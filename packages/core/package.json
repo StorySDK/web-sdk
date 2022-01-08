@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/core",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.0",
   "description": "> TODO: description",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
@@ -18,15 +18,13 @@
     "./dist/bundle.css"
   ],
   "devDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "@storysdk/react": "file:packages//react",
     "@babel/core": "^7.15.5",
     "@babel/preset-react": "^7.14.5",
     "@babel/preset-typescript": "^7.15.0",
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
+    "@storysdk/react": "file:packages//react",
     "@types/axios": "^0.14.0",
     "@types/bem-cn": "^3.0.0",
     "@types/emoji-mart": "^3.0.6",
@@ -46,6 +44,8 @@
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.4.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "rollup": "^2.57.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-scss": "^3.0.0",

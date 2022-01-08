@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/react",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.0",
   "description": "> TODO: description",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
@@ -9,7 +9,7 @@
   "module": "./dist/bundle.esm.js",
   "publishConfig": {
     "access": "public"
-  },  
+  },
   "files": [
     "./dist",
     "./dist/bundle.css"
