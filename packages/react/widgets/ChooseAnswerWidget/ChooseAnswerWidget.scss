@@ -1,0 +1,199 @@
+@import "../../styles/variables.scss";
+
+.ChooseAnswerWidget {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  overflow: hidden;
+
+  &_shake {
+    animation-duration: 1s;
+    animation-name: shake;
+  }
+
+  @each $name, $color in $theme-colors {
+    &_color_#{$name} &__header {
+      background: $color;
+    }
+  }
+
+  &_color_white &__header {
+    color: #05051d;
+  }
+
+  &__header {
+    padding: 13px 0;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 125%;
+    text-align: center;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  &__answers {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  &__answer {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 50px;
+    border: 1px solid #dbdbdb;
+
+    &:not(:last-child) {
+      margin-bottom: 6px;
+    }
+
+    &_correct {
+      border-color: transparent;
+
+      background-color: rgba(
+        $color: map-get($theme-colors, "green"),
+        $alpha: 0.8
+      );
+    }
+
+    &_choosen {
+      border-color: transparent;
+
+      &.ChooseAnswerWidget__answer_incorrect {
+        background-color: rgba(
+          $color: map-get($theme-colors, "red"),
+          $alpha: 0.8
+        );
+      }
+    }
+  }
+
+  &__answerId {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    background: none;
+    border: 1px solid #18182e;
+    font-size: 10px;
+    line-height: 120%;
+    color: #18182e;
+    border-radius: 50px;
+    padding: 0;
+  }
+
+  &__answerTitle {
+    font-size: 10px;
+    line-height: 120%;
+    color: #18182e;
+
+    &_correct {
+      color: #ffffff;
+    }
+
+    &_incorrect {
+      opacity: 0.5;
+    }
+
+    &_choosen {
+      color: #ffffff;
+      opacity: 1;
+    }
+  }
+
+  &__answerIcon {
+    width: 60%;
+    height: 60%;
+    stroke: #ffffff;
+
+    &_incorrect {
+      stroke: rgba($color: map-get($theme-colors, "red"), $alpha: 0.5);
+    }
+
+    &_incorrect.ChooseAnswerWidget__answerIcon_choosen {
+      stroke: map-get($theme-colors, "red");
+    }
+  }
+
+  &__answerCircle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    background: none;
+    border: 1px solid #18182e;
+    border-radius: 50%;
+    position: relative;
+
+    &_correct {
+      border-color: #ffffff;
+    }
+
+    &_choosen {
+      background-color: transparent;
+      border-color: #ffffff;
+    }
+
+    &_incorrect {
+      border-color: rgba($color: map-get($theme-colors, "red"), $alpha: 0.5);
+
+      &.ChooseAnswerWidget__answerCircle_choosen {
+        background-color: #ffffff;
+        border-color: rgba($color: map-get($theme-colors, "red"), $alpha: 0.8);
+      }
+    }
+  }
+}
+
+@keyframes shake {
+  from {
+    transform: translateX(0);
+  }
+
+  10% {
+    transform: translateX(-10px);
+  }
+
+  20% {
+    transform: translateX(10px);
+  }
+
+  30% {
+    transform: translateX(-10px);
+  }
+
+  40% {
+    transform: translateX(10px);
+  }
+
+  50% {
+    transform: translateX(-10px);
+  }
+
+  60% {
+    transform: translateX(10px);
+  }
+
+  70% {
+    transform: translateX(-10px);
+  }
+
+  80% {
+    transform: translateX(10px);
+  }
+
+  90% {
+    transform: translateX(-10px);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}

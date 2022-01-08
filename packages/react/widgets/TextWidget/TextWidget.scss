@@ -1,0 +1,62 @@
+@import '../../styles/index.scss';
+
+// .TextWidget {
+//   &__textarea {
+//     border: none;
+//     width: 100%;
+//     height: 100%;
+//     resize: none;
+//     background: none;
+//     overflow: hidden;
+//   }
+
+//   &__span {
+//     padding: 8px;
+//     border-radius: 8px;
+//   }
+// }
+
+
+.TextWidget {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+  
+    &__container {
+      position: relative;
+      z-index: 1;
+    
+      &_gradient {
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  
+    &__textarea {
+      border: none;
+      width: 100%;
+      height: 100%;
+      resize: none;
+      background: none;
+      overflow: hidden;
+    }
+  
+    &__span {
+      // padding: 8px;
+      // border-radius: 8px;
+      word-break: break-word;
+   
+    }
+  
+    &__background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }  
+}
+
+

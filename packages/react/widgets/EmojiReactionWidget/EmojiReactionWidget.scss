@@ -1,0 +1,55 @@
+@import "../../styles/variables.scss";
+
+.EmojiReactionWidget {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  background: #ffffff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  border-radius: 50px;
+  padding: 14px 11px;
+
+  @each $name, $color in $theme-colors {
+    &_color_#{$name} {
+      background: $color;
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    margin: 0 11px;
+    cursor: pointer;
+    position: relative;
+    border: none;
+    outline: none;
+    background: none;
+    padding: 0;
+  }
+
+  &__subItem {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+
+    &_clicked {
+      animation-name: moveTopAndHide;
+      animation-duration: 1.5s;
+    }
+  }
+}
+
+@keyframes moveTopAndHide {
+  from {
+    top: 0;
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    top: -100px;
+  }
+}

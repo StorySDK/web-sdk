@@ -1,0 +1,57 @@
+{
+  "name": "@storysdk/core",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "Dmitry Bayko <dabaycode@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "./dist/bundle.js",
+  "module": "./dist/bundle.esm.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "files": [
+    "./dist",
+    "./dist/bundle.css"
+  ],
+  "devDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "@storysdk/react": "file:packages//react",
+    "@babel/core": "^7.15.5",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.5",
+    "@types/axios": "^0.14.0",
+    "@types/bem-cn": "^3.0.0",
+    "@types/emoji-mart": "^3.0.6",
+    "@types/node": "^12.20.25",
+    "@types/parse-color": "^1.0.1",
+    "@types/react": "^17.0.21",
+    "@types/react-dom": "^17.0.9",
+    "@types/react-slider": "^1.3.1",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "prettier": "^2.4.1",
+    "rollup": "^2.57.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-scss": "^3.0.0",
+    "rollup-plugin-ts": "^1.4.6",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "sass": "^1.42.1",
+    "typescript": "^4.5.4"
+  }
+}

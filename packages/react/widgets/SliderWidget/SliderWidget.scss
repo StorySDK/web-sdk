@@ -1,0 +1,36 @@
+@import "../../styles/variables.scss";
+
+.SliderWidget {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
+  color: #05051d;
+  padding: 20px 20px 30px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+
+  @each $name, $color in $theme-colors {
+    &.SliderWidget--#{$name} {
+      background: $color;
+    }
+  }
+
+  &__text {
+    word-break: break-word;
+    margin-bottom: 15px;
+    color: #05051D;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    text-align: center;
+
+    &--white {
+      color: #fff;
+    }
+  }
+}

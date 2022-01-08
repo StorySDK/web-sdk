@@ -1,0 +1,132 @@
+@import "../../styles/index.scss";
+@import "../../styles/variables.scss";
+
+.TalkAboutWidget {
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  flex-grow: 1;
+
+  &__contentContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    padding-top: 30px;
+
+    &_sendOpen {
+      border-bottom: 1px solid rgba(5, 5, 29, 0.15);
+    }
+  }
+
+  // &_sendOpen {
+  //   border-bottom-left-radius: 0;
+  //   border-bottom-right-radius: 0;
+  // }
+
+  @each $name, $color in $theme-colors {
+    &_color_#{$name} {
+      background: $color;
+    }
+  }
+
+  &__text {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 120%;
+    margin: 0 auto;
+    text-align: center;
+    color: #ffffff;
+  }
+
+  &_color_white &__text {
+    color: #05051d;
+  }
+
+  &__input {
+    width: 100%;
+    text-align: center;
+    padding: 8px;
+    background: rgba(5, 5, 29, 0.15);
+    color: rgba(5, 5, 29);
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    line-height: 100%;
+
+    &:focus,
+    &:active {
+      outline: none;
+      box-shadow: none;
+    }
+
+    &::placeholder {
+      color: rgba(5, 5, 29, 0.6);
+      font-size: 1em;
+      line-height: 100%;
+    }
+  }
+
+  &__imageWrapper {
+    width: 36px;
+    height: 36px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
+    overflow: hidden;
+
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__empty {
+    width: 100%;
+    height: 18px;
+  }
+
+  &__container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  &__send {
+    background-color: #ffffff;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    outline: none;
+
+    &_disabled {
+      cursor: auto;
+    }
+  }
+
+  &__sendText {
+    color: map-get($theme-colors, "blue");
+    font-size: 14px;
+    line-height: 120%;
+
+    &_green {
+      color: map-get($theme-colors, "green");
+    }
+  }
+}

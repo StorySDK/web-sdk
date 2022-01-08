@@ -1,0 +1,69 @@
+@import "../../styles/index.scss";
+
+
+.SwipeUpWidget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+
+  &_gradient {
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent;
+  }
+
+  &--isReadOnly {
+    align-items: center;
+    background: #05051D;
+    border-radius: 10px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    height: 69px;
+    justify-content: center;
+    width: 196px;
+  }
+
+  &__icon {
+    display: flex;
+    margin-bottom: 2px;
+  }
+
+  &__text {
+    text-align: center;
+    line-height: 120%;
+  }
+}
+
+
+// .SwipeUpWidget {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   color: #fff;
+
+//   &--isReadOnly {
+//     align-items: center;
+//     background: #05051d;
+//     border-radius: 10px;
+//     box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+//     display: flex;
+//     flex-direction: column;
+//     height: 69px;
+//     justify-content: center;
+//     width: 196px;
+//   }
+
+//   &_gradient {
+//     -webkit-background-clip: text !important;
+//     -webkit-text-fill-color: transparent;
+//   }
+
+//   &__icon {
+//     margin-bottom: 2px;
+
+//     & > svg {
+//       width: 1rem;
+//     }
+//   }
+// }

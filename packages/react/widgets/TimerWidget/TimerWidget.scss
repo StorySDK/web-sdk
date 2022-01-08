@@ -1,0 +1,90 @@
+@import "../../styles/index.scss";
+@import "../../styles/variables.scss";
+
+.TimerWidget {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 15px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+
+  @each $name, $color in $theme-colors {
+    &_color_#{$name} {
+      background: $color;
+    }
+  }
+
+  &_color_white &__text {
+    color: #05051d;
+  }
+
+  &__text {
+    word-break: break-word;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    color: #FFFFFF;
+    text-align: center;
+  }
+
+  &__dial {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__digitRow {
+    display: flex;
+  }
+
+  &__digit {
+    width: 22px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+    justify-content: center;
+    background: #ffffff;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    color: #05051d;
+
+    &:not(:last-child) {
+      margin-right: 2px;
+    }
+  }
+
+  &_color_white &__digit {
+    background: rgba(5, 5, 29, 0.15);
+  }
+
+  &__caption {
+    margin-top: 2px;
+    font-weight: 500;
+    font-size: 6px;
+    line-height: 7px;
+    color: #ffffff;
+    text-align: left;
+  }
+
+  &_color_white &__caption {
+    color: #05051d;
+  }
+
+  &__col {
+    list-style: none;
+  }
+
+  &__divider {
+    color: #fff;
+    margin-top: -15px;
+  }
+}
