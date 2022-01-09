@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
 import scss from 'rollup-plugin-scss';
 import json from '@rollup/plugin-json';
+import nodePolyfills from 'rollup-plugin-polyfill-node';
 
 const PACKAGE_ROOT_PATH = process.cwd();
 const { LERNA_PACKAGE_NAME } = process.env;
@@ -30,10 +31,12 @@ export default [
       peerDepsExternal(),
       resolve(),
       commonjs(),
-      typescript({ useTsconfigDeclarationDir: true }),
+      typescript({
+        tsconfig: `${PACKAGE_ROOT_PATH}/tsconfig.json`
+      }),
       scss(),
-      json()
+      json(),
+      nodePolyfills()
     ]
-    // external: id => pkgdependencies.includes(id)
   }
 ];

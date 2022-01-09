@@ -1,11 +1,13 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import {
   GroupsList
   // GroupType,
   // WidgetsTypes,
 } from '@storysdk/react';
 import { adaptGroupData } from './utils/groupsAdapter';
-import React from 'react';
-import ReactDOM from 'react-dom';
+
+import '@storysdk/react/dist/bundle.css';
 
 export class Story {
   token: string;
