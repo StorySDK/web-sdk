@@ -1,0 +1,141 @@
+{
+  "extends": [
+    "airbnb",
+    "react-app",
+    "prettier"
+  ],
+  "plugins": [
+    "import",
+    "react-hooks",
+    "prettier"
+  ], 
+  "parserOptions": {
+    "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
+    "sourceType": "module" // Allows for the use of imports
+  },
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "trailingComma": "none",
+        "useTabs": false,
+        "endOfLine": "auto",
+        "printWidth": 100
+      }
+    ],
+    "arrow-body-style": [
+      "error",
+      "as-needed"
+    ],
+    "@typescript-eslint/no-var-requires": 0,
+    "import/prefer-default-export": "off",
+    "import/extensions": [
+      "error",
+      "never"
+    ],
+    "import/no-unresolved": 0,
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
+    "import/order": [ // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/order.md
+      "error",
+      {
+        "newlines-between": "never",
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ]
+        // "alphabetize": {"order": "asc", "caseInsensitive": true},
+        // "pathGroups": [
+        //   {"pattern": "@components", "group": "internal"}
+        // ]
+      }
+    ],
+    "react/require-default-props": 0,
+    "react/destructuring-assignment": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/jsx-sort-props": [
+      2,
+      {
+        "callbacksLast": true
+      }
+    ],
+    "react/prop-types": "off",
+    "react/forbid-prop-types": 0,
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx"
+        ]
+      }
+    ],
+    "max-classes-per-file": [
+      "error",
+      2
+    ],
+    "prefer-destructuring": 0,
+    "react/no-array-index-key": 0,
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "react/jsx-wrap-multilines": [
+      "error",
+      {
+        "arrow": true,
+        "return": true,
+        "declaration": true,
+        "condition": true,
+        "logical": true
+      }
+    ], 
+    "jsx-a11y/label-has-for": 0,
+    "jsx-quotes": [
+      1,
+      "prefer-double"
+    ],
+    "react/button-has-type": "off",
+    "no-param-reassign": 0
+  },
+  "settings": {
+    "import/ignore": [
+      ".scss"
+    ],
+    "import/resolver": {
+      "node": {
+        "paths": [
+          "src"
+        ]
+      },
+      "alias": {
+        "map": [
+          [
+            "@react-components",
+            "./src/react-components"
+          ],
+          [
+            "@core",
+            "./src/core"
+          ]
+        ],
+        "extensions": [
+          ".ts",
+          ".js",
+          ".jsx",
+          ".tsx",
+          ".json"
+        ]
+      }
+    }
+  }
+}

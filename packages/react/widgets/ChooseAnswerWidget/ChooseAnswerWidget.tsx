@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import block from 'bem-cn';
+import JSConfetti from 'js-confetti';
 import {
   ChooseAnswerWidgetParamsType,
   WidgetComponent,
@@ -8,6 +9,7 @@ import {
 } from '../../types';
 import { IconConfirm, IconDecline } from '../../components/Icon';
 import { calculateElementSize } from '../../utils';
+
 import './ChooseAnswerWidget.scss';
 
 const b = block('ChooseAnswerWidget');
@@ -43,11 +45,17 @@ export const ChooseAnswerWidget: WidgetComponent<{
   params: ChooseAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  canvasRef: any;
   onAnswer?(answerId: string): void;
 }> = (props) => {
-  const { params, position, positionLimits, onAnswer } = props;
+  const { params, position, positionLimits, canvasRef, onAnswer } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
+  // const jsConfetti = useRef(
+  //   new JSConfetti({
+  //     canvas: canvasRef.current
+  //   })
+  // );
 
   const calculate = useCallback(
     (size) => {
@@ -187,6 +195,15 @@ export const ChooseAnswerWidget: WidgetComponent<{
       elementSizes.answerId
     ]
   );
+
+  useEffect(() => {
+    if (userAnswer && userAnswer === params.correct) {
+      const jsConfetti = new JSConfetti({
+        canvas: canvasRef.current
+      });
+      jsConfetti.addConfetti();
+    }
+  }, [userAnswer, params.correct, canvasRef]);
 
   return (
     <div

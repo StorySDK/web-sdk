@@ -1,4 +1,7 @@
 export const API = {
+  groups: {
+
+  },
   statistics: {
     story: {
       onWatch(params: { storyId: string }) {
