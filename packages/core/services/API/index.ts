@@ -1,6 +1,29 @@
-export const API = {
-  groups: {
+import axios from 'axios';
 
+export const API = {
+  apps: {
+    getList() {
+      return axios({
+        method: 'get',
+        url: '/apps'
+      });
+    }
+  },
+  groups: {
+    getList(params: { appId: string }) {
+      return axios({
+        method: 'get',
+        url: `/apps/${params.appId}/groups`
+      });
+    }
+  },
+  stories: {
+    getList(params: { appId: string; groupId: string }) {
+      return axios({
+        method: 'get',
+        url: `/apps/${params.appId}/groups/${params.groupId}/stories`
+      });
+    }
   },
   statistics: {
     story: {

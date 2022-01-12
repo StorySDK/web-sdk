@@ -13,6 +13,11 @@
     animation-name: shake;
   }
 
+  &_celebrate {
+    animation-duration: 1s;
+    animation-name: celebrate;
+  }
+
   @each $name, $color in $theme-colors {
     &_color_#{$name} &__header {
       background: $color;
@@ -149,6 +154,20 @@
         border-color: rgba($color: map-get($theme-colors, "red"), $alpha: 0.8);
       }
     }
+  }
+}
+
+@keyframes celebrate {
+  from {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.5);
+  }
+
+  to {
+    transform: scale(1);
   }
 }
 

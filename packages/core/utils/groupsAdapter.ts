@@ -1,4 +1,4 @@
-import { GroupType } from '@storysdk/react';
+// import { GroupType } from '@storysdk/react';
 import { API } from '../services';
 
 const actionToWidget = (widget: any) => {
@@ -42,15 +42,17 @@ const adaptWidgets = (widgets: any) =>
     action: actionToWidget(widget)
   }));
 
-export const adaptGroupData = (data: any): GroupType[] =>
-  data.map((group: any) => ({
-    id: group.id,
-    title: group.title,
-    imageUrl: group.image_url,
-    stories: group.stories.map((story: any, index: number) => ({
-      id: story.id,
-      background: story.story_data.background,
-      storyData: adaptWidgets(story.story_data.widgets),
-      positionIndex: index
-    }))
-  }));
+export const adaptGroupData = (data: any) =>
+  data
+    .filter((group: any) => group.stories.length)
+    .map((group: any) => ({
+      id: group.id,
+      title: group.title,
+      imageUrl: group.image_url,
+      stories: group.stories.map((story: any, index: number) => ({
+        id: story.id,
+        background: story.story_data.background,
+        storyData: adaptWidgets(story.story_data.widgets),
+        positionIndex: index
+      }))
+    }));

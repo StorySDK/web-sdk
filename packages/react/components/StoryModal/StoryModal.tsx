@@ -1,8 +1,8 @@
 import React from 'react';
 import block from 'bem-cn';
 import './StoryModal.scss';
-import { StoryType, GroupType } from '../../types';
 import { useWindowWidth } from '@react-hook/window-size';
+import { StoryType, GroupType } from '../../types';
 import { StoryContent } from '..';
 
 const b = block('StoryModal');

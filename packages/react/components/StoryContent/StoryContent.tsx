@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import block from 'bem-cn';
 import { useWindowWidth } from '@react-hook/window-size';
 import { WidgetFactory } from '../../core';
@@ -18,7 +18,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
   const [isVideoLoading, setVideoLoading] = useState(false);
 
   const width = useWindowWidth();
-  const canvasRef = useRef(null);
+  // const canvasRef = useRef(null);
 
   return (
     <div className={b()} style={{ height: width < 768 ? Math.round(694 * (width / 390)) : '100%' }}>
@@ -36,12 +36,12 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
             key={widget.id}
             style={renderPosition(widget.position, widget.positionLimits, index + 3)}
           >
-            <WidgetFactory canvasRef={canvasRef} storyId={story.id} widget={widget} />
+            <WidgetFactory storyId={story.id} widget={widget} />
           </div>
         ))}
       </div>
 
-      <canvas className={b('canvas')} ref={canvasRef} />
+      {/* <canvas className={b('canvas')} ref={canvasRef} /> */}
 
       {story.background.type === 'video' && (
         <StoryVideoBackground

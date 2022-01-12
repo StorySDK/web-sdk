@@ -71,7 +71,12 @@ const GroupsList = (props) => {
     };
     return (React.createElement(React.Fragment, null, groups.length ? (React.createElement(React.Fragment, null,
         React.createElement("div", { className: b$h() },
-            React.createElement("div", { className: b$h('carousel') }, groups.map((group, index) => (React.createElement(GroupItem, { imageUrl: group.imageUrl, key: group.id, rounded: true, size: "lg", theme: "light", title: group.title, onClick: handleSelectGroup(index) }))))),
+            React.createElement("div", { className: b$h('carousel') }, groups.map((group, index) => {
+                if (group.stories.length) {
+                    return (React.createElement(GroupItem, { imageUrl: group.imageUrl, key: group.id, rounded: true, size: "lg", theme: "light", title: group.title, onClick: handleSelectGroup(index) }));
+                }
+                return null;
+            }))),
         React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))) : (React.createElement("p", null, "No groups to display"))));
 };
 
@@ -3628,13 +3633,9 @@ const INIT_ELEMENT_STYLES$5 = {
     }
 };
 const ChooseAnswerWidget = (props) => {
-    const { params, position, positionLimits, canvasRef, onAnswer } = props;
+    const { params, position, positionLimits, onAnswer } = props;
     const [userAnswer, setUserAnswer] = useState(null);
-    // const jsConfetti = useRef(
-    //   new JSConfetti({
-    //     canvas: canvasRef.current
-    //   })
-    // );
+    const jsConfetti = useRef(new JSConfetti());
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
             return calculateElementSize(position, positionLimits, size);
@@ -3712,12 +3713,9 @@ const ChooseAnswerWidget = (props) => {
     ]);
     useEffect(() => {
         if (userAnswer && userAnswer === params.correct) {
-            const jsConfetti = new JSConfetti({
-                canvas: canvasRef.current
-            });
-            jsConfetti.addConfetti();
+            jsConfetti.current.addConfetti();
         }
-    }, [userAnswer, params.correct, canvasRef]);
+    }, [userAnswer, params.correct]);
     return (React.createElement("div", { className: b$f({
             color: params.color,
             shake: userAnswer && userAnswer !== params.correct,
@@ -58762,7 +58760,7 @@ class WidgetFactory extends React.Component {
     makeWidget() {
         switch (this.props.widget.content.type) {
             case WidgetsTypes.CHOOSE_ANSWER:
-                return (React.createElement(ChooseAnswerWidget, { canvasRef: this.props.canvasRef, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action }));
+                return (React.createElement(ChooseAnswerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action }));
             case WidgetsTypes.CLICK_ME:
                 return (React.createElement(ClickMeWidget, { params: this.props.widget.content.params, onClick: this.props.widget.action }));
             case WidgetsTypes.ELLIPSE:
@@ -58805,14 +58803,13 @@ const StoryContent = (props) => {
     const { story } = props;
     const [isVideoLoading, setVideoLoading] = useState(false);
     const width = c$1();
-    const canvasRef = useRef(null);
+    // const canvasRef = useRef(null);
     return (React.createElement("div", { className: b$1(), style: { height: width < 768 ? Math.round(694 * (width / 390)) : '100%' } },
         React.createElement("div", { className: b$1('scope'), style: {
                 background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
                 transform: width < 768 ? `scale(${width / 3.9}%)` : `scale(${288 / 3.9}%)`
             } }, story.storyData.map((widget, index) => (React.createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits, index + 3) },
-            React.createElement(WidgetFactory, { canvasRef: canvasRef, storyId: story.id, widget: widget }))))),
-        React.createElement("canvas", { className: b$1('canvas'), ref: canvasRef }),
+            React.createElement(WidgetFactory, { storyId: story.id, widget: widget }))))),
         story.background.type === 'video' && (React.createElement(StoryVideoBackground, { autoplay: true, isLoading: isVideoLoading, src: story.background.value, onLoadEnd: () => {
                 setVideoLoading(false);
             } }))));

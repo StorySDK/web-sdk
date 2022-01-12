@@ -42,17 +42,23 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         <>
           <div className={b()}>
             <div className={b('carousel')}>
-              {groups.map((group, index) => (
-                <GroupItem
-                  imageUrl={group.imageUrl}
-                  key={group.id}
-                  rounded
-                  size="lg"
-                  theme="light"
-                  title={group.title}
-                  onClick={handleSelectGroup(index)}
-                />
-              ))}
+              {groups.map((group, index) => {
+                if (group.stories.length) {
+                  return (
+                    <GroupItem
+                      imageUrl={group.imageUrl}
+                      key={group.id}
+                      rounded
+                      size="lg"
+                      theme="light"
+                      title={group.title}
+                      onClick={handleSelectGroup(index)}
+                    />
+                  );
+                }
+
+                return null;
+              })}
             </div>
           </div>
 
