@@ -58,24 +58,42 @@ const GroupItem = (props) => {
 
 const b$h = block('GroupsList');
 const GroupsList = (props) => {
-    const { groups } = props;
+    const { groups, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
     const [currentGroup, setCurrentGroup] = React__default["default"].useState(0);
     const [modalShow, setModalShow] = React__default["default"].useState(false);
     const handleSelectGroup = (groupIndex) => () => {
         setCurrentGroup(groupIndex);
         setModalShow(true);
+        if (onOpenGroup) {
+            onOpenGroup(groups[groupIndex].id);
+        }
     };
     const handlePrevGroup = () => {
         if (currentGroup > 0) {
             setCurrentGroup(currentGroup - 1);
+            if (onOpenGroup && onCloseGroup) {
+                onCloseGroup(groups[currentGroup].id);
+                setTimeout(() => {
+                    onOpenGroup(groups[currentGroup - 1].id);
+                }, 0);
+            }
         }
     };
     const handleNextGroup = () => {
         if (currentGroup < groups.length) {
             setCurrentGroup(currentGroup + 1);
+            if (onOpenGroup && onCloseGroup) {
+                onCloseGroup(groups[currentGroup].id);
+                setTimeout(() => {
+                    onOpenGroup(groups[currentGroup + 1].id);
+                }, 0);
+            }
         }
     };
     const handleCloseModal = () => {
+        if (onCloseGroup) {
+            onCloseGroup(groups[currentGroup].id);
+        }
         setModalShow(false);
     };
     return (React__default["default"].createElement(React__default["default"].Fragment, null, groups.length ? (React__default["default"].createElement(React__default["default"].Fragment, null,
@@ -86,7 +104,7 @@ const GroupsList = (props) => {
                 }
                 return null;
             }))),
-        React__default["default"].createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))) : (React__default["default"].createElement("p", null, "No groups to display"))));
+        React__default["default"].createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React__default["default"].createElement("p", null, "No groups to display"))));
 };
 
 var u = e=>{var a=React.useRef(e);return React.useEffect(()=>{a.current=e;}),a};
@@ -109,15 +127,21 @@ const RightArrowIcon = () => (React__default["default"].createElement("svg", { f
     React__default["default"].createElement("path", { d: "M12 4.99997L19 12L12 19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
 const CurrentStoryContext = React__default["default"].createContext('');
 const StoryModal = (props) => {
-    const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, currentGroup } = props;
+    const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
     const [currentStory, setCurrentStory] = React__default["default"].useState(0);
     const [currentStoryId, setCurrentStoryId] = React__default["default"].useState(stories[0].id);
     const width = c$1();
     React__default["default"].useEffect(() => {
         setCurrentStory(0);
-    }, [stories.length]);
+        if (onOpenStory && showed) {
+            onOpenStory(currentGroup.id, stories[0].id);
+        }
+    }, [stories.length, onOpenStory, stories, currentGroup, showed]);
     const handleClose = () => {
         onClose();
+        if (onCloseStory) {
+            onCloseStory(currentGroup.id, stories[currentStory].id);
+        }
     };
     const handleAnimationEnd = () => {
         handleNext();
@@ -129,6 +153,17 @@ const StoryModal = (props) => {
         else {
             setCurrentStory(currentStory + 1);
             setCurrentStoryId(stories[currentStory + 1].id);
+            if (onCloseStory) {
+                onCloseStory(currentGroup.id, stories[currentStory].id);
+            }
+            if (onOpenStory) {
+                setTimeout(() => {
+                    onOpenStory(currentGroup.id, stories[currentStory + 1].id);
+                }, 0);
+            }
+            if (onNextStory) {
+                onNextStory(currentGroup.id, stories[currentStory].id);
+            }
         }
     };
     const handlePrev = () => {
@@ -138,6 +173,17 @@ const StoryModal = (props) => {
         else {
             setCurrentStory(currentStory - 1);
             setCurrentStoryId(stories[currentStory - 1].id);
+            if (onCloseStory) {
+                onCloseStory(currentGroup.id, stories[currentStory].id);
+            }
+            if (onOpenStory) {
+                setTimeout(() => {
+                    onOpenStory(currentGroup.id, stories[currentStory - 1].id);
+                }, 0);
+            }
+            if (onPrevStory) {
+                onPrevStory(currentGroup.id, stories[currentStory].id);
+            }
         }
     };
     return (React__default["default"].createElement(CurrentStoryContext.Provider, { value: currentStoryId },
@@ -58464,10 +58510,13 @@ const SliderWidget = (props) => {
             setDelay(0);
         }
     }, delay);
-    const handleChange = (valueChanged) => {
-        if (props.onSlide) {
-            props.onSlide(valueChanged);
+    React.useEffect(() => {
+        if (changeStatus === 'moved' && props.onSlide) {
+            props.onSlide(sliderValue);
         }
+        // eslint-disable-next-line
+    }, [changeStatus, sliderValue]);
+    const handleChange = (valueChanged) => {
         setSliderValue(valueChanged);
     };
     const handleBeforeChange = () => {

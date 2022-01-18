@@ -30,31 +30,6 @@ var require$$0__default = /*#__PURE__*/_interopDefaultLegacy(require$$0);
 var require$$8__default = /*#__PURE__*/_interopDefaultLegacy(require$$8);
 var crypto__default = /*#__PURE__*/_interopDefaultLegacy(crypto);
 
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-
-function __awaiter(thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-}
-
 var axios$2 = {exports: {}};
 
 var bind$2 = function bind(fn, thisArg) {
@@ -6172,24 +6147,42 @@ const GroupItem = (props) => {
 
 const b$h = block('GroupsList');
 const GroupsList = (props) => {
-    const { groups } = props;
+    const { groups, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
     const [currentGroup, setCurrentGroup] = React__default["default"].useState(0);
     const [modalShow, setModalShow] = React__default["default"].useState(false);
     const handleSelectGroup = (groupIndex) => () => {
         setCurrentGroup(groupIndex);
         setModalShow(true);
+        if (onOpenGroup) {
+            onOpenGroup(groups[groupIndex].id);
+        }
     };
     const handlePrevGroup = () => {
         if (currentGroup > 0) {
             setCurrentGroup(currentGroup - 1);
+            if (onOpenGroup && onCloseGroup) {
+                onCloseGroup(groups[currentGroup].id);
+                setTimeout(() => {
+                    onOpenGroup(groups[currentGroup - 1].id);
+                }, 0);
+            }
         }
     };
     const handleNextGroup = () => {
         if (currentGroup < groups.length) {
             setCurrentGroup(currentGroup + 1);
+            if (onOpenGroup && onCloseGroup) {
+                onCloseGroup(groups[currentGroup].id);
+                setTimeout(() => {
+                    onOpenGroup(groups[currentGroup + 1].id);
+                }, 0);
+            }
         }
     };
     const handleCloseModal = () => {
+        if (onCloseGroup) {
+            onCloseGroup(groups[currentGroup].id);
+        }
         setModalShow(false);
     };
     return (React__default["default"].createElement(React__default["default"].Fragment, null, groups.length ? (React__default["default"].createElement(React__default["default"].Fragment, null,
@@ -6200,7 +6193,7 @@ const GroupsList = (props) => {
                 }
                 return null;
             }))),
-        React__default["default"].createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))) : (React__default["default"].createElement("p", null, "No groups to display"))));
+        React__default["default"].createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React__default["default"].createElement("p", null, "No groups to display"))));
 };
 
 var u = e=>{var a=React.useRef(e);return React.useEffect(()=>{a.current=e;}),a};
@@ -6223,15 +6216,21 @@ const RightArrowIcon = () => (React__default["default"].createElement("svg", { f
     React__default["default"].createElement("path", { d: "M12 4.99997L19 12L12 19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
 const CurrentStoryContext = React__default["default"].createContext('');
 const StoryModal = (props) => {
-    const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, currentGroup } = props;
+    const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
     const [currentStory, setCurrentStory] = React__default["default"].useState(0);
     const [currentStoryId, setCurrentStoryId] = React__default["default"].useState(stories[0].id);
     const width = c$1();
     React__default["default"].useEffect(() => {
         setCurrentStory(0);
-    }, [stories.length]);
+        if (onOpenStory && showed) {
+            onOpenStory(currentGroup.id, stories[0].id);
+        }
+    }, [stories.length, onOpenStory, stories, currentGroup, showed]);
     const handleClose = () => {
         onClose();
+        if (onCloseStory) {
+            onCloseStory(currentGroup.id, stories[currentStory].id);
+        }
     };
     const handleAnimationEnd = () => {
         handleNext();
@@ -6243,6 +6242,17 @@ const StoryModal = (props) => {
         else {
             setCurrentStory(currentStory + 1);
             setCurrentStoryId(stories[currentStory + 1].id);
+            if (onCloseStory) {
+                onCloseStory(currentGroup.id, stories[currentStory].id);
+            }
+            if (onOpenStory) {
+                setTimeout(() => {
+                    onOpenStory(currentGroup.id, stories[currentStory + 1].id);
+                }, 0);
+            }
+            if (onNextStory) {
+                onNextStory(currentGroup.id, stories[currentStory].id);
+            }
         }
     };
     const handlePrev = () => {
@@ -6252,6 +6262,17 @@ const StoryModal = (props) => {
         else {
             setCurrentStory(currentStory - 1);
             setCurrentStoryId(stories[currentStory - 1].id);
+            if (onCloseStory) {
+                onCloseStory(currentGroup.id, stories[currentStory].id);
+            }
+            if (onOpenStory) {
+                setTimeout(() => {
+                    onOpenStory(currentGroup.id, stories[currentStory - 1].id);
+                }, 0);
+            }
+            if (onPrevStory) {
+                onPrevStory(currentGroup.id, stories[currentStory].id);
+            }
         }
     };
     return (React__default["default"].createElement(CurrentStoryContext.Provider, { value: currentStoryId },
@@ -8659,33 +8680,33 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isFastBuffer(obj.slice(0, 0))
 }
 
-let urlAlphabet =
+let urlAlphabet$1 =
   'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
 
-const POOL_SIZE_MULTIPLIER = 128;
-let pool, poolOffset;
-let fillPool = bytes => {
-  if (!pool || pool.length < bytes) {
-    pool = Buffer.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER);
-    crypto__default["default"].randomFillSync(pool);
-    poolOffset = 0;
-  } else if (poolOffset + bytes > pool.length) {
-    crypto__default["default"].randomFillSync(pool);
-    poolOffset = 0;
+const POOL_SIZE_MULTIPLIER$1 = 128;
+let pool$1, poolOffset$1;
+let fillPool$1 = bytes => {
+  if (!pool$1 || pool$1.length < bytes) {
+    pool$1 = Buffer.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER$1);
+    crypto__default["default"].randomFillSync(pool$1);
+    poolOffset$1 = 0;
+  } else if (poolOffset$1 + bytes > pool$1.length) {
+    crypto__default["default"].randomFillSync(pool$1);
+    poolOffset$1 = 0;
   }
-  poolOffset += bytes;
+  poolOffset$1 += bytes;
 };
-let nanoid = (size = 21) => {
-  fillPool(size);
+let nanoid$1 = (size = 21) => {
+  fillPool$1(size);
   let id = '';
-  for (let i = poolOffset - size; i < poolOffset; i++) {
-    id += urlAlphabet[pool[i] & 63];
+  for (let i = poolOffset$1 - size; i < poolOffset$1; i++) {
+    id += urlAlphabet$1[pool$1[i] & 63];
   }
   return id
 };
 
 const IconLogoCircle = ({ className }) => {
-    const gradientId = React.useMemo(() => nanoid(), []);
+    const gradientId = React.useMemo(() => nanoid$1(), []);
     return (React__default["default"].createElement("svg", { className: className, fill: "none", height: "34", viewBox: "0 0 34 34", width: "34", xmlns: "http://www.w3.org/2000/svg" },
         React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", r: "17" }),
         React__default["default"].createElement("path", { d: "M17 0C7.59621 0 0 7.59887 0 17C0 26.4038 7.59887 34 17 34C26.4038 34 34 26.4011 34 17C34 7.59621 26.4011 0 17 0ZM6.44938 24.5006C5.3198 22.9161 4.55215 21.068 4.23074 19.1575L6.19504 18.8268C6.4673 20.4418 7.11609 22.0037 8.07168 23.3445L6.44938 24.5006ZM6.19504 15.1732L4.23074 14.8425C4.55215 12.932 5.3198 11.0839 6.44938 9.49941L8.07168 10.6555C7.11609 11.9963 6.4673 13.5582 6.19504 15.1732ZM14.8425 29.7693C12.932 29.4479 11.0839 28.6802 9.49941 27.5506L10.6555 25.9283C11.9963 26.8839 13.5582 27.5327 15.1732 27.805L14.8425 29.7693ZM10.6555 8.07168L9.49941 6.44938C11.0839 5.3198 12.932 4.55215 14.8425 4.23074L15.1732 6.19504C13.5582 6.4673 11.9963 7.11609 10.6555 8.07168ZM27.5506 9.49941C28.6802 11.0839 29.4479 12.9313 29.7693 14.8425L27.805 15.1732C27.5327 13.5582 26.8839 11.9963 25.929 10.6555L27.5506 9.49941ZM19.1575 29.7693L18.8268 27.805C20.4418 27.5327 22.0037 26.8839 23.3445 25.9283L24.5006 27.5506C22.9161 28.6802 21.068 29.4479 19.1575 29.7693ZM23.3445 8.07168C22.0037 7.11609 20.4418 6.4673 18.8268 6.19504L19.1575 4.23074C21.068 4.55215 22.9161 5.3198 24.5006 6.44938L23.3445 8.07168ZM27.5506 24.5006L25.929 23.3445C26.8839 22.0037 27.5327 20.4418 27.805 18.8268L29.7693 19.1575C29.4479 21.0687 28.6802 22.9161 27.5506 24.5006Z", fill: `url(#${gradientId})` }),
@@ -10009,7 +10030,7 @@ const CLASS_NAME = 'MaterialIcon';
 const MaterialIcon = React.memo(({ name = 'ArrowCircleUpOutlineIcon', className, color, background, size = 'auto' }) => {
     const Icon = React.useMemo(() => MATERIAL_ICONS[name], [name]);
     let gradient;
-    const gradientId = React.useMemo(() => nanoid(), []);
+    const gradientId = React.useMemo(() => nanoid$1(), []);
     if ((background === null || background === void 0 ? void 0 : background.type) === 'gradient') {
         gradient = (React__default["default"].createElement("linearGradient", { id: gradientId, x1: "0", x2: "0", y1: "0", y2: "1" },
             React__default["default"].createElement("stop", { offset: "0%", stopColor: background.value[0] }),
@@ -64263,10 +64284,13 @@ const SliderWidget = (props) => {
             setDelay(0);
         }
     }, delay);
-    const handleChange = (valueChanged) => {
-        if (props.onSlide) {
-            props.onSlide(valueChanged);
+    React.useEffect(() => {
+        if (changeStatus === 'moved' && props.onSlide) {
+            props.onSlide(sliderValue);
         }
+        // eslint-disable-next-line
+    }, [changeStatus, sliderValue]);
+    const handleChange = (valueChanged) => {
         setSliderValue(valueChanged);
     };
     const handleBeforeChange = () => {
@@ -64623,6 +64647,31 @@ const StoryContent = (props) => {
             } }))));
 };
 
+let urlAlphabet =
+  'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
+
+const POOL_SIZE_MULTIPLIER = 128;
+let pool, poolOffset;
+let fillPool = bytes => {
+  if (!pool || pool.length < bytes) {
+    pool = Buffer$1.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER);
+    crypto__default["default"].randomFillSync(pool);
+    poolOffset = 0;
+  } else if (poolOffset + bytes > pool.length) {
+    crypto__default["default"].randomFillSync(pool);
+    poolOffset = 0;
+  }
+  poolOffset += bytes;
+};
+let nanoid = (size = 21) => {
+  fillPool((size -= 0));
+  let id = '';
+  for (let i = poolOffset - size; i < poolOffset; i++) {
+    id += urlAlphabet[pool[i] & 63];
+  }
+  return id
+};
+
 const API = {
     apps: {
         getList() {
@@ -64649,49 +64698,222 @@ const API = {
         }
     },
     statistics: {
-        story: {
-            onWatch(params) {
-                console.log(params);
+        group: {
+            sendDuration(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'duration',
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: params.seconds
+                    }
+                });
+            },
+            onOpen(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'open',
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
+            },
+            onClose(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'close',
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
             }
-            // onNext(),
-            // onPrev(),
-            // onClose(),
-            // onGroupOpen()
+        },
+        story: {
+            sendDuration(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'duration',
+                        story_id: params.storyId,
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: params.seconds
+                    }
+                });
+            },
+            onOpen(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'open',
+                        story_id: params.storyId,
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
+            },
+            onClose(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'close',
+                        story_id: params.storyId,
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
+            },
+            onNext(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'next',
+                        user_id: params.uniqUserId,
+                        story_id: params.storyId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
+            },
+            onPrev(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'back',
+                        user_id: params.uniqUserId,
+                        story_id: params.storyId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
+            }
         },
         widgets: {
             chooseAnswer: {
                 onAnswer(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'answer',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.answer
+                        }
+                    });
                 }
             },
             clickMe: {
                 onClick(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'click',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.url
+                        }
+                    });
                 }
             },
             emojiReaction: {
                 onReact(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'answer',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.emoji
+                        }
+                    });
                 }
             },
             question: {
                 onAnswer(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'answer',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.answer
+                        }
+                    });
                 }
             },
             slider: {
                 onSlide(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'answer',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.value
+                        }
+                    });
                 }
             },
             swipeUp: {
                 onSwipe(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'click',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.url
+                        }
+                    });
                 }
             },
             talkAbout: {
                 onAnswer(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'answer',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.answer
+                        }
+                    });
                 }
             }
         }
@@ -64699,38 +64921,71 @@ const API = {
 };
 
 // import { GroupType } from '@storysdk/react';
-const actionToWidget = (widget) => {
+const actionToWidget = (widget, storyId, groupId, uniqUserId) => {
     switch (widget.content.type) {
         case 'choose_answer':
             return (answer) => API.statistics.widgets.chooseAnswer.onAnswer({
                 widgetId: widget.id,
+                storyId,
+                groupId,
+                uniqUserId,
                 answer
             });
         case 'emoji_reaction':
             return (emoji) => API.statistics.widgets.emojiReaction.onReact({
                 widgetId: widget.id,
+                storyId,
+                groupId,
+                uniqUserId,
                 emoji
             });
         case 'talk_about':
             return (answer) => API.statistics.widgets.talkAbout.onAnswer({
                 widgetId: widget.id,
+                storyId,
+                groupId,
+                uniqUserId,
                 answer
             });
         case 'click_me':
-            return () => API.statistics.widgets.clickMe.onClick({ widgetId: widget.id });
+            return () => API.statistics.widgets.clickMe.onClick({
+                widgetId: widget.id,
+                storyId,
+                groupId,
+                uniqUserId,
+                url: widget.content.params.url
+            });
         case 'question':
-            return (answer) => API.statistics.widgets.question.onAnswer({ widgetId: widget.id, answer });
+            return (answer) => API.statistics.widgets.question.onAnswer({
+                widgetId: widget.id,
+                answer,
+                storyId,
+                groupId,
+                uniqUserId
+            });
         case 'slider':
-            return (value) => API.statistics.widgets.slider.onSlide({ widgetId: widget.id, value });
+            return (value) => API.statistics.widgets.slider.onSlide({
+                widgetId: widget.id,
+                value,
+                storyId,
+                groupId,
+                uniqUserId
+            });
         case 'swipe_up':
-            return () => API.statistics.widgets.swipeUp.onSwipe({ widgetId: widget.id });
+            return () => API.statistics.widgets.swipeUp.onSwipe({
+                widgetId: widget.id,
+                storyId,
+                groupId,
+                uniqUserId,
+                url: widget.content.params.url
+            });
         default:
             return undefined;
     }
 };
-const adaptWidgets = (widgets) => widgets.map((widget) => (Object.assign(Object.assign({}, widget), { action: actionToWidget(widget) })));
-const adaptGroupData = (data) => data
-    .filter((group) => group.stories.length)
+const adaptWidgets = (widgets, storyId, groupId, uniqUserId) => widgets.map((widget) => (Object.assign(Object.assign({}, widget), { action: actionToWidget(widget, storyId, groupId, uniqUserId) })));
+const adaptGroupData = (data, uniqUserId) => data
+    .filter((group) => (group.stories ? group.stories.length : 0))
     .map((group) => ({
     id: group.id,
     title: group.title,
@@ -64738,7 +64993,7 @@ const adaptGroupData = (data) => data
     stories: group.stories.map((story, index) => ({
         id: story.id,
         background: story.story_data.background,
-        storyData: adaptWidgets(story.story_data.widgets),
+        storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId),
         positionIndex: index
     }))
 }));
@@ -64748,6 +65003,103 @@ const withGroupsData = (GroupsList, token) => () => {
     const [groups, setGroups] = React.useState([]);
     const [groupsWithStories, setGroupsWithStories] = React.useState([]);
     const [loadStatus, setLoadStatus] = React.useState('pending');
+    const [groupDurationStatus, setGroupDurationStatus] = React.useState({
+        groupId: '',
+        status: 'pending'
+    });
+    const [stroyDurationStatus, setStoryDurationStatus] = React.useState({
+        storyId: '',
+        groupId: '',
+        status: 'pending'
+    });
+    const [groupDurationTime, setGroupDurationTime] = React.useState(0); // seconds
+    const [storyDurationTime, setStoryDurationTime] = React.useState(0); // seconds
+    const uniqUserId = React.useMemo(() => nanoid(), []);
+    React.useEffect(() => {
+        let interval;
+        if (groupDurationStatus.status === 'calculating') {
+            interval = setInterval(() => {
+                setGroupDurationTime((seconds) => seconds + 1);
+            }, 1000);
+        }
+        else if (groupDurationStatus.status === 'calculated') {
+            if (interval) {
+                clearInterval(interval);
+            }
+        }
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [groupDurationStatus]);
+    React.useEffect(() => {
+        let interval;
+        if (stroyDurationStatus.status === 'calculating') {
+            interval = setInterval(() => {
+                setStoryDurationTime((seconds) => seconds + 1);
+            }, 1000);
+        }
+        else if (stroyDurationStatus.status === 'calculated') {
+            if (interval) {
+                clearInterval(interval);
+            }
+        }
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [stroyDurationStatus]);
+    React.useEffect(() => {
+        if (groupDurationStatus.status === 'calculated') {
+            API.statistics.group
+                .sendDuration({
+                groupId: groupDurationStatus.groupId,
+                uniqUserId,
+                seconds: groupDurationTime
+            })
+                .then(() => {
+                setGroupDurationTime(0);
+            });
+        }
+        // eslint-disable-next-line
+    }, [groupDurationStatus, uniqUserId]);
+    React.useEffect(() => {
+        if (stroyDurationStatus.status === 'calculated') {
+            API.statistics.story
+                .sendDuration({
+                storyId: stroyDurationStatus.storyId,
+                groupId: stroyDurationStatus.groupId,
+                uniqUserId,
+                seconds: storyDurationTime
+            })
+                .then(() => {
+                setStoryDurationTime(0);
+            });
+        }
+        // eslint-disable-next-line
+    }, [stroyDurationStatus, uniqUserId]);
+    const handleOpenGroup = React.useCallback((groupId) => {
+        setGroupDurationStatus(() => ({ groupId, status: 'calculating' }));
+        return API.statistics.group.onOpen({ groupId, uniqUserId });
+    }, [uniqUserId]);
+    const handleCloseGroup = React.useCallback((groupId) => {
+        setGroupDurationStatus((prevState) => (Object.assign(Object.assign({}, prevState), { status: 'calculated' })));
+        return API.statistics.group.onClose({ groupId, uniqUserId });
+    }, [uniqUserId]);
+    const handleOpenStory = React.useCallback((groupId, storyId) => {
+        setStoryDurationStatus(() => ({ groupId, storyId, status: 'calculating' }));
+        return API.statistics.story.onOpen({ groupId, storyId, uniqUserId });
+    }, [uniqUserId]);
+    const handleCloseStory = React.useCallback((groupId, storyId) => {
+        if (stroyDurationStatus.storyId === storyId && stroyDurationStatus.groupId === groupId) {
+            setStoryDurationStatus((prevState) => (Object.assign(Object.assign({}, prevState), { status: 'calculated' })));
+        }
+        return API.statistics.story.onClose({ groupId, storyId, uniqUserId });
+    }, [stroyDurationStatus, uniqUserId]);
+    const handleNextStory = React.useCallback((groupId, storyId) => API.statistics.story.onNext({ groupId, storyId, uniqUserId }), [uniqUserId]);
+    const handlePrevStory = React.useCallback((groupId, storyId) => API.statistics.story.onPrev({ groupId, storyId, uniqUserId }), [uniqUserId]);
     React.useEffect(() => {
         setLoadStatus('loading');
         API.apps.getList().then((appData) => {
@@ -64799,21 +65151,15 @@ const withGroupsData = (GroupsList, token) => () => {
     }, [groups]);
     React.useEffect(() => {
         if (loadStatus === 'loaded' && groupsWithStories.length) {
-            const adaptedData = adaptGroupData(groupsWithStories);
+            const adaptedData = adaptGroupData(groupsWithStories, uniqUserId);
             setData(adaptedData);
         }
-    }, [loadStatus, groupsWithStories]);
-    return React__default["default"].createElement(GroupsList, { groups: data });
+    }, [loadStatus, groupsWithStories, uniqUserId]);
+    return (React__default["default"].createElement(GroupsList, { groups: data, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory }));
 };
 
 class Story {
     constructor(token) {
-        this.fetchGetApps = () => __awaiter(this, void 0, void 0, function* () {
-            const { data } = yield API.apps.getList();
-            if (data.data && !data.error) {
-                console.log(data.data);
-            }
-        });
         this.token = token;
         axios.defaults.baseURL = 'https://api.diffapp.link/api/v1';
         if (token) {
@@ -64830,664 +65176,6 @@ class Story {
             }
             return;
         }
-        // this.fetchGetApps();
-        // const dataGroups = JSON.stringify([
-        //   {
-        //     id: '6151c3c2be3952141639f90e',
-        //     title: 'test',
-        //     image_url:
-        //       'https://storysdk.s3.eu-north-1.amazonaws.com/613b137d514fd8057b76f13f/1632748482177_d3848efa-a5a9-4095-a235-8160d18d368c.png',
-        //     stories: [
-        //       {
-        //         id: '61c5304ecef08636cb8e5b10',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 1,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'WrgqfCBi98Muped1riYo4I',
-        //               position: {
-        //                 x: 78,
-        //                 y: 291,
-        //                 width: 215,
-        //                 height: 27,
-        //                 rotate: 0
-        //               },
-        //               positionLimits: {
-        //                 isResizableX: true,
-        //                 isResizableY: false,
-        //                 isAutoHeight: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'text',
-        //                 params: {
-        //                   text: 'Your text',
-        //                   fontFamily: 'Roboto',
-        //                   fontSize: 44,
-        //                   fontParams: {
-        //                     style: 'normal',
-        //                     weight: 400
-        //                   },
-        //                   align: 'center',
-        //                   color: {
-        //                     type: 'gradient',
-        //                     value: ['rgba(71, 89, 250, 1)', 'rgba(194, 70, 255, 1)']
-        //                   },
-        //                   withFill: false,
-        //                   opacity: 100,
-        //                   widgetOpacity: 100,
-        //                   backgroundColor: {
-        //                     type: 'color',
-        //                     value: '#ffffff'
-        //                   },
-        //                   backgroundOpacity: 100
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'gradient',
-        //             value: ['rgb(0, 242, 254)', 'rgb(79, 172, 254)']
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:28:30.666Z',
-        //         updated_at: '2021-12-24T02:42:29.679Z'
-        //       },
-        //       {
-        //         id: '61c530afcef08636cb8e5b11',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 2,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'WRkAhGDLmzJ8PPhklwpbRK',
-        //               position: {
-        //                 rotate: 0,
-        //                 x: 45,
-        //                 y: 464,
-        //                 width: 310,
-        //                 height: 158
-        //               },
-        //               positionLimits: {
-        //                 minWidth: 196,
-        //                 maxWidth: 370,
-        //                 minHeight: 100,
-        //                 maxHeight: 189,
-        //                 keepRatio: true,
-        //                 ratioIndex: 1.96,
-        //                 isResizableX: true,
-        //                 isResizableY: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'slider',
-        //                 params: {
-        //                   value: 50,
-        //                   emoji: {
-        //                     name: 'smiley_cat',
-        //                     unicode: '1f63a'
-        //                   },
-        //                   text: 'How Are You?',
-        //                   color: 'white'
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'video',
-        //             value:
-        //               'https://storysdk.s3.eu-north-1.amazonaws.com/613b137d514fd8057b76f13f/1640313006323_xJDDELfNg0h6G3lzWjSB3.mp4'
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:30:07.36Z',
-        //         updated_at: '2021-12-24T02:42:29.682Z'
-        //       },
-        //       {
-        //         id: '61c530cb621e1b54957a5abd',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 3,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'WJF12aq5WQEjZXH312y3CO',
-        //               position: {
-        //                 rotate: -14.749949229980587,
-        //                 x: 42,
-        //                 y: 459,
-        //                 width: 295,
-        //                 height: 135
-        //               },
-        //               positionLimits: {
-        //                 minWidth: 196,
-        //                 maxWidth: 370,
-        //                 minHeight: 90,
-        //                 maxHeight: 169,
-        //                 ratioIndex: 2.18,
-        //                 keepRatio: true,
-        //                 isResizableX: true,
-        //                 isResizableY: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'question',
-        //                 params: {
-        //                   question: 'How Are You?',
-        //                   confirm: 'Yes',
-        //                   decline: 'No',
-        //                   color: '#000000'
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'image',
-        //             value:
-        //               'https://storysdk.s3.eu-north-1.amazonaws.com/613b137d514fd8057b76f13f/1640313048559__6H3NAwaounRI4iM_fC5V.png',
-        //             fileId: '61c530d80b02a5ed2e1672f9'
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:30:35.084Z',
-        //         updated_at: '2021-12-24T02:42:29.706Z'
-        //       },
-        //       {
-        //         id: '61c530f00b02a5ed2e1672fa',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 4,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'W7i3rsVZSIkleebRB0-d2m',
-        //               position: {
-        //                 rotate: 0,
-        //                 x: 67,
-        //                 y: 537,
-        //                 width: 245,
-        //                 height: 70
-        //               },
-        //               positionLimits: {
-        //                 minWidth: 196,
-        //                 maxWidth: 370,
-        //                 minHeight: 50,
-        //                 isResizableX: true,
-        //                 isResizableY: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'click_me',
-        //                 params: {
-        //                   text: 'Click Me',
-        //                   fontFamily: 'Roboto',
-        //                   fontSize: 22,
-        //                   iconSize: 30,
-        //                   color: {
-        //                     type: 'color',
-        //                     value: '#ffffff'
-        //                   },
-        //                   fontParams: {
-        //                     style: 'normal',
-        //                     weight: 400
-        //                   },
-        //                   opacity: 100,
-        //                   borderOpacity: 100,
-        //                   hasIcon: true,
-        //                   borderRadius: 50,
-        //                   backgroundColor: {
-        //                     type: 'gradient',
-        //                     value: ['rgb(255, 106, 40)', 'rgb(254, 47, 87)']
-        //                   },
-        //                   borderWidth: 2,
-        //                   borderColor: {
-        //                     type: 'color',
-        //                     value: '#ffffff'
-        //                   },
-        //                   hasBorder: false,
-        //                   url: '',
-        //                   icon: {
-        //                     name: 'LinksLineIcon'
-        //                   }
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'color',
-        //             value: 'rgba(120, 44, 224, 1)'
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:31:12.452Z',
-        //         updated_at: '2021-12-24T02:42:29.681Z'
-        //       },
-        //       {
-        //         id: '61c53119621e1b54957a5abe',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 5,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'WrIYUNyu2XLhNqFzG1bzQa',
-        //               position: {
-        //                 rotate: 0,
-        //                 x: 71,
-        //                 y: 278,
-        //                 width: 260,
-        //                 height: 169
-        //               },
-        //               positionLimits: {
-        //                 minWidth: 196,
-        //                 maxWidth: 370,
-        //                 minHeight: 127,
-        //                 maxHeight: 240,
-        //                 isAutoHeight: true,
-        //                 keepRatio: true,
-        //                 ratioIndex: 1.54,
-        //                 isResizableX: true,
-        //                 isResizableY: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'talk_about',
-        //                 params: {
-        //                   text: 'I talk about...',
-        //                   image: null,
-        //                   color: 'white'
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'gradient',
-        //             value: ['rgb(243, 186, 227)', 'rgb(156, 186, 237)']
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:31:53.49Z',
-        //         updated_at: '2021-12-24T02:42:29.688Z'
-        //       },
-        //       {
-        //         id: '61c5312d621e1b54957a5abf',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 6,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'WW3TciSsE1FeRWo1JY5jbM',
-        //               position: {
-        //                 rotate: 0,
-        //                 x: 66,
-        //                 y: 302,
-        //                 width: '100%',
-        //                 height: 100
-        //               },
-        //               positionLimits: {
-        //                 minHeight: 70,
-        //                 minWidth: 70,
-        //                 maxHeight: 130,
-        //                 isResizableX: false,
-        //                 isResizableY: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'emoji_reaction',
-        //                 params: {
-        //                   color: 'orange',
-        //                   emoji: [
-        //                     {
-        //                       name: 'star-struck',
-        //                       unicode: '1f929'
-        //                     },
-        //                     {
-        //                       name: 'thumbsup',
-        //                       unicode: '1f44d'
-        //                     },
-        //                     {
-        //                       name: 'fire',
-        //                       unicode: '1f525'
-        //                     }
-        //                   ]
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'color',
-        //             value: '#ffffff'
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:32:13.718Z',
-        //         updated_at: '2021-12-24T02:42:29.68Z'
-        //       },
-        //       {
-        //         id: '61c5316bcef08636cb8e5b12',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 7,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'WekJ2xH3m16ljEnq5PvOWL',
-        //               position: {
-        //                 rotate: 0,
-        //                 x: 52,
-        //                 y: 283,
-        //                 width: 300,
-        //                 height: 153
-        //               },
-        //               positionLimits: {
-        //                 minWidth: 196,
-        //                 minHeight: 100,
-        //                 maxHeight: 189,
-        //                 maxWidth: 370,
-        //                 keepRatio: true,
-        //                 ratioIndex: 1.96,
-        //                 isResizableX: true,
-        //                 isResizableY: true,
-        //                 isRotatable: true,
-        //                 isAutoHeight: true
-        //               },
-        //               content: {
-        //                 type: 'timer',
-        //                 params: {
-        //                   time: 1640872800000,
-        //                   text: 'New Year is coming soon',
-        //                   color: 'purple'
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'color',
-        //             value: 'rgba(210, 38, 38, 1)'
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:33:15.978Z',
-        //         updated_at: '2021-12-24T02:42:29.682Z'
-        //       },
-        //       {
-        //         id: '61c53323cef08636cb8e5b13',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 8,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'WV06-YLqruEAuiuswmyfbp',
-        //               position: {
-        //                 rotate: 0,
-        //                 x: 42,
-        //                 y: 173,
-        //                 width: 300,
-        //                 height: 215
-        //               },
-        //               positionLimits: {
-        //                 minWidth: 196,
-        //                 maxWidth: 370,
-        //                 minHeight: 100,
-        //                 isAutoHeight: true,
-        //                 isResizableX: true,
-        //                 isResizableY: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'choose_answer',
-        //                 params: {
-        //                   text: 'Choose answer',
-        //                   color: 'green',
-        //                   markCorrectAnswer: false,
-        //                   answers: [
-        //                     {
-        //                       id: 'A',
-        //                       title: 'Answer 1'
-        //                     },
-        //                     {
-        //                       id: 'B',
-        //                       title: 'Answer 2'
-        //                     },
-        //                     {
-        //                       id: 'C',
-        //                       title: 'Answer 2'
-        //                     },
-        //                     {
-        //                       id: 'D',
-        //                       title: 'Answer 3'
-        //                     }
-        //                   ],
-        //                   correct: 'D'
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'color',
-        //             value: '#ffffff'
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:40:35.557Z',
-        //         updated_at: '2021-12-24T02:42:29.679Z'
-        //       },
-        //       {
-        //         id: '61c53345cef08636cb8e5b14',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 9,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'WJegC0Tt3T1xgm21l1QaEm',
-        //               position: {
-        //                 rotate: 0,
-        //                 x: 93,
-        //                 y: 579,
-        //                 width: 210,
-        //                 height: 34.796899999999994
-        //               },
-        //               positionLimits: {
-        //                 minWidth: 100,
-        //                 maxWidth: 370,
-        //                 isResizableX: true,
-        //                 isResizableY: true,
-        //                 isAutoHeight: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'swipe_up',
-        //                 params: {
-        //                   text: 'Swipe Up',
-        //                   fontFamily: 'Roboto',
-        //                   fontSize: 34,
-        //                   iconSize: 33,
-        //                   color: {
-        //                     type: 'color',
-        //                     value: '#000000'
-        //                   },
-        //                   opacity: 100,
-        //                   fontParams: {
-        //                     style: 'normal',
-        //                     weight: 400
-        //                   },
-        //                   url: '',
-        //                   icon: {
-        //                     name: 'IconChevronCircleUp'
-        //                   }
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'color',
-        //             value: '#ffffff'
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:41:09.898Z',
-        //         updated_at: '2021-12-24T02:42:29.682Z'
-        //       },
-        //       {
-        //         id: '61c5335dcef08636cb8e5b15',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 10,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'WP3iBOO7XZF_qGblvhTvzW',
-        //               position: {
-        //                 x: 94,
-        //                 y: 39,
-        //                 width: 210,
-        //                 height: 155,
-        //                 rotate: 0
-        //               },
-        //               positionLimits: {
-        //                 isResizableX: true,
-        //                 isResizableY: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'rectangle',
-        //                 params: {
-        //                   fillColor: {
-        //                     type: 'color',
-        //                     value: '#5E50B5'
-        //                   },
-        //                   fillBorderRadius: 5,
-        //                   widgetOpacity: 100,
-        //                   fillOpacity: 100,
-        //                   strokeThickness: 3,
-        //                   strokeColor: {
-        //                     type: 'color',
-        //                     value: 'rgba(241, 13, 202, 1)'
-        //                   },
-        //                   strokeOpacity: 100,
-        //                   hasBorder: true
-        //                 }
-        //               }
-        //             },
-        //             {
-        //               id: 'W8iuORqAiwFWfuJ_FHSVtU',
-        //               position: {
-        //                 x: 108,
-        //                 y: 368,
-        //                 width: 190,
-        //                 height: 205,
-        //                 rotate: 0
-        //               },
-        //               positionLimits: {
-        //                 isResizableX: true,
-        //                 isResizableY: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'ellipse',
-        //                 params: {
-        //                   fillColor: {
-        //                     type: 'color',
-        //                     value: '#5E50B5'
-        //                   },
-        //                   fillOpacity: 100,
-        //                   widgetOpacity: 100,
-        //                   strokeThickness: 17,
-        //                   strokeColor: {
-        //                     type: 'color',
-        //                     value: 'rgba(255, 0, 0, 1)'
-        //                   },
-        //                   strokeOpacity: 100,
-        //                   hasBorder: true
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'color',
-        //             value: '#ffffff'
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:41:33.698Z',
-        //         updated_at: '2021-12-24T02:42:29.683Z'
-        //       },
-        //       {
-        //         id: '61c5338bcef08636cb8e5b16',
-        //         creator_id: '613b137d514fd8057b76f13f',
-        //         group_id: '61c14d470b02a5ed2e1672e6',
-        //         status: 'draft',
-        //         background: 'null',
-        //         position: 11,
-        //         story_data: {
-        //           widgets: [
-        //             {
-        //               id: 'WGVg1nbzlsvCCiEY04l4Jrd',
-        //               position: {
-        //                 x: 58,
-        //                 y: 187,
-        //                 width: 275,
-        //                 height: 305,
-        //                 rotate: -7.131236134130461
-        //               },
-        //               positionLimits: {
-        //                 minWidth: 20,
-        //                 minHeight: 20,
-        //                 isResizableX: true,
-        //                 isResizableY: true,
-        //                 isRotatable: true
-        //               },
-        //               content: {
-        //                 type: 'giphy',
-        //                 params: {
-        //                   gif: 'https://media3.giphy.com/media/gNke2UrUTopOg/giphy.webp?cid=456fdcc6wl3lkm2ye3awk32qudn5ewzrho9aqci48nghwh21&rid=giphy.webp&ct=g',
-        //                   widgetOpacity: 100,
-        //                   borderRadius: 0
-        //                 }
-        //               }
-        //             }
-        //           ],
-        //           background: {
-        //             type: 'color',
-        //             value: '#ffffff'
-        //           }
-        //         },
-        //         statistic: {},
-        //         created_at: '2021-12-24T02:42:19.437Z',
-        //         updated_at: '2021-12-24T02:42:29.865Z'
-        //       }
-        //     ]
-        //   }
-        // ]);
-        // const parsed = JSON.parse(dataGroups);
-        // const groups = adaptGroupData(parsed);
         const Groups = withGroupsData(GroupsList, this.token);
         if (element) {
             ReactDOM__default["default"].render(React__default["default"].createElement(Groups, null), element);

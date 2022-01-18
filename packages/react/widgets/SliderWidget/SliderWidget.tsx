@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react';
 import block from 'bem-cn';
+import ReactSlider from 'react-slider';
 import {
   SliderWidgetParamsType,
   WidgetComponent,
@@ -8,7 +9,6 @@ import {
 } from '../../types';
 import { calculateElementSize } from '../../utils';
 import './SliderWidget.scss';
-import ReactSlider from 'react-slider';
 import { useInterval } from '../../hooks';
 import { CurrentStoryContext } from '../../components';
 import { SliderThumb, SliderTrack } from './_components';
@@ -89,10 +89,15 @@ export const SliderWidget: WidgetComponent<{
     }
   }, delay);
 
-  const handleChange = (valueChanged: any) => {
-    if (props.onSlide) {
-      props.onSlide(valueChanged);
+  useEffect(() => {
+    if (changeStatus === 'moved' && props.onSlide) {
+      props.onSlide(sliderValue);
     }
+
+    // eslint-disable-next-line
+  }, [changeStatus, sliderValue]);
+
+  const handleChange = (valueChanged: any) => {
     setSliderValue(valueChanged);
   };
 

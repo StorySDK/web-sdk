@@ -19,7 +19,8 @@
 .ClickMeWidget {
   position: relative;
   overflow: hidden;
-
+  cursor: pointer;
+  
   &__container {
     width: 100%;
     display: flex;

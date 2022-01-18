@@ -2,9 +2,8 @@
   "name": "storysdk",
   "scripts": {
     "build": "lerna exec -- rollup -c ../../rollup.config.js",
-    "dev": "lerna exec -- rollup -w -c ../../rollup.config.js",
-    "dev-core": "lerna exec --scope @storysdk/core -- rollup -w -c ../../rollup.config.js",
-    "dev-react": "lerna exec --scope @storysdk/react -- rollup -w -c ../../rollup.config.js"
+    "dev:core": "lerna exec --scope @storysdk/core -- rollup -w -c ../../rollup.config.js",
+    "dev:react": "lerna exec --scope @storysdk/react -- rollup -w -c ../../rollup.config.js"
   },
   "resolutions": {
     "react": "^17.0.2",
