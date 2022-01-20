@@ -1,7 +1,7 @@
 import { MaterialIconValueType } from '../components/MaterialIcon/_types';
 import { BackgroundType, BorderType, FontParamsType } from '.';
 
-type EmojiItemType = {
+export type EmojiItemType = {
   name: string;
   unicode: string;
 };

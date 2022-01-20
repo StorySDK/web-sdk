@@ -23,6 +23,7 @@
     "rollup-plugin-scss": "^3.0.0",
     "rollup-plugin-ts": "^1.4.6",
     "rollup-plugin-typescript2": "^0.31.1",
+    "sass": "^1.49.0",
     "typescript": "^4.5.4"
   }
 }
