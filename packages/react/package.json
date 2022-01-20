@@ -1,7 +1,7 @@
 {
   "name": "@storysdk/react",
   "version": "0.1.1",
-  "description": "React components for StorySDK story rendering.",
+  "description": "React components for StorySDK story rendering",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
   "license": "ISC",
@@ -66,5 +66,6 @@
     "rollup-plugin-typescript2": "^0.30.0",
     "sass": "^1.42.1",
     "typescript": "^4.5.4"
-  }
+  },
+  "gitHead": "dedc9ca8a47d087301f304e9b97dbecdde31a923"
 }
