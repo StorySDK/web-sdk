@@ -17,6 +17,7 @@ import {
 
 interface WidgetFactoryProps {
   storyId: string;
+  canvasRef?: any;
   widget: WidgetObjectType;
 }
 

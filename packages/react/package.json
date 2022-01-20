@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/react",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0",
   "description": "> TODO: description",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
@@ -26,6 +26,7 @@
     "axios": "^0.23.0",
     "emoji-mart": "^3.0.1",
     "hex-to-rgba": "^2.0.1",
+    "js-confetti": "^0.10.2",
     "nanoid": "^3.1.30",
     "parse-color": "^1.0.0",
     "react-slider": "^1.3.1"

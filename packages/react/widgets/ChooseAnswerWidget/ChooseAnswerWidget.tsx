@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import block from 'bem-cn';
+import JSConfetti from 'js-confetti';
 import {
   ChooseAnswerWidgetParamsType,
   WidgetComponent,
@@ -8,6 +9,7 @@ import {
 } from '../../types';
 import { IconConfirm, IconDecline } from '../../components/Icon';
 import { calculateElementSize } from '../../utils';
+
 import './ChooseAnswerWidget.scss';
 
 const b = block('ChooseAnswerWidget');
@@ -48,6 +50,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
   const { params, position, positionLimits, onAnswer } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
+  const jsConfetti = useRef(new JSConfetti());
 
   const calculate = useCallback(
     (size) => {
@@ -187,6 +190,12 @@ export const ChooseAnswerWidget: WidgetComponent<{
       elementSizes.answerId
     ]
   );
+
+  useEffect(() => {
+    if (userAnswer && userAnswer === params.correct) {
+      jsConfetti.current.addConfetti();
+    }
+  }, [userAnswer, params.correct]);
 
   return (
     <div

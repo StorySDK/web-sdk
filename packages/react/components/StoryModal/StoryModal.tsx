@@ -1,8 +1,8 @@
 import React from 'react';
 import block from 'bem-cn';
 import './StoryModal.scss';
-import { StoryType, GroupType } from '../../types';
 import { useWindowWidth } from '@react-hook/window-size';
+import { StoryType, GroupType } from '../../types';
 import { StoryContent } from '..';
 
 const b = block('StoryModal');
@@ -16,6 +16,10 @@ interface StoryModalProps {
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
+  onNextStory?(groupId: string, storyId: string): void;
+  onPrevStory?(groupId: string, storyId: string): void;
+  onOpenStory?(groupId: string, storyId: string): void;
+  onCloseStory?(groupId: string, storyId: string): void;
 }
 
 const CloseIcon: React.FC = () => (
@@ -86,6 +90,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onClose,
     onNextGroup,
     onPrevGroup,
+    onNextStory,
+    onPrevStory,
+    onOpenStory,
+    onCloseStory,
     currentGroup
   } = props;
 
@@ -96,10 +104,18 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   React.useEffect(() => {
     setCurrentStory(0);
-  }, [stories.length]);
+
+    if (onOpenStory && showed) {
+      onOpenStory(currentGroup.id, stories[0].id);
+    }
+  }, [stories.length, onOpenStory, stories, currentGroup, showed]);
 
   const handleClose = () => {
     onClose();
+
+    if (onCloseStory) {
+      onCloseStory(currentGroup.id, stories[currentStory].id);
+    }
   };
 
   const handleAnimationEnd = () => {
@@ -112,6 +128,20 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     } else {
       setCurrentStory(currentStory + 1);
       setCurrentStoryId(stories[currentStory + 1].id);
+
+      if (onCloseStory) {
+        onCloseStory(currentGroup.id, stories[currentStory].id);
+      }
+
+      if (onOpenStory) {
+        setTimeout(() => {
+          onOpenStory(currentGroup.id, stories[currentStory + 1].id);
+        }, 0);
+      }
+
+      if (onNextStory) {
+        onNextStory(currentGroup.id, stories[currentStory].id);
+      }
     }
   };
 
@@ -121,6 +151,20 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     } else {
       setCurrentStory(currentStory - 1);
       setCurrentStoryId(stories[currentStory - 1].id);
+
+      if (onCloseStory) {
+        onCloseStory(currentGroup.id, stories[currentStory].id);
+      }
+
+      if (onOpenStory) {
+        setTimeout(() => {
+          onOpenStory(currentGroup.id, stories[currentStory - 1].id);
+        }, 0);
+      }
+
+      if (onPrevStory) {
+        onPrevStory(currentGroup.id, stories[currentStory].id);
+      }
     }
   };
 

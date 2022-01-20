@@ -1,6 +1,6084 @@
-import React, { memo, useMemo, useState, useCallback, useEffect, useContext, useRef } from 'react';
+import React, { memo, useMemo, useState, useRef, useCallback, useEffect, useContext } from 'react';
 import ReactDOM from 'react-dom';
+import require$$1$1 from 'http';
+import require$$2 from 'https';
+import require$$0$2 from 'url';
+import require$$3 from 'stream';
+import require$$4 from 'assert';
+import require$$0$1 from 'tty';
+import require$$1 from 'util';
+import require$$0 from 'os';
+import require$$8 from 'zlib';
 import crypto from 'crypto';
+
+var axios$2 = {exports: {}};
+
+var bind$2 = function bind(fn, thisArg) {
+  return function wrap() {
+    var args = new Array(arguments.length);
+    for (var i = 0; i < args.length; i++) {
+      args[i] = arguments[i];
+    }
+    return fn.apply(thisArg, args);
+  };
+};
+
+var bind$1 = bind$2;
+
+// utils is a library of generic helper functions non-specific to axios
+
+var toString$2 = Object.prototype.toString;
+
+/**
+ * Determine if a value is an Array
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is an Array, otherwise false
+ */
+function isArray$2(val) {
+  return toString$2.call(val) === '[object Array]';
+}
+
+/**
+ * Determine if a value is undefined
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if the value is undefined, otherwise false
+ */
+function isUndefined(val) {
+  return typeof val === 'undefined';
+}
+
+/**
+ * Determine if a value is a Buffer
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a Buffer, otherwise false
+ */
+function isBuffer$2(val) {
+  return val !== null && !isUndefined(val) && val.constructor !== null && !isUndefined(val.constructor)
+    && typeof val.constructor.isBuffer === 'function' && val.constructor.isBuffer(val);
+}
+
+/**
+ * Determine if a value is an ArrayBuffer
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is an ArrayBuffer, otherwise false
+ */
+function isArrayBuffer(val) {
+  return toString$2.call(val) === '[object ArrayBuffer]';
+}
+
+/**
+ * Determine if a value is a FormData
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is an FormData, otherwise false
+ */
+function isFormData(val) {
+  return (typeof FormData !== 'undefined') && (val instanceof FormData);
+}
+
+/**
+ * Determine if a value is a view on an ArrayBuffer
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a view on an ArrayBuffer, otherwise false
+ */
+function isArrayBufferView(val) {
+  var result;
+  if ((typeof ArrayBuffer !== 'undefined') && (ArrayBuffer.isView)) {
+    result = ArrayBuffer.isView(val);
+  } else {
+    result = (val) && (val.buffer) && (val.buffer instanceof ArrayBuffer);
+  }
+  return result;
+}
+
+/**
+ * Determine if a value is a String
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a String, otherwise false
+ */
+function isString(val) {
+  return typeof val === 'string';
+}
+
+/**
+ * Determine if a value is a Number
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a Number, otherwise false
+ */
+function isNumber(val) {
+  return typeof val === 'number';
+}
+
+/**
+ * Determine if a value is an Object
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is an Object, otherwise false
+ */
+function isObject(val) {
+  return val !== null && typeof val === 'object';
+}
+
+/**
+ * Determine if a value is a plain Object
+ *
+ * @param {Object} val The value to test
+ * @return {boolean} True if value is a plain Object, otherwise false
+ */
+function isPlainObject(val) {
+  if (toString$2.call(val) !== '[object Object]') {
+    return false;
+  }
+
+  var prototype = Object.getPrototypeOf(val);
+  return prototype === null || prototype === Object.prototype;
+}
+
+/**
+ * Determine if a value is a Date
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a Date, otherwise false
+ */
+function isDate(val) {
+  return toString$2.call(val) === '[object Date]';
+}
+
+/**
+ * Determine if a value is a File
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a File, otherwise false
+ */
+function isFile(val) {
+  return toString$2.call(val) === '[object File]';
+}
+
+/**
+ * Determine if a value is a Blob
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a Blob, otherwise false
+ */
+function isBlob(val) {
+  return toString$2.call(val) === '[object Blob]';
+}
+
+/**
+ * Determine if a value is a Function
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a Function, otherwise false
+ */
+function isFunction(val) {
+  return toString$2.call(val) === '[object Function]';
+}
+
+/**
+ * Determine if a value is a Stream
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a Stream, otherwise false
+ */
+function isStream(val) {
+  return isObject(val) && isFunction(val.pipe);
+}
+
+/**
+ * Determine if a value is a URLSearchParams object
+ *
+ * @param {Object} val The value to test
+ * @returns {boolean} True if value is a URLSearchParams object, otherwise false
+ */
+function isURLSearchParams(val) {
+  return typeof URLSearchParams !== 'undefined' && val instanceof URLSearchParams;
+}
+
+/**
+ * Trim excess whitespace off the beginning and end of a string
+ *
+ * @param {String} str The String to trim
+ * @returns {String} The String freed of excess whitespace
+ */
+function trim(str) {
+  return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
+}
+
+/**
+ * Determine if we're running in a standard browser environment
+ *
+ * This allows axios to run in a web worker, and react-native.
+ * Both environments support XMLHttpRequest, but not fully standard globals.
+ *
+ * web workers:
+ *  typeof window -> undefined
+ *  typeof document -> undefined
+ *
+ * react-native:
+ *  navigator.product -> 'ReactNative'
+ * nativescript
+ *  navigator.product -> 'NativeScript' or 'NS'
+ */
+function isStandardBrowserEnv() {
+  if (typeof navigator !== 'undefined' && (navigator.product === 'ReactNative' ||
+                                           navigator.product === 'NativeScript' ||
+                                           navigator.product === 'NS')) {
+    return false;
+  }
+  return (
+    typeof window !== 'undefined' &&
+    typeof document !== 'undefined'
+  );
+}
+
+/**
+ * Iterate over an Array or an Object invoking a function for each item.
+ *
+ * If `obj` is an Array callback will be called passing
+ * the value, index, and complete array for each item.
+ *
+ * If 'obj' is an Object callback will be called passing
+ * the value, key, and complete object for each property.
+ *
+ * @param {Object|Array} obj The object to iterate
+ * @param {Function} fn The callback to invoke for each item
+ */
+function forEach(obj, fn) {
+  // Don't bother if no value provided
+  if (obj === null || typeof obj === 'undefined') {
+    return;
+  }
+
+  // Force an array if not already something iterable
+  if (typeof obj !== 'object') {
+    /*eslint no-param-reassign:0*/
+    obj = [obj];
+  }
+
+  if (isArray$2(obj)) {
+    // Iterate over array values
+    for (var i = 0, l = obj.length; i < l; i++) {
+      fn.call(null, obj[i], i, obj);
+    }
+  } else {
+    // Iterate over object keys
+    for (var key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        fn.call(null, obj[key], key, obj);
+      }
+    }
+  }
+}
+
+/**
+ * Accepts varargs expecting each argument to be an object, then
+ * immutably merges the properties of each object and returns result.
+ *
+ * When multiple objects contain the same key the later object in
+ * the arguments list will take precedence.
+ *
+ * Example:
+ *
+ * ```js
+ * var result = merge({foo: 123}, {foo: 456});
+ * console.log(result.foo); // outputs 456
+ * ```
+ *
+ * @param {Object} obj1 Object to merge
+ * @returns {Object} Result of all merge properties
+ */
+function merge(/* obj1, obj2, obj3, ... */) {
+  var result = {};
+  function assignValue(val, key) {
+    if (isPlainObject(result[key]) && isPlainObject(val)) {
+      result[key] = merge(result[key], val);
+    } else if (isPlainObject(val)) {
+      result[key] = merge({}, val);
+    } else if (isArray$2(val)) {
+      result[key] = val.slice();
+    } else {
+      result[key] = val;
+    }
+  }
+
+  for (var i = 0, l = arguments.length; i < l; i++) {
+    forEach(arguments[i], assignValue);
+  }
+  return result;
+}
+
+/**
+ * Extends object a by mutably adding to it the properties of object b.
+ *
+ * @param {Object} a The object to be extended
+ * @param {Object} b The object to copy properties from
+ * @param {Object} thisArg The object to bind function to
+ * @return {Object} The resulting value of object a
+ */
+function extend(a, b, thisArg) {
+  forEach(b, function assignValue(val, key) {
+    if (thisArg && typeof val === 'function') {
+      a[key] = bind$1(val, thisArg);
+    } else {
+      a[key] = val;
+    }
+  });
+  return a;
+}
+
+/**
+ * Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
+ *
+ * @param {string} content with BOM
+ * @return {string} content value without BOM
+ */
+function stripBOM(content) {
+  if (content.charCodeAt(0) === 0xFEFF) {
+    content = content.slice(1);
+  }
+  return content;
+}
+
+var utils$e = {
+  isArray: isArray$2,
+  isArrayBuffer: isArrayBuffer,
+  isBuffer: isBuffer$2,
+  isFormData: isFormData,
+  isArrayBufferView: isArrayBufferView,
+  isString: isString,
+  isNumber: isNumber,
+  isObject: isObject,
+  isPlainObject: isPlainObject,
+  isUndefined: isUndefined,
+  isDate: isDate,
+  isFile: isFile,
+  isBlob: isBlob,
+  isFunction: isFunction,
+  isStream: isStream,
+  isURLSearchParams: isURLSearchParams,
+  isStandardBrowserEnv: isStandardBrowserEnv,
+  forEach: forEach,
+  merge: merge,
+  extend: extend,
+  trim: trim,
+  stripBOM: stripBOM
+};
+
+var utils$d = utils$e;
+
+function encode(val) {
+  return encodeURIComponent(val).
+    replace(/%3A/gi, ':').
+    replace(/%24/g, '$').
+    replace(/%2C/gi, ',').
+    replace(/%20/g, '+').
+    replace(/%5B/gi, '[').
+    replace(/%5D/gi, ']');
+}
+
+/**
+ * Build a URL by appending params to the end
+ *
+ * @param {string} url The base of the url (e.g., http://www.google.com)
+ * @param {object} [params] The params to be appended
+ * @returns {string} The formatted url
+ */
+var buildURL$3 = function buildURL(url, params, paramsSerializer) {
+  /*eslint no-param-reassign:0*/
+  if (!params) {
+    return url;
+  }
+
+  var serializedParams;
+  if (paramsSerializer) {
+    serializedParams = paramsSerializer(params);
+  } else if (utils$d.isURLSearchParams(params)) {
+    serializedParams = params.toString();
+  } else {
+    var parts = [];
+
+    utils$d.forEach(params, function serialize(val, key) {
+      if (val === null || typeof val === 'undefined') {
+        return;
+      }
+
+      if (utils$d.isArray(val)) {
+        key = key + '[]';
+      } else {
+        val = [val];
+      }
+
+      utils$d.forEach(val, function parseValue(v) {
+        if (utils$d.isDate(v)) {
+          v = v.toISOString();
+        } else if (utils$d.isObject(v)) {
+          v = JSON.stringify(v);
+        }
+        parts.push(encode(key) + '=' + encode(v));
+      });
+    });
+
+    serializedParams = parts.join('&');
+  }
+
+  if (serializedParams) {
+    var hashmarkIndex = url.indexOf('#');
+    if (hashmarkIndex !== -1) {
+      url = url.slice(0, hashmarkIndex);
+    }
+
+    url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
+  }
+
+  return url;
+};
+
+var utils$c = utils$e;
+
+function InterceptorManager$1() {
+  this.handlers = [];
+}
+
+/**
+ * Add a new interceptor to the stack
+ *
+ * @param {Function} fulfilled The function to handle `then` for a `Promise`
+ * @param {Function} rejected The function to handle `reject` for a `Promise`
+ *
+ * @return {Number} An ID used to remove interceptor later
+ */
+InterceptorManager$1.prototype.use = function use(fulfilled, rejected, options) {
+  this.handlers.push({
+    fulfilled: fulfilled,
+    rejected: rejected,
+    synchronous: options ? options.synchronous : false,
+    runWhen: options ? options.runWhen : null
+  });
+  return this.handlers.length - 1;
+};
+
+/**
+ * Remove an interceptor from the stack
+ *
+ * @param {Number} id The ID that was returned by `use`
+ */
+InterceptorManager$1.prototype.eject = function eject(id) {
+  if (this.handlers[id]) {
+    this.handlers[id] = null;
+  }
+};
+
+/**
+ * Iterate over all the registered interceptors
+ *
+ * This method is particularly useful for skipping over any
+ * interceptors that may have become `null` calling `eject`.
+ *
+ * @param {Function} fn The function to call for each interceptor
+ */
+InterceptorManager$1.prototype.forEach = function forEach(fn) {
+  utils$c.forEach(this.handlers, function forEachHandler(h) {
+    if (h !== null) {
+      fn(h);
+    }
+  });
+};
+
+var InterceptorManager_1 = InterceptorManager$1;
+
+var global$2 = (typeof global !== "undefined" ? global :
+  typeof self !== "undefined" ? self :
+  typeof window !== "undefined" ? window : {});
+
+// shim for using process in browser
+// based off https://github.com/defunctzombie/node-process/blob/master/browser.js
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+var cachedSetTimeout = defaultSetTimout;
+var cachedClearTimeout = defaultClearTimeout;
+if (typeof global$2.setTimeout === 'function') {
+    cachedSetTimeout = setTimeout;
+}
+if (typeof global$2.clearTimeout === 'function') {
+    cachedClearTimeout = clearTimeout;
+}
+
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+function nextTick(fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+}
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+var title = 'browser';
+var platform = 'browser';
+var browser$1 = true;
+var env$1 = {};
+var argv = [];
+var version = ''; // empty string to avoid regexp issues
+var versions = {};
+var release = {};
+var config = {};
+
+function noop$1() {}
+
+var on = noop$1;
+var addListener = noop$1;
+var once = noop$1;
+var off = noop$1;
+var removeListener = noop$1;
+var removeAllListeners = noop$1;
+var emit = noop$1;
+
+function binding(name) {
+    throw new Error('process.binding is not supported');
+}
+
+function cwd () { return '/' }
+function chdir (dir) {
+    throw new Error('process.chdir is not supported');
+}function umask() { return 0; }
+
+// from https://github.com/kumavis/browser-process-hrtime/blob/master/index.js
+var performance$1 = global$2.performance || {};
+var performanceNow =
+  performance$1.now        ||
+  performance$1.mozNow     ||
+  performance$1.msNow      ||
+  performance$1.oNow       ||
+  performance$1.webkitNow  ||
+  function(){ return (new Date()).getTime() };
+
+// generate timestamp or delta
+// see http://nodejs.org/api/process.html#process_process_hrtime
+function hrtime(previousTimestamp){
+  var clocktime = performanceNow.call(performance$1)*1e-3;
+  var seconds = Math.floor(clocktime);
+  var nanoseconds = Math.floor((clocktime%1)*1e9);
+  if (previousTimestamp) {
+    seconds = seconds - previousTimestamp[0];
+    nanoseconds = nanoseconds - previousTimestamp[1];
+    if (nanoseconds<0) {
+      seconds--;
+      nanoseconds += 1e9;
+    }
+  }
+  return [seconds,nanoseconds]
+}
+
+var startTime = new Date();
+function uptime() {
+  var currentTime = new Date();
+  var dif = currentTime - startTime;
+  return dif / 1000;
+}
+
+var browser$1$1 = {
+  nextTick: nextTick,
+  title: title,
+  browser: browser$1,
+  env: env$1,
+  argv: argv,
+  version: version,
+  versions: versions,
+  on: on,
+  addListener: addListener,
+  once: once,
+  off: off,
+  removeListener: removeListener,
+  removeAllListeners: removeAllListeners,
+  emit: emit,
+  binding: binding,
+  cwd: cwd,
+  chdir: chdir,
+  umask: umask,
+  hrtime: hrtime,
+  platform: platform,
+  release: release,
+  config: config,
+  uptime: uptime
+};
+
+var utils$b = utils$e;
+
+var normalizeHeaderName$1 = function normalizeHeaderName(headers, normalizedName) {
+  utils$b.forEach(headers, function processHeader(value, name) {
+    if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
+      headers[normalizedName] = value;
+      delete headers[name];
+    }
+  });
+};
+
+/**
+ * Update an Error with the specified config, error code, and response.
+ *
+ * @param {Error} error The error to update.
+ * @param {Object} config The config.
+ * @param {string} [code] The error code (for example, 'ECONNABORTED').
+ * @param {Object} [request] The request.
+ * @param {Object} [response] The response.
+ * @returns {Error} The error.
+ */
+var enhanceError$3 = function enhanceError(error, config, code, request, response) {
+  error.config = config;
+  if (code) {
+    error.code = code;
+  }
+
+  error.request = request;
+  error.response = response;
+  error.isAxiosError = true;
+
+  error.toJSON = function toJSON() {
+    return {
+      // Standard
+      message: this.message,
+      name: this.name,
+      // Microsoft
+      description: this.description,
+      number: this.number,
+      // Mozilla
+      fileName: this.fileName,
+      lineNumber: this.lineNumber,
+      columnNumber: this.columnNumber,
+      stack: this.stack,
+      // Axios
+      config: this.config,
+      code: this.code,
+      status: this.response && this.response.status ? this.response.status : null
+    };
+  };
+  return error;
+};
+
+var enhanceError$2 = enhanceError$3;
+
+/**
+ * Create an Error with the specified message, config, error code, request and response.
+ *
+ * @param {string} message The error message.
+ * @param {Object} config The config.
+ * @param {string} [code] The error code (for example, 'ECONNABORTED').
+ * @param {Object} [request] The request.
+ * @param {Object} [response] The response.
+ * @returns {Error} The created error.
+ */
+var createError$3 = function createError(message, config, code, request, response) {
+  var error = new Error(message);
+  return enhanceError$2(error, config, code, request, response);
+};
+
+var createError$2 = createError$3;
+
+/**
+ * Resolve or reject a Promise based on response status.
+ *
+ * @param {Function} resolve A function that resolves the promise.
+ * @param {Function} reject A function that rejects the promise.
+ * @param {object} response The response.
+ */
+var settle$2 = function settle(resolve, reject, response) {
+  var validateStatus = response.config.validateStatus;
+  if (!response.status || !validateStatus || validateStatus(response.status)) {
+    resolve(response);
+  } else {
+    reject(createError$2(
+      'Request failed with status code ' + response.status,
+      response.config,
+      null,
+      response.request,
+      response
+    ));
+  }
+};
+
+var utils$a = utils$e;
+
+var cookies$1 = (
+  utils$a.isStandardBrowserEnv() ?
+
+  // Standard browser envs support document.cookie
+    (function standardBrowserEnv() {
+      return {
+        write: function write(name, value, expires, path, domain, secure) {
+          var cookie = [];
+          cookie.push(name + '=' + encodeURIComponent(value));
+
+          if (utils$a.isNumber(expires)) {
+            cookie.push('expires=' + new Date(expires).toGMTString());
+          }
+
+          if (utils$a.isString(path)) {
+            cookie.push('path=' + path);
+          }
+
+          if (utils$a.isString(domain)) {
+            cookie.push('domain=' + domain);
+          }
+
+          if (secure === true) {
+            cookie.push('secure');
+          }
+
+          document.cookie = cookie.join('; ');
+        },
+
+        read: function read(name) {
+          var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+          return (match ? decodeURIComponent(match[3]) : null);
+        },
+
+        remove: function remove(name) {
+          this.write(name, '', Date.now() - 86400000);
+        }
+      };
+    })() :
+
+  // Non standard browser env (web workers, react-native) lack needed support.
+    (function nonStandardBrowserEnv() {
+      return {
+        write: function write() {},
+        read: function read() { return null; },
+        remove: function remove() {}
+      };
+    })()
+);
+
+/**
+ * Determines whether the specified URL is absolute
+ *
+ * @param {string} url The URL to test
+ * @returns {boolean} True if the specified URL is absolute, otherwise false
+ */
+var isAbsoluteURL$1 = function isAbsoluteURL(url) {
+  // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
+  // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
+  // by any combination of letters, digits, plus, period, or hyphen.
+  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
+};
+
+/**
+ * Creates a new URL by combining the specified URLs
+ *
+ * @param {string} baseURL The base URL
+ * @param {string} relativeURL The relative URL
+ * @returns {string} The combined URL
+ */
+var combineURLs$1 = function combineURLs(baseURL, relativeURL) {
+  return relativeURL
+    ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
+    : baseURL;
+};
+
+var isAbsoluteURL = isAbsoluteURL$1;
+var combineURLs = combineURLs$1;
+
+/**
+ * Creates a new URL by combining the baseURL with the requestedURL,
+ * only when the requestedURL is not already an absolute URL.
+ * If the requestURL is absolute, this function returns the requestedURL untouched.
+ *
+ * @param {string} baseURL The base URL
+ * @param {string} requestedURL Absolute or relative URL to combine
+ * @returns {string} The combined full path
+ */
+var buildFullPath$2 = function buildFullPath(baseURL, requestedURL) {
+  if (baseURL && !isAbsoluteURL(requestedURL)) {
+    return combineURLs(baseURL, requestedURL);
+  }
+  return requestedURL;
+};
+
+var utils$9 = utils$e;
+
+// Headers whose duplicates are ignored by node
+// c.f. https://nodejs.org/api/http.html#http_message_headers
+var ignoreDuplicateOf = [
+  'age', 'authorization', 'content-length', 'content-type', 'etag',
+  'expires', 'from', 'host', 'if-modified-since', 'if-unmodified-since',
+  'last-modified', 'location', 'max-forwards', 'proxy-authorization',
+  'referer', 'retry-after', 'user-agent'
+];
+
+/**
+ * Parse headers into an object
+ *
+ * ```
+ * Date: Wed, 27 Aug 2014 08:58:49 GMT
+ * Content-Type: application/json
+ * Connection: keep-alive
+ * Transfer-Encoding: chunked
+ * ```
+ *
+ * @param {String} headers Headers needing to be parsed
+ * @returns {Object} Headers parsed into an object
+ */
+var parseHeaders$1 = function parseHeaders(headers) {
+  var parsed = {};
+  var key;
+  var val;
+  var i;
+
+  if (!headers) { return parsed; }
+
+  utils$9.forEach(headers.split('\n'), function parser(line) {
+    i = line.indexOf(':');
+    key = utils$9.trim(line.substr(0, i)).toLowerCase();
+    val = utils$9.trim(line.substr(i + 1));
+
+    if (key) {
+      if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
+        return;
+      }
+      if (key === 'set-cookie') {
+        parsed[key] = (parsed[key] ? parsed[key] : []).concat([val]);
+      } else {
+        parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
+      }
+    }
+  });
+
+  return parsed;
+};
+
+var utils$8 = utils$e;
+
+var isURLSameOrigin$1 = (
+  utils$8.isStandardBrowserEnv() ?
+
+  // Standard browser envs have full support of the APIs needed to test
+  // whether the request URL is of the same origin as current location.
+    (function standardBrowserEnv() {
+      var msie = /(msie|trident)/i.test(navigator.userAgent);
+      var urlParsingNode = document.createElement('a');
+      var originURL;
+
+      /**
+    * Parse a URL to discover it's components
+    *
+    * @param {String} url The URL to be parsed
+    * @returns {Object}
+    */
+      function resolveURL(url) {
+        var href = url;
+
+        if (msie) {
+        // IE needs attribute set twice to normalize properties
+          urlParsingNode.setAttribute('href', href);
+          href = urlParsingNode.href;
+        }
+
+        urlParsingNode.setAttribute('href', href);
+
+        // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
+        return {
+          href: urlParsingNode.href,
+          protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
+          host: urlParsingNode.host,
+          search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
+          hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
+          hostname: urlParsingNode.hostname,
+          port: urlParsingNode.port,
+          pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
+            urlParsingNode.pathname :
+            '/' + urlParsingNode.pathname
+        };
+      }
+
+      originURL = resolveURL(window.location.href);
+
+      /**
+    * Determine if a URL shares the same origin as the current location
+    *
+    * @param {String} requestURL The URL to test
+    * @returns {boolean} True if URL shares the same origin, otherwise false
+    */
+      return function isURLSameOrigin(requestURL) {
+        var parsed = (utils$8.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
+        return (parsed.protocol === originURL.protocol &&
+            parsed.host === originURL.host);
+      };
+    })() :
+
+  // Non standard browser envs (web workers, react-native) lack needed support.
+    (function nonStandardBrowserEnv() {
+      return function isURLSameOrigin() {
+        return true;
+      };
+    })()
+);
+
+/**
+ * A `Cancel` is an object that is thrown when an operation is canceled.
+ *
+ * @class
+ * @param {string=} message The message.
+ */
+function Cancel$4(message) {
+  this.message = message;
+}
+
+Cancel$4.prototype.toString = function toString() {
+  return 'Cancel' + (this.message ? ': ' + this.message : '');
+};
+
+Cancel$4.prototype.__CANCEL__ = true;
+
+var Cancel_1 = Cancel$4;
+
+var utils$7 = utils$e;
+var settle$1 = settle$2;
+var cookies = cookies$1;
+var buildURL$2 = buildURL$3;
+var buildFullPath$1 = buildFullPath$2;
+var parseHeaders = parseHeaders$1;
+var isURLSameOrigin = isURLSameOrigin$1;
+var createError$1 = createError$3;
+var defaults$6 = defaults_1;
+var Cancel$3 = Cancel_1;
+
+var xhr = function xhrAdapter(config) {
+  return new Promise(function dispatchXhrRequest(resolve, reject) {
+    var requestData = config.data;
+    var requestHeaders = config.headers;
+    var responseType = config.responseType;
+    var onCanceled;
+    function done() {
+      if (config.cancelToken) {
+        config.cancelToken.unsubscribe(onCanceled);
+      }
+
+      if (config.signal) {
+        config.signal.removeEventListener('abort', onCanceled);
+      }
+    }
+
+    if (utils$7.isFormData(requestData)) {
+      delete requestHeaders['Content-Type']; // Let the browser set it
+    }
+
+    var request = new XMLHttpRequest();
+
+    // HTTP basic authentication
+    if (config.auth) {
+      var username = config.auth.username || '';
+      var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : '';
+      requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
+    }
+
+    var fullPath = buildFullPath$1(config.baseURL, config.url);
+    request.open(config.method.toUpperCase(), buildURL$2(fullPath, config.params, config.paramsSerializer), true);
+
+    // Set the request timeout in MS
+    request.timeout = config.timeout;
+
+    function onloadend() {
+      if (!request) {
+        return;
+      }
+      // Prepare the response
+      var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
+      var responseData = !responseType || responseType === 'text' ||  responseType === 'json' ?
+        request.responseText : request.response;
+      var response = {
+        data: responseData,
+        status: request.status,
+        statusText: request.statusText,
+        headers: responseHeaders,
+        config: config,
+        request: request
+      };
+
+      settle$1(function _resolve(value) {
+        resolve(value);
+        done();
+      }, function _reject(err) {
+        reject(err);
+        done();
+      }, response);
+
+      // Clean up request
+      request = null;
+    }
+
+    if ('onloadend' in request) {
+      // Use onloadend if available
+      request.onloadend = onloadend;
+    } else {
+      // Listen for ready state to emulate onloadend
+      request.onreadystatechange = function handleLoad() {
+        if (!request || request.readyState !== 4) {
+          return;
+        }
+
+        // The request errored out and we didn't get a response, this will be
+        // handled by onerror instead
+        // With one exception: request that using file: protocol, most browsers
+        // will return status as 0 even though it's a successful request
+        if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
+          return;
+        }
+        // readystate handler is calling before onerror or ontimeout handlers,
+        // so we should call onloadend on the next 'tick'
+        setTimeout(onloadend);
+      };
+    }
+
+    // Handle browser request cancellation (as opposed to a manual cancellation)
+    request.onabort = function handleAbort() {
+      if (!request) {
+        return;
+      }
+
+      reject(createError$1('Request aborted', config, 'ECONNABORTED', request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Handle low level network errors
+    request.onerror = function handleError() {
+      // Real errors are hidden from us by the browser
+      // onerror should only fire if it's a network error
+      reject(createError$1('Network Error', config, null, request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Handle timeout
+    request.ontimeout = function handleTimeout() {
+      var timeoutErrorMessage = config.timeout ? 'timeout of ' + config.timeout + 'ms exceeded' : 'timeout exceeded';
+      var transitional = config.transitional || defaults$6.transitional;
+      if (config.timeoutErrorMessage) {
+        timeoutErrorMessage = config.timeoutErrorMessage;
+      }
+      reject(createError$1(
+        timeoutErrorMessage,
+        config,
+        transitional.clarifyTimeoutError ? 'ETIMEDOUT' : 'ECONNABORTED',
+        request));
+
+      // Clean up request
+      request = null;
+    };
+
+    // Add xsrf header
+    // This is only done if running in a standard browser environment.
+    // Specifically not if we're in a web worker, or react-native.
+    if (utils$7.isStandardBrowserEnv()) {
+      // Add xsrf header
+      var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ?
+        cookies.read(config.xsrfCookieName) :
+        undefined;
+
+      if (xsrfValue) {
+        requestHeaders[config.xsrfHeaderName] = xsrfValue;
+      }
+    }
+
+    // Add headers to the request
+    if ('setRequestHeader' in request) {
+      utils$7.forEach(requestHeaders, function setRequestHeader(val, key) {
+        if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
+          // Remove Content-Type if data is undefined
+          delete requestHeaders[key];
+        } else {
+          // Otherwise add header to the request
+          request.setRequestHeader(key, val);
+        }
+      });
+    }
+
+    // Add withCredentials to request if needed
+    if (!utils$7.isUndefined(config.withCredentials)) {
+      request.withCredentials = !!config.withCredentials;
+    }
+
+    // Add responseType to request if needed
+    if (responseType && responseType !== 'json') {
+      request.responseType = config.responseType;
+    }
+
+    // Handle progress if needed
+    if (typeof config.onDownloadProgress === 'function') {
+      request.addEventListener('progress', config.onDownloadProgress);
+    }
+
+    // Not all browsers support upload events
+    if (typeof config.onUploadProgress === 'function' && request.upload) {
+      request.upload.addEventListener('progress', config.onUploadProgress);
+    }
+
+    if (config.cancelToken || config.signal) {
+      // Handle cancellation
+      // eslint-disable-next-line func-names
+      onCanceled = function(cancel) {
+        if (!request) {
+          return;
+        }
+        reject(!cancel || (cancel && cancel.type) ? new Cancel$3('canceled') : cancel);
+        request.abort();
+        request = null;
+      };
+
+      config.cancelToken && config.cancelToken.subscribe(onCanceled);
+      if (config.signal) {
+        config.signal.aborted ? onCanceled() : config.signal.addEventListener('abort', onCanceled);
+      }
+    }
+
+    if (!requestData) {
+      requestData = null;
+    }
+
+    // Send the request
+    request.send(requestData);
+  });
+};
+
+var lookup$1 = [];
+var revLookup$1 = [];
+var Arr$1 = typeof Uint8Array !== 'undefined' ? Uint8Array : Array;
+var inited$1 = false;
+function init$2 () {
+  inited$1 = true;
+  var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  for (var i = 0, len = code.length; i < len; ++i) {
+    lookup$1[i] = code[i];
+    revLookup$1[code.charCodeAt(i)] = i;
+  }
+
+  revLookup$1['-'.charCodeAt(0)] = 62;
+  revLookup$1['_'.charCodeAt(0)] = 63;
+}
+
+function toByteArray$1 (b64) {
+  if (!inited$1) {
+    init$2();
+  }
+  var i, j, l, tmp, placeHolders, arr;
+  var len = b64.length;
+
+  if (len % 4 > 0) {
+    throw new Error('Invalid string. Length must be a multiple of 4')
+  }
+
+  // the number of equal signs (place holders)
+  // if there are two placeholders, than the two characters before it
+  // represent one byte
+  // if there is only one, then the three characters before it represent 2 bytes
+  // this is just a cheap hack to not do indexOf twice
+  placeHolders = b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0;
+
+  // base64 is 4/3 + up to two characters of the original data
+  arr = new Arr$1(len * 3 / 4 - placeHolders);
+
+  // if there are placeholders, only get up to the last complete 4 chars
+  l = placeHolders > 0 ? len - 4 : len;
+
+  var L = 0;
+
+  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+    tmp = (revLookup$1[b64.charCodeAt(i)] << 18) | (revLookup$1[b64.charCodeAt(i + 1)] << 12) | (revLookup$1[b64.charCodeAt(i + 2)] << 6) | revLookup$1[b64.charCodeAt(i + 3)];
+    arr[L++] = (tmp >> 16) & 0xFF;
+    arr[L++] = (tmp >> 8) & 0xFF;
+    arr[L++] = tmp & 0xFF;
+  }
+
+  if (placeHolders === 2) {
+    tmp = (revLookup$1[b64.charCodeAt(i)] << 2) | (revLookup$1[b64.charCodeAt(i + 1)] >> 4);
+    arr[L++] = tmp & 0xFF;
+  } else if (placeHolders === 1) {
+    tmp = (revLookup$1[b64.charCodeAt(i)] << 10) | (revLookup$1[b64.charCodeAt(i + 1)] << 4) | (revLookup$1[b64.charCodeAt(i + 2)] >> 2);
+    arr[L++] = (tmp >> 8) & 0xFF;
+    arr[L++] = tmp & 0xFF;
+  }
+
+  return arr
+}
+
+function tripletToBase64$1 (num) {
+  return lookup$1[num >> 18 & 0x3F] + lookup$1[num >> 12 & 0x3F] + lookup$1[num >> 6 & 0x3F] + lookup$1[num & 0x3F]
+}
+
+function encodeChunk$1 (uint8, start, end) {
+  var tmp;
+  var output = [];
+  for (var i = start; i < end; i += 3) {
+    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2]);
+    output.push(tripletToBase64$1(tmp));
+  }
+  return output.join('')
+}
+
+function fromByteArray$1 (uint8) {
+  if (!inited$1) {
+    init$2();
+  }
+  var tmp;
+  var len = uint8.length;
+  var extraBytes = len % 3; // if we have 1 byte left, pad 2 bytes
+  var output = '';
+  var parts = [];
+  var maxChunkLength = 16383; // must be multiple of 3
+
+  // go through the array every three bytes, we'll deal with trailing stuff later
+  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+    parts.push(encodeChunk$1(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)));
+  }
+
+  // pad the end with zeros, but make sure to not forget the extra bytes
+  if (extraBytes === 1) {
+    tmp = uint8[len - 1];
+    output += lookup$1[tmp >> 2];
+    output += lookup$1[(tmp << 4) & 0x3F];
+    output += '==';
+  } else if (extraBytes === 2) {
+    tmp = (uint8[len - 2] << 8) + (uint8[len - 1]);
+    output += lookup$1[tmp >> 10];
+    output += lookup$1[(tmp >> 4) & 0x3F];
+    output += lookup$1[(tmp << 2) & 0x3F];
+    output += '=';
+  }
+
+  parts.push(output);
+
+  return parts.join('')
+}
+
+function read$1 (buffer, offset, isLE, mLen, nBytes) {
+  var e, m;
+  var eLen = nBytes * 8 - mLen - 1;
+  var eMax = (1 << eLen) - 1;
+  var eBias = eMax >> 1;
+  var nBits = -7;
+  var i = isLE ? (nBytes - 1) : 0;
+  var d = isLE ? -1 : 1;
+  var s = buffer[offset + i];
+
+  i += d;
+
+  e = s & ((1 << (-nBits)) - 1);
+  s >>= (-nBits);
+  nBits += eLen;
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1);
+  e >>= (-nBits);
+  nBits += mLen;
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias;
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen);
+    e = e - eBias;
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+function write$1 (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c;
+  var eLen = nBytes * 8 - mLen - 1;
+  var eMax = (1 << eLen) - 1;
+  var eBias = eMax >> 1;
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0);
+  var i = isLE ? 0 : (nBytes - 1);
+  var d = isLE ? 1 : -1;
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
+
+  value = Math.abs(value);
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0;
+    e = eMax;
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2);
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--;
+      c *= 2;
+    }
+    if (e + eBias >= 1) {
+      value += rt / c;
+    } else {
+      value += rt * Math.pow(2, 1 - eBias);
+    }
+    if (value * c >= 2) {
+      e++;
+      c /= 2;
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0;
+      e = eMax;
+    } else if (e + eBias >= 1) {
+      m = (value * c - 1) * Math.pow(2, mLen);
+      e = e + eBias;
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
+      e = 0;
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m;
+  eLen += mLen;
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128;
+}
+
+var toString$1 = {}.toString;
+
+var isArray$1 = Array.isArray || function (arr) {
+  return toString$1.call(arr) == '[object Array]';
+};
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+var INSPECT_MAX_BYTES$1 = 50;
+
+/**
+ * If `Buffer.TYPED_ARRAY_SUPPORT`:
+ *   === true    Use Uint8Array implementation (fastest)
+ *   === false   Use Object implementation (most compatible, even IE6)
+ *
+ * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
+ * Opera 11.6+, iOS 4.2+.
+ *
+ * Due to various browser bugs, sometimes the Object implementation will be used even
+ * when the browser supports typed arrays.
+ *
+ * Note:
+ *
+ *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
+ *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
+ *
+ *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
+ *
+ *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
+ *     incorrect length in some situations.
+
+ * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
+ * get the Object implementation, which is slower but behaves correctly.
+ */
+Buffer$1.TYPED_ARRAY_SUPPORT = global$2.TYPED_ARRAY_SUPPORT !== undefined
+  ? global$2.TYPED_ARRAY_SUPPORT
+  : true;
+
+function kMaxLength$1 () {
+  return Buffer$1.TYPED_ARRAY_SUPPORT
+    ? 0x7fffffff
+    : 0x3fffffff
+}
+
+function createBuffer$1 (that, length) {
+  if (kMaxLength$1() < length) {
+    throw new RangeError('Invalid typed array length')
+  }
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = new Uint8Array(length);
+    that.__proto__ = Buffer$1.prototype;
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    if (that === null) {
+      that = new Buffer$1(length);
+    }
+    that.length = length;
+  }
+
+  return that
+}
+
+/**
+ * The Buffer constructor returns instances of `Uint8Array` that have their
+ * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
+ * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
+ * and the `Uint8Array` methods. Square bracket notation works as expected -- it
+ * returns a single octet.
+ *
+ * The `Uint8Array` prototype remains unmodified.
+ */
+
+function Buffer$1 (arg, encodingOrOffset, length) {
+  if (!Buffer$1.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer$1)) {
+    return new Buffer$1(arg, encodingOrOffset, length)
+  }
+
+  // Common case.
+  if (typeof arg === 'number') {
+    if (typeof encodingOrOffset === 'string') {
+      throw new Error(
+        'If encoding is specified then the first argument must be a string'
+      )
+    }
+    return allocUnsafe$1(this, arg)
+  }
+  return from$2(this, arg, encodingOrOffset, length)
+}
+
+Buffer$1.poolSize = 8192; // not used by this implementation
+
+// TODO: Legacy, not needed anymore. Remove in next major version.
+Buffer$1._augment = function (arr) {
+  arr.__proto__ = Buffer$1.prototype;
+  return arr
+};
+
+function from$2 (that, value, encodingOrOffset, length) {
+  if (typeof value === 'number') {
+    throw new TypeError('"value" argument must not be a number')
+  }
+
+  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+    return fromArrayBuffer$1(that, value, encodingOrOffset, length)
+  }
+
+  if (typeof value === 'string') {
+    return fromString$1(that, value, encodingOrOffset)
+  }
+
+  return fromObject$1(that, value)
+}
+
+/**
+ * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
+ * if value is a number.
+ * Buffer.from(str[, encoding])
+ * Buffer.from(array)
+ * Buffer.from(buffer)
+ * Buffer.from(arrayBuffer[, byteOffset[, length]])
+ **/
+Buffer$1.from = function (value, encodingOrOffset, length) {
+  return from$2(null, value, encodingOrOffset, length)
+};
+
+if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+  Buffer$1.prototype.__proto__ = Uint8Array.prototype;
+  Buffer$1.__proto__ = Uint8Array;
+}
+
+function assertSize$1 (size) {
+  if (typeof size !== 'number') {
+    throw new TypeError('"size" argument must be a number')
+  } else if (size < 0) {
+    throw new RangeError('"size" argument must not be negative')
+  }
+}
+
+function alloc$1 (that, size, fill, encoding) {
+  assertSize$1(size);
+  if (size <= 0) {
+    return createBuffer$1(that, size)
+  }
+  if (fill !== undefined) {
+    // Only pay attention to encoding if it's a string. This
+    // prevents accidentally sending in a number that would
+    // be interpretted as a start offset.
+    return typeof encoding === 'string'
+      ? createBuffer$1(that, size).fill(fill, encoding)
+      : createBuffer$1(that, size).fill(fill)
+  }
+  return createBuffer$1(that, size)
+}
+
+/**
+ * Creates a new filled Buffer instance.
+ * alloc(size[, fill[, encoding]])
+ **/
+Buffer$1.alloc = function (size, fill, encoding) {
+  return alloc$1(null, size, fill, encoding)
+};
+
+function allocUnsafe$1 (that, size) {
+  assertSize$1(size);
+  that = createBuffer$1(that, size < 0 ? 0 : checked$1(size) | 0);
+  if (!Buffer$1.TYPED_ARRAY_SUPPORT) {
+    for (var i = 0; i < size; ++i) {
+      that[i] = 0;
+    }
+  }
+  return that
+}
+
+/**
+ * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
+ * */
+Buffer$1.allocUnsafe = function (size) {
+  return allocUnsafe$1(null, size)
+};
+/**
+ * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
+ */
+Buffer$1.allocUnsafeSlow = function (size) {
+  return allocUnsafe$1(null, size)
+};
+
+function fromString$1 (that, string, encoding) {
+  if (typeof encoding !== 'string' || encoding === '') {
+    encoding = 'utf8';
+  }
+
+  if (!Buffer$1.isEncoding(encoding)) {
+    throw new TypeError('"encoding" must be a valid string encoding')
+  }
+
+  var length = byteLength$1(string, encoding) | 0;
+  that = createBuffer$1(that, length);
+
+  var actual = that.write(string, encoding);
+
+  if (actual !== length) {
+    // Writing a hex string, for example, that contains invalid characters will
+    // cause everything after the first invalid character to be ignored. (e.g.
+    // 'abxxcd' will be treated as 'ab')
+    that = that.slice(0, actual);
+  }
+
+  return that
+}
+
+function fromArrayLike$1 (that, array) {
+  var length = array.length < 0 ? 0 : checked$1(array.length) | 0;
+  that = createBuffer$1(that, length);
+  for (var i = 0; i < length; i += 1) {
+    that[i] = array[i] & 255;
+  }
+  return that
+}
+
+function fromArrayBuffer$1 (that, array, byteOffset, length) {
+  array.byteLength; // this throws if `array` is not a valid ArrayBuffer
+
+  if (byteOffset < 0 || array.byteLength < byteOffset) {
+    throw new RangeError('\'offset\' is out of bounds')
+  }
+
+  if (array.byteLength < byteOffset + (length || 0)) {
+    throw new RangeError('\'length\' is out of bounds')
+  }
+
+  if (byteOffset === undefined && length === undefined) {
+    array = new Uint8Array(array);
+  } else if (length === undefined) {
+    array = new Uint8Array(array, byteOffset);
+  } else {
+    array = new Uint8Array(array, byteOffset, length);
+  }
+
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    // Return an augmented `Uint8Array` instance, for best performance
+    that = array;
+    that.__proto__ = Buffer$1.prototype;
+  } else {
+    // Fallback: Return an object instance of the Buffer class
+    that = fromArrayLike$1(that, array);
+  }
+  return that
+}
+
+function fromObject$1 (that, obj) {
+  if (internalIsBuffer$1(obj)) {
+    var len = checked$1(obj.length) | 0;
+    that = createBuffer$1(that, len);
+
+    if (that.length === 0) {
+      return that
+    }
+
+    obj.copy(that, 0, 0, len);
+    return that
+  }
+
+  if (obj) {
+    if ((typeof ArrayBuffer !== 'undefined' &&
+        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
+      if (typeof obj.length !== 'number' || isnan$1(obj.length)) {
+        return createBuffer$1(that, 0)
+      }
+      return fromArrayLike$1(that, obj)
+    }
+
+    if (obj.type === 'Buffer' && isArray$1(obj.data)) {
+      return fromArrayLike$1(that, obj.data)
+    }
+  }
+
+  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
+}
+
+function checked$1 (length) {
+  // Note: cannot use `length < kMaxLength()` here because that fails when
+  // length is NaN (which is otherwise coerced to zero.)
+  if (length >= kMaxLength$1()) {
+    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
+                         'size: 0x' + kMaxLength$1().toString(16) + ' bytes')
+  }
+  return length | 0
+}
+Buffer$1.isBuffer = isBuffer$1;
+function internalIsBuffer$1 (b) {
+  return !!(b != null && b._isBuffer)
+}
+
+Buffer$1.compare = function compare (a, b) {
+  if (!internalIsBuffer$1(a) || !internalIsBuffer$1(b)) {
+    throw new TypeError('Arguments must be Buffers')
+  }
+
+  if (a === b) return 0
+
+  var x = a.length;
+  var y = b.length;
+
+  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+    if (a[i] !== b[i]) {
+      x = a[i];
+      y = b[i];
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+};
+
+Buffer$1.isEncoding = function isEncoding (encoding) {
+  switch (String(encoding).toLowerCase()) {
+    case 'hex':
+    case 'utf8':
+    case 'utf-8':
+    case 'ascii':
+    case 'latin1':
+    case 'binary':
+    case 'base64':
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+      return true
+    default:
+      return false
+  }
+};
+
+Buffer$1.concat = function concat (list, length) {
+  if (!isArray$1(list)) {
+    throw new TypeError('"list" argument must be an Array of Buffers')
+  }
+
+  if (list.length === 0) {
+    return Buffer$1.alloc(0)
+  }
+
+  var i;
+  if (length === undefined) {
+    length = 0;
+    for (i = 0; i < list.length; ++i) {
+      length += list[i].length;
+    }
+  }
+
+  var buffer = Buffer$1.allocUnsafe(length);
+  var pos = 0;
+  for (i = 0; i < list.length; ++i) {
+    var buf = list[i];
+    if (!internalIsBuffer$1(buf)) {
+      throw new TypeError('"list" argument must be an Array of Buffers')
+    }
+    buf.copy(buffer, pos);
+    pos += buf.length;
+  }
+  return buffer
+};
+
+function byteLength$1 (string, encoding) {
+  if (internalIsBuffer$1(string)) {
+    return string.length
+  }
+  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
+      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
+    return string.byteLength
+  }
+  if (typeof string !== 'string') {
+    string = '' + string;
+  }
+
+  var len = string.length;
+  if (len === 0) return 0
+
+  // Use a for loop to avoid recursion
+  var loweredCase = false;
+  for (;;) {
+    switch (encoding) {
+      case 'ascii':
+      case 'latin1':
+      case 'binary':
+        return len
+      case 'utf8':
+      case 'utf-8':
+      case undefined:
+        return utf8ToBytes$1(string).length
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return len * 2
+      case 'hex':
+        return len >>> 1
+      case 'base64':
+        return base64ToBytes$1(string).length
+      default:
+        if (loweredCase) return utf8ToBytes$1(string).length // assume utf8
+        encoding = ('' + encoding).toLowerCase();
+        loweredCase = true;
+    }
+  }
+}
+Buffer$1.byteLength = byteLength$1;
+
+function slowToString$1 (encoding, start, end) {
+  var loweredCase = false;
+
+  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
+  // property of a typed array.
+
+  // This behaves neither like String nor Uint8Array in that we set start/end
+  // to their upper/lower bounds if the value passed is out of range.
+  // undefined is handled specially as per ECMA-262 6th Edition,
+  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
+  if (start === undefined || start < 0) {
+    start = 0;
+  }
+  // Return early if start > this.length. Done here to prevent potential uint32
+  // coercion fail below.
+  if (start > this.length) {
+    return ''
+  }
+
+  if (end === undefined || end > this.length) {
+    end = this.length;
+  }
+
+  if (end <= 0) {
+    return ''
+  }
+
+  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
+  end >>>= 0;
+  start >>>= 0;
+
+  if (end <= start) {
+    return ''
+  }
+
+  if (!encoding) encoding = 'utf8';
+
+  while (true) {
+    switch (encoding) {
+      case 'hex':
+        return hexSlice$1(this, start, end)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Slice$1(this, start, end)
+
+      case 'ascii':
+        return asciiSlice$1(this, start, end)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Slice$1(this, start, end)
+
+      case 'base64':
+        return base64Slice$1(this, start, end)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return utf16leSlice$1(this, start, end)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = (encoding + '').toLowerCase();
+        loweredCase = true;
+    }
+  }
+}
+
+// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
+// Buffer instances.
+Buffer$1.prototype._isBuffer = true;
+
+function swap$1 (b, n, m) {
+  var i = b[n];
+  b[n] = b[m];
+  b[m] = i;
+}
+
+Buffer$1.prototype.swap16 = function swap16 () {
+  var len = this.length;
+  if (len % 2 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 16-bits')
+  }
+  for (var i = 0; i < len; i += 2) {
+    swap$1(this, i, i + 1);
+  }
+  return this
+};
+
+Buffer$1.prototype.swap32 = function swap32 () {
+  var len = this.length;
+  if (len % 4 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 32-bits')
+  }
+  for (var i = 0; i < len; i += 4) {
+    swap$1(this, i, i + 3);
+    swap$1(this, i + 1, i + 2);
+  }
+  return this
+};
+
+Buffer$1.prototype.swap64 = function swap64 () {
+  var len = this.length;
+  if (len % 8 !== 0) {
+    throw new RangeError('Buffer size must be a multiple of 64-bits')
+  }
+  for (var i = 0; i < len; i += 8) {
+    swap$1(this, i, i + 7);
+    swap$1(this, i + 1, i + 6);
+    swap$1(this, i + 2, i + 5);
+    swap$1(this, i + 3, i + 4);
+  }
+  return this
+};
+
+Buffer$1.prototype.toString = function toString () {
+  var length = this.length | 0;
+  if (length === 0) return ''
+  if (arguments.length === 0) return utf8Slice$1(this, 0, length)
+  return slowToString$1.apply(this, arguments)
+};
+
+Buffer$1.prototype.equals = function equals (b) {
+  if (!internalIsBuffer$1(b)) throw new TypeError('Argument must be a Buffer')
+  if (this === b) return true
+  return Buffer$1.compare(this, b) === 0
+};
+
+Buffer$1.prototype.inspect = function inspect () {
+  var str = '';
+  var max = INSPECT_MAX_BYTES$1;
+  if (this.length > 0) {
+    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ');
+    if (this.length > max) str += ' ... ';
+  }
+  return '<Buffer ' + str + '>'
+};
+
+Buffer$1.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
+  if (!internalIsBuffer$1(target)) {
+    throw new TypeError('Argument must be a Buffer')
+  }
+
+  if (start === undefined) {
+    start = 0;
+  }
+  if (end === undefined) {
+    end = target ? target.length : 0;
+  }
+  if (thisStart === undefined) {
+    thisStart = 0;
+  }
+  if (thisEnd === undefined) {
+    thisEnd = this.length;
+  }
+
+  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
+    throw new RangeError('out of range index')
+  }
+
+  if (thisStart >= thisEnd && start >= end) {
+    return 0
+  }
+  if (thisStart >= thisEnd) {
+    return -1
+  }
+  if (start >= end) {
+    return 1
+  }
+
+  start >>>= 0;
+  end >>>= 0;
+  thisStart >>>= 0;
+  thisEnd >>>= 0;
+
+  if (this === target) return 0
+
+  var x = thisEnd - thisStart;
+  var y = end - start;
+  var len = Math.min(x, y);
+
+  var thisCopy = this.slice(thisStart, thisEnd);
+  var targetCopy = target.slice(start, end);
+
+  for (var i = 0; i < len; ++i) {
+    if (thisCopy[i] !== targetCopy[i]) {
+      x = thisCopy[i];
+      y = targetCopy[i];
+      break
+    }
+  }
+
+  if (x < y) return -1
+  if (y < x) return 1
+  return 0
+};
+
+// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
+// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
+//
+// Arguments:
+// - buffer - a Buffer to search
+// - val - a string, Buffer, or number
+// - byteOffset - an index into `buffer`; will be clamped to an int32
+// - encoding - an optional encoding, relevant is val is a string
+// - dir - true for indexOf, false for lastIndexOf
+function bidirectionalIndexOf$1 (buffer, val, byteOffset, encoding, dir) {
+  // Empty buffer means no match
+  if (buffer.length === 0) return -1
+
+  // Normalize byteOffset
+  if (typeof byteOffset === 'string') {
+    encoding = byteOffset;
+    byteOffset = 0;
+  } else if (byteOffset > 0x7fffffff) {
+    byteOffset = 0x7fffffff;
+  } else if (byteOffset < -0x80000000) {
+    byteOffset = -0x80000000;
+  }
+  byteOffset = +byteOffset;  // Coerce to Number.
+  if (isNaN(byteOffset)) {
+    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
+    byteOffset = dir ? 0 : (buffer.length - 1);
+  }
+
+  // Normalize byteOffset: negative offsets start from the end of the buffer
+  if (byteOffset < 0) byteOffset = buffer.length + byteOffset;
+  if (byteOffset >= buffer.length) {
+    if (dir) return -1
+    else byteOffset = buffer.length - 1;
+  } else if (byteOffset < 0) {
+    if (dir) byteOffset = 0;
+    else return -1
+  }
+
+  // Normalize val
+  if (typeof val === 'string') {
+    val = Buffer$1.from(val, encoding);
+  }
+
+  // Finally, search either indexOf (if dir is true) or lastIndexOf
+  if (internalIsBuffer$1(val)) {
+    // Special case: looking for empty string/buffer always fails
+    if (val.length === 0) {
+      return -1
+    }
+    return arrayIndexOf$1(buffer, val, byteOffset, encoding, dir)
+  } else if (typeof val === 'number') {
+    val = val & 0xFF; // Search for a byte value [0-255]
+    if (Buffer$1.TYPED_ARRAY_SUPPORT &&
+        typeof Uint8Array.prototype.indexOf === 'function') {
+      if (dir) {
+        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
+      } else {
+        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
+      }
+    }
+    return arrayIndexOf$1(buffer, [ val ], byteOffset, encoding, dir)
+  }
+
+  throw new TypeError('val must be string, number or Buffer')
+}
+
+function arrayIndexOf$1 (arr, val, byteOffset, encoding, dir) {
+  var indexSize = 1;
+  var arrLength = arr.length;
+  var valLength = val.length;
+
+  if (encoding !== undefined) {
+    encoding = String(encoding).toLowerCase();
+    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
+        encoding === 'utf16le' || encoding === 'utf-16le') {
+      if (arr.length < 2 || val.length < 2) {
+        return -1
+      }
+      indexSize = 2;
+      arrLength /= 2;
+      valLength /= 2;
+      byteOffset /= 2;
+    }
+  }
+
+  function read (buf, i) {
+    if (indexSize === 1) {
+      return buf[i]
+    } else {
+      return buf.readUInt16BE(i * indexSize)
+    }
+  }
+
+  var i;
+  if (dir) {
+    var foundIndex = -1;
+    for (i = byteOffset; i < arrLength; i++) {
+      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
+        if (foundIndex === -1) foundIndex = i;
+        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
+      } else {
+        if (foundIndex !== -1) i -= i - foundIndex;
+        foundIndex = -1;
+      }
+    }
+  } else {
+    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength;
+    for (i = byteOffset; i >= 0; i--) {
+      var found = true;
+      for (var j = 0; j < valLength; j++) {
+        if (read(arr, i + j) !== read(val, j)) {
+          found = false;
+          break
+        }
+      }
+      if (found) return i
+    }
+  }
+
+  return -1
+}
+
+Buffer$1.prototype.includes = function includes (val, byteOffset, encoding) {
+  return this.indexOf(val, byteOffset, encoding) !== -1
+};
+
+Buffer$1.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf$1(this, val, byteOffset, encoding, true)
+};
+
+Buffer$1.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
+  return bidirectionalIndexOf$1(this, val, byteOffset, encoding, false)
+};
+
+function hexWrite$1 (buf, string, offset, length) {
+  offset = Number(offset) || 0;
+  var remaining = buf.length - offset;
+  if (!length) {
+    length = remaining;
+  } else {
+    length = Number(length);
+    if (length > remaining) {
+      length = remaining;
+    }
+  }
+
+  // must be an even number of digits
+  var strLen = string.length;
+  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
+
+  if (length > strLen / 2) {
+    length = strLen / 2;
+  }
+  for (var i = 0; i < length; ++i) {
+    var parsed = parseInt(string.substr(i * 2, 2), 16);
+    if (isNaN(parsed)) return i
+    buf[offset + i] = parsed;
+  }
+  return i
+}
+
+function utf8Write$1 (buf, string, offset, length) {
+  return blitBuffer$1(utf8ToBytes$1(string, buf.length - offset), buf, offset, length)
+}
+
+function asciiWrite$1 (buf, string, offset, length) {
+  return blitBuffer$1(asciiToBytes$1(string), buf, offset, length)
+}
+
+function latin1Write$1 (buf, string, offset, length) {
+  return asciiWrite$1(buf, string, offset, length)
+}
+
+function base64Write$1 (buf, string, offset, length) {
+  return blitBuffer$1(base64ToBytes$1(string), buf, offset, length)
+}
+
+function ucs2Write$1 (buf, string, offset, length) {
+  return blitBuffer$1(utf16leToBytes$1(string, buf.length - offset), buf, offset, length)
+}
+
+Buffer$1.prototype.write = function write (string, offset, length, encoding) {
+  // Buffer#write(string)
+  if (offset === undefined) {
+    encoding = 'utf8';
+    length = this.length;
+    offset = 0;
+  // Buffer#write(string, encoding)
+  } else if (length === undefined && typeof offset === 'string') {
+    encoding = offset;
+    length = this.length;
+    offset = 0;
+  // Buffer#write(string, offset[, length][, encoding])
+  } else if (isFinite(offset)) {
+    offset = offset | 0;
+    if (isFinite(length)) {
+      length = length | 0;
+      if (encoding === undefined) encoding = 'utf8';
+    } else {
+      encoding = length;
+      length = undefined;
+    }
+  // legacy write(string, encoding, offset, length) - remove in v0.13
+  } else {
+    throw new Error(
+      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
+    )
+  }
+
+  var remaining = this.length - offset;
+  if (length === undefined || length > remaining) length = remaining;
+
+  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
+    throw new RangeError('Attempt to write outside buffer bounds')
+  }
+
+  if (!encoding) encoding = 'utf8';
+
+  var loweredCase = false;
+  for (;;) {
+    switch (encoding) {
+      case 'hex':
+        return hexWrite$1(this, string, offset, length)
+
+      case 'utf8':
+      case 'utf-8':
+        return utf8Write$1(this, string, offset, length)
+
+      case 'ascii':
+        return asciiWrite$1(this, string, offset, length)
+
+      case 'latin1':
+      case 'binary':
+        return latin1Write$1(this, string, offset, length)
+
+      case 'base64':
+        // Warning: maxLength not taken into account in base64Write
+        return base64Write$1(this, string, offset, length)
+
+      case 'ucs2':
+      case 'ucs-2':
+      case 'utf16le':
+      case 'utf-16le':
+        return ucs2Write$1(this, string, offset, length)
+
+      default:
+        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
+        encoding = ('' + encoding).toLowerCase();
+        loweredCase = true;
+    }
+  }
+};
+
+Buffer$1.prototype.toJSON = function toJSON () {
+  return {
+    type: 'Buffer',
+    data: Array.prototype.slice.call(this._arr || this, 0)
+  }
+};
+
+function base64Slice$1 (buf, start, end) {
+  if (start === 0 && end === buf.length) {
+    return fromByteArray$1(buf)
+  } else {
+    return fromByteArray$1(buf.slice(start, end))
+  }
+}
+
+function utf8Slice$1 (buf, start, end) {
+  end = Math.min(buf.length, end);
+  var res = [];
+
+  var i = start;
+  while (i < end) {
+    var firstByte = buf[i];
+    var codePoint = null;
+    var bytesPerSequence = (firstByte > 0xEF) ? 4
+      : (firstByte > 0xDF) ? 3
+      : (firstByte > 0xBF) ? 2
+      : 1;
+
+    if (i + bytesPerSequence <= end) {
+      var secondByte, thirdByte, fourthByte, tempCodePoint;
+
+      switch (bytesPerSequence) {
+        case 1:
+          if (firstByte < 0x80) {
+            codePoint = firstByte;
+          }
+          break
+        case 2:
+          secondByte = buf[i + 1];
+          if ((secondByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F);
+            if (tempCodePoint > 0x7F) {
+              codePoint = tempCodePoint;
+            }
+          }
+          break
+        case 3:
+          secondByte = buf[i + 1];
+          thirdByte = buf[i + 2];
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F);
+            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+              codePoint = tempCodePoint;
+            }
+          }
+          break
+        case 4:
+          secondByte = buf[i + 1];
+          thirdByte = buf[i + 2];
+          fourthByte = buf[i + 3];
+          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F);
+            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+              codePoint = tempCodePoint;
+            }
+          }
+      }
+    }
+
+    if (codePoint === null) {
+      // we did not generate a valid codePoint so insert a
+      // replacement char (U+FFFD) and advance only 1 byte
+      codePoint = 0xFFFD;
+      bytesPerSequence = 1;
+    } else if (codePoint > 0xFFFF) {
+      // encode to utf16 (surrogate pair dance)
+      codePoint -= 0x10000;
+      res.push(codePoint >>> 10 & 0x3FF | 0xD800);
+      codePoint = 0xDC00 | codePoint & 0x3FF;
+    }
+
+    res.push(codePoint);
+    i += bytesPerSequence;
+  }
+
+  return decodeCodePointsArray$1(res)
+}
+
+// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// the lowest limit is Chrome, with 0x10000 args.
+// We go 1 magnitude less, for safety
+var MAX_ARGUMENTS_LENGTH$1 = 0x1000;
+
+function decodeCodePointsArray$1 (codePoints) {
+  var len = codePoints.length;
+  if (len <= MAX_ARGUMENTS_LENGTH$1) {
+    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
+  }
+
+  // Decode in chunks to avoid "call stack size exceeded".
+  var res = '';
+  var i = 0;
+  while (i < len) {
+    res += String.fromCharCode.apply(
+      String,
+      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH$1)
+    );
+  }
+  return res
+}
+
+function asciiSlice$1 (buf, start, end) {
+  var ret = '';
+  end = Math.min(buf.length, end);
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i] & 0x7F);
+  }
+  return ret
+}
+
+function latin1Slice$1 (buf, start, end) {
+  var ret = '';
+  end = Math.min(buf.length, end);
+
+  for (var i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i]);
+  }
+  return ret
+}
+
+function hexSlice$1 (buf, start, end) {
+  var len = buf.length;
+
+  if (!start || start < 0) start = 0;
+  if (!end || end < 0 || end > len) end = len;
+
+  var out = '';
+  for (var i = start; i < end; ++i) {
+    out += toHex$1(buf[i]);
+  }
+  return out
+}
+
+function utf16leSlice$1 (buf, start, end) {
+  var bytes = buf.slice(start, end);
+  var res = '';
+  for (var i = 0; i < bytes.length; i += 2) {
+    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256);
+  }
+  return res
+}
+
+Buffer$1.prototype.slice = function slice (start, end) {
+  var len = this.length;
+  start = ~~start;
+  end = end === undefined ? len : ~~end;
+
+  if (start < 0) {
+    start += len;
+    if (start < 0) start = 0;
+  } else if (start > len) {
+    start = len;
+  }
+
+  if (end < 0) {
+    end += len;
+    if (end < 0) end = 0;
+  } else if (end > len) {
+    end = len;
+  }
+
+  if (end < start) end = start;
+
+  var newBuf;
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    newBuf = this.subarray(start, end);
+    newBuf.__proto__ = Buffer$1.prototype;
+  } else {
+    var sliceLen = end - start;
+    newBuf = new Buffer$1(sliceLen, undefined);
+    for (var i = 0; i < sliceLen; ++i) {
+      newBuf[i] = this[i + start];
+    }
+  }
+
+  return newBuf
+};
+
+/*
+ * Need to make sure that buffer isn't trying to write out of bounds.
+ */
+function checkOffset$1 (offset, ext, length) {
+  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
+  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
+}
+
+Buffer$1.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0;
+  byteLength = byteLength | 0;
+  if (!noAssert) checkOffset$1(offset, byteLength, this.length);
+
+  var val = this[offset];
+  var mul = 1;
+  var i = 0;
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul;
+  }
+
+  return val
+};
+
+Buffer$1.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0;
+  byteLength = byteLength | 0;
+  if (!noAssert) {
+    checkOffset$1(offset, byteLength, this.length);
+  }
+
+  var val = this[offset + --byteLength];
+  var mul = 1;
+  while (byteLength > 0 && (mul *= 0x100)) {
+    val += this[offset + --byteLength] * mul;
+  }
+
+  return val
+};
+
+Buffer$1.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 1, this.length);
+  return this[offset]
+};
+
+Buffer$1.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 2, this.length);
+  return this[offset] | (this[offset + 1] << 8)
+};
+
+Buffer$1.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 2, this.length);
+  return (this[offset] << 8) | this[offset + 1]
+};
+
+Buffer$1.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 4, this.length);
+
+  return ((this[offset]) |
+      (this[offset + 1] << 8) |
+      (this[offset + 2] << 16)) +
+      (this[offset + 3] * 0x1000000)
+};
+
+Buffer$1.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 4, this.length);
+
+  return (this[offset] * 0x1000000) +
+    ((this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    this[offset + 3])
+};
+
+Buffer$1.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
+  offset = offset | 0;
+  byteLength = byteLength | 0;
+  if (!noAssert) checkOffset$1(offset, byteLength, this.length);
+
+  var val = this[offset];
+  var mul = 1;
+  var i = 0;
+  while (++i < byteLength && (mul *= 0x100)) {
+    val += this[offset + i] * mul;
+  }
+  mul *= 0x80;
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength);
+
+  return val
+};
+
+Buffer$1.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
+  offset = offset | 0;
+  byteLength = byteLength | 0;
+  if (!noAssert) checkOffset$1(offset, byteLength, this.length);
+
+  var i = byteLength;
+  var mul = 1;
+  var val = this[offset + --i];
+  while (i > 0 && (mul *= 0x100)) {
+    val += this[offset + --i] * mul;
+  }
+  mul *= 0x80;
+
+  if (val >= mul) val -= Math.pow(2, 8 * byteLength);
+
+  return val
+};
+
+Buffer$1.prototype.readInt8 = function readInt8 (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 1, this.length);
+  if (!(this[offset] & 0x80)) return (this[offset])
+  return ((0xff - this[offset] + 1) * -1)
+};
+
+Buffer$1.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 2, this.length);
+  var val = this[offset] | (this[offset + 1] << 8);
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+};
+
+Buffer$1.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 2, this.length);
+  var val = this[offset + 1] | (this[offset] << 8);
+  return (val & 0x8000) ? val | 0xFFFF0000 : val
+};
+
+Buffer$1.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 4, this.length);
+
+  return (this[offset]) |
+    (this[offset + 1] << 8) |
+    (this[offset + 2] << 16) |
+    (this[offset + 3] << 24)
+};
+
+Buffer$1.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 4, this.length);
+
+  return (this[offset] << 24) |
+    (this[offset + 1] << 16) |
+    (this[offset + 2] << 8) |
+    (this[offset + 3])
+};
+
+Buffer$1.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 4, this.length);
+  return read$1(this, offset, true, 23, 4)
+};
+
+Buffer$1.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 4, this.length);
+  return read$1(this, offset, false, 23, 4)
+};
+
+Buffer$1.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 8, this.length);
+  return read$1(this, offset, true, 52, 8)
+};
+
+Buffer$1.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
+  if (!noAssert) checkOffset$1(offset, 8, this.length);
+  return read$1(this, offset, false, 52, 8)
+};
+
+function checkInt$1 (buf, value, offset, ext, max, min) {
+  if (!internalIsBuffer$1(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
+  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+}
+
+Buffer$1.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  byteLength = byteLength | 0;
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1;
+    checkInt$1(this, value, offset, byteLength, maxBytes, 0);
+  }
+
+  var mul = 1;
+  var i = 0;
+  this[offset] = value & 0xFF;
+  while (++i < byteLength && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF;
+  }
+
+  return offset + byteLength
+};
+
+Buffer$1.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  byteLength = byteLength | 0;
+  if (!noAssert) {
+    var maxBytes = Math.pow(2, 8 * byteLength) - 1;
+    checkInt$1(this, value, offset, byteLength, maxBytes, 0);
+  }
+
+  var i = byteLength - 1;
+  var mul = 1;
+  this[offset + i] = value & 0xFF;
+  while (--i >= 0 && (mul *= 0x100)) {
+    this[offset + i] = (value / mul) & 0xFF;
+  }
+
+  return offset + byteLength
+};
+
+Buffer$1.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) checkInt$1(this, value, offset, 1, 0xff, 0);
+  if (!Buffer$1.TYPED_ARRAY_SUPPORT) value = Math.floor(value);
+  this[offset] = (value & 0xff);
+  return offset + 1
+};
+
+function objectWriteUInt16$1 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffff + value + 1;
+  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
+    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
+      (littleEndian ? i : 1 - i) * 8;
+  }
+}
+
+Buffer$1.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) checkInt$1(this, value, offset, 2, 0xffff, 0);
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff);
+    this[offset + 1] = (value >>> 8);
+  } else {
+    objectWriteUInt16$1(this, value, offset, true);
+  }
+  return offset + 2
+};
+
+Buffer$1.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) checkInt$1(this, value, offset, 2, 0xffff, 0);
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8);
+    this[offset + 1] = (value & 0xff);
+  } else {
+    objectWriteUInt16$1(this, value, offset, false);
+  }
+  return offset + 2
+};
+
+function objectWriteUInt32$1 (buf, value, offset, littleEndian) {
+  if (value < 0) value = 0xffffffff + value + 1;
+  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
+    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff;
+  }
+}
+
+Buffer$1.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) checkInt$1(this, value, offset, 4, 0xffffffff, 0);
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    this[offset + 3] = (value >>> 24);
+    this[offset + 2] = (value >>> 16);
+    this[offset + 1] = (value >>> 8);
+    this[offset] = (value & 0xff);
+  } else {
+    objectWriteUInt32$1(this, value, offset, true);
+  }
+  return offset + 4
+};
+
+Buffer$1.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) checkInt$1(this, value, offset, 4, 0xffffffff, 0);
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24);
+    this[offset + 1] = (value >>> 16);
+    this[offset + 2] = (value >>> 8);
+    this[offset + 3] = (value & 0xff);
+  } else {
+    objectWriteUInt32$1(this, value, offset, false);
+  }
+  return offset + 4
+};
+
+Buffer$1.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1);
+
+    checkInt$1(this, value, offset, byteLength, limit - 1, -limit);
+  }
+
+  var i = 0;
+  var mul = 1;
+  var sub = 0;
+  this[offset] = value & 0xFF;
+  while (++i < byteLength && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
+      sub = 1;
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF;
+  }
+
+  return offset + byteLength
+};
+
+Buffer$1.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) {
+    var limit = Math.pow(2, 8 * byteLength - 1);
+
+    checkInt$1(this, value, offset, byteLength, limit - 1, -limit);
+  }
+
+  var i = byteLength - 1;
+  var mul = 1;
+  var sub = 0;
+  this[offset + i] = value & 0xFF;
+  while (--i >= 0 && (mul *= 0x100)) {
+    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
+      sub = 1;
+    }
+    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF;
+  }
+
+  return offset + byteLength
+};
+
+Buffer$1.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) checkInt$1(this, value, offset, 1, 0x7f, -0x80);
+  if (!Buffer$1.TYPED_ARRAY_SUPPORT) value = Math.floor(value);
+  if (value < 0) value = 0xff + value + 1;
+  this[offset] = (value & 0xff);
+  return offset + 1
+};
+
+Buffer$1.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) checkInt$1(this, value, offset, 2, 0x7fff, -0x8000);
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff);
+    this[offset + 1] = (value >>> 8);
+  } else {
+    objectWriteUInt16$1(this, value, offset, true);
+  }
+  return offset + 2
+};
+
+Buffer$1.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) checkInt$1(this, value, offset, 2, 0x7fff, -0x8000);
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 8);
+    this[offset + 1] = (value & 0xff);
+  } else {
+    objectWriteUInt16$1(this, value, offset, false);
+  }
+  return offset + 2
+};
+
+Buffer$1.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) checkInt$1(this, value, offset, 4, 0x7fffffff, -0x80000000);
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value & 0xff);
+    this[offset + 1] = (value >>> 8);
+    this[offset + 2] = (value >>> 16);
+    this[offset + 3] = (value >>> 24);
+  } else {
+    objectWriteUInt32$1(this, value, offset, true);
+  }
+  return offset + 4
+};
+
+Buffer$1.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
+  value = +value;
+  offset = offset | 0;
+  if (!noAssert) checkInt$1(this, value, offset, 4, 0x7fffffff, -0x80000000);
+  if (value < 0) value = 0xffffffff + value + 1;
+  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
+    this[offset] = (value >>> 24);
+    this[offset + 1] = (value >>> 16);
+    this[offset + 2] = (value >>> 8);
+    this[offset + 3] = (value & 0xff);
+  } else {
+    objectWriteUInt32$1(this, value, offset, false);
+  }
+  return offset + 4
+};
+
+function checkIEEE754$1 (buf, value, offset, ext, max, min) {
+  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+  if (offset < 0) throw new RangeError('Index out of range')
+}
+
+function writeFloat$1 (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754$1(buf, value, offset, 4);
+  }
+  write$1(buf, value, offset, littleEndian, 23, 4);
+  return offset + 4
+}
+
+Buffer$1.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
+  return writeFloat$1(this, value, offset, true, noAssert)
+};
+
+Buffer$1.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
+  return writeFloat$1(this, value, offset, false, noAssert)
+};
+
+function writeDouble$1 (buf, value, offset, littleEndian, noAssert) {
+  if (!noAssert) {
+    checkIEEE754$1(buf, value, offset, 8);
+  }
+  write$1(buf, value, offset, littleEndian, 52, 8);
+  return offset + 8
+}
+
+Buffer$1.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
+  return writeDouble$1(this, value, offset, true, noAssert)
+};
+
+Buffer$1.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
+  return writeDouble$1(this, value, offset, false, noAssert)
+};
+
+// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
+Buffer$1.prototype.copy = function copy (target, targetStart, start, end) {
+  if (!start) start = 0;
+  if (!end && end !== 0) end = this.length;
+  if (targetStart >= target.length) targetStart = target.length;
+  if (!targetStart) targetStart = 0;
+  if (end > 0 && end < start) end = start;
+
+  // Copy 0 bytes; we're done
+  if (end === start) return 0
+  if (target.length === 0 || this.length === 0) return 0
+
+  // Fatal error conditions
+  if (targetStart < 0) {
+    throw new RangeError('targetStart out of bounds')
+  }
+  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
+  if (end < 0) throw new RangeError('sourceEnd out of bounds')
+
+  // Are we oob?
+  if (end > this.length) end = this.length;
+  if (target.length - targetStart < end - start) {
+    end = target.length - targetStart + start;
+  }
+
+  var len = end - start;
+  var i;
+
+  if (this === target && start < targetStart && targetStart < end) {
+    // descending copy from end
+    for (i = len - 1; i >= 0; --i) {
+      target[i + targetStart] = this[i + start];
+    }
+  } else if (len < 1000 || !Buffer$1.TYPED_ARRAY_SUPPORT) {
+    // ascending copy from start
+    for (i = 0; i < len; ++i) {
+      target[i + targetStart] = this[i + start];
+    }
+  } else {
+    Uint8Array.prototype.set.call(
+      target,
+      this.subarray(start, start + len),
+      targetStart
+    );
+  }
+
+  return len
+};
+
+// Usage:
+//    buffer.fill(number[, offset[, end]])
+//    buffer.fill(buffer[, offset[, end]])
+//    buffer.fill(string[, offset[, end]][, encoding])
+Buffer$1.prototype.fill = function fill (val, start, end, encoding) {
+  // Handle string cases:
+  if (typeof val === 'string') {
+    if (typeof start === 'string') {
+      encoding = start;
+      start = 0;
+      end = this.length;
+    } else if (typeof end === 'string') {
+      encoding = end;
+      end = this.length;
+    }
+    if (val.length === 1) {
+      var code = val.charCodeAt(0);
+      if (code < 256) {
+        val = code;
+      }
+    }
+    if (encoding !== undefined && typeof encoding !== 'string') {
+      throw new TypeError('encoding must be a string')
+    }
+    if (typeof encoding === 'string' && !Buffer$1.isEncoding(encoding)) {
+      throw new TypeError('Unknown encoding: ' + encoding)
+    }
+  } else if (typeof val === 'number') {
+    val = val & 255;
+  }
+
+  // Invalid ranges are not set to a default, so can range check early.
+  if (start < 0 || this.length < start || this.length < end) {
+    throw new RangeError('Out of range index')
+  }
+
+  if (end <= start) {
+    return this
+  }
+
+  start = start >>> 0;
+  end = end === undefined ? this.length : end >>> 0;
+
+  if (!val) val = 0;
+
+  var i;
+  if (typeof val === 'number') {
+    for (i = start; i < end; ++i) {
+      this[i] = val;
+    }
+  } else {
+    var bytes = internalIsBuffer$1(val)
+      ? val
+      : utf8ToBytes$1(new Buffer$1(val, encoding).toString());
+    var len = bytes.length;
+    for (i = 0; i < end - start; ++i) {
+      this[i + start] = bytes[i % len];
+    }
+  }
+
+  return this
+};
+
+// HELPER FUNCTIONS
+// ================
+
+var INVALID_BASE64_RE$1 = /[^+\/0-9A-Za-z-_]/g;
+
+function base64clean$1 (str) {
+  // Node strips out invalid characters like \n and \t from the string, base64-js does not
+  str = stringtrim$1(str).replace(INVALID_BASE64_RE$1, '');
+  // Node converts strings with length < 2 to ''
+  if (str.length < 2) return ''
+  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
+  while (str.length % 4 !== 0) {
+    str = str + '=';
+  }
+  return str
+}
+
+function stringtrim$1 (str) {
+  if (str.trim) return str.trim()
+  return str.replace(/^\s+|\s+$/g, '')
+}
+
+function toHex$1 (n) {
+  if (n < 16) return '0' + n.toString(16)
+  return n.toString(16)
+}
+
+function utf8ToBytes$1 (string, units) {
+  units = units || Infinity;
+  var codePoint;
+  var length = string.length;
+  var leadSurrogate = null;
+  var bytes = [];
+
+  for (var i = 0; i < length; ++i) {
+    codePoint = string.charCodeAt(i);
+
+    // is surrogate component
+    if (codePoint > 0xD7FF && codePoint < 0xE000) {
+      // last char was a lead
+      if (!leadSurrogate) {
+        // no lead yet
+        if (codePoint > 0xDBFF) {
+          // unexpected trail
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
+          continue
+        } else if (i + 1 === length) {
+          // unpaired lead
+          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
+          continue
+        }
+
+        // valid lead
+        leadSurrogate = codePoint;
+
+        continue
+      }
+
+      // 2 leads in a row
+      if (codePoint < 0xDC00) {
+        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
+        leadSurrogate = codePoint;
+        continue
+      }
+
+      // valid surrogate pair
+      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000;
+    } else if (leadSurrogate) {
+      // valid bmp char, but last char was a lead
+      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
+    }
+
+    leadSurrogate = null;
+
+    // encode utf8
+    if (codePoint < 0x80) {
+      if ((units -= 1) < 0) break
+      bytes.push(codePoint);
+    } else if (codePoint < 0x800) {
+      if ((units -= 2) < 0) break
+      bytes.push(
+        codePoint >> 0x6 | 0xC0,
+        codePoint & 0x3F | 0x80
+      );
+    } else if (codePoint < 0x10000) {
+      if ((units -= 3) < 0) break
+      bytes.push(
+        codePoint >> 0xC | 0xE0,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      );
+    } else if (codePoint < 0x110000) {
+      if ((units -= 4) < 0) break
+      bytes.push(
+        codePoint >> 0x12 | 0xF0,
+        codePoint >> 0xC & 0x3F | 0x80,
+        codePoint >> 0x6 & 0x3F | 0x80,
+        codePoint & 0x3F | 0x80
+      );
+    } else {
+      throw new Error('Invalid code point')
+    }
+  }
+
+  return bytes
+}
+
+function asciiToBytes$1 (str) {
+  var byteArray = [];
+  for (var i = 0; i < str.length; ++i) {
+    // Node's code seems to be doing this and not & 0x7F..
+    byteArray.push(str.charCodeAt(i) & 0xFF);
+  }
+  return byteArray
+}
+
+function utf16leToBytes$1 (str, units) {
+  var c, hi, lo;
+  var byteArray = [];
+  for (var i = 0; i < str.length; ++i) {
+    if ((units -= 2) < 0) break
+
+    c = str.charCodeAt(i);
+    hi = c >> 8;
+    lo = c % 256;
+    byteArray.push(lo);
+    byteArray.push(hi);
+  }
+
+  return byteArray
+}
+
+
+function base64ToBytes$1 (str) {
+  return toByteArray$1(base64clean$1(str))
+}
+
+function blitBuffer$1 (src, dst, offset, length) {
+  for (var i = 0; i < length; ++i) {
+    if ((i + offset >= dst.length) || (i >= src.length)) break
+    dst[i + offset] = src[i];
+  }
+  return i
+}
+
+function isnan$1 (val) {
+  return val !== val // eslint-disable-line no-self-compare
+}
+
+
+// the following is from is-buffer, also by Feross Aboukhadijeh and with same lisence
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+function isBuffer$1(obj) {
+  return obj != null && (!!obj._isBuffer || isFastBuffer$1(obj) || isSlowBuffer$1(obj))
+}
+
+function isFastBuffer$1 (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer$1 (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isFastBuffer$1(obj.slice(0, 0))
+}
+
+var followRedirects = {exports: {}};
+
+var src = {exports: {}};
+
+var browser = {exports: {}};
+
+/**
+ * Helpers.
+ */
+
+var s = 1000;
+var m = s * 60;
+var h = m * 60;
+var d = h * 24;
+var w = d * 7;
+var y = d * 365.25;
+
+/**
+ * Parse or format the given `val`.
+ *
+ * Options:
+ *
+ *  - `long` verbose formatting [false]
+ *
+ * @param {String|Number} val
+ * @param {Object} [options]
+ * @throws {Error} throw an error if val is not a non-empty string or a number
+ * @return {String|Number}
+ * @api public
+ */
+
+var ms = function(val, options) {
+  options = options || {};
+  var type = typeof val;
+  if (type === 'string' && val.length > 0) {
+    return parse(val);
+  } else if (type === 'number' && isFinite(val)) {
+    return options.long ? fmtLong(val) : fmtShort(val);
+  }
+  throw new Error(
+    'val is not a non-empty string or a valid number. val=' +
+      JSON.stringify(val)
+  );
+};
+
+/**
+ * Parse the given `str` and return milliseconds.
+ *
+ * @param {String} str
+ * @return {Number}
+ * @api private
+ */
+
+function parse(str) {
+  str = String(str);
+  if (str.length > 100) {
+    return;
+  }
+  var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
+    str
+  );
+  if (!match) {
+    return;
+  }
+  var n = parseFloat(match[1]);
+  var type = (match[2] || 'ms').toLowerCase();
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'yrs':
+    case 'yr':
+    case 'y':
+      return n * y;
+    case 'weeks':
+    case 'week':
+    case 'w':
+      return n * w;
+    case 'days':
+    case 'day':
+    case 'd':
+      return n * d;
+    case 'hours':
+    case 'hour':
+    case 'hrs':
+    case 'hr':
+    case 'h':
+      return n * h;
+    case 'minutes':
+    case 'minute':
+    case 'mins':
+    case 'min':
+    case 'm':
+      return n * m;
+    case 'seconds':
+    case 'second':
+    case 'secs':
+    case 'sec':
+    case 's':
+      return n * s;
+    case 'milliseconds':
+    case 'millisecond':
+    case 'msecs':
+    case 'msec':
+    case 'ms':
+      return n;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Short format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function fmtShort(ms) {
+  var msAbs = Math.abs(ms);
+  if (msAbs >= d) {
+    return Math.round(ms / d) + 'd';
+  }
+  if (msAbs >= h) {
+    return Math.round(ms / h) + 'h';
+  }
+  if (msAbs >= m) {
+    return Math.round(ms / m) + 'm';
+  }
+  if (msAbs >= s) {
+    return Math.round(ms / s) + 's';
+  }
+  return ms + 'ms';
+}
+
+/**
+ * Long format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function fmtLong(ms) {
+  var msAbs = Math.abs(ms);
+  if (msAbs >= d) {
+    return plural(ms, msAbs, d, 'day');
+  }
+  if (msAbs >= h) {
+    return plural(ms, msAbs, h, 'hour');
+  }
+  if (msAbs >= m) {
+    return plural(ms, msAbs, m, 'minute');
+  }
+  if (msAbs >= s) {
+    return plural(ms, msAbs, s, 'second');
+  }
+  return ms + ' ms';
+}
+
+/**
+ * Pluralization helper.
+ */
+
+function plural(ms, msAbs, n, name) {
+  var isPlural = msAbs >= n * 1.5;
+  return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
+}
+
+/**
+ * This is the common logic for both the Node.js and web browser
+ * implementations of `debug()`.
+ */
+
+function setup(env) {
+	createDebug.debug = createDebug;
+	createDebug.default = createDebug;
+	createDebug.coerce = coerce;
+	createDebug.disable = disable;
+	createDebug.enable = enable;
+	createDebug.enabled = enabled;
+	createDebug.humanize = ms;
+	createDebug.destroy = destroy;
+
+	Object.keys(env).forEach(key => {
+		createDebug[key] = env[key];
+	});
+
+	/**
+	* The currently active debug mode names, and names to skip.
+	*/
+
+	createDebug.names = [];
+	createDebug.skips = [];
+
+	/**
+	* Map of special "%n" handling functions, for the debug "format" argument.
+	*
+	* Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
+	*/
+	createDebug.formatters = {};
+
+	/**
+	* Selects a color for a debug namespace
+	* @param {String} namespace The namespace string for the debug instance to be colored
+	* @return {Number|String} An ANSI color code for the given namespace
+	* @api private
+	*/
+	function selectColor(namespace) {
+		let hash = 0;
+
+		for (let i = 0; i < namespace.length; i++) {
+			hash = ((hash << 5) - hash) + namespace.charCodeAt(i);
+			hash |= 0; // Convert to 32bit integer
+		}
+
+		return createDebug.colors[Math.abs(hash) % createDebug.colors.length];
+	}
+	createDebug.selectColor = selectColor;
+
+	/**
+	* Create a debugger with the given `namespace`.
+	*
+	* @param {String} namespace
+	* @return {Function}
+	* @api public
+	*/
+	function createDebug(namespace) {
+		let prevTime;
+		let enableOverride = null;
+		let namespacesCache;
+		let enabledCache;
+
+		function debug(...args) {
+			// Disabled?
+			if (!debug.enabled) {
+				return;
+			}
+
+			const self = debug;
+
+			// Set `diff` timestamp
+			const curr = Number(new Date());
+			const ms = curr - (prevTime || curr);
+			self.diff = ms;
+			self.prev = prevTime;
+			self.curr = curr;
+			prevTime = curr;
+
+			args[0] = createDebug.coerce(args[0]);
+
+			if (typeof args[0] !== 'string') {
+				// Anything else let's inspect with %O
+				args.unshift('%O');
+			}
+
+			// Apply any `formatters` transformations
+			let index = 0;
+			args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
+				// If we encounter an escaped % then don't increase the array index
+				if (match === '%%') {
+					return '%';
+				}
+				index++;
+				const formatter = createDebug.formatters[format];
+				if (typeof formatter === 'function') {
+					const val = args[index];
+					match = formatter.call(self, val);
+
+					// Now we need to remove `args[index]` since it's inlined in the `format`
+					args.splice(index, 1);
+					index--;
+				}
+				return match;
+			});
+
+			// Apply env-specific formatting (colors, etc.)
+			createDebug.formatArgs.call(self, args);
+
+			const logFn = self.log || createDebug.log;
+			logFn.apply(self, args);
+		}
+
+		debug.namespace = namespace;
+		debug.useColors = createDebug.useColors();
+		debug.color = createDebug.selectColor(namespace);
+		debug.extend = extend;
+		debug.destroy = createDebug.destroy; // XXX Temporary. Will be removed in the next major release.
+
+		Object.defineProperty(debug, 'enabled', {
+			enumerable: true,
+			configurable: false,
+			get: () => {
+				if (enableOverride !== null) {
+					return enableOverride;
+				}
+				if (namespacesCache !== createDebug.namespaces) {
+					namespacesCache = createDebug.namespaces;
+					enabledCache = createDebug.enabled(namespace);
+				}
+
+				return enabledCache;
+			},
+			set: v => {
+				enableOverride = v;
+			}
+		});
+
+		// Env-specific initialization logic for debug instances
+		if (typeof createDebug.init === 'function') {
+			createDebug.init(debug);
+		}
+
+		return debug;
+	}
+
+	function extend(namespace, delimiter) {
+		const newDebug = createDebug(this.namespace + (typeof delimiter === 'undefined' ? ':' : delimiter) + namespace);
+		newDebug.log = this.log;
+		return newDebug;
+	}
+
+	/**
+	* Enables a debug mode by namespaces. This can include modes
+	* separated by a colon and wildcards.
+	*
+	* @param {String} namespaces
+	* @api public
+	*/
+	function enable(namespaces) {
+		createDebug.save(namespaces);
+		createDebug.namespaces = namespaces;
+
+		createDebug.names = [];
+		createDebug.skips = [];
+
+		let i;
+		const split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
+		const len = split.length;
+
+		for (i = 0; i < len; i++) {
+			if (!split[i]) {
+				// ignore empty strings
+				continue;
+			}
+
+			namespaces = split[i].replace(/\*/g, '.*?');
+
+			if (namespaces[0] === '-') {
+				createDebug.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+			} else {
+				createDebug.names.push(new RegExp('^' + namespaces + '$'));
+			}
+		}
+	}
+
+	/**
+	* Disable debug output.
+	*
+	* @return {String} namespaces
+	* @api public
+	*/
+	function disable() {
+		const namespaces = [
+			...createDebug.names.map(toNamespace),
+			...createDebug.skips.map(toNamespace).map(namespace => '-' + namespace)
+		].join(',');
+		createDebug.enable('');
+		return namespaces;
+	}
+
+	/**
+	* Returns true if the given mode name is enabled, false otherwise.
+	*
+	* @param {String} name
+	* @return {Boolean}
+	* @api public
+	*/
+	function enabled(name) {
+		if (name[name.length - 1] === '*') {
+			return true;
+		}
+
+		let i;
+		let len;
+
+		for (i = 0, len = createDebug.skips.length; i < len; i++) {
+			if (createDebug.skips[i].test(name)) {
+				return false;
+			}
+		}
+
+		for (i = 0, len = createDebug.names.length; i < len; i++) {
+			if (createDebug.names[i].test(name)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	* Convert regexp to namespace
+	*
+	* @param {RegExp} regxep
+	* @return {String} namespace
+	* @api private
+	*/
+	function toNamespace(regexp) {
+		return regexp.toString()
+			.substring(2, regexp.toString().length - 2)
+			.replace(/\.\*\?$/, '*');
+	}
+
+	/**
+	* Coerce `val`.
+	*
+	* @param {Mixed} val
+	* @return {Mixed}
+	* @api private
+	*/
+	function coerce(val) {
+		if (val instanceof Error) {
+			return val.stack || val.message;
+		}
+		return val;
+	}
+
+	/**
+	* XXX DO NOT USE. This is a temporary stub function.
+	* XXX It WILL be removed in the next major release.
+	*/
+	function destroy() {
+		console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+	}
+
+	createDebug.enable(createDebug.load());
+
+	return createDebug;
+}
+
+var common = setup;
+
+(function (module, exports) {
+/**
+ * This is the web browser implementation of `debug()`.
+ */
+
+exports.formatArgs = formatArgs;
+exports.save = save;
+exports.load = load;
+exports.useColors = useColors;
+exports.storage = localstorage();
+exports.destroy = (() => {
+	let warned = false;
+
+	return () => {
+		if (!warned) {
+			warned = true;
+			console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+		}
+	};
+})();
+
+/**
+ * Colors.
+ */
+
+exports.colors = [
+	'#0000CC',
+	'#0000FF',
+	'#0033CC',
+	'#0033FF',
+	'#0066CC',
+	'#0066FF',
+	'#0099CC',
+	'#0099FF',
+	'#00CC00',
+	'#00CC33',
+	'#00CC66',
+	'#00CC99',
+	'#00CCCC',
+	'#00CCFF',
+	'#3300CC',
+	'#3300FF',
+	'#3333CC',
+	'#3333FF',
+	'#3366CC',
+	'#3366FF',
+	'#3399CC',
+	'#3399FF',
+	'#33CC00',
+	'#33CC33',
+	'#33CC66',
+	'#33CC99',
+	'#33CCCC',
+	'#33CCFF',
+	'#6600CC',
+	'#6600FF',
+	'#6633CC',
+	'#6633FF',
+	'#66CC00',
+	'#66CC33',
+	'#9900CC',
+	'#9900FF',
+	'#9933CC',
+	'#9933FF',
+	'#99CC00',
+	'#99CC33',
+	'#CC0000',
+	'#CC0033',
+	'#CC0066',
+	'#CC0099',
+	'#CC00CC',
+	'#CC00FF',
+	'#CC3300',
+	'#CC3333',
+	'#CC3366',
+	'#CC3399',
+	'#CC33CC',
+	'#CC33FF',
+	'#CC6600',
+	'#CC6633',
+	'#CC9900',
+	'#CC9933',
+	'#CCCC00',
+	'#CCCC33',
+	'#FF0000',
+	'#FF0033',
+	'#FF0066',
+	'#FF0099',
+	'#FF00CC',
+	'#FF00FF',
+	'#FF3300',
+	'#FF3333',
+	'#FF3366',
+	'#FF3399',
+	'#FF33CC',
+	'#FF33FF',
+	'#FF6600',
+	'#FF6633',
+	'#FF9900',
+	'#FF9933',
+	'#FFCC00',
+	'#FFCC33'
+];
+
+/**
+ * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+ * and the Firebug extension (any Firefox version) are known
+ * to support "%c" CSS customizations.
+ *
+ * TODO: add a `localStorage` variable to explicitly enable/disable colors
+ */
+
+// eslint-disable-next-line complexity
+function useColors() {
+	// NB: In an Electron preload script, document will be defined but not fully
+	// initialized. Since we know we're in Chrome, we'll just detect this case
+	// explicitly
+	if (typeof window !== 'undefined' && window.process && (window.process.type === 'renderer' || window.process.__nwjs)) {
+		return true;
+	}
+
+	// Internet Explorer and Edge do not support colors.
+	if (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) {
+		return false;
+	}
+
+	// Is webkit? http://stackoverflow.com/a/16459606/376773
+	// document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
+	return (typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
+		// Is firebug? http://stackoverflow.com/a/398120/376773
+		(typeof window !== 'undefined' && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
+		// Is firefox >= v31?
+		// https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
+		// Double check webkit in userAgent just in case we are in a worker
+		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
+}
+
+/**
+ * Colorize log arguments if enabled.
+ *
+ * @api public
+ */
+
+function formatArgs(args) {
+	args[0] = (this.useColors ? '%c' : '') +
+		this.namespace +
+		(this.useColors ? ' %c' : ' ') +
+		args[0] +
+		(this.useColors ? '%c ' : ' ') +
+		'+' + module.exports.humanize(this.diff);
+
+	if (!this.useColors) {
+		return;
+	}
+
+	const c = 'color: ' + this.color;
+	args.splice(1, 0, c, 'color: inherit');
+
+	// The final "%c" is somewhat tricky, because there could be other
+	// arguments passed either before or after the %c, so we need to
+	// figure out the correct index to insert the CSS into
+	let index = 0;
+	let lastC = 0;
+	args[0].replace(/%[a-zA-Z%]/g, match => {
+		if (match === '%%') {
+			return;
+		}
+		index++;
+		if (match === '%c') {
+			// We only are interested in the *last* %c
+			// (the user may have provided their own)
+			lastC = index;
+		}
+	});
+
+	args.splice(lastC, 0, c);
+}
+
+/**
+ * Invokes `console.debug()` when available.
+ * No-op when `console.debug` is not a "function".
+ * If `console.debug` is not available, falls back
+ * to `console.log`.
+ *
+ * @api public
+ */
+exports.log = console.debug || console.log || (() => {});
+
+/**
+ * Save `namespaces`.
+ *
+ * @param {String} namespaces
+ * @api private
+ */
+function save(namespaces) {
+	try {
+		if (namespaces) {
+			exports.storage.setItem('debug', namespaces);
+		} else {
+			exports.storage.removeItem('debug');
+		}
+	} catch (error) {
+		// Swallow
+		// XXX (@Qix-) should we be logging these?
+	}
+}
+
+/**
+ * Load `namespaces`.
+ *
+ * @return {String} returns the previously persisted debug modes
+ * @api private
+ */
+function load() {
+	let r;
+	try {
+		r = exports.storage.getItem('debug');
+	} catch (error) {
+		// Swallow
+		// XXX (@Qix-) should we be logging these?
+	}
+
+	// If debug isn't set in LS, and we're in Electron, try to load $DEBUG
+	if (!r && typeof browser$1$1 !== 'undefined' && 'env' in browser$1$1) {
+		r = browser$1$1.env.DEBUG;
+	}
+
+	return r;
+}
+
+/**
+ * Localstorage attempts to return the localstorage.
+ *
+ * This is necessary because safari throws
+ * when a user disables cookies/localstorage
+ * and you attempt to access it.
+ *
+ * @return {LocalStorage}
+ * @api private
+ */
+
+function localstorage() {
+	try {
+		// TVMLKit (Apple TV JS Runtime) does not have a window object, just localStorage in the global context
+		// The Browser also has localStorage in the global context.
+		return localStorage;
+	} catch (error) {
+		// Swallow
+		// XXX (@Qix-) should we be logging these?
+	}
+}
+
+module.exports = common(exports);
+
+const {formatters} = module.exports;
+
+/**
+ * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+ */
+
+formatters.j = function (v) {
+	try {
+		return JSON.stringify(v);
+	} catch (error) {
+		return '[UnexpectedJSONParseError]: ' + error.message;
+	}
+};
+}(browser, browser.exports));
+
+var node = {exports: {}};
+
+var hasFlag$1 = (flag, argv) => {
+	argv = argv || browser$1$1.argv;
+	const prefix = flag.startsWith('-') ? '' : (flag.length === 1 ? '-' : '--');
+	const pos = argv.indexOf(prefix + flag);
+	const terminatorPos = argv.indexOf('--');
+	return pos !== -1 && (terminatorPos === -1 ? true : pos < terminatorPos);
+};
+
+const os = require$$0;
+const hasFlag = hasFlag$1;
+
+const env = browser$1$1.env;
+
+let forceColor;
+if (hasFlag('no-color') ||
+	hasFlag('no-colors') ||
+	hasFlag('color=false')) {
+	forceColor = false;
+} else if (hasFlag('color') ||
+	hasFlag('colors') ||
+	hasFlag('color=true') ||
+	hasFlag('color=always')) {
+	forceColor = true;
+}
+if ('FORCE_COLOR' in env) {
+	forceColor = env.FORCE_COLOR.length === 0 || parseInt(env.FORCE_COLOR, 10) !== 0;
+}
+
+function translateLevel(level) {
+	if (level === 0) {
+		return false;
+	}
+
+	return {
+		level,
+		hasBasic: true,
+		has256: level >= 2,
+		has16m: level >= 3
+	};
+}
+
+function supportsColor(stream) {
+	if (forceColor === false) {
+		return 0;
+	}
+
+	if (hasFlag('color=16m') ||
+		hasFlag('color=full') ||
+		hasFlag('color=truecolor')) {
+		return 3;
+	}
+
+	if (hasFlag('color=256')) {
+		return 2;
+	}
+
+	if (stream && !stream.isTTY && forceColor !== true) {
+		return 0;
+	}
+
+	const min = forceColor ? 1 : 0;
+
+	if (browser$1$1.platform === 'win32') {
+		// Node.js 7.5.0 is the first version of Node.js to include a patch to
+		// libuv that enables 256 color output on Windows. Anything earlier and it
+		// won't work. However, here we target Node.js 8 at minimum as it is an LTS
+		// release, and Node.js 7 is not. Windows 10 build 10586 is the first Windows
+		// release that supports 256 colors. Windows 10 build 14931 is the first release
+		// that supports 16m/TrueColor.
+		const osRelease = os.release().split('.');
+		if (
+			Number(browser$1$1.versions.node.split('.')[0]) >= 8 &&
+			Number(osRelease[0]) >= 10 &&
+			Number(osRelease[2]) >= 10586
+		) {
+			return Number(osRelease[2]) >= 14931 ? 3 : 2;
+		}
+
+		return 1;
+	}
+
+	if ('CI' in env) {
+		if (['TRAVIS', 'CIRCLECI', 'APPVEYOR', 'GITLAB_CI'].some(sign => sign in env) || env.CI_NAME === 'codeship') {
+			return 1;
+		}
+
+		return min;
+	}
+
+	if ('TEAMCITY_VERSION' in env) {
+		return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
+	}
+
+	if (env.COLORTERM === 'truecolor') {
+		return 3;
+	}
+
+	if ('TERM_PROGRAM' in env) {
+		const version = parseInt((env.TERM_PROGRAM_VERSION || '').split('.')[0], 10);
+
+		switch (env.TERM_PROGRAM) {
+			case 'iTerm.app':
+				return version >= 3 ? 3 : 2;
+			case 'Apple_Terminal':
+				return 2;
+			// No default
+		}
+	}
+
+	if (/-256(color)?$/i.test(env.TERM)) {
+		return 2;
+	}
+
+	if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM)) {
+		return 1;
+	}
+
+	if ('COLORTERM' in env) {
+		return 1;
+	}
+
+	if (env.TERM === 'dumb') {
+		return min;
+	}
+
+	return min;
+}
+
+function getSupportLevel(stream) {
+	const level = supportsColor(stream);
+	return translateLevel(level);
+}
+
+var supportsColor_1 = {
+	supportsColor: getSupportLevel,
+	stdout: getSupportLevel(browser$1$1.stdout),
+	stderr: getSupportLevel(browser$1$1.stderr)
+};
+
+(function (module, exports) {
+const tty = require$$0$1;
+const util = require$$1;
+
+/**
+ * This is the Node.js implementation of `debug()`.
+ */
+
+exports.init = init;
+exports.log = log;
+exports.formatArgs = formatArgs;
+exports.save = save;
+exports.load = load;
+exports.useColors = useColors;
+exports.destroy = util.deprecate(
+	() => {},
+	'Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.'
+);
+
+/**
+ * Colors.
+ */
+
+exports.colors = [6, 2, 3, 4, 5, 1];
+
+try {
+	// Optional dependency (as in, doesn't need to be installed, NOT like optionalDependencies in package.json)
+	// eslint-disable-next-line import/no-extraneous-dependencies
+	const supportsColor = supportsColor_1;
+
+	if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
+		exports.colors = [
+			20,
+			21,
+			26,
+			27,
+			32,
+			33,
+			38,
+			39,
+			40,
+			41,
+			42,
+			43,
+			44,
+			45,
+			56,
+			57,
+			62,
+			63,
+			68,
+			69,
+			74,
+			75,
+			76,
+			77,
+			78,
+			79,
+			80,
+			81,
+			92,
+			93,
+			98,
+			99,
+			112,
+			113,
+			128,
+			129,
+			134,
+			135,
+			148,
+			149,
+			160,
+			161,
+			162,
+			163,
+			164,
+			165,
+			166,
+			167,
+			168,
+			169,
+			170,
+			171,
+			172,
+			173,
+			178,
+			179,
+			184,
+			185,
+			196,
+			197,
+			198,
+			199,
+			200,
+			201,
+			202,
+			203,
+			204,
+			205,
+			206,
+			207,
+			208,
+			209,
+			214,
+			215,
+			220,
+			221
+		];
+	}
+} catch (error) {
+	// Swallow - we only care if `supports-color` is available; it doesn't have to be.
+}
+
+/**
+ * Build up the default `inspectOpts` object from the environment variables.
+ *
+ *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
+ */
+
+exports.inspectOpts = Object.keys(browser$1$1.env).filter(key => {
+	return /^debug_/i.test(key);
+}).reduce((obj, key) => {
+	// Camel-case
+	const prop = key
+		.substring(6)
+		.toLowerCase()
+		.replace(/_([a-z])/g, (_, k) => {
+			return k.toUpperCase();
+		});
+
+	// Coerce string value into JS value
+	let val = browser$1$1.env[key];
+	if (/^(yes|on|true|enabled)$/i.test(val)) {
+		val = true;
+	} else if (/^(no|off|false|disabled)$/i.test(val)) {
+		val = false;
+	} else if (val === 'null') {
+		val = null;
+	} else {
+		val = Number(val);
+	}
+
+	obj[prop] = val;
+	return obj;
+}, {});
+
+/**
+ * Is stdout a TTY? Colored output is enabled when `true`.
+ */
+
+function useColors() {
+	return 'colors' in exports.inspectOpts ?
+		Boolean(exports.inspectOpts.colors) :
+		tty.isatty(browser$1$1.stderr.fd);
+}
+
+/**
+ * Adds ANSI color escape codes if enabled.
+ *
+ * @api public
+ */
+
+function formatArgs(args) {
+	const {namespace: name, useColors} = this;
+
+	if (useColors) {
+		const c = this.color;
+		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
+		const prefix = `  ${colorCode};1m${name} \u001B[0m`;
+
+		args[0] = prefix + args[0].split('\n').join('\n' + prefix);
+		args.push(colorCode + 'm+' + module.exports.humanize(this.diff) + '\u001B[0m');
+	} else {
+		args[0] = getDate() + name + ' ' + args[0];
+	}
+}
+
+function getDate() {
+	if (exports.inspectOpts.hideDate) {
+		return '';
+	}
+	return new Date().toISOString() + ' ';
+}
+
+/**
+ * Invokes `util.format()` with the specified arguments and writes to stderr.
+ */
+
+function log(...args) {
+	return browser$1$1.stderr.write(util.format(...args) + '\n');
+}
+
+/**
+ * Save `namespaces`.
+ *
+ * @param {String} namespaces
+ * @api private
+ */
+function save(namespaces) {
+	if (namespaces) {
+		browser$1$1.env.DEBUG = namespaces;
+	} else {
+		// If you set a process.env field to null or undefined, it gets cast to the
+		// string 'null' or 'undefined'. Just delete instead.
+		delete browser$1$1.env.DEBUG;
+	}
+}
+
+/**
+ * Load `namespaces`.
+ *
+ * @return {String} returns the previously persisted debug modes
+ * @api private
+ */
+
+function load() {
+	return browser$1$1.env.DEBUG;
+}
+
+/**
+ * Init logic for `debug` instances.
+ *
+ * Create a new `inspectOpts` object in case `useColors` is set
+ * differently for a particular `debug` instance.
+ */
+
+function init(debug) {
+	debug.inspectOpts = {};
+
+	const keys = Object.keys(exports.inspectOpts);
+	for (let i = 0; i < keys.length; i++) {
+		debug.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
+	}
+}
+
+module.exports = common(exports);
+
+const {formatters} = module.exports;
+
+/**
+ * Map %o to `util.inspect()`, all on a single line.
+ */
+
+formatters.o = function (v) {
+	this.inspectOpts.colors = this.useColors;
+	return util.inspect(v, this.inspectOpts)
+		.split('\n')
+		.map(str => str.trim())
+		.join(' ');
+};
+
+/**
+ * Map %O to `util.inspect()`, allowing multiple lines if needed.
+ */
+
+formatters.O = function (v) {
+	this.inspectOpts.colors = this.useColors;
+	return util.inspect(v, this.inspectOpts);
+};
+}(node, node.exports));
+
+if (typeof browser$1$1 === 'undefined' || browser$1$1.type === 'renderer' || browser$1$1.browser === true || browser$1$1.__nwjs) {
+	src.exports = browser.exports;
+} else {
+	src.exports = node.exports;
+}
+
+var debug$1;
+
+var debug_1 = function () {
+  if (!debug$1) {
+    try {
+      /* eslint global-require: off */
+      debug$1 = src.exports("follow-redirects");
+    }
+    catch (error) { /* */ }
+    if (typeof debug$1 !== "function") {
+      debug$1 = function () { /* */ };
+    }
+  }
+  debug$1.apply(null, arguments);
+};
+
+var url$1 = require$$0$2;
+var URL = url$1.URL;
+var http$1 = require$$1$1;
+var https$1 = require$$2;
+var Writable = require$$3.Writable;
+var assert = require$$4;
+var debug = debug_1;
+
+// Create handlers that pass events from native requests
+var events = ["abort", "aborted", "connect", "error", "socket", "timeout"];
+var eventHandlers = Object.create(null);
+events.forEach(function (event) {
+  eventHandlers[event] = function (arg1, arg2, arg3) {
+    this._redirectable.emit(event, arg1, arg2, arg3);
+  };
+});
+
+// Error types with codes
+var RedirectionError = createErrorType(
+  "ERR_FR_REDIRECTION_FAILURE",
+  "Redirected request failed"
+);
+var TooManyRedirectsError = createErrorType(
+  "ERR_FR_TOO_MANY_REDIRECTS",
+  "Maximum number of redirects exceeded"
+);
+var MaxBodyLengthExceededError = createErrorType(
+  "ERR_FR_MAX_BODY_LENGTH_EXCEEDED",
+  "Request body larger than maxBodyLength limit"
+);
+var WriteAfterEndError = createErrorType(
+  "ERR_STREAM_WRITE_AFTER_END",
+  "write after end"
+);
+
+// An HTTP(S) request that can be redirected
+function RedirectableRequest(options, responseCallback) {
+  // Initialize the request
+  Writable.call(this);
+  this._sanitizeOptions(options);
+  this._options = options;
+  this._ended = false;
+  this._ending = false;
+  this._redirectCount = 0;
+  this._redirects = [];
+  this._requestBodyLength = 0;
+  this._requestBodyBuffers = [];
+
+  // Attach a callback if passed
+  if (responseCallback) {
+    this.on("response", responseCallback);
+  }
+
+  // React to responses of native requests
+  var self = this;
+  this._onNativeResponse = function (response) {
+    self._processResponse(response);
+  };
+
+  // Perform the first request
+  this._performRequest();
+}
+RedirectableRequest.prototype = Object.create(Writable.prototype);
+
+RedirectableRequest.prototype.abort = function () {
+  abortRequest(this._currentRequest);
+  this.emit("abort");
+};
+
+// Writes buffered data to the current native request
+RedirectableRequest.prototype.write = function (data, encoding, callback) {
+  // Writing is not allowed if end has been called
+  if (this._ending) {
+    throw new WriteAfterEndError();
+  }
+
+  // Validate input and shift parameters if necessary
+  if (!(typeof data === "string" || typeof data === "object" && ("length" in data))) {
+    throw new TypeError("data should be a string, Buffer or Uint8Array");
+  }
+  if (typeof encoding === "function") {
+    callback = encoding;
+    encoding = null;
+  }
+
+  // Ignore empty buffers, since writing them doesn't invoke the callback
+  // https://github.com/nodejs/node/issues/22066
+  if (data.length === 0) {
+    if (callback) {
+      callback();
+    }
+    return;
+  }
+  // Only write when we don't exceed the maximum body length
+  if (this._requestBodyLength + data.length <= this._options.maxBodyLength) {
+    this._requestBodyLength += data.length;
+    this._requestBodyBuffers.push({ data: data, encoding: encoding });
+    this._currentRequest.write(data, encoding, callback);
+  }
+  // Error when we exceed the maximum body length
+  else {
+    this.emit("error", new MaxBodyLengthExceededError());
+    this.abort();
+  }
+};
+
+// Ends the current native request
+RedirectableRequest.prototype.end = function (data, encoding, callback) {
+  // Shift parameters if necessary
+  if (typeof data === "function") {
+    callback = data;
+    data = encoding = null;
+  }
+  else if (typeof encoding === "function") {
+    callback = encoding;
+    encoding = null;
+  }
+
+  // Write data if needed and end
+  if (!data) {
+    this._ended = this._ending = true;
+    this._currentRequest.end(null, null, callback);
+  }
+  else {
+    var self = this;
+    var currentRequest = this._currentRequest;
+    this.write(data, encoding, function () {
+      self._ended = true;
+      currentRequest.end(null, null, callback);
+    });
+    this._ending = true;
+  }
+};
+
+// Sets a header value on the current native request
+RedirectableRequest.prototype.setHeader = function (name, value) {
+  this._options.headers[name] = value;
+  this._currentRequest.setHeader(name, value);
+};
+
+// Clears a header value on the current native request
+RedirectableRequest.prototype.removeHeader = function (name) {
+  delete this._options.headers[name];
+  this._currentRequest.removeHeader(name);
+};
+
+// Global timeout for all underlying requests
+RedirectableRequest.prototype.setTimeout = function (msecs, callback) {
+  var self = this;
+
+  // Destroys the socket on timeout
+  function destroyOnTimeout(socket) {
+    socket.setTimeout(msecs);
+    socket.removeListener("timeout", socket.destroy);
+    socket.addListener("timeout", socket.destroy);
+  }
+
+  // Sets up a timer to trigger a timeout event
+  function startTimer(socket) {
+    if (self._timeout) {
+      clearTimeout(self._timeout);
+    }
+    self._timeout = setTimeout(function () {
+      self.emit("timeout");
+      clearTimer();
+    }, msecs);
+    destroyOnTimeout(socket);
+  }
+
+  // Stops a timeout from triggering
+  function clearTimer() {
+    // Clear the timeout
+    if (self._timeout) {
+      clearTimeout(self._timeout);
+      self._timeout = null;
+    }
+
+    // Clean up all attached listeners
+    self.removeListener("abort", clearTimer);
+    self.removeListener("error", clearTimer);
+    self.removeListener("response", clearTimer);
+    if (callback) {
+      self.removeListener("timeout", callback);
+    }
+    if (!self.socket) {
+      self._currentRequest.removeListener("socket", startTimer);
+    }
+  }
+
+  // Attach callback if passed
+  if (callback) {
+    this.on("timeout", callback);
+  }
+
+  // Start the timer if or when the socket is opened
+  if (this.socket) {
+    startTimer(this.socket);
+  }
+  else {
+    this._currentRequest.once("socket", startTimer);
+  }
+
+  // Clean up on events
+  this.on("socket", destroyOnTimeout);
+  this.on("abort", clearTimer);
+  this.on("error", clearTimer);
+  this.on("response", clearTimer);
+
+  return this;
+};
+
+// Proxy all other public ClientRequest methods
+[
+  "flushHeaders", "getHeader",
+  "setNoDelay", "setSocketKeepAlive",
+].forEach(function (method) {
+  RedirectableRequest.prototype[method] = function (a, b) {
+    return this._currentRequest[method](a, b);
+  };
+});
+
+// Proxy all public ClientRequest properties
+["aborted", "connection", "socket"].forEach(function (property) {
+  Object.defineProperty(RedirectableRequest.prototype, property, {
+    get: function () { return this._currentRequest[property]; },
+  });
+});
+
+RedirectableRequest.prototype._sanitizeOptions = function (options) {
+  // Ensure headers are always present
+  if (!options.headers) {
+    options.headers = {};
+  }
+
+  // Since http.request treats host as an alias of hostname,
+  // but the url module interprets host as hostname plus port,
+  // eliminate the host property to avoid confusion.
+  if (options.host) {
+    // Use hostname if set, because it has precedence
+    if (!options.hostname) {
+      options.hostname = options.host;
+    }
+    delete options.host;
+  }
+
+  // Complete the URL object when necessary
+  if (!options.pathname && options.path) {
+    var searchPos = options.path.indexOf("?");
+    if (searchPos < 0) {
+      options.pathname = options.path;
+    }
+    else {
+      options.pathname = options.path.substring(0, searchPos);
+      options.search = options.path.substring(searchPos);
+    }
+  }
+};
+
+
+// Executes the next native request (initial or redirect)
+RedirectableRequest.prototype._performRequest = function () {
+  // Load the native protocol
+  var protocol = this._options.protocol;
+  var nativeProtocol = this._options.nativeProtocols[protocol];
+  if (!nativeProtocol) {
+    this.emit("error", new TypeError("Unsupported protocol " + protocol));
+    return;
+  }
+
+  // If specified, use the agent corresponding to the protocol
+  // (HTTP and HTTPS use different types of agents)
+  if (this._options.agents) {
+    var scheme = protocol.substr(0, protocol.length - 1);
+    this._options.agent = this._options.agents[scheme];
+  }
+
+  // Create the native request
+  var request = this._currentRequest =
+        nativeProtocol.request(this._options, this._onNativeResponse);
+  this._currentUrl = url$1.format(this._options);
+
+  // Set up event handlers
+  request._redirectable = this;
+  for (var e = 0; e < events.length; e++) {
+    request.on(events[e], eventHandlers[events[e]]);
+  }
+
+  // End a redirected request
+  // (The first request must be ended explicitly with RedirectableRequest#end)
+  if (this._isRedirect) {
+    // Write the request entity and end.
+    var i = 0;
+    var self = this;
+    var buffers = this._requestBodyBuffers;
+    (function writeNext(error) {
+      // Only write if this request has not been redirected yet
+      /* istanbul ignore else */
+      if (request === self._currentRequest) {
+        // Report any write errors
+        /* istanbul ignore if */
+        if (error) {
+          self.emit("error", error);
+        }
+        // Write the next buffer if there are still left
+        else if (i < buffers.length) {
+          var buffer = buffers[i++];
+          /* istanbul ignore else */
+          if (!request.finished) {
+            request.write(buffer.data, buffer.encoding, writeNext);
+          }
+        }
+        // End the request if `end` has been called on us
+        else if (self._ended) {
+          request.end();
+        }
+      }
+    }());
+  }
+};
+
+// Processes a response from the current native request
+RedirectableRequest.prototype._processResponse = function (response) {
+  // Store the redirected response
+  var statusCode = response.statusCode;
+  if (this._options.trackRedirects) {
+    this._redirects.push({
+      url: this._currentUrl,
+      headers: response.headers,
+      statusCode: statusCode,
+    });
+  }
+
+  // RFC7231§6.4: The 3xx (Redirection) class of status code indicates
+  // that further action needs to be taken by the user agent in order to
+  // fulfill the request. If a Location header field is provided,
+  // the user agent MAY automatically redirect its request to the URI
+  // referenced by the Location field value,
+  // even if the specific status code is not understood.
+  var location = response.headers.location;
+  if (location && this._options.followRedirects !== false &&
+      statusCode >= 300 && statusCode < 400) {
+    // Abort the current request
+    abortRequest(this._currentRequest);
+    // Discard the remainder of the response to avoid waiting for data
+    response.destroy();
+
+    // RFC7231§6.4: A client SHOULD detect and intervene
+    // in cyclical redirections (i.e., "infinite" redirection loops).
+    if (++this._redirectCount > this._options.maxRedirects) {
+      this.emit("error", new TooManyRedirectsError());
+      return;
+    }
+
+    // RFC7231§6.4: Automatic redirection needs to done with
+    // care for methods not known to be safe, […]
+    // RFC7231§6.4.2–3: For historical reasons, a user agent MAY change
+    // the request method from POST to GET for the subsequent request.
+    if ((statusCode === 301 || statusCode === 302) && this._options.method === "POST" ||
+        // RFC7231§6.4.4: The 303 (See Other) status code indicates that
+        // the server is redirecting the user agent to a different resource […]
+        // A user agent can perform a retrieval request targeting that URI
+        // (a GET or HEAD request if using HTTP) […]
+        (statusCode === 303) && !/^(?:GET|HEAD)$/.test(this._options.method)) {
+      this._options.method = "GET";
+      // Drop a possible entity and headers related to it
+      this._requestBodyBuffers = [];
+      removeMatchingHeaders(/^content-/i, this._options.headers);
+    }
+
+    // Drop the Host header, as the redirect might lead to a different host
+    var currentHostHeader = removeMatchingHeaders(/^host$/i, this._options.headers);
+
+    // If the redirect is relative, carry over the host of the last request
+    var currentUrlParts = url$1.parse(this._currentUrl);
+    var currentHost = currentHostHeader || currentUrlParts.host;
+    var currentUrl = /^\w+:/.test(location) ? this._currentUrl :
+      url$1.format(Object.assign(currentUrlParts, { host: currentHost }));
+
+    // Determine the URL of the redirection
+    var redirectUrl;
+    try {
+      redirectUrl = url$1.resolve(currentUrl, location);
+    }
+    catch (cause) {
+      this.emit("error", new RedirectionError(cause));
+      return;
+    }
+
+    // Create the redirected request
+    debug("redirecting to", redirectUrl);
+    this._isRedirect = true;
+    var redirectUrlParts = url$1.parse(redirectUrl);
+    Object.assign(this._options, redirectUrlParts);
+
+    // Drop the Authorization header if redirecting to another domain
+    if (!(redirectUrlParts.host === currentHost || isSubdomainOf(redirectUrlParts.host, currentHost))) {
+      removeMatchingHeaders(/^authorization$/i, this._options.headers);
+    }
+
+    // Evaluate the beforeRedirect callback
+    if (typeof this._options.beforeRedirect === "function") {
+      var responseDetails = { headers: response.headers };
+      try {
+        this._options.beforeRedirect.call(null, this._options, responseDetails);
+      }
+      catch (err) {
+        this.emit("error", err);
+        return;
+      }
+      this._sanitizeOptions(this._options);
+    }
+
+    // Perform the redirected request
+    try {
+      this._performRequest();
+    }
+    catch (cause) {
+      this.emit("error", new RedirectionError(cause));
+    }
+  }
+  else {
+    // The response is not a redirect; return it as-is
+    response.responseUrl = this._currentUrl;
+    response.redirects = this._redirects;
+    this.emit("response", response);
+
+    // Clean up
+    this._requestBodyBuffers = [];
+  }
+};
+
+// Wraps the key/value object of protocols with redirect functionality
+function wrap(protocols) {
+  // Default settings
+  var exports = {
+    maxRedirects: 21,
+    maxBodyLength: 10 * 1024 * 1024,
+  };
+
+  // Wrap each protocol
+  var nativeProtocols = {};
+  Object.keys(protocols).forEach(function (scheme) {
+    var protocol = scheme + ":";
+    var nativeProtocol = nativeProtocols[protocol] = protocols[scheme];
+    var wrappedProtocol = exports[scheme] = Object.create(nativeProtocol);
+
+    // Executes a request, following redirects
+    function request(input, options, callback) {
+      // Parse parameters
+      if (typeof input === "string") {
+        var urlStr = input;
+        try {
+          input = urlToOptions(new URL(urlStr));
+        }
+        catch (err) {
+          /* istanbul ignore next */
+          input = url$1.parse(urlStr);
+        }
+      }
+      else if (URL && (input instanceof URL)) {
+        input = urlToOptions(input);
+      }
+      else {
+        callback = options;
+        options = input;
+        input = { protocol: protocol };
+      }
+      if (typeof options === "function") {
+        callback = options;
+        options = null;
+      }
+
+      // Set defaults
+      options = Object.assign({
+        maxRedirects: exports.maxRedirects,
+        maxBodyLength: exports.maxBodyLength,
+      }, input, options);
+      options.nativeProtocols = nativeProtocols;
+
+      assert.equal(options.protocol, protocol, "protocol mismatch");
+      debug("options", options);
+      return new RedirectableRequest(options, callback);
+    }
+
+    // Executes a GET request, following redirects
+    function get(input, options, callback) {
+      var wrappedRequest = wrappedProtocol.request(input, options, callback);
+      wrappedRequest.end();
+      return wrappedRequest;
+    }
+
+    // Expose the properties on the wrapped protocol
+    Object.defineProperties(wrappedProtocol, {
+      request: { value: request, configurable: true, enumerable: true, writable: true },
+      get: { value: get, configurable: true, enumerable: true, writable: true },
+    });
+  });
+  return exports;
+}
+
+/* istanbul ignore next */
+function noop() { /* empty */ }
+
+// from https://github.com/nodejs/node/blob/master/lib/internal/url.js
+function urlToOptions(urlObject) {
+  var options = {
+    protocol: urlObject.protocol,
+    hostname: urlObject.hostname.startsWith("[") ?
+      /* istanbul ignore next */
+      urlObject.hostname.slice(1, -1) :
+      urlObject.hostname,
+    hash: urlObject.hash,
+    search: urlObject.search,
+    pathname: urlObject.pathname,
+    path: urlObject.pathname + urlObject.search,
+    href: urlObject.href,
+  };
+  if (urlObject.port !== "") {
+    options.port = Number(urlObject.port);
+  }
+  return options;
+}
+
+function removeMatchingHeaders(regex, headers) {
+  var lastValue;
+  for (var header in headers) {
+    if (regex.test(header)) {
+      lastValue = headers[header];
+      delete headers[header];
+    }
+  }
+  return (lastValue === null || typeof lastValue === "undefined") ?
+    undefined : String(lastValue).trim();
+}
+
+function createErrorType(code, defaultMessage) {
+  function CustomError(cause) {
+    Error.captureStackTrace(this, this.constructor);
+    if (!cause) {
+      this.message = defaultMessage;
+    }
+    else {
+      this.message = defaultMessage + ": " + cause.message;
+      this.cause = cause;
+    }
+  }
+  CustomError.prototype = new Error();
+  CustomError.prototype.constructor = CustomError;
+  CustomError.prototype.name = "Error [" + code + "]";
+  CustomError.prototype.code = code;
+  return CustomError;
+}
+
+function abortRequest(request) {
+  for (var e = 0; e < events.length; e++) {
+    request.removeListener(events[e], eventHandlers[events[e]]);
+  }
+  request.on("error", noop);
+  request.abort();
+}
+
+function isSubdomainOf(subdomain, domain) {
+  const dot = subdomain.length - domain.length - 1;
+  return dot > 0 && subdomain[dot] === "." && subdomain.endsWith(domain);
+}
+
+// Exports
+followRedirects.exports = wrap({ http: http$1, https: https$1 });
+followRedirects.exports.wrap = wrap;
+
+var data$1 = {
+  "version": "0.24.0"
+};
+
+var utils$6 = utils$e;
+var settle = settle$2;
+var buildFullPath = buildFullPath$2;
+var buildURL$1 = buildURL$3;
+var http = require$$1$1;
+var https = require$$2;
+var httpFollow = followRedirects.exports.http;
+var httpsFollow = followRedirects.exports.https;
+var url = require$$0$2;
+var zlib = require$$8;
+var VERSION$1 = data$1.version;
+var createError = createError$3;
+var enhanceError$1 = enhanceError$3;
+var defaults$5 = defaults_1;
+var Cancel$2 = Cancel_1;
+
+var isHttps = /https:?/;
+
+/**
+ *
+ * @param {http.ClientRequestArgs} options
+ * @param {AxiosProxyConfig} proxy
+ * @param {string} location
+ */
+function setProxy(options, proxy, location) {
+  options.hostname = proxy.host;
+  options.host = proxy.host;
+  options.port = proxy.port;
+  options.path = location;
+
+  // Basic proxy authorization
+  if (proxy.auth) {
+    var base64 = Buffer$1.from(proxy.auth.username + ':' + proxy.auth.password, 'utf8').toString('base64');
+    options.headers['Proxy-Authorization'] = 'Basic ' + base64;
+  }
+
+  // If a proxy is used, any redirects must also pass through the proxy
+  options.beforeRedirect = function beforeRedirect(redirection) {
+    redirection.headers.host = redirection.host;
+    setProxy(redirection, proxy, redirection.href);
+  };
+}
+
+/*eslint consistent-return:0*/
+var http_1 = function httpAdapter(config) {
+  return new Promise(function dispatchHttpRequest(resolvePromise, rejectPromise) {
+    var onCanceled;
+    function done() {
+      if (config.cancelToken) {
+        config.cancelToken.unsubscribe(onCanceled);
+      }
+
+      if (config.signal) {
+        config.signal.removeEventListener('abort', onCanceled);
+      }
+    }
+    var resolve = function resolve(value) {
+      done();
+      resolvePromise(value);
+    };
+    var reject = function reject(value) {
+      done();
+      rejectPromise(value);
+    };
+    var data = config.data;
+    var headers = config.headers;
+    var headerNames = {};
+
+    Object.keys(headers).forEach(function storeLowerName(name) {
+      headerNames[name.toLowerCase()] = name;
+    });
+
+    // Set User-Agent (required by some servers)
+    // See https://github.com/axios/axios/issues/69
+    if ('user-agent' in headerNames) {
+      // User-Agent is specified; handle case where no UA header is desired
+      if (!headers[headerNames['user-agent']]) {
+        delete headers[headerNames['user-agent']];
+      }
+      // Otherwise, use specified value
+    } else {
+      // Only set header if it hasn't been set in config
+      headers['User-Agent'] = 'axios/' + VERSION$1;
+    }
+
+    if (data && !utils$6.isStream(data)) {
+      if (Buffer$1.isBuffer(data)) ; else if (utils$6.isArrayBuffer(data)) {
+        data = Buffer$1.from(new Uint8Array(data));
+      } else if (utils$6.isString(data)) {
+        data = Buffer$1.from(data, 'utf-8');
+      } else {
+        return reject(createError(
+          'Data after transformation must be a string, an ArrayBuffer, a Buffer, or a Stream',
+          config
+        ));
+      }
+
+      // Add Content-Length header if data exists
+      if (!headerNames['content-length']) {
+        headers['Content-Length'] = data.length;
+      }
+    }
+
+    // HTTP basic authentication
+    var auth = undefined;
+    if (config.auth) {
+      var username = config.auth.username || '';
+      var password = config.auth.password || '';
+      auth = username + ':' + password;
+    }
+
+    // Parse url
+    var fullPath = buildFullPath(config.baseURL, config.url);
+    var parsed = url.parse(fullPath);
+    var protocol = parsed.protocol || 'http:';
+
+    if (!auth && parsed.auth) {
+      var urlAuth = parsed.auth.split(':');
+      var urlUsername = urlAuth[0] || '';
+      var urlPassword = urlAuth[1] || '';
+      auth = urlUsername + ':' + urlPassword;
+    }
+
+    if (auth && headerNames.authorization) {
+      delete headers[headerNames.authorization];
+    }
+
+    var isHttpsRequest = isHttps.test(protocol);
+    var agent = isHttpsRequest ? config.httpsAgent : config.httpAgent;
+
+    var options = {
+      path: buildURL$1(parsed.path, config.params, config.paramsSerializer).replace(/^\?/, ''),
+      method: config.method.toUpperCase(),
+      headers: headers,
+      agent: agent,
+      agents: { http: config.httpAgent, https: config.httpsAgent },
+      auth: auth
+    };
+
+    if (config.socketPath) {
+      options.socketPath = config.socketPath;
+    } else {
+      options.hostname = parsed.hostname;
+      options.port = parsed.port;
+    }
+
+    var proxy = config.proxy;
+    if (!proxy && proxy !== false) {
+      var proxyEnv = protocol.slice(0, -1) + '_proxy';
+      var proxyUrl = browser$1$1.env[proxyEnv] || browser$1$1.env[proxyEnv.toUpperCase()];
+      if (proxyUrl) {
+        var parsedProxyUrl = url.parse(proxyUrl);
+        var noProxyEnv = browser$1$1.env.no_proxy || browser$1$1.env.NO_PROXY;
+        var shouldProxy = true;
+
+        if (noProxyEnv) {
+          var noProxy = noProxyEnv.split(',').map(function trim(s) {
+            return s.trim();
+          });
+
+          shouldProxy = !noProxy.some(function proxyMatch(proxyElement) {
+            if (!proxyElement) {
+              return false;
+            }
+            if (proxyElement === '*') {
+              return true;
+            }
+            if (proxyElement[0] === '.' &&
+                parsed.hostname.substr(parsed.hostname.length - proxyElement.length) === proxyElement) {
+              return true;
+            }
+
+            return parsed.hostname === proxyElement;
+          });
+        }
+
+        if (shouldProxy) {
+          proxy = {
+            host: parsedProxyUrl.hostname,
+            port: parsedProxyUrl.port,
+            protocol: parsedProxyUrl.protocol
+          };
+
+          if (parsedProxyUrl.auth) {
+            var proxyUrlAuth = parsedProxyUrl.auth.split(':');
+            proxy.auth = {
+              username: proxyUrlAuth[0],
+              password: proxyUrlAuth[1]
+            };
+          }
+        }
+      }
+    }
+
+    if (proxy) {
+      options.headers.host = parsed.hostname + (parsed.port ? ':' + parsed.port : '');
+      setProxy(options, proxy, protocol + '//' + parsed.hostname + (parsed.port ? ':' + parsed.port : '') + options.path);
+    }
+
+    var transport;
+    var isHttpsProxy = isHttpsRequest && (proxy ? isHttps.test(proxy.protocol) : true);
+    if (config.transport) {
+      transport = config.transport;
+    } else if (config.maxRedirects === 0) {
+      transport = isHttpsProxy ? https : http;
+    } else {
+      if (config.maxRedirects) {
+        options.maxRedirects = config.maxRedirects;
+      }
+      transport = isHttpsProxy ? httpsFollow : httpFollow;
+    }
+
+    if (config.maxBodyLength > -1) {
+      options.maxBodyLength = config.maxBodyLength;
+    }
+
+    if (config.insecureHTTPParser) {
+      options.insecureHTTPParser = config.insecureHTTPParser;
+    }
+
+    // Create the request
+    var req = transport.request(options, function handleResponse(res) {
+      if (req.aborted) return;
+
+      // uncompress the response body transparently if required
+      var stream = res;
+
+      // return the last request in case of redirects
+      var lastRequest = res.req || req;
+
+
+      // if no content, is HEAD request or decompress disabled we should not decompress
+      if (res.statusCode !== 204 && lastRequest.method !== 'HEAD' && config.decompress !== false) {
+        switch (res.headers['content-encoding']) {
+        /*eslint default-case:0*/
+        case 'gzip':
+        case 'compress':
+        case 'deflate':
+        // add the unzipper to the body stream processing pipeline
+          stream = stream.pipe(zlib.createUnzip());
+
+          // remove the content-encoding in order to not confuse downstream operations
+          delete res.headers['content-encoding'];
+          break;
+        }
+      }
+
+      var response = {
+        status: res.statusCode,
+        statusText: res.statusMessage,
+        headers: res.headers,
+        config: config,
+        request: lastRequest
+      };
+
+      if (config.responseType === 'stream') {
+        response.data = stream;
+        settle(resolve, reject, response);
+      } else {
+        var responseBuffer = [];
+        var totalResponseBytes = 0;
+        stream.on('data', function handleStreamData(chunk) {
+          responseBuffer.push(chunk);
+          totalResponseBytes += chunk.length;
+
+          // make sure the content length is not over the maxContentLength if specified
+          if (config.maxContentLength > -1 && totalResponseBytes > config.maxContentLength) {
+            stream.destroy();
+            reject(createError('maxContentLength size of ' + config.maxContentLength + ' exceeded',
+              config, null, lastRequest));
+          }
+        });
+
+        stream.on('error', function handleStreamError(err) {
+          if (req.aborted) return;
+          reject(enhanceError$1(err, config, null, lastRequest));
+        });
+
+        stream.on('end', function handleStreamEnd() {
+          var responseData = Buffer$1.concat(responseBuffer);
+          if (config.responseType !== 'arraybuffer') {
+            responseData = responseData.toString(config.responseEncoding);
+            if (!config.responseEncoding || config.responseEncoding === 'utf8') {
+              responseData = utils$6.stripBOM(responseData);
+            }
+          }
+
+          response.data = responseData;
+          settle(resolve, reject, response);
+        });
+      }
+    });
+
+    // Handle errors
+    req.on('error', function handleRequestError(err) {
+      if (req.aborted && err.code !== 'ERR_FR_TOO_MANY_REDIRECTS') return;
+      reject(enhanceError$1(err, config, null, req));
+    });
+
+    // Handle request timeout
+    if (config.timeout) {
+      // This is forcing a int timeout to avoid problems if the `req` interface doesn't handle other types.
+      var timeout = parseInt(config.timeout, 10);
+
+      if (isNaN(timeout)) {
+        reject(createError(
+          'error trying to parse `config.timeout` to int',
+          config,
+          'ERR_PARSE_TIMEOUT',
+          req
+        ));
+
+        return;
+      }
+
+      // Sometime, the response will be very slow, and does not respond, the connect event will be block by event loop system.
+      // And timer callback will be fired, and abort() will be invoked before connection, then get "socket hang up" and code ECONNRESET.
+      // At this time, if we have a large number of request, nodejs will hang up some socket on background. and the number will up and up.
+      // And then these socket which be hang up will devoring CPU little by little.
+      // ClientRequest.setTimeout will be fired on the specify milliseconds, and can make sure that abort() will be fired after connect.
+      req.setTimeout(timeout, function handleRequestTimeout() {
+        req.abort();
+        var transitional = config.transitional || defaults$5.transitional;
+        reject(createError(
+          'timeout of ' + timeout + 'ms exceeded',
+          config,
+          transitional.clarifyTimeoutError ? 'ETIMEDOUT' : 'ECONNABORTED',
+          req
+        ));
+      });
+    }
+
+    if (config.cancelToken || config.signal) {
+      // Handle cancellation
+      // eslint-disable-next-line func-names
+      onCanceled = function(cancel) {
+        if (req.aborted) return;
+
+        req.abort();
+        reject(!cancel || (cancel && cancel.type) ? new Cancel$2('canceled') : cancel);
+      };
+
+      config.cancelToken && config.cancelToken.subscribe(onCanceled);
+      if (config.signal) {
+        config.signal.aborted ? onCanceled() : config.signal.addEventListener('abort', onCanceled);
+      }
+    }
+
+
+    // Send the request
+    if (utils$6.isStream(data)) {
+      data.on('error', function handleStreamError(err) {
+        reject(enhanceError$1(err, config, null, req));
+      }).pipe(req);
+    } else {
+      req.end(data);
+    }
+  });
+};
+
+var utils$5 = utils$e;
+var normalizeHeaderName = normalizeHeaderName$1;
+var enhanceError = enhanceError$3;
+
+var DEFAULT_CONTENT_TYPE = {
+  'Content-Type': 'application/x-www-form-urlencoded'
+};
+
+function setContentTypeIfUnset(headers, value) {
+  if (!utils$5.isUndefined(headers) && utils$5.isUndefined(headers['Content-Type'])) {
+    headers['Content-Type'] = value;
+  }
+}
+
+function getDefaultAdapter() {
+  var adapter;
+  if (typeof XMLHttpRequest !== 'undefined') {
+    // For browsers use XHR adapter
+    adapter = xhr;
+  } else if (typeof browser$1$1 !== 'undefined' && Object.prototype.toString.call(browser$1$1) === '[object process]') {
+    // For node use HTTP adapter
+    adapter = http_1;
+  }
+  return adapter;
+}
+
+function stringifySafely(rawValue, parser, encoder) {
+  if (utils$5.isString(rawValue)) {
+    try {
+      (parser || JSON.parse)(rawValue);
+      return utils$5.trim(rawValue);
+    } catch (e) {
+      if (e.name !== 'SyntaxError') {
+        throw e;
+      }
+    }
+  }
+
+  return (encoder || JSON.stringify)(rawValue);
+}
+
+var defaults$4 = {
+
+  transitional: {
+    silentJSONParsing: true,
+    forcedJSONParsing: true,
+    clarifyTimeoutError: false
+  },
+
+  adapter: getDefaultAdapter(),
+
+  transformRequest: [function transformRequest(data, headers) {
+    normalizeHeaderName(headers, 'Accept');
+    normalizeHeaderName(headers, 'Content-Type');
+
+    if (utils$5.isFormData(data) ||
+      utils$5.isArrayBuffer(data) ||
+      utils$5.isBuffer(data) ||
+      utils$5.isStream(data) ||
+      utils$5.isFile(data) ||
+      utils$5.isBlob(data)
+    ) {
+      return data;
+    }
+    if (utils$5.isArrayBufferView(data)) {
+      return data.buffer;
+    }
+    if (utils$5.isURLSearchParams(data)) {
+      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
+      return data.toString();
+    }
+    if (utils$5.isObject(data) || (headers && headers['Content-Type'] === 'application/json')) {
+      setContentTypeIfUnset(headers, 'application/json');
+      return stringifySafely(data);
+    }
+    return data;
+  }],
+
+  transformResponse: [function transformResponse(data) {
+    var transitional = this.transitional || defaults$4.transitional;
+    var silentJSONParsing = transitional && transitional.silentJSONParsing;
+    var forcedJSONParsing = transitional && transitional.forcedJSONParsing;
+    var strictJSONParsing = !silentJSONParsing && this.responseType === 'json';
+
+    if (strictJSONParsing || (forcedJSONParsing && utils$5.isString(data) && data.length)) {
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        if (strictJSONParsing) {
+          if (e.name === 'SyntaxError') {
+            throw enhanceError(e, this, 'E_JSON_PARSE');
+          }
+          throw e;
+        }
+      }
+    }
+
+    return data;
+  }],
+
+  /**
+   * A timeout in milliseconds to abort a request. If set to 0 (default) a
+   * timeout is not created.
+   */
+  timeout: 0,
+
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+
+  maxContentLength: -1,
+  maxBodyLength: -1,
+
+  validateStatus: function validateStatus(status) {
+    return status >= 200 && status < 300;
+  },
+
+  headers: {
+    common: {
+      'Accept': 'application/json, text/plain, */*'
+    }
+  }
+};
+
+utils$5.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
+  defaults$4.headers[method] = {};
+});
+
+utils$5.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+  defaults$4.headers[method] = utils$5.merge(DEFAULT_CONTENT_TYPE);
+});
+
+var defaults_1 = defaults$4;
+
+var utils$4 = utils$e;
+var defaults$3 = defaults_1;
+
+/**
+ * Transform the data for a request or a response
+ *
+ * @param {Object|String} data The data to be transformed
+ * @param {Array} headers The headers for the request or response
+ * @param {Array|Function} fns A single function or Array of functions
+ * @returns {*} The resulting transformed data
+ */
+var transformData$1 = function transformData(data, headers, fns) {
+  var context = this || defaults$3;
+  /*eslint no-param-reassign:0*/
+  utils$4.forEach(fns, function transform(fn) {
+    data = fn.call(context, data, headers);
+  });
+
+  return data;
+};
+
+var isCancel$1 = function isCancel(value) {
+  return !!(value && value.__CANCEL__);
+};
+
+var utils$3 = utils$e;
+var transformData = transformData$1;
+var isCancel = isCancel$1;
+var defaults$2 = defaults_1;
+var Cancel$1 = Cancel_1;
+
+/**
+ * Throws a `Cancel` if cancellation has been requested.
+ */
+function throwIfCancellationRequested(config) {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested();
+  }
+
+  if (config.signal && config.signal.aborted) {
+    throw new Cancel$1('canceled');
+  }
+}
+
+/**
+ * Dispatch a request to the server using the configured adapter.
+ *
+ * @param {object} config The config that is to be used for the request
+ * @returns {Promise} The Promise to be fulfilled
+ */
+var dispatchRequest$1 = function dispatchRequest(config) {
+  throwIfCancellationRequested(config);
+
+  // Ensure headers exist
+  config.headers = config.headers || {};
+
+  // Transform request data
+  config.data = transformData.call(
+    config,
+    config.data,
+    config.headers,
+    config.transformRequest
+  );
+
+  // Flatten headers
+  config.headers = utils$3.merge(
+    config.headers.common || {},
+    config.headers[config.method] || {},
+    config.headers
+  );
+
+  utils$3.forEach(
+    ['delete', 'get', 'head', 'post', 'put', 'patch', 'common'],
+    function cleanHeaderConfig(method) {
+      delete config.headers[method];
+    }
+  );
+
+  var adapter = config.adapter || defaults$2.adapter;
+
+  return adapter(config).then(function onAdapterResolution(response) {
+    throwIfCancellationRequested(config);
+
+    // Transform response data
+    response.data = transformData.call(
+      config,
+      response.data,
+      response.headers,
+      config.transformResponse
+    );
+
+    return response;
+  }, function onAdapterRejection(reason) {
+    if (!isCancel(reason)) {
+      throwIfCancellationRequested(config);
+
+      // Transform response data
+      if (reason && reason.response) {
+        reason.response.data = transformData.call(
+          config,
+          reason.response.data,
+          reason.response.headers,
+          config.transformResponse
+        );
+      }
+    }
+
+    return Promise.reject(reason);
+  });
+};
+
+var utils$2 = utils$e;
+
+/**
+ * Config-specific merge-function which creates a new config-object
+ * by merging two configuration objects together.
+ *
+ * @param {Object} config1
+ * @param {Object} config2
+ * @returns {Object} New object resulting from merging config2 to config1
+ */
+var mergeConfig$2 = function mergeConfig(config1, config2) {
+  // eslint-disable-next-line no-param-reassign
+  config2 = config2 || {};
+  var config = {};
+
+  function getMergedValue(target, source) {
+    if (utils$2.isPlainObject(target) && utils$2.isPlainObject(source)) {
+      return utils$2.merge(target, source);
+    } else if (utils$2.isPlainObject(source)) {
+      return utils$2.merge({}, source);
+    } else if (utils$2.isArray(source)) {
+      return source.slice();
+    }
+    return source;
+  }
+
+  // eslint-disable-next-line consistent-return
+  function mergeDeepProperties(prop) {
+    if (!utils$2.isUndefined(config2[prop])) {
+      return getMergedValue(config1[prop], config2[prop]);
+    } else if (!utils$2.isUndefined(config1[prop])) {
+      return getMergedValue(undefined, config1[prop]);
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  function valueFromConfig2(prop) {
+    if (!utils$2.isUndefined(config2[prop])) {
+      return getMergedValue(undefined, config2[prop]);
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  function defaultToConfig2(prop) {
+    if (!utils$2.isUndefined(config2[prop])) {
+      return getMergedValue(undefined, config2[prop]);
+    } else if (!utils$2.isUndefined(config1[prop])) {
+      return getMergedValue(undefined, config1[prop]);
+    }
+  }
+
+  // eslint-disable-next-line consistent-return
+  function mergeDirectKeys(prop) {
+    if (prop in config2) {
+      return getMergedValue(config1[prop], config2[prop]);
+    } else if (prop in config1) {
+      return getMergedValue(undefined, config1[prop]);
+    }
+  }
+
+  var mergeMap = {
+    'url': valueFromConfig2,
+    'method': valueFromConfig2,
+    'data': valueFromConfig2,
+    'baseURL': defaultToConfig2,
+    'transformRequest': defaultToConfig2,
+    'transformResponse': defaultToConfig2,
+    'paramsSerializer': defaultToConfig2,
+    'timeout': defaultToConfig2,
+    'timeoutMessage': defaultToConfig2,
+    'withCredentials': defaultToConfig2,
+    'adapter': defaultToConfig2,
+    'responseType': defaultToConfig2,
+    'xsrfCookieName': defaultToConfig2,
+    'xsrfHeaderName': defaultToConfig2,
+    'onUploadProgress': defaultToConfig2,
+    'onDownloadProgress': defaultToConfig2,
+    'decompress': defaultToConfig2,
+    'maxContentLength': defaultToConfig2,
+    'maxBodyLength': defaultToConfig2,
+    'transport': defaultToConfig2,
+    'httpAgent': defaultToConfig2,
+    'httpsAgent': defaultToConfig2,
+    'cancelToken': defaultToConfig2,
+    'socketPath': defaultToConfig2,
+    'responseEncoding': defaultToConfig2,
+    'validateStatus': mergeDirectKeys
+  };
+
+  utils$2.forEach(Object.keys(config1).concat(Object.keys(config2)), function computeConfigValue(prop) {
+    var merge = mergeMap[prop] || mergeDeepProperties;
+    var configValue = merge(prop);
+    (utils$2.isUndefined(configValue) && merge !== mergeDirectKeys) || (config[prop] = configValue);
+  });
+
+  return config;
+};
+
+var VERSION = data$1.version;
+
+var validators$1 = {};
+
+// eslint-disable-next-line func-names
+['object', 'boolean', 'number', 'function', 'string', 'symbol'].forEach(function(type, i) {
+  validators$1[type] = function validator(thing) {
+    return typeof thing === type || 'a' + (i < 1 ? 'n ' : ' ') + type;
+  };
+});
+
+var deprecatedWarnings = {};
+
+/**
+ * Transitional option validator
+ * @param {function|boolean?} validator - set to false if the transitional option has been removed
+ * @param {string?} version - deprecated version / removed since version
+ * @param {string?} message - some message with additional info
+ * @returns {function}
+ */
+validators$1.transitional = function transitional(validator, version, message) {
+  function formatMessage(opt, desc) {
+    return '[Axios v' + VERSION + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
+  }
+
+  // eslint-disable-next-line func-names
+  return function(value, opt, opts) {
+    if (validator === false) {
+      throw new Error(formatMessage(opt, ' has been removed' + (version ? ' in ' + version : '')));
+    }
+
+    if (version && !deprecatedWarnings[opt]) {
+      deprecatedWarnings[opt] = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        formatMessage(
+          opt,
+          ' has been deprecated since v' + version + ' and will be removed in the near future'
+        )
+      );
+    }
+
+    return validator ? validator(value, opt, opts) : true;
+  };
+};
+
+/**
+ * Assert object's properties type
+ * @param {object} options
+ * @param {object} schema
+ * @param {boolean?} allowUnknown
+ */
+
+function assertOptions(options, schema, allowUnknown) {
+  if (typeof options !== 'object') {
+    throw new TypeError('options must be an object');
+  }
+  var keys = Object.keys(options);
+  var i = keys.length;
+  while (i-- > 0) {
+    var opt = keys[i];
+    var validator = schema[opt];
+    if (validator) {
+      var value = options[opt];
+      var result = value === undefined || validator(value, opt, options);
+      if (result !== true) {
+        throw new TypeError('option ' + opt + ' must be ' + result);
+      }
+      continue;
+    }
+    if (allowUnknown !== true) {
+      throw Error('Unknown option ' + opt);
+    }
+  }
+}
+
+var validator$1 = {
+  assertOptions: assertOptions,
+  validators: validators$1
+};
+
+var utils$1 = utils$e;
+var buildURL = buildURL$3;
+var InterceptorManager = InterceptorManager_1;
+var dispatchRequest = dispatchRequest$1;
+var mergeConfig$1 = mergeConfig$2;
+var validator = validator$1;
+
+var validators = validator.validators;
+/**
+ * Create a new instance of Axios
+ *
+ * @param {Object} instanceConfig The default config for the instance
+ */
+function Axios$1(instanceConfig) {
+  this.defaults = instanceConfig;
+  this.interceptors = {
+    request: new InterceptorManager(),
+    response: new InterceptorManager()
+  };
+}
+
+/**
+ * Dispatch a request
+ *
+ * @param {Object} config The config specific for this request (merged with this.defaults)
+ */
+Axios$1.prototype.request = function request(config) {
+  /*eslint no-param-reassign:0*/
+  // Allow for axios('example/url'[, config]) a la fetch API
+  if (typeof config === 'string') {
+    config = arguments[1] || {};
+    config.url = arguments[0];
+  } else {
+    config = config || {};
+  }
+
+  config = mergeConfig$1(this.defaults, config);
+
+  // Set config.method
+  if (config.method) {
+    config.method = config.method.toLowerCase();
+  } else if (this.defaults.method) {
+    config.method = this.defaults.method.toLowerCase();
+  } else {
+    config.method = 'get';
+  }
+
+  var transitional = config.transitional;
+
+  if (transitional !== undefined) {
+    validator.assertOptions(transitional, {
+      silentJSONParsing: validators.transitional(validators.boolean),
+      forcedJSONParsing: validators.transitional(validators.boolean),
+      clarifyTimeoutError: validators.transitional(validators.boolean)
+    }, false);
+  }
+
+  // filter out skipped interceptors
+  var requestInterceptorChain = [];
+  var synchronousRequestInterceptors = true;
+  this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
+    if (typeof interceptor.runWhen === 'function' && interceptor.runWhen(config) === false) {
+      return;
+    }
+
+    synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
+
+    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
+  });
+
+  var responseInterceptorChain = [];
+  this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
+    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
+  });
+
+  var promise;
+
+  if (!synchronousRequestInterceptors) {
+    var chain = [dispatchRequest, undefined];
+
+    Array.prototype.unshift.apply(chain, requestInterceptorChain);
+    chain = chain.concat(responseInterceptorChain);
+
+    promise = Promise.resolve(config);
+    while (chain.length) {
+      promise = promise.then(chain.shift(), chain.shift());
+    }
+
+    return promise;
+  }
+
+
+  var newConfig = config;
+  while (requestInterceptorChain.length) {
+    var onFulfilled = requestInterceptorChain.shift();
+    var onRejected = requestInterceptorChain.shift();
+    try {
+      newConfig = onFulfilled(newConfig);
+    } catch (error) {
+      onRejected(error);
+      break;
+    }
+  }
+
+  try {
+    promise = dispatchRequest(newConfig);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+
+  while (responseInterceptorChain.length) {
+    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
+  }
+
+  return promise;
+};
+
+Axios$1.prototype.getUri = function getUri(config) {
+  config = mergeConfig$1(this.defaults, config);
+  return buildURL(config.url, config.params, config.paramsSerializer).replace(/^\?/, '');
+};
+
+// Provide aliases for supported request methods
+utils$1.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
+  /*eslint func-names:0*/
+  Axios$1.prototype[method] = function(url, config) {
+    return this.request(mergeConfig$1(config || {}, {
+      method: method,
+      url: url,
+      data: (config || {}).data
+    }));
+  };
+});
+
+utils$1.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+  /*eslint func-names:0*/
+  Axios$1.prototype[method] = function(url, data, config) {
+    return this.request(mergeConfig$1(config || {}, {
+      method: method,
+      url: url,
+      data: data
+    }));
+  };
+});
+
+var Axios_1 = Axios$1;
+
+var Cancel = Cancel_1;
+
+/**
+ * A `CancelToken` is an object that can be used to request cancellation of an operation.
+ *
+ * @class
+ * @param {Function} executor The executor function.
+ */
+function CancelToken(executor) {
+  if (typeof executor !== 'function') {
+    throw new TypeError('executor must be a function.');
+  }
+
+  var resolvePromise;
+
+  this.promise = new Promise(function promiseExecutor(resolve) {
+    resolvePromise = resolve;
+  });
+
+  var token = this;
+
+  // eslint-disable-next-line func-names
+  this.promise.then(function(cancel) {
+    if (!token._listeners) return;
+
+    var i;
+    var l = token._listeners.length;
+
+    for (i = 0; i < l; i++) {
+      token._listeners[i](cancel);
+    }
+    token._listeners = null;
+  });
+
+  // eslint-disable-next-line func-names
+  this.promise.then = function(onfulfilled) {
+    var _resolve;
+    // eslint-disable-next-line func-names
+    var promise = new Promise(function(resolve) {
+      token.subscribe(resolve);
+      _resolve = resolve;
+    }).then(onfulfilled);
+
+    promise.cancel = function reject() {
+      token.unsubscribe(_resolve);
+    };
+
+    return promise;
+  };
+
+  executor(function cancel(message) {
+    if (token.reason) {
+      // Cancellation has already been requested
+      return;
+    }
+
+    token.reason = new Cancel(message);
+    resolvePromise(token.reason);
+  });
+}
+
+/**
+ * Throws a `Cancel` if cancellation has been requested.
+ */
+CancelToken.prototype.throwIfRequested = function throwIfRequested() {
+  if (this.reason) {
+    throw this.reason;
+  }
+};
+
+/**
+ * Subscribe to the cancel signal
+ */
+
+CancelToken.prototype.subscribe = function subscribe(listener) {
+  if (this.reason) {
+    listener(this.reason);
+    return;
+  }
+
+  if (this._listeners) {
+    this._listeners.push(listener);
+  } else {
+    this._listeners = [listener];
+  }
+};
+
+/**
+ * Unsubscribe from the cancel signal
+ */
+
+CancelToken.prototype.unsubscribe = function unsubscribe(listener) {
+  if (!this._listeners) {
+    return;
+  }
+  var index = this._listeners.indexOf(listener);
+  if (index !== -1) {
+    this._listeners.splice(index, 1);
+  }
+};
+
+/**
+ * Returns an object that contains a new `CancelToken` and a function that, when called,
+ * cancels the `CancelToken`.
+ */
+CancelToken.source = function source() {
+  var cancel;
+  var token = new CancelToken(function executor(c) {
+    cancel = c;
+  });
+  return {
+    token: token,
+    cancel: cancel
+  };
+};
+
+var CancelToken_1 = CancelToken;
+
+/**
+ * Syntactic sugar for invoking a function and expanding an array for arguments.
+ *
+ * Common use case would be to use `Function.prototype.apply`.
+ *
+ *  ```js
+ *  function f(x, y, z) {}
+ *  var args = [1, 2, 3];
+ *  f.apply(null, args);
+ *  ```
+ *
+ * With `spread` this example can be re-written.
+ *
+ *  ```js
+ *  spread(function(x, y, z) {})([1, 2, 3]);
+ *  ```
+ *
+ * @param {Function} callback
+ * @returns {Function}
+ */
+var spread = function spread(callback) {
+  return function wrap(arr) {
+    return callback.apply(null, arr);
+  };
+};
+
+/**
+ * Determines whether the payload is an error thrown by Axios
+ *
+ * @param {*} payload The value to test
+ * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
+ */
+var isAxiosError = function isAxiosError(payload) {
+  return (typeof payload === 'object') && (payload.isAxiosError === true);
+};
+
+var utils = utils$e;
+var bind = bind$2;
+var Axios = Axios_1;
+var mergeConfig = mergeConfig$2;
+var defaults$1 = defaults_1;
+
+/**
+ * Create an instance of Axios
+ *
+ * @param {Object} defaultConfig The default config for the instance
+ * @return {Axios} A new instance of Axios
+ */
+function createInstance(defaultConfig) {
+  var context = new Axios(defaultConfig);
+  var instance = bind(Axios.prototype.request, context);
+
+  // Copy axios.prototype to instance
+  utils.extend(instance, Axios.prototype, context);
+
+  // Copy context to instance
+  utils.extend(instance, context);
+
+  // Factory for creating new instances
+  instance.create = function create(instanceConfig) {
+    return createInstance(mergeConfig(defaultConfig, instanceConfig));
+  };
+
+  return instance;
+}
+
+// Create the default instance to be exported
+var axios$1 = createInstance(defaults$1);
+
+// Expose Axios class to allow class inheritance
+axios$1.Axios = Axios;
+
+// Expose Cancel & CancelToken
+axios$1.Cancel = Cancel_1;
+axios$1.CancelToken = CancelToken_1;
+axios$1.isCancel = isCancel$1;
+axios$1.VERSION = data$1.version;
+
+// Expose all/spread
+axios$1.all = function all(promises) {
+  return Promise.all(promises);
+};
+axios$1.spread = spread;
+
+// Expose isAxiosError
+axios$1.isAxiosError = isAxiosError;
+
+axios$2.exports = axios$1;
+
+// Allow use of default import syntax in TypeScript
+axios$2.exports.default = axios$1;
+
+var axios = axios$2.exports;
 
 // eslint-disable-next-line no-shadow
 var WidgetsTypes;
@@ -50,31 +6128,53 @@ const GroupItem = (props) => {
 
 const b$h = block('GroupsList');
 const GroupsList = (props) => {
-    const { groups } = props;
+    const { groups, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
     const [currentGroup, setCurrentGroup] = React.useState(0);
     const [modalShow, setModalShow] = React.useState(false);
     const handleSelectGroup = (groupIndex) => () => {
         setCurrentGroup(groupIndex);
         setModalShow(true);
+        if (onOpenGroup) {
+            onOpenGroup(groups[groupIndex].id);
+        }
     };
     const handlePrevGroup = () => {
         if (currentGroup > 0) {
             setCurrentGroup(currentGroup - 1);
+            if (onOpenGroup && onCloseGroup) {
+                onCloseGroup(groups[currentGroup].id);
+                setTimeout(() => {
+                    onOpenGroup(groups[currentGroup - 1].id);
+                }, 0);
+            }
         }
     };
     const handleNextGroup = () => {
         if (currentGroup < groups.length) {
             setCurrentGroup(currentGroup + 1);
+            if (onOpenGroup && onCloseGroup) {
+                onCloseGroup(groups[currentGroup].id);
+                setTimeout(() => {
+                    onOpenGroup(groups[currentGroup + 1].id);
+                }, 0);
+            }
         }
     };
     const handleCloseModal = () => {
+        if (onCloseGroup) {
+            onCloseGroup(groups[currentGroup].id);
+        }
         setModalShow(false);
     };
     return (React.createElement(React.Fragment, null, groups.length ? (React.createElement(React.Fragment, null,
-        "333",
         React.createElement("div", { className: b$h() },
-            React.createElement("div", { className: b$h('carousel') }, groups.map((group, index) => (React.createElement(GroupItem, { imageUrl: group.imageUrl, key: group.id, rounded: true, size: "lg", theme: "light", title: group.title, onClick: handleSelectGroup(index) }))))),
-        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))) : (React.createElement("p", null, "No groups to display"))));
+            React.createElement("div", { className: b$h('carousel') }, groups.map((group, index) => {
+                if (group.stories.length) {
+                    return (React.createElement(GroupItem, { imageUrl: group.imageUrl, key: group.id, rounded: true, size: "lg", theme: "light", title: group.title, onClick: handleSelectGroup(index) }));
+                }
+                return null;
+            }))),
+        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("p", null, "No groups to display"))));
 };
 
 var u = e=>{var a=useRef(e);return useEffect(()=>{a.current=e;}),a};
@@ -97,15 +6197,21 @@ const RightArrowIcon = () => (React.createElement("svg", { fill: "none", height:
     React.createElement("path", { d: "M12 4.99997L19 12L12 19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
 const CurrentStoryContext = React.createContext('');
 const StoryModal = (props) => {
-    const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, currentGroup } = props;
+    const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
     const [currentStory, setCurrentStory] = React.useState(0);
     const [currentStoryId, setCurrentStoryId] = React.useState(stories[0].id);
     const width = c$1();
     React.useEffect(() => {
         setCurrentStory(0);
-    }, [stories.length]);
+        if (onOpenStory && showed) {
+            onOpenStory(currentGroup.id, stories[0].id);
+        }
+    }, [stories.length, onOpenStory, stories, currentGroup, showed]);
     const handleClose = () => {
         onClose();
+        if (onCloseStory) {
+            onCloseStory(currentGroup.id, stories[currentStory].id);
+        }
     };
     const handleAnimationEnd = () => {
         handleNext();
@@ -117,6 +6223,17 @@ const StoryModal = (props) => {
         else {
             setCurrentStory(currentStory + 1);
             setCurrentStoryId(stories[currentStory + 1].id);
+            if (onCloseStory) {
+                onCloseStory(currentGroup.id, stories[currentStory].id);
+            }
+            if (onOpenStory) {
+                setTimeout(() => {
+                    onOpenStory(currentGroup.id, stories[currentStory + 1].id);
+                }, 0);
+            }
+            if (onNextStory) {
+                onNextStory(currentGroup.id, stories[currentStory].id);
+            }
         }
     };
     const handlePrev = () => {
@@ -126,6 +6243,17 @@ const StoryModal = (props) => {
         else {
             setCurrentStory(currentStory - 1);
             setCurrentStoryId(stories[currentStory - 1].id);
+            if (onCloseStory) {
+                onCloseStory(currentGroup.id, stories[currentStory].id);
+            }
+            if (onOpenStory) {
+                setTimeout(() => {
+                    onOpenStory(currentGroup.id, stories[currentStory - 1].id);
+                }, 0);
+            }
+            if (onPrevStory) {
+                onPrevStory(currentGroup.id, stories[currentStory].id);
+            }
         }
     };
     return (React.createElement(CurrentStoryContext.Provider, { value: currentStoryId },
@@ -150,6 +6278,416 @@ const StoryModal = (props) => {
                 React.createElement("button", { className: b$g('arrowButton', { right: true }), onClick: handleNext },
                     React.createElement(RightArrowIcon, null))))));
 };
+
+function _classCallCheck$1(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties$1(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass$1(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties$1(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties$1(Constructor, staticProps);
+  return Constructor;
+}
+
+function normalizeComputedStyleValue(string) {
+  // "250px" --> 250
+  return +string.replace(/px/, '');
+}
+
+function fixDPR(canvas) {
+  var dpr = window.devicePixelRatio;
+  var computedStyles = getComputedStyle(canvas);
+  var width = normalizeComputedStyleValue(computedStyles.getPropertyValue('width'));
+  var height = normalizeComputedStyleValue(computedStyles.getPropertyValue('height'));
+  canvas.setAttribute('width', (width * dpr).toString());
+  canvas.setAttribute('height', (height * dpr).toString());
+}
+
+function generateRandomNumber(min, max) {
+  var fractionDigits = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var randomNumber = Math.random() * (max - min) + min;
+  return Math.floor(randomNumber * Math.pow(10, fractionDigits)) / Math.pow(10, fractionDigits);
+}
+
+function generateRandomArrayElement(arr) {
+  return arr[generateRandomNumber(0, arr.length)];
+}
+
+var FREE_FALLING_OBJECT_ACCELERATION = 0.00125;
+var MIN_DRAG_FORCE_COEFFICIENT = 0.0005;
+var MAX_DRAG_FORCE_COEFFICIENT = 0.0009;
+var ROTATION_SLOWDOWN_ACCELERATION = 0.00001;
+var INITIAL_SHAPE_RADIUS = 6;
+var INITIAL_EMOJI_SIZE = 80;
+var MIN_INITIAL_CONFETTI_SPEED = 0.9;
+var MAX_INITIAL_CONFETTI_SPEED = 1.7;
+var MIN_FINAL_X_CONFETTI_SPEED = 0.2;
+var MAX_FINAL_X_CONFETTI_SPEED = 0.6;
+var MIN_INITIAL_ROTATION_SPEED = 0.03;
+var MAX_INITIAL_ROTATION_SPEED = 0.07;
+var MIN_CONFETTI_ANGLE = 15;
+var MAX_CONFETTI_ANGLE = 82;
+var MAX_CONFETTI_POSITION_SHIFT = 150;
+var SHAPE_VISIBILITY_TRESHOLD = 100;
+var DEFAULT_CONFETTI_NUMBER = 250;
+var DEFAULT_EMOJIS_NUMBER = 40;
+var DEFAULT_CONFETTI_COLORS = ['#fcf403', '#62fc03', '#f4fc03', '#03e7fc', '#03fca5', '#a503fc', '#fc03ad', '#fc03c2'];
+
+function getWindowWidthCoefficient(canvasWidth) {
+  var HD_SCREEN_WIDTH = 1920;
+  return Math.log(canvasWidth) / Math.log(HD_SCREEN_WIDTH);
+}
+
+var ConfettiShape = /*#__PURE__*/function () {
+  function ConfettiShape(args) {
+    _classCallCheck$1(this, ConfettiShape);
+
+    var initialPosition = args.initialPosition,
+        direction = args.direction,
+        confettiRadius = args.confettiRadius,
+        confettiColors = args.confettiColors,
+        emojis = args.emojis,
+        emojiSize = args.emojiSize,
+        canvasWidth = args.canvasWidth;
+    var randomConfettiSpeed = generateRandomNumber(MIN_INITIAL_CONFETTI_SPEED, MAX_INITIAL_CONFETTI_SPEED, 3);
+    var initialSpeed = randomConfettiSpeed * getWindowWidthCoefficient(canvasWidth);
+    this.confettiSpeed = {
+      x: initialSpeed,
+      y: initialSpeed
+    };
+    this.finalConfettiSpeedX = generateRandomNumber(MIN_FINAL_X_CONFETTI_SPEED, MAX_FINAL_X_CONFETTI_SPEED, 3);
+    this.rotationSpeed = emojis.length ? 0.01 : generateRandomNumber(MIN_INITIAL_ROTATION_SPEED, MAX_INITIAL_ROTATION_SPEED, 3) * getWindowWidthCoefficient(canvasWidth);
+    this.dragForceCoefficient = generateRandomNumber(MIN_DRAG_FORCE_COEFFICIENT, MAX_DRAG_FORCE_COEFFICIENT, 6);
+    this.radius = {
+      x: confettiRadius,
+      y: confettiRadius
+    };
+    this.initialRadius = confettiRadius;
+    this.rotationAngle = direction === 'left' ? generateRandomNumber(0, 0.2, 3) : generateRandomNumber(-0.2, 0, 3);
+    this.emojiSize = emojiSize;
+    this.emojiRotationAngle = generateRandomNumber(0, 2 * Math.PI);
+    this.radiusYUpdateDirection = 'down';
+    var angle = direction === 'left' ? generateRandomNumber(MAX_CONFETTI_ANGLE, MIN_CONFETTI_ANGLE) * Math.PI / 180 : generateRandomNumber(-MIN_CONFETTI_ANGLE, -MAX_CONFETTI_ANGLE) * Math.PI / 180;
+    this.absCos = Math.abs(Math.cos(angle));
+    this.absSin = Math.abs(Math.sin(angle));
+    var positionShift = generateRandomNumber(-MAX_CONFETTI_POSITION_SHIFT, 0);
+    var shiftedInitialPosition = {
+      x: initialPosition.x + (direction === 'left' ? -positionShift : positionShift) * this.absCos,
+      y: initialPosition.y - positionShift * this.absSin
+    };
+    this.currentPosition = Object.assign({}, shiftedInitialPosition);
+    this.initialPosition = Object.assign({}, shiftedInitialPosition);
+    this.color = emojis.length ? null : generateRandomArrayElement(confettiColors);
+    this.emoji = emojis.length ? generateRandomArrayElement(emojis) : null;
+    this.createdAt = new Date().getTime();
+    this.direction = direction;
+  }
+
+  _createClass$1(ConfettiShape, [{
+    key: "draw",
+    value: function draw(canvasContext) {
+      var currentPosition = this.currentPosition,
+          radius = this.radius,
+          color = this.color,
+          emoji = this.emoji,
+          rotationAngle = this.rotationAngle,
+          emojiRotationAngle = this.emojiRotationAngle,
+          emojiSize = this.emojiSize;
+      var dpr = window.devicePixelRatio;
+
+      if (color) {
+        canvasContext.fillStyle = color;
+        canvasContext.beginPath();
+        canvasContext.ellipse(currentPosition.x * dpr, currentPosition.y * dpr, radius.x * dpr, radius.y * dpr, rotationAngle, 0, 2 * Math.PI);
+        canvasContext.fill();
+      } else if (emoji) {
+        canvasContext.font = "".concat(emojiSize, "px serif");
+        canvasContext.save();
+        canvasContext.translate(dpr * currentPosition.x, dpr * currentPosition.y);
+        canvasContext.rotate(emojiRotationAngle);
+        canvasContext.textAlign = 'center';
+        canvasContext.fillText(emoji, 0, 0);
+        canvasContext.restore();
+      }
+    }
+  }, {
+    key: "updatePosition",
+    value: function updatePosition(iterationTimeDelta, currentTime) {
+      var confettiSpeed = this.confettiSpeed,
+          dragForceCoefficient = this.dragForceCoefficient,
+          finalConfettiSpeedX = this.finalConfettiSpeedX,
+          radiusYUpdateDirection = this.radiusYUpdateDirection,
+          rotationSpeed = this.rotationSpeed,
+          createdAt = this.createdAt,
+          direction = this.direction;
+      var timeDeltaSinceCreation = currentTime - createdAt;
+      if (confettiSpeed.x > finalConfettiSpeedX) this.confettiSpeed.x -= dragForceCoefficient * iterationTimeDelta;
+      this.currentPosition.x += confettiSpeed.x * (direction === 'left' ? -this.absCos : this.absCos) * iterationTimeDelta;
+      this.currentPosition.y = this.initialPosition.y - confettiSpeed.y * this.absSin * timeDeltaSinceCreation + FREE_FALLING_OBJECT_ACCELERATION * Math.pow(timeDeltaSinceCreation, 2) / 2;
+      this.rotationSpeed -= this.emoji ? 0.0001 : ROTATION_SLOWDOWN_ACCELERATION * iterationTimeDelta;
+      if (this.rotationSpeed < 0) this.rotationSpeed = 0; // no need to update rotation radius for emoji
+
+      if (this.emoji) {
+        this.emojiRotationAngle += this.rotationSpeed * iterationTimeDelta % (2 * Math.PI);
+        return;
+      }
+
+      if (radiusYUpdateDirection === 'down') {
+        this.radius.y -= iterationTimeDelta * rotationSpeed;
+
+        if (this.radius.y <= 0) {
+          this.radius.y = 0;
+          this.radiusYUpdateDirection = 'up';
+        }
+      } else {
+        this.radius.y += iterationTimeDelta * rotationSpeed;
+
+        if (this.radius.y >= this.initialRadius) {
+          this.radius.y = this.initialRadius;
+          this.radiusYUpdateDirection = 'down';
+        }
+      }
+    }
+  }, {
+    key: "getIsVisibleOnCanvas",
+    value: function getIsVisibleOnCanvas(canvasHeight) {
+      return this.currentPosition.y < canvasHeight + SHAPE_VISIBILITY_TRESHOLD;
+    }
+  }]);
+
+  return ConfettiShape;
+}();
+
+function createCanvas() {
+  var canvas = document.createElement('canvas');
+  canvas.style.position = 'fixed';
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.zIndex = '1000';
+  canvas.style.pointerEvents = 'none';
+  document.body.appendChild(canvas);
+  return canvas;
+}
+
+function normalizeConfettiConfig(confettiConfig) {
+  var _confettiConfig$confe = confettiConfig.confettiRadius,
+      confettiRadius = _confettiConfig$confe === void 0 ? INITIAL_SHAPE_RADIUS : _confettiConfig$confe,
+      _confettiConfig$confe2 = confettiConfig.confettiNumber,
+      confettiNumber = _confettiConfig$confe2 === void 0 ? confettiConfig.confettiesNumber || (confettiConfig.emojis ? DEFAULT_EMOJIS_NUMBER : DEFAULT_CONFETTI_NUMBER) : _confettiConfig$confe2,
+      _confettiConfig$confe3 = confettiConfig.confettiColors,
+      confettiColors = _confettiConfig$confe3 === void 0 ? DEFAULT_CONFETTI_COLORS : _confettiConfig$confe3,
+      _confettiConfig$emoji = confettiConfig.emojis,
+      emojis = _confettiConfig$emoji === void 0 ? confettiConfig.emojies || [] : _confettiConfig$emoji,
+      _confettiConfig$emoji2 = confettiConfig.emojiSize,
+      emojiSize = _confettiConfig$emoji2 === void 0 ? INITIAL_EMOJI_SIZE : _confettiConfig$emoji2; // deprecate wrong plural forms, used in early releases
+
+  if (confettiConfig.emojies) console.error("emojies argument is deprecated, please use emojis instead");
+  if (confettiConfig.confettiesNumber) console.error("confettiesNumber argument is deprecated, please use confettiNumber instead");
+  return {
+    confettiRadius: confettiRadius,
+    confettiNumber: confettiNumber,
+    confettiColors: confettiColors,
+    emojis: emojis,
+    emojiSize: emojiSize
+  };
+}
+
+var ConfettiBatch = /*#__PURE__*/function () {
+  function ConfettiBatch(canvasContext) {
+    var _this = this;
+
+    _classCallCheck$1(this, ConfettiBatch);
+
+    this.canvasContext = canvasContext;
+    this.shapes = [];
+    this.promise = new Promise(function (completionCallback) {
+      return _this.resolvePromise = completionCallback;
+    });
+  }
+
+  _createClass$1(ConfettiBatch, [{
+    key: "getBatchCompletePromise",
+    value: function getBatchCompletePromise() {
+      return this.promise;
+    }
+  }, {
+    key: "addShapes",
+    value: function addShapes() {
+      var _this$shapes;
+
+      (_this$shapes = this.shapes).push.apply(_this$shapes, arguments);
+    }
+  }, {
+    key: "complete",
+    value: function complete() {
+      var _a;
+
+      if (this.shapes.length) {
+        return false;
+      }
+
+      (_a = this.resolvePromise) === null || _a === void 0 ? void 0 : _a.call(this);
+      return true;
+    }
+  }, {
+    key: "processShapes",
+    value: function processShapes(time, canvasHeight, cleanupInvisibleShapes) {
+      var _this2 = this;
+
+      var timeDelta = time.timeDelta,
+          currentTime = time.currentTime;
+      this.shapes = this.shapes.filter(function (shape) {
+        // Render the shapes in this batch
+        shape.updatePosition(timeDelta, currentTime);
+        shape.draw(_this2.canvasContext); // Only cleanup the shapes if we're being asked to
+
+        if (!cleanupInvisibleShapes) {
+          return true;
+        }
+
+        return shape.getIsVisibleOnCanvas(canvasHeight);
+      });
+    }
+  }]);
+
+  return ConfettiBatch;
+}();
+
+var JSConfetti = /*#__PURE__*/function () {
+  function JSConfetti() {
+    var jsConfettiConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck$1(this, JSConfetti);
+
+    this.activeConfettiBatches = [];
+    this.canvas = jsConfettiConfig.canvas || createCanvas();
+    this.canvasContext = this.canvas.getContext('2d');
+    this.requestAnimationFrameRequested = false;
+    this.lastUpdated = new Date().getTime();
+    this.iterationIndex = 0;
+    this.loop = this.loop.bind(this);
+    requestAnimationFrame(this.loop);
+  }
+
+  _createClass$1(JSConfetti, [{
+    key: "loop",
+    value: function loop() {
+      this.requestAnimationFrameRequested = false;
+      fixDPR(this.canvas);
+      var currentTime = new Date().getTime();
+      var timeDelta = currentTime - this.lastUpdated;
+      var canvasHeight = this.canvas.offsetHeight;
+      var cleanupInvisibleShapes = this.iterationIndex % 10 === 0;
+      this.activeConfettiBatches = this.activeConfettiBatches.filter(function (batch) {
+        batch.processShapes({
+          timeDelta: timeDelta,
+          currentTime: currentTime
+        }, canvasHeight, cleanupInvisibleShapes); // Do not remove invisible shapes on every iteration
+
+        if (!cleanupInvisibleShapes) {
+          return true;
+        }
+
+        return !batch.complete();
+      });
+      this.iterationIndex++;
+      this.queueAnimationFrameIfNeeded(currentTime);
+    }
+  }, {
+    key: "queueAnimationFrameIfNeeded",
+    value: function queueAnimationFrameIfNeeded(currentTime) {
+      if (this.requestAnimationFrameRequested) {
+        // We already have a pended animation frame, so there is no more work
+        return;
+      }
+
+      if (this.activeConfettiBatches.length < 1) {
+        // No shapes to animate, so don't queue another frame
+        return;
+      }
+
+      this.requestAnimationFrameRequested = true; // Capture the last updated time for animation
+
+      this.lastUpdated = currentTime || new Date().getTime();
+      requestAnimationFrame(this.loop);
+    }
+  }, {
+    key: "addConfetti",
+    value: function addConfetti() {
+      var confettiConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      var _normalizeConfettiCon = normalizeConfettiConfig(confettiConfig),
+          confettiRadius = _normalizeConfettiCon.confettiRadius,
+          confettiNumber = _normalizeConfettiCon.confettiNumber,
+          confettiColors = _normalizeConfettiCon.confettiColors,
+          emojis = _normalizeConfettiCon.emojis,
+          emojiSize = _normalizeConfettiCon.emojiSize; // Use the bounding rect rather tahn the canvas width / height, because
+      // .width / .height are unset until a layout pass has been completed. Upon
+      // confetti being immediately queued on a page load, this hasn't happened so
+      // the default of 300x150 will be returned, causing an improper source point
+      // for the confetti animation.
+
+
+      var canvasRect = this.canvas.getBoundingClientRect();
+      var canvasWidth = canvasRect.width;
+      var canvasHeight = canvasRect.height;
+      var yPosition = canvasHeight * 5 / 7;
+      var leftConfettiPosition = {
+        x: 0,
+        y: yPosition
+      };
+      var rightConfettiPosition = {
+        x: canvasWidth,
+        y: yPosition
+      };
+      var confettiGroup = new ConfettiBatch(this.canvasContext);
+
+      for (var i = 0; i < confettiNumber / 2; i++) {
+        var confettiOnTheRight = new ConfettiShape({
+          initialPosition: leftConfettiPosition,
+          direction: 'right',
+          confettiRadius: confettiRadius,
+          confettiColors: confettiColors,
+          confettiNumber: confettiNumber,
+          emojis: emojis,
+          emojiSize: emojiSize,
+          canvasWidth: canvasWidth
+        });
+        var confettiOnTheLeft = new ConfettiShape({
+          initialPosition: rightConfettiPosition,
+          direction: 'left',
+          confettiRadius: confettiRadius,
+          confettiColors: confettiColors,
+          confettiNumber: confettiNumber,
+          emojis: emojis,
+          emojiSize: emojiSize,
+          canvasWidth: canvasWidth
+        });
+        confettiGroup.addShapes(confettiOnTheRight, confettiOnTheLeft);
+      }
+
+      this.activeConfettiBatches.push(confettiGroup);
+      this.queueAnimationFrameIfNeeded();
+      return confettiGroup.getBatchCompletePromise();
+    }
+  }]);
+
+  return JSConfetti;
+}();
 
 var global$1 = (typeof global !== "undefined" ? global :
   typeof self !== "undefined" ? self :
@@ -2123,33 +8661,33 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isFastBuffer(obj.slice(0, 0))
 }
 
-let urlAlphabet =
+let urlAlphabet$1 =
   'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
 
-const POOL_SIZE_MULTIPLIER = 128;
-let pool, poolOffset;
-let fillPool = bytes => {
-  if (!pool || pool.length < bytes) {
-    pool = Buffer.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER);
-    crypto.randomFillSync(pool);
-    poolOffset = 0;
-  } else if (poolOffset + bytes > pool.length) {
-    crypto.randomFillSync(pool);
-    poolOffset = 0;
+const POOL_SIZE_MULTIPLIER$1 = 128;
+let pool$1, poolOffset$1;
+let fillPool$1 = bytes => {
+  if (!pool$1 || pool$1.length < bytes) {
+    pool$1 = Buffer.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER$1);
+    crypto.randomFillSync(pool$1);
+    poolOffset$1 = 0;
+  } else if (poolOffset$1 + bytes > pool$1.length) {
+    crypto.randomFillSync(pool$1);
+    poolOffset$1 = 0;
   }
-  poolOffset += bytes;
+  poolOffset$1 += bytes;
 };
-let nanoid = (size = 21) => {
-  fillPool(size);
+let nanoid$1 = (size = 21) => {
+  fillPool$1(size);
   let id = '';
-  for (let i = poolOffset - size; i < poolOffset; i++) {
-    id += urlAlphabet[pool[i] & 63];
+  for (let i = poolOffset$1 - size; i < poolOffset$1; i++) {
+    id += urlAlphabet$1[pool$1[i] & 63];
   }
   return id
 };
 
 const IconLogoCircle = ({ className }) => {
-    const gradientId = useMemo(() => nanoid(), []);
+    const gradientId = useMemo(() => nanoid$1(), []);
     return (React.createElement("svg", { className: className, fill: "none", height: "34", viewBox: "0 0 34 34", width: "34", xmlns: "http://www.w3.org/2000/svg" },
         React.createElement("circle", { cx: "17", cy: "17", fill: "white", r: "17" }),
         React.createElement("path", { d: "M17 0C7.59621 0 0 7.59887 0 17C0 26.4038 7.59887 34 17 34C26.4038 34 34 26.4011 34 17C34 7.59621 26.4011 0 17 0ZM6.44938 24.5006C5.3198 22.9161 4.55215 21.068 4.23074 19.1575L6.19504 18.8268C6.4673 20.4418 7.11609 22.0037 8.07168 23.3445L6.44938 24.5006ZM6.19504 15.1732L4.23074 14.8425C4.55215 12.932 5.3198 11.0839 6.44938 9.49941L8.07168 10.6555C7.11609 11.9963 6.4673 13.5582 6.19504 15.1732ZM14.8425 29.7693C12.932 29.4479 11.0839 28.6802 9.49941 27.5506L10.6555 25.9283C11.9963 26.8839 13.5582 27.5327 15.1732 27.805L14.8425 29.7693ZM10.6555 8.07168L9.49941 6.44938C11.0839 5.3198 12.932 4.55215 14.8425 4.23074L15.1732 6.19504C13.5582 6.4673 11.9963 7.11609 10.6555 8.07168ZM27.5506 9.49941C28.6802 11.0839 29.4479 12.9313 29.7693 14.8425L27.805 15.1732C27.5327 13.5582 26.8839 11.9963 25.929 10.6555L27.5506 9.49941ZM19.1575 29.7693L18.8268 27.805C20.4418 27.5327 22.0037 26.8839 23.3445 25.9283L24.5006 27.5506C22.9161 28.6802 21.068 29.4479 19.1575 29.7693ZM23.3445 8.07168C22.0037 7.11609 20.4418 6.4673 18.8268 6.19504L19.1575 4.23074C21.068 4.55215 22.9161 5.3198 24.5006 6.44938L23.3445 8.07168ZM27.5506 24.5006L25.929 23.3445C26.8839 22.0037 27.5327 20.4418 27.805 18.8268L29.7693 19.1575C29.4479 21.0687 28.6802 22.9161 27.5506 24.5006Z", fill: `url(#${gradientId})` }),
@@ -3203,6 +9741,7 @@ const INIT_ELEMENT_STYLES$5 = {
 const ChooseAnswerWidget = (props) => {
     const { params, position, positionLimits, onAnswer } = props;
     const [userAnswer, setUserAnswer] = useState(null);
+    const jsConfetti = useRef(new JSConfetti());
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
             return calculateElementSize(position, positionLimits, size);
@@ -3278,6 +9817,11 @@ const ChooseAnswerWidget = (props) => {
         elementSizes.answerTitle,
         elementSizes.answerId
     ]);
+    useEffect(() => {
+        if (userAnswer && userAnswer === params.correct) {
+            jsConfetti.current.addConfetti();
+        }
+    }, [userAnswer, params.correct]);
     return (React.createElement("div", { className: b$f({
             color: params.color,
             shake: userAnswer && userAnswer !== params.correct,
@@ -3467,7 +10011,7 @@ const CLASS_NAME = 'MaterialIcon';
 const MaterialIcon = memo(({ name = 'ArrowCircleUpOutlineIcon', className, color, background, size = 'auto' }) => {
     const Icon = useMemo(() => MATERIAL_ICONS[name], [name]);
     let gradient;
-    const gradientId = useMemo(() => nanoid(), []);
+    const gradientId = useMemo(() => nanoid$1(), []);
     if ((background === null || background === void 0 ? void 0 : background.type) === 'gradient') {
         gradient = (React.createElement("linearGradient", { id: gradientId, x1: "0", x2: "0", y1: "0", y2: "1" },
             React.createElement("stop", { offset: "0%", stopColor: background.value[0] }),
@@ -57721,10 +64265,13 @@ const SliderWidget = (props) => {
             setDelay(0);
         }
     }, delay);
-    const handleChange = (valueChanged) => {
-        if (props.onSlide) {
-            props.onSlide(valueChanged);
+    useEffect(() => {
+        if (changeStatus === 'moved' && props.onSlide) {
+            props.onSlide(sliderValue);
         }
+        // eslint-disable-next-line
+    }, [changeStatus, sliderValue]);
+    const handleChange = (valueChanged) => {
         setSliderValue(valueChanged);
     };
     const handleBeforeChange = () => {
@@ -58069,6 +64616,7 @@ const StoryContent = (props) => {
     const { story } = props;
     const [isVideoLoading, setVideoLoading] = useState(false);
     const width = c$1();
+    // const canvasRef = useRef(null);
     return (React.createElement("div", { className: b$1(), style: { height: width < 768 ? Math.round(694 * (width / 390)) : '100%' } },
         React.createElement("div", { className: b$1('scope'), style: {
                 background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
@@ -58080,102 +64628,524 @@ const StoryContent = (props) => {
             } }))));
 };
 
+let urlAlphabet =
+  'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
+
+const POOL_SIZE_MULTIPLIER = 128;
+let pool, poolOffset;
+let fillPool = bytes => {
+  if (!pool || pool.length < bytes) {
+    pool = Buffer$1.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER);
+    crypto.randomFillSync(pool);
+    poolOffset = 0;
+  } else if (poolOffset + bytes > pool.length) {
+    crypto.randomFillSync(pool);
+    poolOffset = 0;
+  }
+  poolOffset += bytes;
+};
+let nanoid = (size = 21) => {
+  fillPool((size -= 0));
+  let id = '';
+  for (let i = poolOffset - size; i < poolOffset; i++) {
+    id += urlAlphabet[pool[i] & 63];
+  }
+  return id
+};
+
 const API = {
+    apps: {
+        getList() {
+            return axios({
+                method: 'get',
+                url: '/apps'
+            });
+        }
+    },
+    groups: {
+        getList(params) {
+            return axios({
+                method: 'get',
+                url: `/apps/${params.appId}/groups`
+            });
+        }
+    },
+    stories: {
+        getList(params) {
+            return axios({
+                method: 'get',
+                url: `/apps/${params.appId}/groups/${params.groupId}/stories`
+            });
+        }
+    },
     statistics: {
-        story: {
-            onWatch(params) {
-                console.log(params);
+        group: {
+            sendDuration(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'duration',
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: params.seconds
+                    }
+                });
+            },
+            onOpen(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'open',
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
+            },
+            onClose(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'close',
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
             }
-            // onNext(),
-            // onPrev(),
-            // onClose(),
-            // onGroupOpen()
+        },
+        story: {
+            sendDuration(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'duration',
+                        story_id: params.storyId,
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: params.seconds
+                    }
+                });
+            },
+            onOpen(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'open',
+                        story_id: params.storyId,
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
+            },
+            onClose(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'close',
+                        story_id: params.storyId,
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
+            },
+            onNext(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'next',
+                        user_id: params.uniqUserId,
+                        story_id: params.storyId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
+            },
+            onPrev(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'back',
+                        user_id: params.uniqUserId,
+                        story_id: params.storyId,
+                        group_id: params.groupId,
+                        value: ''
+                    }
+                });
+            }
         },
         widgets: {
             chooseAnswer: {
                 onAnswer(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'answer',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.answer
+                        }
+                    });
                 }
             },
             clickMe: {
                 onClick(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'click',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.url
+                        }
+                    });
                 }
             },
             emojiReaction: {
                 onReact(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'answer',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.emoji
+                        }
+                    });
                 }
             },
             question: {
                 onAnswer(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'answer',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.answer
+                        }
+                    });
                 }
             },
             slider: {
                 onSlide(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'answer',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.value
+                        }
+                    });
                 }
             },
             swipeUp: {
                 onSwipe(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'click',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.url
+                        }
+                    });
                 }
             },
             talkAbout: {
                 onAnswer(params) {
-                    console.log(params);
+                    return axios({
+                        method: 'post',
+                        url: `/reactions`,
+                        data: {
+                            type: 'answer',
+                            group_id: params.groupId,
+                            story_id: params.storyId,
+                            widget_id: params.widgetId,
+                            user_id: params.uniqUserId,
+                            value: params.answer
+                        }
+                    });
                 }
             }
         }
     }
 };
 
-const actionToWidget = (widget) => {
+// import { GroupType } from '@storysdk/react';
+const actionToWidget = (widget, storyId, groupId, uniqUserId) => {
     switch (widget.content.type) {
         case 'choose_answer':
             return (answer) => API.statistics.widgets.chooseAnswer.onAnswer({
                 widgetId: widget.id,
+                storyId,
+                groupId,
+                uniqUserId,
                 answer
             });
         case 'emoji_reaction':
             return (emoji) => API.statistics.widgets.emojiReaction.onReact({
                 widgetId: widget.id,
+                storyId,
+                groupId,
+                uniqUserId,
                 emoji
             });
         case 'talk_about':
             return (answer) => API.statistics.widgets.talkAbout.onAnswer({
                 widgetId: widget.id,
+                storyId,
+                groupId,
+                uniqUserId,
                 answer
             });
         case 'click_me':
-            return () => API.statistics.widgets.clickMe.onClick({ widgetId: widget.id });
+            return () => API.statistics.widgets.clickMe.onClick({
+                widgetId: widget.id,
+                storyId,
+                groupId,
+                uniqUserId,
+                url: widget.content.params.url
+            });
         case 'question':
-            return (answer) => API.statistics.widgets.question.onAnswer({ widgetId: widget.id, answer });
+            return (answer) => API.statistics.widgets.question.onAnswer({
+                widgetId: widget.id,
+                answer,
+                storyId,
+                groupId,
+                uniqUserId
+            });
         case 'slider':
-            return (value) => API.statistics.widgets.slider.onSlide({ widgetId: widget.id, value });
+            return (value) => API.statistics.widgets.slider.onSlide({
+                widgetId: widget.id,
+                value,
+                storyId,
+                groupId,
+                uniqUserId
+            });
         case 'swipe_up':
-            return () => API.statistics.widgets.swipeUp.onSwipe({ widgetId: widget.id });
+            return () => API.statistics.widgets.swipeUp.onSwipe({
+                widgetId: widget.id,
+                storyId,
+                groupId,
+                uniqUserId,
+                url: widget.content.params.url
+            });
         default:
             return undefined;
     }
 };
-const adaptWidgets = (widgets) => widgets.map((widget) => (Object.assign(Object.assign({}, widget), { action: actionToWidget(widget) })));
-const adaptGroupData = (data) => data.map((group) => ({
+const adaptWidgets = (widgets, storyId, groupId, uniqUserId) => widgets.map((widget) => (Object.assign(Object.assign({}, widget), { action: actionToWidget(widget, storyId, groupId, uniqUserId) })));
+const adaptGroupData = (data, uniqUserId) => data
+    .filter((group) => (group.stories ? group.stories.length : 0))
+    .map((group) => ({
     id: group.id,
     title: group.title,
     imageUrl: group.image_url,
     stories: group.stories.map((story, index) => ({
         id: story.id,
         background: story.story_data.background,
-        storyData: adaptWidgets(story.story_data.widgets),
+        storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId),
         positionIndex: index
     }))
 }));
 
+const withGroupsData = (GroupsList, token) => () => {
+    const [data, setData] = useState([]);
+    const [groups, setGroups] = useState([]);
+    const [groupsWithStories, setGroupsWithStories] = useState([]);
+    const [loadStatus, setLoadStatus] = useState('pending');
+    const [groupDurationStatus, setGroupDurationStatus] = useState({
+        groupId: '',
+        status: 'pending'
+    });
+    const [stroyDurationStatus, setStoryDurationStatus] = useState({
+        storyId: '',
+        groupId: '',
+        status: 'pending'
+    });
+    const [groupDurationTime, setGroupDurationTime] = useState(0); // seconds
+    const [storyDurationTime, setStoryDurationTime] = useState(0); // seconds
+    const uniqUserId = useMemo(() => nanoid(), []);
+    useEffect(() => {
+        let interval;
+        if (groupDurationStatus.status === 'calculating') {
+            interval = setInterval(() => {
+                setGroupDurationTime((seconds) => seconds + 1);
+            }, 1000);
+        }
+        else if (groupDurationStatus.status === 'calculated') {
+            if (interval) {
+                clearInterval(interval);
+            }
+        }
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [groupDurationStatus]);
+    useEffect(() => {
+        let interval;
+        if (stroyDurationStatus.status === 'calculating') {
+            interval = setInterval(() => {
+                setStoryDurationTime((seconds) => seconds + 1);
+            }, 1000);
+        }
+        else if (stroyDurationStatus.status === 'calculated') {
+            if (interval) {
+                clearInterval(interval);
+            }
+        }
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [stroyDurationStatus]);
+    useEffect(() => {
+        if (groupDurationStatus.status === 'calculated') {
+            API.statistics.group
+                .sendDuration({
+                groupId: groupDurationStatus.groupId,
+                uniqUserId,
+                seconds: groupDurationTime
+            })
+                .then(() => {
+                setGroupDurationTime(0);
+            });
+        }
+        // eslint-disable-next-line
+    }, [groupDurationStatus, uniqUserId]);
+    useEffect(() => {
+        if (stroyDurationStatus.status === 'calculated') {
+            API.statistics.story
+                .sendDuration({
+                storyId: stroyDurationStatus.storyId,
+                groupId: stroyDurationStatus.groupId,
+                uniqUserId,
+                seconds: storyDurationTime
+            })
+                .then(() => {
+                setStoryDurationTime(0);
+            });
+        }
+        // eslint-disable-next-line
+    }, [stroyDurationStatus, uniqUserId]);
+    const handleOpenGroup = useCallback((groupId) => {
+        setGroupDurationStatus(() => ({ groupId, status: 'calculating' }));
+        return API.statistics.group.onOpen({ groupId, uniqUserId });
+    }, [uniqUserId]);
+    const handleCloseGroup = useCallback((groupId) => {
+        setGroupDurationStatus((prevState) => (Object.assign(Object.assign({}, prevState), { status: 'calculated' })));
+        return API.statistics.group.onClose({ groupId, uniqUserId });
+    }, [uniqUserId]);
+    const handleOpenStory = useCallback((groupId, storyId) => {
+        setStoryDurationStatus(() => ({ groupId, storyId, status: 'calculating' }));
+        return API.statistics.story.onOpen({ groupId, storyId, uniqUserId });
+    }, [uniqUserId]);
+    const handleCloseStory = useCallback((groupId, storyId) => {
+        if (stroyDurationStatus.storyId === storyId && stroyDurationStatus.groupId === groupId) {
+            setStoryDurationStatus((prevState) => (Object.assign(Object.assign({}, prevState), { status: 'calculated' })));
+        }
+        return API.statistics.story.onClose({ groupId, storyId, uniqUserId });
+    }, [stroyDurationStatus, uniqUserId]);
+    const handleNextStory = useCallback((groupId, storyId) => API.statistics.story.onNext({ groupId, storyId, uniqUserId }), [uniqUserId]);
+    const handlePrevStory = useCallback((groupId, storyId) => API.statistics.story.onPrev({ groupId, storyId, uniqUserId }), [uniqUserId]);
+    useEffect(() => {
+        setLoadStatus('loading');
+        API.apps.getList().then((appData) => {
+            if (!appData.data.error) {
+                const app = appData.data.data.filter((item) => item.sdk_token === token);
+                const appId = app.length ? app[0].id : '';
+                API.groups.getList({ appId }).then((groupsData) => {
+                    if (!groupsData.data.error) {
+                        const groupsFetchedData = groupsData.data.data
+                            .filter((item) => item.active)
+                            .map((item) => ({
+                            id: item.id,
+                            app_id: item.app_id,
+                            title: item.title,
+                            image_url: item.image_url
+                        }));
+                        setGroups(groupsFetchedData);
+                        setGroupsWithStories(groupsFetchedData);
+                    }
+                });
+            }
+        });
+    }, []);
+    useEffect(() => {
+        if (groups.length) {
+            groups.forEach((groupItem, groupIndex) => {
+                API.stories
+                    .getList({
+                    appId: groupItem.app_id,
+                    groupId: groupItem.id
+                })
+                    .then((storiesData) => {
+                    if (!storiesData.data.error) {
+                        const stories = storiesData.data.data.filter((storyItem) => storyItem.status === 'active');
+                        // @ts-ignore
+                        setGroupsWithStories((prevState) => prevState.map((item) => {
+                            if (item.id === groupItem.id) {
+                                return Object.assign(Object.assign({}, item), { stories });
+                            }
+                            return item;
+                        }));
+                        if (groupIndex === groups.length - 1) {
+                            setLoadStatus('loaded');
+                        }
+                    }
+                });
+            });
+        }
+    }, [groups]);
+    useEffect(() => {
+        if (loadStatus === 'loaded' && groupsWithStories.length) {
+            const adaptedData = adaptGroupData(groupsWithStories, uniqUserId);
+            setData(adaptedData);
+        }
+    }, [loadStatus, groupsWithStories, uniqUserId]);
+    return (React.createElement(GroupsList, { groups: data, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory }));
+};
+
 class Story {
     constructor(token) {
         this.token = token;
+        axios.defaults.baseURL = 'https://api.diffapp.link/api/v1';
+        if (token) {
+            axios.defaults.headers.common = { Authorization: `SDK ${token}` };
+        }
     }
     renderGroups(element) {
         if (!this.token) {
@@ -58185,663 +65155,11 @@ class Story {
             else {
                 console.warn('StorySDK has not been initialized.');
             }
+            return;
         }
-        const dataGroups = JSON.stringify([
-            {
-                id: '6151c3c2be3952141639f90e',
-                title: 'test',
-                image_url: 'https://storysdk.s3.eu-north-1.amazonaws.com/613b137d514fd8057b76f13f/1632748482177_d3848efa-a5a9-4095-a235-8160d18d368c.png',
-                stories: [
-                    {
-                        id: '61c5304ecef08636cb8e5b10',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 1,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'WrgqfCBi98Muped1riYo4I',
-                                    position: {
-                                        x: 78,
-                                        y: 291,
-                                        width: 215,
-                                        height: 27,
-                                        rotate: 0
-                                    },
-                                    positionLimits: {
-                                        isResizableX: true,
-                                        isResizableY: false,
-                                        isAutoHeight: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'text',
-                                        params: {
-                                            text: 'Your text',
-                                            fontFamily: 'Roboto',
-                                            fontSize: 44,
-                                            fontParams: {
-                                                style: 'normal',
-                                                weight: 400
-                                            },
-                                            align: 'center',
-                                            color: {
-                                                type: 'gradient',
-                                                value: ['rgba(71, 89, 250, 1)', 'rgba(194, 70, 255, 1)']
-                                            },
-                                            withFill: false,
-                                            opacity: 100,
-                                            widgetOpacity: 100,
-                                            backgroundColor: {
-                                                type: 'color',
-                                                value: '#ffffff'
-                                            },
-                                            backgroundOpacity: 100
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'gradient',
-                                value: ['rgb(0, 242, 254)', 'rgb(79, 172, 254)']
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:28:30.666Z',
-                        updated_at: '2021-12-24T02:42:29.679Z'
-                    },
-                    {
-                        id: '61c530afcef08636cb8e5b11',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 2,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'WRkAhGDLmzJ8PPhklwpbRK',
-                                    position: {
-                                        rotate: 0,
-                                        x: 45,
-                                        y: 464,
-                                        width: 310,
-                                        height: 158
-                                    },
-                                    positionLimits: {
-                                        minWidth: 196,
-                                        maxWidth: 370,
-                                        minHeight: 100,
-                                        maxHeight: 189,
-                                        keepRatio: true,
-                                        ratioIndex: 1.96,
-                                        isResizableX: true,
-                                        isResizableY: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'slider',
-                                        params: {
-                                            value: 50,
-                                            emoji: {
-                                                name: 'smiley_cat',
-                                                unicode: '1f63a'
-                                            },
-                                            text: 'How Are You?',
-                                            color: 'white'
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'video',
-                                value: 'https://storysdk.s3.eu-north-1.amazonaws.com/613b137d514fd8057b76f13f/1640313006323_xJDDELfNg0h6G3lzWjSB3.mp4'
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:30:07.36Z',
-                        updated_at: '2021-12-24T02:42:29.682Z'
-                    },
-                    {
-                        id: '61c530cb621e1b54957a5abd',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 3,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'WJF12aq5WQEjZXH312y3CO',
-                                    position: {
-                                        rotate: -14.749949229980587,
-                                        x: 42,
-                                        y: 459,
-                                        width: 295,
-                                        height: 135
-                                    },
-                                    positionLimits: {
-                                        minWidth: 196,
-                                        maxWidth: 370,
-                                        minHeight: 90,
-                                        maxHeight: 169,
-                                        ratioIndex: 2.18,
-                                        keepRatio: true,
-                                        isResizableX: true,
-                                        isResizableY: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'question',
-                                        params: {
-                                            question: 'How Are You?',
-                                            confirm: 'Yes',
-                                            decline: 'No',
-                                            color: '#000000'
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'image',
-                                value: 'https://storysdk.s3.eu-north-1.amazonaws.com/613b137d514fd8057b76f13f/1640313048559__6H3NAwaounRI4iM_fC5V.png',
-                                fileId: '61c530d80b02a5ed2e1672f9'
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:30:35.084Z',
-                        updated_at: '2021-12-24T02:42:29.706Z'
-                    },
-                    {
-                        id: '61c530f00b02a5ed2e1672fa',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 4,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'W7i3rsVZSIkleebRB0-d2m',
-                                    position: {
-                                        rotate: 0,
-                                        x: 67,
-                                        y: 537,
-                                        width: 245,
-                                        height: 70
-                                    },
-                                    positionLimits: {
-                                        minWidth: 196,
-                                        maxWidth: 370,
-                                        minHeight: 50,
-                                        isResizableX: true,
-                                        isResizableY: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'click_me',
-                                        params: {
-                                            text: 'Click Me',
-                                            fontFamily: 'Roboto',
-                                            fontSize: 22,
-                                            iconSize: 30,
-                                            color: {
-                                                type: 'color',
-                                                value: '#ffffff'
-                                            },
-                                            fontParams: {
-                                                style: 'normal',
-                                                weight: 400
-                                            },
-                                            opacity: 100,
-                                            borderOpacity: 100,
-                                            hasIcon: true,
-                                            borderRadius: 50,
-                                            backgroundColor: {
-                                                type: 'gradient',
-                                                value: ['rgb(255, 106, 40)', 'rgb(254, 47, 87)']
-                                            },
-                                            borderWidth: 2,
-                                            borderColor: {
-                                                type: 'color',
-                                                value: '#ffffff'
-                                            },
-                                            hasBorder: false,
-                                            url: '',
-                                            icon: {
-                                                name: 'LinksLineIcon'
-                                            }
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'color',
-                                value: 'rgba(120, 44, 224, 1)'
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:31:12.452Z',
-                        updated_at: '2021-12-24T02:42:29.681Z'
-                    },
-                    {
-                        id: '61c53119621e1b54957a5abe',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 5,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'WrIYUNyu2XLhNqFzG1bzQa',
-                                    position: {
-                                        rotate: 0,
-                                        x: 71,
-                                        y: 278,
-                                        width: 260,
-                                        height: 169
-                                    },
-                                    positionLimits: {
-                                        minWidth: 196,
-                                        maxWidth: 370,
-                                        minHeight: 127,
-                                        maxHeight: 240,
-                                        isAutoHeight: true,
-                                        keepRatio: true,
-                                        ratioIndex: 1.54,
-                                        isResizableX: true,
-                                        isResizableY: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'talk_about',
-                                        params: {
-                                            text: 'I talk about...',
-                                            image: null,
-                                            color: 'white'
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'gradient',
-                                value: ['rgb(243, 186, 227)', 'rgb(156, 186, 237)']
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:31:53.49Z',
-                        updated_at: '2021-12-24T02:42:29.688Z'
-                    },
-                    {
-                        id: '61c5312d621e1b54957a5abf',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 6,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'WW3TciSsE1FeRWo1JY5jbM',
-                                    position: {
-                                        rotate: 0,
-                                        x: 66,
-                                        y: 302,
-                                        width: '100%',
-                                        height: 100
-                                    },
-                                    positionLimits: {
-                                        minHeight: 70,
-                                        minWidth: 70,
-                                        maxHeight: 130,
-                                        isResizableX: false,
-                                        isResizableY: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'emoji_reaction',
-                                        params: {
-                                            color: 'orange',
-                                            emoji: [
-                                                {
-                                                    name: 'star-struck',
-                                                    unicode: '1f929'
-                                                },
-                                                {
-                                                    name: 'thumbsup',
-                                                    unicode: '1f44d'
-                                                },
-                                                {
-                                                    name: 'fire',
-                                                    unicode: '1f525'
-                                                }
-                                            ]
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'color',
-                                value: '#ffffff'
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:32:13.718Z',
-                        updated_at: '2021-12-24T02:42:29.68Z'
-                    },
-                    {
-                        id: '61c5316bcef08636cb8e5b12',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 7,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'WekJ2xH3m16ljEnq5PvOWL',
-                                    position: {
-                                        rotate: 0,
-                                        x: 52,
-                                        y: 283,
-                                        width: 300,
-                                        height: 153
-                                    },
-                                    positionLimits: {
-                                        minWidth: 196,
-                                        minHeight: 100,
-                                        maxHeight: 189,
-                                        maxWidth: 370,
-                                        keepRatio: true,
-                                        ratioIndex: 1.96,
-                                        isResizableX: true,
-                                        isResizableY: true,
-                                        isRotatable: true,
-                                        isAutoHeight: true
-                                    },
-                                    content: {
-                                        type: 'timer',
-                                        params: {
-                                            time: 1640872800000,
-                                            text: 'New Year is coming soon',
-                                            color: 'purple'
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'color',
-                                value: 'rgba(210, 38, 38, 1)'
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:33:15.978Z',
-                        updated_at: '2021-12-24T02:42:29.682Z'
-                    },
-                    {
-                        id: '61c53323cef08636cb8e5b13',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 8,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'WV06-YLqruEAuiuswmyfbp',
-                                    position: {
-                                        rotate: 0,
-                                        x: 42,
-                                        y: 173,
-                                        width: 300,
-                                        height: 215
-                                    },
-                                    positionLimits: {
-                                        minWidth: 196,
-                                        maxWidth: 370,
-                                        minHeight: 100,
-                                        isAutoHeight: true,
-                                        isResizableX: true,
-                                        isResizableY: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'choose_answer',
-                                        params: {
-                                            text: 'Choose answer',
-                                            color: 'green',
-                                            markCorrectAnswer: false,
-                                            answers: [
-                                                {
-                                                    id: 'A',
-                                                    title: 'Answer 1'
-                                                },
-                                                {
-                                                    id: 'B',
-                                                    title: 'Answer 2'
-                                                },
-                                                {
-                                                    id: 'C',
-                                                    title: 'Answer 2'
-                                                },
-                                                {
-                                                    id: 'D',
-                                                    title: 'Answer 3'
-                                                }
-                                            ],
-                                            correct: 'D'
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'color',
-                                value: '#ffffff'
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:40:35.557Z',
-                        updated_at: '2021-12-24T02:42:29.679Z'
-                    },
-                    {
-                        id: '61c53345cef08636cb8e5b14',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 9,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'WJegC0Tt3T1xgm21l1QaEm',
-                                    position: {
-                                        rotate: 0,
-                                        x: 93,
-                                        y: 579,
-                                        width: 210,
-                                        height: 34.796899999999994
-                                    },
-                                    positionLimits: {
-                                        minWidth: 100,
-                                        maxWidth: 370,
-                                        isResizableX: true,
-                                        isResizableY: true,
-                                        isAutoHeight: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'swipe_up',
-                                        params: {
-                                            text: 'Swipe Up',
-                                            fontFamily: 'Roboto',
-                                            fontSize: 34,
-                                            iconSize: 33,
-                                            color: {
-                                                type: 'color',
-                                                value: '#000000'
-                                            },
-                                            opacity: 100,
-                                            fontParams: {
-                                                style: 'normal',
-                                                weight: 400
-                                            },
-                                            url: '',
-                                            icon: {
-                                                name: 'IconChevronCircleUp'
-                                            }
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'color',
-                                value: '#ffffff'
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:41:09.898Z',
-                        updated_at: '2021-12-24T02:42:29.682Z'
-                    },
-                    {
-                        id: '61c5335dcef08636cb8e5b15',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 10,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'WP3iBOO7XZF_qGblvhTvzW',
-                                    position: {
-                                        x: 94,
-                                        y: 39,
-                                        width: 210,
-                                        height: 155,
-                                        rotate: 0
-                                    },
-                                    positionLimits: {
-                                        isResizableX: true,
-                                        isResizableY: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'rectangle',
-                                        params: {
-                                            fillColor: {
-                                                type: 'color',
-                                                value: '#5E50B5'
-                                            },
-                                            fillBorderRadius: 5,
-                                            widgetOpacity: 100,
-                                            fillOpacity: 100,
-                                            strokeThickness: 3,
-                                            strokeColor: {
-                                                type: 'color',
-                                                value: 'rgba(241, 13, 202, 1)'
-                                            },
-                                            strokeOpacity: 100,
-                                            hasBorder: true
-                                        }
-                                    }
-                                },
-                                {
-                                    id: 'W8iuORqAiwFWfuJ_FHSVtU',
-                                    position: {
-                                        x: 108,
-                                        y: 368,
-                                        width: 190,
-                                        height: 205,
-                                        rotate: 0
-                                    },
-                                    positionLimits: {
-                                        isResizableX: true,
-                                        isResizableY: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'ellipse',
-                                        params: {
-                                            fillColor: {
-                                                type: 'color',
-                                                value: '#5E50B5'
-                                            },
-                                            fillOpacity: 100,
-                                            widgetOpacity: 100,
-                                            strokeThickness: 17,
-                                            strokeColor: {
-                                                type: 'color',
-                                                value: 'rgba(255, 0, 0, 1)'
-                                            },
-                                            strokeOpacity: 100,
-                                            hasBorder: true
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'color',
-                                value: '#ffffff'
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:41:33.698Z',
-                        updated_at: '2021-12-24T02:42:29.683Z'
-                    },
-                    {
-                        id: '61c5338bcef08636cb8e5b16',
-                        creator_id: '613b137d514fd8057b76f13f',
-                        group_id: '61c14d470b02a5ed2e1672e6',
-                        status: 'draft',
-                        background: 'null',
-                        position: 11,
-                        story_data: {
-                            widgets: [
-                                {
-                                    id: 'WGVg1nbzlsvCCiEY04l4Jrd',
-                                    position: {
-                                        x: 58,
-                                        y: 187,
-                                        width: 275,
-                                        height: 305,
-                                        rotate: -7.131236134130461
-                                    },
-                                    positionLimits: {
-                                        minWidth: 20,
-                                        minHeight: 20,
-                                        isResizableX: true,
-                                        isResizableY: true,
-                                        isRotatable: true
-                                    },
-                                    content: {
-                                        type: 'giphy',
-                                        params: {
-                                            gif: 'https://media3.giphy.com/media/gNke2UrUTopOg/giphy.webp?cid=456fdcc6wl3lkm2ye3awk32qudn5ewzrho9aqci48nghwh21&rid=giphy.webp&ct=g',
-                                            widgetOpacity: 100,
-                                            borderRadius: 0
-                                        }
-                                    }
-                                }
-                            ],
-                            background: {
-                                type: 'color',
-                                value: '#ffffff'
-                            }
-                        },
-                        statistic: {},
-                        created_at: '2021-12-24T02:42:19.437Z',
-                        updated_at: '2021-12-24T02:42:29.865Z'
-                    }
-                ]
-            }
-        ]);
-        const parsed = JSON.parse(dataGroups);
-        const groups = adaptGroupData(parsed);
+        const Groups = withGroupsData(GroupsList, this.token);
         if (element) {
-            ReactDOM.render(React.createElement(GroupsList, { groups: groups }), element);
+            ReactDOM.render(React.createElement(Groups, null), element);
         }
     }
 }
