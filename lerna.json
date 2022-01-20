@@ -2,8 +2,5 @@
   "packages": [
     "packages/*"
   ],
-  "publishConfig": {
-    "directory": "dist"
-  },
-  "version": "0.1.2-alpha.0"
+  "version": "0.2.0"
 }
