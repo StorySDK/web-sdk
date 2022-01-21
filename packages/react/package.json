@@ -5,14 +5,14 @@
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
   "license": "ISC",
-  "main": "./dist/bundle.js",
-  "module": "./dist/bundle.esm.js",
+  "main": "dist/bundle.js",
+  "module": "dist/bundle.esm.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    "dist/",
-    "./dist/*"
+    "dist/"
   ],
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"

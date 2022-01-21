@@ -5,8 +5,9 @@
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
   "license": "ISC",
-  "main": "./dist/bundle.js",
-  "module": "./dist/bundle.esm.js",
+  "main": "dist/bundle.js",
+  "module": "dist/bundle.esm.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -14,8 +15,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "files": [
-    "dist/",
-    "./dist/*"
+    "dist/"
   ],
   "peerDependencies": {
     "react": "^17.0.1",
