@@ -56,13 +56,6 @@
   color: #fff;
 }
 
-.GroupsList {
-  display: block;
-}
-.GroupsList__carousel {
-  display: flex;
-}
-
 .StoryContent {
   display: block;
   background: #18182E;
@@ -325,6 +318,13 @@
   }
 }
 
+.GroupsList {
+  display: block;
+}
+.GroupsList__carousel {
+  display: flex;
+}
+
 .StoryVideoBackground {
   width: 100%;
   height: 100%;
@@ -365,17 +365,6 @@
   opacity: 1;
 }
 
-.RectangleWidget {
-  width: 100%;
-  height: 100%;
-  background-position: center;
-  background-size: cover;
-}
-.RectangleWidget__background {
-  width: 100%;
-  height: 100%;
-}
-
 .ClickMeWidget {
   position: relative;
   overflow: hidden;
@@ -408,370 +397,6 @@
   width: 100%;
   height: 100%;
   z-index: 0;
-}
-
-.ChooseAnswerWidget {
-  width: 100%;
-  height: 100%;
-  background: #ffffff;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.ChooseAnswerWidget_shake {
-  animation-duration: 1s;
-  animation-name: shake;
-}
-.ChooseAnswerWidget_celebrate {
-  animation-duration: 1s;
-  animation-name: celebrate;
-}
-.ChooseAnswerWidget_color_purple .ChooseAnswerWidget__header {
-  background: linear-gradient(72.4deg, #ae13ab 2.52%, #890eea 95.95%);
-}
-.ChooseAnswerWidget_color_blue .ChooseAnswerWidget__header {
-  background: #00b2ff;
-}
-.ChooseAnswerWidget_color_darkBlue .ChooseAnswerWidget__header {
-  background: #366efe;
-}
-.ChooseAnswerWidget_color_white .ChooseAnswerWidget__header {
-  background: #ffffff;
-}
-.ChooseAnswerWidget_color_green .ChooseAnswerWidget__header {
-  background: #44d937;
-}
-.ChooseAnswerWidget_color_orange .ChooseAnswerWidget__header {
-  background: #ffa93d;
-}
-.ChooseAnswerWidget_color_orangeRed .ChooseAnswerWidget__header {
-  background: #ff4c25;
-}
-.ChooseAnswerWidget_color_yellow .ChooseAnswerWidget__header {
-  background: #f3cc00;
-}
-.ChooseAnswerWidget_color_black .ChooseAnswerWidget__header {
-  background: #05051d;
-}
-.ChooseAnswerWidget_color_red .ChooseAnswerWidget__header {
-  background: #d62727;
-}
-.ChooseAnswerWidget_color_grey .ChooseAnswerWidget__header {
-  background: #dddbde;
-}
-.ChooseAnswerWidget_color_white .ChooseAnswerWidget__header {
-  color: #05051d;
-}
-.ChooseAnswerWidget__header {
-  padding: 13px 0;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 125%;
-  text-align: center;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-.ChooseAnswerWidget__answers {
-  display: flex;
-  flex-direction: column;
-  padding: 12px;
-}
-.ChooseAnswerWidget__answer {
-  display: flex;
-  align-items: center;
-  padding: 8px;
-  border-radius: 50px;
-  border: 1px solid #dbdbdb;
-}
-.ChooseAnswerWidget__answer:not(:last-child) {
-  margin-bottom: 6px;
-}
-.ChooseAnswerWidget__answer_correct {
-  border-color: transparent;
-  background-color: rgba(68, 217, 55, 0.8);
-}
-.ChooseAnswerWidget__answer_choosen {
-  border-color: transparent;
-}
-.ChooseAnswerWidget__answer_choosen.ChooseAnswerWidget__answer_incorrect {
-  background-color: rgba(214, 39, 39, 0.8);
-}
-.ChooseAnswerWidget__answerId {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
-  background: none;
-  border: 1px solid #18182e;
-  font-size: 10px;
-  line-height: 120%;
-  color: #18182e;
-  border-radius: 50px;
-  padding: 0;
-}
-.ChooseAnswerWidget__answerTitle {
-  font-size: 10px;
-  line-height: 120%;
-  color: #18182e;
-}
-.ChooseAnswerWidget__answerTitle_correct {
-  color: #ffffff;
-}
-.ChooseAnswerWidget__answerTitle_incorrect {
-  opacity: 0.5;
-}
-.ChooseAnswerWidget__answerTitle_choosen {
-  color: #ffffff;
-  opacity: 1;
-}
-.ChooseAnswerWidget__answerIcon {
-  width: 60%;
-  height: 60%;
-  stroke: #ffffff;
-}
-.ChooseAnswerWidget__answerIcon_incorrect {
-  stroke: rgba(214, 39, 39, 0.5);
-}
-.ChooseAnswerWidget__answerIcon_incorrect.ChooseAnswerWidget__answerIcon_choosen {
-  stroke: #d62727;
-}
-.ChooseAnswerWidget__answerCircle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
-  background: none;
-  border: 1px solid #18182e;
-  border-radius: 50%;
-  position: relative;
-}
-.ChooseAnswerWidget__answerCircle_correct {
-  border-color: #ffffff;
-}
-.ChooseAnswerWidget__answerCircle_choosen {
-  background-color: transparent;
-  border-color: #ffffff;
-}
-.ChooseAnswerWidget__answerCircle_incorrect {
-  border-color: rgba(214, 39, 39, 0.5);
-}
-.ChooseAnswerWidget__answerCircle_incorrect.ChooseAnswerWidget__answerCircle_choosen {
-  background-color: #ffffff;
-  border-color: rgba(214, 39, 39, 0.8);
-}
-
-@keyframes celebrate {
-  from {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.5);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-@keyframes shake {
-  from {
-    transform: translateX(0);
-  }
-  10% {
-    transform: translateX(-10px);
-  }
-  20% {
-    transform: translateX(10px);
-  }
-  30% {
-    transform: translateX(-10px);
-  }
-  40% {
-    transform: translateX(10px);
-  }
-  50% {
-    transform: translateX(-10px);
-  }
-  60% {
-    transform: translateX(10px);
-  }
-  70% {
-    transform: translateX(-10px);
-  }
-  80% {
-    transform: translateX(10px);
-  }
-  90% {
-    transform: translateX(-10px);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-.SwipeUpWidget {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #fff;
-}
-.SwipeUpWidget_gradient {
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent;
-}
-.SwipeUpWidget--isReadOnly {
-  align-items: center;
-  background: #05051D;
-  border-radius: 10px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  height: 69px;
-  justify-content: center;
-  width: 196px;
-}
-.SwipeUpWidget__icon {
-  display: flex;
-  margin-bottom: 2px;
-}
-.SwipeUpWidget__text {
-  text-align: center;
-  line-height: 120%;
-}
-
-.TalkAboutWidget {
-  width: 100%;
-  height: 100%;
-  background: #FFFFFF;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
-  flex-grow: 1;
-}
-.TalkAboutWidget__contentContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-  padding-top: 30px;
-}
-.TalkAboutWidget__contentContainer_sendOpen {
-  border-bottom: 1px solid rgba(5, 5, 29, 0.15);
-}
-.TalkAboutWidget_color_purple {
-  background: linear-gradient(72.4deg, #ae13ab 2.52%, #890eea 95.95%);
-}
-.TalkAboutWidget_color_blue {
-  background: #00b2ff;
-}
-.TalkAboutWidget_color_darkBlue {
-  background: #366efe;
-}
-.TalkAboutWidget_color_white {
-  background: #ffffff;
-}
-.TalkAboutWidget_color_green {
-  background: #44d937;
-}
-.TalkAboutWidget_color_orange {
-  background: #ffa93d;
-}
-.TalkAboutWidget_color_orangeRed {
-  background: #ff4c25;
-}
-.TalkAboutWidget_color_yellow {
-  background: #f3cc00;
-}
-.TalkAboutWidget_color_black {
-  background: #05051d;
-}
-.TalkAboutWidget_color_red {
-  background: #d62727;
-}
-.TalkAboutWidget_color_grey {
-  background: #dddbde;
-}
-.TalkAboutWidget__text {
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 120%;
-  margin: 0 auto;
-  text-align: center;
-  color: #ffffff;
-}
-.TalkAboutWidget_color_white .TalkAboutWidget__text {
-  color: #05051d;
-}
-.TalkAboutWidget__input {
-  width: 100%;
-  text-align: center;
-  padding: 8px;
-  background: rgba(5, 5, 29, 0.15);
-  color: #05051d;
-  border-radius: 8px;
-  border: none;
-  font-size: 16px;
-  line-height: 100%;
-}
-.TalkAboutWidget__input:focus, .TalkAboutWidget__input:active {
-  outline: none;
-  box-shadow: none;
-}
-.TalkAboutWidget__input::placeholder {
-  color: rgba(5, 5, 29, 0.6);
-  font-size: 1em;
-  line-height: 100%;
-}
-.TalkAboutWidget__imageWrapper {
-  width: 36px;
-  height: 36px;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  border: 2px solid #FFFFFF;
-  overflow: hidden;
-}
-.TalkAboutWidget__image {
-  width: 100%;
-  height: 100%;
-}
-.TalkAboutWidget__empty {
-  width: 100%;
-  height: 18px;
-}
-.TalkAboutWidget__container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-.TalkAboutWidget__send {
-  background-color: #ffffff;
-  border-bottom-left-radius: inherit;
-  border-bottom-right-radius: inherit;
-  height: 50px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border: none;
-  outline: none;
-}
-.TalkAboutWidget__send_disabled {
-  cursor: auto;
-}
-.TalkAboutWidget__sendText {
-  color: #00b2ff;
-  font-size: 14px;
-  line-height: 120%;
-}
-.TalkAboutWidget__sendText_green {
-  color: #44d937;
 }
 
 .EmojiReactionWidget {
@@ -1074,6 +699,270 @@
     height: 100%;
   }
 }
+.ChooseAnswerWidget {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.ChooseAnswerWidget_shake {
+  animation-duration: 1s;
+  animation-name: shake;
+}
+.ChooseAnswerWidget_celebrate {
+  animation-duration: 1s;
+  animation-name: celebrate;
+}
+.ChooseAnswerWidget_color_purple .ChooseAnswerWidget__header {
+  background: linear-gradient(72.4deg, #ae13ab 2.52%, #890eea 95.95%);
+}
+.ChooseAnswerWidget_color_blue .ChooseAnswerWidget__header {
+  background: #00b2ff;
+}
+.ChooseAnswerWidget_color_darkBlue .ChooseAnswerWidget__header {
+  background: #366efe;
+}
+.ChooseAnswerWidget_color_white .ChooseAnswerWidget__header {
+  background: #ffffff;
+}
+.ChooseAnswerWidget_color_green .ChooseAnswerWidget__header {
+  background: #44d937;
+}
+.ChooseAnswerWidget_color_orange .ChooseAnswerWidget__header {
+  background: #ffa93d;
+}
+.ChooseAnswerWidget_color_orangeRed .ChooseAnswerWidget__header {
+  background: #ff4c25;
+}
+.ChooseAnswerWidget_color_yellow .ChooseAnswerWidget__header {
+  background: #f3cc00;
+}
+.ChooseAnswerWidget_color_black .ChooseAnswerWidget__header {
+  background: #05051d;
+}
+.ChooseAnswerWidget_color_red .ChooseAnswerWidget__header {
+  background: #d62727;
+}
+.ChooseAnswerWidget_color_grey .ChooseAnswerWidget__header {
+  background: #dddbde;
+}
+.ChooseAnswerWidget_color_white .ChooseAnswerWidget__header {
+  color: #05051d;
+}
+.ChooseAnswerWidget__header {
+  padding: 13px 0;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 125%;
+  text-align: center;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+.ChooseAnswerWidget__answers {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+}
+.ChooseAnswerWidget__answer {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 50px;
+  border: 1px solid #dbdbdb;
+}
+.ChooseAnswerWidget__answer:not(:last-child) {
+  margin-bottom: 6px;
+}
+.ChooseAnswerWidget__answer_correct {
+  border-color: transparent;
+  background-color: rgba(68, 217, 55, 0.8);
+}
+.ChooseAnswerWidget__answer_choosen {
+  border-color: transparent;
+}
+.ChooseAnswerWidget__answer_choosen.ChooseAnswerWidget__answer_incorrect {
+  background-color: rgba(214, 39, 39, 0.8);
+}
+.ChooseAnswerWidget__answerId {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  background: none;
+  border: 1px solid #18182e;
+  font-size: 10px;
+  line-height: 120%;
+  color: #18182e;
+  border-radius: 50px;
+  padding: 0;
+}
+.ChooseAnswerWidget__answerTitle {
+  font-size: 10px;
+  line-height: 120%;
+  color: #18182e;
+}
+.ChooseAnswerWidget__answerTitle_correct {
+  color: #ffffff;
+}
+.ChooseAnswerWidget__answerTitle_incorrect {
+  opacity: 0.5;
+}
+.ChooseAnswerWidget__answerTitle_choosen {
+  color: #ffffff;
+  opacity: 1;
+}
+.ChooseAnswerWidget__answerIcon {
+  width: 60%;
+  height: 60%;
+  stroke: #ffffff;
+}
+.ChooseAnswerWidget__answerIcon_incorrect {
+  stroke: rgba(214, 39, 39, 0.5);
+}
+.ChooseAnswerWidget__answerIcon_incorrect.ChooseAnswerWidget__answerIcon_choosen {
+  stroke: #d62727;
+}
+.ChooseAnswerWidget__answerCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  background: none;
+  border: 1px solid #18182e;
+  border-radius: 50%;
+  position: relative;
+}
+.ChooseAnswerWidget__answerCircle_correct {
+  border-color: #ffffff;
+}
+.ChooseAnswerWidget__answerCircle_choosen {
+  background-color: transparent;
+  border-color: #ffffff;
+}
+.ChooseAnswerWidget__answerCircle_incorrect {
+  border-color: rgba(214, 39, 39, 0.5);
+}
+.ChooseAnswerWidget__answerCircle_incorrect.ChooseAnswerWidget__answerCircle_choosen {
+  background-color: #ffffff;
+  border-color: rgba(214, 39, 39, 0.8);
+}
+
+@keyframes celebrate {
+  from {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes shake {
+  from {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(-10px);
+  }
+  20% {
+    transform: translateX(10px);
+  }
+  30% {
+    transform: translateX(-10px);
+  }
+  40% {
+    transform: translateX(10px);
+  }
+  50% {
+    transform: translateX(-10px);
+  }
+  60% {
+    transform: translateX(10px);
+  }
+  70% {
+    transform: translateX(-10px);
+  }
+  80% {
+    transform: translateX(10px);
+  }
+  90% {
+    transform: translateX(-10px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.RectangleWidget {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+}
+.RectangleWidget__background {
+  width: 100%;
+  height: 100%;
+}
+
+.GiphyWidget {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+.GiphyWidget__img {
+  width: 100%;
+  height: 100%;
+}
+
+.SwipeUpWidget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+}
+.SwipeUpWidget_gradient {
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent;
+}
+.SwipeUpWidget--isReadOnly {
+  align-items: center;
+  background: #05051D;
+  border-radius: 10px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  height: 69px;
+  justify-content: center;
+  width: 196px;
+}
+.SwipeUpWidget__icon {
+  display: flex;
+  margin-bottom: 2px;
+}
+.SwipeUpWidget__text {
+  text-align: center;
+  line-height: 120%;
+}
+
+.EllipseWidget {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.EllipseWidget__background {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+}
+
 .TimerWidget {
   width: 100%;
   height: 100%;
@@ -1178,27 +1067,138 @@
   margin-top: -15px;
 }
 
-.GiphyWidget {
+.TalkAboutWidget {
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  flex-grow: 1;
+}
+.TalkAboutWidget__contentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  padding-top: 30px;
+}
+.TalkAboutWidget__contentContainer_sendOpen {
+  border-bottom: 1px solid rgba(5, 5, 29, 0.15);
+}
+.TalkAboutWidget_color_purple {
+  background: linear-gradient(72.4deg, #ae13ab 2.52%, #890eea 95.95%);
+}
+.TalkAboutWidget_color_blue {
+  background: #00b2ff;
+}
+.TalkAboutWidget_color_darkBlue {
+  background: #366efe;
+}
+.TalkAboutWidget_color_white {
+  background: #ffffff;
+}
+.TalkAboutWidget_color_green {
+  background: #44d937;
+}
+.TalkAboutWidget_color_orange {
+  background: #ffa93d;
+}
+.TalkAboutWidget_color_orangeRed {
+  background: #ff4c25;
+}
+.TalkAboutWidget_color_yellow {
+  background: #f3cc00;
+}
+.TalkAboutWidget_color_black {
+  background: #05051d;
+}
+.TalkAboutWidget_color_red {
+  background: #d62727;
+}
+.TalkAboutWidget_color_grey {
+  background: #dddbde;
+}
+.TalkAboutWidget__text {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 120%;
+  margin: 0 auto;
+  text-align: center;
+  color: #ffffff;
+}
+.TalkAboutWidget_color_white .TalkAboutWidget__text {
+  color: #05051d;
+}
+.TalkAboutWidget__input {
+  width: 100%;
+  text-align: center;
+  padding: 8px;
+  background: rgba(5, 5, 29, 0.15);
+  color: #05051d;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  line-height: 100%;
+}
+.TalkAboutWidget__input:focus, .TalkAboutWidget__input:active {
+  outline: none;
+  box-shadow: none;
+}
+.TalkAboutWidget__input::placeholder {
+  color: rgba(5, 5, 29, 0.6);
+  font-size: 1em;
+  line-height: 100%;
+}
+.TalkAboutWidget__imageWrapper {
+  width: 36px;
+  height: 36px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
   overflow: hidden;
+}
+.TalkAboutWidget__image {
   width: 100%;
   height: 100%;
 }
-.GiphyWidget__img {
+.TalkAboutWidget__empty {
   width: 100%;
-  height: 100%;
+  height: 18px;
 }
-
-.EllipseWidget {
+.TalkAboutWidget__container {
+  position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
 }
-.EllipseWidget__background {
+.TalkAboutWidget__send {
+  background-color: #ffffff;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+  height: 50px;
   width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-position: center;
-  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+.TalkAboutWidget__send_disabled {
+  cursor: auto;
+}
+.TalkAboutWidget__sendText {
+  color: #00b2ff;
+  font-size: 14px;
+  line-height: 120%;
+}
+.TalkAboutWidget__sendText_green {
+  color: #44d937;
 }
 
 .TextWidget {
@@ -1249,22 +1249,6 @@
   height: 100%;
 }
 
-.SliderTrack {
-  background: linear-gradient(90deg, #ce25ca 0%, #ea0e4e 97.37%);
-  border-radius: 10px;
-  height: 10px;
-}
-.SliderTrack:first-child {
-  z-index: 1;
-  margin-left: 5px;
-  margin-right: 10px;
-}
-.SliderTrack_selected {
-  background: rgba(100, 100, 100, 0.25);
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
 .SliderThumb {
   color: #fff;
   cursor: grab;
@@ -1287,4 +1271,20 @@
 .SliderThumb:focus, .SliderThumb:active {
   outline: none;
   box-shadow: none;
+}
+
+.SliderTrack {
+  background: linear-gradient(90deg, #ce25ca 0%, #ea0e4e 97.37%);
+  border-radius: 10px;
+  height: 10px;
+}
+.SliderTrack:first-child {
+  z-index: 1;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+.SliderTrack_selected {
+  background: rgba(100, 100, 100, 0.25);
+  margin-left: 5px;
+  margin-right: 5px;
 }
