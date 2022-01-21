@@ -11,7 +11,7 @@ import {
 import './EmojiReactionWidget.scss';
 import { useInterval } from '../../hooks';
 
-const b = block('EmojiReactionWidget');
+const b = block('EmojiReactionSdkWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {

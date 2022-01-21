@@ -5,7 +5,7 @@ import { ClickMeWidgetParamsType, WidgetComponent } from '../../types';
 import './ClickMeWidget.scss';
 import { MaterialIcon } from '../../components/MaterialIcon';
 
-const b = block('ClickMeWidget');
+const b = block('ClickMeSdkWidget');
 
 export const ClickMeWidget: WidgetComponent<{
   params: ClickMeWidgetParamsType;

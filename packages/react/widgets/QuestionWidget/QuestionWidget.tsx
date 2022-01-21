@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import block from 'bem-cn';
+import cn from 'classnames';
 import {
   QuestionWidgetParamsType,
   WidgetComponent,
@@ -8,9 +9,8 @@ import {
 } from '../../types';
 import { calculateElementSize } from '../../utils';
 import './QuestionWidget.scss';
-import cn from 'classnames';
 
-const b = block('QuestionWidget');
+const b = block('QuestionSdkWidget');
 
 const INIT_ELEMENT_STYLES = {
   text: {
@@ -75,8 +75,8 @@ export const QuestionWidget: WidgetComponent<{
   useEffect(() => {
     if (answer) {
       const percentsFromApi = {
-        confirm: 100,
-        decline: 0
+        confirm: answer === 'confirm' ? 100 : 0,
+        decline: answer === 'decline' ? 100 : 0
       };
 
       setPercents(percentsFromApi);

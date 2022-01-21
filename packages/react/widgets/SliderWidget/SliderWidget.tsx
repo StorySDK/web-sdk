@@ -13,7 +13,7 @@ import { useInterval } from '../../hooks';
 import { CurrentStoryContext } from '../../components';
 import { SliderThumb, SliderTrack } from './_components';
 
-const b = block('SliderWidget');
+const b = block('SliderSdkWidget');
 
 type ChangeStatus = 'init' | 'moving' | 'moved';
 
@@ -123,27 +123,34 @@ export const SliderWidget: WidgetComponent<{
         {text}
       </div>
 
-      <ReactSlider
-        disabled={changeStatus === 'moved'}
-        max={100}
-        min={0}
-        renderThumb={(sliderProps: any) => (
-          <SliderThumb
-            changeStatus={changeStatus}
-            currentPosition={sliderValue}
-            emoji={emoji.name}
-            initSize={elementSizes.emoji.width}
-            props={sliderProps}
-          />
-        )}
-        renderTrack={(propsTrack, state) => (
-          <SliderTrack propsTrack={propsTrack} size={elementSizes.slider} state={state} />
-        )}
-        value={[sliderValue]}
-        onAfterChange={handleAfterChange}
-        onBeforeChange={handleBeforeChange}
-        onChange={handleChange}
-      />
+      <div
+        className={b('sliderWrapper')}
+        style={{
+          height: elementSizes.slider.height
+        }}
+      >
+        <ReactSlider
+          disabled={changeStatus === 'moved'}
+          max={100}
+          min={0}
+          renderThumb={(sliderProps: any) => (
+            <SliderThumb
+              changeStatus={changeStatus}
+              currentPosition={sliderValue}
+              emoji={emoji.name}
+              initSize={elementSizes.emoji.width}
+              props={sliderProps}
+            />
+          )}
+          renderTrack={(propsTrack, state) => (
+            <SliderTrack propsTrack={propsTrack} size={elementSizes.slider} state={state} />
+          )}
+          value={[sliderValue]}
+          onAfterChange={handleAfterChange}
+          onBeforeChange={handleBeforeChange}
+          onChange={handleChange}
+        />
+      </div>
     </div>
   );
 };

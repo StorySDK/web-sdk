@@ -4,7 +4,7 @@ import './GroupsList.scss';
 import { GroupType } from '../../types';
 import { GroupItem, StoryModal } from '..';
 
-const b = block('GroupsList');
+const b = block('GroupsSdkList');
 
 interface GroupsListProps {
   groups: GroupType[];

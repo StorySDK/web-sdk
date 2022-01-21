@@ -4,7 +4,7 @@ import { renderBackgroundStyles, renderTextBackgroundStyles } from '../../utils'
 import { TextWidgetParamsType, WidgetComponent } from '../../types';
 import './TextWidget.scss';
 
-const b = block('TextWidget');
+const b = block('TextSdkWidget');
 
 type PropsType = {
   params: any;

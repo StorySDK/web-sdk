@@ -7,7 +7,7 @@ import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackgrou
 import { renderBackgroundStyles, renderPosition } from '../../utils';
 import './StoryContent.scss';
 
-const b = block('StoryContent');
+const b = block('StorySdkContent');
 
 interface StoryContentProps {
   story: StoryType;

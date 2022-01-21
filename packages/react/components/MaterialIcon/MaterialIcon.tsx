@@ -5,7 +5,7 @@ import { BackgroundType } from '../../types';
 import { MATERIAL_ICONS } from './_constants';
 import './MaterialIcon.scss';
 
-const CLASS_NAME = 'MaterialIcon';
+const CLASS_NAME = 'MaterialSdkIcon';
 
 type PropsType = {
   name: string;

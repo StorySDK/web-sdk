@@ -4777,9 +4777,9 @@ RedirectableRequest.prototype._processResponse = function (response) {
     var redirectUrlParts = url$1.parse(redirectUrl);
     Object.assign(this._options, redirectUrlParts);
 
-    // Drop the Authorization header if redirecting to another domain
+    // Drop the confidential headers when redirecting to another domain
     if (!(redirectUrlParts.host === currentHost || isSubdomainOf(redirectUrlParts.host, currentHost))) {
-      removeMatchingHeaders(/^authorization$/i, this._options.headers);
+      removeMatchingHeaders(/^(?:authorization|cookie)$/i, this._options.headers);
     }
 
     // Evaluate the beforeRedirect callback
@@ -6136,7 +6136,7 @@ var lib = {exports: {}};
 
 var block = /*@__PURE__*/getDefaultExportFromCjs(lib.exports);
 
-const b$i = block('GroupItem');
+const b$i = block('GroupSdkItem');
 const GroupItem = (props) => {
     const { imageUrl, size, title, theme, rounded, onClick } = props;
     return (React__default["default"].createElement("button", { className: b$i(), onClick: onClick },
@@ -6145,7 +6145,7 @@ const GroupItem = (props) => {
         React__default["default"].createElement("div", { className: b$i('title', { theme }) }, title)));
 };
 
-const b$h = block('GroupsList');
+const b$h = block('GroupsSdkList');
 const GroupsList = (props) => {
     const { groups, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
     const [currentGroup, setCurrentGroup] = React__default["default"].useState(0);
@@ -6204,7 +6204,7 @@ function t$1(t,n,a,u){var c=React.useRef(a),i=React.useRef(u);React.useEffect(()
 
 var n$1={},i="undefined"==typeof window?null:window,o=()=>[document.documentElement.clientWidth,document.documentElement.clientHeight],d$1=function(d){void 0===d&&(d=n$1);var{wait:r,leading:c,initialWidth:m=0,initialHeight:u=0}=d,[a,l]=c$2("undefined"==typeof document?[m,u]:o,r,c),f=()=>l(o);return t$1(i,"resize",f),t$1(i,"orientationchange",f),a},c$1=e=>d$1(e)[0];
 
-const b$g = block('StoryModal');
+const b$g = block('StorySdkModal');
 const CloseIcon = () => (React__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
     React__default["default"].createElement("path", { d: "M18.0002 6.00079L6.00024 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" }),
     React__default["default"].createElement("path", { d: "M6.00024 6.00079L18.0002 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" })));
@@ -6218,11 +6218,11 @@ const CurrentStoryContext = React__default["default"].createContext('');
 const StoryModal = (props) => {
     const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
     const [currentStory, setCurrentStory] = React__default["default"].useState(0);
-    const [currentStoryId, setCurrentStoryId] = React__default["default"].useState(stories[0].id);
+    const [currentStoryId, setCurrentStoryId] = React__default["default"].useState(stories.length ? stories[0].id : '');
     const width = c$1();
     React__default["default"].useEffect(() => {
         setCurrentStory(0);
-        if (onOpenStory && showed) {
+        if (onOpenStory && showed && stories.length) {
             onOpenStory(currentGroup.id, stories[0].id);
         }
     }, [stories.length, onOpenStory, stories, currentGroup, showed]);
@@ -8697,7 +8697,7 @@ let fillPool$1 = bytes => {
   poolOffset$1 += bytes;
 };
 let nanoid$1 = (size = 21) => {
-  fillPool$1(size);
+  fillPool$1((size -= 0));
   let id = '';
   for (let i = poolOffset$1 - size; i < poolOffset$1; i++) {
     id += urlAlphabet$1[pool$1[i] & 63];
@@ -9730,7 +9730,7 @@ const calculateElementSizeByHeight = (position, positionLimits, elementSize) => 
     ? Math.round((elementSize * position.height) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight))
     : elementSize;
 
-const b$f = block('ChooseAnswerWidget');
+const b$f = block('ChooseAnswerSdkWidget');
 const INIT_ELEMENT_STYLES$5 = {
     widget: {
         borderRadius: 10
@@ -10026,7 +10026,7 @@ const MATERIAL_ICONS = {
     UploadOutlineIcon,
 };
 
-const CLASS_NAME = 'MaterialIcon';
+const CLASS_NAME = 'MaterialSdkIcon';
 const MaterialIcon = React.memo(({ name = 'ArrowCircleUpOutlineIcon', className, color, background, size = 'auto' }) => {
     const Icon = React.useMemo(() => MATERIAL_ICONS[name], [name]);
     let gradient;
@@ -10043,7 +10043,7 @@ const MaterialIcon = React.memo(({ name = 'ArrowCircleUpOutlineIcon', className,
     return null;
 });
 
-const b$e = block('ClickMeWidget');
+const b$e = block('ClickMeSdkWidget');
 const ClickMeWidget = (props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url } = props.params;
     // const border = hasBorder ? `${borderWidth}px solid ${borderColor}` : 'none';
@@ -10082,8 +10082,8 @@ const EllipseWidget = (props) => {
     const backgroundStyles = {
         background: renderBackgroundStyles(fillColor)
     };
-    return (React__default["default"].createElement("div", { className: "EllipseWidget", style: styles },
-        React__default["default"].createElement("div", { className: "EllipseWidget__background", style: backgroundStyles })));
+    return (React__default["default"].createElement("div", { className: "EllipsSdkWidget", style: styles },
+        React__default["default"].createElement("div", { className: "EllipsSdkWidget__background", style: backgroundStyles })));
 };
 
 var compressed = true;
@@ -62770,7 +62770,7 @@ function useInterval(callback, delay) {
     }, [delay]);
 }
 
-const b$c = block('EmojiReactionWidget');
+const b$c = block('EmojiReactionSdkWidget');
 const INIT_ELEMENT_STYLES$4 = {
     widget: {
         borderRadius: 50,
@@ -62844,14 +62844,14 @@ const EmojiReactionWidget = (props) => {
         React__default["default"].createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: elementSizes.emoji.width }))))));
 };
 
-const b$b = block('GiphyWidget');
+const b$b = block('GiphySdkWidget');
 const GiphyWidget = (props) => {
     const { params } = props;
     return (React__default["default"].createElement("div", { className: b$b(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
         React__default["default"].createElement("img", { alt: "", className: b$b('img'), src: params.gif })));
 };
 
-const b$a = block('QuestionWidget');
+const b$a = block('QuestionSdkWidget');
 const INIT_ELEMENT_STYLES$3 = {
     text: {
         fontSize: 14,
@@ -62896,8 +62896,8 @@ const QuestionWidget = (props) => {
     React.useEffect(() => {
         if (answer) {
             const percentsFromApi = {
-                confirm: 100,
-                decline: 0
+                confirm: answer === 'confirm' ? 100 : 0,
+                decline: answer === 'decline' ? 100 : 0
             };
             setPercents(percentsFromApi);
         }
@@ -62967,8 +62967,8 @@ const RectangleWidget = (props) => {
         background: renderBackgroundStyles(fillColor),
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
-    return (React__default["default"].createElement("div", { className: "RectangleWidget", style: styles },
-        React__default["default"].createElement("div", { className: "RectangleWidget__background", style: backgroundStyles })));
+    return (React__default["default"].createElement("div", { className: "RectangleSdkWidget", style: styles },
+        React__default["default"].createElement("div", { className: "RectangleSdkWidget__background", style: backgroundStyles })));
 };
 
 var _jsxFileName = "/Users/brians/git/react-slider/src/components/ReactSlider/ReactSlider.jsx";
@@ -64229,7 +64229,7 @@ const SliderThumb = ({ props, emoji, changeStatus, currentPosition, initSize = 3
 const b$8 = block('SliderTrack');
 const SliderTrack = ({ propsTrack, state, size }) => (React__default["default"].createElement("div", Object.assign({}, propsTrack, { className: b$8({ selected: state.index === 1 }), style: Object.assign(Object.assign({}, size), propsTrack.style) })));
 
-const b$7 = block('SliderWidget');
+const b$7 = block('SliderSdkWidget');
 const INIT_ELEMENT_STYLES$2 = {
     widget: {
         borderRadius: 10
@@ -64307,10 +64307,13 @@ const SliderWidget = (props) => {
     }, [currentStoryId, storyId, value, time]);
     return (React__default["default"].createElement("div", { className: b$7({ color }), style: elementSizes.widget },
         React__default["default"].createElement("div", { className: b$7('text'), style: elementSizes.text }, text),
-        React__default["default"].createElement(ReactSlider$1, { disabled: changeStatus === 'moved', max: 100, min: 0, renderThumb: (sliderProps) => (React__default["default"].createElement(SliderThumb, { changeStatus: changeStatus, currentPosition: sliderValue, emoji: emoji.name, initSize: elementSizes.emoji.width, props: sliderProps })), renderTrack: (propsTrack, state) => (React__default["default"].createElement(SliderTrack, { propsTrack: propsTrack, size: elementSizes.slider, state: state })), value: [sliderValue], onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange })));
+        React__default["default"].createElement("div", { className: b$7('sliderWrapper'), style: {
+                height: elementSizes.slider.height
+            } },
+            React__default["default"].createElement(ReactSlider$1, { disabled: changeStatus === 'moved', max: 100, min: 0, renderThumb: (sliderProps) => (React__default["default"].createElement(SliderThumb, { changeStatus: changeStatus, currentPosition: sliderValue, emoji: emoji.name, initSize: elementSizes.emoji.width, props: sliderProps })), renderTrack: (propsTrack, state) => (React__default["default"].createElement(SliderTrack, { propsTrack: propsTrack, size: elementSizes.slider, state: state })), value: [sliderValue], onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
 };
 
-const b$6 = block('SwipeUpWidget');
+const b$6 = block('SwipeUpSdkWidget');
 const SwipeUpWidget = (props) => {
     const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
     const [touchStart, setTouchStart] = React.useState(0);
@@ -64349,7 +64352,7 @@ const SwipeUpWidget = (props) => {
         React__default["default"].createElement("span", { className: b$6('text') }, text)));
 };
 
-const b$5 = block('TalkAboutWidget');
+const b$5 = block('TalkAboutSdkWidget');
 const INIT_ELEMENT_STYLES$1 = {
     widget: {
         borderRadius: 10
@@ -64449,7 +64452,7 @@ const TalkAboutWidget = (props) => {
                     React__default["default"].createElement("span", { className: b$5('sendText', { green: isSent }), style: elementSizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
 };
 
-const b$4 = block('TextWidget');
+const b$4 = block('TextSdkWidget');
 const TextWidget = (props) => {
     const { params } = props;
     return (React__default["default"].createElement("div", { className: b$4() },
@@ -64485,7 +64488,7 @@ const TextWidget = (props) => {
     );
 };
 
-const b$3 = block('TimerWidget');
+const b$3 = block('TimerSdkWidget');
 const calculateTime = (time) => {
     const days = Math.floor(time / (1000 * 60 * 60 * 24));
     const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
@@ -64624,13 +64627,13 @@ class WidgetFactory extends React__default["default"].Component {
     }
 }
 
-const b$2 = block('StoryVideoBackground');
+const b$2 = block('StorySdkVideoBackground');
 const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, onLoadEnd }) => (React__default["default"].createElement("div", { className: b$2() },
     React__default["default"].createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), loop: true, muted: true, preload: "metadata", onLoadStart: onLoadStart, onLoadedData: onLoadEnd },
         React__default["default"].createElement("source", { src: src })),
     React__default["default"].createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
-const b$1 = block('StoryContent');
+const b$1 = block('StorySdkContent');
 const StoryContent = (props) => {
     const { story } = props;
     const [isVideoLoading, setVideoLoading] = React.useState(false);

@@ -18,8 +18,8 @@ export const EllipseWidget: WidgetComponent<{ params: EllipseWidgetParamsType }>
   };
 
   return (
-    <div className="EllipseWidget" style={styles}>
-      <div className="EllipseWidget__background" style={backgroundStyles} />
+    <div className="EllipsSdkWidget" style={styles}>
+      <div className="EllipsSdkWidget__background" style={backgroundStyles} />
     </div>
   );
 };

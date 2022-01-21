@@ -2,7 +2,7 @@ import React from 'react';
 import block from 'bem-cn';
 import './GroupItem.scss';
 
-const b = block('GroupItem');
+const b = block('GroupSdkItem');
 
 interface Props {
   imageUrl: string;

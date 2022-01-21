@@ -12,7 +12,7 @@ import { calculateElementSize } from '../../utils';
 
 import './ChooseAnswerWidget.scss';
 
-const b = block('ChooseAnswerWidget');
+const b = block('ChooseAnswerSdkWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {
@@ -50,6 +50,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
   const { params, position, positionLimits, onAnswer } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
+
   const jsConfetti = useRef(new JSConfetti());
 
   const calculate = useCallback(
