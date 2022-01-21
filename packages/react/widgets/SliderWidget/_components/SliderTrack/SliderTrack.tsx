@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import block from 'bem-cn';
 import './SliderTrack.scss';
 
-const b = block('SliderTrack');
+const b = block('SliderSdkTrack');
 
 type PropType = {
   propsTrack: any;
