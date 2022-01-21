@@ -11,8 +11,8 @@
     "access": "public"
   },
   "files": [
-    "./dist",
-    "./dist/bundle.css"
+    "dist/",
+    "./dist/*"
   ],
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"

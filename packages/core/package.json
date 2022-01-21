@@ -14,8 +14,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "files": [
-    "./dist",
-    "./dist/bundle.css"
+    "dist/",
+    "./dist/*"
   ],
   "peerDependencies": {
     "react": "^17.0.2",
