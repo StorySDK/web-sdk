@@ -129,11 +129,11 @@ const CurrentStoryContext = React__default["default"].createContext('');
 const StoryModal = (props) => {
     const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
     const [currentStory, setCurrentStory] = React__default["default"].useState(0);
-    const [currentStoryId, setCurrentStoryId] = React__default["default"].useState(stories[0].id);
+    const [currentStoryId, setCurrentStoryId] = React__default["default"].useState(stories.length ? stories[0].id : '');
     const width = c$1();
     React__default["default"].useEffect(() => {
         setCurrentStory(0);
-        if (onOpenStory && showed) {
+        if (onOpenStory && showed && stories.length) {
             onOpenStory(currentGroup.id, stories[0].id);
         }
     }, [stories.length, onOpenStory, stories, currentGroup, showed]);
@@ -189,8 +189,8 @@ const StoryModal = (props) => {
     return (React__default["default"].createElement(CurrentStoryContext.Provider, { value: currentStoryId },
         React__default["default"].createElement("div", { className: b$g({ showed }), style: { height: width < 768 ? Math.round(694 * (width / 390)) : '100%' } },
             React__default["default"].createElement("div", { className: b$g('body') },
-                React__default["default"].createElement("button", { className: b$g('arrowButton', { left: true }), onClick: handlePrev },
-                    React__default["default"].createElement(LeftArrowIcon, null)),
+                !isFirstGroup && (React__default["default"].createElement("button", { className: b$g('arrowButton', { left: true }), onClick: handlePrev },
+                    React__default["default"].createElement(LeftArrowIcon, null))),
                 React__default["default"].createElement("div", { className: b$g('swiper') },
                     React__default["default"].createElement("div", { className: b$g('swiperContent') }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$g('story', { current: index === currentStory }), key: story.id },
                         React__default["default"].createElement(StoryContent, { story: story }))))),
@@ -205,8 +205,8 @@ const StoryModal = (props) => {
                             React__default["default"].createElement("p", { className: b$g('groupTitle') }, currentGroup.title)),
                         React__default["default"].createElement("button", { className: b$g('close'), onClick: handleClose },
                             React__default["default"].createElement(CloseIcon, null)))),
-                React__default["default"].createElement("button", { className: b$g('arrowButton', { right: true }), onClick: handleNext },
-                    React__default["default"].createElement(RightArrowIcon, null))))));
+                isLastGroup && (React__default["default"].createElement("button", { className: b$g('arrowButton', { right: true }), onClick: handleNext },
+                    React__default["default"].createElement(RightArrowIcon, null)))))));
 };
 
 function _classCallCheck$1(instance, Constructor) {

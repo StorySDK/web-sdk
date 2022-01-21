@@ -120,11 +120,11 @@ const CurrentStoryContext = React.createContext('');
 const StoryModal = (props) => {
     const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
     const [currentStory, setCurrentStory] = React.useState(0);
-    const [currentStoryId, setCurrentStoryId] = React.useState(stories[0].id);
+    const [currentStoryId, setCurrentStoryId] = React.useState(stories.length ? stories[0].id : '');
     const width = c$1();
     React.useEffect(() => {
         setCurrentStory(0);
-        if (onOpenStory && showed) {
+        if (onOpenStory && showed && stories.length) {
             onOpenStory(currentGroup.id, stories[0].id);
         }
     }, [stories.length, onOpenStory, stories, currentGroup, showed]);
@@ -180,8 +180,8 @@ const StoryModal = (props) => {
     return (React.createElement(CurrentStoryContext.Provider, { value: currentStoryId },
         React.createElement("div", { className: b$g({ showed }), style: { height: width < 768 ? Math.round(694 * (width / 390)) : '100%' } },
             React.createElement("div", { className: b$g('body') },
-                React.createElement("button", { className: b$g('arrowButton', { left: true }), onClick: handlePrev },
-                    React.createElement(LeftArrowIcon, null)),
+                !isFirstGroup && (React.createElement("button", { className: b$g('arrowButton', { left: true }), onClick: handlePrev },
+                    React.createElement(LeftArrowIcon, null))),
                 React.createElement("div", { className: b$g('swiper') },
                     React.createElement("div", { className: b$g('swiperContent') }, stories.map((story, index) => (React.createElement("div", { className: b$g('story', { current: index === currentStory }), key: story.id },
                         React.createElement(StoryContent, { story: story }))))),
@@ -196,8 +196,8 @@ const StoryModal = (props) => {
                             React.createElement("p", { className: b$g('groupTitle') }, currentGroup.title)),
                         React.createElement("button", { className: b$g('close'), onClick: handleClose },
                             React.createElement(CloseIcon, null)))),
-                React.createElement("button", { className: b$g('arrowButton', { right: true }), onClick: handleNext },
-                    React.createElement(RightArrowIcon, null))))));
+                isLastGroup && (React.createElement("button", { className: b$g('arrowButton', { right: true }), onClick: handleNext },
+                    React.createElement(RightArrowIcon, null)))))));
 };
 
 function _classCallCheck$1(instance, Constructor) {

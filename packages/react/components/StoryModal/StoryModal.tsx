@@ -98,14 +98,14 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   } = props;
 
   const [currentStory, setCurrentStory] = React.useState(0);
-  const [currentStoryId, setCurrentStoryId] = React.useState(stories[0].id);
+  const [currentStoryId, setCurrentStoryId] = React.useState(stories.length ? stories[0].id : '');
 
   const width = useWindowWidth();
 
   React.useEffect(() => {
     setCurrentStory(0);
 
-    if (onOpenStory && showed) {
+    if (onOpenStory && showed && stories.length) {
       onOpenStory(currentGroup.id, stories[0].id);
     }
   }, [stories.length, onOpenStory, stories, currentGroup, showed]);
@@ -175,9 +175,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         style={{ height: width < 768 ? Math.round(694 * (width / 390)) : '100%' }}
       >
         <div className={b('body')}>
-          <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
-            <LeftArrowIcon />
-          </button>
+          {!isFirstGroup && (
+            <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
+              <LeftArrowIcon />
+            </button>
+          )}
+
           <div className={b('swiper')}>
             <div className={b('swiperContent')}>
               {stories.map((story, index) => (
@@ -211,9 +214,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               </button>
             </div>
           </div>
-          <button className={b('arrowButton', { right: true })} onClick={handleNext}>
-            <RightArrowIcon />
-          </button>
+
+          {isLastGroup && (
+            <button className={b('arrowButton', { right: true })} onClick={handleNext}>
+              <RightArrowIcon />
+            </button>
+          )}
         </div>
       </div>
     </CurrentStoryContext.Provider>
