@@ -64214,7 +64214,7 @@ ReactSlider.propTypes = {
 } ;
 var ReactSlider$1 = ReactSlider;
 
-const b$9 = block('SliderThumb');
+const b$9 = block('SliderSdkThumb');
 const SliderThumb = ({ props, emoji, changeStatus, currentPosition, initSize = 34 }) => {
     const [bigSize, setBigSize] = React.useState(initSize);
     React.useEffect(() => {
@@ -64226,7 +64226,7 @@ const SliderThumb = ({ props, emoji, changeStatus, currentPosition, initSize = 3
         React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })));
 };
 
-const b$8 = block('SliderTrack');
+const b$8 = block('SliderSdkTrack');
 const SliderTrack = ({ propsTrack, state, size }) => (React__default["default"].createElement("div", Object.assign({}, propsTrack, { className: b$8({ selected: state.index === 1 }), style: Object.assign(Object.assign({}, size), propsTrack.style) })));
 
 const b$7 = block('SliderSdkWidget');
