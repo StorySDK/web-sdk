@@ -10,7 +10,7 @@ import { IconLogoCircle } from '../../components/Icon';
 import { calculateElementSize } from '../../utils';
 import './TalkAboutWidget.scss';
 
-const b = block('TalkAboutWidget');
+const b = block('TalkAboutSdkWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {

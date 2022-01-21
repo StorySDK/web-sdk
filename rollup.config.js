@@ -34,7 +34,9 @@ export default [
       typescript({
         tsconfig: `${PACKAGE_ROOT_PATH}/tsconfig.json`
       }),
-      scss(),
+      scss({
+        outputStyle: 'compressed'
+      }),
       json(),
       nodePolyfills()
     ]

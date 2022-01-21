@@ -3,7 +3,7 @@ import block from 'bem-cn';
 import { GiphyWidgetParamsType, WidgetComponent } from '../../types';
 import './GiphyWidget.scss';
 
-const b = block('GiphyWidget');
+const b = block('GiphySdkWidget');
 
 export const GiphyWidget: WidgetComponent<{ params: GiphyWidgetParamsType }> = (props) => {
   const { params } = props;

@@ -5,7 +5,7 @@ import { useWindowWidth } from '@react-hook/window-size';
 import { StoryType, GroupType } from '../../types';
 import { StoryContent } from '..';
 
-const b = block('StoryModal');
+const b = block('StorySdkModal');
 
 interface StoryModalProps {
   currentGroup: GroupType;
@@ -175,11 +175,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         style={{ height: width < 768 ? Math.round(694 * (width / 390)) : '100%' }}
       >
         <div className={b('body')}>
-          {!isFirstGroup && (
-            <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
-              <LeftArrowIcon />
-            </button>
-          )}
+          <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
+            <LeftArrowIcon />
+          </button>
 
           <div className={b('swiper')}>
             <div className={b('swiperContent')}>
@@ -215,11 +213,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </div>
           </div>
 
-          {isLastGroup && (
-            <button className={b('arrowButton', { right: true })} onClick={handleNext}>
-              <RightArrowIcon />
-            </button>
-          )}
+          <button className={b('arrowButton', { right: true })} onClick={handleNext}>
+            <RightArrowIcon />
+          </button>
         </div>
       </div>
     </CurrentStoryContext.Provider>

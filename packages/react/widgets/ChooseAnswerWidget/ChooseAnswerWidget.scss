@@ -1,6 +1,6 @@
 @import "../../styles/variables.scss";
 
-.ChooseAnswerWidget {
+.ChooseAnswerSdkWidget {
   width: 100%;
   height: 100%;
   background: #ffffff;
@@ -67,7 +67,7 @@
     &_choosen {
       border-color: transparent;
 
-      &.ChooseAnswerWidget__answer_incorrect {
+      &.ChooseAnswerSdkWidget__answer_incorrect {
         background-color: rgba(
           $color: map-get($theme-colors, "red"),
           $alpha: 0.8
@@ -120,7 +120,7 @@
       stroke: rgba($color: map-get($theme-colors, "red"), $alpha: 0.5);
     }
 
-    &_incorrect.ChooseAnswerWidget__answerIcon_choosen {
+    &_incorrect.ChooseAnswerSdkWidget__answerIcon_choosen {
       stroke: map-get($theme-colors, "red");
     }
   }
@@ -149,7 +149,7 @@
     &_incorrect {
       border-color: rgba($color: map-get($theme-colors, "red"), $alpha: 0.5);
 
-      &.ChooseAnswerWidget__answerCircle_choosen {
+      &.ChooseAnswerSdkWidget__answerCircle_choosen {
         background-color: #ffffff;
         border-color: rgba($color: map-get($theme-colors, "red"), $alpha: 0.8);
       }

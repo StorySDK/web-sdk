@@ -7,16 +7,16 @@
   }
 }
 
-.StoryModal {
+.StorySdkModal {
   display: none;
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
+  z-index: 999;
 
   background: #18182E;
   // opacity: 0.9;
-  z-index: 1000;
   justify-content: center;
   align-items: flex-start;
 
