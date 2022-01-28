@@ -1,7 +1,7 @@
 import React from 'react';
 import block from 'bem-cn';
 import './StoryModal.scss';
-import { useWindowWidth } from '@react-hook/window-size';
+import { useWindowSize } from '@react-hook/window-size';
 import { StoryType, GroupType } from '../../types';
 import { StoryContent } from '..';
 
@@ -79,7 +79,17 @@ const RightArrowIcon: React.FC = () => (
   </svg>
 );
 
-export const CurrentStoryContext = React.createContext('');
+export const StoryContext = React.createContext<{
+  currentStoryId: string;
+  playStatusChange?: any;
+  confetti?: any;
+}>({
+  currentStoryId: '',
+  playStatusChange: () => {},
+  confetti: null
+});
+
+type PlayStatusType = 'wait' | 'play' | 'pause';
 
 export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const {
@@ -99,11 +109,18 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const [currentStory, setCurrentStory] = React.useState(0);
   const [currentStoryId, setCurrentStoryId] = React.useState(stories.length ? stories[0].id : '');
+  const [playStatus, setPlayStatus] = React.useState<PlayStatusType>('wait');
 
-  const width = useWindowWidth();
+  const [width, height] = useWindowSize();
 
   React.useEffect(() => {
     setCurrentStory(0);
+
+    if (showed) {
+      setPlayStatus('play');
+    } else {
+      setPlayStatus('wait');
+    }
 
     if (onOpenStory && showed && stories.length) {
       onOpenStory(currentGroup.id, stories[0].id);
@@ -169,17 +186,24 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   };
 
   return (
-    <CurrentStoryContext.Provider value={currentStoryId}>
+    <StoryContext.Provider value={{ currentStoryId, playStatusChange: setPlayStatus }}>
       <div
         className={b({ showed })}
-        style={{ height: width < 768 ? Math.round(694 * (width / 390)) : '100%' }}
+        style={{
+          height: width < 768 ? Math.round(694 * (width / 390)) : '100%'
+        }}
       >
         <div className={b('body')}>
           <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
             <LeftArrowIcon />
           </button>
 
-          <div className={b('swiper')}>
+          <div
+            className={b('swiper')}
+            style={{
+              width: width > 768 ? Math.round((283 / 512) * height) : '100%'
+            }}
+          >
             <div className={b('swiperContent')}>
               {stories.map((story, index) => (
                 <div className={b('story', { current: index === currentStory })} key={story.id}>
@@ -189,7 +213,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </div>
 
             <div className={b('controls')}>
-              <div className={b('indicators')}>
+              <div className={b('indicators', { stopAnimation: playStatus === 'pause' })}>
                 {stories.map((story, index) => (
                   <div
                     className={b('indicator', {
@@ -218,6 +242,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           </button>
         </div>
       </div>
-    </CurrentStoryContext.Provider>
+    </StoryContext.Provider>
   );
 };

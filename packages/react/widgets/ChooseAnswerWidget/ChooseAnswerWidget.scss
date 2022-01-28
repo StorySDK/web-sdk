@@ -42,6 +42,7 @@
     display: flex;
     flex-direction: column;
     padding: 12px;
+
   }
 
   &__answer {
@@ -49,14 +50,20 @@
     align-items: center;
     padding: 8px;
     border-radius: 50px;
+    cursor: pointer;
     border: 1px solid #dbdbdb;
 
     &:not(:last-child) {
       margin-bottom: 6px;
     }
 
+    &_incorrect {
+      cursor: auto;
+    }
+
     &_correct {
       border-color: transparent;
+      cursor: auto;
 
       background-color: rgba(
         $color: map-get($theme-colors, "green"),
@@ -66,6 +73,7 @@
 
     &_choosen {
       border-color: transparent;
+      cursor: auto;
 
       &.ChooseAnswerSdkWidget__answer_incorrect {
         background-color: rgba(

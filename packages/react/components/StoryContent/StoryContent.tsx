@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import block from 'bem-cn';
-import { useWindowWidth } from '@react-hook/window-size';
+import { useWindowSize } from '@react-hook/window-size';
 import { WidgetFactory } from '../../core';
 import { StoryType } from '../../types';
 import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackground';
@@ -17,7 +17,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
   const { story } = props;
   const [isVideoLoading, setVideoLoading] = useState(false);
 
-  const width = useWindowWidth();
+  const [width, height] = useWindowSize();
   // const canvasRef = useRef(null);
 
   return (
@@ -26,7 +26,10 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         className={b('scope')}
         style={{
           background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
-          transform: width < 768 ? `scale(${width / 3.9}%)` : `scale(${288 / 3.9}%)`
+          transform:
+            width < 768
+              ? `scale(${width / 3.9}%)`
+              : `scale(${Math.round((283 / 512) * height) / 3.9}%)`
         }}
       >
         {story.storyData.map((widget: any, index: number) => (
@@ -39,20 +42,19 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
             <WidgetFactory storyId={story.id} widget={widget} />
           </div>
         ))}
+        {story.background.type === 'video' && (
+          <StoryVideoBackground
+            autoplay
+            isLoading={isVideoLoading}
+            src={story.background.value}
+            onLoadEnd={() => {
+              setVideoLoading(false);
+            }}
+          />
+        )}
       </div>
 
       {/* <canvas className={b('canvas')} ref={canvasRef} /> */}
-
-      {story.background.type === 'video' && (
-        <StoryVideoBackground
-          autoplay
-          isLoading={isVideoLoading}
-          src={story.background.value}
-          onLoadEnd={() => {
-            setVideoLoading(false);
-          }}
-        />
-      )}
     </div>
   );
 };

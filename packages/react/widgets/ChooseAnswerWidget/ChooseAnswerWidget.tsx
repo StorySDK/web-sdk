@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import block from 'bem-cn';
-import JSConfetti from 'js-confetti';
+// import JSConfetti from 'js-confetti';
 import {
   ChooseAnswerWidgetParamsType,
   WidgetComponent,
@@ -51,7 +51,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
 
-  const jsConfetti = useRef(new JSConfetti());
+  // const jsConfetti = useRef(new JSConfetti());
 
   const calculate = useCallback(
     (size) => {
@@ -168,12 +168,16 @@ export const ChooseAnswerWidget: WidgetComponent<{
         );
       }
       return (
-        <div className={b('answer')} key={answer.id} style={elementSizes.answer}>
-          <button
-            className={b('answerId')}
-            style={elementSizes.answerId}
-            onClick={!userAnswer ? () => handleMarkAnswer(answer.id) : undefined}
-          >
+        <div
+          className={b('answer')}
+          key={answer.id}
+          role="button"
+          style={elementSizes.answer}
+          tabIndex={0}
+          onClick={!userAnswer ? () => handleMarkAnswer(answer.id) : undefined}
+          onKeyDown={!userAnswer ? () => handleMarkAnswer(answer.id) : undefined}
+        >
+          <button className={b('answerId')} style={elementSizes.answerId}>
             {`${answer.id}`}
           </button>
           <div className={b('answerTitle')} style={elementSizes.answerTitle}>
@@ -192,11 +196,11 @@ export const ChooseAnswerWidget: WidgetComponent<{
     ]
   );
 
-  useEffect(() => {
-    if (userAnswer && userAnswer === params.correct) {
-      jsConfetti.current.addConfetti();
-    }
-  }, [userAnswer, params.correct]);
+  // useEffect(() => {
+  //   if (userAnswer && userAnswer === params.correct) {
+  //     jsConfetti.current.addConfetti();
+  //   }
+  // }, [userAnswer, params.correct]);
 
   return (
     <div

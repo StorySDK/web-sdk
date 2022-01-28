@@ -10,7 +10,7 @@ import {
 import { calculateElementSize } from '../../utils';
 import './SliderWidget.scss';
 import { useInterval } from '../../hooks';
-import { CurrentStoryContext } from '../../components';
+import { StoryContext } from '../../components';
 import { SliderThumb, SliderTrack } from './_components';
 
 const b = block('SliderSdkWidget');
@@ -109,13 +109,13 @@ export const SliderWidget: WidgetComponent<{
     setChangeStatus('moved');
   };
 
-  const currentStoryId = useContext(CurrentStoryContext);
+  const storyContextVal = useContext(StoryContext);
 
   useEffect(() => {
-    if (currentStoryId === storyId) {
+    if (storyContextVal.currentStoryId === storyId) {
       setDelay(Math.round(time / value));
     }
-  }, [currentStoryId, storyId, value, time]);
+  }, [storyContextVal, storyId, value, time]);
 
   return (
     <div className={b({ color })} style={elementSizes.widget}>

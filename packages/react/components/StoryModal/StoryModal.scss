@@ -14,6 +14,7 @@
   top: 0;
   width: 100%;
   z-index: 999;
+  box-sizing: border-box;
 
   background: #18182E;
   // opacity: 0.9;
@@ -34,7 +35,7 @@
   @media (min-width: 768px) {
     min-height: auto;
     align-items: center;
-    min-height: 694px;
+    // min-height: 694px;
     height: 100%;
   }
 
@@ -67,8 +68,8 @@
 
     @media (min-width: 768px) {
       padding: 0;
-      max-width: 394px;
-      max-height: 512px;  
+      // max-width: 394px;
+      // max-height: 512px;  
 
       // max-width: 501px;
       // max-height: 694px;
@@ -155,16 +156,6 @@
     height: 100%;
   }
 
-  &__indicators {
-    z-index: 99999;
-    position: absolute;
-    top: 10px;
-    width: 100%;
-    padding: 0 8px;
-    display: flex;
-    box-sizing: border-box;
-  }
-
   &__indicator {
     position: relative;
     width: 100%;
@@ -190,6 +181,22 @@
       border-radius: 5px;
       background: #FAFAFA;
       animation: indicator 7s linear;
+    }
+  }
+
+  &__indicators {
+    z-index: 99999;
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    padding: 0 8px;
+    display: flex;
+    box-sizing: border-box;
+
+    &_stopAnimation {
+      .StorySdkModal__indicator_current::after {
+        animation-play-state: paused;
+      }
     }
   }
 
