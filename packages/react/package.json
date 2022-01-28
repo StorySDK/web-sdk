@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/react",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "React components for StorySDK rendering",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
@@ -67,5 +67,5 @@
     "sass": "^1.42.1",
     "typescript": "^4.5.4"
   },
-  "gitHead": "a40633edebc117b10d6f62c292125a81c4ada4c9"
+  "gitHead": "68b3b570cb439fcbf6da6f7e1bc37dfbdb8b4911"
 }

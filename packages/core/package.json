@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/core",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "StorySDK for web projects",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
@@ -28,7 +28,7 @@
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
-    "@storysdk/react": "../react",
+    "@storysdk/react": "^0.2.1",
     "@types/axios": "^0.14.0",
     "@types/bem-cn": "^3.0.0",
     "@types/emoji-mart": "^3.0.6",
@@ -60,5 +60,5 @@
     "axios": "^0.24.0",
     "nanoid": "^3.1.32"
   },
-  "gitHead": "a40633edebc117b10d6f62c292125a81c4ada4c9"
+  "gitHead": "68b3b570cb439fcbf6da6f7e1bc37dfbdb8b4911"
 }
