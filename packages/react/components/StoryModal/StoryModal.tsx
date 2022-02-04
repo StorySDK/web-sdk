@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import block from 'bem-cn';
 import './StoryModal.scss';
 import { useWindowSize } from '@react-hook/window-size';
@@ -107,13 +107,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentGroup
   } = props;
 
-  const [currentStory, setCurrentStory] = React.useState(0);
-  const [currentStoryId, setCurrentStoryId] = React.useState(stories.length ? stories[0].id : '');
-  const [playStatus, setPlayStatus] = React.useState<PlayStatusType>('wait');
+  const [currentStory, setCurrentStory] = useState(0);
+  const [currentStoryId, setCurrentStoryId] = useState('');
+  const [playStatus, setPlayStatus] = useState<PlayStatusType>('wait');
 
   const [width, height] = useWindowSize();
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrentStory(0);
 
     if (showed) {
@@ -123,23 +123,20 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     }
 
     if (onOpenStory && showed && stories.length) {
+      setCurrentStoryId(stories[0].id);
       onOpenStory(currentGroup.id, stories[0].id);
     }
   }, [stories.length, onOpenStory, stories, currentGroup, showed]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
 
     if (onCloseStory) {
       onCloseStory(currentGroup.id, stories[currentStory].id);
     }
-  };
+  }, [currentGroup.id, currentStory, onClose, onCloseStory, stories]);
 
-  const handleAnimationEnd = () => {
-    handleNext();
-  };
-
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (currentStory === stories.length - 1) {
       isLastGroup ? handleClose() : onNextGroup();
     } else {
@@ -160,9 +157,23 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         onNextStory(currentGroup.id, stories[currentStory].id);
       }
     }
-  };
+  }, [
+    currentGroup.id,
+    currentStory,
+    handleClose,
+    isLastGroup,
+    onCloseStory,
+    onNextGroup,
+    onNextStory,
+    onOpenStory,
+    stories
+  ]);
 
-  const handlePrev = () => {
+  const handleAnimationEnd = useCallback(() => {
+    handleNext();
+  }, [handleNext]);
+
+  const handlePrev = useCallback(() => {
     if (currentStory === 0) {
       isFirstGroup ? handleClose() : onPrevGroup();
     } else {
@@ -183,7 +194,17 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         onPrevStory(currentGroup.id, stories[currentStory].id);
       }
     }
-  };
+  }, [
+    currentGroup.id,
+    currentStory,
+    handleClose,
+    isFirstGroup,
+    onCloseStory,
+    onOpenStory,
+    onPrevGroup,
+    onPrevStory,
+    stories
+  ]);
 
   return (
     <StoryContext.Provider value={{ currentStoryId, playStatusChange: setPlayStatus }}>
@@ -213,7 +234,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </div>
 
             <div className={b('controls')}>
-              <div className={b('indicators', { stopAnimation: playStatus === 'pause' })}>
+              <div className={b('indicators', { stopAnimation: playStatus === 'pause' || true })}>
                 {stories.map((story, index) => (
                   <div
                     className={b('indicator', {

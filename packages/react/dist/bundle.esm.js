@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback, useMemo, memo, useContext } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo, memo, useContext } from 'react';
 import crypto from 'crypto';
 
 // eslint-disable-next-line no-shadow
@@ -38,28 +38,103 @@ var lib = {exports: {}};
 
 var block = /*@__PURE__*/getDefaultExportFromCjs(lib.exports);
 
-const b$i = block('GroupSdkItem');
+const b$h = block('GroupSdkItem');
 const GroupItem = (props) => {
-    const { imageUrl, size, title, theme, rounded, onClick } = props;
-    return (React.createElement("button", { className: b$i(), onClick: onClick },
-        React.createElement("div", { className: b$i('imgWrapper') },
-            React.createElement("img", { alt: "group", className: b$i('img', { size, rounded }), src: imageUrl })),
-        React.createElement("div", { className: b$i('title', { theme }) }, title)));
+    const { imageUrl, size, title, theme, rounded, index, onClick } = props;
+    return (React.createElement("button", { className: b$h(), onClick: () => onClick && onClick(index) },
+        React.createElement("div", { className: b$h('imgWrapper') },
+            React.createElement("img", { alt: "group", className: b$h('img', { size, rounded }), src: imageUrl })),
+        React.createElement("div", { className: b$h('title', { theme }) }, title)));
 };
 
-const b$h = block('GroupsSdkList');
+/**
+ * @internal
+ */
+const SkeletonThemeContext = React.createContext({});
+
+/* eslint-disable react/no-array-index-key */
+const defaultEnableAnimation = true;
+// For performance & cleanliness, don't add any inline styles unless we have to
+function styleOptionsToCssProperties({ baseColor, highlightColor, width, height, borderRadius, circle, direction, duration, enableAnimation = defaultEnableAnimation, }) {
+    const style = {};
+    if (direction === 'rtl')
+        style['--animation-direction'] = 'reverse';
+    if (typeof duration === 'number')
+        style['--animation-duration'] = `${duration}s`;
+    if (!enableAnimation)
+        style['--pseudo-element-display'] = 'none';
+    if (typeof width === 'string' || typeof width === 'number')
+        style.width = width;
+    if (typeof height === 'string' || typeof height === 'number')
+        style.height = height;
+    if (typeof borderRadius === 'string' || typeof borderRadius === 'number')
+        style.borderRadius = borderRadius;
+    if (circle)
+        style.borderRadius = '50%';
+    if (typeof baseColor !== 'undefined')
+        style['--base-color'] = baseColor;
+    if (typeof highlightColor !== 'undefined')
+        style['--highlight-color'] = highlightColor;
+    return style;
+}
+function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, containerClassName, containerTestId, circle = false, style: styleProp, ...originalPropsStyleOptions }) {
+    var _a, _b;
+    const contextStyleOptions = React.useContext(SkeletonThemeContext);
+    const propsStyleOptions = { ...originalPropsStyleOptions };
+    // DO NOT overwrite style options from the context if `propsStyleOptions`
+    // has properties explicity set to undefined
+    for (const [key, value] of Object.entries(originalPropsStyleOptions)) {
+        if (typeof value === 'undefined') {
+            delete propsStyleOptions[key];
+        }
+    }
+    // Props take priority over context
+    const styleOptions = {
+        ...contextStyleOptions,
+        ...propsStyleOptions,
+        circle,
+    };
+    // `styleProp` has the least priority out of everything
+    const style = {
+        ...styleProp,
+        ...styleOptionsToCssProperties(styleOptions),
+    };
+    let className = 'react-loading-skeleton';
+    if (customClassName)
+        className += ` ${customClassName}`;
+    const inline = (_a = styleOptions.inline) !== null && _a !== void 0 ? _a : false;
+    const elements = [];
+    // Without the <br />, the skeleton lines will all run together if
+    // `width` is specified
+    for (let i = 0; i < count; i++) {
+        const skeletonSpan = (React.createElement("span", { className: className, style: style, key: i }, "\u200C"));
+        if (inline) {
+            elements.push(skeletonSpan);
+        }
+        else {
+            elements.push(React.createElement(React.Fragment, { key: i },
+                skeletonSpan,
+                React.createElement("br", null)));
+        }
+    }
+    return (React.createElement("span", { className: containerClassName, "data-testid": containerTestId, "aria-live": "polite", "aria-busy": (_b = styleOptions.enableAnimation) !== null && _b !== void 0 ? _b : defaultEnableAnimation }, Wrapper
+        ? elements.map((el, i) => React.createElement(Wrapper, { key: i }, el))
+        : elements));
+}
+
+const b$g = block('GroupsSdkList');
 const GroupsList = (props) => {
-    const { groups, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
-    const [currentGroup, setCurrentGroup] = React.useState(0);
-    const [modalShow, setModalShow] = React.useState(false);
-    const handleSelectGroup = (groupIndex) => () => {
+    const { groups, isLoading, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
+    const [currentGroup, setCurrentGroup] = useState(0);
+    const [modalShow, setModalShow] = useState(false);
+    const handleSelectGroup = useCallback((groupIndex) => {
         setCurrentGroup(groupIndex);
         setModalShow(true);
         if (onOpenGroup) {
             onOpenGroup(groups[groupIndex].id);
         }
-    };
-    const handlePrevGroup = () => {
+    }, [groups, onOpenGroup]);
+    const handlePrevGroup = useCallback(() => {
         if (currentGroup > 0) {
             setCurrentGroup(currentGroup - 1);
             if (onOpenGroup && onCloseGroup) {
@@ -69,8 +144,8 @@ const GroupsList = (props) => {
                 }, 0);
             }
         }
-    };
-    const handleNextGroup = () => {
+    }, [currentGroup, groups, onCloseGroup, onOpenGroup]);
+    const handleNextGroup = useCallback(() => {
         if (currentGroup < groups.length) {
             setCurrentGroup(currentGroup + 1);
             if (onOpenGroup && onCloseGroup) {
@@ -80,22 +155,33 @@ const GroupsList = (props) => {
                 }, 0);
             }
         }
-    };
-    const handleCloseModal = () => {
+    }, [currentGroup, groups, onCloseGroup, onOpenGroup]);
+    const handleCloseModal = useCallback(() => {
         if (onCloseGroup) {
             onCloseGroup(groups[currentGroup].id);
         }
         setModalShow(false);
-    };
-    return (React.createElement(React.Fragment, null, groups.length ? (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: b$h() },
-            React.createElement("div", { className: b$h('carousel') }, groups.map((group, index) => {
-                if (group.stories.length) {
-                    return (React.createElement(GroupItem, { imageUrl: group.imageUrl, key: group.id, rounded: true, size: "lg", theme: "light", title: group.title, onClick: handleSelectGroup(index) }));
-                }
-                return null;
-            }))),
-        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("p", null, "No groups to display"))));
+    }, [currentGroup, groups, onCloseGroup]);
+    return (React.createElement(React.Fragment, null, isLoading ? (React.createElement("div", { className: b$g() },
+        React.createElement("div", { className: b$g('carousel') },
+            React.createElement("div", { className: b$g('loaderItem') },
+                React.createElement(Skeleton, { height: 64, width: 64 }),
+                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 })),
+            React.createElement("div", { className: b$g('loaderItem') },
+                React.createElement(Skeleton, { height: 64, width: 64 }),
+                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 })),
+            React.createElement("div", { className: b$g('loaderItem') },
+                React.createElement(Skeleton, { height: 64, width: 64 }),
+                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 })),
+            React.createElement("div", { className: b$g('loaderItem') },
+                React.createElement(Skeleton, { height: 64, width: 64 }),
+                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 }))))) : (React.createElement(React.Fragment, null, groups.length ? (React.createElement(React.Fragment, null,
+        React.createElement("div", { className: b$g() },
+            React.createElement("div", { className: b$g('carousel') }, groups
+                .filter((group) => group.stories.length)
+                .map((group, index) => (React.createElement(GroupItem, { imageUrl: group.imageUrl, index: index, key: group.id, rounded: true, size: "lg", theme: "light", title: group.title, onClick: handleSelectGroup }))))),
+        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("div", { className: b$g({ empty: true }) },
+        React.createElement("p", { className: b$g('emptyText') }, "Stories will be here")))))));
 };
 
 var u = e=>{var a=useRef(e);return useEffect(()=>{a.current=e;}),a};
@@ -106,7 +192,7 @@ function t$1(t,n,a,u){var c=useRef(a),i=useRef(u);useEffect(()=>{c.current=a,i.c
 
 var n$1={},i="undefined"==typeof window?null:window,o=()=>[document.documentElement.clientWidth,document.documentElement.clientHeight],d$1=function(d){void 0===d&&(d=n$1);var{wait:r,leading:c,initialWidth:m=0,initialHeight:u=0}=d,[a,l]=c$1("undefined"==typeof document?[m,u]:o,r,c),f=()=>l(o);return t$1(i,"resize",f),t$1(i,"orientationchange",f),a};
 
-const b$g = block('StorySdkModal');
+const b$f = block('StorySdkModal');
 const CloseIcon = () => (React.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
     React.createElement("path", { d: "M18.0002 6.00079L6.00024 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" }),
     React.createElement("path", { d: "M6.00024 6.00079L18.0002 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" })));
@@ -123,11 +209,11 @@ const StoryContext = React.createContext({
 });
 const StoryModal = (props) => {
     const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
-    const [currentStory, setCurrentStory] = React.useState(0);
-    const [currentStoryId, setCurrentStoryId] = React.useState(stories.length ? stories[0].id : '');
-    const [playStatus, setPlayStatus] = React.useState('wait');
+    const [currentStory, setCurrentStory] = useState(0);
+    const [currentStoryId, setCurrentStoryId] = useState('');
+    const [playStatus, setPlayStatus] = useState('wait');
     const [width, height] = d$1();
-    React.useEffect(() => {
+    useEffect(() => {
         setCurrentStory(0);
         if (showed) {
             setPlayStatus('play');
@@ -136,19 +222,17 @@ const StoryModal = (props) => {
             setPlayStatus('wait');
         }
         if (onOpenStory && showed && stories.length) {
+            setCurrentStoryId(stories[0].id);
             onOpenStory(currentGroup.id, stories[0].id);
         }
     }, [stories.length, onOpenStory, stories, currentGroup, showed]);
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         onClose();
         if (onCloseStory) {
             onCloseStory(currentGroup.id, stories[currentStory].id);
         }
-    };
-    const handleAnimationEnd = () => {
-        handleNext();
-    };
-    const handleNext = () => {
+    }, [currentGroup.id, currentStory, onClose, onCloseStory, stories]);
+    const handleNext = useCallback(() => {
         if (currentStory === stories.length - 1) {
             isLastGroup ? handleClose() : onNextGroup();
         }
@@ -167,8 +251,21 @@ const StoryModal = (props) => {
                 onNextStory(currentGroup.id, stories[currentStory].id);
             }
         }
-    };
-    const handlePrev = () => {
+    }, [
+        currentGroup.id,
+        currentStory,
+        handleClose,
+        isLastGroup,
+        onCloseStory,
+        onNextGroup,
+        onNextStory,
+        onOpenStory,
+        stories
+    ]);
+    const handleAnimationEnd = useCallback(() => {
+        handleNext();
+    }, [handleNext]);
+    const handlePrev = useCallback(() => {
         if (currentStory === 0) {
             isFirstGroup ? handleClose() : onPrevGroup();
         }
@@ -187,31 +284,41 @@ const StoryModal = (props) => {
                 onPrevStory(currentGroup.id, stories[currentStory].id);
             }
         }
-    };
+    }, [
+        currentGroup.id,
+        currentStory,
+        handleClose,
+        isFirstGroup,
+        onCloseStory,
+        onOpenStory,
+        onPrevGroup,
+        onPrevStory,
+        stories
+    ]);
     return (React.createElement(StoryContext.Provider, { value: { currentStoryId, playStatusChange: setPlayStatus } },
-        React.createElement("div", { className: b$g({ showed }), style: {
+        React.createElement("div", { className: b$f({ showed }), style: {
                 height: width < 768 ? Math.round(694 * (width / 390)) : '100%'
             } },
-            React.createElement("div", { className: b$g('body') },
-                React.createElement("button", { className: b$g('arrowButton', { left: true }), onClick: handlePrev },
+            React.createElement("div", { className: b$f('body') },
+                React.createElement("button", { className: b$f('arrowButton', { left: true }), onClick: handlePrev },
                     React.createElement(LeftArrowIcon, null)),
-                React.createElement("div", { className: b$g('swiper'), style: {
+                React.createElement("div", { className: b$f('swiper'), style: {
                         width: width > 768 ? Math.round((283 / 512) * height) : '100%'
                     } },
-                    React.createElement("div", { className: b$g('swiperContent') }, stories.map((story, index) => (React.createElement("div", { className: b$g('story', { current: index === currentStory }), key: story.id },
+                    React.createElement("div", { className: b$f('swiperContent') }, stories.map((story, index) => (React.createElement("div", { className: b$f('story', { current: index === currentStory }), key: story.id },
                         React.createElement(StoryContent, { story: story }))))),
-                    React.createElement("div", { className: b$g('controls') },
-                        React.createElement("div", { className: b$g('indicators', { stopAnimation: playStatus === 'pause' }) }, stories.map((story, index) => (React.createElement("div", { className: b$g('indicator', {
+                    React.createElement("div", { className: b$f('controls') },
+                        React.createElement("div", { className: b$f('indicators', { stopAnimation: playStatus === 'pause' || true }) }, stories.map((story, index) => (React.createElement("div", { className: b$f('indicator', {
                                 filled: index < currentStory,
                                 current: index === currentStory
                             }), key: story.id, onAnimationEnd: handleAnimationEnd })))),
-                        React.createElement("div", { className: b$g('group') },
-                            React.createElement("div", { className: b$g('groupImgWrapper') },
-                                React.createElement("img", { alt: "", className: b$g('groupImg'), src: currentGroup.imageUrl })),
-                            React.createElement("p", { className: b$g('groupTitle') }, currentGroup.title)),
-                        React.createElement("button", { className: b$g('close'), onClick: handleClose },
+                        React.createElement("div", { className: b$f('group') },
+                            React.createElement("div", { className: b$f('groupImgWrapper') },
+                                React.createElement("img", { alt: "", className: b$f('groupImg'), src: currentGroup.imageUrl })),
+                            React.createElement("p", { className: b$f('groupTitle') }, currentGroup.title)),
+                        React.createElement("button", { className: b$f('close'), onClick: handleClose },
                             React.createElement(CloseIcon, null)))),
-                React.createElement("button", { className: b$g('arrowButton', { right: true }), onClick: handleNext },
+                React.createElement("button", { className: b$f('arrowButton', { right: true }), onClick: handleNext },
                     React.createElement(RightArrowIcon, null))))));
 };
 
@@ -3256,7 +3363,22 @@ const calculateElementSizeByHeight = (position, positionLimits, elementSize) => 
     ? Math.round((elementSize * position.height) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight))
     : elementSize;
 
-const b$f = block('ChooseAnswerSdkWidget');
+const getClientPosition = (e) => {
+    const touches = e.touches;
+    if (touches && touches.length) {
+        const finger = touches[0];
+        return {
+            x: finger.clientX,
+            y: finger.clientY
+        };
+    }
+    return {
+        x: e.clientX,
+        y: e.clientY
+    };
+};
+
+const b$e = block('ChooseAnswerSdkWidget');
 const INIT_ELEMENT_STYLES$5 = {
     widget: {
         borderRadius: 10
@@ -3327,33 +3449,33 @@ const ChooseAnswerWidget = (props) => {
     }, [onAnswer]);
     const renderAnswer = useCallback((answer) => {
         if (userAnswer) {
-            return (React.createElement("div", { className: b$f('answer', {
+            return (React.createElement("div", { className: b$e('answer', {
                     correct: answer.id === params.correct,
                     incorrect: answer.id !== params.correct,
                     choosen: userAnswer === answer.id
                 }), key: `answer-${answer.id}`, style: elementSizes.answer },
-                React.createElement("div", { className: b$f('answerCircle', {
+                React.createElement("div", { className: b$e('answerCircle', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
-                    }), style: elementSizes.answerId }, answer.id === params.correct ? (React.createElement(IconConfirm, { className: b$f('answerIcon', {
+                    }), style: elementSizes.answerId }, answer.id === params.correct ? (React.createElement(IconConfirm, { className: b$e('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
-                    }) })) : (React.createElement(IconDecline, { className: b$f('answerIcon', {
+                    }) })) : (React.createElement(IconDecline, { className: b$e('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
                     }) }))),
-                React.createElement("div", { className: b$f('answerTitle', {
+                React.createElement("div", { className: b$e('answerTitle', {
                         choosen: userAnswer === answer.id,
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct
                     }), style: elementSizes.answerTitle }, answer.title)));
         }
-        return (React.createElement("div", { className: b$f('answer'), key: answer.id, role: "button", style: elementSizes.answer, tabIndex: 0, onClick: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined },
-            React.createElement("button", { className: b$f('answerId'), style: elementSizes.answerId }, `${answer.id}`),
-            React.createElement("div", { className: b$f('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
+        return (React.createElement("div", { className: b$e('answer'), key: answer.id, role: "button", style: elementSizes.answer, tabIndex: 0, onClick: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined },
+            React.createElement("button", { className: b$e('answerId'), style: elementSizes.answerId }, `${answer.id}`),
+            React.createElement("div", { className: b$e('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
     }, [
         userAnswer,
         handleMarkAnswer,
@@ -3367,13 +3489,13 @@ const ChooseAnswerWidget = (props) => {
     //     jsConfetti.current.addConfetti();
     //   }
     // }, [userAnswer, params.correct]);
-    return (React.createElement("div", { className: b$f({
+    return (React.createElement("div", { className: b$e({
             color: params.color,
             shake: userAnswer && userAnswer !== params.correct,
             celebrate: userAnswer && userAnswer === params.correct
         }), style: elementSizes.widget },
-        React.createElement("div", { className: b$f('header'), style: elementSizes.header }, params.text),
-        React.createElement("div", { className: b$f('answers'), style: elementSizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
+        React.createElement("div", { className: b$e('header'), style: elementSizes.header }, params.text),
+        React.createElement("div", { className: b$e('answers'), style: elementSizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
 };
 
 var classnames = {exports: {}};
@@ -3569,7 +3691,7 @@ const MaterialIcon = memo(({ name = 'ArrowCircleUpOutlineIcon', className, color
     return null;
 });
 
-const b$e = block('ClickMeSdkWidget');
+const b$d = block('ClickMeSdkWidget');
 const ClickMeWidget = (props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url } = props.params;
     // const border = hasBorder ? `${borderWidth}px solid ${borderColor}` : 'none';
@@ -3582,17 +3704,17 @@ const ClickMeWidget = (props) => {
             tab.focus();
         }
     };
-    return (React.createElement("div", { className: b$e(), role: "button", style: {
+    return (React.createElement("div", { className: b$d(), role: "button", style: {
             borderRadius,
             borderStyle: 'solid',
             borderWidth: `${hasBorder ? borderWidth : 0}px`,
             borderColor: renderBackgroundStyles(borderColor)
         }, tabIndex: 0, onClick: handleWidgetClick, onKeyDown: handleWidgetClick },
-        React.createElement("div", { className: b$e('container', { gradient: color.type === 'gradient' }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
+        React.createElement("div", { className: b$d('container', { gradient: color.type === 'gradient' }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
                 fontSize }, renderTextBackgroundStyles({ color })) },
-            hasIcon ? (React.createElement(MaterialIcon, { background: color, className: b$e('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
-            React.createElement("span", { className: b$e('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
-        React.createElement("div", { className: b$e('background'), style: {
+            hasIcon ? (React.createElement(MaterialIcon, { background: color, className: b$d('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
+            React.createElement("span", { className: b$d('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
+        React.createElement("div", { className: b$d('background'), style: {
                 background: renderBackgroundStyles(backgroundColor)
             } })));
 };
@@ -53124,8 +53246,8 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-function _extends$1() {
-  _extends$1 = Object.assign || function (target) {
+function _extends() {
+  _extends = Object.assign || function (target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
 
@@ -53139,7 +53261,7 @@ function _extends$1() {
     return target;
   };
 
-  return _extends$1.apply(this, arguments);
+  return _extends.apply(this, arguments);
 }
 
 function _assertThisInitialized(self) {
@@ -53167,13 +53289,13 @@ function _getPrototypeOf(o) {
   return _getPrototypeOf(o);
 }
 
-function _setPrototypeOf$1(o, p) {
-  _setPrototypeOf$1 = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
     o.__proto__ = p;
     return o;
   };
 
-  return _setPrototypeOf$1(o, p);
+  return _setPrototypeOf(o, p);
 }
 
 function _inherits(subClass, superClass) {
@@ -53191,7 +53313,7 @@ function _inherits(subClass, superClass) {
   Object.defineProperty(subClass, "prototype", {
     writable: false
   });
-  if (superClass) _setPrototypeOf$1(subClass, superClass);
+  if (superClass) _setPrototypeOf(subClass, superClass);
 }
 
 // shim for using process in browser
@@ -53430,8 +53552,8 @@ var reactIs_production_min = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var b$d="function"===typeof Symbol&&Symbol.for,c=b$d?Symbol.for("react.element"):60103,d=b$d?Symbol.for("react.portal"):60106,e=b$d?Symbol.for("react.fragment"):60107,f=b$d?Symbol.for("react.strict_mode"):60108,g$1=b$d?Symbol.for("react.profiler"):60114,h=b$d?Symbol.for("react.provider"):60109,k=b$d?Symbol.for("react.context"):60110,l=b$d?Symbol.for("react.async_mode"):60111,m=b$d?Symbol.for("react.concurrent_mode"):60111,n=b$d?Symbol.for("react.forward_ref"):60112,p=b$d?Symbol.for("react.suspense"):60113,q=b$d?
-Symbol.for("react.suspense_list"):60120,r$1=b$d?Symbol.for("react.memo"):60115,t=b$d?Symbol.for("react.lazy"):60116,v=b$d?Symbol.for("react.block"):60121,w=b$d?Symbol.for("react.fundamental"):60117,x=b$d?Symbol.for("react.responder"):60118,y=b$d?Symbol.for("react.scope"):60119;
+var b$c="function"===typeof Symbol&&Symbol.for,c=b$c?Symbol.for("react.element"):60103,d=b$c?Symbol.for("react.portal"):60106,e=b$c?Symbol.for("react.fragment"):60107,f=b$c?Symbol.for("react.strict_mode"):60108,g$1=b$c?Symbol.for("react.profiler"):60114,h=b$c?Symbol.for("react.provider"):60109,k=b$c?Symbol.for("react.context"):60110,l=b$c?Symbol.for("react.async_mode"):60111,m=b$c?Symbol.for("react.concurrent_mode"):60111,n=b$c?Symbol.for("react.forward_ref"):60112,p=b$c?Symbol.for("react.suspense"):60113,q=b$c?
+Symbol.for("react.suspense_list"):60120,r$1=b$c?Symbol.for("react.memo"):60115,t=b$c?Symbol.for("react.lazy"):60116,v=b$c?Symbol.for("react.block"):60121,w=b$c?Symbol.for("react.fundamental"):60117,x=b$c?Symbol.for("react.responder"):60118,y=b$c?Symbol.for("react.scope"):60119;
 function z(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g$1:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k:case n:case t:case r$1:case h:return a;default:return u}}case d:return u}}}function A(a){return z(a)===m}reactIs_production_min.AsyncMode=l;reactIs_production_min.ConcurrentMode=m;reactIs_production_min.ContextConsumer=k;reactIs_production_min.ContextProvider=h;reactIs_production_min.Element=c;reactIs_production_min.ForwardRef=n;reactIs_production_min.Fragment=e;reactIs_production_min.Lazy=t;reactIs_production_min.Memo=r$1;reactIs_production_min.Portal=d;
 reactIs_production_min.Profiler=g$1;reactIs_production_min.StrictMode=f;reactIs_production_min.Suspense=p;reactIs_production_min.isAsyncMode=function(a){return A(a)||z(a)===l};reactIs_production_min.isConcurrentMode=A;reactIs_production_min.isContextConsumer=function(a){return z(a)===k};reactIs_production_min.isContextProvider=function(a){return z(a)===h};reactIs_production_min.isElement=function(a){return "object"===typeof a&&null!==a&&a.$$typeof===c};reactIs_production_min.isForwardRef=function(a){return z(a)===n};reactIs_production_min.isFragment=function(a){return z(a)===e};reactIs_production_min.isLazy=function(a){return z(a)===t};
 reactIs_production_min.isMemo=function(a){return z(a)===r$1};reactIs_production_min.isPortal=function(a){return z(a)===d};reactIs_production_min.isProfiler=function(a){return z(a)===g$1};reactIs_production_min.isStrictMode=function(a){return z(a)===f};reactIs_production_min.isSuspense=function(a){return z(a)===p};
@@ -55058,7 +55180,7 @@ var NimbleEmoji = function NimbleEmoji(props) {
     style = _convertStyleToCSS(style);
     return "<".concat(Tag.name, " style='").concat(style, "' aria-label='").concat(label, "' ").concat(title ? "title='".concat(title, "'") : '', " class='").concat(className, "'>").concat(children || '', "</").concat(Tag.name, ">");
   } else {
-    return React.createElement(Tag.name, _extends$1({
+    return React.createElement(Tag.name, _extends({
       onClick: function onClick(e) {
         return _handleClick(e, props);
       },
@@ -55561,14 +55683,14 @@ function (_Skins) {
       for (var skinTone = 1; skinTone <= 6; skinTone++) {
         var selected = skinTone === skin;
         var visible = opened || selected;
-        skinToneNodes.push(React.createElement("span", _extends$1({
+        skinToneNodes.push(React.createElement("span", _extends({
           key: "skin-tone-".concat(skinTone),
           className: "emoji-mart-skin-swatch".concat(selected ? ' selected' : ''),
           "aria-label": i18n.skintones[skinTone],
           "aria-hidden": !visible
         }, opened ? {
           role: 'menuitem'
-        } : {}), React.createElement("span", _extends$1({
+        } : {}), React.createElement("span", _extends({
           onClick: this.handleClick,
           onKeyDown: this.handleKeyDown,
           role: "button"
@@ -56544,7 +56666,7 @@ function (_React$PureComponent) {
   _createClass(Picker, [{
     key: "render",
     value: function render() {
-      return React.createElement(NimblePicker, _extends$1({}, this.props, this.state));
+      return React.createElement(NimblePicker, _extends({}, this.props, this.state));
     }
   }]);
 
@@ -56592,7 +56714,7 @@ function useInterval(callback, delay) {
     }, [delay]);
 }
 
-const b$c = block('EmojiReactionSdkWidget');
+const b$b = block('EmojiReactionSdkWidget');
 const INIT_ELEMENT_STYLES$4 = {
     widget: {
         borderRadius: 50,
@@ -56655,25 +56777,25 @@ const EmojiReactionWidget = (props) => {
         setBigSize(initEmojiSize);
         setDelay(50);
     };
-    return (React.createElement("div", { className: b$c({ color: params.color }), style: elementSizes.widget }, params.emoji.map((emojiItem, index) => (React.createElement("button", { className: b$c('item'), key: `${emojiItem.unicode}-${index}`, style: elementSizes.item, onClick: (e) => {
+    return (React.createElement("div", { className: b$b({ color: params.color }), style: elementSizes.widget }, params.emoji.map((emojiItem, index) => (React.createElement("button", { className: b$b('item'), key: `${emojiItem.unicode}-${index}`, style: elementSizes.item, onClick: (e) => {
             e.preventDefault();
             if (!isToched) {
                 handleReactionClick(index, emojiItem.unicode);
             }
         } },
-        React.createElement("div", { className: b$c('subItem', { clicked: index === clickedIndex }) },
+        React.createElement("div", { className: b$b('subItem', { clicked: index === clickedIndex }) },
             React.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: bigSize })),
         React.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: elementSizes.emoji.width }))))));
 };
 
-const b$b = block('GiphySdkWidget');
+const b$a = block('GiphySdkWidget');
 const GiphyWidget = (props) => {
     const { params } = props;
-    return (React.createElement("div", { className: b$b(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
-        React.createElement("img", { alt: "", className: b$b('img'), src: params.gif })));
+    return (React.createElement("div", { className: b$a(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
+        React.createElement("img", { alt: "", className: b$a('img'), src: params.gif })));
 };
 
-const b$a = block('QuestionSdkWidget');
+const b$9 = block('QuestionSdkWidget');
 const INIT_ELEMENT_STYLES$3 = {
     text: {
         fontSize: 14,
@@ -56739,10 +56861,10 @@ const QuestionWidget = (props) => {
         }
         return percent;
     };
-    return (React.createElement("div", { className: b$a() },
-        React.createElement("div", { className: b$a('question'), style: elementSizes.text }, params.question),
-        React.createElement("div", { className: b$a('buttons'), style: { borderRadius: elementSizes.button.borderRadius } },
-            React.createElement("button", { className: b$a('item', {
+    return (React.createElement("div", { className: b$9() },
+        React.createElement("div", { className: b$9('question'), style: elementSizes.text }, params.question),
+        React.createElement("div", { className: b$9('buttons'), style: { borderRadius: elementSizes.button.borderRadius } },
+            React.createElement("button", { className: b$9('item', {
                     answered: answer === 'confirm',
                     confirm: true,
                     answerConfirm: answer && percents.confirm !== 100,
@@ -56753,12 +56875,12 @@ const QuestionWidget = (props) => {
                     height: elementSizes.button.height,
                     fontSize: elementSizes.button.fontSize
                 }, type: "button", onClick: () => handleChange('confirm') },
-                React.createElement("div", { className: b$a('itemTextContainer') },
-                    React.createElement("span", { className: cn(b$a('itemTextConfirm').toString(), b$a('itemText', { answered: answer !== null }).toString()) }, params.confirm),
-                    answer && React.createElement("span", { className: b$a('itemTextPercent') },
+                React.createElement("div", { className: b$9('itemTextContainer') },
+                    React.createElement("span", { className: cn(b$9('itemTextConfirm').toString(), b$9('itemText', { answered: answer !== null }).toString()) }, params.confirm),
+                    answer && React.createElement("span", { className: b$9('itemTextPercent') },
                         percents.confirm,
                         "%"))),
-            React.createElement("button", { className: b$a('item', {
+            React.createElement("button", { className: b$9('item', {
                     answered: answer === 'decline',
                     decline: true,
                     answerDecline: answer && percents.decline !== 100,
@@ -56769,9 +56891,9 @@ const QuestionWidget = (props) => {
                     height: elementSizes.button.height,
                     fontSize: elementSizes.button.fontSize
                 }, type: "button", onClick: () => handleChange('decline') },
-                React.createElement("div", { className: b$a('itemTextContainer') },
-                    React.createElement("span", { className: cn(b$a('itemTextDecline').toString(), b$a('itemText', { answered: answer !== null }).toString()) }, params.decline),
-                    answer && React.createElement("span", { className: b$a('itemTextPercent') },
+                React.createElement("div", { className: b$9('itemTextContainer') },
+                    React.createElement("span", { className: cn(b$9('itemTextDecline').toString(), b$9('itemText', { answered: answer !== null }).toString()) }, params.decline),
+                    answer && React.createElement("span", { className: b$9('itemTextPercent') },
                         percents.decline,
                         "%"))))));
 };
@@ -56793,1263 +56915,88 @@ const RectangleWidget = (props) => {
         React.createElement("div", { className: "RectangleSdkWidget__background", style: backgroundStyles })));
 };
 
-var _jsxFileName = "/Users/brians/git/react-slider/src/components/ReactSlider/ReactSlider.jsx";
+block('SliderSdkThumb');
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+block('SliderSdkTrack');
 
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-/**
- * To prevent text selection while dragging.
- * http://stackoverflow.com/questions/5429827/how-can-i-prevent-text-element-selection-with-cursor-drag
- */
-
-function pauseEvent(e) {
-  if (e && e.stopPropagation) {
-    e.stopPropagation();
-  }
-
-  if (e && e.preventDefault) {
-    e.preventDefault();
-  }
-
-  return false;
-}
-
-function stopPropagation(e) {
-  if (e.stopPropagation) {
-    e.stopPropagation();
-  }
-}
-
-function sanitizeInValue(x) {
-  if (x == null) {
-    return [];
-  }
-
-  return Array.isArray(x) ? x.slice() : [x];
-}
-
-function prepareOutValue(x) {
-  return x !== null && x.length === 1 ? x[0] : x.slice();
-}
-
-function trimSucceeding(length, nextValue, minDistance, max) {
-  for (var i = 0; i < length; i += 1) {
-    var padding = max - i * minDistance;
-
-    if (nextValue[length - 1 - i] > padding) {
-      // eslint-disable-next-line no-param-reassign
-      nextValue[length - 1 - i] = padding;
-    }
-  }
-}
-
-function trimPreceding(length, nextValue, minDistance, min) {
-  for (var i = 0; i < length; i += 1) {
-    var padding = min + i * minDistance;
-
-    if (nextValue[i] < padding) {
-      // eslint-disable-next-line no-param-reassign
-      nextValue[i] = padding;
-    }
-  }
-}
-
-function addHandlers(eventMap) {
-  Object.keys(eventMap).forEach(function (key) {
-    if (typeof document !== 'undefined') {
-      document.addEventListener(key, eventMap[key], false);
-    }
-  });
-}
-
-function removeHandlers(eventMap) {
-  Object.keys(eventMap).forEach(function (key) {
-    if (typeof document !== 'undefined') {
-      document.removeEventListener(key, eventMap[key], false);
-    }
-  });
-}
-
-function trimAlignValue(val, props) {
-  return alignValue(trimValue(val, props), props);
-}
-
-function alignValue(val, props) {
-  var valModStep = (val - props.min) % props.step;
-  var alignedValue = val - valModStep;
-
-  if (Math.abs(valModStep) * 2 >= props.step) {
-    alignedValue += valModStep > 0 ? props.step : -props.step;
-  }
-
-  return parseFloat(alignedValue.toFixed(5));
-}
-
-function trimValue(val, props) {
-  var trimmed = val;
-
-  if (trimmed <= props.min) {
-    trimmed = props.min;
-  }
-
-  if (trimmed >= props.max) {
-    trimmed = props.max;
-  }
-
-  return trimmed;
-}
-
-var ReactSlider = /*#__PURE__*/function (_React$Component) {
-  _inheritsLoose(ReactSlider, _React$Component);
-
-  function ReactSlider(_props) {
-    var _this;
-
-    _this = _React$Component.call(this, _props) || this;
-
-    _this.onKeyUp = function () {
-      _this.onEnd();
-    };
-
-    _this.onMouseUp = function () {
-      _this.onEnd(_this.getMouseEventMap());
-    };
-
-    _this.onTouchEnd = function () {
-      _this.onEnd(_this.getTouchEventMap());
-    };
-
-    _this.onBlur = function () {
-      _this.setState({
-        index: -1
-      }, _this.onEnd(_this.getKeyDownEventMap()));
-    };
-
-    _this.onMouseMove = function (e) {
-      // Prevent controlled updates from happening while mouse is moving
-      _this.setState({
-        pending: true
-      });
-
-      var position = _this.getMousePosition(e);
-
-      var diffPosition = _this.getDiffPosition(position[0]);
-
-      var newValue = _this.getValueFromPosition(diffPosition);
-
-      _this.move(newValue);
-    };
-
-    _this.onTouchMove = function (e) {
-      if (e.touches.length > 1) {
-        return;
-      } // Prevent controlled updates from happending while touch is moving
-
-
-      _this.setState({
-        pending: true
-      });
-
-      var position = _this.getTouchPosition(e);
-
-      if (typeof _this.isScrolling === 'undefined') {
-        var diffMainDir = position[0] - _this.startPosition[0];
-        var diffScrollDir = position[1] - _this.startPosition[1];
-        _this.isScrolling = Math.abs(diffScrollDir) > Math.abs(diffMainDir);
-      }
-
-      if (_this.isScrolling) {
-        _this.setState({
-          index: -1
-        });
-
-        return;
-      }
-
-      var diffPosition = _this.getDiffPosition(position[0]);
-
-      var newValue = _this.getValueFromPosition(diffPosition);
-
-      _this.move(newValue);
-    };
-
-    _this.onKeyDown = function (e) {
-      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
-        return;
-      } // Prevent controlled updates from happening while a key is pressed
-
-
-      _this.setState({
-        pending: true
-      });
-
-      switch (e.key) {
-        case 'ArrowLeft':
-        case 'ArrowDown':
-        case 'Left':
-        case 'Down':
-          e.preventDefault();
-
-          _this.moveDownByStep();
-
-          break;
-
-        case 'ArrowRight':
-        case 'ArrowUp':
-        case 'Right':
-        case 'Up':
-          e.preventDefault();
-
-          _this.moveUpByStep();
-
-          break;
-
-        case 'Home':
-          e.preventDefault();
-
-          _this.move(_this.props.min);
-
-          break;
-
-        case 'End':
-          e.preventDefault();
-
-          _this.move(_this.props.max);
-
-          break;
-
-        case 'PageDown':
-          e.preventDefault();
-
-          _this.moveDownByStep(_this.props.pageFn(_this.props.step));
-
-          break;
-
-        case 'PageUp':
-          e.preventDefault();
-
-          _this.moveUpByStep(_this.props.pageFn(_this.props.step));
-
-          break;
-      }
-    };
-
-    _this.onSliderMouseDown = function (e) {
-      // do nothing if disabled or right click
-      if (_this.props.disabled || e.button === 2) {
-        return;
-      } // Prevent controlled updates from happening while mouse is moving
-
-
-      _this.setState({
-        pending: true
-      });
-
-      if (!_this.props.snapDragDisabled) {
-        var position = _this.getMousePosition(e);
-
-        _this.forceValueFromPosition(position[0], function (i) {
-          _this.start(i, position[0]);
-
-          addHandlers(_this.getMouseEventMap());
-        });
-      }
-
-      pauseEvent(e);
-    };
-
-    _this.onSliderClick = function (e) {
-      if (_this.props.disabled) {
-        return;
-      }
-
-      if (_this.props.onSliderClick && !_this.hasMoved) {
-        var position = _this.getMousePosition(e);
-
-        var valueAtPos = trimAlignValue(_this.calcValue(_this.calcOffsetFromPosition(position[0])), _this.props);
-
-        _this.props.onSliderClick(valueAtPos);
-      }
-    };
-
-    _this.createOnKeyDown = function (i) {
-      return function (e) {
-        if (_this.props.disabled) {
-          return;
-        }
-
-        _this.start(i);
-
-        addHandlers(_this.getKeyDownEventMap());
-        pauseEvent(e);
-      };
-    };
-
-    _this.createOnMouseDown = function (i) {
-      return function (e) {
-        // do nothing if disabled or right click
-        if (_this.props.disabled || e.button === 2) {
-          return;
-        } // Prevent controlled updates from happending while mouse is moving
-
-
-        _this.setState({
-          pending: true
-        });
-
-        var position = _this.getMousePosition(e);
-
-        _this.start(i, position[0]);
-
-        addHandlers(_this.getMouseEventMap());
-        pauseEvent(e);
-      };
-    };
-
-    _this.createOnTouchStart = function (i) {
-      return function (e) {
-        if (_this.props.disabled || e.touches.length > 1) {
-          return;
-        } // Prevent controlled updates from happending while touch is moving
-
-
-        _this.setState({
-          pending: true
-        });
-
-        var position = _this.getTouchPosition(e);
-
-        _this.startPosition = position; // don't know yet if the user is trying to scroll
-
-        _this.isScrolling = undefined;
-
-        _this.start(i, position[0]);
-
-        addHandlers(_this.getTouchEventMap());
-        stopPropagation(e);
-      };
-    };
-
-    _this.handleResize = function () {
-      // setTimeout of 0 gives element enough time to have assumed its new size if
-      // it is being resized
-      var resizeTimeout = window.setTimeout(function () {
-        // drop this timeout from pendingResizeTimeouts to reduce memory usage
-        _this.pendingResizeTimeouts.shift();
-
-        _this.resize();
-      }, 0);
-
-      _this.pendingResizeTimeouts.push(resizeTimeout);
-    };
-
-    _this.renderThumb = function (style, i) {
-      var className = _this.props.thumbClassName + " " + _this.props.thumbClassName + "-" + i + " " + (_this.state.index === i ? _this.props.thumbActiveClassName : '');
-      var props = {
-        'ref': function ref(r) {
-          _this["thumb" + i] = r;
-        },
-        'key': _this.props.thumbClassName + "-" + i,
-        className: className,
-        style: style,
-        'onMouseDown': _this.createOnMouseDown(i),
-        'onTouchStart': _this.createOnTouchStart(i),
-        'onFocus': _this.createOnKeyDown(i),
-        'tabIndex': 0,
-        'role': 'slider',
-        'aria-orientation': _this.props.orientation,
-        'aria-valuenow': _this.state.value[i],
-        'aria-valuemin': _this.props.min,
-        'aria-valuemax': _this.props.max,
-        'aria-label': Array.isArray(_this.props.ariaLabel) ? _this.props.ariaLabel[i] : _this.props.ariaLabel,
-        'aria-labelledby': Array.isArray(_this.props.ariaLabelledby) ? _this.props.ariaLabelledby[i] : _this.props.ariaLabelledby
-      };
-      var state = {
-        index: i,
-        value: prepareOutValue(_this.state.value),
-        valueNow: _this.state.value[i]
-      };
-
-      if (_this.props.ariaValuetext) {
-        props['aria-valuetext'] = typeof _this.props.ariaValuetext === 'string' ? _this.props.ariaValuetext : _this.props.ariaValuetext(state);
-      }
-
-      return _this.props.renderThumb(props, state);
-    };
-
-    _this.renderTrack = function (i, offsetFrom, offsetTo) {
-      var props = {
-        key: _this.props.trackClassName + "-" + i,
-        className: _this.props.trackClassName + " " + _this.props.trackClassName + "-" + i,
-        style: _this.buildTrackStyle(offsetFrom, _this.state.upperBound - offsetTo)
-      };
-      var state = {
-        index: i,
-        value: prepareOutValue(_this.state.value)
-      };
-      return _this.props.renderTrack(props, state);
-    };
-
-    var value = sanitizeInValue(_props.value);
-
-    if (!value.length) {
-      value = sanitizeInValue(_props.defaultValue);
-    } // array for storing resize timeouts ids
-
-
-    _this.pendingResizeTimeouts = [];
-    var zIndices = [];
-
-    for (var i = 0; i < value.length; i += 1) {
-      value[i] = trimAlignValue(value[i], _props);
-      zIndices.push(i);
-    }
-
-    _this.state = {
-      index: -1,
-      upperBound: 0,
-      sliderLength: 0,
-      value: value,
-      zIndices: zIndices
-    };
-    return _this;
-  }
-
-  var _proto = ReactSlider.prototype;
-
-  _proto.componentDidMount = function componentDidMount() {
-    if (typeof window !== 'undefined') {
-      window.addEventListener('resize', this.handleResize);
-      this.resize();
-    }
-  } // Keep the internal `value` consistent with an outside `value` if present.
-  // This basically allows the slider to be a controlled component.
-  ;
-
-  ReactSlider.getDerivedStateFromProps = function getDerivedStateFromProps(props, state) {
-    var value = sanitizeInValue(props.value);
-
-    if (!value.length) {
-      return null;
-    } // Do not allow controlled upates to happen while we have pending updates
-
-
-    if (state.pending) {
-      return null;
-    }
-
-    return {
-      value: value.map(function (item) {
-        return trimAlignValue(item, props);
-      })
-    };
-  };
-
-  _proto.componentDidUpdate = function componentDidUpdate() {
-    // If an upperBound has not yet been determined (due to the component being hidden
-    // during the mount event, or during the last resize), then calculate it now
-    if (this.state.upperBound === 0) {
-      this.resize();
-    }
-  };
-
-  _proto.componentWillUnmount = function componentWillUnmount() {
-    this.clearPendingResizeTimeouts();
-
-    if (typeof window !== 'undefined') {
-      window.removeEventListener('resize', this.handleResize);
-    }
-  };
-
-  _proto.onEnd = function onEnd(eventMap) {
-    if (eventMap) {
-      removeHandlers(eventMap);
-    }
-
-    if (this.hasMoved) {
-      this.fireChangeEvent('onAfterChange');
-    } // Allow controlled updates to continue
-
-
-    this.setState({
-      pending: false
-    });
-    this.hasMoved = false;
-  };
-
-  _proto.getValue = function getValue() {
-    return prepareOutValue(this.state.value);
-  };
-
-  _proto.getClosestIndex = function getClosestIndex(pixelOffset) {
-    var minDist = Number.MAX_VALUE;
-    var closestIndex = -1;
-    var value = this.state.value;
-    var l = value.length;
-
-    for (var i = 0; i < l; i += 1) {
-      var offset = this.calcOffset(value[i]);
-      var dist = Math.abs(pixelOffset - offset);
-
-      if (dist < minDist) {
-        minDist = dist;
-        closestIndex = i;
-      }
-    }
-
-    return closestIndex;
-  };
-
-  _proto.getMousePosition = function getMousePosition(e) {
-    return [e["page" + this.axisKey()], e["page" + this.orthogonalAxisKey()]];
-  };
-
-  _proto.getTouchPosition = function getTouchPosition(e) {
-    var touch = e.touches[0];
-    return [touch["page" + this.axisKey()], touch["page" + this.orthogonalAxisKey()]];
-  };
-
-  _proto.getKeyDownEventMap = function getKeyDownEventMap() {
-    return {
-      keydown: this.onKeyDown,
-      keyup: this.onKeyUp,
-      focusout: this.onBlur
-    };
-  };
-
-  _proto.getMouseEventMap = function getMouseEventMap() {
-    return {
-      mousemove: this.onMouseMove,
-      mouseup: this.onMouseUp
-    };
-  };
-
-  _proto.getTouchEventMap = function getTouchEventMap() {
-    return {
-      touchmove: this.onTouchMove,
-      touchend: this.onTouchEnd
-    };
-  };
-
-  _proto.getValueFromPosition = function getValueFromPosition(position) {
-    var diffValue = position / (this.state.sliderLength - this.state.thumbSize) * (this.props.max - this.props.min);
-    return trimAlignValue(this.state.startValue + diffValue, this.props);
-  };
-
-  _proto.getDiffPosition = function getDiffPosition(position) {
-    var diffPosition = position - this.state.startPosition;
-
-    if (this.props.invert) {
-      diffPosition *= -1;
-    }
-
-    return diffPosition;
-  } // create the `keydown` handler for the i-th thumb
-  ;
-
-  _proto.resize = function resize() {
-    var slider = this.slider,
-        thumb = this.thumb0;
-
-    if (!slider || !thumb) {
-      return;
-    }
-
-    var sizeKey = this.sizeKey(); // For the slider size, we want to use the client width/height, excluding any borders
-
-    var sliderRect = slider.getBoundingClientRect();
-    var sliderSize = slider[sizeKey];
-    var sliderMax = sliderRect[this.posMaxKey()];
-    var sliderMin = sliderRect[this.posMinKey()]; // For the thumb size, we want to use the outer width/height, including any borders
-
-    var thumbRect = thumb.getBoundingClientRect();
-    var thumbSize = thumbRect[sizeKey.replace('client', '').toLowerCase()];
-    var upperBound = sliderSize - thumbSize;
-    var sliderLength = Math.abs(sliderMax - sliderMin);
-
-    if (this.state.upperBound !== upperBound || this.state.sliderLength !== sliderLength || this.state.thumbSize !== thumbSize) {
-      this.setState({
-        upperBound: upperBound,
-        sliderLength: sliderLength,
-        thumbSize: thumbSize
-      });
-    }
-  } // calculates the offset of a thumb in pixels based on its value.
-  ;
-
-  _proto.calcOffset = function calcOffset(value) {
-    var range = this.props.max - this.props.min;
-
-    if (range === 0) {
-      return 0;
-    }
-
-    var ratio = (value - this.props.min) / range;
-    return ratio * this.state.upperBound;
-  } // calculates the value corresponding to a given pixel offset, i.e. the inverse of `calcOffset`.
-  ;
-
-  _proto.calcValue = function calcValue(offset) {
-    var ratio = offset / this.state.upperBound;
-    return ratio * (this.props.max - this.props.min) + this.props.min;
-  };
-
-  _proto.calcOffsetFromPosition = function calcOffsetFromPosition(position) {
-    var slider = this.slider;
-    var sliderRect = slider.getBoundingClientRect();
-    var sliderMax = sliderRect[this.posMaxKey()];
-    var sliderMin = sliderRect[this.posMinKey()]; // The `position` value passed in is the mouse position based on the window height.
-    // The slider bounding rect is based on the viewport, so we must add the window scroll
-    // offset to normalize the values.
-
-    var windowOffset = window["page" + this.axisKey() + "Offset"];
-    var sliderStart = windowOffset + (this.props.invert ? sliderMax : sliderMin);
-    var pixelOffset = position - sliderStart;
-
-    if (this.props.invert) {
-      pixelOffset = this.state.sliderLength - pixelOffset;
-    }
-
-    pixelOffset -= this.state.thumbSize / 2;
-    return pixelOffset;
-  } // Snaps the nearest thumb to the value corresponding to `position`
-  // and calls `callback` with that thumb's index.
-  ;
-
-  _proto.forceValueFromPosition = function forceValueFromPosition(position, callback) {
-    var _this2 = this;
-
-    var pixelOffset = this.calcOffsetFromPosition(position);
-    var closestIndex = this.getClosestIndex(pixelOffset);
-    var nextValue = trimAlignValue(this.calcValue(pixelOffset), this.props); // Clone this.state.value since we'll modify it temporarily
-    // eslint-disable-next-line zillow/react/no-access-state-in-setstate
-
-    var value = this.state.value.slice();
-    value[closestIndex] = nextValue; // Prevents the slider from shrinking below `props.minDistance`
-
-    for (var i = 0; i < value.length - 1; i += 1) {
-      if (value[i + 1] - value[i] < this.props.minDistance) {
-        return;
-      }
-    }
-
-    this.fireChangeEvent('onBeforeChange');
-    this.hasMoved = true;
-    this.setState({
-      value: value
-    }, function () {
-      callback(closestIndex);
-
-      _this2.fireChangeEvent('onChange');
-    });
-  } // clear all pending timeouts to avoid error messages after unmounting
-  ;
-
-  _proto.clearPendingResizeTimeouts = function clearPendingResizeTimeouts() {
-    do {
-      var nextTimeout = this.pendingResizeTimeouts.shift();
-      clearTimeout(nextTimeout);
-    } while (this.pendingResizeTimeouts.length);
-  };
-
-  _proto.start = function start(i, position) {
-    var thumbRef = this["thumb" + i];
-
-    if (thumbRef) {
-      thumbRef.focus();
-    }
-
-    var zIndices = this.state.zIndices; // remove wherever the element is
-
-    zIndices.splice(zIndices.indexOf(i), 1); // add to end
-
-    zIndices.push(i);
-    this.setState(function (prevState) {
-      return {
-        startValue: prevState.value[i],
-        startPosition: position !== undefined ? position : prevState.startPosition,
-        index: i,
-        zIndices: zIndices
-      };
-    });
-  };
-
-  _proto.moveUpByStep = function moveUpByStep(step) {
-    if (step === void 0) {
-      step = this.props.step;
-    }
-
-    var oldValue = this.state.value[this.state.index];
-    var newValue = trimAlignValue(oldValue + step, this.props);
-    this.move(Math.min(newValue, this.props.max));
-  };
-
-  _proto.moveDownByStep = function moveDownByStep(step) {
-    if (step === void 0) {
-      step = this.props.step;
-    }
-
-    var oldValue = this.state.value[this.state.index];
-    var newValue = trimAlignValue(oldValue - step, this.props);
-    this.move(Math.max(newValue, this.props.min));
-  };
-
-  _proto.move = function move(newValue) {
-    var _this$state = this.state,
-        index = _this$state.index,
-        value = _this$state.value;
-    var length = value.length; // Short circuit if the value is not changing
-
-    var oldValue = value[index];
-
-    if (newValue === oldValue) {
-      return;
-    } // Trigger only before the first movement
-
-
-    if (!this.hasMoved) {
-      this.fireChangeEvent('onBeforeChange');
-    }
-
-    this.hasMoved = true; // if "pearling" (= thumbs pushing each other) is disabled,
-    // prevent the thumb from getting closer than `minDistance` to the previous or next thumb.
-
-    var _this$props = this.props,
-        pearling = _this$props.pearling,
-        max = _this$props.max,
-        min = _this$props.min,
-        minDistance = _this$props.minDistance;
-
-    if (!pearling) {
-      if (index > 0) {
-        var valueBefore = value[index - 1];
-
-        if (newValue < valueBefore + minDistance) {
-          // eslint-disable-next-line no-param-reassign
-          newValue = valueBefore + minDistance;
-        }
-      }
-
-      if (index < length - 1) {
-        var valueAfter = value[index + 1];
-
-        if (newValue > valueAfter - minDistance) {
-          // eslint-disable-next-line no-param-reassign
-          newValue = valueAfter - minDistance;
-        }
-      }
-    }
-
-    value[index] = newValue; // if "pearling" is enabled, let the current thumb push the pre- and succeeding thumbs.
-
-    if (pearling && length > 1) {
-      if (newValue > oldValue) {
-        this.pushSucceeding(value, minDistance, index);
-        trimSucceeding(length, value, minDistance, max);
-      } else if (newValue < oldValue) {
-        this.pushPreceding(value, minDistance, index);
-        trimPreceding(length, value, minDistance, min);
-      }
-    } // Normally you would use `shouldComponentUpdate`,
-    // but since the slider is a low-level component,
-    // the extra complexity might be worth the extra performance.
-
-
-    this.setState({
-      value: value
-    }, this.fireChangeEvent.bind(this, 'onChange'));
-  };
-
-  _proto.pushSucceeding = function pushSucceeding(value, minDistance, index) {
-    var i;
-    var padding;
-
-    for (i = index, padding = value[i] + minDistance; value[i + 1] !== null && padding > value[i + 1]; i += 1, padding = value[i] + minDistance) {
-      // eslint-disable-next-line no-param-reassign
-      value[i + 1] = alignValue(padding, this.props);
-    }
-  };
-
-  _proto.pushPreceding = function pushPreceding(value, minDistance, index) {
-    for (var i = index, padding = value[i] - minDistance; value[i - 1] !== null && padding < value[i - 1]; i -= 1, padding = value[i] - minDistance) {
-      // eslint-disable-next-line no-param-reassign
-      value[i - 1] = alignValue(padding, this.props);
-    }
-  };
-
-  _proto.axisKey = function axisKey() {
-    if (this.props.orientation === 'vertical') {
-      return 'Y';
-    } // Defaults to 'horizontal';
-
-
-    return 'X';
-  };
-
-  _proto.orthogonalAxisKey = function orthogonalAxisKey() {
-    if (this.props.orientation === 'vertical') {
-      return 'X';
-    } // Defaults to 'horizontal'
-
-
-    return 'Y';
-  };
-
-  _proto.posMinKey = function posMinKey() {
-    if (this.props.orientation === 'vertical') {
-      return this.props.invert ? 'bottom' : 'top';
-    } // Defaults to 'horizontal'
-
-
-    return this.props.invert ? 'right' : 'left';
-  };
-
-  _proto.posMaxKey = function posMaxKey() {
-    if (this.props.orientation === 'vertical') {
-      return this.props.invert ? 'top' : 'bottom';
-    } // Defaults to 'horizontal'
-
-
-    return this.props.invert ? 'left' : 'right';
-  };
-
-  _proto.sizeKey = function sizeKey() {
-    if (this.props.orientation === 'vertical') {
-      return 'clientHeight';
-    } // Defaults to 'horizontal'
-
-
-    return 'clientWidth';
-  };
-
-  _proto.fireChangeEvent = function fireChangeEvent(event) {
-    if (this.props[event]) {
-      this.props[event](prepareOutValue(this.state.value), this.state.index);
-    }
-  };
-
-  _proto.buildThumbStyle = function buildThumbStyle(offset, i) {
-    var style = {
-      position: 'absolute',
-      touchAction: 'none',
-      willChange: this.state.index >= 0 ? this.posMinKey() : '',
-      zIndex: this.state.zIndices.indexOf(i) + 1
-    };
-    style[this.posMinKey()] = offset + "px";
-    return style;
-  };
-
-  _proto.buildTrackStyle = function buildTrackStyle(min, max) {
-    var obj = {
-      position: 'absolute',
-      willChange: this.state.index >= 0 ? this.posMinKey() + "," + this.posMaxKey() : ''
-    };
-    obj[this.posMinKey()] = min;
-    obj[this.posMaxKey()] = max;
-    return obj;
-  };
-
-  _proto.buildMarkStyle = function buildMarkStyle(offset) {
-    var _ref;
-
-    return _ref = {
-      position: 'absolute'
-    }, _ref[this.posMinKey()] = offset, _ref;
-  };
-
-  _proto.renderThumbs = function renderThumbs(offset) {
-    var length = offset.length;
-    var styles = [];
-
-    for (var i = 0; i < length; i += 1) {
-      styles[i] = this.buildThumbStyle(offset[i], i);
-    }
-
-    var res = [];
-
-    for (var _i = 0; _i < length; _i += 1) {
-      res[_i] = this.renderThumb(styles[_i], _i);
-    }
-
-    return res;
-  };
-
-  _proto.renderTracks = function renderTracks(offset) {
-    var tracks = [];
-    var lastIndex = offset.length - 1;
-    tracks.push(this.renderTrack(0, 0, offset[0]));
-
-    for (var i = 0; i < lastIndex; i += 1) {
-      tracks.push(this.renderTrack(i + 1, offset[i], offset[i + 1]));
-    }
-
-    tracks.push(this.renderTrack(lastIndex + 1, offset[lastIndex], this.state.upperBound));
-    return tracks;
-  };
-
-  _proto.renderMarks = function renderMarks() {
-    var _this3 = this;
-
-    var marks = this.props.marks;
-    var range = this.props.max - this.props.min + 1;
-
-    if (typeof marks === 'boolean') {
-      marks = Array.from({
-        length: range
-      }).map(function (_, key) {
-        return key;
-      });
-    } else if (typeof marks === 'number') {
-      marks = Array.from({
-        length: range
-      }).map(function (_, key) {
-        return key;
-      }).filter(function (key) {
-        return key % marks === 0;
-      });
-    }
-
-    return marks.map(parseFloat).sort(function (a, b) {
-      return a - b;
-    }).map(function (mark) {
-      var offset = _this3.calcOffset(mark);
-
-      var props = {
-        key: mark,
-        className: _this3.props.markClassName,
-        style: _this3.buildMarkStyle(offset)
-      };
-      return _this3.props.renderMark(props);
-    });
-  };
-
-  _proto.render = function render() {
-    var _this4 = this;
-
-    var offset = [];
-    var value = this.state.value;
-    var l = value.length;
-
-    for (var i = 0; i < l; i += 1) {
-      offset[i] = this.calcOffset(value[i], i);
-    }
-
-    var tracks = this.props.withTracks ? this.renderTracks(offset) : null;
-    var thumbs = this.renderThumbs(offset);
-    var marks = this.props.marks ? this.renderMarks() : null;
-    return /*#__PURE__*/React.createElement('div', {
-      ref: function ref(r) {
-        _this4.slider = r;
-      },
-      style: {
-        position: 'relative'
-      },
-      className: this.props.className + (this.props.disabled ? ' disabled' : ''),
-      onMouseDown: this.onSliderMouseDown,
-      onClick: this.onSliderClick
-    }, tracks, thumbs, marks);
-  };
-
-  return ReactSlider;
-}(React.Component);
-
-ReactSlider.displayName = 'ReactSlider';
-ReactSlider.defaultProps = {
-  min: 0,
-  max: 100,
-  step: 1,
-  pageFn: function pageFn(step) {
-    return step * 10;
-  },
-  minDistance: 0,
-  defaultValue: 0,
-  orientation: 'horizontal',
-  className: 'slider',
-  thumbClassName: 'thumb',
-  thumbActiveClassName: 'active',
-  trackClassName: 'track',
-  markClassName: 'mark',
-  withTracks: true,
-  pearling: false,
-  disabled: false,
-  snapDragDisabled: false,
-  invert: false,
-  marks: [],
-  renderThumb: function renderThumb(props) {
-    return /*#__PURE__*/React.createElement("div", _extends({}, props, {
-      __self: ReactSlider,
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 353,
-        columnNumber: 31
-      }
-    }));
-  },
-  renderTrack: function renderTrack(props) {
-    return /*#__PURE__*/React.createElement("div", _extends({}, props, {
-      __self: ReactSlider,
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 354,
-        columnNumber: 31
-      }
-    }));
-  },
-  renderMark: function renderMark(props) {
-    return /*#__PURE__*/React.createElement("span", _extends({}, props, {
-      __self: ReactSlider,
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 355,
-        columnNumber: 30
-      }
-    }));
-  }
-};
-ReactSlider.propTypes = {
-  /**
-   * The minimum value of the slider.
-   */
-  min: PropTypes.number,
-
-  /**
-   * The maximum value of the slider.
-   */
-  max: PropTypes.number,
-
-  /**
-   * Value to be added or subtracted on each step the slider makes.
-   * Must be greater than zero.
-   * `max - min` should be evenly divisible by the step value.
-   */
-  step: PropTypes.number,
-
-  /**
-   * The result of the function is the value to be added or subtracted
-   * when the `Page Up` or `Page Down` keys are pressed.
-   *
-   * The current `step` value will be passed as the only argument.
-   * By default, paging will modify `step` by a factor of 10.
-   */
-  pageFn: PropTypes.func,
-
-  /**
-   * The minimal distance between any pair of thumbs.
-   * Must be positive, but zero means they can sit on top of each other.
-   */
-  minDistance: PropTypes.number,
-
-  /**
-   * Determines the initial positions of the thumbs and the number of thumbs.
-   *
-   * If a number is passed a slider with one thumb will be rendered.
-   * If an array is passed each value will determine the position of one thumb.
-   * The values in the array must be sorted.
-   */
-  defaultValue: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
-
-  /**
-   * Like `defaultValue` but for
-   * [controlled components](http://facebook.github.io/react/docs/forms.html#controlled-components).
-   */
-  // eslint-disable-next-line zillow/react/require-default-props
-  value: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
-
-  /**
-   * Determines whether the slider moves horizontally (from left to right)
-   * or vertically (from top to bottom).
-   */
-  orientation: PropTypes.oneOf(['horizontal', 'vertical']),
-
-  /**
-   * The css class set on the slider node.
-   */
-  className: PropTypes.string,
-
-  /**
-   * The css class set on each thumb node.
-   *
-   * In addition each thumb will receive a numbered css class of the form
-   * `${thumbClassName}-${i}`, e.g. `thumb-0`, `thumb-1`, ...
-   */
-  thumbClassName: PropTypes.string,
-
-  /**
-   * The css class set on the thumb that is currently being moved.
-   */
-  thumbActiveClassName: PropTypes.string,
-
-  /**
-   * If `true` tracks between the thumbs will be rendered.
-   */
-  withTracks: PropTypes.bool,
-
-  /**
-   * The css class set on the tracks between the thumbs.
-   * In addition track fragment will receive a numbered css class of the form
-   * `${trackClassName}-${i}`, e.g. `track-0`, `track-1`, ...
-   */
-  trackClassName: PropTypes.string,
-
-  /**
-   * If `true` the active thumb will push other thumbs
-   * within the constraints of `min`, `max`, `step` and `minDistance`.
-   */
-  pearling: PropTypes.bool,
-
-  /**
-   * If `true` the thumbs can't be moved.
-   */
-  disabled: PropTypes.bool,
-
-  /**
-   * Disables thumb move when clicking the slider track
-   */
-  snapDragDisabled: PropTypes.bool,
-
-  /**
-   * Inverts the slider.
-   */
-  invert: PropTypes.bool,
-
-  /**
-   * Shows passed marks on the track, if true it shows all the marks,
-   * if an array of numbers it shows just the passed marks, if a number is passed
-   * it shows just the marks in that steps: like passing 3 shows the marks 3, 6, 9
-   */
-  marks: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.number), PropTypes.bool, PropTypes.number]),
-
-  /**
-   * The css class set on the marks.
-   */
-  markClassName: PropTypes.string,
-
-  /**
-   * Callback called before starting to move a thumb. The callback will only be called if the
-   * action will result in a change. The function will be called with two arguments, the first
-   * being the initial value(s) the second being thumb index.
-   */
-  // eslint-disable-next-line max-len
-  // eslint-disable-next-line zillow/react/require-default-props, zillow/react/no-unused-prop-types
-  onBeforeChange: PropTypes.func,
-
-  /**
-   * Callback called on every value change.
-   * The function will be called with two arguments, the first being the new value(s)
-   * the second being thumb index.
-   */
-  // eslint-disable-next-line max-len
-  // eslint-disable-next-line zillow/react/require-default-props, zillow/react/no-unused-prop-types
-  onChange: PropTypes.func,
-
-  /**
-   * Callback called only after moving a thumb has ended. The callback will only be called if
-   * the action resulted in a change. The function will be called with two arguments, the
-   * first being the result value(s) the second being thumb index.
-   */
-  // eslint-disable-next-line max-len
-  // eslint-disable-next-line zillow/react/require-default-props, zillow/react/no-unused-prop-types
-  onAfterChange: PropTypes.func,
-
-  /**
-   * Callback called when the the slider is clicked (thumb or tracks).
-   * Receives the value at the clicked position as argument.
-   */
-  // eslint-disable-next-line zillow/react/require-default-props
-  onSliderClick: PropTypes.func,
-
-  /**
-   * aria-label for screen-readers to apply to the thumbs.
-   * Use an array for more than one thumb.
-   * The length of the array must match the number of thumbs in the value array.
-   */
-  // eslint-disable-next-line zillow/react/require-default-props
-  ariaLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-
-  /**
-   * aria-labelledby for screen-readers to apply to the thumbs.
-   * Used when slider rendered with separate label.
-   * Use an array for more than one thumb.
-   * The length of the array must match the number of thumbs in the value array.
-   */
-  // eslint-disable-next-line zillow/react/require-default-props
-  ariaLabelledby: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-
-  /**
-   * aria-valuetext for screen-readers.
-   * Can be a static string, or a function that returns a string.
-   * The function will be passed a single argument,
-   * an object with the following properties:
-   *
-   *     state => `Value: ${state.value}`
-   *
-   * - `state.index` {`number`} the index of the thumb
-   * - `state.value` {`number` | `array`} the current value state
-   * - `state.valueNow` {`number`} the value of the thumb (i.e. aria-valuenow)
-   */
-  // eslint-disable-next-line zillow/react/require-default-props
-  ariaValuetext: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
-
-  /**
-   * Provide a custom render function for the track node.
-   * The render function will be passed two arguments,
-   * an object with props that should be added to your handle node,
-   * and an object with track and slider state:
-   *
-   *     (props, state) => <div {...props} />
-   *
-   * - `props` {`object`} props to be spread into your track node
-   * - `state.index` {`number`} the index of the track
-   * - `state.value` {`number` | `array`} the current value state
-   */
-  renderTrack: PropTypes.func,
-
-  /**
-   * Provide a custom render function for dynamic thumb content.
-   * The render function will be passed two arguments,
-   * an object with props that should be added to your thumb node,
-   * and an object with thumb and slider state:
-   *
-   *     (props, state) => <div {...props} />
-   *
-   * - `props` {`object`} props to be spread into your thumb node
-   * - `state.index` {`number`} the index of the thumb
-   * - `state.value` {`number` | `array`} the current value state
-   * - `state.valueNow` {`number`} the value of the thumb (i.e. aria-valuenow)
-   */
-  // eslint-disable-next-line zillow/react/require-default-props
-  renderThumb: PropTypes.func,
-
-  /**
-   * Provide a custom render function for the mark node.
-   * The render function will be passed one argument,
-   * an object with props that should be added to your handle node
-   *
-   *     (props) => <span {...props} />
-   *
-   * - `props` {`object`} props to be spread into your track node
-   */
-  renderMark: PropTypes.func
-} ;
-var ReactSlider$1 = ReactSlider;
-
-const b$9 = block('SliderSdkThumb');
-const SliderThumb = ({ props, emoji, changeStatus, currentPosition, initSize = 34 }) => {
+const b$8 = block('SliderSdkCustom');
+const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, height, onChange, onAfterChange, onBeforeChange }) => {
+    const containerRef = useRef(null);
+    const thumbRef = useRef(null);
     const [bigSize, setBigSize] = useState(initSize);
+    const containerPos = useRef({
+        start: 0,
+        end: 0
+    });
     useEffect(() => {
-        setBigSize(initSize + initSize * (currentPosition / 100));
-    }, [currentPosition, initSize]);
-    return (React.createElement("div", Object.assign({}, props, { className: b$9({ staus: changeStatus }), id: props.key, role: "button", tabIndex: 0, onClick: (e) => e.stopPropagation(), onKeyUp: (e) => e.stopPropagation() }),
-        changeStatus === 'moving' || changeStatus === 'moved' ? (React.createElement("div", { className: b$9('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + 5}px` } },
-            React.createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
-        React.createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })));
+        setBigSize(initSize + initSize * (value / 100));
+    }, [value, initSize]);
+    const getPos = (e) => {
+        const clientPos = getClientPosition(e);
+        const left = Math.round(clientPos.x - containerPos.current.start);
+        if (left < 0) {
+            return 0;
+        }
+        if (left > Math.round(containerPos.current.end)) {
+            return 100;
+        }
+        return Math.round((left / containerPos.current.end) * 100);
+    };
+    const handleDrag = (e) => {
+        if (disabled)
+            return;
+        e.preventDefault();
+        if (onChange) {
+            onChange(getPos(e));
+        }
+    };
+    const handleMouseDown = (e) => {
+        if (disabled)
+            return;
+        e.preventDefault();
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
+        // @ts-ignore
+        const container = containerRef.current.getBoundingClientRect();
+        containerPos.current.start = container.x;
+        containerPos.current.end = container.width;
+        document.addEventListener('mousemove', handleDrag);
+        document.addEventListener('mouseup', handleDragEnd);
+        document.addEventListener('touchmove', handleDrag, { passive: false });
+        document.addEventListener('touchend', handleDragEnd);
+        document.addEventListener('touchcancel', handleDragEnd);
+        if (onBeforeChange) {
+            onBeforeChange();
+        }
+    };
+    const handleDragEnd = (e) => {
+        if (disabled)
+            return;
+        e.preventDefault();
+        document.removeEventListener('mousemove', handleDrag);
+        document.removeEventListener('mouseup', handleDragEnd);
+        document.removeEventListener('touchmove', handleDrag);
+        document.removeEventListener('touchend', handleDragEnd);
+        document.removeEventListener('touchcancel', handleDragEnd);
+        if (onAfterChange) {
+            onAfterChange();
+        }
+    };
+    return (React.createElement("div", { className: b$8(), ref: containerRef, style: { height } },
+        React.createElement("div", { className: b$8('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
+                e.stopPropagation();
+                e.nativeEvent.stopImmediatePropagation();
+            }, onKeyUp: (e) => {
+                e.stopPropagation();
+                e.nativeEvent.stopImmediatePropagation();
+            }, onMouseDown: handleMouseDown, onTouchStart: handleMouseDown },
+            changeStatus === 'moving' || changeStatus === 'moved' ? (React.createElement("div", { className: b$8('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + 5}px` } },
+                React.createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
+            React.createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })),
+        React.createElement("div", { className: b$8('track'), style: { height } },
+            React.createElement("span", { className: b$8('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
+            React.createElement("span", { className: b$8('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
 };
-
-const b$8 = block('SliderSdkTrack');
-const SliderTrack = ({ propsTrack, state, size }) => (React.createElement("div", Object.assign({}, propsTrack, { className: b$8({ selected: state.index === 1 }), style: Object.assign(Object.assign({}, size), propsTrack.style) })));
 
 const b$7 = block('SliderSdkWidget');
 const INIT_ELEMENT_STYLES$2 = {
@@ -58073,7 +57020,7 @@ const SliderWidget = (props) => {
     const { params, storyId, position, positionLimits } = props;
     const { color, text, emoji, value } = params;
     const [sliderValue, setSliderValue] = useState(0);
-    const [changeStatus, setChangeStatus] = useState('init');
+    const [changeStatus, setChangeStatus] = useState('wait');
     const time = 500;
     const [delay, setDelay] = useState(0);
     const calculate = useCallback((size) => {
@@ -58123,16 +57070,18 @@ const SliderWidget = (props) => {
     };
     const storyContextVal = useContext(StoryContext);
     useEffect(() => {
-        if (storyContextVal.currentStoryId === storyId) {
+        if (storyContextVal.currentStoryId === storyId && changeStatus === 'wait') {
             setDelay(Math.round(time / value));
+            setChangeStatus('init');
         }
-    }, [storyContextVal, storyId, value, time]);
+    }, [storyContextVal, storyId, changeStatus, value, time]);
+    useState({ x: 50 });
     return (React.createElement("div", { className: b$7({ color }), style: elementSizes.widget },
         React.createElement("div", { className: b$7('text'), style: elementSizes.text }, text),
         React.createElement("div", { className: b$7('sliderWrapper'), style: {
                 height: elementSizes.slider.height
             } },
-            React.createElement(ReactSlider$1, { disabled: changeStatus === 'moved', max: 100, min: 0, renderThumb: (sliderProps) => (React.createElement(SliderThumb, { changeStatus: changeStatus, currentPosition: sliderValue, emoji: emoji.name, initSize: elementSizes.emoji.width, props: sliderProps })), renderTrack: (propsTrack, state) => (React.createElement(SliderTrack, { propsTrack: propsTrack, size: elementSizes.slider, state: state })), value: [sliderValue], onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
+            React.createElement(SliderCustom, { changeStatus: changeStatus, disabled: changeStatus === 'moved', emoji: emoji.name, height: elementSizes.slider.height, initSize: elementSizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
 };
 
 const b$6 = block('SwipeUpSdkWidget');
@@ -58507,4 +57456,4 @@ const CustomGroupControl = (props) => {
         React.createElement(StoryModal, { currentGroup: group, isFirstGroup: isFirstGroup, isLastGroup: isLastGroup, showed: isShowing, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup })));
 };
 
-export { CustomGroupControl, GroupItem, GroupsList, StoryContent, StoryContext, StoryModal, WidgetsTypes, calculateElementSize, calculateElementSizeByHeight, renderBackgroundStyles, renderBorderStyles, renderColor, renderGradient, renderPosition, renderTextBackgroundStyles };
+export { CustomGroupControl, GroupItem, GroupsList, StoryContent, StoryContext, StoryModal, WidgetsTypes, calculateElementSize, calculateElementSizeByHeight, getClientPosition, renderBackgroundStyles, renderBorderStyles, renderColor, renderGradient, renderPosition, renderTextBackgroundStyles };

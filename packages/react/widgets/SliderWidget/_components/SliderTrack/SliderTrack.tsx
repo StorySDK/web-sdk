@@ -14,6 +14,8 @@ type PropType = {
 };
 
 export const SliderTrack: FC<PropType> = ({ propsTrack, state, size }) => (
+  // console.log(propsTrack);
+
   <div
     {...propsTrack}
     className={b({ selected: state.index === 1 })}

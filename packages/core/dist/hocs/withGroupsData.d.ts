@@ -2,6 +2,7 @@ import React from 'react';
 import { GroupType } from '@storysdk/react';
 interface GroupsListProps {
     groups: GroupType[];
+    isLoading?: boolean;
     onOpenGroup?(id: string): void;
     onCloseGroup?(id: string): void;
     onNextStory?(groupId: string, storyId: string): void;

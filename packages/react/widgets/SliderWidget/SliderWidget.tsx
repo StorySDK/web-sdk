@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react';
 import block from 'bem-cn';
-import ReactSlider from 'react-slider';
 import {
   SliderWidgetParamsType,
   WidgetComponent,
@@ -8,14 +7,14 @@ import {
   WidgetPositionLimitsType
 } from '../../types';
 import { calculateElementSize } from '../../utils';
-import './SliderWidget.scss';
 import { useInterval } from '../../hooks';
 import { StoryContext } from '../../components';
-import { SliderThumb, SliderTrack } from './_components';
+import { SliderCustom } from './_components';
+import './SliderWidget.scss';
 
 const b = block('SliderSdkWidget');
 
-type ChangeStatus = 'init' | 'moving' | 'moved';
+type ChangeStatus = 'init' | 'wait' | 'moving' | 'moved';
 
 const INIT_ELEMENT_STYLES = {
   widget: {
@@ -45,7 +44,7 @@ export const SliderWidget: WidgetComponent<{
   const { params, storyId, position, positionLimits } = props;
   const { color, text, emoji, value } = params;
   const [sliderValue, setSliderValue] = useState<number>(0);
-  const [changeStatus, setChangeStatus] = useState<ChangeStatus>('init');
+  const [changeStatus, setChangeStatus] = useState<ChangeStatus>('wait');
 
   const time = 500;
   const [delay, setDelay] = useState<number>(0);
@@ -97,7 +96,7 @@ export const SliderWidget: WidgetComponent<{
     // eslint-disable-next-line
   }, [changeStatus, sliderValue]);
 
-  const handleChange = (valueChanged: any) => {
+  const handleChange = (valueChanged: number) => {
     setSliderValue(valueChanged);
   };
 
@@ -112,10 +111,13 @@ export const SliderWidget: WidgetComponent<{
   const storyContextVal = useContext(StoryContext);
 
   useEffect(() => {
-    if (storyContextVal.currentStoryId === storyId) {
+    if (storyContextVal.currentStoryId === storyId && changeStatus === 'wait') {
       setDelay(Math.round(time / value));
+      setChangeStatus('init');
     }
-  }, [storyContextVal, storyId, value, time]);
+  }, [storyContextVal, storyId, changeStatus, value, time]);
+
+  const [state, setState] = useState({ x: 50 });
 
   return (
     <div className={b({ color })} style={elementSizes.widget}>
@@ -129,23 +131,13 @@ export const SliderWidget: WidgetComponent<{
           height: elementSizes.slider.height
         }}
       >
-        <ReactSlider
+        <SliderCustom
+          changeStatus={changeStatus}
           disabled={changeStatus === 'moved'}
-          max={100}
-          min={0}
-          renderThumb={(sliderProps: any) => (
-            <SliderThumb
-              changeStatus={changeStatus}
-              currentPosition={sliderValue}
-              emoji={emoji.name}
-              initSize={elementSizes.emoji.width}
-              props={sliderProps}
-            />
-          )}
-          renderTrack={(propsTrack, state) => (
-            <SliderTrack propsTrack={propsTrack} size={elementSizes.slider} state={state} />
-          )}
-          value={[sliderValue]}
+          emoji={emoji.name}
+          height={elementSizes.slider.height}
+          initSize={elementSizes.emoji.width}
+          value={sliderValue}
           onAfterChange={handleAfterChange}
           onBeforeChange={handleBeforeChange}
           onChange={handleChange}

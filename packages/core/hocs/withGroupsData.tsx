@@ -6,6 +6,7 @@ import { adaptGroupData } from '../utils/groupsAdapter';
 
 interface GroupsListProps {
   groups: GroupType[];
+  isLoading?: boolean;
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
   onNextStory?(groupId: string, storyId: string): void;
@@ -227,6 +228,7 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
   return (
     <GroupsList
       groups={data}
+      isLoading={loadStatus === 'loading'}
       onCloseGroup={handleCloseGroup}
       onCloseStory={handleCloseStory}
       onNextStory={handleNextStory}
