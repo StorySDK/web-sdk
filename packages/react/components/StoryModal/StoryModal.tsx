@@ -122,9 +122,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       setPlayStatus('wait');
     }
 
-    if (onOpenStory && showed && stories.length) {
+    if (showed && stories.length) {
       setCurrentStoryId(stories[0].id);
-      onOpenStory(currentGroup.id, stories[0].id);
+
+      if (onOpenStory) {
+        onOpenStory(currentGroup.id, stories[0].id);
+      }
     }
   }, [stories.length, onOpenStory, stories, currentGroup, showed]);
 
