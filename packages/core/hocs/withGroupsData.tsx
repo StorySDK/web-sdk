@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useReducer } from 'react';
 import { GroupType } from '@storysdk/react';
 import { nanoid } from 'nanoid';
+import { DateTime } from 'luxon';
 import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 
@@ -15,104 +16,37 @@ interface GroupsListProps {
   onCloseStory?(groupId: string, storyId: string): void;
 }
 
+interface DurationProps {
+  storyId?: string;
+  groupId: string;
+  startTime: number;
+}
+
 const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) => () => {
   const [data, setData] = useState([]);
   const [groups, setGroups] = useState([]);
   const [groupsWithStories, setGroupsWithStories] = useState([]);
   const [loadStatus, setLoadStatus] = useState('pending');
 
-  const [groupDurationStatus, setGroupDurationStatus] = useState({
+  const [groupDuration, setGroupDuration] = useState<DurationProps>({
     groupId: '',
-    status: 'pending'
+    startTime: 0
   });
 
-  const [stroyDurationStatus, setStoryDurationStatus] = useState({
+  const [storyDuration, setStoryDuration] = useState<DurationProps>({
     storyId: '',
     groupId: '',
-    status: 'pending'
+    startTime: 0
   });
-
-  const [groupDurationTime, setGroupDurationTime] = useState(0); // seconds
-  const [storyDurationTime, setStoryDurationTime] = useState(0); // seconds
-
   const uniqUserId = useMemo(() => nanoid(), []);
-
-  useEffect(() => {
-    let interval: number | NodeJS.Timeout | undefined;
-
-    if (groupDurationStatus.status === 'calculating') {
-      interval = setInterval(() => {
-        setGroupDurationTime((seconds) => seconds + 1);
-      }, 1000);
-    } else if (groupDurationStatus.status === 'calculated') {
-      if (interval) {
-        clearInterval(interval as NodeJS.Timeout);
-      }
-    }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval as NodeJS.Timeout);
-      }
-    };
-  }, [groupDurationStatus]);
-
-  useEffect(() => {
-    let interval: number | NodeJS.Timeout | undefined;
-
-    if (stroyDurationStatus.status === 'calculating') {
-      interval = setInterval(() => {
-        setStoryDurationTime((seconds) => seconds + 1);
-      }, 1000);
-    } else if (stroyDurationStatus.status === 'calculated') {
-      if (interval) {
-        clearInterval(interval as NodeJS.Timeout);
-      }
-    }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval as NodeJS.Timeout);
-      }
-    };
-  }, [stroyDurationStatus]);
-
-  useEffect(() => {
-    if (groupDurationStatus.status === 'calculated') {
-      API.statistics.group
-        .sendDuration({
-          groupId: groupDurationStatus.groupId,
-          uniqUserId,
-          seconds: groupDurationTime
-        })
-        .then(() => {
-          setGroupDurationTime(0);
-        });
-    }
-
-    // eslint-disable-next-line
-  }, [groupDurationStatus, uniqUserId]);
-
-  useEffect(() => {
-    if (stroyDurationStatus.status === 'calculated') {
-      API.statistics.story
-        .sendDuration({
-          storyId: stroyDurationStatus.storyId,
-          groupId: stroyDurationStatus.groupId,
-          uniqUserId,
-          seconds: storyDurationTime
-        })
-        .then(() => {
-          setStoryDurationTime(0);
-        });
-    }
-
-    // eslint-disable-next-line
-  }, [stroyDurationStatus, uniqUserId]);
 
   const handleOpenGroup = useCallback(
     (groupId: string) => {
-      setGroupDurationStatus(() => ({ groupId, status: 'calculating' }));
+      setGroupDuration(() => ({
+        groupId,
+        startTime: DateTime.now().toSeconds()
+      }));
+
       return API.statistics.group.onOpen({ groupId, uniqUserId });
     },
     [uniqUserId]
@@ -120,28 +54,57 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
 
   const handleCloseGroup = useCallback(
     (groupId: string) => {
-      setGroupDurationStatus((prevState) => ({ ...prevState, status: 'calculated' }));
+      const duration = DateTime.now().toSeconds() - groupDuration.startTime;
+
+      API.statistics.group.sendDuration({
+        groupId: groupDuration.groupId,
+        uniqUserId,
+        seconds: duration
+      });
+
       return API.statistics.group.onClose({ groupId, uniqUserId });
     },
-    [uniqUserId]
+    [groupDuration, uniqUserId]
   );
 
   const handleOpenStory = useCallback(
     (groupId: string, storyId: string) => {
-      setStoryDurationStatus(() => ({ groupId, storyId, status: 'calculating' }));
-      return API.statistics.story.onOpen({ groupId, storyId, uniqUserId });
+      setStoryDuration(() => ({
+        groupId,
+        storyId,
+        startTime: DateTime.now().toSeconds()
+      }));
+
+      API.statistics.story.onOpen({ groupId, storyId, uniqUserId });
     },
+
     [uniqUserId]
   );
 
   const handleCloseStory = useCallback(
     (groupId: string, storyId: string) => {
-      if (stroyDurationStatus.storyId === storyId && stroyDurationStatus.groupId === groupId) {
-        setStoryDurationStatus((prevState) => ({ ...prevState, status: 'calculated' }));
+      if (storyDuration.storyId === storyId && storyDuration.groupId === groupId) {
+        const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+
+        API.statistics.story.sendDuration({
+          storyId: storyDuration.storyId,
+          groupId: storyDuration.groupId,
+          uniqUserId,
+          seconds: duration
+        });
+
+        if (duration > 1) {
+          API.statistics.story.sendImpression({
+            storyId: storyDuration.storyId,
+            groupId: storyDuration.groupId,
+            uniqUserId,
+            seconds: duration
+          });
+        }
       }
-      return API.statistics.story.onClose({ groupId, storyId, uniqUserId });
+      API.statistics.story.onClose({ groupId, storyId, uniqUserId });
     },
-    [stroyDurationStatus, uniqUserId]
+    [storyDuration, uniqUserId]
   );
 
   const handleNextStory = useCallback(

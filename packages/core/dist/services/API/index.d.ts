@@ -36,6 +36,12 @@ export declare const API: {
                 uniqUserId: string;
                 seconds: number;
             }): import("axios").AxiosPromise<any>;
+            sendImpression(params: {
+                groupId: string;
+                storyId: string;
+                uniqUserId: string;
+                seconds: number;
+            }): import("axios").AxiosPromise<any>;
             onOpen(params: {
                 groupId: string;
                 storyId: string;

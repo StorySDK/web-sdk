@@ -138,7 +138,17 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const handleNext = useCallback(() => {
     if (currentStory === stories.length - 1) {
-      isLastGroup ? handleClose() : onNextGroup();
+      if (isLastGroup) {
+        handleClose();
+      } else {
+        onNextGroup();
+
+        if (onCloseStory) {
+          onCloseStory(currentGroup.id, stories[currentStory].id);
+        }
+      }
+
+      // isLastGroup ? handleClose() : onNextGroup();
     } else {
       setCurrentStory(currentStory + 1);
       setCurrentStoryId(stories[currentStory + 1].id);
@@ -234,7 +244,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </div>
 
             <div className={b('controls')}>
-              <div className={b('indicators', { stopAnimation: playStatus === 'pause' || true })}>
+              <div className={b('indicators', { stopAnimation: playStatus === 'pause' })}>
                 {stories.map((story, index) => (
                   <div
                     className={b('indicator', {

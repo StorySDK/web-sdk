@@ -83,6 +83,25 @@ export const API = {
           }
         });
       },
+
+      sendImpression(params: {
+        groupId: string;
+        storyId: string;
+        uniqUserId: string;
+        seconds: number;
+      }) {
+        return axios({
+          method: 'post',
+          url: `/reactions`,
+          data: {
+            type: 'impression',
+            story_id: params.storyId,
+            user_id: params.uniqUserId,
+            group_id: params.groupId,
+            value: params.seconds
+          }
+        });
+      },
       onOpen(params: { groupId: string; storyId: string; uniqUserId: string }) {
         return axios({
           method: 'post',

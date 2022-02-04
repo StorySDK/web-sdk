@@ -243,7 +243,16 @@ const StoryModal = (props) => {
     }, [currentGroup.id, currentStory, onClose, onCloseStory, stories]);
     const handleNext = React.useCallback(() => {
         if (currentStory === stories.length - 1) {
-            isLastGroup ? handleClose() : onNextGroup();
+            if (isLastGroup) {
+                handleClose();
+            }
+            else {
+                onNextGroup();
+                if (onCloseStory) {
+                    onCloseStory(currentGroup.id, stories[currentStory].id);
+                }
+            }
+            // isLastGroup ? handleClose() : onNextGroup();
         }
         else {
             setCurrentStory(currentStory + 1);
@@ -317,7 +326,7 @@ const StoryModal = (props) => {
                     React__default["default"].createElement("div", { className: b$f('swiperContent') }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$f('story', { current: index === currentStory }), key: story.id },
                         React__default["default"].createElement(StoryContent, { story: story }))))),
                     React__default["default"].createElement("div", { className: b$f('controls') },
-                        React__default["default"].createElement("div", { className: b$f('indicators', { stopAnimation: playStatus === 'pause' || true }) }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$f('indicator', {
+                        React__default["default"].createElement("div", { className: b$f('indicators', { stopAnimation: playStatus === 'pause' }) }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$f('indicator', {
                                 filled: index < currentStory,
                                 current: index === currentStory
                             }), key: story.id, onAnimationEnd: handleAnimationEnd })))),

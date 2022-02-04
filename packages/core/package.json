@@ -32,6 +32,7 @@
     "@types/axios": "^0.14.0",
     "@types/bem-cn": "^3.0.0",
     "@types/emoji-mart": "^3.0.6",
+    "@types/luxon": "^2.0.9",
     "@types/node": "^12.20.25",
     "@types/parse-color": "^1.0.1",
     "@types/react": "^17.0.21",
@@ -58,6 +59,7 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "luxon": "^2.3.0",
     "nanoid": "^3.1.32"
   },
   "gitHead": "86a2ccc8d21a9db1e10233ceeb2dabb25773b186"
