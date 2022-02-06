@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import block from 'bem-cn';
-// import JSConfetti from 'js-confetti';
 import {
   ChooseAnswerWidgetParamsType,
   WidgetComponent,
@@ -45,13 +44,12 @@ export const ChooseAnswerWidget: WidgetComponent<{
   params: ChooseAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  jsConfetti?: any;
   onAnswer?(answerId: string): void;
 }> = (props) => {
-  const { params, position, positionLimits, onAnswer } = props;
+  const { params, position, positionLimits, jsConfetti, onAnswer } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
-
-  // const jsConfetti = useRef(new JSConfetti());
 
   const calculate = useCallback(
     (size) => {
@@ -145,15 +143,6 @@ export const ChooseAnswerWidget: WidgetComponent<{
               )}
             </div>
 
-            {/* <span
-              className={b('answerCircle', {
-                correct: answer.id === params.correct,
-                incorrect: answer.id !== params.correct,
-                choosen: userAnswer === answer.id
-              })}
-              style={elementSizes.answerId}
-            /> */}
-
             <div
               className={b('answerTitle', {
                 choosen: userAnswer === answer.id,
@@ -196,11 +185,11 @@ export const ChooseAnswerWidget: WidgetComponent<{
     ]
   );
 
-  // useEffect(() => {
-  //   if (userAnswer && userAnswer === params.correct) {
-  //     jsConfetti.current.addConfetti();
-  //   }
-  // }, [userAnswer, params.correct]);
+  useEffect(() => {
+    if (userAnswer && userAnswer === params.correct) {
+      jsConfetti.current.addConfetti();
+    }
+  }, [userAnswer, params.correct, jsConfetti]);
 
   return (
     <div

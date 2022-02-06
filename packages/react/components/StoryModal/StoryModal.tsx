@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import block from 'bem-cn';
 import './StoryModal.scss';
 import { useWindowSize } from '@react-hook/window-size';
+import JSConfetti from 'js-confetti';
 import { StoryType, GroupType } from '../../types';
 import { StoryContent } from '..';
 
@@ -150,8 +151,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           onCloseStory(currentGroup.id, stories[currentStory].id);
         }
       }
-
-      // isLastGroup ? handleClose() : onNextGroup();
     } else {
       setCurrentStory(currentStory + 1);
       setCurrentStoryId(stories[currentStory + 1].id);
@@ -219,6 +218,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     stories
   ]);
 
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const jsConfetti = useRef(
+    new JSConfetti({
+      canvas: canvasRef.current as HTMLCanvasElement
+    })
+  );
+
   return (
     <StoryContext.Provider value={{ currentStoryId, playStatusChange: setPlayStatus }}>
       <div
@@ -241,7 +247,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             <div className={b('swiperContent')}>
               {stories.map((story, index) => (
                 <div className={b('story', { current: index === currentStory })} key={story.id}>
-                  <StoryContent story={story} />
+                  <StoryContent jsConfetti={jsConfetti} story={story} />
                 </div>
               ))}
             </div>
@@ -276,6 +282,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           </button>
         </div>
       </div>
+
+      <canvas ref={canvasRef} />
     </StoryContext.Provider>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import { WidgetFactory } from '../../core';
@@ -11,14 +11,14 @@ const b = block('StorySdkContent');
 
 interface StoryContentProps {
   story: StoryType;
+  jsConfetti?: any;
 }
 
 export const StoryContent: React.FC<StoryContentProps> = (props) => {
-  const { story } = props;
+  const { story, jsConfetti } = props;
   const [isVideoLoading, setVideoLoading] = useState(false);
 
   const [width, height] = useWindowSize();
-  // const canvasRef = useRef(null);
 
   return (
     <div className={b()} style={{ height: width < 768 ? Math.round(694 * (width / 390)) : '100%' }}>
@@ -39,9 +39,10 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
             key={widget.id}
             style={renderPosition(widget.position, widget.positionLimits, index + 3)}
           >
-            <WidgetFactory storyId={story.id} widget={widget} />
+            <WidgetFactory jsConfetti={jsConfetti} storyId={story.id} widget={widget} />
           </div>
         ))}
+
         {story.background.type === 'video' && (
           <StoryVideoBackground
             autoplay
@@ -53,8 +54,6 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
           />
         )}
       </div>
-
-      {/* <canvas className={b('canvas')} ref={canvasRef} /> */}
     </div>
   );
 };

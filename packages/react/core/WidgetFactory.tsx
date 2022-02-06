@@ -17,7 +17,7 @@ import {
 
 interface WidgetFactoryProps {
   storyId: string;
-  canvasRef?: any;
+  jsConfetti?: any;
   widget: WidgetObjectType;
 }
 
@@ -27,6 +27,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.CHOOSE_ANSWER:
         return (
           <ChooseAnswerWidget
+            jsConfetti={this.props.jsConfetti}
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
