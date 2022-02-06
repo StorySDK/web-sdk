@@ -283,7 +283,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         </div>
       </div>
 
-      <canvas ref={canvasRef} />
+      <canvas
+        ref={canvasRef}
+        style={{
+          display: 'none'
+        }}
+      />
     </StoryContext.Provider>
   );
 };

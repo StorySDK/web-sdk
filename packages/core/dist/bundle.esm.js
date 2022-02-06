@@ -6823,7 +6823,9 @@ const StoryModal = (props) => {
                             React.createElement(CloseIcon, null)))),
                 React.createElement("button", { className: b$f('arrowButton', { right: true }), onClick: handleNext },
                     React.createElement(RightArrowIcon, null)))),
-        React.createElement("canvas", { ref: canvasRef })));
+        React.createElement("canvas", { ref: canvasRef, style: {
+                display: 'none'
+            } })));
 };
 
 var global$1 = (typeof global !== "undefined" ? global :
