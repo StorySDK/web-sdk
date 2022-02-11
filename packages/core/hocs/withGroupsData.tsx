@@ -7,6 +7,7 @@ import { adaptGroupData } from '../utils/groupsAdapter';
 
 interface GroupsListProps {
   groups: GroupType[];
+  groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle' | string;
   isLoading?: boolean;
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
@@ -25,6 +26,7 @@ interface DurationProps {
 const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) => () => {
   const [data, setData] = useState([]);
   const [groups, setGroups] = useState([]);
+  const [groupView, setGroupView] = useState('circle');
   const [groupsWithStories, setGroupsWithStories] = useState([]);
   const [loadStatus, setLoadStatus] = useState('pending');
 
@@ -126,6 +128,12 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
       if (!appData.data.error) {
         const app = appData.data.data.filter((item: any) => item.sdk_token === token);
         const appId = app.length ? app[0].id : '';
+        const appGroupView =
+          app.length && app[0].settings && app[0].settings.groupView
+            ? app[0].settings.groupView
+            : 'circle';
+
+        setGroupView(appGroupView);
 
         API.groups.getList({ appId }).then((groupsData) => {
           if (!groupsData.data.error) {
@@ -190,6 +198,7 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
 
   return (
     <GroupsList
+      groupView={groupView}
       groups={data}
       isLoading={loadStatus === 'loading'}
       onCloseGroup={handleCloseGroup}

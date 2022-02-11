@@ -12,6 +12,7 @@ const b = block('GroupsSdkList');
 interface GroupsListProps {
   groups: GroupType[];
   isLoading?: boolean;
+  groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
   onNextStory?(groupId: string, storyId: string): void;
@@ -23,6 +24,7 @@ interface GroupsListProps {
 export const GroupsList: React.FC<GroupsListProps> = (props) => {
   const {
     groups,
+    groupView,
     isLoading,
     onOpenGroup,
     onCloseGroup,
@@ -119,10 +121,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                         imageUrl={group.imageUrl}
                         index={index}
                         key={group.id}
-                        rounded
-                        size="lg"
-                        theme="light"
                         title={group.title}
+                        type={groupView}
                         onClick={handleSelectGroup}
                       />
                     ))}

@@ -49,11 +49,12 @@ var block = /*@__PURE__*/getDefaultExportFromCjs(lib.exports);
 
 const b$h = block('GroupSdkItem');
 const GroupItem = (props) => {
-    const { imageUrl, size, title, theme, rounded, index, onClick } = props;
-    return (React__default["default"].createElement("button", { className: b$h(), onClick: () => onClick && onClick(index) },
-        React__default["default"].createElement("div", { className: b$h('imgWrapper') },
-            React__default["default"].createElement("img", { alt: "group", className: b$h('img', { size, rounded }), src: imageUrl })),
-        React__default["default"].createElement("div", { className: b$h('title', { theme }) }, title)));
+    const { imageUrl, title, type, index, onClick } = props;
+    return (React__default["default"].createElement("button", { className: b$h({ type }), onClick: () => onClick && onClick(index) },
+        React__default["default"].createElement("div", { className: b$h('imgContainer', { type }) },
+            React__default["default"].createElement("img", { alt: "", className: b$h('img', { type }), src: imageUrl })),
+        React__default["default"].createElement("div", { className: b$h('titleContainer', { type }) },
+            React__default["default"].createElement("p", { className: b$h('title', { type }) }, title))));
 };
 
 /**
@@ -133,7 +134,7 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
 
 const b$g = block('GroupsSdkList');
 const GroupsList = (props) => {
-    const { groups, isLoading, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
+    const { groups, groupView, isLoading, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
     const [currentGroup, setCurrentGroup] = React.useState(0);
     const [modalShow, setModalShow] = React.useState(false);
     const handleSelectGroup = React.useCallback((groupIndex) => {
@@ -188,7 +189,7 @@ const GroupsList = (props) => {
         React__default["default"].createElement("div", { className: b$g() },
             React__default["default"].createElement("div", { className: b$g('carousel') }, groups
                 .filter((group) => group.stories.length)
-                .map((group, index) => (React__default["default"].createElement(GroupItem, { imageUrl: group.imageUrl, index: index, key: group.id, rounded: true, size: "lg", theme: "light", title: group.title, onClick: handleSelectGroup }))))),
+                .map((group, index) => (React__default["default"].createElement(GroupItem, { imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: groupView, onClick: handleSelectGroup }))))),
         React__default["default"].createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React__default["default"].createElement("div", { className: b$g({ empty: true }) },
         React__default["default"].createElement("p", { className: b$g('emptyText') }, "Stories will be here")))))));
 };

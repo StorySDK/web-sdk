@@ -25,10 +25,11 @@
     display: flex;
     overflow-x: auto;
     padding: 8px;
+    min-height: 100px;
   }
 
   &__loaderItem {
-    width: 100px;
+    width: 90px;
     display: flex;
     flex-direction: column;
     align-items: center;

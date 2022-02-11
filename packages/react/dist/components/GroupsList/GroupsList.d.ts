@@ -5,6 +5,7 @@ import './GroupsList.scss';
 interface GroupsListProps {
     groups: GroupType[];
     isLoading?: boolean;
+    groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
     onOpenGroup?(id: string): void;
     onCloseGroup?(id: string): void;
     onNextStory?(groupId: string, storyId: string): void;
