@@ -63018,25 +63018,32 @@ const QuestionWidget = (props) => {
             borderRadius: calculate(INIT_ELEMENT_STYLES$3.button.borderRadius)
         }
     }), [calculate]);
-    const handleChange = (option) => {
-        if (props.onAnswer) {
-            props.onAnswer(option);
-        }
-        setAnswer(option);
-    };
     const [percents, setPercents] = useState({
         confirm: 0,
         decline: 0
     });
+    const handleChange = (option) => {
+        if (props.onAnswer) {
+            props.onAnswer(option).then((res) => {
+                if (res.data && !res.data.error) {
+                    setAnswer(option);
+                    setPercents((prevState) => (Object.assign(Object.assign({}, prevState), res.data.data)));
+                }
+            });
+        }
+        else {
+            setAnswer(option);
+        }
+    };
     useEffect(() => {
-        if (answer) {
+        if (answer && !props.onAnswer) {
             const percentsFromApi = {
                 confirm: answer === 'confirm' ? 100 : 0,
                 decline: answer === 'decline' ? 100 : 0
             };
             setPercents(percentsFromApi);
         }
-    }, [answer]);
+    }, [answer, props.onAnswer]);
     const calculateWidth = (percent) => {
         if (percent === 0) {
             return 0;
