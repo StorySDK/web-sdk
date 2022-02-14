@@ -65,15 +65,17 @@ export const QuestionWidget: WidgetComponent<{
   });
 
   const handleChange = (option: string) => {
-    if (props.onAnswer) {
-      props.onAnswer(option).then((res: any) => {
-        if (res.data && !res.data.error) {
-          setAnswer(option);
-          setPercents((prevState) => ({ ...prevState, ...res.data.data }));
-        }
-      });
-    } else {
-      setAnswer(option);
+    if (!answer) {
+      if (props.onAnswer) {
+        props.onAnswer(option).then((res: any) => {
+          if (res.data && !res.data.error) {
+            setAnswer(option);
+            setPercents((prevState) => ({ ...prevState, ...res.data.data }));
+          }
+        });
+      } else {
+        setAnswer(option);
+      }
     }
   };
 
@@ -119,6 +121,7 @@ export const QuestionWidget: WidgetComponent<{
             zero: answer && percents.confirm === 0,
             full: answer && percents.confirm === 100
           })}
+          disabled={!!answer}
           style={{
             width: answer ? `${calculateWidth(percents.confirm)}%` : '50%',
             height: elementSizes.button.height,
@@ -147,6 +150,7 @@ export const QuestionWidget: WidgetComponent<{
             zero: answer && percents.decline === 0,
             full: answer && percents.decline === 100
           })}
+          disabled={!!answer}
           style={{
             width: answer ? `${calculateWidth(percents.decline)}%` : '50%',
             height: elementSizes.button.height,

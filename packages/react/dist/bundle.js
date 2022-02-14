@@ -57268,16 +57268,18 @@ const QuestionWidget = (props) => {
         decline: 0
     });
     const handleChange = (option) => {
-        if (props.onAnswer) {
-            props.onAnswer(option).then((res) => {
-                if (res.data && !res.data.error) {
-                    setAnswer(option);
-                    setPercents((prevState) => (Object.assign(Object.assign({}, prevState), res.data.data)));
-                }
-            });
-        }
-        else {
-            setAnswer(option);
+        if (!answer) {
+            if (props.onAnswer) {
+                props.onAnswer(option).then((res) => {
+                    if (res.data && !res.data.error) {
+                        setAnswer(option);
+                        setPercents((prevState) => (Object.assign(Object.assign({}, prevState), res.data.data)));
+                    }
+                });
+            }
+            else {
+                setAnswer(option);
+            }
         }
     };
     React.useEffect(() => {
@@ -57313,7 +57315,7 @@ const QuestionWidget = (props) => {
                     answerConfirm: answer && percents.confirm !== 100,
                     zero: answer && percents.confirm === 0,
                     full: answer && percents.confirm === 100
-                }), style: {
+                }), disabled: !!answer, style: {
                     width: answer ? `${calculateWidth(percents.confirm)}%` : '50%',
                     height: elementSizes.button.height,
                     fontSize: elementSizes.button.fontSize
@@ -57329,7 +57331,7 @@ const QuestionWidget = (props) => {
                     answerDecline: answer && percents.decline !== 100,
                     zero: answer && percents.decline === 0,
                     full: answer && percents.decline === 100
-                }), style: {
+                }), disabled: !!answer, style: {
                     width: answer ? `${calculateWidth(percents.decline)}%` : '50%',
                     height: elementSizes.button.height,
                     fontSize: elementSizes.button.fontSize
