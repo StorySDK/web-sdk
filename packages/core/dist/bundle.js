@@ -70701,7 +70701,8 @@ const API = {
                         type: 'duration',
                         user_id: params.uniqUserId,
                         group_id: params.groupId,
-                        value: params.seconds
+                        value: params.seconds,
+                        locale: params.language
                     }
                 });
             },
@@ -70713,7 +70714,8 @@ const API = {
                         type: 'open',
                         user_id: params.uniqUserId,
                         group_id: params.groupId,
-                        value: ''
+                        value: '',
+                        locale: params.language
                     }
                 });
             },
@@ -70725,7 +70727,8 @@ const API = {
                         type: 'close',
                         user_id: params.uniqUserId,
                         group_id: params.groupId,
-                        value: ''
+                        value: '',
+                        locale: params.language
                     }
                 });
             }
@@ -70740,7 +70743,8 @@ const API = {
                         story_id: params.storyId,
                         user_id: params.uniqUserId,
                         group_id: params.groupId,
-                        value: params.seconds
+                        value: params.seconds,
+                        locale: params.language
                     }
                 });
             },
@@ -70753,7 +70757,8 @@ const API = {
                         story_id: params.storyId,
                         user_id: params.uniqUserId,
                         group_id: params.groupId,
-                        value: params.seconds
+                        value: params.seconds,
+                        locale: params.language
                     }
                 });
             },
@@ -70766,7 +70771,8 @@ const API = {
                         story_id: params.storyId,
                         user_id: params.uniqUserId,
                         group_id: params.groupId,
-                        value: ''
+                        value: '',
+                        locale: params.language
                     }
                 });
             },
@@ -70779,7 +70785,8 @@ const API = {
                         story_id: params.storyId,
                         user_id: params.uniqUserId,
                         group_id: params.groupId,
-                        value: ''
+                        value: '',
+                        locale: params.language
                     }
                 });
             },
@@ -70792,7 +70799,8 @@ const API = {
                         user_id: params.uniqUserId,
                         story_id: params.storyId,
                         group_id: params.groupId,
-                        value: ''
+                        value: '',
+                        locale: params.language
                     }
                 });
             },
@@ -70805,7 +70813,8 @@ const API = {
                         user_id: params.uniqUserId,
                         story_id: params.storyId,
                         group_id: params.groupId,
-                        value: ''
+                        value: '',
+                        locale: params.language
                     }
                 });
             }
@@ -70822,7 +70831,8 @@ const API = {
                             story_id: params.storyId,
                             widget_id: params.widgetId,
                             user_id: params.uniqUserId,
-                            value: params.answer
+                            value: params.answer,
+                            locale: params.language
                         }
                     });
                 }
@@ -70838,7 +70848,8 @@ const API = {
                             story_id: params.storyId,
                             widget_id: params.widgetId,
                             user_id: params.uniqUserId,
-                            value: params.url
+                            value: params.url,
+                            locale: params.language
                         }
                     });
                 }
@@ -70854,7 +70865,8 @@ const API = {
                             story_id: params.storyId,
                             widget_id: params.widgetId,
                             user_id: params.uniqUserId,
-                            value: params.emoji
+                            value: params.emoji,
+                            locale: params.language
                         }
                     });
                 }
@@ -70870,7 +70882,8 @@ const API = {
                             story_id: params.storyId,
                             widget_id: params.widgetId,
                             user_id: params.uniqUserId,
-                            value: params.answer
+                            value: params.answer,
+                            locale: params.language
                         }
                     });
                 }
@@ -70886,7 +70899,8 @@ const API = {
                             story_id: params.storyId,
                             widget_id: params.widgetId,
                             user_id: params.uniqUserId,
-                            value: params.value
+                            value: params.value,
+                            locale: params.language
                         }
                     });
                 }
@@ -70902,7 +70916,8 @@ const API = {
                             story_id: params.storyId,
                             widget_id: params.widgetId,
                             user_id: params.uniqUserId,
-                            value: params.url
+                            value: params.url,
+                            locale: params.language
                         }
                     });
                 }
@@ -70918,7 +70933,8 @@ const API = {
                             story_id: params.storyId,
                             widget_id: params.widgetId,
                             user_id: params.uniqUserId,
-                            value: params.answer
+                            value: params.answer,
+                            locale: params.language
                         }
                     });
                 }
@@ -70928,7 +70944,7 @@ const API = {
 };
 
 // import { GroupType } from '@storysdk/react';
-const actionToWidget = (widget, storyId, groupId, uniqUserId) => {
+const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
     switch (widget.content.type) {
         case 'choose_answer':
             return (answer) => API.statistics.widgets.chooseAnswer.onAnswer({
@@ -70936,7 +70952,8 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId) => {
                 storyId,
                 groupId,
                 uniqUserId,
-                answer
+                answer,
+                language
             });
         case 'emoji_reaction':
             return (emoji) => API.statistics.widgets.emojiReaction.onReact({
@@ -70944,7 +70961,8 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId) => {
                 storyId,
                 groupId,
                 uniqUserId,
-                emoji
+                emoji,
+                language
             });
         case 'talk_about':
             return (answer) => API.statistics.widgets.talkAbout.onAnswer({
@@ -70952,7 +70970,8 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId) => {
                 storyId,
                 groupId,
                 uniqUserId,
-                answer
+                answer,
+                language
             });
         case 'click_me':
             return () => API.statistics.widgets.clickMe.onClick({
@@ -70960,7 +70979,8 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId) => {
                 storyId,
                 groupId,
                 uniqUserId,
-                url: widget.content.params.url
+                url: widget.content.params.url,
+                language
             });
         case 'question':
             return (answer) => API.statistics.widgets.question.onAnswer({
@@ -70968,7 +70988,8 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId) => {
                 answer,
                 storyId,
                 groupId,
-                uniqUserId
+                uniqUserId,
+                language
             });
         case 'slider':
             return (value) => API.statistics.widgets.slider.onSlide({
@@ -70976,7 +70997,8 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId) => {
                 value,
                 storyId,
                 groupId,
-                uniqUserId
+                uniqUserId,
+                language
             });
         case 'swipe_up':
             return () => API.statistics.widgets.swipeUp.onSwipe({
@@ -70984,14 +71006,15 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId) => {
                 storyId,
                 groupId,
                 uniqUserId,
-                url: widget.content.params.url
+                url: widget.content.params.url,
+                language
             });
         default:
             return undefined;
     }
 };
-const adaptWidgets = (widgets, storyId, groupId, uniqUserId) => widgets.map((widget) => (Object.assign(Object.assign({}, widget), { action: actionToWidget(widget, storyId, groupId, uniqUserId) })));
-const adaptGroupData = (data, uniqUserId) => data
+const adaptWidgets = (widgets, storyId, groupId, uniqUserId, language) => widgets.map((widget) => (Object.assign(Object.assign({}, widget), { action: actionToWidget(widget, storyId, groupId, uniqUserId, language) })));
+const adaptGroupData = (data, uniqUserId, language) => data
     .filter((group) => (group.stories ? group.stories.length : 0))
     .map((group) => ({
     id: group.id,
@@ -70999,16 +71022,29 @@ const adaptGroupData = (data, uniqUserId) => data
     imageUrl: group.image_url,
     stories: group.stories.map((story, index) => ({
         id: story.id,
-        background: story.story_data.background,
-        storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId),
+        background: story.story_data[language].background,
+        storyData: adaptWidgets(story.story_data[language].widgets, story.id, group.id, uniqUserId, language),
         positionIndex: index
     }))
 }));
+
+const getNavigatorLanguage = (appLocale) => {
+    const language = navigator.languages && navigator.languages.length
+        ? navigator.languages[0]
+        : // @ts-ignore
+            navigator.userLanguage || navigator.language || navigator.browserLanguage || 'en';
+    const langArr = language.split('-');
+    if (!appLocale.languages.find((item) => item === langArr[0])) {
+        return appLocale.default;
+    }
+    return langArr[0];
+};
 
 const withGroupsData = (GroupsList, token) => () => {
     const [data, setData] = React.useState([]);
     const [groups, setGroups] = React.useState([]);
     const [groupView, setGroupView] = React.useState('circle');
+    const [appLocale, setAppLocale] = React.useState(null);
     const [groupsWithStories, setGroupsWithStories] = React.useState([]);
     const [loadStatus, setLoadStatus] = React.useState('pending');
     const [groupDuration, setGroupDuration] = React.useState({
@@ -71021,30 +71057,37 @@ const withGroupsData = (GroupsList, token) => () => {
         startTime: 0
     });
     const uniqUserId = React.useMemo(() => nanoid(), []);
+    const language = React.useMemo(() => {
+        if (appLocale) {
+            return getNavigatorLanguage(appLocale);
+        }
+        return 'en';
+    }, [appLocale]);
     const handleOpenGroup = React.useCallback((groupId) => {
         setGroupDuration(() => ({
             groupId,
             startTime: DateTime.now().toSeconds()
         }));
-        return API.statistics.group.onOpen({ groupId, uniqUserId });
-    }, [uniqUserId]);
+        return API.statistics.group.onOpen({ groupId, uniqUserId, language });
+    }, [uniqUserId, language]);
     const handleCloseGroup = React.useCallback((groupId) => {
         const duration = DateTime.now().toSeconds() - groupDuration.startTime;
         API.statistics.group.sendDuration({
             groupId: groupDuration.groupId,
             uniqUserId,
-            seconds: duration
+            seconds: duration,
+            language
         });
-        return API.statistics.group.onClose({ groupId, uniqUserId });
-    }, [groupDuration, uniqUserId]);
+        return API.statistics.group.onClose({ groupId, uniqUserId, language });
+    }, [groupDuration, uniqUserId, language]);
     const handleOpenStory = React.useCallback((groupId, storyId) => {
         setStoryDuration(() => ({
             groupId,
             storyId,
             startTime: DateTime.now().toSeconds()
         }));
-        API.statistics.story.onOpen({ groupId, storyId, uniqUserId });
-    }, [uniqUserId]);
+        API.statistics.story.onOpen({ groupId, storyId, uniqUserId, language });
+    }, [uniqUserId, language]);
     const handleCloseStory = React.useCallback((groupId, storyId) => {
         if (storyDuration.storyId === storyId && storyDuration.groupId === groupId) {
             const duration = DateTime.now().toSeconds() - storyDuration.startTime;
@@ -71052,21 +71095,23 @@ const withGroupsData = (GroupsList, token) => () => {
                 storyId: storyDuration.storyId,
                 groupId: storyDuration.groupId,
                 uniqUserId,
-                seconds: duration
+                seconds: duration,
+                language
             });
             if (duration > 1) {
                 API.statistics.story.sendImpression({
                     storyId: storyDuration.storyId,
                     groupId: storyDuration.groupId,
                     uniqUserId,
-                    seconds: duration
+                    seconds: duration,
+                    language
                 });
             }
         }
-        API.statistics.story.onClose({ groupId, storyId, uniqUserId });
-    }, [storyDuration, uniqUserId]);
-    const handleNextStory = React.useCallback((groupId, storyId) => API.statistics.story.onNext({ groupId, storyId, uniqUserId }), [uniqUserId]);
-    const handlePrevStory = React.useCallback((groupId, storyId) => API.statistics.story.onPrev({ groupId, storyId, uniqUserId }), [uniqUserId]);
+        API.statistics.story.onClose({ groupId, storyId, uniqUserId, language });
+    }, [storyDuration, uniqUserId, language]);
+    const handleNextStory = React.useCallback((groupId, storyId) => API.statistics.story.onNext({ groupId, storyId, uniqUserId, language }), [uniqUserId, language]);
+    const handlePrevStory = React.useCallback((groupId, storyId) => API.statistics.story.onPrev({ groupId, storyId, uniqUserId, language }), [uniqUserId, language]);
     React.useEffect(() => {
         setLoadStatus('loading');
         API.apps.getList().then((appData) => {
@@ -71076,6 +71121,7 @@ const withGroupsData = (GroupsList, token) => () => {
                 const appGroupView = app.length && app[0].settings && app[0].settings.groupView
                     ? app[0].settings.groupView
                     : 'circle';
+                setAppLocale(app[0].localization);
                 setGroupView(appGroupView);
                 API.groups.getList({ appId }).then((groupsData) => {
                     if (!groupsData.data.error) {
@@ -71084,8 +71130,8 @@ const withGroupsData = (GroupsList, token) => () => {
                             .map((item) => ({
                             id: item.id,
                             app_id: item.app_id,
-                            title: item.title,
-                            image_url: item.image_url
+                            title: item.title.en,
+                            image_url: item.image_url.en
                         }));
                         setGroups(groupsFetchedData);
                         setGroupsWithStories(groupsFetchedData);
@@ -71104,7 +71150,7 @@ const withGroupsData = (GroupsList, token) => () => {
                 })
                     .then((storiesData) => {
                     if (!storiesData.data.error) {
-                        const stories = storiesData.data.data.filter((storyItem) => storyItem.status === 'active');
+                        const stories = storiesData.data.data.filter((storyItem) => storyItem.story_data[language].status === 'active');
                         // @ts-ignore
                         setGroupsWithStories((prevState) => prevState.map((item) => {
                             if (item.id === groupItem.id) {
@@ -71119,13 +71165,13 @@ const withGroupsData = (GroupsList, token) => () => {
                 });
             });
         }
-    }, [groups]);
+    }, [groups, language]);
     React.useEffect(() => {
         if (loadStatus === 'loaded' && groupsWithStories.length) {
-            const adaptedData = adaptGroupData(groupsWithStories, uniqUserId);
+            const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language);
             setData(adaptedData);
         }
-    }, [loadStatus, groupsWithStories, uniqUserId]);
+    }, [loadStatus, groupsWithStories, uniqUserId, language]);
     return (React__default["default"].createElement(GroupsList, { groupView: groupView, groups: data, isLoading: loadStatus === 'loading', onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory }));
 };
 

@@ -19,14 +19,17 @@ export declare const API: {
                 groupId: string;
                 uniqUserId: string;
                 seconds: number;
+                language: string;
             }): import("axios").AxiosPromise<any>;
             onOpen(params: {
                 groupId: string;
                 uniqUserId: string;
+                language: string;
             }): import("axios").AxiosPromise<any>;
             onClose(params: {
                 groupId: string;
                 uniqUserId: string;
+                language: string;
             }): import("axios").AxiosPromise<any>;
         };
         story: {
@@ -35,32 +38,38 @@ export declare const API: {
                 storyId: string;
                 uniqUserId: string;
                 seconds: number;
+                language: string;
             }): import("axios").AxiosPromise<any>;
             sendImpression(params: {
                 groupId: string;
                 storyId: string;
                 uniqUserId: string;
                 seconds: number;
+                language: string;
             }): import("axios").AxiosPromise<any>;
             onOpen(params: {
                 groupId: string;
                 storyId: string;
                 uniqUserId: string;
+                language: string;
             }): import("axios").AxiosPromise<any>;
             onClose(params: {
                 groupId: string;
                 storyId: string;
                 uniqUserId: string;
+                language: string;
             }): import("axios").AxiosPromise<any>;
             onNext(params: {
                 groupId: string;
                 storyId: string;
                 uniqUserId: string;
+                language: string;
             }): import("axios").AxiosPromise<any>;
             onPrev(params: {
                 groupId: string;
                 storyId: string;
                 uniqUserId: string;
+                language: string;
             }): import("axios").AxiosPromise<any>;
         };
         widgets: {
@@ -71,6 +80,7 @@ export declare const API: {
                     groupId: string;
                     answer: string;
                     uniqUserId: string;
+                    language: string;
                 }): import("axios").AxiosPromise<any>;
             };
             clickMe: {
@@ -80,6 +90,7 @@ export declare const API: {
                     groupId: string;
                     uniqUserId: string;
                     url: string;
+                    language: string;
                 }): import("axios").AxiosPromise<any>;
             };
             emojiReaction: {
@@ -89,6 +100,7 @@ export declare const API: {
                     groupId: string;
                     uniqUserId: string;
                     emoji: string;
+                    language: string;
                 }): import("axios").AxiosPromise<any>;
             };
             question: {
@@ -98,6 +110,7 @@ export declare const API: {
                     groupId: string;
                     uniqUserId: string;
                     answer: string;
+                    language: string;
                 }): import("axios").AxiosPromise<any>;
             };
             slider: {
@@ -107,6 +120,7 @@ export declare const API: {
                     groupId: string;
                     uniqUserId: string;
                     value: number;
+                    language: string;
                 }): import("axios").AxiosPromise<any>;
             };
             swipeUp: {
@@ -116,6 +130,7 @@ export declare const API: {
                     groupId: string;
                     uniqUserId: string;
                     url: string;
+                    language: string;
                 }): import("axios").AxiosPromise<any>;
             };
             talkAbout: {
@@ -125,6 +140,7 @@ export declare const API: {
                     groupId: string;
                     uniqUserId: string;
                     answer: string;
+                    language: string;
                 }): import("axios").AxiosPromise<any>;
             };
         };

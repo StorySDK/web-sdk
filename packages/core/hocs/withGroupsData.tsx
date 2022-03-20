@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useMemo, useCallback, useReducer } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { GroupType } from '@storysdk/react';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
 import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
+import { getNavigatorLanguage } from '../utils/localization';
 
 interface GroupsListProps {
   groups: GroupType[];
@@ -27,6 +28,7 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
   const [data, setData] = useState([]);
   const [groups, setGroups] = useState([]);
   const [groupView, setGroupView] = useState('circle');
+  const [appLocale, setAppLocale] = useState(null);
   const [groupsWithStories, setGroupsWithStories] = useState([]);
   const [loadStatus, setLoadStatus] = useState('pending');
 
@@ -42,6 +44,14 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
   });
   const uniqUserId = useMemo(() => nanoid(), []);
 
+  const language = useMemo(() => {
+    if (appLocale) {
+      return getNavigatorLanguage(appLocale);
+    }
+
+    return 'en';
+  }, [appLocale]);
+
   const handleOpenGroup = useCallback(
     (groupId: string) => {
       setGroupDuration(() => ({
@@ -49,9 +59,9 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
         startTime: DateTime.now().toSeconds()
       }));
 
-      return API.statistics.group.onOpen({ groupId, uniqUserId });
+      return API.statistics.group.onOpen({ groupId, uniqUserId, language });
     },
-    [uniqUserId]
+    [uniqUserId, language]
   );
 
   const handleCloseGroup = useCallback(
@@ -61,12 +71,13 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
       API.statistics.group.sendDuration({
         groupId: groupDuration.groupId,
         uniqUserId,
-        seconds: duration
+        seconds: duration,
+        language
       });
 
-      return API.statistics.group.onClose({ groupId, uniqUserId });
+      return API.statistics.group.onClose({ groupId, uniqUserId, language });
     },
-    [groupDuration, uniqUserId]
+    [groupDuration, uniqUserId, language]
   );
 
   const handleOpenStory = useCallback(
@@ -77,10 +88,10 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
         startTime: DateTime.now().toSeconds()
       }));
 
-      API.statistics.story.onOpen({ groupId, storyId, uniqUserId });
+      API.statistics.story.onOpen({ groupId, storyId, uniqUserId, language });
     },
 
-    [uniqUserId]
+    [uniqUserId, language]
   );
 
   const handleCloseStory = useCallback(
@@ -92,7 +103,8 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
           storyId: storyDuration.storyId,
           groupId: storyDuration.groupId,
           uniqUserId,
-          seconds: duration
+          seconds: duration,
+          language
         });
 
         if (duration > 1) {
@@ -100,25 +112,26 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
             storyId: storyDuration.storyId,
             groupId: storyDuration.groupId,
             uniqUserId,
-            seconds: duration
+            seconds: duration,
+            language
           });
         }
       }
-      API.statistics.story.onClose({ groupId, storyId, uniqUserId });
+      API.statistics.story.onClose({ groupId, storyId, uniqUserId, language });
     },
-    [storyDuration, uniqUserId]
+    [storyDuration, uniqUserId, language]
   );
 
   const handleNextStory = useCallback(
     (groupId: string, storyId: string) =>
-      API.statistics.story.onNext({ groupId, storyId, uniqUserId }),
-    [uniqUserId]
+      API.statistics.story.onNext({ groupId, storyId, uniqUserId, language }),
+    [uniqUserId, language]
   );
 
   const handlePrevStory = useCallback(
     (groupId: string, storyId: string) =>
-      API.statistics.story.onPrev({ groupId, storyId, uniqUserId }),
-    [uniqUserId]
+      API.statistics.story.onPrev({ groupId, storyId, uniqUserId, language }),
+    [uniqUserId, language]
   );
 
   useEffect(() => {
@@ -127,12 +140,14 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
     API.apps.getList().then((appData) => {
       if (!appData.data.error) {
         const app = appData.data.data.filter((item: any) => item.sdk_token === token);
+
         const appId = app.length ? app[0].id : '';
         const appGroupView =
           app.length && app[0].settings && app[0].settings.groupView
             ? app[0].settings.groupView
             : 'circle';
 
+        setAppLocale(app[0].localization);
         setGroupView(appGroupView);
 
         API.groups.getList({ appId }).then((groupsData) => {
@@ -142,8 +157,8 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
               .map((item: any) => ({
                 id: item.id,
                 app_id: item.app_id,
-                title: item.title,
-                image_url: item.image_url
+                title: item.title.en,
+                image_url: item.image_url.en
               }));
 
             setGroups(groupsFetchedData);
@@ -165,7 +180,7 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
           .then((storiesData) => {
             if (!storiesData.data.error) {
               const stories = storiesData.data.data.filter(
-                (storyItem: any) => storyItem.status === 'active'
+                (storyItem: any) => storyItem.story_data[language].status === 'active'
               );
 
               // @ts-ignore
@@ -186,15 +201,15 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
           });
       });
     }
-  }, [groups]);
+  }, [groups, language]);
 
   useEffect(() => {
     if (loadStatus === 'loaded' && groupsWithStories.length) {
-      const adaptedData = adaptGroupData(groupsWithStories, uniqUserId);
+      const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language);
 
       setData(adaptedData);
     }
-  }, [loadStatus, groupsWithStories, uniqUserId]);
+  }, [loadStatus, groupsWithStories, uniqUserId, language]);
 
   return (
     <GroupsList

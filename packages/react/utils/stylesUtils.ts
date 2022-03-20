@@ -1,11 +1,6 @@
-import {
-  WidgetPositionType,
-  WidgetPositionLimitsType,
-  BackgroundType,
-  BorderType
-} from '../types';
 import hexToRgba from 'hex-to-rgba';
 import parseColor from 'parse-color';
+import { WidgetPositionType, WidgetPositionLimitsType, BackgroundType, BorderType } from '../types';
 
 interface Stroke {
   strokeThickness: number;
