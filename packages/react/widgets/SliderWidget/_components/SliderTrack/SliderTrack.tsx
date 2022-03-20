@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import block from 'bem-cn';
 import './SliderTrack.scss';
 
-const b = block('SliderTrack');
+const b = block('SliderSdkTrack');
 
 type PropType = {
   propsTrack: any;
@@ -14,6 +14,8 @@ type PropType = {
 };
 
 export const SliderTrack: FC<PropType> = ({ propsTrack, state, size }) => (
+  // console.log(propsTrack);
+
   <div
     {...propsTrack}
     className={b({ selected: state.index === 1 })}

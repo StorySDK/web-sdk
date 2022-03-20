@@ -1,0 +1,65 @@
+.SliderSdkCustom {
+  position: relative;
+  width: 100%;
+  height: 10px;
+
+  &__thumb {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform:translateX(-50%) translateY(-50%);
+    z-index: 2;
+    cursor: grab;
+
+    &:focus,
+    &:active {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  &__up {
+    position: absolute;
+    top: -39px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 1;
+    margin-top: 0;
+
+    &_moved {
+      opacity: 0;
+      top: -100px !important;
+      transition: 0.5s top ease, 0.5s opacity ease;
+    }
+  }
+
+  &__track {
+    display: flex;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: 1;
+    height: 10px;
+  }
+
+  &__trackPart {
+    display: block;
+    background: linear-gradient(90deg, #ce25ca 0%, #ea0e4e 97.37%);
+    border-radius: 10px;
+    height: 100%;
+    width: 0%;
+
+    &_unselected {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    &_selected {
+      background: rgba(100, 100, 100, 0.25);
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}

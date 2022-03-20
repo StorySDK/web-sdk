@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import block from 'bem-cn';
 import './StoryModal.scss';
-import { useWindowWidth } from '@react-hook/window-size';
+import { useWindowSize } from '@react-hook/window-size';
+import JSConfetti from 'js-confetti';
 import { StoryType, GroupType } from '../../types';
 import { StoryContent } from '..';
 
@@ -79,7 +80,17 @@ const RightArrowIcon: React.FC = () => (
   </svg>
 );
 
-export const CurrentStoryContext = React.createContext('');
+export const StoryContext = React.createContext<{
+  currentStoryId: string;
+  playStatusChange?: any;
+  confetti?: any;
+}>({
+  currentStoryId: '',
+  playStatusChange: () => {},
+  confetti: null
+});
+
+type PlayStatusType = 'wait' | 'play' | 'pause';
 
 export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const {
@@ -97,34 +108,49 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentGroup
   } = props;
 
-  const [currentStory, setCurrentStory] = React.useState(0);
-  const [currentStoryId, setCurrentStoryId] = React.useState(stories.length ? stories[0].id : '');
+  const [currentStory, setCurrentStory] = useState(0);
+  const [currentStoryId, setCurrentStoryId] = useState('');
+  const [playStatus, setPlayStatus] = useState<PlayStatusType>('wait');
 
-  const width = useWindowWidth();
+  const [width, height] = useWindowSize();
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrentStory(0);
 
-    if (onOpenStory && showed && stories.length) {
-      onOpenStory(currentGroup.id, stories[0].id);
+    if (showed) {
+      setPlayStatus('play');
+    } else {
+      setPlayStatus('wait');
+    }
+
+    if (showed && stories.length) {
+      setCurrentStoryId(stories[0].id);
+
+      if (onOpenStory) {
+        onOpenStory(currentGroup.id, stories[0].id);
+      }
     }
   }, [stories.length, onOpenStory, stories, currentGroup, showed]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
 
     if (onCloseStory) {
       onCloseStory(currentGroup.id, stories[currentStory].id);
     }
-  };
+  }, [currentGroup.id, currentStory, onClose, onCloseStory, stories]);
 
-  const handleAnimationEnd = () => {
-    handleNext();
-  };
-
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (currentStory === stories.length - 1) {
-      isLastGroup ? handleClose() : onNextGroup();
+      if (isLastGroup) {
+        handleClose();
+      } else {
+        onNextGroup();
+
+        if (onCloseStory) {
+          onCloseStory(currentGroup.id, stories[currentStory].id);
+        }
+      }
     } else {
       setCurrentStory(currentStory + 1);
       setCurrentStoryId(stories[currentStory + 1].id);
@@ -143,9 +169,23 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         onNextStory(currentGroup.id, stories[currentStory].id);
       }
     }
-  };
+  }, [
+    currentGroup.id,
+    currentStory,
+    handleClose,
+    isLastGroup,
+    onCloseStory,
+    onNextGroup,
+    onNextStory,
+    onOpenStory,
+    stories
+  ]);
 
-  const handlePrev = () => {
+  const handleAnimationEnd = useCallback(() => {
+    handleNext();
+  }, [handleNext]);
+
+  const handlePrev = useCallback(() => {
     if (currentStory === 0) {
       isFirstGroup ? handleClose() : onPrevGroup();
     } else {
@@ -166,30 +206,54 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         onPrevStory(currentGroup.id, stories[currentStory].id);
       }
     }
-  };
+  }, [
+    currentGroup.id,
+    currentStory,
+    handleClose,
+    isFirstGroup,
+    onCloseStory,
+    onOpenStory,
+    onPrevGroup,
+    onPrevStory,
+    stories
+  ]);
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const jsConfetti = useRef(
+    new JSConfetti({
+      canvas: canvasRef.current as HTMLCanvasElement
+    })
+  );
 
   return (
-    <CurrentStoryContext.Provider value={currentStoryId}>
+    <StoryContext.Provider value={{ currentStoryId, playStatusChange: setPlayStatus }}>
       <div
         className={b({ showed })}
-        style={{ height: width < 768 ? Math.round(694 * (width / 390)) : '100%' }}
+        style={{
+          height: width < 768 ? Math.round(694 * (width / 390)) : '100%'
+        }}
       >
         <div className={b('body')}>
           <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
             <LeftArrowIcon />
           </button>
 
-          <div className={b('swiper')}>
+          <div
+            className={b('swiper')}
+            style={{
+              width: width > 768 ? Math.round((283 / 512) * height) : '100%'
+            }}
+          >
             <div className={b('swiperContent')}>
               {stories.map((story, index) => (
                 <div className={b('story', { current: index === currentStory })} key={story.id}>
-                  <StoryContent story={story} />
+                  <StoryContent jsConfetti={jsConfetti} story={story} />
                 </div>
               ))}
             </div>
 
             <div className={b('controls')}>
-              <div className={b('indicators')}>
+              <div className={b('indicators', { stopAnimation: playStatus === 'pause' })}>
                 {stories.map((story, index) => (
                   <div
                     className={b('indicator', {
@@ -218,6 +282,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           </button>
         </div>
       </div>
-    </CurrentStoryContext.Provider>
+
+      <canvas
+        ref={canvasRef}
+        style={{
+          display: 'none'
+        }}
+      />
+    </StoryContext.Provider>
   );
 };

@@ -28,7 +28,7 @@ export const QuestionWidget: WidgetComponent<{
   params: QuestionWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
-  onAnswer?(answer: string): void;
+  onAnswer?(answer: string): any;
 }> = (props) => {
   const { params, position, positionLimits } = props;
   const [answer, setAnswer] = useState<string | null>(null);
@@ -59,21 +59,28 @@ export const QuestionWidget: WidgetComponent<{
     [calculate]
   );
 
-  const handleChange = (option: string) => {
-    if (props.onAnswer) {
-      props.onAnswer(option);
-    }
-
-    setAnswer(option);
-  };
-
   const [percents, setPercents] = useState({
     confirm: 0,
     decline: 0
   });
 
+  const handleChange = (option: string) => {
+    if (!answer) {
+      if (props.onAnswer) {
+        props.onAnswer(option).then((res: any) => {
+          if (res.data && !res.data.error) {
+            setAnswer(option);
+            setPercents((prevState) => ({ ...prevState, ...res.data.data }));
+          }
+        });
+      } else {
+        setAnswer(option);
+      }
+    }
+  };
+
   useEffect(() => {
-    if (answer) {
+    if (answer && !props.onAnswer) {
       const percentsFromApi = {
         confirm: answer === 'confirm' ? 100 : 0,
         decline: answer === 'decline' ? 100 : 0
@@ -81,7 +88,7 @@ export const QuestionWidget: WidgetComponent<{
 
       setPercents(percentsFromApi);
     }
-  }, [answer]);
+  }, [answer, props.onAnswer]);
 
   const calculateWidth = (percent: number) => {
     if (percent === 0) {
@@ -114,6 +121,7 @@ export const QuestionWidget: WidgetComponent<{
             zero: answer && percents.confirm === 0,
             full: answer && percents.confirm === 100
           })}
+          disabled={!!answer}
           style={{
             width: answer ? `${calculateWidth(percents.confirm)}%` : '50%',
             height: elementSizes.button.height,
@@ -142,6 +150,7 @@ export const QuestionWidget: WidgetComponent<{
             zero: answer && percents.decline === 0,
             full: answer && percents.decline === 100
           })}
+          disabled={!!answer}
           style={{
             width: answer ? `${calculateWidth(percents.decline)}%` : '50%',
             height: elementSizes.button.height,

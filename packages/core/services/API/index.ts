@@ -27,7 +27,12 @@ export const API = {
   },
   statistics: {
     group: {
-      sendDuration(params: { groupId: string; uniqUserId: string; seconds: number }) {
+      sendDuration(params: {
+        groupId: string;
+        uniqUserId: string;
+        seconds: number;
+        language: string;
+      }) {
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -35,11 +40,12 @@ export const API = {
             type: 'duration',
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: params.seconds
+            value: params.seconds,
+            locale: params.language
           }
         });
       },
-      onOpen(params: { groupId: string; uniqUserId: string }) {
+      onOpen(params: { groupId: string; uniqUserId: string; language: string }) {
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -47,11 +53,12 @@ export const API = {
             type: 'open',
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: ''
+            value: '',
+            locale: params.language
           }
         });
       },
-      onClose(params: { groupId: string; uniqUserId: string }) {
+      onClose(params: { groupId: string; uniqUserId: string; language: string }) {
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -59,7 +66,8 @@ export const API = {
             type: 'close',
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: ''
+            value: '',
+            locale: params.language
           }
         });
       }
@@ -70,6 +78,7 @@ export const API = {
         storyId: string;
         uniqUserId: string;
         seconds: number;
+        language: string;
       }) {
         return axios({
           method: 'post',
@@ -79,11 +88,33 @@ export const API = {
             story_id: params.storyId,
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: params.seconds
+            value: params.seconds,
+            locale: params.language
           }
         });
       },
-      onOpen(params: { groupId: string; storyId: string; uniqUserId: string }) {
+
+      sendImpression(params: {
+        groupId: string;
+        storyId: string;
+        uniqUserId: string;
+        seconds: number;
+        language: string;
+      }) {
+        return axios({
+          method: 'post',
+          url: `/reactions`,
+          data: {
+            type: 'impression',
+            story_id: params.storyId,
+            user_id: params.uniqUserId,
+            group_id: params.groupId,
+            value: params.seconds,
+            locale: params.language
+          }
+        });
+      },
+      onOpen(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -92,11 +123,12 @@ export const API = {
             story_id: params.storyId,
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: ''
+            value: '',
+            locale: params.language
           }
         });
       },
-      onClose(params: { groupId: string; storyId: string; uniqUserId: string }) {
+      onClose(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -105,11 +137,12 @@ export const API = {
             story_id: params.storyId,
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: ''
+            value: '',
+            locale: params.language
           }
         });
       },
-      onNext(params: { groupId: string; storyId: string; uniqUserId: string }) {
+      onNext(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -118,11 +151,12 @@ export const API = {
             user_id: params.uniqUserId,
             story_id: params.storyId,
             group_id: params.groupId,
-            value: ''
+            value: '',
+            locale: params.language
           }
         });
       },
-      onPrev(params: { groupId: string; storyId: string; uniqUserId: string }) {
+      onPrev(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -131,7 +165,8 @@ export const API = {
             user_id: params.uniqUserId,
             story_id: params.storyId,
             group_id: params.groupId,
-            value: ''
+            value: '',
+            locale: params.language
           }
         });
       }
@@ -144,6 +179,7 @@ export const API = {
           groupId: string;
           answer: string;
           uniqUserId: string;
+          language: string;
         }) {
           return axios({
             method: 'post',
@@ -154,7 +190,8 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.answer
+              value: params.answer,
+              locale: params.language
             }
           });
         }
@@ -166,6 +203,7 @@ export const API = {
           groupId: string;
           uniqUserId: string;
           url: string;
+          language: string;
         }) {
           return axios({
             method: 'post',
@@ -176,7 +214,8 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.url
+              value: params.url,
+              locale: params.language
             }
           });
         }
@@ -188,6 +227,7 @@ export const API = {
           groupId: string;
           uniqUserId: string;
           emoji: string;
+          language: string;
         }) {
           return axios({
             method: 'post',
@@ -198,7 +238,8 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.emoji
+              value: params.emoji,
+              locale: params.language
             }
           });
         }
@@ -210,6 +251,7 @@ export const API = {
           groupId: string;
           uniqUserId: string;
           answer: string;
+          language: string;
         }) {
           return axios({
             method: 'post',
@@ -220,7 +262,8 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.answer
+              value: params.answer,
+              locale: params.language
             }
           });
         }
@@ -232,6 +275,7 @@ export const API = {
           groupId: string;
           uniqUserId: string;
           value: number;
+          language: string;
         }) {
           return axios({
             method: 'post',
@@ -242,7 +286,8 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.value
+              value: params.value,
+              locale: params.language
             }
           });
         }
@@ -254,6 +299,7 @@ export const API = {
           groupId: string;
           uniqUserId: string;
           url: string;
+          language: string;
         }) {
           return axios({
             method: 'post',
@@ -264,7 +310,8 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.url
+              value: params.url,
+              locale: params.language
             }
           });
         }
@@ -276,6 +323,7 @@ export const API = {
           groupId: string;
           uniqUserId: string;
           answer: string;
+          language: string;
         }) {
           return axios({
             method: 'post',
@@ -286,7 +334,8 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.answer
+              value: params.answer,
+              locale: params.language
             }
           });
         }

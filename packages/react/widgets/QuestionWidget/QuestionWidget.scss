@@ -57,6 +57,7 @@
 
   &__itemTextPercent {
     font-size: 0.75em;
+    color: map-get($theme-colors, "black");
   }
 
   &__itemText {

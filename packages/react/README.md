@@ -1,11 +1,15 @@
 # `@storysdk/react`
 
-> TODO: description
+React components for StorySDK
 
 ## Usage
 
 ```
-const react = require('@storysdk/react');
+import { GroupsList, GroupType, WidgetsTypes } from "@storysdk/react"; 
+import "@storysdk/react/dist/bundle.css";
 
-// TODO: DEMONSTRATE API
+return (
+  <GroupsList groups={<GROUPS_ARRAY_HERE>}/>
+);
+
 ```

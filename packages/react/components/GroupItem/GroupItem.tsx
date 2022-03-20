@@ -5,23 +5,24 @@ import './GroupItem.scss';
 const b = block('GroupSdkItem');
 
 interface Props {
+  index: number;
   imageUrl: string;
   title: string;
-  theme: 'light' | 'dark';
-  size: 'sm' | 'md' | 'lg';
-  rounded?: boolean;
-  onClick?(): void;
+  type: 'circle' | 'square' | 'bigSquare' | 'rectangle';
+  onClick?(index: number): void;
 }
 
 export const GroupItem: React.FunctionComponent<Props> = (props) => {
-  const { imageUrl, size, title, theme, rounded, onClick } = props;
+  const { imageUrl, title, type, index, onClick } = props;
 
   return (
-    <button className={b()} onClick={onClick}>
-      <div className={b('imgWrapper')}>
-        <img alt="group" className={b('img', { size, rounded })} src={imageUrl} />
+    <button className={b({ type })} onClick={() => onClick && onClick(index)}>
+      <div className={b('imgContainer', { type })}>
+        <img alt="" className={b('img', { type })} src={imageUrl} />
       </div>
-      <div className={b('title', { theme })}>{title}</div>
+      <div className={b('titleContainer', { type })}>
+        <p className={b('title', { type })}>{title}</p>
+      </div>
     </button>
   );
 };

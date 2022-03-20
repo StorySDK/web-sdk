@@ -4,5 +4,6 @@ export declare const ChooseAnswerWidget: WidgetComponent<{
     params: ChooseAnswerWidgetParamsType;
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;
+    jsConfetti?: any;
     onAnswer?(answerId: string): void;
 }>;

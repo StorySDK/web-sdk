@@ -3,7 +3,7 @@ import { Emoji } from 'emoji-mart';
 import block from 'bem-cn';
 import './SliderThumb.scss';
 
-const b = block('SliderThumb');
+const b = block('SliderSdkThumb');
 
 interface Props {
   props: any;
