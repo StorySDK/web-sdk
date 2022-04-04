@@ -42,7 +42,18 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
     groupId: '',
     startTime: 0
   });
-  const uniqUserId = useMemo(() => nanoid(), []);
+
+  const getUniqUserId = useCallback(() => {
+    if (localStorage.getItem('userId')) {
+      return localStorage.getItem('userId');
+    }
+    const id = nanoid();
+    localStorage.setItem('userId', id);
+
+    return id;
+  }, []);
+
+  const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), [getUniqUserId]);
 
   const language = useMemo(() => {
     if (appLocale) {
@@ -157,8 +168,8 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
               .map((item: any) => ({
                 id: item.id,
                 app_id: item.app_id,
-                title: item.title.en,
-                image_url: item.image_url.en
+                title: item.title[language],
+                image_url: item.image_url[language]
               }));
 
             setGroups(groupsFetchedData);
@@ -167,7 +178,7 @@ const withGroupsData = (GroupsList: React.FC<GroupsListProps>, token: string) =>
         });
       }
     });
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     if (groups.length) {
