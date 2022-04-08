@@ -4,6 +4,8 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
 interface GroupsListProps {
     groups: GroupType[];
+    groupsClassName?: string;
+    groupClassName?: string;
     isLoading?: boolean;
     groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
     onOpenGroup?(id: string): void;

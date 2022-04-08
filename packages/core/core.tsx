@@ -8,7 +8,11 @@ import '@storysdk/react/dist/bundle.css';
 export class Story {
   token: string;
 
-  constructor(token: string) {
+  groupClassName: string;
+
+  groupsClassName: string;
+
+  constructor(token: string, groupClassName?: string, groupsClassName?: string) {
     this.token = token;
     axios.defaults.baseURL = 'https://api.diffapp.link/api/v1';
 
@@ -28,7 +32,12 @@ export class Story {
       return;
     }
 
-    const Groups = withGroupsData(GroupsList, this.token);
+    const Groups = withGroupsData(
+      GroupsList,
+      this.token,
+      this.groupClassName,
+      this.groupsClassName
+    );
 
     if (element) {
       ReactDOM.render(<Groups />, element);

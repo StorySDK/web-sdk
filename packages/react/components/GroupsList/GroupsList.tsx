@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import block from 'bem-cn';
 import Skeleton from 'react-loading-skeleton';
+import classNames from 'classnames';
 import { GroupType } from '../../types';
 import { GroupItem, StoryModal } from '..';
 
@@ -11,6 +12,8 @@ const b = block('GroupsSdkList');
 
 interface GroupsListProps {
   groups: GroupType[];
+  groupsClassName?: string;
+  groupClassName?: string;
   isLoading?: boolean;
   groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
   onOpenGroup?(id: string): void;
@@ -26,6 +29,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groups,
     groupView,
     isLoading,
+    groupClassName,
+    groupsClassName,
     onOpenGroup,
     onCloseGroup,
     onNextStory,
@@ -112,12 +117,13 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         <>
           {groups.length ? (
             <>
-              <div className={b()}>
+              <div className={classNames(b(), groupsClassName)}>
                 <div className={b('carousel')}>
                   {groups
                     .filter((group: any) => group.stories.length)
                     .map((group, index) => (
                       <GroupItem
+                        groupClassName={groupClassName}
                         imageUrl={group.imageUrl}
                         index={index}
                         key={group.id}

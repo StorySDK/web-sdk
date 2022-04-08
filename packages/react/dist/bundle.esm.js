@@ -38,10 +38,70 @@ var lib = {exports: {}};
 
 var block = /*@__PURE__*/getDefaultExportFromCjs(lib.exports);
 
+var classnames = {exports: {}};
+
+/*!
+  Copyright (c) 2018 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+
+(function (module) {
+/* global define */
+
+(function () {
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames() {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg)) {
+				if (arg.length) {
+					var inner = classNames.apply(null, arg);
+					if (inner) {
+						classes.push(inner);
+					}
+				}
+			} else if (argType === 'object') {
+				if (arg.toString === Object.prototype.toString) {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				} else {
+					classes.push(arg.toString());
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else {
+		window.classNames = classNames;
+	}
+}());
+}(classnames));
+
+var cn = classnames.exports;
+
 const b$h = block('GroupSdkItem');
 const GroupItem = (props) => {
-    const { imageUrl, title, type, index, onClick } = props;
-    return (React.createElement("button", { className: b$h({ type }), onClick: () => onClick && onClick(index) },
+    const { imageUrl, title, type, index, groupClassName, onClick } = props;
+    return (React.createElement("button", { className: cn(b$h({ type }).toString(), groupClassName || ''), onClick: () => onClick && onClick(index) },
         React.createElement("div", { className: b$h('imgContainer', { type }) },
             React.createElement("img", { alt: "", className: b$h('img', { type }), src: imageUrl })),
         React.createElement("div", { className: b$h('titleContainer', { type }) },
@@ -125,7 +185,7 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
 
 const b$g = block('GroupsSdkList');
 const GroupsList = (props) => {
-    const { groups, groupView, isLoading, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
+    const { groups, groupView, isLoading, groupClassName, groupsClassName, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
     const [currentGroup, setCurrentGroup] = useState(0);
     const [modalShow, setModalShow] = useState(false);
     const handleSelectGroup = useCallback((groupIndex) => {
@@ -177,10 +237,10 @@ const GroupsList = (props) => {
             React.createElement("div", { className: b$g('loaderItem') },
                 React.createElement(Skeleton, { height: 64, width: 64 }),
                 React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 }))))) : (React.createElement(React.Fragment, null, groups.length ? (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: b$g() },
+        React.createElement("div", { className: cn(b$g(), groupsClassName) },
             React.createElement("div", { className: b$g('carousel') }, groups
                 .filter((group) => group.stories.length)
-                .map((group, index) => (React.createElement(GroupItem, { imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: groupView, onClick: handleSelectGroup }))))),
+                .map((group, index) => (React.createElement(GroupItem, { groupClassName: groupClassName, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: groupView, onClick: handleSelectGroup }))))),
         React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("div", { className: b$g({ empty: true }) },
         React.createElement("p", { className: b$g('emptyText') }, "Stories will be here")))))));
 };
@@ -3924,66 +3984,6 @@ const ChooseAnswerWidget = (props) => {
         React.createElement("div", { className: b$e('header'), style: elementSizes.header }, params.text),
         React.createElement("div", { className: b$e('answers'), style: elementSizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
 };
-
-var classnames = {exports: {}};
-
-/*!
-  Copyright (c) 2018 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/classnames
-*/
-
-(function (module) {
-/* global define */
-
-(function () {
-
-	var hasOwn = {}.hasOwnProperty;
-
-	function classNames() {
-		var classes = [];
-
-		for (var i = 0; i < arguments.length; i++) {
-			var arg = arguments[i];
-			if (!arg) continue;
-
-			var argType = typeof arg;
-
-			if (argType === 'string' || argType === 'number') {
-				classes.push(arg);
-			} else if (Array.isArray(arg)) {
-				if (arg.length) {
-					var inner = classNames.apply(null, arg);
-					if (inner) {
-						classes.push(inner);
-					}
-				}
-			} else if (argType === 'object') {
-				if (arg.toString === Object.prototype.toString) {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				} else {
-					classes.push(arg.toString());
-				}
-			}
-		}
-
-		return classes.join(' ');
-	}
-
-	if (module.exports) {
-		classNames.default = classNames;
-		module.exports = classNames;
-	} else {
-		window.classNames = classNames;
-	}
-}());
-}(classnames));
-
-var cn = classnames.exports;
 
 const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
     gradient && React.createElement("defs", null, gradient),
