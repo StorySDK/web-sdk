@@ -71170,6 +71170,8 @@ const withGroupsData = (GroupsList, token, groupClassName, groupsClassName) => (
 class Story {
     constructor(token, groupClassName, groupsClassName) {
         this.token = token;
+        this.groupClassName = groupClassName;
+        this.groupsClassName = groupsClassName;
         axios.defaults.baseURL = 'https://api.diffapp.link/api/v1';
         if (token) {
             axios.defaults.headers.common = { Authorization: `SDK ${token}` };

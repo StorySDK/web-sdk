@@ -8,12 +8,15 @@ import '@storysdk/react/dist/bundle.css';
 export class Story {
   token: string;
 
-  groupClassName: string;
+  groupClassName?: string;
 
-  groupsClassName: string;
+  groupsClassName?: string;
 
   constructor(token: string, groupClassName?: string, groupsClassName?: string) {
     this.token = token;
+    this.groupClassName = groupClassName;
+    this.groupsClassName = groupsClassName;
+
     axios.defaults.baseURL = 'https://api.diffapp.link/api/v1';
 
     if (token) {
