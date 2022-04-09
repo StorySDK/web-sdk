@@ -6783,12 +6783,17 @@ const StoryModal = (props) => {
     const [playStatus, setPlayStatus] = React.useState('wait');
     const [width, height] = d$1();
     React.useEffect(() => {
+        var _a, _b;
         setCurrentStory(0);
         if (showed) {
             setPlayStatus('play');
+            // @ts-ignore
+            (_a = document.querySelector('body')) === null || _a === void 0 ? void 0 : _a.style.overflow = 'hidden';
         }
         else {
             setPlayStatus('wait');
+            // @ts-ignore
+            (_b = document.querySelector('body')) === null || _b === void 0 ? void 0 : _b.style.overflow = 'auto';
         }
         if (showed && stories.length) {
             setCurrentStoryId(stories[0].id);
@@ -6880,6 +6885,7 @@ const StoryModal = (props) => {
     }));
     return (React__default["default"].createElement(StoryContext.Provider, { value: { currentStoryId, playStatusChange: setPlayStatus } },
         React__default["default"].createElement("div", { className: b$f({ showed }), style: {
+                top: window.pageYOffset || document.documentElement.scrollTop,
                 height: width < 768 ? Math.round(694 * (width / 390)) : '100%'
             } },
             React__default["default"].createElement("div", { className: b$f('body') },

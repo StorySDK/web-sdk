@@ -119,8 +119,14 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     if (showed) {
       setPlayStatus('play');
+
+      // @ts-ignore
+      document.querySelector('body')?.style.overflow = 'hidden';
     } else {
       setPlayStatus('wait');
+
+      // @ts-ignore
+      document.querySelector('body')?.style.overflow = 'auto';
     }
 
     if (showed && stories.length) {
@@ -230,6 +236,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       <div
         className={b({ showed })}
         style={{
+          top: window.pageYOffset || document.documentElement.scrollTop,
           height: width < 768 ? Math.round(694 * (width / 390)) : '100%'
         }}
       >
