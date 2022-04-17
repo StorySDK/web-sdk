@@ -8,12 +8,28 @@ import '@storysdk/react/dist/bundle.css';
 export class Story {
   token: string;
 
+  groupImageWidth?: number;
+
+  groupImageHeight?: number;
+
+  groupTitleSize?: number;
+
   groupClassName?: string;
 
   groupsClassName?: string;
 
-  constructor(token: string, groupClassName?: string, groupsClassName?: string) {
+  constructor(
+    token: string,
+    groupImageWidth?: number,
+    groupImageHeight?: number,
+    groupTitleSize?: number,
+    groupClassName?: string,
+    groupsClassName?: string
+  ) {
     this.token = token;
+    this.groupImageWidth = groupImageWidth;
+    this.groupImageHeight = groupImageHeight;
+    this.groupTitleSize = groupTitleSize;
     this.groupClassName = groupClassName;
     this.groupsClassName = groupsClassName;
 
@@ -38,6 +54,9 @@ export class Story {
     const Groups = withGroupsData(
       GroupsList,
       this.token,
+      this.groupImageWidth,
+      this.groupImageHeight,
+      this.groupTitleSize,
       this.groupClassName,
       this.groupsClassName
     );

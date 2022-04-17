@@ -6179,12 +6179,57 @@ var cn = classnames.exports;
 
 const b$h = block('GroupSdkItem');
 const GroupItem = (props) => {
-    const { imageUrl, title, type, index, groupClassName, onClick } = props;
-    return (React.createElement("button", { className: cn(b$h({ type }).toString(), groupClassName || ''), onClick: () => onClick && onClick(index) },
-        React.createElement("div", { className: b$h('imgContainer', { type }) },
-            React.createElement("img", { alt: "", className: b$h('img', { type }), src: imageUrl })),
+    const { imageUrl, title, type, index, groupClassName, groupTitleSize, groupImageWidth, groupImageHeight, onClick } = props;
+    const BASE_CONTAINER_WIDTH_INDEX = 1.32;
+    const BIG_SQUARE_CONTAINER_WIDTH_INDEX = 0.93;
+    const RECTANGLE_CONTAINER_WIDTH_INDEX = 0.97;
+    const BASE_IMAGE_WIDTH_INDEX = 0.88;
+    const BIG_SQUARE_IMAGE_WIDTH_INDEX = 0.9;
+    const RECTANGLE_IMAGE_WIDTH_INDEX = 0.9;
+    const RECTANGLE_IMAGE_HEIGHT_INDEX = 1.26;
+    const getContainerSize = useCallback(() => {
+        if (groupImageWidth) {
+            switch (type) {
+                case 'bigSquare':
+                    return groupImageWidth * BIG_SQUARE_CONTAINER_WIDTH_INDEX;
+                case 'rectangle':
+                    return groupImageWidth * RECTANGLE_CONTAINER_WIDTH_INDEX;
+                default:
+                    return groupImageWidth * BASE_CONTAINER_WIDTH_INDEX;
+            }
+        }
+        return undefined;
+    }, [groupImageWidth, type]);
+    const getImageSize = useCallback((imageSize, isHeight = false) => {
+        if (imageSize) {
+            switch (type) {
+                case 'bigSquare':
+                    return imageSize * BIG_SQUARE_IMAGE_WIDTH_INDEX;
+                case 'rectangle':
+                    return isHeight
+                        ? imageSize * RECTANGLE_IMAGE_HEIGHT_INDEX
+                        : imageSize * RECTANGLE_IMAGE_WIDTH_INDEX;
+                default:
+                    return imageSize * BASE_IMAGE_WIDTH_INDEX;
+            }
+        }
+        return undefined;
+    }, [type]);
+    return (React.createElement("button", { className: cn(b$h({ type }).toString(), groupClassName || ''), style: {
+            width: getContainerSize(),
+            minHeight: type === 'rectangle' && groupImageWidth
+                ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
+                : undefined
+        }, onClick: () => onClick && onClick(index) },
+        React.createElement("div", { className: b$h('imgContainer', { type }), style: { width: groupImageWidth, height: type !== 'rectangle' ? groupImageHeight : 'auto' } },
+            React.createElement("img", { alt: "", className: b$h('img', { type }), src: imageUrl, style: {
+                    width: getImageSize(groupImageWidth),
+                    height: getImageSize(groupImageHeight, true)
+                } })),
         React.createElement("div", { className: b$h('titleContainer', { type }) },
-            React.createElement("p", { className: b$h('title', { type }) }, title))));
+            React.createElement("p", { className: b$h('title', { type }), style: {
+                    fontSize: groupTitleSize || undefined
+                } }, title))));
 };
 
 /**
@@ -6264,7 +6309,7 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
 
 const b$g = block('GroupsSdkList');
 const GroupsList = (props) => {
-    const { groups, groupView, isLoading, groupClassName, groupsClassName, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
+    const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
     const [currentGroup, setCurrentGroup] = useState(0);
     const [modalShow, setModalShow] = useState(false);
     const handleSelectGroup = useCallback((groupIndex) => {
@@ -6305,21 +6350,21 @@ const GroupsList = (props) => {
     return (React.createElement(React.Fragment, null, isLoading ? (React.createElement("div", { className: b$g() },
         React.createElement("div", { className: b$g('carousel') },
             React.createElement("div", { className: b$g('loaderItem') },
-                React.createElement(Skeleton, { height: 64, width: 64 }),
-                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 })),
+                React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
             React.createElement("div", { className: b$g('loaderItem') },
-                React.createElement(Skeleton, { height: 64, width: 64 }),
-                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 })),
+                React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
             React.createElement("div", { className: b$g('loaderItem') },
-                React.createElement(Skeleton, { height: 64, width: 64 }),
-                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 })),
+                React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
             React.createElement("div", { className: b$g('loaderItem') },
-                React.createElement(Skeleton, { height: 64, width: 64 }),
-                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 }))))) : (React.createElement(React.Fragment, null, groups.length ? (React.createElement(React.Fragment, null,
+                React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React.createElement(React.Fragment, null, groups.length ? (React.createElement(React.Fragment, null,
         React.createElement("div", { className: cn(b$g(), groupsClassName) },
             React.createElement("div", { className: b$g('carousel') }, groups
                 .filter((group) => group.stories.length)
-                .map((group, index) => (React.createElement(GroupItem, { groupClassName: groupClassName, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: groupView, onClick: handleSelectGroup }))))),
+                .map((group, index) => (React.createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: groupView, onClick: handleSelectGroup }))))),
         React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("div", { className: b$g({ empty: true }) },
         React.createElement("p", { className: b$g('emptyText') }, "Stories will be here")))))));
 };
@@ -71027,7 +71072,7 @@ const getNavigatorLanguage = (appLocale) => {
     return langArr[0];
 };
 
-const withGroupsData = (GroupsList, token, groupClassName, groupsClassName) => () => {
+const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, groupTitleSize, groupClassName, groupsClassName) => () => {
     const [data, setData] = useState([]);
     const [groups, setGroups] = useState([]);
     const [groupView, setGroupView] = useState('circle');
@@ -71170,12 +71215,15 @@ const withGroupsData = (GroupsList, token, groupClassName, groupsClassName) => (
             setData(adaptedData);
         }
     }, [loadStatus, groupsWithStories, uniqUserId, language]);
-    return (React.createElement(GroupsList, { groupClassName: groupClassName, groupView: groupView, groups: data, groupsClassName: groupsClassName, isLoading: loadStatus === 'loading', onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory }));
+    return (React.createElement(GroupsList, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, groupView: groupView, groups: data, groupsClassName: groupsClassName, isLoading: loadStatus === 'loading', onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory }));
 };
 
 class Story {
-    constructor(token, groupClassName, groupsClassName) {
+    constructor(token, groupImageWidth, groupImageHeight, groupTitleSize, groupClassName, groupsClassName) {
         this.token = token;
+        this.groupImageWidth = groupImageWidth;
+        this.groupImageHeight = groupImageHeight;
+        this.groupTitleSize = groupTitleSize;
         this.groupClassName = groupClassName;
         this.groupsClassName = groupsClassName;
         axios.defaults.baseURL = 'https://api.diffapp.link/api/v1';
@@ -71193,7 +71241,7 @@ class Story {
             }
             return;
         }
-        const Groups = withGroupsData(GroupsList, this.token, this.groupClassName, this.groupsClassName);
+        const Groups = withGroupsData(GroupsList, this.token, this.groupImageWidth, this.groupImageHeight, this.groupTitleSize, this.groupClassName, this.groupsClassName);
         if (element) {
             ReactDOM.render(React.createElement(Groups, null), element);
         }

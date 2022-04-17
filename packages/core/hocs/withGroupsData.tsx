@@ -8,6 +8,9 @@ import { getNavigatorLanguage } from '../utils/localization';
 
 interface GroupsListProps {
   groups: GroupType[];
+  groupImageWidth?: number;
+  groupImageHeight?: number;
+  groupTitleSize?: number;
   groupClassName?: string;
   groupsClassName?: string;
   groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle' | string;
@@ -30,6 +33,9 @@ const withGroupsData =
   (
     GroupsList: React.FC<GroupsListProps>,
     token: string,
+    groupImageWidth?: number,
+    groupImageHeight?: number,
+    groupTitleSize?: number,
     groupClassName?: string,
     groupsClassName?: string
   ) =>
@@ -237,6 +243,9 @@ const withGroupsData =
     return (
       <GroupsList
         groupClassName={groupClassName}
+        groupImageHeight={groupImageHeight}
+        groupImageWidth={groupImageWidth}
+        groupTitleSize={groupTitleSize}
         groupView={groupView}
         groups={data}
         groupsClassName={groupsClassName}
