@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
+import { loadFontsToPage } from '../utils/fontsInclude';
 
 interface GroupsListProps {
   groups: GroupType[];
@@ -169,12 +170,13 @@ const withGroupsData =
 
           const appId = app.length ? app[0].id : '';
           const appGroupView =
-            app.length &&
-            app[0].settings &&
-            app[0].settings.groupView &&
-            app[0].settings.groupView.web
+            app.length && app[0].settings?.groupView?.web
               ? app[0].settings.groupView.web
               : 'circle';
+
+          if (app.length && app[0].settings.fonts?.length) {
+            loadFontsToPage(app[0].settings.fonts);
+          }
 
           setAppLocale(app[0].localization);
           setGroupView(appGroupView);

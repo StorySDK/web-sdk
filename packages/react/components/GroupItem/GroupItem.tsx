@@ -83,7 +83,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
         minHeight:
           type === 'rectangle' && groupImageWidth
             ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
-            : undefined
+            : getContainerSize()
       }}
       onClick={() => onClick && onClick(index)}
     >

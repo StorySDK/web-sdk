@@ -149,7 +149,7 @@ const GroupItem = (props) => {
             width: getContainerSize(),
             minHeight: type === 'rectangle' && groupImageWidth
                 ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
-                : undefined
+                : getContainerSize()
         }, onClick: () => onClick && onClick(index) },
         React__default["default"].createElement("div", { className: b$h('imgContainer', { type }), style: { width: groupImageWidth, height: type !== 'rectangle' ? groupImageHeight : 'auto' } },
             React__default["default"].createElement("img", { alt: "", className: b$h('img', { type }), src: imageUrl, style: {

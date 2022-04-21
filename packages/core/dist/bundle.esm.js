@@ -6219,7 +6219,7 @@ const GroupItem = (props) => {
             width: getContainerSize(),
             minHeight: type === 'rectangle' && groupImageWidth
                 ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
-                : undefined
+                : getContainerSize()
         }, onClick: () => onClick && onClick(index) },
         React.createElement("div", { className: b$h('imgContainer', { type }), style: { width: groupImageWidth, height: type !== 'rectangle' ? groupImageHeight : 'auto' } },
             React.createElement("img", { alt: "", className: b$h('img', { type }), src: imageUrl, style: {
@@ -71072,6 +71072,29 @@ const getNavigatorLanguage = (appLocale) => {
     return langArr[0];
 };
 
+const createLinkElement = () => {
+    const headID = document.getElementsByTagName('head')[0];
+    const link = document.createElement('link');
+    link.type = 'text/css';
+    link.rel = 'stylesheet';
+    link.id = 'storySdkGoogleFonts';
+    headID.appendChild(link);
+    return link;
+};
+const updateLinkHref = (link, fonts) => {
+    link.href = `https://fonts.googleapis.com/css2?family=${fonts
+        .map((font) => font.family.split(' ').join('+'))
+        .join('&family=')}`;
+};
+const loadFontsToPage = (fonts) => {
+    const googleFontsLink = document.getElementById('storySdkGoogleFonts');
+    if (googleFontsLink) {
+        updateLinkHref(googleFontsLink, fonts);
+        return;
+    }
+    updateLinkHref(createLinkElement(), fonts);
+};
+
 const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, groupTitleSize, groupClassName, groupsClassName) => () => {
     const [data, setData] = useState([]);
     const [groups, setGroups] = useState([]);
@@ -71155,15 +71178,16 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
     useEffect(() => {
         setLoadStatus('loading');
         API.apps.getList().then((appData) => {
+            var _a, _b, _c;
             if (!appData.data.error) {
                 const app = appData.data.data.filter((item) => item.sdk_token === token);
                 const appId = app.length ? app[0].id : '';
-                const appGroupView = app.length &&
-                    app[0].settings &&
-                    app[0].settings.groupView &&
-                    app[0].settings.groupView.web
+                const appGroupView = app.length && ((_b = (_a = app[0].settings) === null || _a === void 0 ? void 0 : _a.groupView) === null || _b === void 0 ? void 0 : _b.web)
                     ? app[0].settings.groupView.web
                     : 'circle';
+                if (app.length && ((_c = app[0].settings.fonts) === null || _c === void 0 ? void 0 : _c.length)) {
+                    loadFontsToPage(app[0].settings.fonts);
+                }
                 setAppLocale(app[0].localization);
                 setGroupView(appGroupView);
                 API.groups.getList({ appId }).then((groupsData) => {
