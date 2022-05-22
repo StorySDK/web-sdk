@@ -1,27 +1,27 @@
 import axios from 'axios';
 
 export const API = {
-  apps: {
-    getList() {
+  app: {
+    getApp() {
       return axios({
         method: 'get',
-        url: '/apps'
+        url: '/app'
       });
     }
   },
   groups: {
-    getList(params: { appId: string }) {
+    getList() {
       return axios({
         method: 'get',
-        url: `/apps/${params.appId}/groups`
+        url: `/groups`
       });
     }
   },
   stories: {
-    getList(params: { appId: string; groupId: string }) {
+    getList(params: { groupId: string }) {
       return axios({
         method: 'get',
-        url: `/apps/${params.appId}/groups/${params.groupId}/stories`
+        url: `/groups/${params.groupId}/stories`
       });
     }
   },

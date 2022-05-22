@@ -33,7 +33,7 @@ export class Story {
     this.groupClassName = groupClassName;
     this.groupsClassName = groupsClassName;
 
-    axios.defaults.baseURL = 'https://api.diffapp.link/api/v1';
+    axios.defaults.baseURL = 'https://api.diffapp.link/sdk/v1';
 
     if (token) {
       axios.defaults.headers.common = { Authorization: `SDK ${token}` };

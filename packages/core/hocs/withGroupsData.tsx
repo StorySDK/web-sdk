@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { GroupType } from '@storysdk/react';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
+import axios from 'axios';
 import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
@@ -78,6 +79,12 @@ const withGroupsData =
 
       return 'en';
     }, [appLocale]);
+
+    useEffect(() => {
+      if (language) {
+        axios.defaults.headers.common['Accept-Language'] = language;
+      }
+    }, [language]);
 
     const handleOpenGroup = useCallback(
       (groupId: string) => {
@@ -164,54 +171,53 @@ const withGroupsData =
     useEffect(() => {
       setLoadStatus('loading');
 
-      API.apps.getList().then((appData) => {
+      API.app.getApp().then((appData) => {
         if (!appData.data.error) {
-          const app = appData.data.data.filter((item: any) => item.sdk_token === token);
+          const app = appData.data.data;
 
-          const appId = app.length ? app[0].id : '';
-          const appGroupView =
-            app.length && app[0].settings?.groupView?.web
-              ? app[0].settings.groupView.web
+          if (app) {
+            const appGroupView = app.settings?.groupView?.web
+              ? app.settings.groupView.web
               : 'circle';
 
-          if (app.length && app[0].settings.fonts?.length) {
-            loadFontsToPage(app[0].settings.fonts);
-          }
-
-          setAppLocale(app[0].localization);
-          setGroupView(appGroupView);
-
-          API.groups.getList({ appId }).then((groupsData) => {
-            if (!groupsData.data.error) {
-              const groupsFetchedData = groupsData.data.data
-                .filter((item: any) => item.active)
-                .map((item: any) => ({
-                  id: item.id,
-                  app_id: item.app_id,
-                  title: item.title[language],
-                  image_url: item.image_url[language]
-                }));
-
-              setGroups(groupsFetchedData);
-              setGroupsWithStories(groupsFetchedData);
+            if (app.settings.fonts?.length) {
+              loadFontsToPage(app.settings.fonts);
             }
-          });
+
+            setAppLocale(app.localization);
+            setGroupView(appGroupView);
+
+            API.groups.getList().then((groupsData) => {
+              if (!groupsData.data.error) {
+                const groupsFetchedData = groupsData.data.data
+                  .filter((item: any) => item.active)
+                  .map((item: any) => ({
+                    id: item.id,
+                    app_id: item.app_id,
+                    title: item.title,
+                    image_url: item.image_url
+                  }));
+
+                setGroups(groupsFetchedData);
+                setGroupsWithStories(groupsFetchedData);
+              }
+            });
+          }
         }
       });
-    }, [language]);
+    }, []);
 
     useEffect(() => {
       if (groups.length) {
         groups.forEach((groupItem: any, groupIndex: number) => {
           API.stories
             .getList({
-              appId: groupItem.app_id,
               groupId: groupItem.id
             })
             .then((storiesData) => {
               if (!storiesData.data.error) {
                 const stories = storiesData.data.data.filter(
-                  (storyItem: any) => storyItem.story_data[language].status === 'active'
+                  (storyItem: any) => storyItem.story_data.status === 'active'
                 );
 
                 // @ts-ignore
@@ -232,7 +238,7 @@ const withGroupsData =
             });
         });
       }
-    }, [groups, language]);
+    }, [groups]);
 
     useEffect(() => {
       if (loadStatus === 'loaded' && groupsWithStories.length) {

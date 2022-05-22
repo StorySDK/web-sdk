@@ -70699,19 +70699,19 @@ function friendlyDateTime(dateTimeish) {
 }
 
 const API = {
-    apps: {
-        getList() {
+    app: {
+        getApp() {
             return axios({
                 method: 'get',
-                url: '/apps'
+                url: '/app'
             });
         }
     },
     groups: {
-        getList(params) {
+        getList() {
             return axios({
                 method: 'get',
-                url: `/apps/${params.appId}/groups`
+                url: `/groups`
             });
         }
     },
@@ -70719,7 +70719,7 @@ const API = {
         getList(params) {
             return axios({
                 method: 'get',
-                url: `/apps/${params.appId}/groups/${params.groupId}/stories`
+                url: `/groups/${params.groupId}/stories`
             });
         }
     },
@@ -71054,8 +71054,8 @@ const adaptGroupData = (data, uniqUserId, language) => data
     imageUrl: group.image_url,
     stories: group.stories.map((story, index) => ({
         id: story.id,
-        background: story.story_data[language].background,
-        storyData: adaptWidgets(story.story_data[language].widgets, story.id, group.id, uniqUserId, language),
+        background: story.story_data.background,
+        storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId, language),
         positionIndex: index
     }))
 }));
@@ -71126,6 +71126,11 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
         }
         return 'en';
     }, [appLocale]);
+    useEffect(() => {
+        if (language) {
+            axios.defaults.headers.common['Accept-Language'] = language;
+        }
+    }, [language]);
     const handleOpenGroup = useCallback((groupId) => {
         setGroupDuration(() => ({
             groupId,
@@ -71177,47 +71182,47 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
     const handlePrevStory = useCallback((groupId, storyId) => API.statistics.story.onPrev({ groupId, storyId, uniqUserId, language }), [uniqUserId, language]);
     useEffect(() => {
         setLoadStatus('loading');
-        API.apps.getList().then((appData) => {
+        API.app.getApp().then((appData) => {
             var _a, _b, _c;
             if (!appData.data.error) {
-                const app = appData.data.data.filter((item) => item.sdk_token === token);
-                const appId = app.length ? app[0].id : '';
-                const appGroupView = app.length && ((_b = (_a = app[0].settings) === null || _a === void 0 ? void 0 : _a.groupView) === null || _b === void 0 ? void 0 : _b.web)
-                    ? app[0].settings.groupView.web
-                    : 'circle';
-                if (app.length && ((_c = app[0].settings.fonts) === null || _c === void 0 ? void 0 : _c.length)) {
-                    loadFontsToPage(app[0].settings.fonts);
-                }
-                setAppLocale(app[0].localization);
-                setGroupView(appGroupView);
-                API.groups.getList({ appId }).then((groupsData) => {
-                    if (!groupsData.data.error) {
-                        const groupsFetchedData = groupsData.data.data
-                            .filter((item) => item.active)
-                            .map((item) => ({
-                            id: item.id,
-                            app_id: item.app_id,
-                            title: item.title[language],
-                            image_url: item.image_url[language]
-                        }));
-                        setGroups(groupsFetchedData);
-                        setGroupsWithStories(groupsFetchedData);
+                const app = appData.data.data;
+                if (app) {
+                    const appGroupView = ((_b = (_a = app.settings) === null || _a === void 0 ? void 0 : _a.groupView) === null || _b === void 0 ? void 0 : _b.web)
+                        ? app.settings.groupView.web
+                        : 'circle';
+                    if ((_c = app.settings.fonts) === null || _c === void 0 ? void 0 : _c.length) {
+                        loadFontsToPage(app.settings.fonts);
                     }
-                });
+                    setAppLocale(app.localization);
+                    setGroupView(appGroupView);
+                    API.groups.getList().then((groupsData) => {
+                        if (!groupsData.data.error) {
+                            const groupsFetchedData = groupsData.data.data
+                                .filter((item) => item.active)
+                                .map((item) => ({
+                                id: item.id,
+                                app_id: item.app_id,
+                                title: item.title,
+                                image_url: item.image_url
+                            }));
+                            setGroups(groupsFetchedData);
+                            setGroupsWithStories(groupsFetchedData);
+                        }
+                    });
+                }
             }
         });
-    }, [language]);
+    }, []);
     useEffect(() => {
         if (groups.length) {
             groups.forEach((groupItem, groupIndex) => {
                 API.stories
                     .getList({
-                    appId: groupItem.app_id,
                     groupId: groupItem.id
                 })
                     .then((storiesData) => {
                     if (!storiesData.data.error) {
-                        const stories = storiesData.data.data.filter((storyItem) => storyItem.story_data[language].status === 'active');
+                        const stories = storiesData.data.data.filter((storyItem) => storyItem.story_data.status === 'active');
                         // @ts-ignore
                         setGroupsWithStories((prevState) => prevState.map((item) => {
                             if (item.id === groupItem.id) {
@@ -71232,7 +71237,7 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
                 });
             });
         }
-    }, [groups, language]);
+    }, [groups]);
     useEffect(() => {
         if (loadStatus === 'loaded' && groupsWithStories.length) {
             const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language);
@@ -71250,7 +71255,7 @@ class Story {
         this.groupTitleSize = groupTitleSize;
         this.groupClassName = groupClassName;
         this.groupsClassName = groupsClassName;
-        axios.defaults.baseURL = 'https://api.diffapp.link/api/v1';
+        axios.defaults.baseURL = 'https://api.diffapp.link/sdk/v1';
         if (token) {
             axios.defaults.headers.common = { Authorization: `SDK ${token}` };
         }

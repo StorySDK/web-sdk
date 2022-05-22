@@ -105,14 +105,8 @@ export const adaptGroupData = (data: any, uniqUserId: string, language: string) 
       imageUrl: group.image_url,
       stories: group.stories.map((story: any, index: number) => ({
         id: story.id,
-        background: story.story_data[language].background,
-        storyData: adaptWidgets(
-          story.story_data[language].widgets,
-          story.id,
-          group.id,
-          uniqUserId,
-          language
-        ),
+        background: story.story_data.background,
+        storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId, language),
         positionIndex: index
       }))
     }));
