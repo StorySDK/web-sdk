@@ -21,6 +21,7 @@ export declare const renderPosition: (position: WidgetPositionType, positionLimi
     zIndex: number;
     transform: string;
 };
+export declare const getScalableValue: (value: number) => number;
 export declare const calculateElementSize: (position: WidgetPositionType, positionLimits: WidgetPositionLimitsType, elementSize: number) => number;
 export declare const calculateElementSizeByHeight: (position: WidgetPositionType, positionLimits: WidgetPositionLimitsType, elementSize: number) => number;
 export {};

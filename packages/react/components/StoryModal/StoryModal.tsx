@@ -111,16 +111,38 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [currentStory, setCurrentStory] = useState(0);
   const [currentStoryId, setCurrentStoryId] = useState('');
   const [playStatus, setPlayStatus] = useState<PlayStatusType>('wait');
+  const storyModalRef = useRef<HTMLDivElement>(null);
 
   const [width, height] = useWindowSize();
 
   useEffect(() => {
+    const body = document.querySelector('body');
+    if (storyModalRef.current && body) {
+      if (width < 767) {
+        storyModalRef.current.style.setProperty('height', `${body.clientHeight}px`);
+      } else {
+        storyModalRef.current.style.setProperty('height', `100%`);
+      }
+    }
+  }, [width, height]);
+
+  useEffect(() => {
     setCurrentStory(0);
+
+    const body = document.querySelector('body');
 
     if (showed) {
       setPlayStatus('play');
+
+      if (body) {
+        body.style.overflow = 'hidden';
+      }
     } else {
       setPlayStatus('wait');
+
+      if (body) {
+        body.style.overflow = 'auto';
+      }
     }
 
     if (showed && stories.length) {
@@ -229,8 +251,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     <StoryContext.Provider value={{ currentStoryId, playStatusChange: setPlayStatus }}>
       <div
         className={b({ showed })}
+        ref={storyModalRef}
         style={{
-          height: width < 768 ? Math.round(694 * (width / 390)) : '100%'
+          top: window.pageYOffset || document.documentElement.scrollTop
+          // height: width < 767 ? Math.round(694 * (width / 390)) : '100%'
         }}
       >
         <div className={b('body')}>
@@ -241,7 +265,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           <div
             className={b('swiper')}
             style={{
-              width: width > 768 ? Math.round((283 / 512) * height) : '100%'
+              width: width > 767 ? Math.round((283 / 512) * height) : '100%'
             }}
           >
             <div className={b('swiperContent')}>

@@ -1,15 +1,12 @@
 export declare const API: {
-    apps: {
-        getList(): import("axios").AxiosPromise<any>;
+    app: {
+        getApp(): import("axios").AxiosPromise<any>;
     };
     groups: {
-        getList(params: {
-            appId: string;
-        }): import("axios").AxiosPromise<any>;
+        getList(): import("axios").AxiosPromise<any>;
     };
     stories: {
         getList(params: {
-            appId: string;
             groupId: string;
         }): import("axios").AxiosPromise<any>;
     };

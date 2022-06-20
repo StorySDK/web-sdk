@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import block from 'bem-cn';
 import Skeleton from 'react-loading-skeleton';
+import classNames from 'classnames';
 import { GroupType } from '../../types';
 import { GroupItem, StoryModal } from '..';
 
@@ -11,6 +12,11 @@ const b = block('GroupsSdkList');
 
 interface GroupsListProps {
   groups: GroupType[];
+  groupImageWidth?: number;
+  groupImageHeight?: number;
+  groupTitleSize?: number;
+  groupsClassName?: string;
+  groupClassName?: string;
   isLoading?: boolean;
   groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
   onOpenGroup?(id: string): void;
@@ -26,6 +32,11 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groups,
     groupView,
     isLoading,
+    groupClassName,
+    groupsClassName,
+    groupImageWidth,
+    groupImageHeight,
+    groupTitleSize,
     onOpenGroup,
     onCloseGroup,
     onNextStory,
@@ -91,20 +102,20 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         <div className={b()}>
           <div className={b('carousel')}>
             <div className={b('loaderItem')}>
-              <Skeleton height={64} width={64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={64} />
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
             </div>
             <div className={b('loaderItem')}>
-              <Skeleton height={64} width={64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={64} />
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
             </div>
             <div className={b('loaderItem')}>
-              <Skeleton height={64} width={64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={64} />
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
             </div>
             <div className={b('loaderItem')}>
-              <Skeleton height={64} width={64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={64} />
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
             </div>
           </div>
         </div>
@@ -112,12 +123,16 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         <>
           {groups.length ? (
             <>
-              <div className={b()}>
+              <div className={classNames(b(), groupsClassName)}>
                 <div className={b('carousel')}>
                   {groups
                     .filter((group: any) => group.stories.length)
                     .map((group, index) => (
                       <GroupItem
+                        groupClassName={groupClassName}
+                        groupImageHeight={groupImageHeight}
+                        groupImageWidth={groupImageWidth}
+                        groupTitleSize={groupTitleSize}
                         imageUrl={group.imageUrl}
                         index={index}
                         key={group.id}

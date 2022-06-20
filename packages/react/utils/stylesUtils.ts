@@ -106,14 +106,17 @@ export const renderPosition = (
   transform: `rotate(${position.rotate}deg)`
 });
 
+const SCALE_INDEX = 2.76;
+export const getScalableValue = (value: number): number => Math.round(value * SCALE_INDEX);
+
 export const calculateElementSize = (
   position: WidgetPositionType,
   positionLimits: WidgetPositionLimitsType,
   elementSize: number
 ) =>
   positionLimits.minWidth
-    ? Math.round((elementSize * +position.width) / positionLimits?.minWidth)
-    : elementSize;
+    ? getScalableValue(Math.round((elementSize * +position.width) / positionLimits?.minWidth))
+    : getScalableValue(elementSize);
 
 export const calculateElementSizeByHeight = (
   position: WidgetPositionType,
@@ -121,5 +124,5 @@ export const calculateElementSizeByHeight = (
   elementSize: number
 ) =>
   positionLimits.minHeight
-    ? Math.round((elementSize * position.height) / positionLimits?.minHeight)
-    : elementSize;
+    ? getScalableValue(Math.round((elementSize * position.height) / positionLimits?.minHeight))
+    : getScalableValue(elementSize);

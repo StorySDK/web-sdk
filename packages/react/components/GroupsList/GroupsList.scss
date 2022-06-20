@@ -29,9 +29,9 @@
   }
 
   &__loaderItem {
-    width: 90px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-right: 15px;
   }
 }

@@ -47,14 +47,119 @@ var lib = {exports: {}};
 
 var block = /*@__PURE__*/getDefaultExportFromCjs(lib.exports);
 
+var classnames = {exports: {}};
+
+/*!
+  Copyright (c) 2018 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+
+(function (module) {
+/* global define */
+
+(function () {
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames() {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg)) {
+				if (arg.length) {
+					var inner = classNames.apply(null, arg);
+					if (inner) {
+						classes.push(inner);
+					}
+				}
+			} else if (argType === 'object') {
+				if (arg.toString === Object.prototype.toString) {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				} else {
+					classes.push(arg.toString());
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (module.exports) {
+		classNames.default = classNames;
+		module.exports = classNames;
+	} else {
+		window.classNames = classNames;
+	}
+}());
+}(classnames));
+
+var cn = classnames.exports;
+
 const b$h = block('GroupSdkItem');
 const GroupItem = (props) => {
-    const { imageUrl, title, type, index, onClick } = props;
-    return (React__default["default"].createElement("button", { className: b$h({ type }), onClick: () => onClick && onClick(index) },
-        React__default["default"].createElement("div", { className: b$h('imgContainer', { type }) },
-            React__default["default"].createElement("img", { alt: "", className: b$h('img', { type }), src: imageUrl })),
+    const { imageUrl, title, type, index, groupClassName, groupTitleSize, groupImageWidth, groupImageHeight, onClick } = props;
+    const BASE_CONTAINER_WIDTH_INDEX = 1.32;
+    const BIG_SQUARE_CONTAINER_WIDTH_INDEX = 0.93;
+    const RECTANGLE_CONTAINER_WIDTH_INDEX = 0.97;
+    const BASE_IMAGE_WIDTH_INDEX = 0.88;
+    const BIG_SQUARE_IMAGE_WIDTH_INDEX = 0.9;
+    const RECTANGLE_IMAGE_WIDTH_INDEX = 0.9;
+    const RECTANGLE_IMAGE_HEIGHT_INDEX = 1.26;
+    const getContainerSize = React.useCallback(() => {
+        if (groupImageWidth) {
+            switch (type) {
+                case 'bigSquare':
+                    return groupImageWidth * BIG_SQUARE_CONTAINER_WIDTH_INDEX;
+                case 'rectangle':
+                    return groupImageWidth * RECTANGLE_CONTAINER_WIDTH_INDEX;
+                default:
+                    return groupImageWidth * BASE_CONTAINER_WIDTH_INDEX;
+            }
+        }
+        return undefined;
+    }, [groupImageWidth, type]);
+    const getImageSize = React.useCallback((imageSize, isHeight = false) => {
+        if (imageSize) {
+            switch (type) {
+                case 'bigSquare':
+                    return imageSize * BIG_SQUARE_IMAGE_WIDTH_INDEX;
+                case 'rectangle':
+                    return isHeight
+                        ? imageSize * RECTANGLE_IMAGE_HEIGHT_INDEX
+                        : imageSize * RECTANGLE_IMAGE_WIDTH_INDEX;
+                default:
+                    return imageSize * BASE_IMAGE_WIDTH_INDEX;
+            }
+        }
+        return undefined;
+    }, [type]);
+    return (React__default["default"].createElement("button", { className: cn(b$h({ type }).toString(), groupClassName || ''), style: {
+            width: getContainerSize(),
+            minHeight: type === 'rectangle' && groupImageWidth
+                ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
+                : getContainerSize()
+        }, onClick: () => onClick && onClick(index) },
+        React__default["default"].createElement("div", { className: b$h('imgContainer', { type }), style: { width: groupImageWidth, height: type !== 'rectangle' ? groupImageHeight : 'auto' } },
+            React__default["default"].createElement("img", { alt: "", className: b$h('img', { type }), src: imageUrl, style: {
+                    width: getImageSize(groupImageWidth),
+                    height: getImageSize(groupImageHeight, true)
+                } })),
         React__default["default"].createElement("div", { className: b$h('titleContainer', { type }) },
-            React__default["default"].createElement("p", { className: b$h('title', { type }) }, title))));
+            React__default["default"].createElement("p", { className: b$h('title', { type }), style: {
+                    fontSize: groupTitleSize || undefined
+                } }, title))));
 };
 
 /**
@@ -134,7 +239,7 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
 
 const b$g = block('GroupsSdkList');
 const GroupsList = (props) => {
-    const { groups, groupView, isLoading, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
+    const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
     const [currentGroup, setCurrentGroup] = React.useState(0);
     const [modalShow, setModalShow] = React.useState(false);
     const handleSelectGroup = React.useCallback((groupIndex) => {
@@ -175,21 +280,21 @@ const GroupsList = (props) => {
     return (React__default["default"].createElement(React__default["default"].Fragment, null, isLoading ? (React__default["default"].createElement("div", { className: b$g() },
         React__default["default"].createElement("div", { className: b$g('carousel') },
             React__default["default"].createElement("div", { className: b$g('loaderItem') },
-                React__default["default"].createElement(Skeleton, { height: 64, width: 64 }),
-                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 })),
+                React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
             React__default["default"].createElement("div", { className: b$g('loaderItem') },
-                React__default["default"].createElement(Skeleton, { height: 64, width: 64 }),
-                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 })),
+                React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
             React__default["default"].createElement("div", { className: b$g('loaderItem') },
-                React__default["default"].createElement(Skeleton, { height: 64, width: 64 }),
-                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 })),
+                React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
             React__default["default"].createElement("div", { className: b$g('loaderItem') },
-                React__default["default"].createElement(Skeleton, { height: 64, width: 64 }),
-                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: 64 }))))) : (React__default["default"].createElement(React__default["default"].Fragment, null, groups.length ? (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement("div", { className: b$g() },
+                React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React__default["default"].createElement(React__default["default"].Fragment, null, groups.length ? (React__default["default"].createElement(React__default["default"].Fragment, null,
+        React__default["default"].createElement("div", { className: cn(b$g(), groupsClassName) },
             React__default["default"].createElement("div", { className: b$g('carousel') }, groups
                 .filter((group) => group.stories.length)
-                .map((group, index) => (React__default["default"].createElement(GroupItem, { imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: groupView, onClick: handleSelectGroup }))))),
+                .map((group, index) => (React__default["default"].createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: groupView, onClick: handleSelectGroup }))))),
         React__default["default"].createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React__default["default"].createElement("div", { className: b$g({ empty: true }) },
         React__default["default"].createElement("p", { className: b$g('emptyText') }, "Stories will be here")))))));
 };
@@ -632,14 +737,33 @@ const StoryModal = (props) => {
     const [currentStory, setCurrentStory] = React.useState(0);
     const [currentStoryId, setCurrentStoryId] = React.useState('');
     const [playStatus, setPlayStatus] = React.useState('wait');
+    const storyModalRef = React.useRef(null);
     const [width, height] = d$1();
     React.useEffect(() => {
+        const body = document.querySelector('body');
+        if (storyModalRef.current && body) {
+            if (width < 767) {
+                storyModalRef.current.style.setProperty('height', `${body.clientHeight}px`);
+            }
+            else {
+                storyModalRef.current.style.setProperty('height', `100%`);
+            }
+        }
+    }, [width, height]);
+    React.useEffect(() => {
         setCurrentStory(0);
+        const body = document.querySelector('body');
         if (showed) {
             setPlayStatus('play');
+            if (body) {
+                body.style.overflow = 'hidden';
+            }
         }
         else {
             setPlayStatus('wait');
+            if (body) {
+                body.style.overflow = 'auto';
+            }
         }
         if (showed && stories.length) {
             setCurrentStoryId(stories[0].id);
@@ -730,14 +854,15 @@ const StoryModal = (props) => {
         canvas: canvasRef.current
     }));
     return (React__default["default"].createElement(StoryContext.Provider, { value: { currentStoryId, playStatusChange: setPlayStatus } },
-        React__default["default"].createElement("div", { className: b$f({ showed }), style: {
-                height: width < 768 ? Math.round(694 * (width / 390)) : '100%'
+        React__default["default"].createElement("div", { className: b$f({ showed }), ref: storyModalRef, style: {
+                top: window.pageYOffset || document.documentElement.scrollTop
+                // height: width < 767 ? Math.round(694 * (width / 390)) : '100%'
             } },
             React__default["default"].createElement("div", { className: b$f('body') },
                 React__default["default"].createElement("button", { className: b$f('arrowButton', { left: true }), onClick: handlePrev },
                     React__default["default"].createElement(LeftArrowIcon, null)),
                 React__default["default"].createElement("div", { className: b$f('swiper'), style: {
-                        width: width > 768 ? Math.round((283 / 512) * height) : '100%'
+                        width: width > 767 ? Math.round((283 / 512) * height) : '100%'
                     } },
                     React__default["default"].createElement("div", { className: b$f('swiperContent') }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$f('story', { current: index === currentStory }), key: story.id },
                         React__default["default"].createElement(StoryContent, { jsConfetti: jsConfetti, story: story }))))),
@@ -3793,12 +3918,14 @@ const renderPosition = (position, positionLimits, zIndex) => ({
     zIndex,
     transform: `rotate(${position.rotate}deg)`
 });
+const SCALE_INDEX$1 = 2.76;
+const getScalableValue = (value) => Math.round(value * SCALE_INDEX$1);
 const calculateElementSize = (position, positionLimits, elementSize) => positionLimits.minWidth
-    ? Math.round((elementSize * +position.width) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth))
-    : elementSize;
+    ? getScalableValue(Math.round((elementSize * +position.width) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)))
+    : getScalableValue(elementSize);
 const calculateElementSizeByHeight = (position, positionLimits, elementSize) => positionLimits.minHeight
-    ? Math.round((elementSize * position.height) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight))
-    : elementSize;
+    ? getScalableValue(Math.round((elementSize * position.height) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight)))
+    : getScalableValue(elementSize);
 
 const getClientPosition = (e) => {
     const touches = e.touches;
@@ -3933,66 +4060,6 @@ const ChooseAnswerWidget = (props) => {
         React__default["default"].createElement("div", { className: b$e('header'), style: elementSizes.header }, params.text),
         React__default["default"].createElement("div", { className: b$e('answers'), style: elementSizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
 };
-
-var classnames = {exports: {}};
-
-/*!
-  Copyright (c) 2018 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/classnames
-*/
-
-(function (module) {
-/* global define */
-
-(function () {
-
-	var hasOwn = {}.hasOwnProperty;
-
-	function classNames() {
-		var classes = [];
-
-		for (var i = 0; i < arguments.length; i++) {
-			var arg = arguments[i];
-			if (!arg) continue;
-
-			var argType = typeof arg;
-
-			if (argType === 'string' || argType === 'number') {
-				classes.push(arg);
-			} else if (Array.isArray(arg)) {
-				if (arg.length) {
-					var inner = classNames.apply(null, arg);
-					if (inner) {
-						classes.push(inner);
-					}
-				}
-			} else if (argType === 'object') {
-				if (arg.toString === Object.prototype.toString) {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				} else {
-					classes.push(arg.toString());
-				}
-			}
-		}
-
-		return classes.join(' ');
-	}
-
-	if (module.exports) {
-		classNames.default = classNames;
-		module.exports = classNames;
-	} else {
-		window.classNames = classNames;
-	}
-}());
-}(classnames));
-
-var cn = classnames.exports;
 
 const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
     gradient && React__default["default"].createElement("defs", null, gradient),
@@ -4130,7 +4197,6 @@ const MaterialIcon = React.memo(({ name = 'ArrowCircleUpOutlineIcon', className,
 const b$d = block('ClickMeSdkWidget');
 const ClickMeWidget = (props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url } = props.params;
-    // const border = hasBorder ? `${borderWidth}px solid ${borderColor}` : 'none';
     const handleWidgetClick = () => {
         if (props.onClick) {
             props.onClick();
@@ -57198,7 +57264,7 @@ const EmojiReactionWidget = (props) => {
     const [isToched, setIsToched] = React.useState(false);
     useInterval(() => {
         setBigSize(bigSize + 2);
-        if (bigSize > 100) {
+        if (bigSize > getScalableValue(100)) {
             setDelay(0);
             setBigSize(initEmojiSize);
             setClickedIndex(null);
@@ -57360,10 +57426,6 @@ const RectangleWidget = (props) => {
         React__default["default"].createElement("div", { className: "RectangleSdkWidget__background", style: backgroundStyles })));
 };
 
-block('SliderSdkThumb');
-
-block('SliderSdkTrack');
-
 const b$8 = block('SliderSdkCustom');
 const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, height, onChange, onAfterChange, onBeforeChange }) => {
     const containerRef = React.useRef(null);
@@ -57435,7 +57497,7 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
             }, onMouseDown: handleMouseDown, onTouchStart: handleMouseDown },
-            changeStatus === 'moving' || changeStatus === 'moved' ? (React__default["default"].createElement("div", { className: b$8('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + 5}px` } },
+            changeStatus === 'moving' || changeStatus === 'moved' ? (React__default["default"].createElement("div", { className: b$8('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
                 React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
             React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })),
         React__default["default"].createElement("div", { className: b$8('track'), style: { height } },
@@ -57446,7 +57508,11 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
 const b$7 = block('SliderSdkWidget');
 const INIT_ELEMENT_STYLES$2 = {
     widget: {
-        borderRadius: 10
+        borderRadius: 10,
+        paddingTop: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingBottom: 30
     },
     emoji: {
         width: 30,
@@ -57476,7 +57542,11 @@ const SliderWidget = (props) => {
     }, [position, positionLimits]);
     const elementSizes = React.useMemo(() => ({
         widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES$2.widget.borderRadius)
+            borderRadius: calculate(INIT_ELEMENT_STYLES$2.widget.borderRadius),
+            paddingTop: calculate(INIT_ELEMENT_STYLES$2.widget.paddingTop),
+            paddingRight: calculate(INIT_ELEMENT_STYLES$2.widget.paddingRight),
+            paddingLeft: calculate(INIT_ELEMENT_STYLES$2.widget.paddingLeft),
+            paddingBottom: calculate(INIT_ELEMENT_STYLES$2.widget.paddingBottom)
         },
         emoji: {
             width: calculate(INIT_ELEMENT_STYLES$2.emoji.width)
@@ -57520,7 +57590,6 @@ const SliderWidget = (props) => {
             setChangeStatus('init');
         }
     }, [storyContextVal, storyId, changeStatus, value, time]);
-    React.useState({ x: 50 });
     return (React__default["default"].createElement("div", { className: b$7({ color }), style: elementSizes.widget },
         React__default["default"].createElement("div", { className: b$7('text'), style: elementSizes.text }, text),
         React__default["default"].createElement("div", { className: b$7('sliderWrapper'), style: {
@@ -57875,16 +57944,28 @@ const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, o
     React__default["default"].createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
 const b$1 = block('StorySdkContent');
+const STORY_SIZE = {
+    width: 390,
+    height: 694
+};
+const STORY_SIZE_DESKTOP = {
+    width: 283,
+    height: 512
+};
+const SCALE_INDEX = 10.53;
 const StoryContent = (props) => {
     const { story, jsConfetti } = props;
     const [isVideoLoading, setVideoLoading] = React.useState(false);
     const [width, height] = d$1();
-    return (React__default["default"].createElement("div", { className: b$1(), style: { height: width < 768 ? Math.round(694 * (width / 390)) : '100%' } },
+    return (React__default["default"].createElement("div", { className: b$1(), style: {
+            height: width < 768 ? Math.round(STORY_SIZE.height * (width / STORY_SIZE.width)) : '100%'
+        } },
         React__default["default"].createElement("div", { className: b$1('scope'), style: {
                 background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
                 transform: width < 768
-                    ? `scale(${width / 3.9}%)`
-                    : `scale(${Math.round((283 / 512) * height) / 3.9}%)`
+                    ? `scale(${width / SCALE_INDEX}%)`
+                    : `scale(${Math.round((STORY_SIZE_DESKTOP.width / STORY_SIZE_DESKTOP.height) * height) /
+                        SCALE_INDEX}%)`
             } },
             story.storyData.map((widget, index) => (React__default["default"].createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits, index + 3) },
                 React__default["default"].createElement(WidgetFactory, { jsConfetti: jsConfetti, storyId: story.id, widget: widget })))),
@@ -57909,6 +57990,7 @@ exports.StoryModal = StoryModal;
 exports.calculateElementSize = calculateElementSize;
 exports.calculateElementSizeByHeight = calculateElementSizeByHeight;
 exports.getClientPosition = getClientPosition;
+exports.getScalableValue = getScalableValue;
 exports.renderBackgroundStyles = renderBackgroundStyles;
 exports.renderBorderStyles = renderBorderStyles;
 exports.renderColor = renderColor;

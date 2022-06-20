@@ -15,6 +15,7 @@ declare const widgets: {
         params: import("../types").ChooseAnswerWidgetParamsType;
         position?: import("../types").WidgetPositionType | undefined;
         positionLimits?: import("../types").WidgetPositionLimitsType | undefined;
+        jsConfetti?: any;
         onAnswer?(answerId: string): void;
     }>;
     click_me: import("../types").WidgetComponent<{
@@ -37,7 +38,7 @@ declare const widgets: {
         params: import("../types").QuestionWidgetParamsType;
         position?: import("../types").WidgetPositionType | undefined;
         positionLimits?: import("../types").WidgetPositionLimitsType | undefined;
-        onAnswer?(answer: string): void;
+        onAnswer?(answer: string): any;
     }>;
     rectangle: import("../types").WidgetComponent<{
         params: import("../types").RectangleWidgetParamsType;

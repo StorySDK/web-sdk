@@ -30,7 +30,7 @@
     &_bigSquare {
       width: 84px;
       padding: 0;
-      margin-right: 10px;
+      margin-right: 15px;
       &:last-child {
         margin-right: 0;
       }
@@ -67,14 +67,14 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
 
     &::after {
       content: "";
       display: block;
       position: absolute;
-      width: 64px;
-      height: 64px;
+      width: 94%;
+      height: 94%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -101,15 +101,15 @@
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 78px;
-          height: 78px;
+          width: 90%;
+          height: 90%;
           background:rgba(0, 0, 0, 0.2);
           border-radius: 7px;
         }
 
         &::after {
-          width: 80px;
-          height: 80px;
+          width: 95%;
+          height: 95%;
 
           border-radius: 10px;
         }
@@ -127,15 +127,15 @@
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 60px;
-          height: 78px;
+          width: 89%;
+          height: 100%;
           background:rgba(0, 0, 0, 0.2);
           border-radius: 7px;
         }
 
         &::after {
-          width: 62px;
-          height: 80px;
+          width: 93%;
+          height: 103%;
 
           border-radius: 10px;
         }
@@ -187,7 +187,7 @@
   &__title {
     font-weight: 600;
     font-size: 10px;
-    line-height: 18px;
+    line-height: 1.2em;
     margin: 0;
     color: #2B1E2A;
     word-break: break-word;
@@ -198,7 +198,7 @@
         color: #FFFFFF;
         font-weight: 600;
         font-size: 10px;
-        line-height: 12px;
+        line-height: 1.2em;
         padding-bottom: 10px;
         padding-left: 10px;
         padding-right: 10px;
@@ -211,7 +211,7 @@
         color: #FFFFFF;
         font-weight: 600;
         font-size: 8px;
-        line-height: 12px;
+        line-height: 1.5em;
         padding-bottom: 10px;
         padding-left: 10px;
         padding-right: 10px;

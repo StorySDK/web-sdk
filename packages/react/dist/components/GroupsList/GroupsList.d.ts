@@ -4,6 +4,11 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
 interface GroupsListProps {
     groups: GroupType[];
+    groupImageWidth?: number;
+    groupImageHeight?: number;
+    groupTitleSize?: number;
+    groupsClassName?: string;
+    groupClassName?: string;
     isLoading?: boolean;
     groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
     onOpenGroup?(id: string): void;

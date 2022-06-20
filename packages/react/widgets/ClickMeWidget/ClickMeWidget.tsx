@@ -29,8 +29,6 @@ export const ClickMeWidget: WidgetComponent<{
     url
   } = props.params;
 
-  // const border = hasBorder ? `${borderWidth}px solid ${borderColor}` : 'none';
-
   const handleWidgetClick = () => {
     if (props.onClick) {
       props.onClick();
