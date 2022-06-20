@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import { WidgetFactory } from '../../core';
@@ -14,6 +14,18 @@ interface StoryContentProps {
   jsConfetti?: any;
 }
 
+const STORY_SIZE = {
+  width: 390,
+  height: 694
+};
+
+const STORY_SIZE_DESKTOP = {
+  width: 283,
+  height: 512
+};
+
+const SCALE_INDEX = 10.53;
+
 export const StoryContent: React.FC<StoryContentProps> = (props) => {
   const { story, jsConfetti } = props;
   const [isVideoLoading, setVideoLoading] = useState(false);
@@ -21,15 +33,23 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
   const [width, height] = useWindowSize();
 
   return (
-    <div className={b()} style={{ height: width < 768 ? Math.round(694 * (width / 390)) : '100%' }}>
+    <div
+      className={b()}
+      style={{
+        height: width < 768 ? Math.round(STORY_SIZE.height * (width / STORY_SIZE.width)) : '100%'
+      }}
+    >
       <div
         className={b('scope')}
         style={{
           background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
           transform:
             width < 768
-              ? `scale(${width / 3.9}%)`
-              : `scale(${Math.round((283 / 512) * height) / 3.9}%)`
+              ? `scale(${width / SCALE_INDEX}%)`
+              : `scale(${
+                  Math.round((STORY_SIZE_DESKTOP.width / STORY_SIZE_DESKTOP.height) * height) /
+                  SCALE_INDEX
+                }%)`
         }}
       >
         {story.storyData.map((widget: any, index: number) => (

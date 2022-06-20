@@ -28,7 +28,6 @@
 
     &_moved {
       opacity: 0;
-      top: -100px !important;
       transition: 0.5s top ease, 0.5s opacity ease;
     }
   }

@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect, useRef } from 'react';
 import { Emoji } from 'emoji-mart';
 import block from 'bem-cn';
-import { getClientPosition } from '../../../../utils';
+import { getClientPosition, getScalableValue } from '../../../../utils';
 
 import './SliderCustom.scss';
 
@@ -132,7 +132,7 @@ export const SliderCustom: FC<Props> = ({
         {changeStatus === 'moving' || changeStatus === 'moved' ? (
           <div
             className={b('up', { moved: changeStatus === 'moved' })}
-            style={{ top: `-${bigSize + 5}px` }}
+            style={{ top: `-${bigSize + getScalableValue(10)}px` }}
           >
             <Emoji emoji={emoji} set="apple" size={bigSize} />
           </div>

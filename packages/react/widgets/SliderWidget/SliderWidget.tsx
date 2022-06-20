@@ -18,7 +18,11 @@ type ChangeStatus = 'init' | 'wait' | 'moving' | 'moved';
 
 const INIT_ELEMENT_STYLES = {
   widget: {
-    borderRadius: 10
+    borderRadius: 10,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 30
   },
   emoji: {
     width: 30,
@@ -63,7 +67,11 @@ export const SliderWidget: WidgetComponent<{
   const elementSizes = useMemo(
     () => ({
       widget: {
-        borderRadius: calculate(INIT_ELEMENT_STYLES.widget.borderRadius)
+        borderRadius: calculate(INIT_ELEMENT_STYLES.widget.borderRadius),
+        paddingTop: calculate(INIT_ELEMENT_STYLES.widget.paddingTop),
+        paddingRight: calculate(INIT_ELEMENT_STYLES.widget.paddingRight),
+        paddingLeft: calculate(INIT_ELEMENT_STYLES.widget.paddingLeft),
+        paddingBottom: calculate(INIT_ELEMENT_STYLES.widget.paddingBottom)
       },
       emoji: {
         width: calculate(INIT_ELEMENT_STYLES.emoji.width)
@@ -116,8 +124,6 @@ export const SliderWidget: WidgetComponent<{
       setChangeStatus('init');
     }
   }, [storyContextVal, storyId, changeStatus, value, time]);
-
-  const [state, setState] = useState({ x: 50 });
 
   return (
     <div className={b({ color })} style={elementSizes.widget}>

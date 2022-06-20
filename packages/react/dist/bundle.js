@@ -737,19 +737,33 @@ const StoryModal = (props) => {
     const [currentStory, setCurrentStory] = React.useState(0);
     const [currentStoryId, setCurrentStoryId] = React.useState('');
     const [playStatus, setPlayStatus] = React.useState('wait');
+    const storyModalRef = React.useRef(null);
     const [width, height] = d$1();
     React.useEffect(() => {
-        var _a, _b;
+        const body = document.querySelector('body');
+        if (storyModalRef.current && body) {
+            if (width < 767) {
+                storyModalRef.current.style.setProperty('height', `${body.clientHeight}px`);
+            }
+            else {
+                storyModalRef.current.style.setProperty('height', `100%`);
+            }
+        }
+    }, [width, height]);
+    React.useEffect(() => {
         setCurrentStory(0);
+        const body = document.querySelector('body');
         if (showed) {
             setPlayStatus('play');
-            // @ts-ignore
-            (_a = document.querySelector('body')) === null || _a === void 0 ? void 0 : _a.style.overflow = 'hidden';
+            if (body) {
+                body.style.overflow = 'hidden';
+            }
         }
         else {
             setPlayStatus('wait');
-            // @ts-ignore
-            (_b = document.querySelector('body')) === null || _b === void 0 ? void 0 : _b.style.overflow = 'auto';
+            if (body) {
+                body.style.overflow = 'auto';
+            }
         }
         if (showed && stories.length) {
             setCurrentStoryId(stories[0].id);
@@ -840,15 +854,15 @@ const StoryModal = (props) => {
         canvas: canvasRef.current
     }));
     return (React__default["default"].createElement(StoryContext.Provider, { value: { currentStoryId, playStatusChange: setPlayStatus } },
-        React__default["default"].createElement("div", { className: b$f({ showed }), style: {
-                top: window.pageYOffset || document.documentElement.scrollTop,
-                height: width < 768 ? Math.round(694 * (width / 390)) : '100%'
+        React__default["default"].createElement("div", { className: b$f({ showed }), ref: storyModalRef, style: {
+                top: window.pageYOffset || document.documentElement.scrollTop
+                // height: width < 767 ? Math.round(694 * (width / 390)) : '100%'
             } },
             React__default["default"].createElement("div", { className: b$f('body') },
                 React__default["default"].createElement("button", { className: b$f('arrowButton', { left: true }), onClick: handlePrev },
                     React__default["default"].createElement(LeftArrowIcon, null)),
                 React__default["default"].createElement("div", { className: b$f('swiper'), style: {
-                        width: width > 768 ? Math.round((283 / 512) * height) : '100%'
+                        width: width > 767 ? Math.round((283 / 512) * height) : '100%'
                     } },
                     React__default["default"].createElement("div", { className: b$f('swiperContent') }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$f('story', { current: index === currentStory }), key: story.id },
                         React__default["default"].createElement(StoryContent, { jsConfetti: jsConfetti, story: story }))))),
@@ -3904,12 +3918,14 @@ const renderPosition = (position, positionLimits, zIndex) => ({
     zIndex,
     transform: `rotate(${position.rotate}deg)`
 });
+const SCALE_INDEX$1 = 2.76;
+const getScalableValue = (value) => Math.round(value * SCALE_INDEX$1);
 const calculateElementSize = (position, positionLimits, elementSize) => positionLimits.minWidth
-    ? Math.round((elementSize * +position.width) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth))
-    : elementSize;
+    ? getScalableValue(Math.round((elementSize * +position.width) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)))
+    : getScalableValue(elementSize);
 const calculateElementSizeByHeight = (position, positionLimits, elementSize) => positionLimits.minHeight
-    ? Math.round((elementSize * position.height) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight))
-    : elementSize;
+    ? getScalableValue(Math.round((elementSize * position.height) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight)))
+    : getScalableValue(elementSize);
 
 const getClientPosition = (e) => {
     const touches = e.touches;
@@ -4181,7 +4197,6 @@ const MaterialIcon = React.memo(({ name = 'ArrowCircleUpOutlineIcon', className,
 const b$d = block('ClickMeSdkWidget');
 const ClickMeWidget = (props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url } = props.params;
-    // const border = hasBorder ? `${borderWidth}px solid ${borderColor}` : 'none';
     const handleWidgetClick = () => {
         if (props.onClick) {
             props.onClick();
@@ -57249,7 +57264,7 @@ const EmojiReactionWidget = (props) => {
     const [isToched, setIsToched] = React.useState(false);
     useInterval(() => {
         setBigSize(bigSize + 2);
-        if (bigSize > 100) {
+        if (bigSize > getScalableValue(100)) {
             setDelay(0);
             setBigSize(initEmojiSize);
             setClickedIndex(null);
@@ -57411,10 +57426,6 @@ const RectangleWidget = (props) => {
         React__default["default"].createElement("div", { className: "RectangleSdkWidget__background", style: backgroundStyles })));
 };
 
-block('SliderSdkThumb');
-
-block('SliderSdkTrack');
-
 const b$8 = block('SliderSdkCustom');
 const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, height, onChange, onAfterChange, onBeforeChange }) => {
     const containerRef = React.useRef(null);
@@ -57486,7 +57497,7 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
             }, onMouseDown: handleMouseDown, onTouchStart: handleMouseDown },
-            changeStatus === 'moving' || changeStatus === 'moved' ? (React__default["default"].createElement("div", { className: b$8('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + 5}px` } },
+            changeStatus === 'moving' || changeStatus === 'moved' ? (React__default["default"].createElement("div", { className: b$8('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
                 React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
             React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })),
         React__default["default"].createElement("div", { className: b$8('track'), style: { height } },
@@ -57497,7 +57508,11 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
 const b$7 = block('SliderSdkWidget');
 const INIT_ELEMENT_STYLES$2 = {
     widget: {
-        borderRadius: 10
+        borderRadius: 10,
+        paddingTop: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingBottom: 30
     },
     emoji: {
         width: 30,
@@ -57527,7 +57542,11 @@ const SliderWidget = (props) => {
     }, [position, positionLimits]);
     const elementSizes = React.useMemo(() => ({
         widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES$2.widget.borderRadius)
+            borderRadius: calculate(INIT_ELEMENT_STYLES$2.widget.borderRadius),
+            paddingTop: calculate(INIT_ELEMENT_STYLES$2.widget.paddingTop),
+            paddingRight: calculate(INIT_ELEMENT_STYLES$2.widget.paddingRight),
+            paddingLeft: calculate(INIT_ELEMENT_STYLES$2.widget.paddingLeft),
+            paddingBottom: calculate(INIT_ELEMENT_STYLES$2.widget.paddingBottom)
         },
         emoji: {
             width: calculate(INIT_ELEMENT_STYLES$2.emoji.width)
@@ -57571,7 +57590,6 @@ const SliderWidget = (props) => {
             setChangeStatus('init');
         }
     }, [storyContextVal, storyId, changeStatus, value, time]);
-    React.useState({ x: 50 });
     return (React__default["default"].createElement("div", { className: b$7({ color }), style: elementSizes.widget },
         React__default["default"].createElement("div", { className: b$7('text'), style: elementSizes.text }, text),
         React__default["default"].createElement("div", { className: b$7('sliderWrapper'), style: {
@@ -57926,16 +57944,28 @@ const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, o
     React__default["default"].createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
 const b$1 = block('StorySdkContent');
+const STORY_SIZE = {
+    width: 390,
+    height: 694
+};
+const STORY_SIZE_DESKTOP = {
+    width: 283,
+    height: 512
+};
+const SCALE_INDEX = 10.53;
 const StoryContent = (props) => {
     const { story, jsConfetti } = props;
     const [isVideoLoading, setVideoLoading] = React.useState(false);
     const [width, height] = d$1();
-    return (React__default["default"].createElement("div", { className: b$1(), style: { height: width < 768 ? Math.round(694 * (width / 390)) : '100%' } },
+    return (React__default["default"].createElement("div", { className: b$1(), style: {
+            height: width < 768 ? Math.round(STORY_SIZE.height * (width / STORY_SIZE.width)) : '100%'
+        } },
         React__default["default"].createElement("div", { className: b$1('scope'), style: {
                 background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
                 transform: width < 768
-                    ? `scale(${width / 3.9}%)`
-                    : `scale(${Math.round((283 / 512) * height) / 3.9}%)`
+                    ? `scale(${width / SCALE_INDEX}%)`
+                    : `scale(${Math.round((STORY_SIZE_DESKTOP.width / STORY_SIZE_DESKTOP.height) * height) /
+                        SCALE_INDEX}%)`
             } },
             story.storyData.map((widget, index) => (React__default["default"].createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits, index + 3) },
                 React__default["default"].createElement(WidgetFactory, { jsConfetti: jsConfetti, storyId: story.id, widget: widget })))),
@@ -57960,6 +57990,7 @@ exports.StoryModal = StoryModal;
 exports.calculateElementSize = calculateElementSize;
 exports.calculateElementSizeByHeight = calculateElementSizeByHeight;
 exports.getClientPosition = getClientPosition;
+exports.getScalableValue = getScalableValue;
 exports.renderBackgroundStyles = renderBackgroundStyles;
 exports.renderBorderStyles = renderBorderStyles;
 exports.renderColor = renderColor;
