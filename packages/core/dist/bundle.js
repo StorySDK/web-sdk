@@ -71297,14 +71297,17 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
 };
 
 class Story {
-    constructor(token, groupImageWidth, groupImageHeight, groupTitleSize, groupClassName, groupsClassName) {
+    constructor(token, groupImageWidth, groupImageHeight, groupTitleSize, groupClassName, groupsClassName, devMode) {
         this.token = token;
         this.groupImageWidth = groupImageWidth;
         this.groupImageHeight = groupImageHeight;
         this.groupTitleSize = groupTitleSize;
         this.groupClassName = groupClassName;
         this.groupsClassName = groupsClassName;
-        axios.defaults.baseURL = 'https://api.diffapp.link/sdk/v1';
+        this.devMode = devMode;
+        axios.defaults.baseURL = devMode
+            ? 'https://api.diffapp.link/sdk/v1'
+            : 'https://api.storysdk.com/sdk/v1';
         if (token) {
             axios.defaults.headers.common = { Authorization: `SDK ${token}` };
         }

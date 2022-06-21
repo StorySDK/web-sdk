@@ -6,6 +6,7 @@ export declare class Story {
     groupTitleSize?: number;
     groupClassName?: string;
     groupsClassName?: string;
-    constructor(token: string, groupImageWidth?: number, groupImageHeight?: number, groupTitleSize?: number, groupClassName?: string, groupsClassName?: string);
+    devMode?: boolean;
+    constructor(token: string, groupImageWidth?: number, groupImageHeight?: number, groupTitleSize?: number, groupClassName?: string, groupsClassName?: string, devMode?: boolean);
     renderGroups(element?: Element | HTMLDivElement | null): void;
 }
