@@ -18,13 +18,16 @@ export class Story {
 
   groupsClassName?: string;
 
+  devMode?: boolean;
+
   constructor(
     token: string,
     groupImageWidth?: number,
     groupImageHeight?: number,
     groupTitleSize?: number,
     groupClassName?: string,
-    groupsClassName?: string
+    groupsClassName?: string,
+    devMode?: boolean
   ) {
     this.token = token;
     this.groupImageWidth = groupImageWidth;
@@ -32,8 +35,11 @@ export class Story {
     this.groupTitleSize = groupTitleSize;
     this.groupClassName = groupClassName;
     this.groupsClassName = groupsClassName;
+    this.devMode = devMode;
 
-    axios.defaults.baseURL = 'https://api.diffapp.link/sdk/v1';
+    axios.defaults.baseURL = devMode
+      ? 'https://api.diffapp.link/sdk/v1'
+      : 'https://api.storysdk.com/sdk/v1';
 
     if (token) {
       axios.defaults.headers.common = { Authorization: `SDK ${token}` };
