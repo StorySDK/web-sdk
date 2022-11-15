@@ -3901,12 +3901,12 @@ const renderTextBackgroundStyles = ({ color, opacity }) => {
             };
     }
 };
-const renderPosition = (position, positionLimits, zIndex) => ({
+const renderPosition = (position, positionLimits) => ({
     left: `${position.x}px`,
     top: `${position.y}px`,
     width: positionLimits.isAutoWidth ? 'auto' : `${position.width}px`,
     height: positionLimits.isAutoHeight ? 'auto' : `${position.height}px`,
-    zIndex,
+    zIndex: position.zIndex,
     transform: `rotate(${position.rotate}deg)`
 });
 const SCALE_INDEX$1 = 2.76;
@@ -57958,7 +57958,7 @@ const StoryContent = (props) => {
                     : `scale(${Math.round((STORY_SIZE_DESKTOP.width / STORY_SIZE_DESKTOP.height) * height) /
                         SCALE_INDEX}%)`
             } },
-            story.storyData.map((widget, index) => (React.createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits, index + 3) },
+            story.storyData.map((widget) => (React.createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits) },
                 React.createElement(WidgetFactory, { jsConfetti: jsConfetti, storyId: story.id, widget: widget })))),
             story.background.type === 'video' && (React.createElement(StoryVideoBackground, { autoplay: true, isLoading: isVideoLoading, src: story.background.value, onLoadEnd: () => {
                     setVideoLoading(false);

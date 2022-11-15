@@ -95,14 +95,13 @@ export const renderTextBackgroundStyles = ({
 
 export const renderPosition = (
   position: WidgetPositionType,
-  positionLimits: WidgetPositionLimitsType,
-  zIndex: number
+  positionLimits: WidgetPositionLimitsType
 ) => ({
   left: `${position.x}px`,
   top: `${position.y}px`,
   width: positionLimits.isAutoWidth ? 'auto' : `${position.width}px`,
   height: positionLimits.isAutoHeight ? 'auto' : `${position.height}px`,
-  zIndex,
+  zIndex: position.zIndex,
   transform: `rotate(${position.rotate}deg)`
 });
 
