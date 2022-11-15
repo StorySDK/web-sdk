@@ -13,7 +13,7 @@ export declare const renderTextBackgroundStyles: ({ color, opacity }: {
     color: BorderType;
     opacity?: number | undefined;
 }) => React.CSSProperties;
-export declare const renderPosition: (position: WidgetPositionType, positionLimits: WidgetPositionLimitsType, zIndex: number) => {
+export declare const renderPosition: (position: WidgetPositionType, positionLimits: WidgetPositionLimitsType) => {
     left: string;
     top: string;
     width: string;

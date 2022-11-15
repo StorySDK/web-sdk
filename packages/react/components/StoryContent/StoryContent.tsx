@@ -52,12 +52,12 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
                 }%)`
         }}
       >
-        {story.storyData.map((widget: any, index: number) => (
+        {story.storyData.map((widget: any) => (
           <div
             className={b('object')}
             id={`story-${story.id}-widget-${widget.id}`}
             key={widget.id}
-            style={renderPosition(widget.position, widget.positionLimits, index + 3)}
+            style={renderPosition(widget.position, widget.positionLimits)}
           >
             <WidgetFactory jsConfetti={jsConfetti} storyId={story.id} widget={widget} />
           </div>

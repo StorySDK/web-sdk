@@ -103,6 +103,7 @@ export interface WidgetPositionLimitsType {
 export interface WidgetPositionType {
     x: number;
     y: number;
+    zIndex: number;
     width: number | string;
     height: number;
     rotate: number;
