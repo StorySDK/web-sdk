@@ -148,7 +148,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                 currentGroup={groups[currentGroup]}
                 isFirstGroup={currentGroup === 0}
                 isLastGroup={currentGroup === groups.length - 1}
-                showed={modalShow}
+                isShowing={modalShow}
                 stories={groups[currentGroup].stories}
                 onClose={handleCloseModal}
                 onCloseStory={onCloseStory}
