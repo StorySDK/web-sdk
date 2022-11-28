@@ -4,9 +4,10 @@ import { StoryType, GroupType } from '../../types';
 interface StoryModalProps {
     currentGroup: GroupType;
     stories: StoryType[];
-    showed: boolean;
+    isShowing: boolean;
     isLastGroup: boolean;
     isFirstGroup: boolean;
+    startStoryId?: string;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;

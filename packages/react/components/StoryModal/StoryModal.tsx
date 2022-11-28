@@ -11,9 +11,10 @@ const b = block('StorySdkModal');
 interface StoryModalProps {
   currentGroup: GroupType;
   stories: StoryType[];
-  showed: boolean;
+  isShowing: boolean;
   isLastGroup: boolean;
   isFirstGroup: boolean;
+  startStoryId?: string;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -95,9 +96,10 @@ type PlayStatusType = 'wait' | 'play' | 'pause';
 export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const {
     stories,
-    showed,
+    isShowing,
     isLastGroup,
     isFirstGroup,
+    startStoryId,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -127,11 +129,17 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [width, height]);
 
   useEffect(() => {
-    setCurrentStory(0);
+    let currentStoryIndex = 0;
+
+    if (startStoryId && stories.length) {
+      currentStoryIndex = stories.findIndex((story) => story.id === startStoryId);
+    }
+
+    setCurrentStory(currentStoryIndex);
 
     const body = document.querySelector('body');
 
-    if (showed) {
+    if (isShowing) {
       setPlayStatus('play');
 
       if (body) {
@@ -145,14 +153,14 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       }
     }
 
-    if (showed && stories.length) {
-      setCurrentStoryId(stories[0].id);
+    if (isShowing && stories.length && currentStoryIndex > -1) {
+      setCurrentStoryId(stories[currentStoryIndex].id);
 
       if (onOpenStory) {
-        onOpenStory(currentGroup.id, stories[0].id);
+        onOpenStory(currentGroup.id, stories[currentStoryIndex].id);
       }
     }
-  }, [stories.length, onOpenStory, stories, currentGroup, showed]);
+  }, [stories.length, onOpenStory, stories, currentGroup, isShowing, startStoryId]);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -250,7 +258,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   return (
     <StoryContext.Provider value={{ currentStoryId, playStatusChange: setPlayStatus }}>
       <div
-        className={b({ showed })}
+        className={b({ isShowing })}
         ref={storyModalRef}
         style={{
           top: window.pageYOffset || document.documentElement.scrollTop

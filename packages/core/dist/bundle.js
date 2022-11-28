@@ -6822,7 +6822,7 @@ const StoryContext = React__default["default"].createContext({
     confetti: null
 });
 const StoryModal = (props) => {
-    const { stories, showed, isLastGroup, isFirstGroup, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
+    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
     const [currentStory, setCurrentStory] = React.useState(0);
     const [currentStoryId, setCurrentStoryId] = React.useState('');
     const [playStatus, setPlayStatus] = React.useState('wait');
@@ -6840,9 +6840,13 @@ const StoryModal = (props) => {
         }
     }, [width, height]);
     React.useEffect(() => {
-        setCurrentStory(0);
+        let currentStoryIndex = 0;
+        if (startStoryId && stories.length) {
+            currentStoryIndex = stories.findIndex((story) => story.id === startStoryId);
+        }
+        setCurrentStory(currentStoryIndex);
         const body = document.querySelector('body');
-        if (showed) {
+        if (isShowing) {
             setPlayStatus('play');
             if (body) {
                 body.style.overflow = 'hidden';
@@ -6854,13 +6858,13 @@ const StoryModal = (props) => {
                 body.style.overflow = 'auto';
             }
         }
-        if (showed && stories.length) {
-            setCurrentStoryId(stories[0].id);
+        if (isShowing && stories.length && currentStoryIndex > -1) {
+            setCurrentStoryId(stories[currentStoryIndex].id);
             if (onOpenStory) {
-                onOpenStory(currentGroup.id, stories[0].id);
+                onOpenStory(currentGroup.id, stories[currentStoryIndex].id);
             }
         }
-    }, [stories.length, onOpenStory, stories, currentGroup, showed]);
+    }, [stories.length, onOpenStory, stories, currentGroup, isShowing, startStoryId]);
     const handleClose = React.useCallback(() => {
         onClose();
         if (onCloseStory) {
@@ -6943,7 +6947,7 @@ const StoryModal = (props) => {
         canvas: canvasRef.current
     }));
     return (React__default["default"].createElement(StoryContext.Provider, { value: { currentStoryId, playStatusChange: setPlayStatus } },
-        React__default["default"].createElement("div", { className: b$f({ showed }), ref: storyModalRef, style: {
+        React__default["default"].createElement("div", { className: b$f({ isShowing }), ref: storyModalRef, style: {
                 top: window.pageYOffset || document.documentElement.scrollTop
                 // height: width < 767 ? Math.round(694 * (width / 390)) : '100%'
             } },
