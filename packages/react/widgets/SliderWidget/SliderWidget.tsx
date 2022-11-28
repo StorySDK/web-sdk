@@ -136,7 +136,7 @@ export const SliderWidget: WidgetComponent<{
             props={sliderProps}
           />
         )}
-        renderTrack={(propsTrack, state) => (
+        renderTrack={(propsTrack: any, state: any) => (
           <SliderTrack propsTrack={propsTrack} size={elementSizes.slider} state={state} />
         )}
         value={[sliderValue]}
