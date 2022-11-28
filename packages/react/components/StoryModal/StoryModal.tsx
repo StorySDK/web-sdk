@@ -132,7 +132,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     let currentStoryIndex = 0;
 
     if (startStoryId && stories.length) {
-      currentStoryIndex = stories.findIndex((story) => story.id === startStoryId);
+      const storyIndex = stories.findIndex((story) => story.id === startStoryId);
+      currentStoryIndex = storyIndex > -1 ? storyIndex : 0;
     }
 
     setCurrentStory(currentStoryIndex);
@@ -153,7 +154,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       }
     }
 
-    if (isShowing && stories.length && currentStoryIndex > -1) {
+    if (isShowing && stories.length) {
       setCurrentStoryId(stories[currentStoryIndex].id);
 
       if (onOpenStory) {
