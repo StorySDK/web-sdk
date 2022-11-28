@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import block from 'bem-cn';
 import { Emoji } from 'emoji-mart';
-import { calculateElementSizeByHeight } from '../../utils';
+import { calculateElementSizeByHeight, getScalableValue } from '../../utils';
 import {
   EmojiReactionWidgetParamsType,
   WidgetComponent,
@@ -11,7 +11,7 @@ import {
 import './EmojiReactionWidget.scss';
 import { useInterval } from '../../hooks';
 
-const b = block('EmojiReactionWidget');
+const b = block('EmojiReactionSdkWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {
@@ -79,7 +79,7 @@ export const EmojiReactionWidget: WidgetComponent<{
   useInterval(() => {
     setBigSize(bigSize + 2);
 
-    if (bigSize > 100) {
+    if (bigSize > getScalableValue(100)) {
       setDelay(0);
       setBigSize(initEmojiSize);
       setClickedIndex(null);

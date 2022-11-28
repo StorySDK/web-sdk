@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import block from 'bem-cn';
-import JSConfetti from 'js-confetti';
 import {
   ChooseAnswerWidgetParamsType,
   WidgetComponent,
@@ -12,7 +11,7 @@ import { calculateElementSize } from '../../utils';
 
 import './ChooseAnswerWidget.scss';
 
-const b = block('ChooseAnswerWidget');
+const b = block('ChooseAnswerSdkWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {
@@ -45,12 +44,12 @@ export const ChooseAnswerWidget: WidgetComponent<{
   params: ChooseAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  jsConfetti?: any;
   onAnswer?(answerId: string): void;
 }> = (props) => {
-  const { params, position, positionLimits, onAnswer } = props;
+  const { params, position, positionLimits, jsConfetti, onAnswer } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
-  const jsConfetti = useRef(new JSConfetti());
 
   const calculate = useCallback(
     (size) => {
@@ -144,15 +143,6 @@ export const ChooseAnswerWidget: WidgetComponent<{
               )}
             </div>
 
-            {/* <span
-              className={b('answerCircle', {
-                correct: answer.id === params.correct,
-                incorrect: answer.id !== params.correct,
-                choosen: userAnswer === answer.id
-              })}
-              style={elementSizes.answerId}
-            /> */}
-
             <div
               className={b('answerTitle', {
                 choosen: userAnswer === answer.id,
@@ -167,12 +157,16 @@ export const ChooseAnswerWidget: WidgetComponent<{
         );
       }
       return (
-        <div className={b('answer')} key={answer.id} style={elementSizes.answer}>
-          <button
-            className={b('answerId')}
-            style={elementSizes.answerId}
-            onClick={!userAnswer ? () => handleMarkAnswer(answer.id) : undefined}
-          >
+        <div
+          className={b('answer')}
+          key={answer.id}
+          role="button"
+          style={elementSizes.answer}
+          tabIndex={0}
+          onClick={!userAnswer ? () => handleMarkAnswer(answer.id) : undefined}
+          onKeyDown={!userAnswer ? () => handleMarkAnswer(answer.id) : undefined}
+        >
+          <button className={b('answerId')} style={elementSizes.answerId}>
             {`${answer.id}`}
           </button>
           <div className={b('answerTitle')} style={elementSizes.answerTitle}>
@@ -195,7 +189,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
     if (userAnswer && userAnswer === params.correct) {
       jsConfetti.current.addConfetti();
     }
-  }, [userAnswer, params.correct]);
+  }, [userAnswer, params.correct, jsConfetti]);
 
   return (
     <div

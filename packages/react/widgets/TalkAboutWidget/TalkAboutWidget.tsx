@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useContext, useEffect, useRef } from 'react';
 import block from 'bem-cn';
 import {
   TalkAboutWidgetParamsType,
@@ -6,11 +6,12 @@ import {
   WidgetPositionType,
   WidgetPositionLimitsType
 } from '../../types';
+import { StoryContext } from '../../components';
 import { IconLogoCircle } from '../../components/Icon';
 import { calculateElementSize } from '../../utils';
 import './TalkAboutWidget.scss';
 
-const b = block('TalkAboutWidget');
+const b = block('TalkAboutSdkWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {
@@ -107,6 +108,7 @@ export const TalkAboutWidget: WidgetComponent<{
 
   const handleTextChange = (e: any) => {
     setText(e.target.value);
+    storyContextVal.playStatusChange('pause');
   };
 
   const handleSendClick = () => {
@@ -115,13 +117,41 @@ export const TalkAboutWidget: WidgetComponent<{
         props.onAnswer(text);
       }
 
+      storyContextVal.playStatusChange('play');
       setIsSent(true);
     }
   };
 
+  const storyContextVal = useContext(StoryContext);
+
+  const ref = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleClickOutside = (event: any) => {
+    if (ref.current && !ref.current.contains(event.target)) {
+      storyContextVal.playStatusChange('play');
+    } else if (inputRef.current && inputRef.current.contains(event.target) && !isSent) {
+      storyContextVal.playStatusChange('pause');
+    }
+  };
+
+  useEffect(() => {
+    if (!isSent) {
+      document.addEventListener('click', handleClickOutside, true);
+    } else {
+      document.removeEventListener('click', handleClickOutside, true);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+
+    // eslint-disable-next-line
+  }, [isSent]);
+
   return (
     <>
-      <div className={b('container')}>
+      <div className={b('container')} ref={ref}>
         <picture className={b('imageWrapper')} style={elementSizes.imageWrapper}>
           {params.image ? (
             <img alt="" className={b('image')} src={params.image} />
@@ -145,6 +175,7 @@ export const TalkAboutWidget: WidgetComponent<{
               className={b('input')}
               disabled={isSent}
               placeholder="Type something..."
+              ref={inputRef}
               style={elementSizes.input}
               type="text"
               value={text}

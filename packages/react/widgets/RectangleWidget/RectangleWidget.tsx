@@ -3,7 +3,9 @@ import { RectangleWidgetParamsType, WidgetComponent } from '../../types';
 import { renderBackgroundStyles } from '../../utils';
 import './RectangleWidget.scss';
 
-export const RectangleWidget: WidgetComponent<{ params: RectangleWidgetParamsType }> = (props: any) => {
+export const RectangleWidget: WidgetComponent<{ params: RectangleWidgetParamsType }> = (
+  props: any
+) => {
   const { fillColor, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } =
     props.params;
 
@@ -21,8 +23,8 @@ export const RectangleWidget: WidgetComponent<{ params: RectangleWidgetParamsTyp
   };
 
   return (
-    <div className="RectangleWidget" style={styles}>
-      <div className="RectangleWidget__background" style={backgroundStyles} />
+    <div className="RectangleSdkWidget" style={styles}>
+      <div className="RectangleSdkWidget__background" style={backgroundStyles} />
     </div>
   );
 };

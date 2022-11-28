@@ -8,9 +8,38 @@ import '@storysdk/react/dist/bundle.css';
 export class Story {
   token: string;
 
-  constructor(token: string) {
+  groupImageWidth?: number;
+
+  groupImageHeight?: number;
+
+  groupTitleSize?: number;
+
+  groupClassName?: string;
+
+  groupsClassName?: string;
+
+  devMode?: boolean;
+
+  constructor(
+    token: string,
+    groupImageWidth?: number,
+    groupImageHeight?: number,
+    groupTitleSize?: number,
+    groupClassName?: string,
+    groupsClassName?: string,
+    devMode?: boolean
+  ) {
     this.token = token;
-    axios.defaults.baseURL = 'https://api.diffapp.link/api/v1';
+    this.groupImageWidth = groupImageWidth;
+    this.groupImageHeight = groupImageHeight;
+    this.groupTitleSize = groupTitleSize;
+    this.groupClassName = groupClassName;
+    this.groupsClassName = groupsClassName;
+    this.devMode = devMode;
+
+    axios.defaults.baseURL = devMode
+      ? 'https://api.diffapp.link/sdk/v1'
+      : 'https://api.storysdk.com/sdk/v1';
 
     if (token) {
       axios.defaults.headers.common = { Authorization: `SDK ${token}` };
@@ -28,7 +57,15 @@ export class Story {
       return;
     }
 
-    const Groups = withGroupsData(GroupsList, this.token);
+    const Groups = withGroupsData(
+      GroupsList,
+      this.token,
+      this.groupImageWidth,
+      this.groupImageHeight,
+      this.groupTitleSize,
+      this.groupClassName,
+      this.groupsClassName
+    );
 
     if (element) {
       ReactDOM.render(<Groups />, element);

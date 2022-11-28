@@ -1,7 +1,13 @@
 // import { GroupType } from '@storysdk/react';
 import { API } from '../services';
 
-const actionToWidget = (widget: any, storyId: string, groupId: string, uniqUserId: string) => {
+const actionToWidget = (
+  widget: any,
+  storyId: string,
+  groupId: string,
+  uniqUserId: string,
+  language: string
+) => {
   switch (widget.content.type) {
     case 'choose_answer':
       return (answer: string) =>
@@ -10,7 +16,8 @@ const actionToWidget = (widget: any, storyId: string, groupId: string, uniqUserI
           storyId,
           groupId,
           uniqUserId,
-          answer
+          answer,
+          language
         });
     case 'emoji_reaction':
       return (emoji: string) =>
@@ -19,7 +26,8 @@ const actionToWidget = (widget: any, storyId: string, groupId: string, uniqUserI
           storyId,
           groupId,
           uniqUserId,
-          emoji
+          emoji,
+          language
         });
     case 'talk_about':
       return (answer: string) =>
@@ -28,7 +36,8 @@ const actionToWidget = (widget: any, storyId: string, groupId: string, uniqUserI
           storyId,
           groupId,
           uniqUserId,
-          answer
+          answer,
+          language
         });
     case 'click_me':
       return () =>
@@ -37,7 +46,8 @@ const actionToWidget = (widget: any, storyId: string, groupId: string, uniqUserI
           storyId,
           groupId,
           uniqUserId,
-          url: widget.content.params.url
+          url: widget.content.params.url,
+          language
         });
     case 'question':
       return (answer: string) =>
@@ -46,7 +56,8 @@ const actionToWidget = (widget: any, storyId: string, groupId: string, uniqUserI
           answer,
           storyId,
           groupId,
-          uniqUserId
+          uniqUserId,
+          language
         });
     case 'slider':
       return (value: number) =>
@@ -55,7 +66,8 @@ const actionToWidget = (widget: any, storyId: string, groupId: string, uniqUserI
           value,
           storyId,
           groupId,
-          uniqUserId
+          uniqUserId,
+          language
         });
     case 'swipe_up':
       return () =>
@@ -64,20 +76,27 @@ const actionToWidget = (widget: any, storyId: string, groupId: string, uniqUserI
           storyId,
           groupId,
           uniqUserId,
-          url: widget.content.params.url
+          url: widget.content.params.url,
+          language
         });
     default:
       return undefined;
   }
 };
 
-const adaptWidgets = (widgets: any, storyId: string, groupId: string, uniqUserId: string) =>
+const adaptWidgets = (
+  widgets: any,
+  storyId: string,
+  groupId: string,
+  uniqUserId: string,
+  language: string
+) =>
   widgets.map((widget: any) => ({
     ...widget,
-    action: actionToWidget(widget, storyId, groupId, uniqUserId)
+    action: actionToWidget(widget, storyId, groupId, uniqUserId, language)
   }));
 
-export const adaptGroupData = (data: any, uniqUserId: string) =>
+export const adaptGroupData = (data: any, uniqUserId: string, language: string) =>
   data
     .filter((group: any) => (group.stories ? group.stories.length : 0))
     .map((group: any) => ({
@@ -87,7 +106,7 @@ export const adaptGroupData = (data: any, uniqUserId: string) =>
       stories: group.stories.map((story: any, index: number) => ({
         id: story.id,
         background: story.story_data.background,
-        storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId),
+        storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId, language),
         positionIndex: index
       }))
     }));

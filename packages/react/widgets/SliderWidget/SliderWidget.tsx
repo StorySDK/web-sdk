@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react';
 import block from 'bem-cn';
-import ReactSlider from 'react-slider';
 import {
   SliderWidgetParamsType,
   WidgetComponent,
@@ -8,18 +7,22 @@ import {
   WidgetPositionLimitsType
 } from '../../types';
 import { calculateElementSize } from '../../utils';
-import './SliderWidget.scss';
 import { useInterval } from '../../hooks';
-import { CurrentStoryContext } from '../../components';
-import { SliderThumb, SliderTrack } from './_components';
+import { StoryContext } from '../../components';
+import { SliderCustom } from './_components';
+import './SliderWidget.scss';
 
-const b = block('SliderWidget');
+const b = block('SliderSdkWidget');
 
-type ChangeStatus = 'init' | 'moving' | 'moved';
+type ChangeStatus = 'init' | 'wait' | 'moving' | 'moved';
 
 const INIT_ELEMENT_STYLES = {
   widget: {
-    borderRadius: 10
+    borderRadius: 10,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 30
   },
   emoji: {
     width: 30,
@@ -45,7 +48,7 @@ export const SliderWidget: WidgetComponent<{
   const { params, storyId, position, positionLimits } = props;
   const { color, text, emoji, value } = params;
   const [sliderValue, setSliderValue] = useState<number>(0);
-  const [changeStatus, setChangeStatus] = useState<ChangeStatus>('init');
+  const [changeStatus, setChangeStatus] = useState<ChangeStatus>('wait');
 
   const time = 500;
   const [delay, setDelay] = useState<number>(0);
@@ -64,7 +67,11 @@ export const SliderWidget: WidgetComponent<{
   const elementSizes = useMemo(
     () => ({
       widget: {
-        borderRadius: calculate(INIT_ELEMENT_STYLES.widget.borderRadius)
+        borderRadius: calculate(INIT_ELEMENT_STYLES.widget.borderRadius),
+        paddingTop: calculate(INIT_ELEMENT_STYLES.widget.paddingTop),
+        paddingRight: calculate(INIT_ELEMENT_STYLES.widget.paddingRight),
+        paddingLeft: calculate(INIT_ELEMENT_STYLES.widget.paddingLeft),
+        paddingBottom: calculate(INIT_ELEMENT_STYLES.widget.paddingBottom)
       },
       emoji: {
         width: calculate(INIT_ELEMENT_STYLES.emoji.width)
@@ -97,7 +104,7 @@ export const SliderWidget: WidgetComponent<{
     // eslint-disable-next-line
   }, [changeStatus, sliderValue]);
 
-  const handleChange = (valueChanged: any) => {
+  const handleChange = (valueChanged: number) => {
     setSliderValue(valueChanged);
   };
 
@@ -109,13 +116,14 @@ export const SliderWidget: WidgetComponent<{
     setChangeStatus('moved');
   };
 
-  const currentStoryId = useContext(CurrentStoryContext);
+  const storyContextVal = useContext(StoryContext);
 
   useEffect(() => {
-    if (currentStoryId === storyId) {
+    if (storyContextVal.currentStoryId === storyId && changeStatus === 'wait') {
       setDelay(Math.round(time / value));
+      setChangeStatus('init');
     }
-  }, [currentStoryId, storyId, value, time]);
+  }, [storyContextVal, storyId, changeStatus, value, time]);
 
   return (
     <div className={b({ color })} style={elementSizes.widget}>
@@ -123,27 +131,24 @@ export const SliderWidget: WidgetComponent<{
         {text}
       </div>
 
-      <ReactSlider
-        disabled={changeStatus === 'moved'}
-        max={100}
-        min={0}
-        renderThumb={(sliderProps: any) => (
-          <SliderThumb
-            changeStatus={changeStatus}
-            currentPosition={sliderValue}
-            emoji={emoji.name}
-            initSize={elementSizes.emoji.width}
-            props={sliderProps}
-          />
-        )}
-        renderTrack={(propsTrack: any, state: any) => (
-          <SliderTrack propsTrack={propsTrack} size={elementSizes.slider} state={state} />
-        )}
-        value={[sliderValue]}
-        onAfterChange={handleAfterChange}
-        onBeforeChange={handleBeforeChange}
-        onChange={handleChange}
-      />
+      <div
+        className={b('sliderWrapper')}
+        style={{
+          height: elementSizes.slider.height
+        }}
+      >
+        <SliderCustom
+          changeStatus={changeStatus}
+          disabled={changeStatus === 'moved'}
+          emoji={emoji.name}
+          height={elementSizes.slider.height}
+          initSize={elementSizes.emoji.width}
+          value={sliderValue}
+          onAfterChange={handleAfterChange}
+          onBeforeChange={handleBeforeChange}
+          onChange={handleChange}
+        />
+      </div>
     </div>
   );
 };

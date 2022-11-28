@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import block from 'bem-cn';
-import './GroupsList.scss';
+import Skeleton from 'react-loading-skeleton';
+import classNames from 'classnames';
 import { GroupType } from '../../types';
 import { GroupItem, StoryModal } from '..';
 
-const b = block('GroupsList');
+import 'react-loading-skeleton/dist/skeleton.css';
+import './GroupsList.scss';
+
+const b = block('GroupsSdkList');
 
 interface GroupsListProps {
   groups: GroupType[];
+  groupImageWidth?: number;
+  groupImageHeight?: number;
+  groupTitleSize?: number;
+  groupsClassName?: string;
+  groupClassName?: string;
+  isLoading?: boolean;
+  groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
   onNextStory?(groupId: string, storyId: string): void;
@@ -17,21 +28,39 @@ interface GroupsListProps {
 }
 
 export const GroupsList: React.FC<GroupsListProps> = (props) => {
-  const { groups, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } =
-    props;
-  const [currentGroup, setCurrentGroup] = React.useState(0);
-  const [modalShow, setModalShow] = React.useState(false);
+  const {
+    groups,
+    groupView,
+    isLoading,
+    groupClassName,
+    groupsClassName,
+    groupImageWidth,
+    groupImageHeight,
+    groupTitleSize,
+    onOpenGroup,
+    onCloseGroup,
+    onNextStory,
+    onPrevStory,
+    onCloseStory,
+    onOpenStory
+  } = props;
 
-  const handleSelectGroup = (groupIndex: number) => () => {
-    setCurrentGroup(groupIndex);
-    setModalShow(true);
+  const [currentGroup, setCurrentGroup] = useState(0);
+  const [modalShow, setModalShow] = useState(false);
 
-    if (onOpenGroup) {
-      onOpenGroup(groups[groupIndex].id);
-    }
-  };
+  const handleSelectGroup = useCallback(
+    (groupIndex: number) => {
+      setCurrentGroup(groupIndex);
+      setModalShow(true);
 
-  const handlePrevGroup = () => {
+      if (onOpenGroup) {
+        onOpenGroup(groups[groupIndex].id);
+      }
+    },
+    [groups, onOpenGroup]
+  );
+
+  const handlePrevGroup = useCallback(() => {
     if (currentGroup > 0) {
       setCurrentGroup(currentGroup - 1);
 
@@ -43,9 +72,9 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         }, 0);
       }
     }
-  };
+  }, [currentGroup, groups, onCloseGroup, onOpenGroup]);
 
-  const handleNextGroup = () => {
+  const handleNextGroup = useCallback(() => {
     if (currentGroup < groups.length) {
       setCurrentGroup(currentGroup + 1);
 
@@ -57,59 +86,85 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         }, 0);
       }
     }
-  };
+  }, [currentGroup, groups, onCloseGroup, onOpenGroup]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     if (onCloseGroup) {
       onCloseGroup(groups[currentGroup].id);
     }
 
     setModalShow(false);
-  };
+  }, [currentGroup, groups, onCloseGroup]);
 
   return (
     <>
-      {groups.length ? (
-        <>
-          <div className={b()}>
-            <div className={b('carousel')}>
-              {groups.map((group, index) => {
-                if (group.stories.length) {
-                  return (
-                    <GroupItem
-                      imageUrl={group.imageUrl}
-                      key={group.id}
-                      rounded
-                      size="lg"
-                      theme="light"
-                      title={group.title}
-                      onClick={handleSelectGroup(index)}
-                    />
-                  );
-                }
-
-                return null;
-              })}
+      {isLoading ? (
+        <div className={b()}>
+          <div className={b('carousel')}>
+            <div className={b('loaderItem')}>
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+            </div>
+            <div className={b('loaderItem')}>
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+            </div>
+            <div className={b('loaderItem')}>
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+            </div>
+            <div className={b('loaderItem')}>
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
             </div>
           </div>
-
-          <StoryModal
-            currentGroup={groups[currentGroup]}
-            isFirstGroup={currentGroup === 0}
-            isLastGroup={currentGroup === groups.length - 1}
-            showed={modalShow}
-            stories={groups[currentGroup].stories}
-            onClose={handleCloseModal}
-            onCloseStory={onCloseStory}
-            onNextGroup={handleNextGroup}
-            onNextStory={onNextStory}
-            onOpenStory={onOpenStory}
-            onPrevGroup={handlePrevGroup}
-            onPrevStory={onPrevStory}
-          />
-        </>
+        </div>
       ) : (
-        <p>No groups to display</p>
+        <>
+          {groups.length ? (
+            <>
+              <div className={classNames(b(), groupsClassName)}>
+                <div className={b('carousel')}>
+                  {groups
+                    .filter((group: any) => group.stories.length)
+                    .map((group, index) => (
+                      <GroupItem
+                        groupClassName={groupClassName}
+                        groupImageHeight={groupImageHeight}
+                        groupImageWidth={groupImageWidth}
+                        groupTitleSize={groupTitleSize}
+                        imageUrl={group.imageUrl}
+                        index={index}
+                        key={group.id}
+                        title={group.title}
+                        type={groupView}
+                        onClick={handleSelectGroup}
+                      />
+                    ))}
+                </div>
+              </div>
+
+              <StoryModal
+                currentGroup={groups[currentGroup]}
+                isFirstGroup={currentGroup === 0}
+                isLastGroup={currentGroup === groups.length - 1}
+                showed={modalShow}
+                stories={groups[currentGroup].stories}
+                onClose={handleCloseModal}
+                onCloseStory={onCloseStory}
+                onNextGroup={handleNextGroup}
+                onNextStory={onNextStory}
+                onOpenStory={onOpenStory}
+                onPrevGroup={handlePrevGroup}
+                onPrevStory={onPrevStory}
+              />
+            </>
+          ) : (
+            <div className={b({ empty: true })}>
+              <p className={b('emptyText')}>Stories will be here</p>
+            </div>
+          )}
+        </>
       )}
     </>
   );

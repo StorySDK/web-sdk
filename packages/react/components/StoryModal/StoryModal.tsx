@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import block from 'bem-cn';
 import './StoryModal.scss';
-import { useWindowWidth } from '@react-hook/window-size';
+import { useWindowSize } from '@react-hook/window-size';
+import JSConfetti from 'js-confetti';
 import { StoryType, GroupType } from '../../types';
 import { StoryContent } from '..';
 
-const b = block('StoryModal');
+const b = block('StorySdkModal');
 
 interface StoryModalProps {
   currentGroup: GroupType;
   stories: StoryType[];
-  showed: boolean;
+  isShowing: boolean;
   isLastGroup: boolean;
   isFirstGroup: boolean;
+  startStoryId?: string;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -79,14 +81,25 @@ const RightArrowIcon: React.FC = () => (
   </svg>
 );
 
-export const CurrentStoryContext = React.createContext('');
+export const StoryContext = React.createContext<{
+  currentStoryId: string;
+  playStatusChange?: any;
+  confetti?: any;
+}>({
+  currentStoryId: '',
+  playStatusChange: () => {},
+  confetti: null
+});
+
+type PlayStatusType = 'wait' | 'play' | 'pause';
 
 export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const {
     stories,
-    showed,
+    isShowing,
     isLastGroup,
     isFirstGroup,
+    startStoryId,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -97,34 +110,78 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentGroup
   } = props;
 
-  const [currentStory, setCurrentStory] = React.useState(0);
-  const [currentStoryId, setCurrentStoryId] = React.useState(stories[0].id);
+  const [currentStory, setCurrentStory] = useState(0);
+  const [currentStoryId, setCurrentStoryId] = useState('');
+  const [playStatus, setPlayStatus] = useState<PlayStatusType>('wait');
+  const storyModalRef = useRef<HTMLDivElement>(null);
 
-  const width = useWindowWidth();
+  const [width, height] = useWindowSize();
 
-  React.useEffect(() => {
-    setCurrentStory(0);
-
-    if (onOpenStory && showed) {
-      onOpenStory(currentGroup.id, stories[0].id);
+  useEffect(() => {
+    const body = document.querySelector('body');
+    if (storyModalRef.current && body) {
+      if (width < 767) {
+        storyModalRef.current.style.setProperty('height', `${body.clientHeight}px`);
+      } else {
+        storyModalRef.current.style.setProperty('height', `100%`);
+      }
     }
-  }, [stories.length, onOpenStory, stories, currentGroup, showed]);
+  }, [width, height]);
 
-  const handleClose = () => {
+  useEffect(() => {
+    let currentStoryIndex = 0;
+
+    if (startStoryId && stories.length) {
+      const storyIndex = stories.findIndex((story) => story.id === startStoryId);
+      currentStoryIndex = storyIndex > -1 ? storyIndex : 0;
+    }
+
+    setCurrentStory(currentStoryIndex);
+
+    const body = document.querySelector('body');
+
+    if (isShowing) {
+      setPlayStatus('play');
+
+      if (body) {
+        body.style.overflow = 'hidden';
+      }
+    } else {
+      setPlayStatus('wait');
+
+      if (body) {
+        body.style.overflow = 'auto';
+      }
+    }
+
+    if (isShowing && stories.length) {
+      setCurrentStoryId(stories[currentStoryIndex].id);
+
+      if (onOpenStory) {
+        onOpenStory(currentGroup.id, stories[currentStoryIndex].id);
+      }
+    }
+  }, [stories.length, onOpenStory, stories, currentGroup, isShowing, startStoryId]);
+
+  const handleClose = useCallback(() => {
     onClose();
 
     if (onCloseStory) {
       onCloseStory(currentGroup.id, stories[currentStory].id);
     }
-  };
+  }, [currentGroup.id, currentStory, onClose, onCloseStory, stories]);
 
-  const handleAnimationEnd = () => {
-    handleNext();
-  };
-
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (currentStory === stories.length - 1) {
-      isLastGroup ? handleClose() : onNextGroup();
+      if (isLastGroup) {
+        handleClose();
+      } else {
+        onNextGroup();
+
+        if (onCloseStory) {
+          onCloseStory(currentGroup.id, stories[currentStory].id);
+        }
+      }
     } else {
       setCurrentStory(currentStory + 1);
       setCurrentStoryId(stories[currentStory + 1].id);
@@ -143,9 +200,23 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         onNextStory(currentGroup.id, stories[currentStory].id);
       }
     }
-  };
+  }, [
+    currentGroup.id,
+    currentStory,
+    handleClose,
+    isLastGroup,
+    onCloseStory,
+    onNextGroup,
+    onNextStory,
+    onOpenStory,
+    stories
+  ]);
 
-  const handlePrev = () => {
+  const handleAnimationEnd = useCallback(() => {
+    handleNext();
+  }, [handleNext]);
+
+  const handlePrev = useCallback(() => {
     if (currentStory === 0) {
       isFirstGroup ? handleClose() : onPrevGroup();
     } else {
@@ -166,29 +237,56 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         onPrevStory(currentGroup.id, stories[currentStory].id);
       }
     }
-  };
+  }, [
+    currentGroup.id,
+    currentStory,
+    handleClose,
+    isFirstGroup,
+    onCloseStory,
+    onOpenStory,
+    onPrevGroup,
+    onPrevStory,
+    stories
+  ]);
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const jsConfetti = useRef(
+    new JSConfetti({
+      canvas: canvasRef.current as HTMLCanvasElement
+    })
+  );
 
   return (
-    <CurrentStoryContext.Provider value={currentStoryId}>
+    <StoryContext.Provider value={{ currentStoryId, playStatusChange: setPlayStatus }}>
       <div
-        className={b({ showed })}
-        style={{ height: width < 768 ? Math.round(694 * (width / 390)) : '100%' }}
+        className={b({ isShowing })}
+        ref={storyModalRef}
+        style={{
+          top: window.pageYOffset || document.documentElement.scrollTop
+          // height: width < 767 ? Math.round(694 * (width / 390)) : '100%'
+        }}
       >
         <div className={b('body')}>
           <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
             <LeftArrowIcon />
           </button>
-          <div className={b('swiper')}>
+
+          <div
+            className={b('swiper')}
+            style={{
+              width: width > 767 ? Math.round((283 / 512) * height) : '100%'
+            }}
+          >
             <div className={b('swiperContent')}>
               {stories.map((story, index) => (
                 <div className={b('story', { current: index === currentStory })} key={story.id}>
-                  <StoryContent story={story} />
+                  <StoryContent jsConfetti={jsConfetti} story={story} />
                 </div>
               ))}
             </div>
 
             <div className={b('controls')}>
-              <div className={b('indicators')}>
+              <div className={b('indicators', { stopAnimation: playStatus === 'pause' })}>
                 {stories.map((story, index) => (
                   <div
                     className={b('indicator', {
@@ -211,11 +309,19 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               </button>
             </div>
           </div>
+
           <button className={b('arrowButton', { right: true })} onClick={handleNext}>
             <RightArrowIcon />
           </button>
         </div>
       </div>
-    </CurrentStoryContext.Provider>
+
+      <canvas
+        ref={canvasRef}
+        style={{
+          display: 'none'
+        }}
+      />
+    </StoryContext.Provider>
   );
 };

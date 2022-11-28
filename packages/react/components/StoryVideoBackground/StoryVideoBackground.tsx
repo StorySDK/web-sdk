@@ -2,7 +2,7 @@ import React from 'react';
 import block from 'bem-cn';
 import './StoryVideoBackground.scss';
 
-const b = block('StoryVideoBackground');
+const b = block('StorySdkVideoBackground');
 
 type PropTypes = {
   src: string;

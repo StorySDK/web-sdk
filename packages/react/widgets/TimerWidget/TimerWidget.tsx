@@ -9,7 +9,7 @@ import {
 import { calculateElementSize } from '../../utils';
 import './TimerWidget.scss';
 
-const b = block('TimerWidget');
+const b = block('TimerSdkWidget');
 
 const calculateTime = (time: number) => {
   const days = Math.floor(time / (1000 * 60 * 60 * 24));

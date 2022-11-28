@@ -1,11 +1,6 @@
-import {
-  WidgetPositionType,
-  WidgetPositionLimitsType,
-  BackgroundType,
-  BorderType
-} from '../types';
 import hexToRgba from 'hex-to-rgba';
 import parseColor from 'parse-color';
+import { WidgetPositionType, WidgetPositionLimitsType, BackgroundType, BorderType } from '../types';
 
 interface Stroke {
   strokeThickness: number;
@@ -100,16 +95,18 @@ export const renderTextBackgroundStyles = ({
 
 export const renderPosition = (
   position: WidgetPositionType,
-  positionLimits: WidgetPositionLimitsType,
-  zIndex: number
+  positionLimits: WidgetPositionLimitsType
 ) => ({
   left: `${position.x}px`,
   top: `${position.y}px`,
   width: positionLimits.isAutoWidth ? 'auto' : `${position.width}px`,
   height: positionLimits.isAutoHeight ? 'auto' : `${position.height}px`,
-  zIndex,
+  zIndex: position.zIndex,
   transform: `rotate(${position.rotate}deg)`
 });
+
+const SCALE_INDEX = 2.76;
+export const getScalableValue = (value: number): number => Math.round(value * SCALE_INDEX);
 
 export const calculateElementSize = (
   position: WidgetPositionType,
@@ -117,8 +114,8 @@ export const calculateElementSize = (
   elementSize: number
 ) =>
   positionLimits.minWidth
-    ? Math.round((elementSize * +position.width) / positionLimits?.minWidth)
-    : elementSize;
+    ? getScalableValue(Math.round((elementSize * +position.width) / positionLimits?.minWidth))
+    : getScalableValue(elementSize);
 
 export const calculateElementSizeByHeight = (
   position: WidgetPositionType,
@@ -126,5 +123,5 @@ export const calculateElementSizeByHeight = (
   elementSize: number
 ) =>
   positionLimits.minHeight
-    ? Math.round((elementSize * position.height) / positionLimits?.minHeight)
-    : elementSize;
+    ? getScalableValue(Math.round((elementSize * position.height) / positionLimits?.minHeight))
+    : getScalableValue(elementSize);

@@ -5,7 +5,7 @@ import { ClickMeWidgetParamsType, WidgetComponent } from '../../types';
 import './ClickMeWidget.scss';
 import { MaterialIcon } from '../../components/MaterialIcon';
 
-const b = block('ClickMeWidget');
+const b = block('ClickMeSdkWidget');
 
 export const ClickMeWidget: WidgetComponent<{
   params: ClickMeWidgetParamsType;
@@ -28,8 +28,6 @@ export const ClickMeWidget: WidgetComponent<{
     hasIcon,
     url
   } = props.params;
-
-  // const border = hasBorder ? `${borderWidth}px solid ${borderColor}` : 'none';
 
   const handleWidgetClick = () => {
     if (props.onClick) {
