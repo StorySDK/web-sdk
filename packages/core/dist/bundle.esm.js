@@ -6365,7 +6365,7 @@ const GroupsList = (props) => {
             React.createElement("div", { className: b$g('carousel') }, groups
                 .filter((group) => group.stories.length)
                 .map((group, index) => (React.createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: groupView, onClick: handleSelectGroup }))))),
-        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, showed: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("div", { className: b$g({ empty: true }) },
+        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, isShowing: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("div", { className: b$g({ empty: true }) },
         React.createElement("p", { className: b$g('emptyText') }, "Stories will be here")))))));
 };
 
@@ -6823,7 +6823,8 @@ const StoryModal = (props) => {
     useEffect(() => {
         let currentStoryIndex = 0;
         if (startStoryId && stories.length) {
-            currentStoryIndex = stories.findIndex((story) => story.id === startStoryId);
+            const storyIndex = stories.findIndex((story) => story.id === startStoryId);
+            currentStoryIndex = storyIndex > -1 ? storyIndex : 0;
         }
         setCurrentStory(currentStoryIndex);
         const body = document.querySelector('body');
@@ -6839,7 +6840,7 @@ const StoryModal = (props) => {
                 body.style.overflow = 'auto';
             }
         }
-        if (isShowing && stories.length && currentStoryIndex > -1) {
+        if (isShowing && stories.length) {
             setCurrentStoryId(stories[currentStoryIndex].id);
             if (onOpenStory) {
                 onOpenStory(currentGroup.id, stories[currentStoryIndex].id);
