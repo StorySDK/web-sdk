@@ -8,6 +8,7 @@ interface GroupProps {
     handleNextGroup: () => void;
     handlePrevGroup: () => void;
     isShowing: boolean;
+    startStoryId?: string;
 }
 export declare const CustomGroupControl: React.FC<GroupProps>;
 export {};
