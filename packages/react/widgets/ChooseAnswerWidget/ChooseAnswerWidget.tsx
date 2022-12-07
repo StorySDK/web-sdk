@@ -109,45 +109,53 @@ export const ChooseAnswerWidget: WidgetComponent<{
         return (
           <div
             className={b('answer', {
-              correct: answer.id === params.correct,
-              incorrect: answer.id !== params.correct,
-              choosen: userAnswer === answer.id
+              correct: answer.id === params.correct && params.markCorrectAnswer,
+              incorrect: answer.id !== params.correct && params.markCorrectAnswer,
+              choosen: userAnswer === answer.id && params.markCorrectAnswer,
+              filled: userAnswer === answer.id && !params.markCorrectAnswer
             })}
             key={`answer-${answer.id}`}
             style={elementSizes.answer}
           >
             <div
               className={b('answerCircle', {
-                correct: answer.id === params.correct,
-                incorrect: answer.id !== params.correct,
-                choosen: userAnswer === answer.id
+                correct: answer.id === params.correct && params.markCorrectAnswer,
+                incorrect: answer.id !== params.correct && params.markCorrectAnswer,
+                choosen: userAnswer === answer.id && params.markCorrectAnswer,
+                filled: userAnswer === answer.id && !params.markCorrectAnswer
               })}
               style={elementSizes.answerId}
             >
-              {answer.id === params.correct ? (
-                <IconConfirm
-                  className={b('answerIcon', {
-                    correct: answer.id === params.correct,
-                    incorrect: answer.id !== params.correct,
-                    choosen: userAnswer === answer.id
-                  })}
-                />
+              {params.markCorrectAnswer ? (
+                <>
+                  {answer.id === params.correct ? (
+                    <IconConfirm
+                      className={b('answerIcon', {
+                        correct: answer.id === params.correct,
+                        incorrect: answer.id !== params.correct,
+                        choosen: userAnswer === answer.id
+                      })}
+                    />
+                  ) : (
+                    <IconDecline
+                      className={b('answerIcon', {
+                        correct: answer.id === params.correct,
+                        incorrect: answer.id !== params.correct,
+                        choosen: userAnswer === answer.id
+                      })}
+                    />
+                  )}
+                </>
               ) : (
-                <IconDecline
-                  className={b('answerIcon', {
-                    correct: answer.id === params.correct,
-                    incorrect: answer.id !== params.correct,
-                    choosen: userAnswer === answer.id
-                  })}
-                />
+                <>{`${answer.id}`}</>
               )}
             </div>
 
             <div
               className={b('answerTitle', {
                 choosen: userAnswer === answer.id,
-                correct: answer.id === params.correct,
-                incorrect: answer.id !== params.correct
+                correct: answer.id === params.correct && params.markCorrectAnswer,
+                incorrect: answer.id !== params.correct && params.markCorrectAnswer
               })}
               style={elementSizes.answerTitle}
             >
@@ -158,7 +166,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
       }
       return (
         <div
-          className={b('answer')}
+          className={b('answer', { clickable: !userAnswer })}
           key={answer.id}
           role="button"
           style={elementSizes.answer}
@@ -166,9 +174,9 @@ export const ChooseAnswerWidget: WidgetComponent<{
           onClick={!userAnswer ? () => handleMarkAnswer(answer.id) : undefined}
           onKeyDown={!userAnswer ? () => handleMarkAnswer(answer.id) : undefined}
         >
-          <button className={b('answerId')} style={elementSizes.answerId}>
+          <div className={b('answerId')} style={elementSizes.answerId}>
             {`${answer.id}`}
-          </button>
+          </div>
           <div className={b('answerTitle')} style={elementSizes.answerTitle}>
             {answer.title}
           </div>
@@ -177,32 +185,36 @@ export const ChooseAnswerWidget: WidgetComponent<{
     },
     [
       userAnswer,
-      handleMarkAnswer,
+      params.markCorrectAnswer,
       params.correct,
       elementSizes.answer,
+      elementSizes.answerId,
       elementSizes.answerTitle,
-      elementSizes.answerId
+      handleMarkAnswer
     ]
   );
 
   useEffect(() => {
-    if (userAnswer && userAnswer === params.correct) {
+    if (userAnswer && userAnswer === params.correct && params.markCorrectAnswer) {
       jsConfetti.current.addConfetti();
     }
-  }, [userAnswer, params.correct, jsConfetti]);
+  }, [userAnswer, params.correct, jsConfetti, params.markCorrectAnswer]);
 
   return (
     <div
       className={b({
         color: params.color,
-        shake: userAnswer && userAnswer !== params.correct,
-        celebrate: userAnswer && userAnswer === params.correct
+        shake: userAnswer && params.markCorrectAnswer && userAnswer !== params.correct,
+        celebrate: userAnswer && params.markCorrectAnswer && userAnswer === params.correct
       })}
       style={elementSizes.widget}
     >
-      <div className={b('header')} style={elementSizes.header}>
-        {params.text}
-      </div>
+      {!params.isTitleHidden && (
+        <div className={b('header')} style={elementSizes.header}>
+          {params.text}
+        </div>
+      )}
+
       <div className={b('answers')} style={elementSizes.answers}>
         {params.answers.map((answer) => renderAnswer(answer))}
       </div>

@@ -4009,15 +4009,17 @@ const ChooseAnswerWidget = (props) => {
     const renderAnswer = useCallback((answer) => {
         if (userAnswer) {
             return (React.createElement("div", { className: b$e('answer', {
-                    correct: answer.id === params.correct,
-                    incorrect: answer.id !== params.correct,
-                    choosen: userAnswer === answer.id
+                    correct: answer.id === params.correct && params.markCorrectAnswer,
+                    incorrect: answer.id !== params.correct && params.markCorrectAnswer,
+                    choosen: userAnswer === answer.id && params.markCorrectAnswer,
+                    filled: userAnswer === answer.id && !params.markCorrectAnswer
                 }), key: `answer-${answer.id}`, style: elementSizes.answer },
                 React.createElement("div", { className: b$e('answerCircle', {
-                        correct: answer.id === params.correct,
-                        incorrect: answer.id !== params.correct,
-                        choosen: userAnswer === answer.id
-                    }), style: elementSizes.answerId }, answer.id === params.correct ? (React.createElement(IconConfirm, { className: b$e('answerIcon', {
+                        correct: answer.id === params.correct && params.markCorrectAnswer,
+                        incorrect: answer.id !== params.correct && params.markCorrectAnswer,
+                        choosen: userAnswer === answer.id && params.markCorrectAnswer,
+                        filled: userAnswer === answer.id && !params.markCorrectAnswer
+                    }), style: elementSizes.answerId }, params.markCorrectAnswer ? (React.createElement(React.Fragment, null, answer.id === params.correct ? (React.createElement(IconConfirm, { className: b$e('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
@@ -4025,35 +4027,36 @@ const ChooseAnswerWidget = (props) => {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
-                    }) }))),
+                    }) })))) : (React.createElement(React.Fragment, null, `${answer.id}`))),
                 React.createElement("div", { className: b$e('answerTitle', {
                         choosen: userAnswer === answer.id,
-                        correct: answer.id === params.correct,
-                        incorrect: answer.id !== params.correct
+                        correct: answer.id === params.correct && params.markCorrectAnswer,
+                        incorrect: answer.id !== params.correct && params.markCorrectAnswer
                     }), style: elementSizes.answerTitle }, answer.title)));
         }
-        return (React.createElement("div", { className: b$e('answer'), key: answer.id, role: "button", style: elementSizes.answer, tabIndex: 0, onClick: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined },
-            React.createElement("button", { className: b$e('answerId'), style: elementSizes.answerId }, `${answer.id}`),
+        return (React.createElement("div", { className: b$e('answer', { clickable: !userAnswer }), key: answer.id, role: "button", style: elementSizes.answer, tabIndex: 0, onClick: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined },
+            React.createElement("div", { className: b$e('answerId'), style: elementSizes.answerId }, `${answer.id}`),
             React.createElement("div", { className: b$e('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
     }, [
         userAnswer,
-        handleMarkAnswer,
+        params.markCorrectAnswer,
         params.correct,
         elementSizes.answer,
+        elementSizes.answerId,
         elementSizes.answerTitle,
-        elementSizes.answerId
+        handleMarkAnswer
     ]);
     useEffect(() => {
-        if (userAnswer && userAnswer === params.correct) {
+        if (userAnswer && userAnswer === params.correct && params.markCorrectAnswer) {
             jsConfetti.current.addConfetti();
         }
-    }, [userAnswer, params.correct, jsConfetti]);
+    }, [userAnswer, params.correct, jsConfetti, params.markCorrectAnswer]);
     return (React.createElement("div", { className: b$e({
             color: params.color,
-            shake: userAnswer && userAnswer !== params.correct,
-            celebrate: userAnswer && userAnswer === params.correct
+            shake: userAnswer && params.markCorrectAnswer && userAnswer !== params.correct,
+            celebrate: userAnswer && params.markCorrectAnswer && userAnswer === params.correct
         }), style: elementSizes.widget },
-        React.createElement("div", { className: b$e('header'), style: elementSizes.header }, params.text),
+        !params.isTitleHidden && (React.createElement("div", { className: b$e('header'), style: elementSizes.header }, params.text)),
         React.createElement("div", { className: b$e('answers'), style: elementSizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
 };
 
@@ -57369,7 +57372,7 @@ const QuestionWidget = (props) => {
         return percent;
     };
     return (React.createElement("div", { className: b$9() },
-        React.createElement("div", { className: b$9('question'), style: elementSizes.text }, params.question),
+        !params.isTitleHidden && (React.createElement("div", { className: b$9('question'), style: elementSizes.text }, params.question)),
         React.createElement("div", { className: b$9('buttons'), style: { borderRadius: elementSizes.button.borderRadius } },
             React.createElement("button", { className: b$9('item', {
                     answered: answer === 'confirm',
@@ -57752,7 +57755,7 @@ const TalkAboutWidget = (props) => {
             React.createElement("div", { className: b$5('empty'), style: elementSizes.empty }),
             React.createElement("div", { className: b$5({ color: params.color }), style: elementSizes.widget },
                 React.createElement("div", { className: b$5('contentContainer', { sendOpen: text.length > 0 }), style: elementSizes.content },
-                    React.createElement("div", { className: b$5('text'), style: elementSizes.text }, params.text),
+                    !params.isTitleHidden && (React.createElement("div", { className: b$5('text'), style: elementSizes.text }, params.text)),
                     React.createElement("input", { className: b$5('input'), disabled: isSent, placeholder: "Type something...", ref: inputRef, style: elementSizes.input, type: "text", value: text, onChange: handleTextChange })),
                 text && (React.createElement("button", { className: b$5('send', { disabled: isSent }), style: elementSizes.send, onClick: !isSent ? handleSendClick : undefined },
                     React.createElement("span", { className: b$5('sendText', { green: isSent }), style: elementSizes.sendText }, isSent ? 'Sent!' : 'Send')))))));

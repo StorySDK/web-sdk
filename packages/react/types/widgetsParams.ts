@@ -52,6 +52,7 @@ export type ChooseAnswerWidgetParamsType = {
   markCorrectAnswer: boolean;
   answers: Array<{ id: string; title: string }>;
   correct: string;
+  isTitleHidden: boolean;
 };
 
 export type EmojiReactionWidgetParamsType = {
@@ -70,6 +71,7 @@ export type QuestionWidgetParamsType = {
   confirm: string;
   decline: string;
   color: string;
+  isTitleHidden: boolean;
 };
 
 export type SliderWidgetParamsType = {
@@ -95,6 +97,7 @@ export type TalkAboutWidgetParamsType = {
   text: string;
   image: string | null;
   color: string;
+  isTitleHidden: boolean;
 };
 
 export type TextWidgetParamsType = {
