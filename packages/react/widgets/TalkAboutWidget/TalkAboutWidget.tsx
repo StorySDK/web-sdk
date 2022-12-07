@@ -167,9 +167,11 @@ export const TalkAboutWidget: WidgetComponent<{
             className={b('contentContainer', { sendOpen: text.length > 0 })}
             style={elementSizes.content}
           >
-            <div className={b('text')} style={elementSizes.text}>
-              {params.text}
-            </div>
+            {!params.isTitleHidden && (
+              <div className={b('text')} style={elementSizes.text}>
+                {params.text}
+              </div>
+            )}
 
             <input
               className={b('input')}

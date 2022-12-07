@@ -50,8 +50,12 @@
     align-items: center;
     padding: 8px;
     border-radius: 50px;
-    cursor: pointer;
     border: 1px solid #dbdbdb;
+    transition: 0.2s ease-out all;
+
+    &_clickable {
+      cursor: pointer;
+    }
 
     &:not(:last-child) {
       margin-bottom: 6px;
@@ -69,6 +73,10 @@
         $color: map-get($theme-colors, "green"),
         $alpha: 0.8
       );
+    }
+
+    &_filled {
+      background-color: #05051d;
     }
 
     &_choosen {
@@ -144,6 +152,15 @@
     border: 1px solid #18182e;
     border-radius: 50%;
     position: relative;
+    line-height: 120%;
+    color: #18182e;
+    padding: 0;
+    transition: 0.2s ease-out all;
+
+    &_filled {
+      border-color: #ffffff;
+      color: #ffffff;
+    }
 
     &_correct {
       border-color: #ffffff;

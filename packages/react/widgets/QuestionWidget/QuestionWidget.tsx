@@ -109,9 +109,12 @@ export const QuestionWidget: WidgetComponent<{
 
   return (
     <div className={b()}>
-      <div className={b('question')} style={elementSizes.text}>
-        {params.question}
-      </div>
+      {!params.isTitleHidden && (
+        <div className={b('question')} style={elementSizes.text}>
+          {params.question}
+        </div>
+      )}
+
       <div className={b('buttons')} style={{ borderRadius: elementSizes.button.borderRadius }}>
         <button
           className={b('item', {
