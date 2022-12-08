@@ -3911,7 +3911,6 @@ const renderPosition = (position, positionLimits) => ({
     top: `${position.y}px`,
     width: positionLimits.isAutoWidth ? 'auto' : `${position.width}px`,
     height: positionLimits.isAutoHeight ? 'auto' : `${position.height}px`,
-    zIndex: position.zIndex,
     transform: `rotate(${position.rotate}deg)`
 });
 const SCALE_INDEX$1 = 2.76;

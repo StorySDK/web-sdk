@@ -50,6 +50,7 @@ export declare type ChooseAnswerWidgetParamsType = {
         title: string;
     }>;
     correct: string;
+    isTitleHidden: boolean;
 };
 export declare type EmojiReactionWidgetParamsType = {
     emoji: EmojiItemType[];
@@ -65,6 +66,7 @@ export declare type QuestionWidgetParamsType = {
     confirm: string;
     decline: string;
     color: string;
+    isTitleHidden: boolean;
 };
 export declare type SliderWidgetParamsType = {
     color: string;
@@ -87,6 +89,7 @@ export declare type TalkAboutWidgetParamsType = {
     text: string;
     image: string | null;
     color: string;
+    isTitleHidden: boolean;
 };
 export declare type TextWidgetParamsType = {
     text: string;
