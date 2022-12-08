@@ -18,7 +18,6 @@ export declare const renderPosition: (position: WidgetPositionType, positionLimi
     top: string;
     width: string;
     height: string;
-    zIndex: number;
     transform: string;
 };
 export declare const getScalableValue: (value: number) => number;
