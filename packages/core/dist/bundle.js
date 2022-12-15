@@ -6821,6 +6821,13 @@ const StoryContext = React__default["default"].createContext({
     playStatusChange: () => { },
     confetti: null
 });
+const STORY_SIZE = {
+    width: 1080,
+    height: 1920
+};
+const PADDING_SIZE = 20;
+const MOBILE_BREAKPOINT = 768;
+const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
 const StoryModal = (props) => {
     const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
     const [currentStory, setCurrentStory] = React.useState(0);
@@ -6950,13 +6957,12 @@ const StoryModal = (props) => {
     return (React__default["default"].createElement(StoryContext.Provider, { value: { currentStoryId, playStatusChange: setPlayStatus } },
         React__default["default"].createElement("div", { className: b$f({ isShowing }), ref: storyModalRef, style: {
                 top: window.pageYOffset || document.documentElement.scrollTop
-                // height: width < 767 ? Math.round(694 * (width / 390)) : '100%'
             } },
             React__default["default"].createElement("div", { className: b$f('body') },
                 React__default["default"].createElement("button", { className: b$f('arrowButton', { left: true }), onClick: handlePrev },
                     React__default["default"].createElement(LeftArrowIcon, null)),
                 React__default["default"].createElement("div", { className: b$f('swiper'), style: {
-                        width: width > 767 ? Math.round((283 / 512) * height) : '100%'
+                        width: width >= MOBILE_BREAKPOINT ? ratioIndex * (height - PADDING_SIZE) : '100%'
                     } },
                     React__default["default"].createElement("div", { className: b$f('swiperContent') }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$f('story', { current: index === currentStory }), key: story.id },
                         React__default["default"].createElement(StoryContent, { jsConfetti: jsConfetti, story: story }))))),
@@ -9992,8 +9998,8 @@ const renderPosition = (position, positionLimits) => ({
     height: positionLimits.isAutoHeight ? 'auto' : `${position.height}px`,
     transform: `rotate(${position.rotate}deg)`
 });
-const SCALE_INDEX$1 = 2.76;
-const getScalableValue = (value) => Math.round(value * SCALE_INDEX$1);
+const SCALE_INDEX = 2.76;
+const getScalableValue = (value) => Math.round(value * SCALE_INDEX);
 const calculateElementSize = (position, positionLimits, elementSize) => positionLimits.minWidth
     ? getScalableValue(Math.round((elementSize * +position.width) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)))
     : getScalableValue(elementSize);
@@ -63725,28 +63731,20 @@ const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, o
     React__default["default"].createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
 const b$1 = block('StorySdkContent');
-const STORY_SIZE = {
-    width: 390,
-    height: 694
-};
-const STORY_SIZE_DESKTOP = {
-    width: 283,
-    height: 512
-};
-const SCALE_INDEX = 10.53;
 const StoryContent = (props) => {
     const { story, jsConfetti } = props;
     const [isVideoLoading, setVideoLoading] = React.useState(false);
     const [width, height] = d$1();
     return (React__default["default"].createElement("div", { className: b$1(), style: {
-            height: width < 768 ? Math.round(STORY_SIZE.height * (width / STORY_SIZE.width)) : '100%'
+            height: width < MOBILE_BREAKPOINT
+                ? Math.round(STORY_SIZE.height * (width / STORY_SIZE.width))
+                : '100%'
         } },
         React__default["default"].createElement("div", { className: b$1('scope'), style: {
                 background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
-                transform: width < 768
-                    ? `scale(${width / SCALE_INDEX}%)`
-                    : `scale(${Math.round((STORY_SIZE_DESKTOP.width / STORY_SIZE_DESKTOP.height) * height) /
-                        SCALE_INDEX}%)`
+                transform: width < MOBILE_BREAKPOINT
+                    ? `scale(${width / STORY_SIZE.width})`
+                    : `scale(${(height - PADDING_SIZE) / STORY_SIZE.height})`
             } },
             story.storyData.map((widget) => (React__default["default"].createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits) },
                 React__default["default"].createElement(WidgetFactory, { jsConfetti: jsConfetti, storyId: story.id, widget: widget })))),

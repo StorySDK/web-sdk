@@ -93,6 +93,15 @@ export const StoryContext = React.createContext<{
 
 type PlayStatusType = 'wait' | 'play' | 'pause';
 
+export const STORY_SIZE = {
+  width: 1080,
+  height: 1920
+};
+export const PADDING_SIZE = 20;
+export const MOBILE_BREAKPOINT = 768;
+
+const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
+
 export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const {
     stories,
@@ -263,7 +272,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         ref={storyModalRef}
         style={{
           top: window.pageYOffset || document.documentElement.scrollTop
-          // height: width < 767 ? Math.round(694 * (width / 390)) : '100%'
         }}
       >
         <div className={b('body')}>
@@ -274,7 +282,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           <div
             className={b('swiper')}
             style={{
-              width: width > 767 ? Math.round((283 / 512) * height) : '100%'
+              width: width >= MOBILE_BREAKPOINT ? ratioIndex * (height - PADDING_SIZE) : '100%'
             }}
           >
             <div className={b('swiperContent')}>
