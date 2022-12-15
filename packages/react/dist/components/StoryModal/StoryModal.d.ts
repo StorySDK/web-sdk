@@ -21,5 +21,11 @@ export declare const StoryContext: React.Context<{
     playStatusChange?: any;
     confetti?: any;
 }>;
+export declare const STORY_SIZE: {
+    width: number;
+    height: number;
+};
+export declare const PADDING_SIZE = 20;
+export declare const MOBILE_BREAKPOINT = 768;
 export declare const StoryModal: React.FC<StoryModalProps>;
 export {};
