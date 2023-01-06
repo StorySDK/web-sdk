@@ -58009,10 +58009,10 @@ const StoryContent = (props) => {
 };
 
 const CustomGroupControl = (props) => {
-    const { children, group, isFirstGroup, isLastGroup, startStoryId, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing } = props;
+    const { children, group, isFirstGroup, isLastGroup, startStoryId, isForceCloseAvailable, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing } = props;
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         children,
-        React__default["default"].createElement(StoryModal, { currentGroup: group, isFirstGroup: isFirstGroup, isLastGroup: isLastGroup, isShowing: isShowing, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup })));
+        React__default["default"].createElement(StoryModal, { currentGroup: group, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowing: isShowing, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup })));
 };
 
 exports.CustomGroupControl = CustomGroupControl;

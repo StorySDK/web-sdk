@@ -58000,10 +58000,10 @@ const StoryContent = (props) => {
 };
 
 const CustomGroupControl = (props) => {
-    const { children, group, isFirstGroup, isLastGroup, startStoryId, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing } = props;
+    const { children, group, isFirstGroup, isLastGroup, startStoryId, isForceCloseAvailable, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing } = props;
     return (React.createElement(React.Fragment, null,
         children,
-        React.createElement(StoryModal, { currentGroup: group, isFirstGroup: isFirstGroup, isLastGroup: isLastGroup, isShowing: isShowing, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup })));
+        React.createElement(StoryModal, { currentGroup: group, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowing: isShowing, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup })));
 };
 
 export { CustomGroupControl, GroupItem, GroupType, GroupsList, MOBILE_BREAKPOINT, PADDING_SIZE, STORY_SIZE, StoryContent, StoryContext, StoryModal, WidgetsTypes, calculateElementSize, calculateElementSizeByHeight, getClientPosition, getScalableValue, renderBackgroundStyles, renderBorderStyles, renderColor, renderGradient, renderPosition, renderTextBackgroundStyles };

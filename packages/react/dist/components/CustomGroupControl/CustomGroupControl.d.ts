@@ -1,9 +1,10 @@
 import React from 'react';
-import { GroupType } from '../../types';
+import { Group } from '../../types';
 interface GroupProps {
-    group: GroupType;
+    group: Group;
     isFirstGroup: boolean;
     isLastGroup: boolean;
+    isForceCloseAvailable?: boolean;
     handleCloseModal: () => void;
     handleNextGroup: () => void;
     handlePrevGroup: () => void;

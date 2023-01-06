@@ -1,9 +1,9 @@
 import React from 'react';
-import { GroupType } from '../../types';
+import { Group } from '../../types';
 import { StoryModal } from '..';
 
 interface GroupProps {
-  group: GroupType;
+  group: Group;
   isFirstGroup: boolean;
   isLastGroup: boolean;
   isForceCloseAvailable?: boolean;
