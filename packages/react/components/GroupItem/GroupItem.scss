@@ -18,7 +18,7 @@
     outline: none;
   }
 
-  &_type {
+  &_view {
     &_circle, &_square {
       &:hover {
         .GroupSdkItem__title {
@@ -83,7 +83,7 @@
       transition: 0.2s ease-out all;
     }
 
-    &_type {
+    &_view{
       &_square {
         &::after {
           border-radius: 10px;
@@ -149,7 +149,7 @@
     border-radius: 50%;
     object-fit: cover;
 
-    &_type {
+    &_view {
       &_square {
         border-radius: 7px;
       }
@@ -171,7 +171,7 @@
   &__titleContainer {
     position: relative;
     width: 100%;
-    &_type {
+    &_view {
 
       &_bigSquare {
         margin-top: auto;
@@ -193,7 +193,7 @@
     word-break: break-word;
     transition: 0.2s ease-out all;
 
-    &_type {
+    &_view {
       &_bigSquare {
         color: #FFFFFF;
         font-weight: 600;

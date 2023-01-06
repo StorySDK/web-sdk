@@ -3,18 +3,19 @@ import block from 'bem-cn';
 import './StoryModal.scss';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
-import { StoryType, GroupType } from '../../types';
+import { StoryType, Group, GroupType } from '../../types';
 import { StoryContent } from '..';
 
 const b = block('StorySdkModal');
 
 interface StoryModalProps {
-  currentGroup: GroupType;
+  currentGroup: Group;
   stories: StoryType[];
   isShowing: boolean;
   isLastGroup: boolean;
   isFirstGroup: boolean;
   startStoryId?: string;
+  isForceCloseAvailable?: boolean;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -109,6 +110,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isLastGroup,
     isFirstGroup,
     startStoryId,
+    isForceCloseAvailable,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -192,9 +194,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         }
       }
     } else {
-      setCurrentStory(currentStory + 1);
-      setCurrentStoryId(stories[currentStory + 1].id);
-
       if (onCloseStory) {
         onCloseStory(currentGroup.id, stories[currentStory].id);
       }
@@ -208,6 +207,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       if (onNextStory) {
         onNextStory(currentGroup.id, stories[currentStory].id);
       }
+
+      setCurrentStory(currentStory + 1);
+      setCurrentStoryId(stories[currentStory + 1].id);
     }
   }, [
     currentGroup.id,
@@ -229,9 +231,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     if (currentStory === 0) {
       isFirstGroup ? handleClose() : onPrevGroup();
     } else {
-      setCurrentStory(currentStory - 1);
-      setCurrentStoryId(stories[currentStory - 1].id);
-
       if (onCloseStory) {
         onCloseStory(currentGroup.id, stories[currentStory].id);
       }
@@ -245,6 +244,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       if (onPrevStory) {
         onPrevStory(currentGroup.id, stories[currentStory].id);
       }
+
+      setCurrentStory(currentStory - 1);
+      setCurrentStoryId(stories[currentStory - 1].id);
     }
   }, [
     currentGroup.id,
@@ -258,12 +260,32 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     stories
   ]);
 
+  const handleGoToStory = (storyId: string) => {
+    const storyIndex = stories.findIndex((story) => story.id === storyId);
+
+    if (storyIndex > -1) {
+      if (onOpenStory) {
+        setTimeout(() => {
+          onOpenStory(currentGroup.id, stories[storyIndex].id);
+        }, 0);
+      }
+
+      setCurrentStory(storyIndex);
+      setCurrentStoryId(stories[storyIndex].id);
+    }
+  };
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const jsConfetti = useRef(
     new JSConfetti({
       canvas: canvasRef.current as HTMLCanvasElement
     })
   );
+
+  const noTopShadow =
+    currentGroup.type === GroupType.ONBOARDING &&
+    currentGroup.settings?.isProgressHidden &&
+    currentGroup.settings?.isProhibitToClose;
 
   return (
     <StoryContext.Provider value={{ currentStoryId, playStatusChange: setPlayStatus }}>
@@ -275,9 +297,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         }}
       >
         <div className={b('body')}>
-          <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
-            <LeftArrowIcon />
-          </button>
+          {stories.length > 1 && (
+            <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
+              <LeftArrowIcon />
+            </button>
+          )}
 
           <div
             className={b('swiper')}
@@ -288,40 +312,65 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             <div className={b('swiperContent')}>
               {stories.map((story, index) => (
                 <div className={b('story', { current: index === currentStory })} key={story.id}>
-                  <StoryContent jsConfetti={jsConfetti} story={story} />
+                  <StoryContent
+                    handleGoToStory={handleGoToStory}
+                    jsConfetti={jsConfetti}
+                    noTopShadow={noTopShadow}
+                    story={story}
+                  />
                 </div>
               ))}
             </div>
 
             <div className={b('controls')}>
-              <div className={b('indicators', { stopAnimation: playStatus === 'pause' })}>
-                {stories.map((story, index) => (
-                  <div
-                    className={b('indicator', {
-                      filled: index < currentStory,
-                      current: index === currentStory
-                    })}
-                    key={story.id}
-                    onAnimationEnd={handleAnimationEnd}
-                  />
-                ))}
-              </div>
-              <div className={b('group')}>
-                <div className={b('groupImgWrapper')}>
-                  <img alt="" className={b('groupImg')} src={currentGroup.imageUrl} />
+              {!currentGroup.settings?.isProgressHidden && (
+                <div className={b('indicators', { stopAnimation: playStatus === 'pause' })}>
+                  {stories.map((story, index) => (
+                    <div
+                      className={b('indicator', {
+                        filled: index < currentStory,
+                        current: index === currentStory
+                      })}
+                      key={story.id}
+                      onAnimationEnd={handleAnimationEnd}
+                    />
+                  ))}
                 </div>
-                <p className={b('groupTitle')}>{currentGroup.title}</p>
-              </div>
-              <button className={b('close')} onClick={handleClose}>
-                <CloseIcon />
-              </button>
+              )}
+
+              {currentGroup.type === GroupType.GROUP && (
+                <div
+                  className={b('group', { noProgress: currentGroup.settings?.isProgressHidden })}
+                >
+                  <div className={b('groupImgWrapper')}>
+                    <img alt="" className={b('groupImg')} src={currentGroup.imageUrl} />
+                  </div>
+                  <p className={b('groupTitle')}>{currentGroup.title}</p>
+                </div>
+              )}
+
+              {!currentGroup.settings?.isProhibitToClose && (
+                <button
+                  className={b('close', { noProgress: currentGroup.settings?.isProgressHidden })}
+                  onClick={handleClose}
+                >
+                  <CloseIcon />
+                </button>
+              )}
             </div>
           </div>
-
-          <button className={b('arrowButton', { right: true })} onClick={handleNext}>
-            <RightArrowIcon />
-          </button>
+          {stories.length > 1 && (
+            <button className={b('arrowButton', { right: true })} onClick={handleNext}>
+              <RightArrowIcon />
+            </button>
+          )}
         </div>
+
+        {isForceCloseAvailable && currentGroup.settings?.isProhibitToClose && (
+          <button className={b('close', { general: true })} onClick={handleClose}>
+            <CloseIcon />
+          </button>
+        )}
       </div>
 
       <canvas

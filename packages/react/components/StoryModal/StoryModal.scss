@@ -79,6 +79,10 @@
     left: 8px;
     display: flex;
     align-items: center;
+
+    &_noProgress {
+      top: 10px;
+    }
   }
 
   &__groupImgWrapper {
@@ -205,6 +209,18 @@
     height: 24px;
     width: 24px;
     cursor: pointer;
+
+    &_noProgress {
+      top: 8px;
+    }
+
+    &_general {
+      top: 10px;
+
+      @media (max-width: 768px) {
+        top: 18px;
+      }
+    }
   }
 
   &__navStories {

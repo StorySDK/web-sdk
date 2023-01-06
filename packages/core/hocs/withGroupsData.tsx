@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { GroupType } from '@storysdk/react';
+import { Group } from '@storysdk/react';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
 import axios from 'axios';
@@ -9,7 +9,7 @@ import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage } from '../utils/fontsInclude';
 
 interface GroupsListProps {
-  groups: GroupType[];
+  groups: Group[];
   groupImageWidth?: number;
   groupImageHeight?: number;
   groupTitleSize?: number;
@@ -190,13 +190,22 @@ const withGroupsData =
             API.groups.getList().then((groupsData) => {
               if (!groupsData.data.error) {
                 const groupsFetchedData = groupsData.data.data
-                  .filter((item: any) => item.active)
+                  .filter((item: any) => {
+                    if (item.type === 'onboarding') {
+                      return item.active && item.settings?.addToStories;
+                    }
+
+                    return item.active;
+                  })
                   .map((item: any) => ({
                     id: item.id,
                     app_id: item.app_id,
                     title: item.title,
-                    image_url: item.image_url
-                  }));
+                    image_url: item.image_url,
+                    settings: item.settings,
+                    type: item.type
+                  }))
+                  .sort((a: any, b: any) => (a.type > b.type ? -1 : 1));
 
                 setGroups(groupsFetchedData);
                 setGroupsWithStories(groupsFetchedData);

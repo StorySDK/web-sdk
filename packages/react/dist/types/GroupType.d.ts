@@ -1,7 +1,13 @@
 import { StoryType } from '.';
-export interface GroupType {
+export declare enum GroupType {
+    GROUP = "group",
+    ONBOARDING = "onboarding"
+}
+export interface Group {
     id: string;
     imageUrl: string;
     title: string;
     stories: StoryType[];
+    type: GroupType;
+    settings: any;
 }

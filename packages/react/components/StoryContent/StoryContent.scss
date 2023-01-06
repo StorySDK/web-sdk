@@ -24,6 +24,12 @@
     pointer-events: none;
   }
 
+  &_noTopShadow {
+    &::after {
+      display: none;
+    }
+  }
+
   &__canvas {
     position: absolute;
     top: 0;

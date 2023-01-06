@@ -1,4 +1,5 @@
 import React from 'react';
+import { GroupType } from '../../types';
 import './GroupItem.scss';
 interface Props {
     index: number;
@@ -8,7 +9,8 @@ interface Props {
     groupClassName?: string;
     imageUrl: string;
     title: string;
-    type: 'circle' | 'square' | 'bigSquare' | 'rectangle';
+    view: 'circle' | 'square' | 'bigSquare' | 'rectangle';
+    type: GroupType;
     onClick?(index: number): void;
 }
 export declare const GroupItem: React.FunctionComponent<Props>;
