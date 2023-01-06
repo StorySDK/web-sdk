@@ -1,9 +1,9 @@
 import React from 'react';
-import { GroupType } from '../../types';
+import { Group } from '../../types';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
 interface GroupsListProps {
-    groups: GroupType[];
+    groups: Group[];
     groupImageWidth?: number;
     groupImageHeight?: number;
     groupTitleSize?: number;

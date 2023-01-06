@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import block from 'bem-cn';
 import classNames from 'classnames';
+import { GroupType } from '../../types';
 import './GroupItem.scss';
 
 const b = block('GroupSdkItem');
@@ -13,7 +14,8 @@ interface Props {
   groupClassName?: string;
   imageUrl: string;
   title: string;
-  type: 'circle' | 'square' | 'bigSquare' | 'rectangle';
+  view: 'circle' | 'square' | 'bigSquare' | 'rectangle';
+  type: GroupType;
   onClick?(index: number): void;
 }
 
@@ -21,8 +23,9 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
   const {
     imageUrl,
     title,
-    type,
+    view,
     index,
+    type,
     groupClassName,
     groupTitleSize,
     groupImageWidth,
@@ -42,7 +45,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
 
   const getContainerSize = useCallback(() => {
     if (groupImageWidth) {
-      switch (type) {
+      switch (view) {
         case 'bigSquare':
           return groupImageWidth * BIG_SQUARE_CONTAINER_WIDTH_INDEX;
         case 'rectangle':
@@ -53,12 +56,12 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
     }
 
     return undefined;
-  }, [groupImageWidth, type]);
+  }, [groupImageWidth, view]);
 
   const getImageSize = useCallback(
     (imageSize, isHeight = false) => {
       if (imageSize) {
-        switch (type) {
+        switch (view) {
           case 'bigSquare':
             return imageSize * BIG_SQUARE_IMAGE_WIDTH_INDEX;
           case 'rectangle':
@@ -72,28 +75,28 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
 
       return undefined;
     },
-    [type]
+    [view]
   );
 
   return (
     <button
-      className={classNames(b({ type }).toString(), groupClassName || '')}
+      className={classNames(b({ view, type }).toString(), groupClassName || '')}
       style={{
         width: getContainerSize(),
         minHeight:
-          type === 'rectangle' && groupImageWidth
+          view === 'rectangle' && groupImageWidth
             ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
             : getContainerSize()
       }}
       onClick={() => onClick && onClick(index)}
     >
       <div
-        className={b('imgContainer', { type })}
-        style={{ width: groupImageWidth, height: type !== 'rectangle' ? groupImageHeight : 'auto' }}
+        className={b('imgContainer', { view, type })}
+        style={{ width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' }}
       >
         <img
           alt=""
-          className={b('img', { type })}
+          className={b('img', { view })}
           src={imageUrl}
           style={{
             width: getImageSize(groupImageWidth),
@@ -101,9 +104,9 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
           }}
         />
       </div>
-      <div className={b('titleContainer', { type })}>
+      <div className={b('titleContainer', { view })}>
         <p
-          className={b('title', { type })}
+          className={b('title', { view })}
           style={{
             fontSize: groupTitleSize || undefined
           }}

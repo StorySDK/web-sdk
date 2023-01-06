@@ -1,13 +1,14 @@
 import React from 'react';
 import './StoryModal.scss';
-import { StoryType, GroupType } from '../../types';
+import { StoryType, Group } from '../../types';
 interface StoryModalProps {
-    currentGroup: GroupType;
+    currentGroup: Group;
     stories: StoryType[];
     isShowing: boolean;
     isLastGroup: boolean;
     isFirstGroup: boolean;
     startStoryId?: string;
+    isForceCloseAvailable?: boolean;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;

@@ -10,6 +10,7 @@ const b = block('ClickMeSdkWidget');
 export const ClickMeWidget: WidgetComponent<{
   params: ClickMeWidgetParamsType;
   onClick?(): void;
+  onGoToStory?(storyId: string): void;
 }> = (props) => {
   const {
     fontFamily,
@@ -26,7 +27,9 @@ export const ClickMeWidget: WidgetComponent<{
     borderColor,
     hasBorder,
     hasIcon,
-    url
+    url,
+    storyId,
+    actionType
   } = props.params;
 
   const handleWidgetClick = () => {
@@ -34,9 +37,13 @@ export const ClickMeWidget: WidgetComponent<{
       props.onClick();
     }
 
-    const tab = window.open(url, '_blank');
-    if (tab) {
-      tab.focus();
+    if (actionType === 'link' && url) {
+      const tab = window.open(url, '_blank');
+      if (tab) {
+        tab.focus();
+      }
+    } else if (actionType === 'story' && props.onGoToStory && storyId) {
+      props.onGoToStory(storyId);
     }
   };
 

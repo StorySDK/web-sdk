@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import block from 'bem-cn';
 import Skeleton from 'react-loading-skeleton';
 import classNames from 'classnames';
-import { GroupType } from '../../types';
+import { Group } from '../../types';
 import { GroupItem, StoryModal } from '..';
 
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -11,7 +11,7 @@ import './GroupsList.scss';
 const b = block('GroupsSdkList');
 
 interface GroupsListProps {
-  groups: GroupType[];
+  groups: Group[];
   groupImageWidth?: number;
   groupImageHeight?: number;
   groupTitleSize?: number;
@@ -137,7 +137,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                         index={index}
                         key={group.id}
                         title={group.title}
-                        type={groupView}
+                        type={group.type}
+                        view={groupView}
                         onClick={handleSelectGroup}
                       />
                     ))}

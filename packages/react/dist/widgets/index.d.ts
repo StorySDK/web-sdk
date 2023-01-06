@@ -21,6 +21,7 @@ declare const widgets: {
     click_me: import("../types").WidgetComponent<{
         params: import("../types").ClickMeWidgetParamsType;
         onClick?(): void;
+        onGoToStory?(storyId: string): void;
     }>;
     ellipse: import("../types").WidgetComponent<{
         params: import("../types").EllipseWidgetParamsType;

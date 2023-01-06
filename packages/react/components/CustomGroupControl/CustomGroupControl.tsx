@@ -6,6 +6,7 @@ interface GroupProps {
   group: GroupType;
   isFirstGroup: boolean;
   isLastGroup: boolean;
+  isForceCloseAvailable?: boolean;
   handleCloseModal: () => void;
   handleNextGroup: () => void;
   handlePrevGroup: () => void;
@@ -20,6 +21,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     isFirstGroup,
     isLastGroup,
     startStoryId,
+    isForceCloseAvailable,
     handleCloseModal,
     handleNextGroup,
     handlePrevGroup,
@@ -33,6 +35,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
       <StoryModal
         currentGroup={group}
         isFirstGroup={isFirstGroup}
+        isForceCloseAvailable={isForceCloseAvailable}
         isLastGroup={isLastGroup}
         isShowing={isShowing}
         startStoryId={startStoryId}

@@ -6116,6 +6116,12 @@ var WidgetsTypes;
     WidgetsTypes["GIPHY"] = "giphy";
 })(WidgetsTypes || (WidgetsTypes = {}));
 
+var GroupType;
+(function (GroupType) {
+    GroupType["GROUP"] = "group";
+    GroupType["ONBOARDING"] = "onboarding";
+})(GroupType || (GroupType = {}));
+
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 function getDefaultExportFromCjs (x) {
@@ -6198,7 +6204,7 @@ var cn = classnames.exports;
 
 const b$h = block('GroupSdkItem');
 const GroupItem = (props) => {
-    const { imageUrl, title, type, index, groupClassName, groupTitleSize, groupImageWidth, groupImageHeight, onClick } = props;
+    const { imageUrl, title, view, index, type, groupClassName, groupTitleSize, groupImageWidth, groupImageHeight, onClick } = props;
     const BASE_CONTAINER_WIDTH_INDEX = 1.32;
     const BIG_SQUARE_CONTAINER_WIDTH_INDEX = 0.93;
     const RECTANGLE_CONTAINER_WIDTH_INDEX = 0.97;
@@ -6208,7 +6214,7 @@ const GroupItem = (props) => {
     const RECTANGLE_IMAGE_HEIGHT_INDEX = 1.26;
     const getContainerSize = React.useCallback(() => {
         if (groupImageWidth) {
-            switch (type) {
+            switch (view) {
                 case 'bigSquare':
                     return groupImageWidth * BIG_SQUARE_CONTAINER_WIDTH_INDEX;
                 case 'rectangle':
@@ -6218,10 +6224,10 @@ const GroupItem = (props) => {
             }
         }
         return undefined;
-    }, [groupImageWidth, type]);
+    }, [groupImageWidth, view]);
     const getImageSize = React.useCallback((imageSize, isHeight = false) => {
         if (imageSize) {
-            switch (type) {
+            switch (view) {
                 case 'bigSquare':
                     return imageSize * BIG_SQUARE_IMAGE_WIDTH_INDEX;
                 case 'rectangle':
@@ -6233,20 +6239,20 @@ const GroupItem = (props) => {
             }
         }
         return undefined;
-    }, [type]);
-    return (React__default["default"].createElement("button", { className: cn(b$h({ type }).toString(), groupClassName || ''), style: {
+    }, [view]);
+    return (React__default["default"].createElement("button", { className: cn(b$h({ view, type }).toString(), groupClassName || ''), style: {
             width: getContainerSize(),
-            minHeight: type === 'rectangle' && groupImageWidth
+            minHeight: view === 'rectangle' && groupImageWidth
                 ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
                 : getContainerSize()
         }, onClick: () => onClick && onClick(index) },
-        React__default["default"].createElement("div", { className: b$h('imgContainer', { type }), style: { width: groupImageWidth, height: type !== 'rectangle' ? groupImageHeight : 'auto' } },
-            React__default["default"].createElement("img", { alt: "", className: b$h('img', { type }), src: imageUrl, style: {
+        React__default["default"].createElement("div", { className: b$h('imgContainer', { view, type }), style: { width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' } },
+            React__default["default"].createElement("img", { alt: "", className: b$h('img', { view }), src: imageUrl, style: {
                     width: getImageSize(groupImageWidth),
                     height: getImageSize(groupImageHeight, true)
                 } })),
-        React__default["default"].createElement("div", { className: b$h('titleContainer', { type }) },
-            React__default["default"].createElement("p", { className: b$h('title', { type }), style: {
+        React__default["default"].createElement("div", { className: b$h('titleContainer', { view }) },
+            React__default["default"].createElement("p", { className: b$h('title', { view }), style: {
                     fontSize: groupTitleSize || undefined
                 } }, title))));
 };
@@ -6383,7 +6389,7 @@ const GroupsList = (props) => {
         React__default["default"].createElement("div", { className: cn(b$g(), groupsClassName) },
             React__default["default"].createElement("div", { className: b$g('carousel') }, groups
                 .filter((group) => group.stories.length)
-                .map((group, index) => (React__default["default"].createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: groupView, onClick: handleSelectGroup }))))),
+                .map((group, index) => (React__default["default"].createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))),
         React__default["default"].createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, isShowing: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React__default["default"].createElement("div", { className: b$g({ empty: true }) },
         React__default["default"].createElement("p", { className: b$g('emptyText') }, "Stories will be here")))))));
 };
@@ -6829,7 +6835,8 @@ const PADDING_SIZE = 20;
 const MOBILE_BREAKPOINT = 768;
 const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
 const StoryModal = (props) => {
-    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
+    var _a, _b, _c, _d, _e, _f, _g;
+    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, currentGroup } = props;
     const [currentStory, setCurrentStory] = React.useState(0);
     const [currentStoryId, setCurrentStoryId] = React.useState('');
     const [playStatus, setPlayStatus] = React.useState('wait');
@@ -6892,8 +6899,6 @@ const StoryModal = (props) => {
             }
         }
         else {
-            setCurrentStory(currentStory + 1);
-            setCurrentStoryId(stories[currentStory + 1].id);
             if (onCloseStory) {
                 onCloseStory(currentGroup.id, stories[currentStory].id);
             }
@@ -6905,6 +6910,8 @@ const StoryModal = (props) => {
             if (onNextStory) {
                 onNextStory(currentGroup.id, stories[currentStory].id);
             }
+            setCurrentStory(currentStory + 1);
+            setCurrentStoryId(stories[currentStory + 1].id);
         }
     }, [
         currentGroup.id,
@@ -6925,8 +6932,6 @@ const StoryModal = (props) => {
             isFirstGroup ? handleClose() : onPrevGroup();
         }
         else {
-            setCurrentStory(currentStory - 1);
-            setCurrentStoryId(stories[currentStory - 1].id);
             if (onCloseStory) {
                 onCloseStory(currentGroup.id, stories[currentStory].id);
             }
@@ -6938,6 +6943,8 @@ const StoryModal = (props) => {
             if (onPrevStory) {
                 onPrevStory(currentGroup.id, stories[currentStory].id);
             }
+            setCurrentStory(currentStory - 1);
+            setCurrentStoryId(stories[currentStory - 1].id);
         }
     }, [
         currentGroup.id,
@@ -6950,35 +6957,52 @@ const StoryModal = (props) => {
         onPrevStory,
         stories
     ]);
+    const handleGoToStory = (storyId) => {
+        const storyIndex = stories.findIndex((story) => story.id === storyId);
+        if (storyIndex > -1) {
+            if (onOpenStory) {
+                setTimeout(() => {
+                    onOpenStory(currentGroup.id, stories[storyIndex].id);
+                }, 0);
+            }
+            setCurrentStory(storyIndex);
+            setCurrentStoryId(stories[storyIndex].id);
+        }
+    };
     const canvasRef = React.useRef(null);
     const jsConfetti = React.useRef(new JSConfetti({
         canvas: canvasRef.current
     }));
+    const noTopShadow = currentGroup.type === GroupType.ONBOARDING &&
+        ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.isProgressHidden) &&
+        ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.isProhibitToClose);
     return (React__default["default"].createElement(StoryContext.Provider, { value: { currentStoryId, playStatusChange: setPlayStatus } },
         React__default["default"].createElement("div", { className: b$f({ isShowing }), ref: storyModalRef, style: {
                 top: window.pageYOffset || document.documentElement.scrollTop
             } },
             React__default["default"].createElement("div", { className: b$f('body') },
-                React__default["default"].createElement("button", { className: b$f('arrowButton', { left: true }), onClick: handlePrev },
-                    React__default["default"].createElement(LeftArrowIcon, null)),
+                stories.length > 1 && (React__default["default"].createElement("button", { className: b$f('arrowButton', { left: true }), onClick: handlePrev },
+                    React__default["default"].createElement(LeftArrowIcon, null))),
                 React__default["default"].createElement("div", { className: b$f('swiper'), style: {
                         width: width >= MOBILE_BREAKPOINT ? ratioIndex * (height - PADDING_SIZE) : '100%'
                     } },
                     React__default["default"].createElement("div", { className: b$f('swiperContent') }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$f('story', { current: index === currentStory }), key: story.id },
-                        React__default["default"].createElement(StoryContent, { jsConfetti: jsConfetti, story: story }))))),
+                        React__default["default"].createElement(StoryContent, { handleGoToStory: handleGoToStory, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story }))))),
                     React__default["default"].createElement("div", { className: b$f('controls') },
-                        React__default["default"].createElement("div", { className: b$f('indicators', { stopAnimation: playStatus === 'pause' }) }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$f('indicator', {
+                        !((_c = currentGroup.settings) === null || _c === void 0 ? void 0 : _c.isProgressHidden) && (React__default["default"].createElement("div", { className: b$f('indicators', { stopAnimation: playStatus === 'pause' }) }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$f('indicator', {
                                 filled: index < currentStory,
                                 current: index === currentStory
-                            }), key: story.id, onAnimationEnd: handleAnimationEnd })))),
-                        React__default["default"].createElement("div", { className: b$f('group') },
+                            }), key: story.id, onAnimationEnd: handleAnimationEnd }))))),
+                        currentGroup.type === GroupType.GROUP && (React__default["default"].createElement("div", { className: b$f('group', { noProgress: (_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.isProgressHidden }) },
                             React__default["default"].createElement("div", { className: b$f('groupImgWrapper') },
                                 React__default["default"].createElement("img", { alt: "", className: b$f('groupImg'), src: currentGroup.imageUrl })),
-                            React__default["default"].createElement("p", { className: b$f('groupTitle') }, currentGroup.title)),
-                        React__default["default"].createElement("button", { className: b$f('close'), onClick: handleClose },
-                            React__default["default"].createElement(CloseIcon, null)))),
-                React__default["default"].createElement("button", { className: b$f('arrowButton', { right: true }), onClick: handleNext },
+                            React__default["default"].createElement("p", { className: b$f('groupTitle') }, currentGroup.title))),
+                        !((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$f('close', { noProgress: (_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.isProgressHidden }), onClick: handleClose },
+                            React__default["default"].createElement(CloseIcon, null))))),
+                stories.length > 1 && (React__default["default"].createElement("button", { className: b$f('arrowButton', { right: true }), onClick: handleNext },
                     React__default["default"].createElement(RightArrowIcon, null)))),
+            isForceCloseAvailable && ((_g = currentGroup.settings) === null || _g === void 0 ? void 0 : _g.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$f('close', { general: true }), onClick: handleClose },
+                React__default["default"].createElement(CloseIcon, null)))),
         React__default["default"].createElement("canvas", { ref: canvasRef, style: {
                 display: 'none'
             } })));
@@ -10279,14 +10303,19 @@ const MaterialIcon = React.memo(({ name = 'ArrowCircleUpOutlineIcon', className,
 
 const b$d = block('ClickMeSdkWidget');
 const ClickMeWidget = (props) => {
-    const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url } = props.params;
+    const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url, storyId, actionType } = props.params;
     const handleWidgetClick = () => {
         if (props.onClick) {
             props.onClick();
         }
-        const tab = window.open(url, '_blank');
-        if (tab) {
-            tab.focus();
+        if (actionType === 'link' && url) {
+            const tab = window.open(url, '_blank');
+            if (tab) {
+                tab.focus();
+            }
+        }
+        else if (actionType === 'story' && props.onGoToStory && storyId) {
+            props.onGoToStory(storyId);
         }
     };
     return (React__default["default"].createElement("div", { className: b$d(), role: "button", style: {
@@ -63694,7 +63723,7 @@ class WidgetFactory extends React__default["default"].Component {
             case WidgetsTypes.CHOOSE_ANSWER:
                 return (React__default["default"].createElement(ChooseAnswerWidget, { jsConfetti: this.props.jsConfetti, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action }));
             case WidgetsTypes.CLICK_ME:
-                return (React__default["default"].createElement(ClickMeWidget, { params: this.props.widget.content.params, onClick: this.props.widget.action }));
+                return (React__default["default"].createElement(ClickMeWidget, { params: this.props.widget.content.params, onClick: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.ELLIPSE:
                 return React__default["default"].createElement(EllipseWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.EMOJI_REACTION:
@@ -63732,10 +63761,10 @@ const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, o
 
 const b$1 = block('StorySdkContent');
 const StoryContent = (props) => {
-    const { story, jsConfetti } = props;
+    const { story, jsConfetti, noTopShadow, handleGoToStory } = props;
     const [isVideoLoading, setVideoLoading] = React.useState(false);
     const [width, height] = d$1();
-    return (React__default["default"].createElement("div", { className: b$1(), style: {
+    return (React__default["default"].createElement("div", { className: b$1({ noTopShadow }), style: {
             height: width < MOBILE_BREAKPOINT
                 ? Math.round(STORY_SIZE.height * (width / STORY_SIZE.width))
                 : '100%'
@@ -63747,7 +63776,7 @@ const StoryContent = (props) => {
                     : `scale(${(height - PADDING_SIZE) / STORY_SIZE.height})`
             } },
             story.storyData.map((widget) => (React__default["default"].createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits) },
-                React__default["default"].createElement(WidgetFactory, { jsConfetti: jsConfetti, storyId: story.id, widget: widget })))),
+                React__default["default"].createElement(WidgetFactory, { handleGoToStory: handleGoToStory, jsConfetti: jsConfetti, storyId: story.id, widget: widget })))),
             story.background.type === 'video' && (React__default["default"].createElement(StoryVideoBackground, { autoplay: true, isLoading: isVideoLoading, src: story.background.value, onLoadEnd: () => {
                     setVideoLoading(false);
                 } })))));
@@ -71106,6 +71135,8 @@ const adaptGroupData = (data, uniqUserId, language) => data
     id: group.id,
     title: group.title,
     imageUrl: group.image_url,
+    type: group.type,
+    settings: group.settings,
     stories: group.stories.map((story, index) => ({
         id: story.id,
         background: story.story_data.background,
@@ -71252,13 +71283,22 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
                     API.groups.getList().then((groupsData) => {
                         if (!groupsData.data.error) {
                             const groupsFetchedData = groupsData.data.data
-                                .filter((item) => item.active)
+                                .filter((item) => {
+                                var _a;
+                                if (item.type === 'onboarding') {
+                                    return item.active && ((_a = item.settings) === null || _a === void 0 ? void 0 : _a.addToStories);
+                                }
+                                return item.active;
+                            })
                                 .map((item) => ({
                                 id: item.id,
                                 app_id: item.app_id,
                                 title: item.title,
-                                image_url: item.image_url
-                            }));
+                                image_url: item.image_url,
+                                settings: item.settings,
+                                type: item.type
+                            }))
+                                .sort((a, b) => (a.type > b.type ? -1 : 1));
                             setGroups(groupsFetchedData);
                             setGroupsWithStories(groupsFetchedData);
                         }

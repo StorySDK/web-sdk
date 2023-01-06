@@ -19,6 +19,7 @@ interface WidgetFactoryProps {
   storyId: string;
   jsConfetti?: any;
   widget: WidgetObjectType;
+  handleGoToStory?: (storyId: string) => void;
 }
 
 export class WidgetFactory extends React.Component<WidgetFactoryProps> {
@@ -39,6 +40,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
           <ClickMeWidget
             params={this.props.widget.content.params}
             onClick={this.props.widget.action}
+            onGoToStory={this.props.handleGoToStory}
           />
         );
       case WidgetsTypes.ELLIPSE:

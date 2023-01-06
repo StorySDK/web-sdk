@@ -1,7 +1,7 @@
 import React from 'react';
-import { GroupType } from '@storysdk/react';
+import { Group } from '@storysdk/react';
 interface GroupsListProps {
-    groups: GroupType[];
+    groups: Group[];
     groupImageWidth?: number;
     groupImageHeight?: number;
     groupTitleSize?: number;

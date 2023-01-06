@@ -12,18 +12,20 @@ const b = block('StorySdkContent');
 
 interface StoryContentProps {
   story: StoryType;
+  noTopShadow?: boolean;
   jsConfetti?: any;
+  handleGoToStory?: (storyId: string) => void;
 }
 
 export const StoryContent: React.FC<StoryContentProps> = (props) => {
-  const { story, jsConfetti } = props;
+  const { story, jsConfetti, noTopShadow, handleGoToStory } = props;
   const [isVideoLoading, setVideoLoading] = useState(false);
 
   const [width, height] = useWindowSize();
 
   return (
     <div
-      className={b()}
+      className={b({ noTopShadow })}
       style={{
         height:
           width < MOBILE_BREAKPOINT
@@ -48,7 +50,12 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
             key={widget.id}
             style={renderPosition(widget.position, widget.positionLimits)}
           >
-            <WidgetFactory jsConfetti={jsConfetti} storyId={story.id} widget={widget} />
+            <WidgetFactory
+              handleGoToStory={handleGoToStory}
+              jsConfetti={jsConfetti}
+              storyId={story.id}
+              widget={widget}
+            />
           </div>
         ))}
 
