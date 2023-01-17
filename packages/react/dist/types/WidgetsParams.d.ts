@@ -32,7 +32,7 @@ export declare type ClickMeWidgetParamsType = {
     color: BorderType;
     text: string;
     icon: MaterialIconValueType;
-    url: string;
+    actionType: 'link' | 'story';
     borderRadius: number;
     backgroundColor: BackgroundType;
     hasBorder: boolean;
@@ -40,6 +40,8 @@ export declare type ClickMeWidgetParamsType = {
     borderWidth: number;
     borderColor: BorderType;
     borderOpacity: number;
+    storyId?: string;
+    url?: string;
 };
 export declare type ChooseAnswerWidgetParamsType = {
     text: string;

@@ -9,6 +9,7 @@ interface GroupsListProps {
     groupTitleSize?: number;
     groupsClassName?: string;
     groupClassName?: string;
+    isShowMockup?: boolean;
     isLoading?: boolean;
     groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
     onOpenGroup?(id: string): void;

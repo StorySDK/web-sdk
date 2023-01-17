@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import block from 'bem-cn';
-import './StoryModal.scss';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
-import { StoryType, Group, GroupType } from '../../types';
+import { useAdaptiveValue } from '../../hooks';
+import { StoryType, Group, GroupType, StorySize } from '../../types';
 import { StoryContent } from '..';
+import largeIphoneMockup from '../../assets/images/iphone-mockup-large.png';
+import smallIphoneMockup from '../../assets/images/iphone-mockup-small.svg';
+import './StoryModal.scss';
 
 const b = block('StorySdkModal');
 
@@ -12,6 +15,7 @@ interface StoryModalProps {
   currentGroup: Group;
   stories: StoryType[];
   isShowing: boolean;
+  isShowMockup?: boolean;
   isLastGroup: boolean;
   isFirstGroup: boolean;
   startStoryId?: string;
@@ -94,14 +98,32 @@ export const StoryContext = React.createContext<{
 
 type PlayStatusType = 'wait' | 'play' | 'pause';
 
+export type StoryCurrentSize = {
+  width: number;
+  height: number;
+};
+
 export const STORY_SIZE = {
   width: 1080,
   height: 1920
 };
+
+export const STORY_SIZE_LARGE = {
+  width: 1080,
+  height: 2338
+};
+
 export const PADDING_SIZE = 20;
 export const MOBILE_BREAKPOINT = 768;
+const INIT_TOP_ELEMENTS = 20;
+const INIT_TOP_INDICATOR = 10;
+const INIT_LARGE_PADDING = 30;
+const INIT_LARGE_RADIUS = 30;
+const INIT_SMALL_PADDING = 145;
+const INIT_SMALL_RADIUS = 5;
 
 const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
+const ratioIndexLarge = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
 
 export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const {
@@ -111,6 +133,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isFirstGroup,
     startStoryId,
     isForceCloseAvailable,
+    isShowMockup,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -127,6 +150,30 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const storyModalRef = useRef<HTMLDivElement>(null);
 
   const [width, height] = useWindowSize();
+
+  const currentGroupType = currentGroup.type || GroupType.GROUP;
+
+  const isLarge =
+    (currentGroup.settings?.storiesSize === StorySize.LARGE &&
+      currentGroupType === GroupType.ONBOARDING) ||
+    (currentGroupType === GroupType.GROUP && isShowMockup);
+
+  const currentRationIndex = isLarge ? ratioIndexLarge : ratioIndex;
+  const currentStorySize: StoryCurrentSize = isLarge ? STORY_SIZE_LARGE : STORY_SIZE;
+
+  const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
+  const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
+
+  const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
+  const largeIndicatorTop = useAdaptiveValue(INIT_TOP_INDICATOR);
+
+  const smallHeightGap = useAdaptiveValue(INIT_SMALL_PADDING);
+  const smallBorderRadius = useAdaptiveValue(INIT_SMALL_RADIUS);
+
+  const heightGap = isLarge ? largeHeightGap : smallHeightGap;
+  const borderRadius = isLarge ? largeBorderRadius : smallBorderRadius;
+
+  const currentPaddingSize = isShowMockup ? PADDING_SIZE + heightGap : PADDING_SIZE;
 
   useEffect(() => {
     const body = document.querySelector('body');
@@ -283,9 +330,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   );
 
   const noTopShadow =
-    currentGroup.type === GroupType.ONBOARDING &&
+    currentGroupType === GroupType.ONBOARDING &&
     currentGroup.settings?.isProgressHidden &&
     currentGroup.settings?.isProhibitToClose;
+
+  const isMobile = width < MOBILE_BREAKPOINT;
 
   return (
     <StoryContext.Provider value={{ currentStoryId, playStatusChange: setPlayStatus }}>
@@ -303,62 +352,108 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </button>
           )}
 
-          <div
-            className={b('swiper')}
-            style={{
-              width: width >= MOBILE_BREAKPOINT ? ratioIndex * (height - PADDING_SIZE) : '100%'
-            }}
-          >
-            <div className={b('swiperContent')}>
-              {stories.map((story, index) => (
-                <div className={b('story', { current: index === currentStory })} key={story.id}>
-                  <StoryContent
-                    handleGoToStory={handleGoToStory}
-                    jsConfetti={jsConfetti}
-                    noTopShadow={noTopShadow}
-                    story={story}
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className={b('controls')}>
-              {!currentGroup.settings?.isProgressHidden && (
-                <div className={b('indicators', { stopAnimation: playStatus === 'pause' })}>
-                  {stories.map((story, index) => (
-                    <div
-                      className={b('indicator', {
-                        filled: index < currentStory,
-                        current: index === currentStory
-                      })}
-                      key={story.id}
-                      onAnimationEnd={handleAnimationEnd}
+          <div className={b('bodyContainer')}>
+            <div
+              className={b('swiper', {
+                mockup: !isMobile && isShowMockup,
+                small: !isMobile && !isLarge && isShowMockup
+              })}
+              style={{
+                width:
+                  width >= MOBILE_BREAKPOINT
+                    ? currentRationIndex * (height - currentPaddingSize)
+                    : '100%',
+                height: `calc(100% - ${isShowMockup ? heightGap : 0}px)`,
+                borderRadius: isShowMockup ? borderRadius : undefined
+              }}
+            >
+              <div className={b('swiperContent')}>
+                {stories.map((story, index) => (
+                  <div className={b('story', { current: index === currentStory })} key={story.id}>
+                    <StoryContent
+                      currentPaddingSize={currentPaddingSize}
+                      handleGoToStory={handleGoToStory}
+                      innerHeightGap={isShowMockup ? smallHeightGap : 0}
+                      isLarge={
+                        currentGroup.settings?.storiesSize === StorySize.LARGE &&
+                        currentGroupType === GroupType.ONBOARDING
+                      }
+                      isLargeBackground={isShowMockup && currentGroupType === GroupType.GROUP}
+                      jsConfetti={jsConfetti}
+                      noTopShadow={noTopShadow}
+                      story={story}
+                      storyCurrentSize={currentStorySize}
                     />
-                  ))}
-                </div>
-              )}
-
-              {currentGroup.type === GroupType.GROUP && (
-                <div
-                  className={b('group', { noProgress: currentGroup.settings?.isProgressHidden })}
-                >
-                  <div className={b('groupImgWrapper')}>
-                    <img alt="" className={b('groupImg')} src={currentGroup.imageUrl} />
                   </div>
-                  <p className={b('groupTitle')}>{currentGroup.title}</p>
-                </div>
-              )}
+                ))}
+              </div>
 
-              {!currentGroup.settings?.isProhibitToClose && (
-                <button
-                  className={b('close', { noProgress: currentGroup.settings?.isProgressHidden })}
-                  onClick={handleClose}
-                >
-                  <CloseIcon />
-                </button>
-              )}
+              <div className={b('controls')}>
+                {!currentGroup.settings?.isProgressHidden && (
+                  <div
+                    className={b('indicators', {
+                      stopAnimation: playStatus === 'pause',
+                      widePadding: isShowMockup && isLarge
+                    })}
+                    style={{
+                      top: isShowMockup && isLarge ? largeIndicatorTop : undefined
+                    }}
+                  >
+                    {stories.map((story, index) => (
+                      <div
+                        className={b('indicator', {
+                          filled: index < currentStory,
+                          current: index === currentStory
+                        })}
+                        key={story.id}
+                        onAnimationEnd={handleAnimationEnd}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {currentGroupType === GroupType.GROUP && (
+                  <div
+                    className={b('group', {
+                      noProgress: currentGroup.settings?.isProgressHidden,
+                      wideLeft: isShowMockup && isLarge
+                    })}
+                    style={{
+                      top: isShowMockup && isLarge ? largeElementsTop : undefined
+                    }}
+                  >
+                    <div className={b('groupImgWrapper')}>
+                      <img alt="" className={b('groupImg')} src={currentGroup.imageUrl} />
+                    </div>
+                    <p className={b('groupTitle')}>{currentGroup.title}</p>
+                  </div>
+                )}
+
+                {!currentGroup.settings?.isProhibitToClose && (
+                  <button
+                    className={b('close', {
+                      noProgress: currentGroup.settings?.isProgressHidden,
+                      wideRight: isShowMockup && isLarge
+                    })}
+                    style={{
+                      top: isShowMockup && isLarge ? largeElementsTop : undefined
+                    }}
+                    onClick={handleClose}
+                  >
+                    <CloseIcon />
+                  </button>
+                )}
+              </div>
             </div>
+
+            {isShowMockup && (
+              <img
+                className={b('mockup', { large: isLarge })}
+                src={isLarge ? largeIphoneMockup : smallIphoneMockup}
+              />
+            )}
           </div>
+
           {stories.length > 1 && (
             <button className={b('arrowButton', { right: true })} onClick={handleNext}>
               <RightArrowIcon />

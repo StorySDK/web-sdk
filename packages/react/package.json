@@ -63,6 +63,7 @@
     "rollup-plugin-scss": "^3.0.0",
     "rollup-plugin-ts": "^1.4.6",
     "rollup-plugin-typescript2": "^0.30.0",
+    "@rollup/plugin-image": "^3.0.1",
     "sass": "^1.42.1",
     "typescript": "^4.5.4"
   },

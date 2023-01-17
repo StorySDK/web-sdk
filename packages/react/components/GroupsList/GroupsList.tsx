@@ -17,6 +17,7 @@ interface GroupsListProps {
   groupTitleSize?: number;
   groupsClassName?: string;
   groupClassName?: string;
+  isShowMockup?: boolean;
   isLoading?: boolean;
   groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
   onOpenGroup?(id: string): void;
@@ -37,6 +38,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groupImageWidth,
     groupImageHeight,
     groupTitleSize,
+    isShowMockup,
     onOpenGroup,
     onCloseGroup,
     onNextStory,
@@ -149,6 +151,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                 currentGroup={groups[currentGroup]}
                 isFirstGroup={currentGroup === 0}
                 isLastGroup={currentGroup === groups.length - 1}
+                isShowMockup={isShowMockup}
                 isShowing={modalShow}
                 stories={groups[currentGroup].stories}
                 onClose={handleCloseModal}

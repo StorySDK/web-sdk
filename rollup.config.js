@@ -5,11 +5,11 @@ import typescript from 'rollup-plugin-typescript2';
 import scss from 'rollup-plugin-scss';
 import json from '@rollup/plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
+import image from '@rollup/plugin-image';
 
 const PACKAGE_ROOT_PATH = process.cwd();
 const { LERNA_PACKAGE_NAME } = process.env;
 
-// eslint-disable-next-line
 const pkg = LERNA_PACKAGE_NAME && require(`${PACKAGE_ROOT_PATH}/package.json`);
 
 export default [
@@ -38,7 +38,8 @@ export default [
         outputStyle: 'compressed'
       }),
       json(),
-      nodePolyfills()
+      nodePolyfills(),
+      image()
     ]
   }
 ];
