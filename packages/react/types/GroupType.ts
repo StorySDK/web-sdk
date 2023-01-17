@@ -24,5 +24,5 @@ export interface Group {
   title: string;
   stories: StoryType[];
   type: GroupType;
-  settings: StoriesGroupSettings;
+  settings?: StoriesGroupSettings;
 }
