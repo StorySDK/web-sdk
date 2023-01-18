@@ -120,6 +120,7 @@ const INIT_TOP_INDICATOR = 10;
 const INIT_LARGE_PADDING = 30;
 const INIT_LARGE_RADIUS = 30;
 const INIT_SMALL_PADDING = 145;
+const INIT_INNER_GROUP_PADDING = 115;
 const INIT_SMALL_RADIUS = 5;
 
 const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
@@ -169,6 +170,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const smallHeightGap = useAdaptiveValue(INIT_SMALL_PADDING);
   const smallBorderRadius = useAdaptiveValue(INIT_SMALL_RADIUS);
+
+  const groupInnerHeightGap = useAdaptiveValue(INIT_INNER_GROUP_PADDING);
 
   const heightGap = isLarge ? largeHeightGap : smallHeightGap;
   const borderRadius = isLarge ? largeBorderRadius : smallBorderRadius;
@@ -271,7 +274,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const handleAnimationEnd = useCallback(() => {
-    handleNext();
+    // handleNext();
   }, [handleNext]);
 
   const handlePrev = useCallback(() => {
@@ -373,7 +376,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                     <StoryContent
                       currentPaddingSize={currentPaddingSize}
                       handleGoToStory={handleGoToStory}
-                      innerHeightGap={isShowMockup ? smallHeightGap : 0}
+                      innerHeightGap={
+                        isShowMockup && currentGroupType === GroupType.GROUP
+                          ? groupInnerHeightGap
+                          : 0
+                      }
                       isLarge={
                         currentGroup.settings?.storiesSize === StorySize.LARGE &&
                         currentGroupType === GroupType.ONBOARDING

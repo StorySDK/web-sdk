@@ -6857,6 +6857,7 @@ const INIT_TOP_INDICATOR = 10;
 const INIT_LARGE_PADDING = 30;
 const INIT_LARGE_RADIUS = 30;
 const INIT_SMALL_PADDING = 145;
+const INIT_INNER_GROUP_PADDING = 115;
 const INIT_SMALL_RADIUS = 5;
 const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
 const ratioIndexLarge = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
@@ -6880,6 +6881,7 @@ const StoryModal = (props) => {
     const largeIndicatorTop = useAdaptiveValue(INIT_TOP_INDICATOR);
     const smallHeightGap = useAdaptiveValue(INIT_SMALL_PADDING);
     const smallBorderRadius = useAdaptiveValue(INIT_SMALL_RADIUS);
+    const groupInnerHeightGap = useAdaptiveValue(INIT_INNER_GROUP_PADDING);
     const heightGap = isLarge ? largeHeightGap : smallHeightGap;
     const borderRadius = isLarge ? largeBorderRadius : smallBorderRadius;
     const currentPaddingSize = isShowMockup ? PADDING_SIZE + heightGap : PADDING_SIZE;
@@ -6966,7 +6968,7 @@ const StoryModal = (props) => {
         stories
     ]);
     const handleAnimationEnd = useCallback(() => {
-        handleNext();
+        // handleNext();
     }, [handleNext]);
     const handlePrev = useCallback(() => {
         if (currentStory === 0) {
@@ -7039,7 +7041,9 @@ const StoryModal = (props) => {
                         React.createElement("div", { className: b$f('swiperContent') }, stories.map((story, index) => {
                             var _a;
                             return (React.createElement("div", { className: b$f('story', { current: index === currentStory }), key: story.id },
-                                React.createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup ? smallHeightGap : 0, isLarge: ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.storiesSize) === StorySize.LARGE &&
+                                React.createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP
+                                        ? groupInnerHeightGap
+                                        : 0, isLarge: ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.storiesSize) === StorySize.LARGE &&
                                         currentGroupType === GroupType.ONBOARDING, isLargeBackground: isShowMockup && currentGroupType === GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize })));
                         })),
                         React.createElement("div", { className: b$f('controls') },
