@@ -9,6 +9,7 @@ interface StoryModalProps {
     isLastGroup: boolean;
     isFirstGroup: boolean;
     startStoryId?: string;
+    isStatusBarActive?: boolean;
     isForceCloseAvailable?: boolean;
     onClose(): void;
     onPrevGroup(): void;

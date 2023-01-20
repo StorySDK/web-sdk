@@ -5,7 +5,7 @@ import { WidgetFactory } from '../../core';
 import { StoryType } from '../../types';
 import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackground';
 import { renderBackgroundStyles, renderPosition } from '../../utils';
-import { MOBILE_BREAKPOINT, PADDING_SIZE, StoryCurrentSize } from '../StoryModal/StoryModal';
+import { MOBILE_BREAKPOINT, StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
 
 const b = block('StorySdkContent');
@@ -38,12 +38,17 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
 
   const [width, height] = useWindowSize();
 
+  const isMobile = width < MOBILE_BREAKPOINT;
+
   return (
     <>
       <div
         className={b('background', { noTopShadow })}
         style={{
-          background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D'
+          background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
+          height: isMobile
+            ? Math.round(storyCurrentSize.height * (width / storyCurrentSize.width))
+            : undefined
         }}
       >
         {story.background.type === 'video' && (
@@ -61,19 +66,17 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
       <div
         className={b({ large: isLarge, center: isLargeBackground })}
         style={{
-          height:
-            width < MOBILE_BREAKPOINT
-              ? Math.round(storyCurrentSize.height * (width / storyCurrentSize.width))
-              : `calc(100% - ${innerHeightGap}px)`
+          height: isMobile
+            ? Math.round(storyCurrentSize.height * (width / storyCurrentSize.width))
+            : `calc(100% - ${innerHeightGap}px)`
         }}
       >
         <div
           className={b('scope', { large: isLarge })}
           style={{
-            transform:
-              width < MOBILE_BREAKPOINT
-                ? `scale(${width / storyCurrentSize.width})`
-                : `scale(${(height - currentPaddingSize) / storyCurrentSize.height})`
+            transform: isMobile
+              ? `scale(${width / storyCurrentSize.width})`
+              : `scale(${(height - currentPaddingSize) / storyCurrentSize.height})`
           }}
         >
           {story.storyData.map((widget: any) => (

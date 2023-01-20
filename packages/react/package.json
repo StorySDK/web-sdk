@@ -27,6 +27,7 @@
     "emoji-mart": "^3.0.1",
     "hex-to-rgba": "^2.0.1",
     "js-confetti": "^0.10.2",
+    "luxon": "^3.2.1",
     "nanoid": "^3.1.30",
     "parse-color": "^1.0.0",
     "react-loading-skeleton": "^3.0.2"
@@ -42,6 +43,7 @@
     "@types/axios": "^0.14.0",
     "@types/bem-cn": "^3.0.0",
     "@types/emoji-mart": "^3.0.6",
+    "@types/luxon": "^3.2.0",
     "@types/node": "^12.20.25",
     "@types/parse-color": "^1.0.1",
     "@types/react": "^17.0.21",

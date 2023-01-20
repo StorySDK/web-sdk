@@ -10,6 +10,7 @@ interface GroupProps {
     handlePrevGroup: () => void;
     isShowing: boolean;
     isShowMockup?: boolean;
+    isStatusBarActive?: boolean;
     startStoryId?: string;
 }
 export declare const CustomGroupControl: React.FC<GroupProps>;

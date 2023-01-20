@@ -2,14 +2,17 @@ import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetPar
 declare type ColorValue = {
     type: 'color';
     value: string;
+    isFilled?: boolean;
 };
 declare type GradientValue = {
     type: 'gradient';
     value: string[];
+    isFilled?: boolean;
 };
 declare type BackgrounValue = {
     type: 'image' | 'video';
     value: string;
+    isFilled?: boolean;
 };
 export declare type BorderType = GradientValue | ColorValue;
 export declare type BackgroundType = GradientValue | ColorValue | BackgrounValue;

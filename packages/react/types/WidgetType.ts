@@ -13,9 +13,9 @@ import {
   TimerWidgetParamsType
 } from './WidgetsParams';
 
-type ColorValue = { type: 'color'; value: string };
-type GradientValue = { type: 'gradient'; value: string[] };
-type BackgrounValue = { type: 'image' | 'video'; value: string };
+type ColorValue = { type: 'color'; value: string; isFilled?: boolean };
+type GradientValue = { type: 'gradient'; value: string[]; isFilled?: boolean };
+type BackgrounValue = { type: 'image' | 'video'; value: string; isFilled?: boolean };
 
 export type BorderType = GradientValue | ColorValue;
 export type BackgroundType = GradientValue | ColorValue | BackgrounValue;
