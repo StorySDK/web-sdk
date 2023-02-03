@@ -1,9 +1,9 @@
-import React from 'react';
 import block from 'bem-cn';
-import { GiphyWidgetParamsType, WidgetComponent } from '../../types';
+import React from 'react';
+import { GiphyWidgetParamsType, WidgetComponent } from '@types';
 import './GiphyWidget.scss';
 
-const b = block('GiphySdkWidget');
+const b = block('GiphyWidget');
 
 export const GiphyWidget: WidgetComponent<{ params: GiphyWidgetParamsType }> = (props) => {
   const { params } = props;

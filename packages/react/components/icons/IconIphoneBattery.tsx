@@ -1,10 +1,10 @@
 import React from 'react';
 
-type PropTypes = {
+type PropsType = {
   className?: string;
 };
 
-export const IconIphoneBattery = ({ className }: PropTypes) => (
+export const IconIphoneBattery = ({ className }: PropsType) => (
   <svg
     className={className}
     fill="none"

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import block from 'bem-cn';
 import { DateTime } from 'luxon';
 import './StatusBar.scss';
-import { IconIphoneBattery, IconIphoneCellular, IconIphoneWifi } from '../../../Icon';
-import { useAdaptiveValue } from '../../../../hooks';
+import { IconIphoneBattery, IconIphoneCellular, IconIphoneWifi } from '@components/icons';
+import { useAdaptiveValue } from '@hooks';
 
 const b = block('StorySdkStatusBar');
 

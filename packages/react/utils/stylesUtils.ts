@@ -1,3 +1,4 @@
+import { setup } from 'bem-cn';
 import hexToRgba from 'hex-to-rgba';
 import parseColor from 'parse-color';
 import { WidgetPositionType, WidgetPositionLimitsType, BackgroundType, BorderType } from '../types';
@@ -8,6 +9,8 @@ interface Stroke {
   strokeOpacity: number;
   fillBorderRadius?: number;
 }
+
+export const block = setup({ ns: 'StorySdk-' });
 
 export const renderColor = (color: string, opacity?: number) => {
   if (color.includes('#') && opacity) {

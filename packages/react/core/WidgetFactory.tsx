@@ -1,5 +1,4 @@
 import React from 'react';
-import { WidgetObjectType, WidgetsTypes } from '../types';
 import {
   ChooseAnswerWidget,
   ClickMeWidget,
@@ -7,13 +6,19 @@ import {
   EmojiReactionWidget,
   GiphyWidget,
   QuestionWidget,
+  QuizMultipleAnswerWidget,
+  QuizMultipleAnswerWithImageWidget,
+  QuizOneAnswerWidget,
+  QuizOpenAnswerWidget,
+  QuizRateWidget,
   RectangleWidget,
   SliderWidget,
   SwipeUpWidget,
   TalkAboutWidget,
   TextWidget,
   TimerWidget
-} from '../widgets';
+} from '@widgets';
+import { WidgetObjectType, WidgetsTypes } from '../types';
 
 interface WidgetFactoryProps {
   storyId: string;
@@ -98,6 +103,46 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.TIMER:
         return (
           <TimerWidget
+            params={this.props.widget.content.params}
+            position={this.props.widget.position}
+            positionLimits={this.props.widget.positionLimits}
+          />
+        );
+      case WidgetsTypes.QUIZ_ONE_ANSWER:
+        return (
+          <QuizOneAnswerWidget
+            params={this.props.widget.content.params}
+            position={this.props.widget.position}
+            positionLimits={this.props.widget.positionLimits}
+          />
+        );
+      case WidgetsTypes.QUIZ_MULTIPLE_ANSWERS:
+        return (
+          <QuizMultipleAnswerWidget
+            params={this.props.widget.content.params}
+            position={this.props.widget.position}
+            positionLimits={this.props.widget.positionLimits}
+          />
+        );
+      case WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE:
+        return (
+          <QuizMultipleAnswerWithImageWidget
+            params={this.props.widget.content.params}
+            position={this.props.widget.position}
+            positionLimits={this.props.widget.positionLimits}
+          />
+        );
+      case WidgetsTypes.QUIZ_OPEN_ANSWER:
+        return (
+          <QuizOpenAnswerWidget
+            params={this.props.widget.content.params}
+            position={this.props.widget.position}
+            positionLimits={this.props.widget.positionLimits}
+          />
+        );
+      case WidgetsTypes.QUIZ_RATE:
+        return (
+          <QuizRateWidget
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}

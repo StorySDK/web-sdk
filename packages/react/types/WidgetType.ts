@@ -5,12 +5,17 @@ import {
   EmojiReactionWidgetParamsType,
   GiphyWidgetParamsType,
   QuestionWidgetParamsType,
+  QuizMultipleAnswerParamsType,
+  QuizOneAnswerParamsType,
   RectangleWidgetParamsType,
   SliderWidgetParamsType,
   SwipeUpWidgetParamsType,
   TalkAboutWidgetParamsType,
   TextWidgetParamsType,
-  TimerWidgetParamsType
+  TimerWidgetParamsType,
+  QuizMultipleAnswerWithImageParamsType,
+  QuizRateParamsType,
+  QuizOpenAnswerParamsType
 } from './WidgetsParams';
 
 type ColorValue = { type: 'color'; value: string; isFilled?: boolean };
@@ -37,7 +42,12 @@ export enum WidgetsTypes {
   EMOJI_REACTION = 'emoji_reaction',
   TIMER = 'timer',
   CHOOSE_ANSWER = 'choose_answer',
-  GIPHY = 'giphy'
+  GIPHY = 'giphy',
+  QUIZ_ONE_ANSWER = 'quiz_one_answer',
+  QUIZ_MULTIPLE_ANSWERS = 'quiz_multiple_answers',
+  QUIZ_OPEN_ANSWER = 'quiz_open_answer',
+  QUIZ_MULTIPLE_ANSWER_WITH_IMAGE = 'quiz_one_multiple_with_image',
+  QUIZ_RATE = 'quiz_rate'
 }
 
 export interface RectangleState {
@@ -100,6 +110,31 @@ export interface GiphyState {
   params: GiphyWidgetParamsType;
 }
 
+export interface QuizOneAnswerState {
+  type: WidgetsTypes.QUIZ_ONE_ANSWER;
+  params: QuizOneAnswerParamsType;
+}
+
+export interface QuizMultipleAnswerState {
+  type: WidgetsTypes.QUIZ_MULTIPLE_ANSWERS;
+  params: QuizMultipleAnswerParamsType;
+}
+
+export interface QuizMultipleAnswerWithImageState {
+  type: WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE;
+  params: QuizMultipleAnswerWithImageParamsType;
+}
+
+export interface QuizRateState {
+  type: WidgetsTypes.QUIZ_RATE;
+  params: QuizRateParamsType;
+}
+
+export interface QuizOpenAnswerState {
+  type: WidgetsTypes.QUIZ_OPEN_ANSWER;
+  params: QuizOpenAnswerParamsType;
+}
+
 export interface ElementSizeType {
   width: number | string;
   height: number | string;
@@ -147,7 +182,12 @@ export interface WidgetObjectType {
     | EmojiReactionState
     | TimerState
     | ChooseAnswerState
-    | GiphyState;
+    | GiphyState
+    | QuizOneAnswerState
+    | QuizMultipleAnswerState
+    | QuizMultipleAnswerWithImageState
+    | QuizRateState
+    | QuizOpenAnswerState;
   action?(): void;
 }
 

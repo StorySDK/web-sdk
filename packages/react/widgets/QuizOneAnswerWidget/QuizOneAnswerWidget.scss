@@ -1,0 +1,59 @@
+@import "../../styles/variables.scss";
+
+.StorySdk-QuizOneAnswerWidget {
+  width: 100%;
+
+  &__title {
+    color: #ffffff;
+    font-size: 28px;
+    margin-bottom: 32px;
+    text-align: center;
+    word-break: break-word;
+    font-weight: 800;
+  }
+
+  &__answers {
+    display: grid;
+    gap: 10px;
+  }
+
+  &__answerTitle {
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 123%;
+    color: #000000;
+    margin: 0;
+    transition: 0.2s ease-out all;
+  }
+
+  &__answer {
+    width: 100%;
+    padding: 19px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 50px;
+    transition: 0.2s ease-out all;
+    cursor: pointer;
+
+    &:hover, &_selected {
+      color: #ffffff;
+      background-color: map-get($theme-colors, "black");
+
+      .StorySdk-QuizOneAnswerWidget__answerTitle {
+        color: #ffffff;
+      }
+    }
+
+    &_selected {
+      cursor: auto;
+    }
+
+    &:disabled {
+      cursor: auto;
+      pointer-events: none;
+    }
+  }
+}

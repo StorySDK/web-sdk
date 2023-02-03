@@ -1,10 +1,10 @@
 import React from 'react';
 
-type PropTypes = {
+type PropsType = {
   className?: string;
 };
 
-export const IconConfirm = ({ className }: PropTypes) => (
+export const IconConfirm = ({ className }: PropsType) => (
   <svg
     className={className}
     fill="none"

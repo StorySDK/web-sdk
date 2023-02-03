@@ -6095,6 +6095,11 @@ var WidgetsTypes;
     WidgetsTypes["TIMER"] = "timer";
     WidgetsTypes["CHOOSE_ANSWER"] = "choose_answer";
     WidgetsTypes["GIPHY"] = "giphy";
+    WidgetsTypes["QUIZ_ONE_ANSWER"] = "quiz_one_answer";
+    WidgetsTypes["QUIZ_MULTIPLE_ANSWERS"] = "quiz_multiple_answers";
+    WidgetsTypes["QUIZ_OPEN_ANSWER"] = "quiz_open_answer";
+    WidgetsTypes["QUIZ_MULTIPLE_ANSWER_WITH_IMAGE"] = "quiz_one_multiple_with_image";
+    WidgetsTypes["QUIZ_RATE"] = "quiz_rate";
 })(WidgetsTypes || (WidgetsTypes = {}));
 
 var GroupType;
@@ -6126,7 +6131,7 @@ var lib = {exports: {}};
 !function(n,t){module.exports=t();}(commonjsGlobal,function(){return function(n){var t={};function e(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};return n[r].call(o.exports,o,o.exports,e),o.l=!0,o.exports}return e.m=n,e.c=t,e.d=function(n,t,r){e.o(n,t)||Object.defineProperty(n,t,{enumerable:!0,get:r});},e.r=function(n){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(n,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(n,"__esModule",{value:!0});},e.t=function(n,t){if(1&t&&(n=e(n)),8&t)return n;if(4&t&&"object"==typeof n&&n&&n.__esModule)return n;var r=Object.create(null);if(e.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:n}),2&t&&"string"!=typeof n)for(var o in n)e.d(r,o,function(t){return n[t]}.bind(null,o));return r},e.n=function(n){var t=n&&n.__esModule?function(){return n.default}:function(){return n};return e.d(t,"a",t),t},e.o=function(n,t){return Object.prototype.hasOwnProperty.call(n,t)},e.p="",e(e.s=0)}([function(n,t,e){Object.defineProperty(t,"__esModule",{value:!0});var r=e(1);t.ERROR_BLOCK_NAME_TYPE="Block name should be a string",t.ERROR_BLOCK_NAME_EMPTY="Block name should be non-empty";var o={ns:"",el:"__",mod:"_",modValue:"_"},i=function(n){return "string"==typeof n},u=function(n){return "string"!=typeof n},s=function(n,t){for(var e=[],o=2;o<arguments.length;o++)e[o-2]=arguments[o];var i=r.assign({},t);return i.mixes=i.mixes.concat(e),c(i,n)},a=function(n,t,e){for(var o=[],i=3;i<arguments.length;i++)o[i-3]=arguments[i];var u=r.assign({},t),s=r.assign({},u.states||{});return s[e]=r.assign.apply(void 0,[{},s[e]||{}].concat(o)),u.states=s,c(u,n)},l=function(n,t,e,r){return String.prototype.split.call(f(n,t),e,r)},f=function(n,t){var e=t.name,r=t.mods,o=t.mixes,i=t.states,u=[e];if(r&&(u=u.concat(Object.keys(r).filter(function(n){return r[n]}).map(function(t){var o=r[t];return !0===o?e+n.mod+t:e+n.mod+t+n.modValue+o}))),i&&Object.keys(i).forEach(function(n){var t=i[n];u=u.concat(Object.keys(t).filter(function(n){return t[n]}).map(function(t){return n+t}));}),n.ns&&(u=u.map(function(t){return n.ns+t})),o&&(u=u.concat(function(n){return void 0===n&&(n=[]),n.map(function(n){return Array.isArray(n)?n.join(" "):"object"==typeof n&&null!==n?n.toString():"function"==typeof n?n.toString():"string"==typeof n?n:""}).filter(function(n){return !!n})}(o))),n.classMap){var s=n.classMap;u=u.map(function(n){return s[n]||n});}return u.join(" ")},c=function(n,t){return {mix:s.bind(null,t,n),split:l.bind(null,t,n),is:a.bind(null,t,n,"is-"),has:a.bind(null,t,n,"has-"),state:a.bind(null,t,n,"is-"),toString:f.bind(null,t,n)}},d=function(n,t){var e={name:n,mods:{},mixes:[],states:{"is-":{},"has-":{}}},o=function(n,t){for(var e=[],o=2;o<arguments.length;o++)e[o-2]=arguments[o];if(!e.length)return f(n,t);var s=r.assign({},t),a=e.filter(i).reduce(function(t,e){return t+n.el+e},"");a&&(s.name=s.name+a);var l=e.filter(u).reduce(function(n,t){return r.assign(n,t)},{});return s.mods=r.assign({},s.mods,l),c(s,n)}.bind(null,t,e);return o.mix=s.bind(null,t,e),o.split=l.bind(null,t,e),o.is=a.bind(null,t,e,"is-"),o.has=a.bind(null,t,e,"has-"),o.state=a.bind(null,t,e,"is-"),o.toString=f.bind(null,t,e),o};t.setup=function(n){return void 0===n&&(n={}),function(e){if("string"!=typeof e)throw new Error(t.ERROR_BLOCK_NAME_TYPE);var i=e.trim();if(!i)throw new Error(t.ERROR_BLOCK_NAME_EMPTY);return d(i,r.assign({},o,n))}},t.block=t.setup(),t.default=t.block;},function(n,t,e){Object.defineProperty(t,"__esModule",{value:!0}),t.assign=function(n){for(var t=[],e=1;e<arguments.length;e++)t[e-1]=arguments[e];for(var r=0;r<t.length;r++){var o=t[r];for(var i in o)o.hasOwnProperty(i)&&(n[i]=o[i]);}return n};}])});
 }(lib));
 
-var block = /*@__PURE__*/getDefaultExportFromCjs(lib.exports);
+var block$1 = /*@__PURE__*/getDefaultExportFromCjs(lib.exports);
 
 var classnames = {exports: {}};
 
@@ -6188,7 +6193,7 @@ var classnames = {exports: {}};
 
 var cn = classnames.exports;
 
-const b$i = block('GroupSdkItem');
+const b$p = block$1('GroupSdkItem');
 const GroupItem = (props) => {
     const { imageUrl, title, view, index, type, groupClassName, groupTitleSize, groupImageWidth, groupImageHeight, onClick } = props;
     const BASE_CONTAINER_WIDTH_INDEX = 1.32;
@@ -6226,19 +6231,19 @@ const GroupItem = (props) => {
         }
         return undefined;
     }, [view]);
-    return (React.createElement("button", { className: cn(b$i({ view, type }).toString(), groupClassName || ''), style: {
+    return (React.createElement("button", { className: cn(b$p({ view, type }).toString(), groupClassName || ''), style: {
             width: getContainerSize(),
             minHeight: view === 'rectangle' && groupImageWidth
                 ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
                 : getContainerSize()
         }, onClick: () => onClick && onClick(index) },
-        React.createElement("div", { className: b$i('imgContainer', { view, type }), style: { width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' } },
-            React.createElement("img", { alt: "", className: b$i('img', { view }), src: imageUrl, style: {
+        React.createElement("div", { className: b$p('imgContainer', { view, type }), style: { width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' } },
+            React.createElement("img", { alt: "", className: b$p('img', { view }), src: imageUrl, style: {
                     width: getImageSize(groupImageWidth),
                     height: getImageSize(groupImageHeight, true)
                 } })),
-        React.createElement("div", { className: b$i('titleContainer', { view }) },
-            React.createElement("p", { className: b$i('title', { view }), style: {
+        React.createElement("div", { className: b$p('titleContainer', { view }) },
+            React.createElement("p", { className: b$p('title', { view }), style: {
                     fontSize: groupTitleSize || undefined
                 } }, title))));
 };
@@ -6318,7 +6323,7 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
         : elements));
 }
 
-const b$h = block('GroupsSdkList');
+const b$o = block$1('GroupsSdkList');
 const GroupsList = (props) => {
     const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, isShowMockup, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
     const [currentGroup, setCurrentGroup] = useState(0);
@@ -6358,26 +6363,26 @@ const GroupsList = (props) => {
         }
         setModalShow(false);
     }, [currentGroup, groups, onCloseGroup]);
-    return (React.createElement(React.Fragment, null, isLoading ? (React.createElement("div", { className: b$h() },
-        React.createElement("div", { className: b$h('carousel') },
-            React.createElement("div", { className: b$h('loaderItem') },
+    return (React.createElement(React.Fragment, null, isLoading ? (React.createElement("div", { className: b$o() },
+        React.createElement("div", { className: b$o('carousel') },
+            React.createElement("div", { className: b$o('loaderItem') },
                 React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
                 React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React.createElement("div", { className: b$h('loaderItem') },
+            React.createElement("div", { className: b$o('loaderItem') },
                 React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
                 React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React.createElement("div", { className: b$h('loaderItem') },
+            React.createElement("div", { className: b$o('loaderItem') },
                 React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
                 React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React.createElement("div", { className: b$h('loaderItem') },
+            React.createElement("div", { className: b$o('loaderItem') },
                 React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
                 React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React.createElement(React.Fragment, null, groups.length ? (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: cn(b$h(), groupsClassName) },
-            React.createElement("div", { className: b$h('carousel') }, groups
+        React.createElement("div", { className: cn(b$o(), groupsClassName) },
+            React.createElement("div", { className: b$o('carousel') }, groups
                 .filter((group) => group.stories.length)
                 .map((group, index) => (React.createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))),
-        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, isShowMockup: isShowMockup, isShowing: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("div", { className: b$h({ empty: true }) },
-        React.createElement("p", { className: b$h('emptyText') }, "Stories will be here")))))));
+        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, isShowMockup: isShowMockup, isShowing: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("div", { className: b$o({ empty: true }) },
+        React.createElement("p", { className: b$o('emptyText') }, "Stories will be here")))))));
 };
 
 var u = e=>{var a=useRef(e);return useEffect(()=>{a.current=e;}),a};
@@ -16031,7 +16036,18 @@ const IconIphoneWifi = ({ className }) => (React.createElement("svg", { classNam
 const IconIphoneCellular = ({ className }) => (React.createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 17 12", width: "17", xmlns: "http://www.w3.org/2000/svg" },
     React.createElement("path", { clipRule: "evenodd", d: "M16 0.335938H15C14.4477 0.335938 14 0.783653 14 1.33594V10.0026C14 10.5549 14.4477 11.0026 15 11.0026H16C16.5523 11.0026 17 10.5549 17 10.0026V1.33594C17 0.783653 16.5523 0.335938 16 0.335938ZM10.3333 2.66927H11.3333C11.8856 2.66927 12.3333 3.11699 12.3333 3.66927V10.0026C12.3333 10.5549 11.8856 11.0026 11.3333 11.0026H10.3333C9.78105 11.0026 9.33333 10.5549 9.33333 10.0026V3.66927C9.33333 3.11699 9.78105 2.66927 10.3333 2.66927ZM6.66667 5.0026H5.66667C5.11438 5.0026 4.66667 5.45032 4.66667 6.0026V10.0026C4.66667 10.5549 5.11438 11.0026 5.66667 11.0026H6.66667C7.21895 11.0026 7.66667 10.5549 7.66667 10.0026V6.0026C7.66667 5.45032 7.21895 5.0026 6.66667 5.0026ZM2 7.0026H1C0.447715 7.0026 0 7.45032 0 8.0026V10.0026C0 10.5549 0.447715 11.0026 1 11.0026H2C2.55228 11.0026 3 10.5549 3 10.0026V8.0026C3 7.45032 2.55228 7.0026 2 7.0026Z", fill: "white", fillRule: "evenodd" })));
 
-const b$g = block('StorySdkStatusBar');
+const IconRateStar = ({ className }) => (React.createElement("svg", { className: className, viewBox: "0 0 52 50", xmlns: "http://www.w3.org/2000/svg" },
+    React.createElement("path", { d: "M26 1L33.725 16.7981L51 19.347L38.5 31.6372L41.45 49L26 40.7981L10.55 49L13.5 31.6372L1 19.347L18.275 16.7981L26 1Z", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
+
+const IconArrowSend = ({ className }) => (React.createElement("svg", { className: className, fill: "none", height: "32", viewBox: "0 0 32 32", width: "32", xmlns: "http://www.w3.org/2000/svg" },
+    React.createElement("g", { strokeWidth: "2" },
+        React.createElement("circle", { cx: "16", cy: "16", r: "15" }),
+        React.createElement("g", { strokeLinecap: "round" },
+            React.createElement("path", { d: "m23 16-5.5-5.5" }),
+            React.createElement("path", { d: "m23 16-5.5 5.5" }),
+            React.createElement("path", { d: "m23 16h-14" })))));
+
+const b$n = block$1('StorySdkStatusBar');
 const INIT_VERTICAL_PADDING = 10;
 const INIT_SIDE_PADDING = 20;
 const StatusBar = ({ className }) => {
@@ -16044,20 +16060,20 @@ const StatusBar = ({ className }) => {
     }, []);
     const paddingSide = useAdaptiveValue(INIT_SIDE_PADDING);
     const paddingVertical = useAdaptiveValue(INIT_VERTICAL_PADDING);
-    return (React.createElement("div", { className: `${b$g()} ${className || ''}`.trim(), style: {
+    return (React.createElement("div", { className: `${b$n()} ${className || ''}`.trim(), style: {
             paddingTop: paddingVertical,
             paddingBottom: paddingVertical,
             paddingLeft: paddingSide,
             paddingRight: paddingSide
         } },
-        React.createElement("span", { className: b$g('time') }, time),
-        React.createElement("div", { className: b$g('iconWrapper') },
-            React.createElement(IconIphoneCellular, { className: b$g('icon') }),
-            React.createElement(IconIphoneWifi, { className: b$g('icon') }),
-            React.createElement(IconIphoneBattery, { className: b$g('icon') }))));
+        React.createElement("span", { className: b$n('time') }, time),
+        React.createElement("div", { className: b$n('iconWrapper') },
+            React.createElement(IconIphoneCellular, { className: b$n('icon') }),
+            React.createElement(IconIphoneWifi, { className: b$n('icon') }),
+            React.createElement(IconIphoneBattery, { className: b$n('icon') }))));
 };
 
-const b$f = block('StorySdkModal');
+const b$m = block$1('StorySdkModal');
 const CloseIcon = () => (React.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
     React.createElement("path", { d: "M18.0002 6.00079L6.00024 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" }),
     React.createElement("path", { d: "M6.00024 6.00079L18.0002 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" })));
@@ -16279,29 +16295,29 @@ const StoryModal = (props) => {
         ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.isProgressHidden) &&
         ((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.isProhibitToClose);
     return (React.createElement(StoryContext.Provider, { value: { currentStoryId, playStatusChange: setPlayStatus } },
-        React.createElement("div", { className: b$f({ isShowing }), ref: storyModalRef, style: {
+        React.createElement("div", { className: b$m({ isShowing }), ref: storyModalRef, style: {
                 top: window.pageYOffset || document.documentElement.scrollTop
             } },
-            React.createElement("div", { className: b$f('body') },
-                stories.length > 1 && (React.createElement("button", { className: b$f('arrowButton', { left: true }), onClick: handlePrev },
+            React.createElement("div", { className: b$m('body') },
+                stories.length > 1 && (React.createElement("button", { className: b$m('arrowButton', { left: true }), onClick: handlePrev },
                     React.createElement(LeftArrowIcon, null))),
-                React.createElement("div", { className: b$f('bodyContainer', {
+                React.createElement("div", { className: b$m('bodyContainer', {
                         black: currentGroupType === GroupType.GROUP && !isBackroundFilled && !isMobile
                     }), style: {
                         borderRadius: containerBorderRadius
                     } },
                     isShowStatusBarInContainer && (React.createElement(React.Fragment, null,
-                        React.createElement("div", { className: b$f('statusBar'), style: {
+                        React.createElement("div", { className: b$m('statusBar'), style: {
                                 paddingTop: statusBarTop,
                                 paddingLeft: statusBarTop,
                                 paddingRight: statusBarTop
                             } },
                             React.createElement(StatusBar, null)),
-                        React.createElement("div", { className: b$f('bottomMock'), style: {
+                        React.createElement("div", { className: b$m('bottomMock'), style: {
                                 paddingBottom: largeElementsTop
                             } },
-                            React.createElement("img", { alt: "", className: b$f('bottomMockImg'), src: img })))),
-                    React.createElement("div", { className: b$f('swiper', {
+                            React.createElement("img", { alt: "", className: b$m('bottomMockImg'), src: img })))),
+                    React.createElement("div", { className: b$m('swiper', {
                             mockup: !isMobile && isShowMockup,
                             small: !isMobile && !isLarge && isShowMockup
                         }), style: {
@@ -16309,54 +16325,54 @@ const StoryModal = (props) => {
                             height: `calc(100% - ${isShowMockup && !isMobile ? heightGap : 0}px)`,
                             borderRadius: getBorderRadius()
                         } },
-                        React.createElement("div", { className: b$f('swiperContent') }, stories.map((story, index) => {
+                        React.createElement("div", { className: b$m('swiperContent') }, stories.map((story, index) => {
                             var _a;
-                            return (React.createElement("div", { className: b$f('story', { current: index === currentStory }), key: story.id },
+                            return (React.createElement("div", { className: b$m('story', { current: index === currentStory }), key: story.id },
                                 React.createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP && isLarge
                                         ? groupInnerHeightGap
                                         : 0, isLarge: ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.storiesSize) === StorySize.LARGE &&
                                         currentGroupType === GroupType.ONBOARDING, isLargeBackground: isShowMockup && currentGroupType === GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize })));
                         })),
-                        React.createElement("div", { className: b$f('topContainer') },
+                        React.createElement("div", { className: b$m('topContainer') },
                             React.createElement(React.Fragment, null,
                                 isShowStatusBarInStory && React.createElement(StatusBar, null),
-                                React.createElement("div", { className: b$f('controls'), style: {
+                                React.createElement("div", { className: b$m('controls'), style: {
                                         gap: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
                                         paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
                                         paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
                                         paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
                                     } },
-                                    !((_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.isProgressHidden) && (React.createElement("div", { className: b$f('indicators', {
+                                    !((_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.isProgressHidden) && (React.createElement("div", { className: b$m('indicators', {
                                             stopAnimation: playStatus === 'pause',
                                             widePadding: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeIndicatorTop : undefined
-                                        } }, stories.map((story, index) => (React.createElement("div", { className: b$f('indicator', {
+                                        } }, stories.map((story, index) => (React.createElement("div", { className: b$m('indicator', {
                                             filled: index < currentStory,
                                             current: index === currentStory
                                         }), key: story.id, onAnimationEnd: handleAnimationEnd }))))),
-                                    currentGroupType === GroupType.GROUP && (React.createElement("div", { className: b$f('group', {
+                                    currentGroupType === GroupType.GROUP && (React.createElement("div", { className: b$m('group', {
                                             noProgress: (_g = currentGroup.settings) === null || _g === void 0 ? void 0 : _g.isProgressHidden,
                                             wideLeft: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeElementsTop : undefined
                                         } },
-                                        React.createElement("div", { className: b$f('groupImgWrapper') },
-                                            React.createElement("img", { alt: "", className: b$f('groupImg'), src: currentGroup.imageUrl })),
-                                        React.createElement("p", { className: b$f('groupTitle') }, currentGroup.title))),
-                                    !((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProhibitToClose) && (React.createElement("button", { className: b$f('close', {
+                                        React.createElement("div", { className: b$m('groupImgWrapper') },
+                                            React.createElement("img", { alt: "", className: b$m('groupImg'), src: currentGroup.imageUrl })),
+                                        React.createElement("p", { className: b$m('groupTitle') }, currentGroup.title))),
+                                    !((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProhibitToClose) && (React.createElement("button", { className: b$m('close', {
                                             noProgress: (_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProgressHidden,
                                             wideRight: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeElementsTop : undefined
                                         }, onClick: handleClose },
                                         React.createElement(CloseIcon, null))))))),
-                    isShowMockup && (React.createElement("img", { className: b$f('mockup'), src: isLarge || currentGroupType === GroupType.GROUP
+                    isShowMockup && (React.createElement("img", { className: b$m('mockup'), src: isLarge || currentGroupType === GroupType.GROUP
                             ? img$2
                             : img$1 }))),
-                stories.length > 1 && (React.createElement("button", { className: b$f('arrowButton', { right: true }), onClick: handleNext },
+                stories.length > 1 && (React.createElement("button", { className: b$m('arrowButton', { right: true }), onClick: handleNext },
                     React.createElement(RightArrowIcon, null)))),
-            isForceCloseAvailable && ((_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.isProhibitToClose) && (React.createElement("button", { className: b$f('close', { general: true }), onClick: handleClose },
+            isForceCloseAvailable && ((_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.isProhibitToClose) && (React.createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
                 React.createElement(CloseIcon, null)))),
         React.createElement("canvas", { ref: canvasRef, style: {
                 display: 'none'
@@ -17308,6 +17324,7 @@ var parseColor = function (cstr) {
     return res;
 };
 
+const block = lib.exports.setup({ ns: 'StorySdk-' });
 const renderColor = (color, opacity) => {
     if (color.includes('#') && opacity) {
         color = build(color, opacity / 100);
@@ -17386,8 +17403,8 @@ const getClientPosition = (e) => {
     };
 };
 
-const b$e = block('ChooseAnswerSdkWidget');
-const INIT_ELEMENT_STYLES$5 = {
+const b$l = block('ChooseAnswerWidget');
+const INIT_ELEMENT_STYLES$a = {
     widget: {
         borderRadius: 10
     },
@@ -17424,28 +17441,28 @@ const ChooseAnswerWidget = (props) => {
     }, [position, positionLimits]);
     const elementSizes = useMemo(() => ({
         widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES$5.widget.borderRadius)
+            borderRadius: calculate(INIT_ELEMENT_STYLES$a.widget.borderRadius)
         },
         header: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$5.header.fontSize),
-            paddingTop: calculate(INIT_ELEMENT_STYLES$5.header.paddingTop),
-            paddingBottom: calculate(INIT_ELEMENT_STYLES$5.header.paddingBottom)
+            fontSize: calculate(INIT_ELEMENT_STYLES$a.header.fontSize),
+            paddingTop: calculate(INIT_ELEMENT_STYLES$a.header.paddingTop),
+            paddingBottom: calculate(INIT_ELEMENT_STYLES$a.header.paddingBottom)
         },
         answers: {
-            padding: calculate(INIT_ELEMENT_STYLES$5.answers.padding)
+            padding: calculate(INIT_ELEMENT_STYLES$a.answers.padding)
         },
         answer: {
-            padding: calculate(INIT_ELEMENT_STYLES$5.answer.padding),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$5.answer.marginBottom)
+            padding: calculate(INIT_ELEMENT_STYLES$a.answer.padding),
+            marginBottom: calculate(INIT_ELEMENT_STYLES$a.answer.marginBottom)
         },
         answerId: {
-            width: calculate(INIT_ELEMENT_STYLES$5.answerId.width),
-            height: calculate(INIT_ELEMENT_STYLES$5.answerId.height),
-            marginRight: calculate(INIT_ELEMENT_STYLES$5.answerId.marginRight),
-            fontSize: calculate(INIT_ELEMENT_STYLES$5.answerId.fontSize)
+            width: calculate(INIT_ELEMENT_STYLES$a.answerId.width),
+            height: calculate(INIT_ELEMENT_STYLES$a.answerId.height),
+            marginRight: calculate(INIT_ELEMENT_STYLES$a.answerId.marginRight),
+            fontSize: calculate(INIT_ELEMENT_STYLES$a.answerId.fontSize)
         },
         answerTitle: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$5.answerTitle.fontSize)
+            fontSize: calculate(INIT_ELEMENT_STYLES$a.answerTitle.fontSize)
         }
     }), [calculate]);
     const handleMarkAnswer = useCallback((answerId) => {
@@ -17456,35 +17473,35 @@ const ChooseAnswerWidget = (props) => {
     }, [onAnswer]);
     const renderAnswer = useCallback((answer) => {
         if (userAnswer) {
-            return (React.createElement("div", { className: b$e('answer', {
+            return (React.createElement("div", { className: b$l('answer', {
                     correct: answer.id === params.correct && params.markCorrectAnswer,
                     incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                     choosen: userAnswer === answer.id && params.markCorrectAnswer,
                     filled: userAnswer === answer.id && !params.markCorrectAnswer
                 }), key: `answer-${answer.id}`, style: elementSizes.answer },
-                React.createElement("div", { className: b$e('answerCircle', {
+                React.createElement("div", { className: b$l('answerCircle', {
                         correct: answer.id === params.correct && params.markCorrectAnswer,
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                         choosen: userAnswer === answer.id && params.markCorrectAnswer,
                         filled: userAnswer === answer.id && !params.markCorrectAnswer
-                    }), style: elementSizes.answerId }, params.markCorrectAnswer ? (React.createElement(React.Fragment, null, answer.id === params.correct ? (React.createElement(IconConfirm, { className: b$e('answerIcon', {
+                    }), style: elementSizes.answerId }, params.markCorrectAnswer ? (React.createElement(React.Fragment, null, answer.id === params.correct ? (React.createElement(IconConfirm, { className: b$l('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
-                    }) })) : (React.createElement(IconDecline, { className: b$e('answerIcon', {
+                    }) })) : (React.createElement(IconDecline, { className: b$l('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
                     }) })))) : (React.createElement(React.Fragment, null, `${answer.id}`))),
-                React.createElement("div", { className: b$e('answerTitle', {
+                React.createElement("div", { className: b$l('answerTitle', {
                         choosen: userAnswer === answer.id,
                         correct: answer.id === params.correct && params.markCorrectAnswer,
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer
                     }), style: elementSizes.answerTitle }, answer.title)));
         }
-        return (React.createElement("div", { className: b$e('answer', { clickable: !userAnswer }), key: answer.id, role: "button", style: elementSizes.answer, tabIndex: 0, onClick: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined },
-            React.createElement("div", { className: b$e('answerId'), style: elementSizes.answerId }, `${answer.id}`),
-            React.createElement("div", { className: b$e('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
+        return (React.createElement("div", { className: b$l('answer', { clickable: !userAnswer }), key: answer.id, role: "button", style: elementSizes.answer, tabIndex: 0, onClick: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined },
+            React.createElement("div", { className: b$l('answerId'), style: elementSizes.answerId }, `${answer.id}`),
+            React.createElement("div", { className: b$l('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
     }, [
         userAnswer,
         params.markCorrectAnswer,
@@ -17499,149 +17516,16 @@ const ChooseAnswerWidget = (props) => {
             jsConfetti.current.addConfetti();
         }
     }, [userAnswer, params.correct, jsConfetti, params.markCorrectAnswer]);
-    return (React.createElement("div", { className: b$e({
+    return (React.createElement("div", { className: b$l({
             color: params.color,
             shake: userAnswer && params.markCorrectAnswer && userAnswer !== params.correct,
             celebrate: userAnswer && params.markCorrectAnswer && userAnswer === params.correct
         }), style: elementSizes.widget },
-        !params.isTitleHidden && (React.createElement("div", { className: b$e('header'), style: elementSizes.header }, params.text)),
-        React.createElement("div", { className: b$e('answers'), style: elementSizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
+        !params.isTitleHidden && (React.createElement("div", { className: b$l('header'), style: elementSizes.header }, params.text)),
+        React.createElement("div", { className: b$l('answers'), style: elementSizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
 };
 
-const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("g", { "data-name": "Layer 2" },
-        React.createElement("g", { "data-name": "arrow-circle-up" },
-            React.createElement("rect", { height: "24", width: "24" }),
-            React.createElement("path", { d: "M12.71 7.29a1 1 0 0 0-.32-.21A1 1 0 0 0 12 7h-.1a.82.82 0 0 0-.27.06.72.72 0 0 0-.19.11 1 1 0 0 0-.13.09l-3 2.86a1 1 0 0 0 1.38 1.45L11 10.34V16a1 1 0 0 0 2 0v-5.59l1.29 1.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z", fill: gradient ? `url(#${gradientId})` : color }),
-            React.createElement("path", { d: "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z", fill: gradient ? `url(#${gradientId})` : color })))));
-
-const ArrowheadUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("g", { "data-name": "Layer 2" },
-        React.createElement("g", { "data-name": "arrowhead-up" },
-            React.createElement("rect", { height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
-            React.createElement("path", { d: "M6.63 11.61L12 7.29l5.37 4.48A1 1 0 0 0 18 12a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41l-6-5a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.14z", fill: gradient ? `url(#${gradientId})` : color }),
-            React.createElement("path", { d: "M12.64 12.23a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.15L12 14.29l5.37 4.48A1 1 0 0 0 18 19a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41z", fill: gradient ? `url(#${gradientId})` : color })))));
-
-const ArrowUpIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { className: "feather feather-arrow-up", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "19", y2: "5" }),
-    React.createElement("polyline", { points: "5 12 12 5 19 12", stroke: gradient ? `url(#${gradientId})` : color })));
-
-const ArrowUpCircleIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { className: "feather feather-arrow-up-circle", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("circle", { cx: "12", cy: "12", r: "10", stroke: gradient ? `url(#${gradientId})` : color }),
-    React.createElement("polyline", { points: "16 12 12 8 8 12", stroke: gradient ? `url(#${gradientId})` : color }),
-    React.createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "16", y2: "8" })));
-
-const ArrowUpCircleFillIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm1 10h3l-4-4-4 4h3v4h2v-4z", fill: gradient ? `url(#${gradientId})` : color })));
-
-const ArrowUpCircleLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 18c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8zm1-8v4h-2v-4H8l4-4 4 4h-3z", fill: gradient ? `url(#${gradientId})` : color })));
-
-const ArrowUpFillIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M13 12v8h-2v-8H4l8-8 8 8z", fill: gradient ? `url(#${gradientId})` : color })));
-
-const ArrowUpLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z", fill: gradient ? `url(#${gradientId})` : color })));
-
-const ArrowUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("g", { "data-name": "Layer 2" },
-        React.createElement("g", { "data-name": "arrow-up" },
-            React.createElement("rect", { height: "24", opacity: "0", transform: "rotate(90 12 12)", width: "24" }),
-            React.createElement("path", { d: "M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1 2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1zM8 14h7.9L12 9.18z", fill: gradient ? `url(#${gradientId})` : color })))));
-
-const ArrowUpsFillIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M12 8l6 6H6z", fill: gradient ? `url(#${gradientId})` : color })));
-
-const ArrowUpsLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z", fill: gradient ? `url(#${gradientId})` : color })));
-
-const LinkIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z", fill: gradient ? `url(#${gradientId})` : color })));
-
-const LinksLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M13.06 8.11l1.415 1.415a7 7 0 0 1 0 9.9l-.354.353a7 7 0 0 1-9.9-9.9l1.415 1.415a5 5 0 1 0 7.071 7.071l.354-.354a5 5 0 0 0 0-7.07l-1.415-1.415 1.415-1.414zm6.718 6.011l-1.414-1.414a5 5 0 1 0-7.071-7.071l-.354.354a5 5 0 0 0 0 7.07l1.415 1.415-1.415 1.414-1.414-1.414a7 7 0 0 1 0-9.9l.354-.353a7 7 0 0 1 9.9 9.9z", fill: gradient ? `url(#${gradientId})` : color })));
-
-const ShareLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M13.12 17.023l-4.199-2.29a4 4 0 1 1 0-5.465l4.2-2.29a4 4 0 1 1 .959 1.755l-4.2 2.29a4.008 4.008 0 0 1 0 1.954l4.199 2.29a4 4 0 1 1-.959 1.755zM6 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm11-6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", fill: gradient ? `url(#${gradientId})` : color })));
-
-const UploadOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("g", { "data-name": "Layer 2" },
-        React.createElement("g", { "data-name": "upload" },
-            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
-            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(180 12 5)", width: "16", x: "4", y: "4" }),
-            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 19 6)", width: "4", x: "17", y: "5" }),
-            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 5 6)", width: "4", x: "3", y: "5" }),
-            React.createElement("path", { d: "M8 14a1 1 0 0 1-.8-.4 1 1 0 0 1 .2-1.4l4-3a1 1 0 0 1 1.18 0l4 2.82a1 1 0 0 1 .24 1.39 1 1 0 0 1-1.4.24L12 11.24 8.6 13.8a1 1 0 0 1-.6.2z", fill: gradient ? `url(#${gradientId})` : color }),
-            React.createElement("path", { d: "M12 21a1 1 0 0 1-1-1v-8a1 1 0 0 1 2 0v8a1 1 0 0 1-1 1z", fill: gradient ? `url(#${gradientId})` : color })))));
-
-const IconChevronCircleUp = ({ className, color = '#fff', gradient, gradientId }) => (React.createElement("svg", { className: cn(className, 'stroke-current'), fill: "none", height: 18, viewBox: "0 0 18 18", width: 18, xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("circle", { cx: 9, cy: 9, r: 8.5, stroke: gradient ? `url(#${gradientId})` : color }),
-    React.createElement("path", { d: "M12 10L9 7l-3 3", stroke: gradient ? `url(#${gradientId})` : color, strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.2 })));
-
-const MATERIAL_ICONS = {
-    IconChevronCircleUp,
-    ArrowCircleUpOutlineIcon,
-    ArrowheadUpOutlineIcon,
-    ArrowUpIcon,
-    ArrowUpCircleIcon,
-    ArrowUpCircleFillIcon,
-    ArrowUpCircleLineIcon,
-    ArrowUpFillIcon,
-    ArrowUpLineIcon,
-    ArrowUpOutlineIcon,
-    ArrowUpsFillIcon,
-    ArrowUpsLineIcon,
-    // ArrowUpwardOutlineIcon,
-    // ChevronUpOutlineIcon,
-    LinkIcon,
-    LinksLineIcon,
-    ShareLineIcon,
-    UploadOutlineIcon,
-};
-
-const CLASS_NAME = 'MaterialSdkIcon';
-const MaterialIcon = memo(({ name = 'ArrowCircleUpOutlineIcon', className, color, background, size = 'auto' }) => {
-    const Icon = useMemo(() => MATERIAL_ICONS[name], [name]);
-    let gradient;
-    const gradientId = useMemo(() => nanoid$1(), []);
-    if ((background === null || background === void 0 ? void 0 : background.type) === 'gradient') {
-        gradient = (React.createElement("linearGradient", { id: gradientId, x1: "0", x2: "0", y1: "0", y2: "1" },
-            React.createElement("stop", { offset: "0%", stopColor: background.value[0] }),
-            React.createElement("stop", { offset: "100%", stopColor: background.value[1] })));
-    }
-    if (Icon) {
-        return (React.createElement("span", { className: cn(`${CLASS_NAME}`, className), style: { width: size, height: size } },
-            React.createElement(Icon, { color: color, gradient: gradient, gradientId: gradientId })));
-    }
-    return null;
-});
-
-const b$d = block('ClickMeSdkWidget');
+const b$k = block('ClickMeWidget');
 const ClickMeWidget = (props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url, storyId, actionType } = props.params;
     const handleWidgetClick = () => {
@@ -17658,21 +17542,22 @@ const ClickMeWidget = (props) => {
             props.onGoToStory(storyId);
         }
     };
-    return (React.createElement("div", { className: b$d(), role: "button", style: {
+    return (React.createElement("div", { className: b$k(), role: "button", style: {
             borderRadius,
             borderStyle: 'solid',
             borderWidth: `${hasBorder ? borderWidth : 0}px`,
             borderColor: renderBackgroundStyles(borderColor)
         }, tabIndex: 0, onClick: handleWidgetClick, onKeyDown: handleWidgetClick },
-        React.createElement("div", { className: b$d('container', { gradient: color.type === 'gradient' }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
+        React.createElement("div", { className: b$k('container', { gradient: color.type === 'gradient' }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
                 fontSize }, renderTextBackgroundStyles({ color })) },
-            hasIcon ? (React.createElement(MaterialIcon, { background: color, className: b$d('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
-            React.createElement("span", { className: b$d('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
-        React.createElement("div", { className: b$d('background'), style: {
+            hasIcon ? (React.createElement(MaterialIcon, { background: color, className: b$k('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
+            React.createElement("span", { className: b$k('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
+        React.createElement("div", { className: b$k('background'), style: {
                 background: renderBackgroundStyles(backgroundColor)
             } })));
 };
 
+const b$j = block('EllipseWidget');
 const EllipseWidget = (props) => {
     const { fillColor, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
@@ -17684,8 +17569,8 @@ const EllipseWidget = (props) => {
     const backgroundStyles = {
         background: renderBackgroundStyles(fillColor)
     };
-    return (React.createElement("div", { className: "EllipsSdkWidget", style: styles },
-        React.createElement("div", { className: "EllipsSdkWidget__background", style: backgroundStyles })));
+    return (React.createElement("div", { className: b$j(), style: styles },
+        React.createElement("div", { className: b$j('background'), style: backgroundStyles })));
 };
 
 var compressed = true;
@@ -70358,8 +70243,8 @@ Emoji.defaultProps = _objectSpread({}, EmojiDefaultProps, {
   data: data
 });
 
-const b$b = block('EmojiReactionSdkWidget');
-const INIT_ELEMENT_STYLES$4 = {
+const b$h = block('EmojiReactionWidget');
+const INIT_ELEMENT_STYLES$9 = {
     widget: {
         borderRadius: 50,
         paddingTop: 14,
@@ -70385,18 +70270,18 @@ const EmojiReactionWidget = (props) => {
     }, [position, positionLimits]);
     const elementSizes = useMemo(() => ({
         widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES$4.widget.borderRadius),
-            paddingTop: calculate(INIT_ELEMENT_STYLES$4.widget.paddingTop),
-            paddingBottom: calculate(INIT_ELEMENT_STYLES$4.widget.paddingBottom),
-            paddingRight: calculate(INIT_ELEMENT_STYLES$4.widget.paddingRight),
-            paddingLeft: calculate(INIT_ELEMENT_STYLES$4.widget.paddingLeft)
+            borderRadius: calculate(INIT_ELEMENT_STYLES$9.widget.borderRadius),
+            paddingTop: calculate(INIT_ELEMENT_STYLES$9.widget.paddingTop),
+            paddingBottom: calculate(INIT_ELEMENT_STYLES$9.widget.paddingBottom),
+            paddingRight: calculate(INIT_ELEMENT_STYLES$9.widget.paddingRight),
+            paddingLeft: calculate(INIT_ELEMENT_STYLES$9.widget.paddingLeft)
         },
         emoji: {
-            width: calculate(INIT_ELEMENT_STYLES$4.emoji.width)
+            width: calculate(INIT_ELEMENT_STYLES$9.emoji.width)
         },
         item: {
-            marginRight: calculate(INIT_ELEMENT_STYLES$4.item.marginRight),
-            marginLeft: calculate(INIT_ELEMENT_STYLES$4.item.marginLeft)
+            marginRight: calculate(INIT_ELEMENT_STYLES$9.item.marginRight),
+            marginLeft: calculate(INIT_ELEMENT_STYLES$9.item.marginLeft)
         }
     }), [calculate]);
     const initEmojiSize = useMemo(() => elementSizes.emoji.width, [elementSizes]);
@@ -70421,26 +70306,26 @@ const EmojiReactionWidget = (props) => {
         setBigSize(initEmojiSize);
         setDelay(50);
     };
-    return (React.createElement("div", { className: b$b({ color: params.color }), style: elementSizes.widget }, params.emoji.map((emojiItem, index) => (React.createElement("button", { className: b$b('item'), key: `${emojiItem.unicode}-${index}`, style: elementSizes.item, onClick: (e) => {
+    return (React.createElement("div", { className: b$h({ color: params.color }), style: elementSizes.widget }, params.emoji.map((emojiItem, index) => (React.createElement("button", { className: b$h('item'), key: `${emojiItem.unicode}-${index}`, style: elementSizes.item, onClick: (e) => {
             e.preventDefault();
             if (!isToched) {
                 handleReactionClick(index, emojiItem.unicode);
             }
         } },
-        React.createElement("div", { className: b$b('subItem', { clicked: index === clickedIndex }) },
+        React.createElement("div", { className: b$h('subItem', { clicked: index === clickedIndex }) },
             React.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: bigSize })),
         React.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: elementSizes.emoji.width }))))));
 };
 
-const b$a = block('GiphySdkWidget');
+const b$g = block$1('GiphyWidget');
 const GiphyWidget = (props) => {
     const { params } = props;
-    return (React.createElement("div", { className: b$a(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
-        React.createElement("img", { alt: "", className: b$a('img'), src: params.gif })));
+    return (React.createElement("div", { className: b$g(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
+        React.createElement("img", { alt: "", className: b$g('img'), src: params.gif })));
 };
 
-const b$9 = block('QuestionSdkWidget');
-const INIT_ELEMENT_STYLES$3 = {
+const b$f = block('QuestionWidget');
+const INIT_ELEMENT_STYLES$8 = {
     text: {
         fontSize: 14,
         marginBottom: 10
@@ -70462,13 +70347,13 @@ const QuestionWidget = (props) => {
     }, [position, positionLimits]);
     const elementSizes = useMemo(() => ({
         text: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$3.text.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$3.text.marginBottom)
+            fontSize: calculate(INIT_ELEMENT_STYLES$8.text.fontSize),
+            marginBottom: calculate(INIT_ELEMENT_STYLES$8.text.marginBottom)
         },
         button: {
-            height: calculate(INIT_ELEMENT_STYLES$3.button.height),
-            fontSize: calculate(INIT_ELEMENT_STYLES$3.button.fontSize),
-            borderRadius: calculate(INIT_ELEMENT_STYLES$3.button.borderRadius)
+            height: calculate(INIT_ELEMENT_STYLES$8.button.height),
+            fontSize: calculate(INIT_ELEMENT_STYLES$8.button.fontSize),
+            borderRadius: calculate(INIT_ELEMENT_STYLES$8.button.borderRadius)
         }
     }), [calculate]);
     const [percents, setPercents] = useState({
@@ -70514,10 +70399,10 @@ const QuestionWidget = (props) => {
         }
         return percent;
     };
-    return (React.createElement("div", { className: b$9() },
-        !params.isTitleHidden && (React.createElement("div", { className: b$9('question'), style: elementSizes.text }, params.question)),
-        React.createElement("div", { className: b$9('buttons'), style: { borderRadius: elementSizes.button.borderRadius } },
-            React.createElement("button", { className: b$9('item', {
+    return (React.createElement("div", { className: b$f() },
+        !params.isTitleHidden && (React.createElement("div", { className: b$f('question'), style: elementSizes.text }, params.question)),
+        React.createElement("div", { className: b$f('buttons'), style: { borderRadius: elementSizes.button.borderRadius } },
+            React.createElement("button", { className: b$f('item', {
                     answered: answer === 'confirm',
                     confirm: true,
                     answerConfirm: answer && percents.confirm !== 100,
@@ -70528,12 +70413,12 @@ const QuestionWidget = (props) => {
                     height: elementSizes.button.height,
                     fontSize: elementSizes.button.fontSize
                 }, type: "button", onClick: () => handleChange('confirm') },
-                React.createElement("div", { className: b$9('itemTextContainer') },
-                    React.createElement("span", { className: cn(b$9('itemTextConfirm').toString(), b$9('itemText', { answered: answer !== null }).toString()) }, params.confirm),
-                    answer && React.createElement("span", { className: b$9('itemTextPercent') },
+                React.createElement("div", { className: b$f('itemTextContainer') },
+                    React.createElement("span", { className: cn(b$f('itemTextConfirm').toString(), b$f('itemText', { answered: answer !== null }).toString()) }, params.confirm),
+                    answer && React.createElement("span", { className: b$f('itemTextPercent') },
                         percents.confirm,
                         "%"))),
-            React.createElement("button", { className: b$9('item', {
+            React.createElement("button", { className: b$f('item', {
                     answered: answer === 'decline',
                     decline: true,
                     answerDecline: answer && percents.decline !== 100,
@@ -70544,13 +70429,14 @@ const QuestionWidget = (props) => {
                     height: elementSizes.button.height,
                     fontSize: elementSizes.button.fontSize
                 }, type: "button", onClick: () => handleChange('decline') },
-                React.createElement("div", { className: b$9('itemTextContainer') },
-                    React.createElement("span", { className: cn(b$9('itemTextDecline').toString(), b$9('itemText', { answered: answer !== null }).toString()) }, params.decline),
-                    answer && React.createElement("span", { className: b$9('itemTextPercent') },
+                React.createElement("div", { className: b$f('itemTextContainer') },
+                    React.createElement("span", { className: cn(b$f('itemTextDecline').toString(), b$f('itemText', { answered: answer !== null }).toString()) }, params.decline),
+                    answer && React.createElement("span", { className: b$f('itemTextPercent') },
                         percents.decline,
                         "%"))))));
 };
 
+const b$e = block('RectangleWidget');
 const RectangleWidget = (props) => {
     const { fillColor, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
@@ -70564,11 +70450,11 @@ const RectangleWidget = (props) => {
         background: renderBackgroundStyles(fillColor),
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
-    return (React.createElement("div", { className: "RectangleSdkWidget", style: styles },
-        React.createElement("div", { className: "RectangleSdkWidget__background", style: backgroundStyles })));
+    return (React.createElement("div", { className: b$e(), style: styles },
+        React.createElement("div", { className: b$e('background'), style: backgroundStyles })));
 };
 
-const b$8 = block('SliderSdkCustom');
+const b$d = block('SliderCustom');
 const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, height, onChange, onAfterChange, onBeforeChange }) => {
     const containerRef = useRef(null);
     const thumbRef = useRef(null);
@@ -70631,24 +70517,24 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
             onAfterChange();
         }
     };
-    return (React.createElement("div", { className: b$8(), ref: containerRef, style: { height } },
-        React.createElement("div", { className: b$8('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
+    return (React.createElement("div", { className: b$d(), ref: containerRef, style: { height } },
+        React.createElement("div", { className: b$d('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
             }, onKeyUp: (e) => {
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
             }, onMouseDown: handleMouseDown, onTouchStart: handleMouseDown },
-            changeStatus === 'moving' || changeStatus === 'moved' ? (React.createElement("div", { className: b$8('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
+            changeStatus === 'moving' || changeStatus === 'moved' ? (React.createElement("div", { className: b$d('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
                 React.createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
             React.createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })),
-        React.createElement("div", { className: b$8('track'), style: { height } },
-            React.createElement("span", { className: b$8('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
-            React.createElement("span", { className: b$8('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
+        React.createElement("div", { className: b$d('track'), style: { height } },
+            React.createElement("span", { className: b$d('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
+            React.createElement("span", { className: b$d('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
 };
 
-const b$7 = block('SliderSdkWidget');
-const INIT_ELEMENT_STYLES$2 = {
+const b$c = block('SliderWidget');
+const INIT_ELEMENT_STYLES$7 = {
     widget: {
         borderRadius: 10,
         paddingTop: 20,
@@ -70684,22 +70570,22 @@ const SliderWidget = (props) => {
     }, [position, positionLimits]);
     const elementSizes = useMemo(() => ({
         widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES$2.widget.borderRadius),
-            paddingTop: calculate(INIT_ELEMENT_STYLES$2.widget.paddingTop),
-            paddingRight: calculate(INIT_ELEMENT_STYLES$2.widget.paddingRight),
-            paddingLeft: calculate(INIT_ELEMENT_STYLES$2.widget.paddingLeft),
-            paddingBottom: calculate(INIT_ELEMENT_STYLES$2.widget.paddingBottom)
+            borderRadius: calculate(INIT_ELEMENT_STYLES$7.widget.borderRadius),
+            paddingTop: calculate(INIT_ELEMENT_STYLES$7.widget.paddingTop),
+            paddingRight: calculate(INIT_ELEMENT_STYLES$7.widget.paddingRight),
+            paddingLeft: calculate(INIT_ELEMENT_STYLES$7.widget.paddingLeft),
+            paddingBottom: calculate(INIT_ELEMENT_STYLES$7.widget.paddingBottom)
         },
         emoji: {
-            width: calculate(INIT_ELEMENT_STYLES$2.emoji.width)
+            width: calculate(INIT_ELEMENT_STYLES$7.emoji.width)
         },
         text: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$2.text.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$2.text.marginBottom)
+            fontSize: calculate(INIT_ELEMENT_STYLES$7.text.fontSize),
+            marginBottom: calculate(INIT_ELEMENT_STYLES$7.text.marginBottom)
         },
         slider: {
-            height: calculate(INIT_ELEMENT_STYLES$2.slider.height),
-            borderRadius: calculate(INIT_ELEMENT_STYLES$2.slider.borderRadius)
+            height: calculate(INIT_ELEMENT_STYLES$7.slider.height),
+            borderRadius: calculate(INIT_ELEMENT_STYLES$7.slider.borderRadius)
         }
     }), [calculate]);
     useInterval(() => {
@@ -70732,15 +70618,15 @@ const SliderWidget = (props) => {
             setChangeStatus('init');
         }
     }, [storyContextVal, storyId, changeStatus, value, time]);
-    return (React.createElement("div", { className: b$7({ color }), style: elementSizes.widget },
-        React.createElement("div", { className: b$7('text'), style: elementSizes.text }, text),
-        React.createElement("div", { className: b$7('sliderWrapper'), style: {
+    return (React.createElement("div", { className: b$c({ color }), style: elementSizes.widget },
+        React.createElement("div", { className: b$c('text'), style: elementSizes.text }, text),
+        React.createElement("div", { className: b$c('sliderWrapper'), style: {
                 height: elementSizes.slider.height
             } },
             React.createElement(SliderCustom, { changeStatus: changeStatus, disabled: changeStatus === 'moved', emoji: emoji.name, height: elementSizes.slider.height, initSize: elementSizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
 };
 
-const b$6 = block('SwipeUpSdkWidget');
+const b$b = block('SwipeUpWidget');
 const SwipeUpWidget = (props) => {
     const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
     const [touchStart, setTouchStart] = useState(0);
@@ -70773,14 +70659,14 @@ const SwipeUpWidget = (props) => {
             tab.focus();
         }
     };
-    return (React.createElement("div", { className: b$6({ gradient: color.type === 'gradient' }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: handleClick, onKeyDown: handleClick, onTouchEnd: handleTouchEnd, onTouchMove: handleTouchMove, onTouchStart: handleTouchStart },
-        React.createElement("div", { className: b$6('icon') },
+    return (React.createElement("div", { className: b$b({ gradient: color.type === 'gradient' }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: handleClick, onKeyDown: handleClick, onTouchEnd: handleTouchEnd, onTouchMove: handleTouchMove, onTouchStart: handleTouchStart },
+        React.createElement("div", { className: b$b('icon') },
             React.createElement(MaterialIcon, { background: color, color: renderBackgroundStyles(color), name: icon.name, size: iconSize })),
-        React.createElement("span", { className: b$6('text') }, text)));
+        React.createElement("span", { className: b$b('text') }, text)));
 };
 
-const b$5 = block('TalkAboutSdkWidget');
-const INIT_ELEMENT_STYLES$1 = {
+const b$a = block('TalkAboutWidget');
+const INIT_ELEMENT_STYLES$6 = {
     widget: {
         borderRadius: 10
     },
@@ -70823,35 +70709,35 @@ const TalkAboutWidget = (props) => {
     }, [position, positionLimits]);
     const elementSizes = useMemo(() => ({
         widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES$1.widget.borderRadius)
+            borderRadius: calculate(INIT_ELEMENT_STYLES$6.widget.borderRadius)
         },
         content: {
-            paddingRight: calculate(INIT_ELEMENT_STYLES$1.content.paddingRight),
-            paddingLeft: calculate(INIT_ELEMENT_STYLES$1.content.paddingLeft),
-            paddingBottom: calculate(INIT_ELEMENT_STYLES$1.content.paddingBottom),
-            paddingTop: calculate(INIT_ELEMENT_STYLES$1.content.paddingTop)
+            paddingRight: calculate(INIT_ELEMENT_STYLES$6.content.paddingRight),
+            paddingLeft: calculate(INIT_ELEMENT_STYLES$6.content.paddingLeft),
+            paddingBottom: calculate(INIT_ELEMENT_STYLES$6.content.paddingBottom),
+            paddingTop: calculate(INIT_ELEMENT_STYLES$6.content.paddingTop)
         },
         text: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$1.text.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$1.text.marginBottom)
+            fontSize: calculate(INIT_ELEMENT_STYLES$6.text.fontSize),
+            marginBottom: calculate(INIT_ELEMENT_STYLES$6.text.marginBottom)
         },
         input: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$1.input.fontSize),
-            padding: calculate(INIT_ELEMENT_STYLES$1.input.padding),
-            borderRadius: calculate(INIT_ELEMENT_STYLES$1.input.borderRadius)
+            fontSize: calculate(INIT_ELEMENT_STYLES$6.input.fontSize),
+            padding: calculate(INIT_ELEMENT_STYLES$6.input.padding),
+            borderRadius: calculate(INIT_ELEMENT_STYLES$6.input.borderRadius)
         },
         empty: {
-            height: calculate(INIT_ELEMENT_STYLES$1.empty.height)
+            height: calculate(INIT_ELEMENT_STYLES$6.empty.height)
         },
         imageWrapper: {
-            width: calculate(INIT_ELEMENT_STYLES$1.imageWrapper.width),
-            height: calculate(INIT_ELEMENT_STYLES$1.imageWrapper.height)
+            width: calculate(INIT_ELEMENT_STYLES$6.imageWrapper.width),
+            height: calculate(INIT_ELEMENT_STYLES$6.imageWrapper.height)
         },
         send: {
-            height: calculate(INIT_ELEMENT_STYLES$1.send.height)
+            height: calculate(INIT_ELEMENT_STYLES$6.send.height)
         },
         sendText: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$1.sendText.fontSize)
+            fontSize: calculate(INIT_ELEMENT_STYLES$6.sendText.fontSize)
         }
     }), [calculate]);
     const [text, setText] = useState('');
@@ -70872,14 +70758,14 @@ const TalkAboutWidget = (props) => {
     const storyContextVal = useContext(StoryContext);
     const ref = useRef(null);
     const inputRef = useRef(null);
-    const handleClickOutside = (event) => {
+    const handleClickOutside = useCallback((event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             storyContextVal.playStatusChange('play');
         }
         else if (inputRef.current && inputRef.current.contains(event.target) && !isSent) {
             storyContextVal.playStatusChange('pause');
         }
-    };
+    }, [isSent, storyContextVal]);
     useEffect(() => {
         if (!isSent) {
             document.addEventListener('click', handleClickOutside, true);
@@ -70890,68 +70776,45 @@ const TalkAboutWidget = (props) => {
         return () => {
             document.removeEventListener('click', handleClickOutside, true);
         };
-        // eslint-disable-next-line
-    }, [isSent]);
+    }, [handleClickOutside, isSent]);
     return (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: b$5('container'), ref: ref },
-            React.createElement("picture", { className: b$5('imageWrapper'), style: elementSizes.imageWrapper }, params.image ? (React.createElement("img", { alt: "", className: b$5('image'), src: params.image })) : (React.createElement(IconLogoCircle, { className: b$5('image').toString() }))),
-            React.createElement("div", { className: b$5('empty'), style: elementSizes.empty }),
-            React.createElement("div", { className: b$5({ color: params.color }), style: elementSizes.widget },
-                React.createElement("div", { className: b$5('contentContainer', { sendOpen: text.length > 0 }), style: elementSizes.content },
-                    !params.isTitleHidden && (React.createElement("div", { className: b$5('text'), style: elementSizes.text }, params.text)),
-                    React.createElement("input", { className: b$5('input'), disabled: isSent, placeholder: "Type something...", ref: inputRef, style: elementSizes.input, type: "text", value: text, onChange: handleTextChange })),
-                text && (React.createElement("button", { className: b$5('send', { disabled: isSent }), style: elementSizes.send, onClick: !isSent ? handleSendClick : undefined },
-                    React.createElement("span", { className: b$5('sendText', { green: isSent }), style: elementSizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
+        React.createElement("div", { className: b$a('container'), ref: ref },
+            React.createElement("picture", { className: b$a('imageWrapper'), style: elementSizes.imageWrapper }, params.image ? (React.createElement("img", { alt: "", className: b$a('image'), src: params.image })) : (React.createElement(IconLogoCircle, { className: b$a('image').toString() }))),
+            React.createElement("div", { className: b$a('empty'), style: elementSizes.empty }),
+            React.createElement("div", { className: b$a({ color: params.color }), style: elementSizes.widget },
+                React.createElement("div", { className: b$a('contentContainer', { sendOpen: text.length > 0 }), style: elementSizes.content },
+                    !params.isTitleHidden && (React.createElement("div", { className: b$a('text'), style: elementSizes.text }, params.text)),
+                    React.createElement("input", { className: b$a('input'), disabled: isSent, placeholder: "Type something...", ref: inputRef, style: elementSizes.input, type: "text", value: text, onChange: handleTextChange })),
+                text && (React.createElement("button", { className: b$a('send', { disabled: isSent }), style: elementSizes.send, onClick: !isSent ? handleSendClick : undefined },
+                    React.createElement("span", { className: b$a('sendText', { green: isSent }), style: elementSizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
 };
 
-const b$4 = block('TextSdkWidget');
+const b$9 = block('TextWidget');
 const TextWidget = (props) => {
     const { params } = props;
-    return (React.createElement("div", { className: b$4() },
-        React.createElement("div", { className: b$4('container', { gradient: params.color.type === 'gradient' }), style: Object.assign({ opacity: params.widgetOpacity / 100, fontStyle: params.fontParams.style, fontWeight: params.fontParams.weight, fontFamily: params.fontFamily, fontSize: `${params.fontSize}px`, textAlign: params.align }, renderTextBackgroundStyles({ color: params.color })) },
-            React.createElement("span", { className: b$4('span') }, params.text)),
-        params.withFill ? (React.createElement("div", { className: b$4('background'), style: {
+    return (React.createElement("div", { className: b$9() },
+        React.createElement("div", { className: b$9('container', { gradient: params.color.type === 'gradient' }), style: Object.assign({ opacity: params.widgetOpacity / 100, fontStyle: params.fontParams.style, fontWeight: params.fontParams.weight, fontFamily: params.fontFamily, fontSize: `${params.fontSize}px`, textAlign: params.align }, renderTextBackgroundStyles({ color: params.color })) },
+            React.createElement("span", { className: b$9('span') }, params.text)),
+        params.withFill ? (React.createElement("div", { className: b$9('background'), style: {
                 background: renderBackgroundStyles(params.backgroundColor)
-            } })) : null)
-    // <div
-    //   className={b()}
-    //   style={{
-    //     fontFamily: params.fontFamily,
-    //     fontSize: params.fontSize,
-    //     textAlign: params.align,
-    //     color: params.color,
-    //     opacity: params.opacity / 100
-    //   }}
-    // >
-    //   <span
-    //     className={b('span')}
-    //     style={
-    //       params.withFill
-    //         ? {
-    //             backgroundColor: params.color,
-    //             color: 'white'
-    //           }
-    //         : {}
-    //     }
-    //   >
-    //     {params.text}
-    //   </span>
-    // </div>
-    );
+            } })) : null));
 };
 
-const b$3 = block('TimerSdkWidget');
+const ONE_SECOND_IN_MILLISECONDS = 1000;
+const ONE_MINUTE_IN_SECONDS = 60;
+
+const b$8 = block('TimerWidget');
 const calculateTime = (time) => {
-    const days = Math.floor(time / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((time / 1000 / 60) % 60);
+    const days = Math.floor(time / (ONE_SECOND_IN_MILLISECONDS * ONE_MINUTE_IN_SECONDS * 60 * 24));
+    const hours = Math.floor((time / (ONE_SECOND_IN_MILLISECONDS * ONE_MINUTE_IN_SECONDS * 60)) % 24);
+    const minutes = Math.floor((time / ONE_SECOND_IN_MILLISECONDS / ONE_MINUTE_IN_SECONDS) % 60);
     return {
         days: days < 10 ? `0${days > 0 ? days : 0}` : `${days}`,
         hours: hours < 10 ? `0${hours > 0 ? hours : 0}` : `${hours}`,
         minutes: minutes < 10 ? `0${minutes > 0 ? minutes : 0}` : `${minutes}`
     };
 };
-const INIT_ELEMENT_STYLES = {
+const INIT_ELEMENT_STYLES$5 = {
     widget: {
         borderRadius: 10,
         padding: 15
@@ -70988,44 +70851,438 @@ const TimerWidget = (props) => {
     }, [position, positionLimits]);
     const elementSizes = useMemo(() => ({
         text: {
-            fontSize: calculate(INIT_ELEMENT_STYLES.text.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES.text.marginBottom)
+            fontSize: calculate(INIT_ELEMENT_STYLES$5.text.fontSize),
+            marginBottom: calculate(INIT_ELEMENT_STYLES$5.text.marginBottom)
         },
         widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES.widget.borderRadius),
-            padding: calculate(INIT_ELEMENT_STYLES.widget.padding)
+            borderRadius: calculate(INIT_ELEMENT_STYLES$5.widget.borderRadius),
+            padding: calculate(INIT_ELEMENT_STYLES$5.widget.padding)
         },
         digit: {
-            width: calculate(INIT_ELEMENT_STYLES.digit.width),
-            height: calculate(INIT_ELEMENT_STYLES.digit.height),
-            fontSize: calculate(INIT_ELEMENT_STYLES.digit.fontSize),
-            borderRadius: calculate(INIT_ELEMENT_STYLES.digit.borderRadius)
+            width: calculate(INIT_ELEMENT_STYLES$5.digit.width),
+            height: calculate(INIT_ELEMENT_STYLES$5.digit.height),
+            fontSize: calculate(INIT_ELEMENT_STYLES$5.digit.fontSize),
+            borderRadius: calculate(INIT_ELEMENT_STYLES$5.digit.borderRadius)
         },
         caption: {
-            marginTop: calculate(INIT_ELEMENT_STYLES.caption.marginTop),
-            fontSize: calculate(INIT_ELEMENT_STYLES.caption.fontSize)
+            marginTop: calculate(INIT_ELEMENT_STYLES$5.caption.marginTop),
+            fontSize: calculate(INIT_ELEMENT_STYLES$5.caption.fontSize)
         }
     }), [calculate]);
-    return (React.createElement("div", { className: b$3({ color: params.color }), style: elementSizes.widget },
-        React.createElement("div", { className: b$3('text'), style: elementSizes.text }, params.text),
-        React.createElement("ul", { className: b$3('dial') },
-            React.createElement("li", { className: b$3('col') },
-                React.createElement("div", { className: b$3('digitRow') },
-                    React.createElement("div", { className: b$3('digit'), style: elementSizes.digit }, time.days[0]),
-                    React.createElement("div", { className: b$3('digit'), style: elementSizes.digit }, time.days[1])),
-                React.createElement("div", { className: b$3('caption'), style: elementSizes.caption }, "Day")),
-            React.createElement("span", { className: b$3('divider') }, ":"),
-            React.createElement("li", { className: b$3('col') },
-                React.createElement("div", { className: b$3('digitRow') },
-                    React.createElement("div", { className: b$3('digit'), style: elementSizes.digit }, time.hours[0]),
-                    React.createElement("div", { className: b$3('digit'), style: elementSizes.digit }, time.hours[1])),
-                React.createElement("div", { className: b$3('caption'), style: elementSizes.caption }, "Hours")),
-            React.createElement("span", { className: b$3('divider') }, ":"),
-            React.createElement("li", { className: b$3('col') },
-                React.createElement("div", { className: b$3('digitRow') },
-                    React.createElement("div", { className: b$3('digit'), style: elementSizes.digit }, time.minutes[0]),
-                    React.createElement("div", { className: b$3('digit'), style: elementSizes.digit }, time.minutes[1])),
-                React.createElement("div", { className: b$3('caption'), style: elementSizes.caption }, "Minutes")))));
+    return (React.createElement("div", { className: b$8({ color: params.color }), style: elementSizes.widget },
+        React.createElement("div", { className: b$8('text'), style: elementSizes.text }, params.text),
+        React.createElement("ul", { className: b$8('dial') },
+            React.createElement("li", { className: b$8('col') },
+                React.createElement("div", { className: b$8('digitRow') },
+                    React.createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.days[0]),
+                    React.createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.days[1])),
+                React.createElement("div", { className: b$8('caption'), style: elementSizes.caption }, "Day")),
+            React.createElement("span", { className: b$8('divider') }, ":"),
+            React.createElement("li", { className: b$8('col') },
+                React.createElement("div", { className: b$8('digitRow') },
+                    React.createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.hours[0]),
+                    React.createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.hours[1])),
+                React.createElement("div", { className: b$8('caption'), style: elementSizes.caption }, "Hours")),
+            React.createElement("span", { className: b$8('divider') }, ":"),
+            React.createElement("li", { className: b$8('col') },
+                React.createElement("div", { className: b$8('digitRow') },
+                    React.createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.minutes[0]),
+                    React.createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.minutes[1])),
+                React.createElement("div", { className: b$8('caption'), style: elementSizes.caption }, "Minutes")))));
+};
+
+const b$7 = block('QuizMultipleAnswerWidget');
+const INIT_ELEMENT_STYLES$4 = {
+    title: {
+        fontSize: 14,
+        marginBottom: 16
+    },
+    answers: {
+        gap: 5
+    },
+    answer: {
+        padding: 5,
+        gap: 5,
+        borderRadius: 20
+    },
+    emoji: {
+        width: 11
+    },
+    answerTitle: {
+        fontSize: 8
+    },
+    sendBtn: {
+        fontSize: 8,
+        borderRadius: 20,
+        padding: 5,
+        marginTop: 5,
+        lineHeight: 11
+    }
+};
+const QuizMultipleAnswerWidget = (props) => {
+    const { title, answers, isTitleHidden } = props.params;
+    const { position, positionLimits } = props;
+    const [userAnswers, setUserAnswers] = useState([]);
+    const [isSent, setIsSent] = useState(false);
+    const calculate = useCallback((size) => {
+        if (position && positionLimits) {
+            return calculateElementSize(position, positionLimits, size);
+        }
+        return size;
+    }, [position, positionLimits]);
+    const elementSizes = useMemo(() => ({
+        title: {
+            fontSize: calculate(INIT_ELEMENT_STYLES$4.title.fontSize),
+            marginBottom: calculate(INIT_ELEMENT_STYLES$4.title.marginBottom)
+        },
+        answers: {
+            gap: calculate(INIT_ELEMENT_STYLES$4.answers.gap)
+        },
+        answer: {
+            gap: calculate(INIT_ELEMENT_STYLES$4.answer.gap),
+            borderRadius: calculate(INIT_ELEMENT_STYLES$4.answer.borderRadius),
+            padding: calculate(INIT_ELEMENT_STYLES$4.answer.padding)
+        },
+        emoji: {
+            width: calculate(INIT_ELEMENT_STYLES$4.emoji.width)
+        },
+        answerTitle: {
+            fontSize: calculate(INIT_ELEMENT_STYLES$4.answerTitle.fontSize)
+        },
+        sendBtn: {
+            fontSize: calculate(INIT_ELEMENT_STYLES$4.sendBtn.fontSize),
+            borderRadius: calculate(INIT_ELEMENT_STYLES$4.sendBtn.borderRadius),
+            padding: calculate(INIT_ELEMENT_STYLES$4.sendBtn.padding),
+            marginTop: calculate(INIT_ELEMENT_STYLES$4.sendBtn.marginTop),
+            lineHeight: calculate(INIT_ELEMENT_STYLES$4.sendBtn.lineHeight)
+        }
+    }), [calculate]);
+    const handleAnswer = (id) => {
+        setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
+    };
+    const handleSendAnswer = () => {
+        if (props.onAnswer) {
+            props.onAnswer(userAnswers);
+        }
+        setIsSent(true);
+    };
+    return (React.createElement("div", { className: b$7() },
+        !isTitleHidden && (React.createElement("div", { className: b$7('title'), style: elementSizes.title }, title)),
+        React.createElement("div", { className: b$7('answers'), style: elementSizes.answers }, answers.map((answer) => {
+            var _a;
+            return (React.createElement("button", { className: b$7('answer', {
+                    noGap: !answer.title.length,
+                    selected: userAnswers.includes(answer.id)
+                }), disabled: isSent, key: answer.id, style: elementSizes.answer, onClick: () => handleAnswer(answer.id) },
+                answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
+                React.createElement("p", { className: b$7('answerTitle'), style: Object.assign(Object.assign({}, elementSizes.answerTitle), { lineHeight: `${elementSizes.sendBtn.lineHeight}px` }) }, answer.title)));
+        })),
+        userAnswers.length > 0 && (React.createElement("button", { className: b$7('sendBtn', { sent: isSent }), disabled: isSent, style: Object.assign(Object.assign({}, elementSizes.sendBtn), { lineHeight: `${elementSizes.sendBtn.lineHeight}px` }), onClick: handleSendAnswer }, isSent ? 'Sent!' : 'Send'))));
+};
+
+const b$6 = block('QuizOneAnswerWidget');
+const INIT_ELEMENT_STYLES$3 = {
+    title: {
+        fontSize: 14,
+        marginBottom: 16
+    },
+    answers: {
+        gap: 10
+    },
+    answer: {
+        padding: 10,
+        gap: 10,
+        borderRadius: 20
+    },
+    emoji: {
+        width: 17
+    },
+    answerTitle: {
+        fontSize: 11
+    }
+};
+const QuizOneAnswerWidget = (props) => {
+    const { title, answers, storyId, isTitleHidden } = props.params;
+    const { position, positionLimits } = props;
+    const [userAnswer, setUserAnswer] = useState(null);
+    const calculate = useCallback((size) => {
+        if (position && positionLimits) {
+            return calculateElementSize(position, positionLimits, size);
+        }
+        return size;
+    }, [position, positionLimits]);
+    const elementSizes = useMemo(() => ({
+        title: {
+            fontSize: calculate(INIT_ELEMENT_STYLES$3.title.fontSize),
+            marginBottom: calculate(INIT_ELEMENT_STYLES$3.title.marginBottom)
+        },
+        answers: {
+            gap: calculate(INIT_ELEMENT_STYLES$3.answers.gap)
+        },
+        answer: {
+            gap: calculate(INIT_ELEMENT_STYLES$3.answer.gap),
+            borderRadius: calculate(INIT_ELEMENT_STYLES$3.answer.borderRadius),
+            padding: calculate(INIT_ELEMENT_STYLES$3.answer.padding)
+        },
+        emoji: {
+            width: calculate(INIT_ELEMENT_STYLES$3.emoji.width)
+        },
+        answerTitle: {
+            fontSize: calculate(INIT_ELEMENT_STYLES$3.answerTitle.fontSize)
+        }
+    }), [calculate]);
+    const handleAnswer = (id) => {
+        var _a, _b;
+        setUserAnswer(id);
+        (_a = props.onAnswer) === null || _a === void 0 ? void 0 : _a.call(props, id);
+        if (storyId) {
+            (_b = props.onGoToStory) === null || _b === void 0 ? void 0 : _b.call(props, storyId);
+        }
+    };
+    return (React.createElement("div", { className: b$6() },
+        !isTitleHidden && (React.createElement("div", { className: b$6('title'), style: elementSizes.title }, title)),
+        React.createElement("div", { className: b$6('answers'), style: elementSizes.answers }, answers.map((answer) => {
+            var _a;
+            return (React.createElement("button", { className: b$6('answer', {
+                    selected: userAnswer === answer.id
+                }), disabled: userAnswer !== null, key: answer.id, style: elementSizes.answer, onClick: () => !userAnswer && handleAnswer(answer.id) },
+                answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
+                React.createElement("p", { className: b$6('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
+        }))));
+};
+
+const b$5 = block('QuizOpenAnswerWidget');
+const INIT_ELEMENT_STYLES$2 = {
+    title: {
+        fontSize: 14,
+        marginBottom: 16
+    },
+    input: {
+        fontSize: 11
+    },
+    inputWrapper: {
+        paddingVertical: 9,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        paddingRight: 35
+    },
+    sendButton: {
+        width: 25,
+        height: 25,
+        right: 4
+    }
+};
+const QuizOpenAnswerWidget = (props) => {
+    const { title, isTitleHidden } = props.params;
+    const { position, positionLimits } = props;
+    const storyContextVal = useContext(StoryContext);
+    const [text, setText] = useState('');
+    const [isSent, setIsSent] = useState(false);
+    const handleTextChange = (e) => {
+        setText(e.target.value);
+        storyContextVal.playStatusChange('pause');
+    };
+    const handleClickOutside = useCallback((event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+            storyContextVal.playStatusChange('play');
+        }
+        else if (inputRef.current && inputRef.current.contains(event.target) && !isSent) {
+            storyContextVal.playStatusChange('pause');
+        }
+    }, [isSent, storyContextVal]);
+    const handleSendClick = () => {
+        if (text.length) {
+            if (props.onAnswer) {
+                props.onAnswer(text);
+            }
+            storyContextVal.playStatusChange('play');
+            setIsSent(true);
+        }
+    };
+    useEffect(() => {
+        if (!isSent) {
+            document.addEventListener('click', handleClickOutside, true);
+        }
+        else {
+            document.removeEventListener('click', handleClickOutside, true);
+        }
+        return () => {
+            document.removeEventListener('click', handleClickOutside, true);
+        };
+    }, [handleClickOutside, isSent]);
+    const ref = useRef(null);
+    const inputRef = useRef(null);
+    const calculate = useCallback((size) => {
+        if (position && positionLimits) {
+            return calculateElementSize(position, positionLimits, size);
+        }
+        return size;
+    }, [position, positionLimits]);
+    const elementSizes = useMemo(() => ({
+        title: {
+            fontSize: calculate(INIT_ELEMENT_STYLES$2.title.fontSize),
+            marginBottom: calculate(INIT_ELEMENT_STYLES$2.title.marginBottom)
+        },
+        input: {
+            fontSize: calculate(INIT_ELEMENT_STYLES$2.input.fontSize)
+        },
+        inputWrapper: {
+            paddingVertical: calculate(INIT_ELEMENT_STYLES$2.inputWrapper.paddingVertical),
+            paddingHorizontal: calculate(INIT_ELEMENT_STYLES$2.inputWrapper.paddingHorizontal),
+            borderRadius: calculate(INIT_ELEMENT_STYLES$2.inputWrapper.borderRadius),
+            paddingRight: calculate(INIT_ELEMENT_STYLES$2.inputWrapper.paddingRight)
+        },
+        sendButton: {
+            right: calculate(INIT_ELEMENT_STYLES$2.sendButton.right),
+            width: calculate(INIT_ELEMENT_STYLES$2.sendButton.width),
+            height: calculate(INIT_ELEMENT_STYLES$2.sendButton.height)
+        }
+    }), [calculate]);
+    return (React.createElement("div", { className: b$5() },
+        !isTitleHidden && (React.createElement("div", { className: b$5('title'), style: elementSizes.title }, title)),
+        React.createElement("div", { className: b$5('inputWrapper'), style: {
+                paddingTop: elementSizes.inputWrapper.paddingVertical,
+                paddingBottom: elementSizes.inputWrapper.paddingVertical,
+                paddingLeft: elementSizes.inputWrapper.paddingHorizontal,
+                borderRadius: elementSizes.inputWrapper.borderRadius,
+                paddingRight: elementSizes.inputWrapper.paddingRight
+            } },
+            React.createElement("input", { className: b$5('input'), disabled: isSent, placeholder: "Enter the text...", style: elementSizes.input, type: "text", value: text, onChange: handleTextChange }),
+            text.length > 0 && (React.createElement("button", { className: b$5('sendButton'), disabled: isSent, style: elementSizes.sendButton, onClick: handleSendClick },
+                React.createElement(IconArrowSend, { className: b$5('sendButtonIcon') }))))));
+};
+
+/* eslint-disable jsx-a11y/label-has-associated-control */
+const b$4 = block('QuizRateWidget');
+const INIT_ELEMENT_STYLES$1 = {
+    title: {
+        fontSize: 14,
+        marginBottom: 16
+    },
+    stars: {
+        gap: 10
+    }
+};
+const RATE_MAX = 5;
+const QuizRateWidget = (props) => {
+    const { title, isTitleHidden } = props.params;
+    const { position, positionLimits, onAnswer } = props;
+    const [isSent, setIsSent] = useState(false);
+    const calculate = useCallback((size) => {
+        if (position && positionLimits) {
+            return calculateElementSize(position, positionLimits, size);
+        }
+        return size;
+    }, [position, positionLimits]);
+    const elementSizes = useMemo(() => ({
+        title: {
+            fontSize: calculate(INIT_ELEMENT_STYLES$1.title.fontSize),
+            marginBottom: calculate(INIT_ELEMENT_STYLES$1.title.marginBottom)
+        },
+        stars: {
+            gap: calculate(INIT_ELEMENT_STYLES$1.stars.gap)
+        }
+    }), [calculate]);
+    const handleAnswer = (rate) => {
+        if (onAnswer) {
+            onAnswer(rate);
+        }
+        setIsSent(true);
+    };
+    return (React.createElement("div", { className: b$4() },
+        !isTitleHidden && (React.createElement("div", { className: b$4('title'), style: elementSizes.title }, title)),
+        React.createElement("div", { className: b$4('starsContainer', {
+                disabled: isSent
+            }), style: {
+                gap: elementSizes.stars.gap
+            } }, new Array(RATE_MAX).fill(0).map((_, index) => (React.createElement(React.Fragment, { key: `rate-star-${index}` },
+            React.createElement("input", { className: b$4('input'), disabled: isSent, id: `rate-star-${index}`, type: "radio", value: RATE_MAX - index, onChange: (e) => {
+                    handleAnswer(e.target.value);
+                } }),
+            React.createElement("label", { className: b$4('starItem'), htmlFor: `rate-star-${index}` },
+                React.createElement(IconRateStar, { className: b$4('star') }))))))));
+};
+
+const b$3 = block('QuizMultipleAnswerWithImageWidget');
+const INIT_ELEMENT_STYLES = {
+    title: {
+        fontSize: 14,
+        marginBottom: 16
+    },
+    answers: {
+        gap: 5
+    },
+    answer: {
+        padding: 4,
+        gap: 5,
+        borderRadius: 5
+    },
+    emoji: {
+        width: 11
+    },
+    answerTitle: {
+        fontSize: 11
+    },
+    sendBtn: {
+        fontSize: 11,
+        borderRadius: 5,
+        padding: 10,
+        marginTop: 5
+    }
+};
+const QuizMultipleAnswerWithImageWidget = (props) => {
+    const { title, answers, isTitleHidden } = props.params;
+    const { position, positionLimits } = props;
+    const [userAnswers, setUserAnswers] = useState([]);
+    const [isSent, setIsSent] = useState(false);
+    const calculate = useCallback((size) => {
+        if (position && positionLimits) {
+            return calculateElementSize(position, positionLimits, size);
+        }
+        return size;
+    }, [position, positionLimits]);
+    const elementSizes = useMemo(() => ({
+        title: {
+            fontSize: calculate(INIT_ELEMENT_STYLES.title.fontSize),
+            marginBottom: calculate(INIT_ELEMENT_STYLES.title.marginBottom)
+        },
+        answers: {
+            gap: calculate(INIT_ELEMENT_STYLES.answers.gap)
+        },
+        answer: {
+            gap: calculate(INIT_ELEMENT_STYLES.answer.gap),
+            borderRadius: calculate(INIT_ELEMENT_STYLES.answer.borderRadius),
+            padding: calculate(INIT_ELEMENT_STYLES.answer.padding)
+        },
+        answerTitle: {
+            fontSize: calculate(INIT_ELEMENT_STYLES.answerTitle.fontSize)
+        },
+        sendBtn: {
+            fontSize: calculate(INIT_ELEMENT_STYLES.sendBtn.fontSize),
+            borderRadius: calculate(INIT_ELEMENT_STYLES.sendBtn.borderRadius),
+            padding: calculate(INIT_ELEMENT_STYLES.sendBtn.padding),
+            marginTop: calculate(INIT_ELEMENT_STYLES.sendBtn.marginTop)
+        }
+    }), [calculate]);
+    const handleAnswer = (id) => {
+        setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
+    };
+    const handleSendAnswer = () => {
+        if (props.onAnswer) {
+            props.onAnswer(userAnswers);
+        }
+        setIsSent(true);
+    };
+    return (React.createElement("div", { className: b$3() },
+        !isTitleHidden && (React.createElement("div", { className: b$3('title'), style: elementSizes.title }, title)),
+        React.createElement("div", { className: b$3('answers'), style: elementSizes.answers }, answers.map((answer) => (React.createElement("button", { className: b$3('answer', {
+                selected: userAnswers.includes(answer.id)
+            }), disabled: isSent, key: answer.id, style: elementSizes.answer, onClick: () => handleAnswer(answer.id) },
+            React.createElement("div", { className: b$3('answerImgContainer'), style: {
+                    backgroundImage: answer.image ? `url(${answer.image.url})` : ''
+                } }),
+            React.createElement("p", { className: b$3('answerTitle'), style: elementSizes.answerTitle }, answer.title))))),
+        userAnswers.length > 0 && (React.createElement("button", { className: b$3('sendBtn', { sent: isSent }), disabled: isSent, style: elementSizes.sendBtn, onClick: handleSendAnswer }, isSent ? 'Sent!' : 'Send'))));
 };
 
 ({
@@ -71040,7 +71297,12 @@ const TimerWidget = (props) => {
     [WidgetsTypes.SWIPE_UP]: SwipeUpWidget,
     [WidgetsTypes.TALK_ABOUT]: TalkAboutWidget,
     [WidgetsTypes.TEXT]: TextWidget,
-    [WidgetsTypes.TIMER]: TimerWidget
+    [WidgetsTypes.TIMER]: TimerWidget,
+    [WidgetsTypes.QUIZ_MULTIPLE_ANSWERS]: QuizMultipleAnswerWidget,
+    [WidgetsTypes.QUIZ_ONE_ANSWER]: QuizOneAnswerWidget,
+    [WidgetsTypes.QUIZ_OPEN_ANSWER]: QuizOpenAnswerWidget,
+    [WidgetsTypes.QUIZ_RATE]: QuizRateWidget,
+    [WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE]: QuizMultipleAnswerWithImageWidget
 });
 
 class WidgetFactory extends React.Component {
@@ -71070,6 +71332,16 @@ class WidgetFactory extends React.Component {
                 return React.createElement(TextWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.TIMER:
                 return (React.createElement(TimerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+            case WidgetsTypes.QUIZ_ONE_ANSWER:
+                return (React.createElement(QuizOneAnswerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+            case WidgetsTypes.QUIZ_MULTIPLE_ANSWERS:
+                return (React.createElement(QuizMultipleAnswerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+            case WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE:
+                return (React.createElement(QuizMultipleAnswerWithImageWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+            case WidgetsTypes.QUIZ_OPEN_ANSWER:
+                return (React.createElement(QuizOpenAnswerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+            case WidgetsTypes.QUIZ_RATE:
+                return (React.createElement(QuizRateWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
             default:
                 return undefined;
         }
@@ -71079,13 +71351,13 @@ class WidgetFactory extends React.Component {
     }
 }
 
-const b$2 = block('StorySdkVideoBackground');
+const b$2 = block$1('StorySdkVideoBackground');
 const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, onLoadEnd }) => (React.createElement("div", { className: b$2() },
     React.createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), loop: true, muted: true, preload: "metadata", onLoadStart: onLoadStart, onLoadedData: onLoadEnd },
         React.createElement("source", { src: src })),
     React.createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
-const b$1 = block('StorySdkContent');
+const b$1 = block$1('StorySdkContent');
 const StoryContent = (props) => {
     const { story, jsConfetti, noTopShadow, storyCurrentSize, currentPaddingSize, isLarge, isLargeBackground, innerHeightGap, handleGoToStory } = props;
     const [isVideoLoading, setVideoLoading] = useState(false);
@@ -71112,6 +71384,139 @@ const StoryContent = (props) => {
                 } }, story.storyData.map((widget) => (React.createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits) },
                 React.createElement(WidgetFactory, { handleGoToStory: handleGoToStory, jsConfetti: jsConfetti, storyId: story.id, widget: widget }))))))));
 };
+
+const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("g", { "data-name": "Layer 2" },
+        React.createElement("g", { "data-name": "arrow-circle-up" },
+            React.createElement("rect", { height: "24", width: "24" }),
+            React.createElement("path", { d: "M12.71 7.29a1 1 0 0 0-.32-.21A1 1 0 0 0 12 7h-.1a.82.82 0 0 0-.27.06.72.72 0 0 0-.19.11 1 1 0 0 0-.13.09l-3 2.86a1 1 0 0 0 1.38 1.45L11 10.34V16a1 1 0 0 0 2 0v-5.59l1.29 1.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z", fill: gradient ? `url(#${gradientId})` : color }),
+            React.createElement("path", { d: "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z", fill: gradient ? `url(#${gradientId})` : color })))));
+
+const ArrowheadUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("g", { "data-name": "Layer 2" },
+        React.createElement("g", { "data-name": "arrowhead-up" },
+            React.createElement("rect", { height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
+            React.createElement("path", { d: "M6.63 11.61L12 7.29l5.37 4.48A1 1 0 0 0 18 12a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41l-6-5a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.14z", fill: gradient ? `url(#${gradientId})` : color }),
+            React.createElement("path", { d: "M12.64 12.23a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.15L12 14.29l5.37 4.48A1 1 0 0 0 18 19a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41z", fill: gradient ? `url(#${gradientId})` : color })))));
+
+const ArrowUpIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { className: "feather feather-arrow-up", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "19", y2: "5" }),
+    React.createElement("polyline", { points: "5 12 12 5 19 12", stroke: gradient ? `url(#${gradientId})` : color })));
+
+const ArrowUpCircleIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { className: "feather feather-arrow-up-circle", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("circle", { cx: "12", cy: "12", r: "10", stroke: gradient ? `url(#${gradientId})` : color }),
+    React.createElement("polyline", { points: "16 12 12 8 8 12", stroke: gradient ? `url(#${gradientId})` : color }),
+    React.createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "16", y2: "8" })));
+
+const ArrowUpCircleFillIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React.createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm1 10h3l-4-4-4 4h3v4h2v-4z", fill: gradient ? `url(#${gradientId})` : color })));
+
+const ArrowUpCircleLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React.createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 18c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8zm1-8v4h-2v-4H8l4-4 4 4h-3z", fill: gradient ? `url(#${gradientId})` : color })));
+
+const ArrowUpFillIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React.createElement("path", { d: "M13 12v8h-2v-8H4l8-8 8 8z", fill: gradient ? `url(#${gradientId})` : color })));
+
+const ArrowUpLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React.createElement("path", { d: "M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z", fill: gradient ? `url(#${gradientId})` : color })));
+
+const ArrowUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("g", { "data-name": "Layer 2" },
+        React.createElement("g", { "data-name": "arrow-up" },
+            React.createElement("rect", { height: "24", opacity: "0", transform: "rotate(90 12 12)", width: "24" }),
+            React.createElement("path", { d: "M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1 2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1zM8 14h7.9L12 9.18z", fill: gradient ? `url(#${gradientId})` : color })))));
+
+const ArrowUpsFillIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React.createElement("path", { d: "M12 8l6 6H6z", fill: gradient ? `url(#${gradientId})` : color })));
+
+const ArrowUpsLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React.createElement("path", { d: "M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z", fill: gradient ? `url(#${gradientId})` : color })));
+
+const LinkIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React.createElement("path", { d: "M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z", fill: gradient ? `url(#${gradientId})` : color })));
+
+const LinksLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React.createElement("path", { d: "M13.06 8.11l1.415 1.415a7 7 0 0 1 0 9.9l-.354.353a7 7 0 0 1-9.9-9.9l1.415 1.415a5 5 0 1 0 7.071 7.071l.354-.354a5 5 0 0 0 0-7.07l-1.415-1.415 1.415-1.414zm6.718 6.011l-1.414-1.414a5 5 0 1 0-7.071-7.071l-.354.354a5 5 0 0 0 0 7.07l1.415 1.415-1.415 1.414-1.414-1.414a7 7 0 0 1 0-9.9l.354-.353a7 7 0 0 1 9.9 9.9z", fill: gradient ? `url(#${gradientId})` : color })));
+
+const ShareLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React.createElement("path", { d: "M13.12 17.023l-4.199-2.29a4 4 0 1 1 0-5.465l4.2-2.29a4 4 0 1 1 .959 1.755l-4.2 2.29a4.008 4.008 0 0 1 0 1.954l4.199 2.29a4 4 0 1 1-.959 1.755zM6 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm11-6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", fill: gradient ? `url(#${gradientId})` : color })));
+
+const UploadOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("g", { "data-name": "Layer 2" },
+        React.createElement("g", { "data-name": "upload" },
+            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
+            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(180 12 5)", width: "16", x: "4", y: "4" }),
+            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 19 6)", width: "4", x: "17", y: "5" }),
+            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 5 6)", width: "4", x: "3", y: "5" }),
+            React.createElement("path", { d: "M8 14a1 1 0 0 1-.8-.4 1 1 0 0 1 .2-1.4l4-3a1 1 0 0 1 1.18 0l4 2.82a1 1 0 0 1 .24 1.39 1 1 0 0 1-1.4.24L12 11.24 8.6 13.8a1 1 0 0 1-.6.2z", fill: gradient ? `url(#${gradientId})` : color }),
+            React.createElement("path", { d: "M12 21a1 1 0 0 1-1-1v-8a1 1 0 0 1 2 0v8a1 1 0 0 1-1 1z", fill: gradient ? `url(#${gradientId})` : color })))));
+
+const IconChevronCircleUp = ({ className, color = '#fff', gradient, gradientId }) => (React.createElement("svg", { className: cn(className, 'stroke-current'), fill: "none", height: 18, viewBox: "0 0 18 18", width: 18, xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React.createElement("defs", null, gradient),
+    React.createElement("circle", { cx: 9, cy: 9, r: 8.5, stroke: gradient ? `url(#${gradientId})` : color }),
+    React.createElement("path", { d: "M12 10L9 7l-3 3", stroke: gradient ? `url(#${gradientId})` : color, strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.2 })));
+
+const MATERIAL_ICONS = {
+    IconChevronCircleUp,
+    ArrowCircleUpOutlineIcon,
+    ArrowheadUpOutlineIcon,
+    ArrowUpIcon,
+    ArrowUpCircleIcon,
+    ArrowUpCircleFillIcon,
+    ArrowUpCircleLineIcon,
+    ArrowUpFillIcon,
+    ArrowUpLineIcon,
+    ArrowUpOutlineIcon,
+    ArrowUpsFillIcon,
+    ArrowUpsLineIcon,
+    // ArrowUpwardOutlineIcon,
+    // ChevronUpOutlineIcon,
+    LinkIcon,
+    LinksLineIcon,
+    ShareLineIcon,
+    UploadOutlineIcon,
+};
+
+const CLASS_NAME = 'MaterialSdkIcon';
+const MaterialIcon = memo(({ name = 'ArrowCircleUpOutlineIcon', className, color, background, size = 'auto' }) => {
+    const Icon = useMemo(() => MATERIAL_ICONS[name], [name]);
+    let gradient;
+    const gradientId = useMemo(() => nanoid$1(), []);
+    if ((background === null || background === void 0 ? void 0 : background.type) === 'gradient') {
+        gradient = (React.createElement("linearGradient", { id: gradientId, x1: "0", x2: "0", y1: "0", y2: "1" },
+            React.createElement("stop", { offset: "0%", stopColor: background.value[0] }),
+            React.createElement("stop", { offset: "100%", stopColor: background.value[1] })));
+    }
+    if (Icon) {
+        return (React.createElement("span", { className: cn(`${CLASS_NAME}`, className), style: { width: size, height: size } },
+            React.createElement(Icon, { color: color, gradient: gradient, gradientId: gradientId })));
+    }
+    return null;
+});
 
 let urlAlphabet =
   'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';

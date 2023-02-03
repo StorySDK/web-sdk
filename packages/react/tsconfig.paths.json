@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@components": [
+        "./components"
+      ],
+      "@components/*": [
+        "./components/*"
+      ],
+      "@hooks": [
+        "./hooks"
+      ],
+      "@constants": [
+        "./constants"
+      ],
+      "@utils": [
+        "./utils"
+      ],
+      "@types": [
+        "./types"
+      ],
+      "@widgets": [
+        "./widgets"
+      ],
+      "@widgets/*": [
+        "./widgets/*"
+      ],
+      "@styles": [
+        "./styles"
+      ],
+      "@styles/*": [
+        "./styles/*"
+      ],
+    }
+  },
+}

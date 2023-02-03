@@ -118,6 +118,36 @@
         ]
       },
       "alias": {
+        "map": [
+          [
+            "@components",
+            "./components"
+          ],
+          [
+            "@hooks",
+            "./hooks"
+          ],
+          [
+            "@constants",
+            "./constants"
+          ],
+          [
+            "@widgets",
+            "./widgets"
+          ],
+          [
+            "@types",
+            "./types"
+          ],
+          [
+            "@utils",
+            "./utils"
+          ],
+          [
+            "@styles",
+            "./styles"
+          ]
+        ],
         "extensions": [
           ".ts",
           ".js",

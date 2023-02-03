@@ -1,17 +1,16 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import block from 'bem-cn';
 import { Emoji } from 'emoji-mart';
-import { calculateElementSizeByHeight, getScalableValue } from '../../utils';
+import { block, calculateElementSizeByHeight, getScalableValue } from '@utils';
 import {
   EmojiReactionWidgetParamsType,
   WidgetComponent,
   WidgetPositionType,
   WidgetPositionLimitsType
-} from '../../types';
+} from '@types';
+import { useInterval } from '@hooks';
 import './EmojiReactionWidget.scss';
-import { useInterval } from '../../hooks';
 
-const b = block('EmojiReactionSdkWidget');
+const b = block('EmojiReactionWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {

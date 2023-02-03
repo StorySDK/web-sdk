@@ -1,17 +1,16 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import block from 'bem-cn';
 import {
   ChooseAnswerWidgetParamsType,
   WidgetComponent,
   WidgetPositionType,
   WidgetPositionLimitsType
-} from '../../types';
-import { IconConfirm, IconDecline } from '../../components/Icon';
-import { calculateElementSize } from '../../utils';
+} from '@types';
+import { IconConfirm, IconDecline } from '@components/icons';
+import { block, calculateElementSize } from '@utils';
 
 import './ChooseAnswerWidget.scss';
 
-const b = block('ChooseAnswerSdkWidget');
+const b = block('ChooseAnswerWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {

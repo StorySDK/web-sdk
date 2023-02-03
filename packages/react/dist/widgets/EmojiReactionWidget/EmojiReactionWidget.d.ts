@@ -1,4 +1,4 @@
-import { EmojiReactionWidgetParamsType, WidgetComponent, WidgetPositionType, WidgetPositionLimitsType } from '../../types';
+import { EmojiReactionWidgetParamsType, WidgetComponent, WidgetPositionType, WidgetPositionLimitsType } from '@types';
 import './EmojiReactionWidget.scss';
 export declare const EmojiReactionWidget: WidgetComponent<{
     params: EmojiReactionWidgetParamsType;

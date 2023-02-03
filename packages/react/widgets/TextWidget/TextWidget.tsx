@@ -1,10 +1,9 @@
 import React from 'react';
-import block from 'bem-cn';
-import { renderBackgroundStyles, renderTextBackgroundStyles } from '../../utils';
-import { TextWidgetParamsType, WidgetComponent } from '../../types';
+import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
+import { TextWidgetParamsType, WidgetComponent } from '@types';
 import './TextWidget.scss';
 
-const b = block('TextSdkWidget');
+const b = block('TextWidget');
 
 type PropsType = {
   params: any;
@@ -39,30 +38,5 @@ export const TextWidget: WidgetComponent<{ params: TextWidgetParamsType }> = (pr
         />
       ) : null}
     </div>
-
-    // <div
-    //   className={b()}
-    //   style={{
-    //     fontFamily: params.fontFamily,
-    //     fontSize: params.fontSize,
-    //     textAlign: params.align,
-    //     color: params.color,
-    //     opacity: params.opacity / 100
-    //   }}
-    // >
-    //   <span
-    //     className={b('span')}
-    //     style={
-    //       params.withFill
-    //         ? {
-    //             backgroundColor: params.color,
-    //             color: 'white'
-    //           }
-    //         : {}
-    //     }
-    //   >
-    //     {params.text}
-    //   </span>
-    // </div>
   );
 };

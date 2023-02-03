@@ -1,4 +1,4 @@
-import { SliderWidgetParamsType, WidgetComponent, WidgetPositionType, WidgetPositionLimitsType } from '../../types';
+import { SliderWidgetParamsType, WidgetComponent, WidgetPositionType, WidgetPositionLimitsType } from '@types';
 import './SliderWidget.scss';
 export declare const SliderWidget: WidgetComponent<{
     storyId: string;

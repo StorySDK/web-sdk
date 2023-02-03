@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import block from 'bem-cn';
 import cn from 'classnames';
 import {
   QuestionWidgetParamsType,
   WidgetComponent,
   WidgetPositionType,
   WidgetPositionLimitsType
-} from '../../types';
-import { calculateElementSize } from '../../utils';
+} from '@types';
+import { block, calculateElementSize } from '@utils';
 import './QuestionWidget.scss';
 
-const b = block('QuestionSdkWidget');
+const b = block('QuestionWidget');
 
 const INIT_ELEMENT_STYLES = {
   text: {

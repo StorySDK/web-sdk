@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import block from 'bem-cn';
-import { SwipeUpWidgetParamsType, WidgetComponent } from '../../types';
-import { renderBackgroundStyles, renderTextBackgroundStyles } from '../../utils';
+import { SwipeUpWidgetParamsType, WidgetComponent } from '@types';
+import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
+import { MaterialIcon } from '@components';
 import './SwipeUpWidget.scss';
-import { MaterialIcon } from '../../components/MaterialIcon';
 
-const b = block('SwipeUpSdkWidget');
+const b = block('SwipeUpWidget');
 
 export const SwipeUpWidget: WidgetComponent<{
   params: SwipeUpWidgetParamsType;

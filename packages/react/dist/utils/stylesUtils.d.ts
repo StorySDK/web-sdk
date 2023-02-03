@@ -5,6 +5,7 @@ interface Stroke {
     strokeOpacity: number;
     fillBorderRadius?: number;
 }
+export declare const block: import("bem-cn").BemCn;
 export declare const renderColor: (color: string, opacity?: number | undefined) => string;
 export declare const renderGradient: (colors: string[], opacity?: number | undefined) => string;
 export declare const renderBackgroundStyles: (background: BackgroundType, opacity?: number | undefined) => string;

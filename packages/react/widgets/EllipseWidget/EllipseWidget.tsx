@@ -1,7 +1,9 @@
 import React from 'react';
-import { EllipseWidgetParamsType, WidgetComponent } from '../../types';
-import { renderBackgroundStyles } from '../../utils';
+import { EllipseWidgetParamsType, WidgetComponent } from '@types';
+import { block, renderBackgroundStyles } from '@utils';
 import './EllipseWidget.scss';
+
+const b = block('EllipseWidget');
 
 export const EllipseWidget: WidgetComponent<{ params: EllipseWidgetParamsType }> = (props) => {
   const { fillColor, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
@@ -18,8 +20,8 @@ export const EllipseWidget: WidgetComponent<{ params: EllipseWidgetParamsType }>
   };
 
   return (
-    <div className="EllipsSdkWidget" style={styles}>
-      <div className="EllipsSdkWidget__background" style={backgroundStyles} />
+    <div className={b()} style={styles}>
+      <div className={b('background')} style={backgroundStyles} />
     </div>
   );
 };

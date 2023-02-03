@@ -1,11 +1,10 @@
 import React, { FC, useState, useEffect, useRef } from 'react';
 import { Emoji } from 'emoji-mart';
-import block from 'bem-cn';
-import { getClientPosition, getScalableValue } from '../../../../utils';
+import { block, getClientPosition, getScalableValue } from '@utils';
 
 import './SliderCustom.scss';
 
-const b = block('SliderSdkCustom');
+const b = block('SliderCustom');
 
 interface Props {
   emoji: string;

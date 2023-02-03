@@ -1,13 +1,9 @@
 @import "../../styles/variables.scss";
 
-.SliderSdkWidget {
+.StorySdk-SliderWidget {
   background: #fff;
   border-radius: 10px;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
-
-
-
   padding: 20px 20px 30px;
   width: 100%;
   height: 100%;
@@ -15,22 +11,16 @@
   flex-direction: column;
   justify-content: center;
 
-
   @each $name, $color in $theme-colors {
-    &.SliderSdkWidget_color_#{$name} {
+    &.StorySdk-SliderWidget_color_#{$name} {
       background: $color;
     }
   }
 
-  &__sliderWrapper {
-
-  }
-
-
   &__text {
     word-break: break-word;
     margin-bottom: 15px;
-    color: #05051D;
+    color: map-get($theme-colors, "black");
     font-weight: 500;
     font-size: 16px;
     line-height: 120%;
@@ -38,11 +28,10 @@
     color: #fff;
   }
 
-
   &_color {
     &_white { 
-      .SliderSdkWidget__text {
-        color: #05051d;
+      .StorySdk-SliderWidget__text {
+        color: map-get($theme-colors, "black");
       }
     }
   }
