@@ -114,6 +114,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
+            onAnswer={this.props.widget.action}
+            onGoToStory={this.props.handleGoToStory}
           />
         );
       case WidgetsTypes.QUIZ_MULTIPLE_ANSWERS:
@@ -122,6 +124,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
+            onAnswer={this.props.widget.action}
+            onGoToStory={this.props.handleGoToStory}
           />
         );
       case WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE:
@@ -130,6 +134,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
+            onAnswer={this.props.widget.action}
+            onGoToStory={this.props.handleGoToStory}
           />
         );
       case WidgetsTypes.QUIZ_OPEN_ANSWER:
@@ -138,6 +144,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
+            onAnswer={this.props.widget.action}
+            onGoToStory={this.props.handleGoToStory}
           />
         );
       case WidgetsTypes.QUIZ_RATE:
@@ -146,6 +154,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
+            onAnswer={this.props.widget.action}
+            onGoToStory={this.props.handleGoToStory}
           />
         );
       default:
