@@ -32,7 +32,7 @@ export declare type ClickMeWidgetParamsType = {
     color: BorderType;
     text: string;
     icon: MaterialIconValueType;
-    url: string;
+    actionType: 'link' | 'story';
     borderRadius: number;
     backgroundColor: BackgroundType;
     hasBorder: boolean;
@@ -40,6 +40,8 @@ export declare type ClickMeWidgetParamsType = {
     borderWidth: number;
     borderColor: BorderType;
     borderOpacity: number;
+    storyId?: string;
+    url?: string;
 };
 export declare type ChooseAnswerWidgetParamsType = {
     text: string;
@@ -108,4 +110,53 @@ export declare type TimerWidgetParamsType = {
     time: number;
     text: string;
     color: string;
+};
+export declare type QuizMultipleAnswerParamsType = {
+    title: string;
+    color?: string;
+    answers: Array<{
+        id: string;
+        title: string;
+        emoji: EmojiItemType | undefined;
+    }>;
+    isTitleHidden: boolean;
+    storyId?: string;
+};
+export declare type QuizMultipleAnswerWithImageParamsType = {
+    title: string;
+    color?: string;
+    answers: Array<{
+        id: string;
+        title: string;
+        image?: {
+            url: string;
+            fileId: string;
+        };
+    }>;
+    isTitleHidden: boolean;
+    storyId?: string;
+};
+export declare type QuizOneAnswerParamsType = {
+    title: string;
+    color?: string;
+    answers: Array<{
+        id: string;
+        title: string;
+        emoji: EmojiItemType | undefined;
+    }>;
+    isTitleHidden: boolean;
+    storyId?: string;
+};
+export declare type QuizOpenAnswerParamsType = {
+    title: string;
+    isTitleHidden: boolean;
+    storyId?: string;
+};
+export declare type QuizRateParamsType = {
+    title: string;
+    isTitleHidden: boolean;
+    storeLinks: {
+        [key: string]: string;
+    };
+    storyId?: string;
 };

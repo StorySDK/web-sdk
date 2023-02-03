@@ -1,16 +1,21 @@
-import { WidgetsTypes } from '../types';
-import { ChooseAnswerWidget } from './ChooseAnswerWidget/ChooseAnswerWidget';
-import { ClickMeWidget } from './ClickMeWidget/ClickMeWidget';
-import { EllipseWidget } from './EllipseWidget/EllipseWidget';
-import { EmojiReactionWidget } from './EmojiReactionWidget/EmojiReactionWidget';
-import { GiphyWidget } from './GiphyWidget/GiphyWidget';
-import { QuestionWidget } from './QuestionWidget/QuestionWidget';
-import { RectangleWidget } from './RectangleWidget/RectangleWidget';
-import { SliderWidget } from './SliderWidget/SliderWidget';
-import { SwipeUpWidget } from './SwipeUpWidget/SwipeUpWidget';
-import { TalkAboutWidget } from './TalkAboutWidget/TalkAboutWidget';
-import { TextWidget } from './TextWidget/TextWidget';
-import { TimerWidget } from './TimerWidget/TimerWidget';
+import { WidgetsTypes } from '@types';
+import { ChooseAnswerWidget } from './ChooseAnswerWidget';
+import { ClickMeWidget } from './ClickMeWidget';
+import { EllipseWidget } from './EllipseWidget';
+import { EmojiReactionWidget } from './EmojiReactionWidget';
+import { GiphyWidget } from './GiphyWidget';
+import { QuestionWidget } from './QuestionWidget';
+import { RectangleWidget } from './RectangleWidget';
+import { SliderWidget } from './SliderWidget';
+import { SwipeUpWidget } from './SwipeUpWidget';
+import { TalkAboutWidget } from './TalkAboutWidget';
+import { TextWidget } from './TextWidget';
+import { TimerWidget } from './TimerWidget';
+import { QuizMultipleAnswerWidget } from './QuizMultipleAnswerWidget';
+import { QuizOneAnswerWidget } from './QuizOneAnswerWidget';
+import { QuizOpenAnswerWidget } from './QuizOpenAnswerWidget';
+import { QuizRateWidget } from './QuizRateWidget';
+import { QuizMultipleAnswerWithImageWidget } from './QuizMultipleAnswerWithImageWidget';
 
 const widgets = {
   [WidgetsTypes.CHOOSE_ANSWER]: ChooseAnswerWidget,
@@ -24,7 +29,12 @@ const widgets = {
   [WidgetsTypes.SWIPE_UP]: SwipeUpWidget,
   [WidgetsTypes.TALK_ABOUT]: TalkAboutWidget,
   [WidgetsTypes.TEXT]: TextWidget,
-  [WidgetsTypes.TIMER]: TimerWidget
+  [WidgetsTypes.TIMER]: TimerWidget,
+  [WidgetsTypes.QUIZ_MULTIPLE_ANSWERS]: QuizMultipleAnswerWidget,
+  [WidgetsTypes.QUIZ_ONE_ANSWER]: QuizOneAnswerWidget,
+  [WidgetsTypes.QUIZ_OPEN_ANSWER]: QuizOpenAnswerWidget,
+  [WidgetsTypes.QUIZ_RATE]: QuizRateWidget,
+  [WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE]: QuizMultipleAnswerWithImageWidget
 };
 
 export default widgets;
@@ -41,5 +51,10 @@ export {
   SwipeUpWidget,
   TalkAboutWidget,
   TextWidget,
-  TimerWidget
+  TimerWidget,
+  QuizMultipleAnswerWidget,
+  QuizOneAnswerWidget,
+  QuizOpenAnswerWidget,
+  QuizRateWidget,
+  QuizMultipleAnswerWithImageWidget
 };

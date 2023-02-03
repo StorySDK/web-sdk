@@ -1,17 +1,16 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect, useRef } from 'react';
-import block from 'bem-cn';
 import {
   TalkAboutWidgetParamsType,
   WidgetComponent,
   WidgetPositionType,
   WidgetPositionLimitsType
-} from '../../types';
-import { StoryContext } from '../../components';
-import { IconLogoCircle } from '../../components/Icon';
-import { calculateElementSize } from '../../utils';
+} from '@types';
+import { StoryContext } from '@components';
+import { IconLogoCircle } from '@components/icons';
+import { block, calculateElementSize } from '@utils';
 import './TalkAboutWidget.scss';
 
-const b = block('TalkAboutSdkWidget');
+const b = block('TalkAboutWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {
@@ -127,13 +126,16 @@ export const TalkAboutWidget: WidgetComponent<{
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleClickOutside = (event: any) => {
-    if (ref.current && !ref.current.contains(event.target)) {
-      storyContextVal.playStatusChange('play');
-    } else if (inputRef.current && inputRef.current.contains(event.target) && !isSent) {
-      storyContextVal.playStatusChange('pause');
-    }
-  };
+  const handleClickOutside = useCallback(
+    (event: any) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        storyContextVal.playStatusChange('play');
+      } else if (inputRef.current && inputRef.current.contains(event.target) && !isSent) {
+        storyContextVal.playStatusChange('pause');
+      }
+    },
+    [isSent, storyContextVal]
+  );
 
   useEffect(() => {
     if (!isSent) {
@@ -145,9 +147,7 @@ export const TalkAboutWidget: WidgetComponent<{
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-
-    // eslint-disable-next-line
-  }, [isSent]);
+  }, [handleClickOutside, isSent]);
 
   return (
     <>

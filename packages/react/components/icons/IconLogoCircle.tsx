@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { nanoid } from 'nanoid';
 
-type PropTypes = {
+type PropsType = {
   className?: string;
 };
 
-export const IconLogoCircle = ({ className }: PropTypes) => {
+export const IconLogoCircle = ({ className }: PropsType) => {
   const gradientId = useMemo(() => nanoid(), []);
   return (
     <svg

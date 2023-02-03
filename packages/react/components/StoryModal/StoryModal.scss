@@ -2,6 +2,7 @@
   from {
     width: 0;
   }
+
   to {
     width: 100%;
   }
@@ -39,50 +40,90 @@
     height: 100%;
   }
 
-  &  * {
+  & * {
     box-sizing: border-box;
   }
 
   &_isShowing {
     display: flex;
+    justify-content: center;
     padding: 10px 0;
   }
 
   &__controls {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 70px;
-    z-index: 4;
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    gap: 8px;
+    grid-template-areas: "indicators indicators"
+                          "group close";
+    padding: 0 8px;
   }
 
   &__body {
     position: relative;
     display: flex;
     z-index: 2;
-
-    width: 100%;
     height: 100%;
+    width: 100%;
 
     @media (min-width: 768px) {
+      width: auto;
       padding: 0;
       justify-content: center;
     }
+  }
+
+  &__bodyContainer {
+    position: relative;
+
+    &_black {
+      &::after {
+        z-index: -1;
+        content: "";
+        border-radius: inherit;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 100%;
+        width: 96%;
+        background-color: #000000;
+      }
+      
+    }
   
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 
   &__group {
-    z-index: 99999;
-    position: absolute;
-    top: 20px;
-    left: 8px;
     display: flex;
     align-items: center;
+    grid-area: group;
+  }
 
-    &_noProgress {
-      top: 10px;
-    }
+  &__statusBar {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 16px;
+  }
+
+  &__bottomMockImg {
+    width: 100%;
+  }
+
+  &__bottomMock {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 0 20px;
+    padding-bottom: 20px;
   }
 
   &__groupImgWrapper {
@@ -133,7 +174,7 @@
 
   &__story {
     display: none;
-  
+
     width: 100%;
     height: 100%;
 
@@ -146,6 +187,28 @@
     position: relative;
     width: 100%;
     height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+
+    @media (max-width: 768px) {
+      border-radius: 0;
+    }
+
+    &_mockup {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &_small {
+      margin-top: -1px;
+    }
   }
 
   &__swiperContent {
@@ -183,13 +246,10 @@
   }
 
   &__indicators {
-    z-index: 99999;
-    position: absolute;
-    top: 10px;
     width: 100%;
-    padding: 0 8px;
     display: flex;
     box-sizing: border-box;
+    grid-area: indicators;
 
     &_stopAnimation {
       .StorySdkModal__indicator_current::after {
@@ -199,23 +259,20 @@
   }
 
   &__close {
-    z-index: 99999;
-    position: absolute;
-    top: 18px;
-    right: 8px;
+    grid-area: close;
     border: 0;
     padding: 0;
     background: none;
     height: 24px;
     width: 24px;
     cursor: pointer;
-
-    &_noProgress {
-      top: 8px;
-    }
+    justify-self: flex-end;
 
     &_general {
       top: 10px;
+      right: 8px;
+      position: absolute;
+      z-index: 99999;
 
       @media (max-width: 768px) {
         top: 18px;
@@ -246,7 +303,7 @@
     padding: 0;
     cursor: pointer;
     position: absolute;
-    z-index: 999999;
+    z-index: 99999;
 
     top: 70px;
     left: 0;
@@ -258,7 +315,7 @@
       justify-content: flex-end;
     }
 
-    & > svg {
+    &>svg {
       display: none;
     }
 
@@ -267,10 +324,24 @@
       position: static;
       height: auto;
 
-      & > svg {
+      &>svg {
         display: block;
       }
-  
     }
+  }
+
+  &__mockup {
+    width: auto;
+    height: 100%;
+  }
+
+  &__topContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    z-index: 99999;
+    flex-direction: column;
   }
 }

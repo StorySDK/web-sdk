@@ -1,18 +1,17 @@
 import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react';
-import block from 'bem-cn';
 import {
   SliderWidgetParamsType,
   WidgetComponent,
   WidgetPositionType,
   WidgetPositionLimitsType
-} from '../../types';
-import { calculateElementSize } from '../../utils';
-import { useInterval } from '../../hooks';
-import { StoryContext } from '../../components';
+} from '@types';
+import { block, calculateElementSize } from '@utils';
+import { useInterval } from '@hooks';
+import { StoryContext } from '@components';
 import { SliderCustom } from './_components';
 import './SliderWidget.scss';
 
-const b = block('SliderSdkWidget');
+const b = block('SliderWidget');
 
 type ChangeStatus = 'init' | 'wait' | 'moving' | 'moved';
 

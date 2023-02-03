@@ -17,6 +17,7 @@ interface GroupsListProps {
   groupsClassName?: string;
   groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle' | string;
   isLoading?: boolean;
+  isShowMockup?: boolean;
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
   onNextStory?(groupId: string, storyId: string): void;
@@ -45,6 +46,7 @@ const withGroupsData =
     const [data, setData] = useState([]);
     const [groups, setGroups] = useState([]);
     const [groupView, setGroupView] = useState('circle');
+    const [isShowMockup, setIsShowMockup] = useState(false);
     const [appLocale, setAppLocale] = useState(null);
     const [groupsWithStories, setGroupsWithStories] = useState([]);
     const [loadStatus, setLoadStatus] = useState('pending');
@@ -180,12 +182,15 @@ const withGroupsData =
               ? app.settings.groupView.web
               : 'circle';
 
+            const isShowMockupApp = app.settings?.isShowMockup ?? false;
+
             if (app.settings.fonts?.length) {
               loadFontsToPage(app.settings.fonts);
             }
 
             setAppLocale(app.localization);
             setGroupView(appGroupView);
+            setIsShowMockup(isShowMockupApp);
 
             API.groups.getList().then((groupsData) => {
               if (!groupsData.data.error) {
@@ -267,6 +272,7 @@ const withGroupsData =
         groups={data}
         groupsClassName={groupsClassName}
         isLoading={loadStatus === 'loading'}
+        isShowMockup={isShowMockup}
         onCloseGroup={handleCloseGroup}
         onCloseStory={handleCloseStory}
         onNextStory={handleNextStory}

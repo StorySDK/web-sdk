@@ -1,7 +1,6 @@
 @import "../../styles/index.scss";
 
-
-.SwipeUpSdkWidget {
+.StorySdk-SwipeUpWidget {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,7 +13,7 @@
 
   &--isReadOnly {
     align-items: center;
-    background: #05051D;
+    background: map-get($theme-colors, "black");
     border-radius: 10px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
     display: flex;
@@ -34,36 +33,3 @@
     line-height: 120%;
   }
 }
-
-
-// .SwipeUpWidget {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   color: #fff;
-
-//   &--isReadOnly {
-//     align-items: center;
-//     background: #05051d;
-//     border-radius: 10px;
-//     box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-//     display: flex;
-//     flex-direction: column;
-//     height: 69px;
-//     justify-content: center;
-//     width: 196px;
-//   }
-
-//   &_gradient {
-//     -webkit-background-clip: text !important;
-//     -webkit-text-fill-color: transparent;
-//   }
-
-//   &__icon {
-//     margin-bottom: 2px;
-
-//     & > svg {
-//       width: 1rem;
-//     }
-//   }
-// }

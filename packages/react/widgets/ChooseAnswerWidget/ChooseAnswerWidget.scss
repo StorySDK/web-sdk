@@ -1,6 +1,6 @@
 @import "../../styles/variables.scss";
 
-.ChooseAnswerSdkWidget {
+.StorySdk-ChooseAnswerWidget {
   width: 100%;
   height: 100%;
   background: #ffffff;
@@ -25,7 +25,7 @@
   }
 
   &_color_white &__header {
-    color: #05051d;
+    color: map-get($theme-colors, "black");
   }
 
   &__header {
@@ -76,14 +76,14 @@
     }
 
     &_filled {
-      background-color: #05051d;
+      background-color: map-get($theme-colors, "black");
     }
 
     &_choosen {
       border-color: transparent;
       cursor: auto;
 
-      &.ChooseAnswerSdkWidget__answer_incorrect {
+      &.StorySdk-ChooseAnswerWidget__answer_incorrect {
         background-color: rgba(
           $color: map-get($theme-colors, "red"),
           $alpha: 0.8
@@ -136,7 +136,7 @@
       stroke: rgba($color: map-get($theme-colors, "red"), $alpha: 0.5);
     }
 
-    &_incorrect.ChooseAnswerSdkWidget__answerIcon_choosen {
+    &_incorrect.StorySdk-ChooseAnswerWidget__answerIcon_choosen {
       stroke: map-get($theme-colors, "red");
     }
   }
@@ -174,7 +174,7 @@
     &_incorrect {
       border-color: rgba($color: map-get($theme-colors, "red"), $alpha: 0.5);
 
-      &.ChooseAnswerSdkWidget__answerCircle_choosen {
+      &.StorySdk-ChooseAnswerWidget__answerCircle_choosen {
         background-color: #ffffff;
         border-color: rgba($color: map-get($theme-colors, "red"), $alpha: 0.8);
       }

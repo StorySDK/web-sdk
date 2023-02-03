@@ -1,4 +1,4 @@
-import { ClickMeWidgetParamsType, WidgetComponent } from '../../types';
+import { ClickMeWidgetParamsType, WidgetComponent } from '@types';
 import './ClickMeWidget.scss';
 export declare const ClickMeWidget: WidgetComponent<{
     params: ClickMeWidgetParamsType;

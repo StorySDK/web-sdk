@@ -121,3 +121,49 @@ export type TimerWidgetParamsType = {
   text: string;
   color: string;
 };
+
+export type QuizMultipleAnswerParamsType = {
+  title: string;
+  color?: string;
+  answers: Array<{ id: string; title: string; emoji: EmojiItemType | undefined }>;
+  isTitleHidden: boolean;
+  storyId?: string;
+};
+
+export type QuizMultipleAnswerWithImageParamsType = {
+  title: string;
+  color?: string;
+  answers: Array<{
+    id: string;
+    title: string;
+    image?: {
+      url: string;
+      fileId: string;
+    };
+  }>;
+  isTitleHidden: boolean;
+  storyId?: string;
+};
+
+export type QuizOneAnswerParamsType = {
+  title: string;
+  color?: string;
+  answers: Array<{ id: string; title: string; emoji: EmojiItemType | undefined }>;
+  isTitleHidden: boolean;
+  storyId?: string;
+};
+
+export type QuizOpenAnswerParamsType = {
+  title: string;
+  isTitleHidden: boolean;
+  storyId?: string;
+};
+
+export type QuizRateParamsType = {
+  title: string;
+  isTitleHidden: boolean;
+  storeLinks: {
+    [key: string]: string;
+  };
+  storyId?: string;
+};

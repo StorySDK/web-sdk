@@ -1,11 +1,10 @@
 import React from 'react';
-import block from 'bem-cn';
-import { renderBackgroundStyles, renderTextBackgroundStyles } from '../../utils';
-import { ClickMeWidgetParamsType, WidgetComponent } from '../../types';
+import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
+import { ClickMeWidgetParamsType, WidgetComponent } from '@types';
+import { MaterialIcon } from '@components';
 import './ClickMeWidget.scss';
-import { MaterialIcon } from '../../components/MaterialIcon';
 
-const b = block('ClickMeSdkWidget');
+const b = block('ClickMeWidget');
 
 export const ClickMeWidget: WidgetComponent<{
   params: ClickMeWidgetParamsType;

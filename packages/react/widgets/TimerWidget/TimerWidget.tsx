@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import block from 'bem-cn';
 import {
   TimerWidgetParamsType,
   WidgetComponent,
   WidgetPositionType,
   WidgetPositionLimitsType
-} from '../../types';
-import { calculateElementSize } from '../../utils';
+} from '@types';
+import { block, calculateElementSize } from '@utils';
 import './TimerWidget.scss';
+import { ONE_MINUTE_IN_SECONDS, ONE_SECOND_IN_MILLISECONDS } from '@constants';
 
-const b = block('TimerSdkWidget');
+const b = block('TimerWidget');
 
 const calculateTime = (time: number) => {
-  const days = Math.floor(time / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((time / 1000 / 60) % 60);
+  const days = Math.floor(time / (ONE_SECOND_IN_MILLISECONDS * ONE_MINUTE_IN_SECONDS * 60 * 24));
+  const hours = Math.floor((time / (ONE_SECOND_IN_MILLISECONDS * ONE_MINUTE_IN_SECONDS * 60)) % 24);
+  const minutes = Math.floor((time / ONE_SECOND_IN_MILLISECONDS / ONE_MINUTE_IN_SECONDS) % 60);
 
   return {
     days: days < 10 ? `0${days > 0 ? days : 0}` : `${days}`,

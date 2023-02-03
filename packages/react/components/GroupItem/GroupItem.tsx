@@ -36,11 +36,9 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
   const BASE_CONTAINER_WIDTH_INDEX = 1.32;
   const BIG_SQUARE_CONTAINER_WIDTH_INDEX = 0.93;
   const RECTANGLE_CONTAINER_WIDTH_INDEX = 0.97;
-
   const BASE_IMAGE_WIDTH_INDEX = 0.88;
   const BIG_SQUARE_IMAGE_WIDTH_INDEX = 0.9;
   const RECTANGLE_IMAGE_WIDTH_INDEX = 0.9;
-
   const RECTANGLE_IMAGE_HEIGHT_INDEX = 1.26;
 
   const getContainerSize = useCallback(() => {

@@ -1,13 +1,15 @@
 import React from 'react';
-import './StoryModal.scss';
 import { StoryType, Group } from '../../types';
+import './StoryModal.scss';
 interface StoryModalProps {
     currentGroup: Group;
     stories: StoryType[];
     isShowing: boolean;
+    isShowMockup?: boolean;
     isLastGroup: boolean;
     isFirstGroup: boolean;
     startStoryId?: string;
+    isStatusBarActive?: boolean;
     isForceCloseAvailable?: boolean;
     onClose(): void;
     onPrevGroup(): void;
@@ -22,7 +24,15 @@ export declare const StoryContext: React.Context<{
     playStatusChange?: any;
     confetti?: any;
 }>;
+export declare type StoryCurrentSize = {
+    width: number;
+    height: number;
+};
 export declare const STORY_SIZE: {
+    width: number;
+    height: number;
+};
+export declare const STORY_SIZE_LARGE: {
     width: number;
     height: number;
 };

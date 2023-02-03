@@ -1,9 +1,9 @@
 import React from 'react';
-import { GroupType } from '../../types';
+import { Group } from '../../types';
 import { StoryModal } from '..';
 
 interface GroupProps {
-  group: GroupType;
+  group: Group;
   isFirstGroup: boolean;
   isLastGroup: boolean;
   isForceCloseAvailable?: boolean;
@@ -11,6 +11,8 @@ interface GroupProps {
   handleNextGroup: () => void;
   handlePrevGroup: () => void;
   isShowing: boolean;
+  isShowMockup?: boolean;
+  isStatusBarActive?: boolean;
   startStoryId?: string;
 }
 
@@ -22,6 +24,8 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     isLastGroup,
     startStoryId,
     isForceCloseAvailable,
+    isShowMockup,
+    isStatusBarActive,
     handleCloseModal,
     handleNextGroup,
     handlePrevGroup,
@@ -37,7 +41,9 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
         isFirstGroup={isFirstGroup}
         isForceCloseAvailable={isForceCloseAvailable}
         isLastGroup={isLastGroup}
+        isShowMockup={isShowMockup}
         isShowing={isShowing}
+        isStatusBarActive={isStatusBarActive}
         startStoryId={startStoryId}
         stories={group.stories}
         onClose={handleCloseModal}

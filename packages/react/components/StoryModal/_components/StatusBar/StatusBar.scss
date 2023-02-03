@@ -1,0 +1,19 @@
+.StorySdkStatusBar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  &__time {
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  &__icon {
+    margin-right: 5px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
