@@ -45,9 +45,10 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   onAnswer?(answer: string[]): any;
+  onGoToStory?(storyId: string): void;
 }> = (props) => {
-  const { title, answers, isTitleHidden } = props.params;
-  const { position, positionLimits } = props;
+  const { title, answers, isTitleHidden, storyId } = props.params;
+  const { position, positionLimits, onAnswer, onGoToStory } = props;
 
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isSent, setIsSent] = useState<boolean>(false);
@@ -101,11 +102,12 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
   };
 
   const handleSendAnswer = () => {
-    if (props.onAnswer) {
-      props.onAnswer(userAnswers);
-    }
-
+    onAnswer?.(userAnswers);
     setIsSent(true);
+
+    if (storyId) {
+      onGoToStory?.(storyId);
+    }
   };
 
   return (

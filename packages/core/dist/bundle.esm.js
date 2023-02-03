@@ -70920,8 +70920,8 @@ const INIT_ELEMENT_STYLES$4 = {
     }
 };
 const QuizMultipleAnswerWidget = (props) => {
-    const { title, answers, isTitleHidden } = props.params;
-    const { position, positionLimits } = props;
+    const { title, answers, isTitleHidden, storyId } = props.params;
+    const { position, positionLimits, onAnswer, onGoToStory } = props;
     const [userAnswers, setUserAnswers] = useState([]);
     const [isSent, setIsSent] = useState(false);
     const calculate = useCallback((size) => {
@@ -70961,10 +70961,11 @@ const QuizMultipleAnswerWidget = (props) => {
         setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
     };
     const handleSendAnswer = () => {
-        if (props.onAnswer) {
-            props.onAnswer(userAnswers);
-        }
+        onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
         setIsSent(true);
+        if (storyId) {
+            onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
+        }
     };
     return (React.createElement("div", { className: b$7() },
         !isTitleHidden && (React.createElement("div", { className: b$7('title'), style: elementSizes.title }, title)),
@@ -71003,7 +71004,7 @@ const INIT_ELEMENT_STYLES$3 = {
 };
 const QuizOneAnswerWidget = (props) => {
     const { title, answers, storyId, isTitleHidden } = props.params;
-    const { position, positionLimits } = props;
+    const { position, positionLimits, onAnswer, onGoToStory } = props;
     const [userAnswer, setUserAnswer] = useState(null);
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
@@ -71032,11 +71033,10 @@ const QuizOneAnswerWidget = (props) => {
         }
     }), [calculate]);
     const handleAnswer = (id) => {
-        var _a, _b;
         setUserAnswer(id);
-        (_a = props.onAnswer) === null || _a === void 0 ? void 0 : _a.call(props, id);
+        onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(id);
         if (storyId) {
-            (_b = props.onGoToStory) === null || _b === void 0 ? void 0 : _b.call(props, storyId);
+            onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
     };
     return (React.createElement("div", { className: b$6() },
@@ -71073,8 +71073,8 @@ const INIT_ELEMENT_STYLES$2 = {
     }
 };
 const QuizOpenAnswerWidget = (props) => {
-    const { title, isTitleHidden } = props.params;
-    const { position, positionLimits } = props;
+    const { title, isTitleHidden, storyId } = props.params;
+    const { position, positionLimits, onAnswer, onGoToStory } = props;
     const storyContextVal = useContext(StoryContext);
     const [text, setText] = useState('');
     const [isSent, setIsSent] = useState(false);
@@ -71092,8 +71092,9 @@ const QuizOpenAnswerWidget = (props) => {
     }, [isSent, storyContextVal]);
     const handleSendClick = () => {
         if (text.length) {
-            if (props.onAnswer) {
-                props.onAnswer(text);
+            onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(text);
+            if (storyId) {
+                onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
             }
             storyContextVal.playStatusChange('play');
             setIsSent(true);
@@ -71165,8 +71166,8 @@ const INIT_ELEMENT_STYLES$1 = {
 };
 const RATE_MAX = 5;
 const QuizRateWidget = (props) => {
-    const { title, isTitleHidden } = props.params;
-    const { position, positionLimits, onAnswer } = props;
+    const { title, isTitleHidden, storyId } = props.params;
+    const { position, positionLimits, onAnswer, onGoToStory } = props;
     const [isSent, setIsSent] = useState(false);
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
@@ -71184,8 +71185,9 @@ const QuizRateWidget = (props) => {
         }
     }), [calculate]);
     const handleAnswer = (rate) => {
-        if (onAnswer) {
-            onAnswer(rate);
+        onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(rate);
+        if (storyId) {
+            onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
         setIsSent(true);
     };
@@ -71231,8 +71233,8 @@ const INIT_ELEMENT_STYLES = {
     }
 };
 const QuizMultipleAnswerWithImageWidget = (props) => {
-    const { title, answers, isTitleHidden } = props.params;
-    const { position, positionLimits } = props;
+    const { title, answers, isTitleHidden, storyId } = props.params;
+    const { position, positionLimits, onAnswer, onGoToStory } = props;
     const [userAnswers, setUserAnswers] = useState([]);
     const [isSent, setIsSent] = useState(false);
     const calculate = useCallback((size) => {
@@ -71268,10 +71270,11 @@ const QuizMultipleAnswerWithImageWidget = (props) => {
         setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
     };
     const handleSendAnswer = () => {
-        if (props.onAnswer) {
-            props.onAnswer(userAnswers);
-        }
+        onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
         setIsSent(true);
+        if (storyId) {
+            onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
+        }
     };
     return (React.createElement("div", { className: b$3() },
         !isTitleHidden && (React.createElement("div", { className: b$3('title'), style: elementSizes.title }, title)),
@@ -71333,15 +71336,15 @@ class WidgetFactory extends React.Component {
             case WidgetsTypes.TIMER:
                 return (React.createElement(TimerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
             case WidgetsTypes.QUIZ_ONE_ANSWER:
-                return (React.createElement(QuizOneAnswerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+                return (React.createElement(QuizOneAnswerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_MULTIPLE_ANSWERS:
-                return (React.createElement(QuizMultipleAnswerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+                return (React.createElement(QuizMultipleAnswerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE:
-                return (React.createElement(QuizMultipleAnswerWithImageWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+                return (React.createElement(QuizMultipleAnswerWithImageWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_OPEN_ANSWER:
-                return (React.createElement(QuizOpenAnswerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+                return (React.createElement(QuizOpenAnswerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_RATE:
-                return (React.createElement(QuizRateWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+                return (React.createElement(QuizRateWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             default:
                 return undefined;
         }
@@ -78794,10 +78797,9 @@ const API = {
     }
 };
 
-// import { GroupType } from '@storysdk/react';
 const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
     switch (widget.content.type) {
-        case 'choose_answer':
+        case WidgetsTypes.CHOOSE_ANSWER:
             return (answer) => API.statistics.widgets.chooseAnswer.onAnswer({
                 widgetId: widget.id,
                 storyId,
@@ -78806,7 +78808,7 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
                 answer,
                 language
             });
-        case 'emoji_reaction':
+        case WidgetsTypes.EMOJI_REACTION:
             return (emoji) => API.statistics.widgets.emojiReaction.onReact({
                 widgetId: widget.id,
                 storyId,
@@ -78815,7 +78817,7 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
                 emoji,
                 language
             });
-        case 'talk_about':
+        case WidgetsTypes.TALK_ABOUT:
             return (answer) => API.statistics.widgets.talkAbout.onAnswer({
                 widgetId: widget.id,
                 storyId,
@@ -78824,7 +78826,7 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
                 answer,
                 language
             });
-        case 'click_me':
+        case WidgetsTypes.CLICK_ME:
             return () => API.statistics.widgets.clickMe.onClick({
                 widgetId: widget.id,
                 storyId,
@@ -78833,7 +78835,7 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
                 url: widget.content.params.url,
                 language
             });
-        case 'question':
+        case WidgetsTypes.QUESTION:
             return (answer) => API.statistics.widgets.question.onAnswer({
                 widgetId: widget.id,
                 answer,
@@ -78842,7 +78844,7 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
                 uniqUserId,
                 language
             });
-        case 'slider':
+        case WidgetsTypes.SLIDER:
             return (value) => API.statistics.widgets.slider.onSlide({
                 widgetId: widget.id,
                 value,
@@ -78851,7 +78853,7 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
                 uniqUserId,
                 language
             });
-        case 'swipe_up':
+        case WidgetsTypes.SWIPE_UP:
             return () => API.statistics.widgets.swipeUp.onSwipe({
                 widgetId: widget.id,
                 storyId,

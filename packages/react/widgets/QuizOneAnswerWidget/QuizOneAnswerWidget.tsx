@@ -41,7 +41,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
   onGoToStory?(storyId: string): void;
 }> = (props) => {
   const { title, answers, storyId, isTitleHidden } = props.params;
-  const { position, positionLimits } = props;
+  const { position, positionLimits, onAnswer, onGoToStory } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
 
@@ -82,10 +82,10 @@ export const QuizOneAnswerWidget: WidgetComponent<{
 
   const handleAnswer = (id: string) => {
     setUserAnswer(id);
-    props.onAnswer?.(id);
+    onAnswer?.(id);
 
     if (storyId) {
-      props.onGoToStory?.(storyId);
+      onGoToStory?.(storyId);
     }
   };
 

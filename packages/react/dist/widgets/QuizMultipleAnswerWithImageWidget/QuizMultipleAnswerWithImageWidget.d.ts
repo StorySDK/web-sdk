@@ -5,4 +5,5 @@ export declare const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;
     onAnswer?(answer: string[]): any;
+    onGoToStory?(storyId: string): void;
 }>;

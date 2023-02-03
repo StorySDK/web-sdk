@@ -38,9 +38,10 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   onAnswer?(answer: string): any;
+  onGoToStory?(storyId: string): void;
 }> = (props) => {
-  const { title, isTitleHidden } = props.params;
-  const { position, positionLimits } = props;
+  const { title, isTitleHidden, storyId } = props.params;
+  const { position, positionLimits, onAnswer, onGoToStory } = props;
 
   const storyContextVal = useContext(StoryContext);
 
@@ -65,8 +66,10 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
 
   const handleSendClick = () => {
     if (text.length) {
-      if (props.onAnswer) {
-        props.onAnswer(text);
+      onAnswer?.(text);
+
+      if (storyId) {
+        onGoToStory?.(storyId);
       }
 
       storyContextVal.playStatusChange('play');

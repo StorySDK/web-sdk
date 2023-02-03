@@ -1,4 +1,4 @@
-// import { GroupType } from '@storysdk/react';
+import { WidgetsTypes } from '@storysdk/react';
 import { API } from '../services';
 
 const actionToWidget = (
@@ -9,7 +9,7 @@ const actionToWidget = (
   language: string
 ) => {
   switch (widget.content.type) {
-    case 'choose_answer':
+    case WidgetsTypes.CHOOSE_ANSWER:
       return (answer: string) =>
         API.statistics.widgets.chooseAnswer.onAnswer({
           widgetId: widget.id as string,
@@ -19,7 +19,7 @@ const actionToWidget = (
           answer,
           language
         });
-    case 'emoji_reaction':
+    case WidgetsTypes.EMOJI_REACTION:
       return (emoji: string) =>
         API.statistics.widgets.emojiReaction.onReact({
           widgetId: widget.id as string,
@@ -29,7 +29,7 @@ const actionToWidget = (
           emoji,
           language
         });
-    case 'talk_about':
+    case WidgetsTypes.TALK_ABOUT:
       return (answer: string) =>
         API.statistics.widgets.talkAbout.onAnswer({
           widgetId: widget.id as string,
@@ -39,7 +39,7 @@ const actionToWidget = (
           answer,
           language
         });
-    case 'click_me':
+    case WidgetsTypes.CLICK_ME:
       return () =>
         API.statistics.widgets.clickMe.onClick({
           widgetId: widget.id as string,
@@ -49,7 +49,7 @@ const actionToWidget = (
           url: widget.content.params.url,
           language
         });
-    case 'question':
+    case WidgetsTypes.QUESTION:
       return (answer: string) =>
         API.statistics.widgets.question.onAnswer({
           widgetId: widget.id as string,
@@ -59,7 +59,7 @@ const actionToWidget = (
           uniqUserId,
           language
         });
-    case 'slider':
+    case WidgetsTypes.SLIDER:
       return (value: number) =>
         API.statistics.widgets.slider.onSlide({
           widgetId: widget.id as string,
@@ -69,7 +69,7 @@ const actionToWidget = (
           uniqUserId,
           language
         });
-    case 'swipe_up':
+    case WidgetsTypes.SWIPE_UP:
       return () =>
         API.statistics.widgets.swipeUp.onSwipe({
           widgetId: widget.id as string,
