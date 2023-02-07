@@ -33,9 +33,9 @@ export const EmojiReactionWidget: WidgetComponent<{
   params: EmojiReactionWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
-  onReact?(emoji: string): void;
+  onAnswer?(emoji: string): void;
 }> = (props) => {
-  const { params, position, positionLimits } = props;
+  const { params, position, positionLimits, onAnswer } = props;
 
   const calculate = useCallback(
     (size) => {
@@ -86,10 +86,7 @@ export const EmojiReactionWidget: WidgetComponent<{
   }, delay);
 
   const handleReactionClick = (index: number, emoji: string) => {
-    if (props.onReact) {
-      props.onReact(emoji);
-    }
-
+    onAnswer?.(emoji);
     setIsToched(true);
     setClickedIndex(index);
     setBigSize(initEmojiSize);

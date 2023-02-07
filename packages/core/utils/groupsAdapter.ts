@@ -1,6 +1,21 @@
 import { WidgetsTypes } from '@storysdk/react';
 import { API } from '../services';
 
+const answerWidgets = [
+  WidgetsTypes.CHOOSE_ANSWER,
+  WidgetsTypes.EMOJI_REACTION,
+  WidgetsTypes.TALK_ABOUT,
+  WidgetsTypes.QUESTION,
+  WidgetsTypes.SLIDER,
+  WidgetsTypes.QUIZ_ONE_ANSWER,
+  WidgetsTypes.QUIZ_OPEN_ANSWER,
+  WidgetsTypes.QUIZ_RATE,
+  WidgetsTypes.QUIZ_MULTIPLE_ANSWERS,
+  WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE
+];
+
+const clickWidgets = [WidgetsTypes.CLICK_ME, WidgetsTypes.SWIPE_UP];
+
 const actionToWidget = (
   widget: any,
   storyId: string,
@@ -8,80 +23,31 @@ const actionToWidget = (
   uniqUserId: string,
   language: string
 ) => {
-  switch (widget.content.type) {
-    case WidgetsTypes.CHOOSE_ANSWER:
-      return (answer: string) =>
-        API.statistics.widgets.chooseAnswer.onAnswer({
-          widgetId: widget.id as string,
-          storyId,
-          groupId,
-          uniqUserId,
-          answer,
-          language
-        });
-    case WidgetsTypes.EMOJI_REACTION:
-      return (emoji: string) =>
-        API.statistics.widgets.emojiReaction.onReact({
-          widgetId: widget.id as string,
-          storyId,
-          groupId,
-          uniqUserId,
-          emoji,
-          language
-        });
-    case WidgetsTypes.TALK_ABOUT:
-      return (answer: string) =>
-        API.statistics.widgets.talkAbout.onAnswer({
-          widgetId: widget.id as string,
-          storyId,
-          groupId,
-          uniqUserId,
-          answer,
-          language
-        });
-    case WidgetsTypes.CLICK_ME:
-      return () =>
-        API.statistics.widgets.clickMe.onClick({
-          widgetId: widget.id as string,
-          storyId,
-          groupId,
-          uniqUserId,
-          url: widget.content.params.url,
-          language
-        });
-    case WidgetsTypes.QUESTION:
-      return (answer: string) =>
-        API.statistics.widgets.question.onAnswer({
-          widgetId: widget.id as string,
-          answer,
-          storyId,
-          groupId,
-          uniqUserId,
-          language
-        });
-    case WidgetsTypes.SLIDER:
-      return (value: number) =>
-        API.statistics.widgets.slider.onSlide({
-          widgetId: widget.id as string,
-          value,
-          storyId,
-          groupId,
-          uniqUserId,
-          language
-        });
-    case WidgetsTypes.SWIPE_UP:
-      return () =>
-        API.statistics.widgets.swipeUp.onSwipe({
-          widgetId: widget.id as string,
-          storyId,
-          groupId,
-          uniqUserId,
-          url: widget.content.params.url,
-          language
-        });
-    default:
-      return undefined;
+  if (answerWidgets.includes(widget.content.type)) {
+    return (answer: string | string[]) =>
+      API.statistics.widgets.answer.onAnswer({
+        widgetId: widget.id as string,
+        storyId,
+        groupId,
+        uniqUserId,
+        answer,
+        language
+      });
   }
+
+  if (clickWidgets.includes(widget.content.type)) {
+    return () =>
+      API.statistics.widgets.click.onClick({
+        widgetId: widget.id as string,
+        storyId,
+        groupId,
+        uniqUserId,
+        url: widget.content.params.url,
+        language
+      });
+  }
+
+  return undefined;
 };
 
 const adaptWidgets = (

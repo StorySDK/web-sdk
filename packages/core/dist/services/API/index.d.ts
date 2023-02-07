@@ -70,73 +70,23 @@ export declare const API: {
             }): import("axios").AxiosPromise<any>;
         };
         widgets: {
-            chooseAnswer: {
+            answer: {
                 onAnswer(params: {
                     widgetId: string;
                     storyId: string;
                     groupId: string;
-                    answer: string;
+                    answer: string | string[] | number;
                     uniqUserId: string;
                     language: string;
                 }): import("axios").AxiosPromise<any>;
             };
-            clickMe: {
+            click: {
                 onClick(params: {
                     widgetId: string;
                     storyId: string;
                     groupId: string;
                     uniqUserId: string;
                     url: string;
-                    language: string;
-                }): import("axios").AxiosPromise<any>;
-            };
-            emojiReaction: {
-                onReact(params: {
-                    widgetId: string;
-                    storyId: string;
-                    groupId: string;
-                    uniqUserId: string;
-                    emoji: string;
-                    language: string;
-                }): import("axios").AxiosPromise<any>;
-            };
-            question: {
-                onAnswer(params: {
-                    widgetId: string;
-                    storyId: string;
-                    groupId: string;
-                    uniqUserId: string;
-                    answer: string;
-                    language: string;
-                }): import("axios").AxiosPromise<any>;
-            };
-            slider: {
-                onSlide(params: {
-                    widgetId: string;
-                    storyId: string;
-                    groupId: string;
-                    uniqUserId: string;
-                    value: number;
-                    language: string;
-                }): import("axios").AxiosPromise<any>;
-            };
-            swipeUp: {
-                onSwipe(params: {
-                    widgetId: string;
-                    storyId: string;
-                    groupId: string;
-                    uniqUserId: string;
-                    url: string;
-                    language: string;
-                }): import("axios").AxiosPromise<any>;
-            };
-            talkAbout: {
-                onAnswer(params: {
-                    widgetId: string;
-                    storyId: string;
-                    groupId: string;
-                    uniqUserId: string;
-                    answer: string;
                     language: string;
                 }): import("axios").AxiosPromise<any>;
             };

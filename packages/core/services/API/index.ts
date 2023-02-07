@@ -172,12 +172,12 @@ export const API = {
       }
     },
     widgets: {
-      chooseAnswer: {
+      answer: {
         onAnswer(params: {
           widgetId: string;
           storyId: string;
           groupId: string;
-          answer: string;
+          answer: string | string[] | number;
           uniqUserId: string;
           language: string;
         }) {
@@ -196,7 +196,7 @@ export const API = {
           });
         }
       },
-      clickMe: {
+      click: {
         onClick(params: {
           widgetId: string;
           storyId: string;
@@ -215,126 +215,6 @@ export const API = {
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
               value: params.url,
-              locale: params.language
-            }
-          });
-        }
-      },
-      emojiReaction: {
-        onReact(params: {
-          widgetId: string;
-          storyId: string;
-          groupId: string;
-          uniqUserId: string;
-          emoji: string;
-          language: string;
-        }) {
-          return axios({
-            method: 'post',
-            url: `/reactions`,
-            data: {
-              type: 'answer',
-              group_id: params.groupId,
-              story_id: params.storyId,
-              widget_id: params.widgetId,
-              user_id: params.uniqUserId,
-              value: params.emoji,
-              locale: params.language
-            }
-          });
-        }
-      },
-      question: {
-        onAnswer(params: {
-          widgetId: string;
-          storyId: string;
-          groupId: string;
-          uniqUserId: string;
-          answer: string;
-          language: string;
-        }) {
-          return axios({
-            method: 'post',
-            url: `/reactions`,
-            data: {
-              type: 'answer',
-              group_id: params.groupId,
-              story_id: params.storyId,
-              widget_id: params.widgetId,
-              user_id: params.uniqUserId,
-              value: params.answer,
-              locale: params.language
-            }
-          });
-        }
-      },
-      slider: {
-        onSlide(params: {
-          widgetId: string;
-          storyId: string;
-          groupId: string;
-          uniqUserId: string;
-          value: number;
-          language: string;
-        }) {
-          return axios({
-            method: 'post',
-            url: `/reactions`,
-            data: {
-              type: 'answer',
-              group_id: params.groupId,
-              story_id: params.storyId,
-              widget_id: params.widgetId,
-              user_id: params.uniqUserId,
-              value: params.value,
-              locale: params.language
-            }
-          });
-        }
-      },
-      swipeUp: {
-        onSwipe(params: {
-          widgetId: string;
-          storyId: string;
-          groupId: string;
-          uniqUserId: string;
-          url: string;
-          language: string;
-        }) {
-          return axios({
-            method: 'post',
-            url: `/reactions`,
-            data: {
-              type: 'click',
-              group_id: params.groupId,
-              story_id: params.storyId,
-              widget_id: params.widgetId,
-              user_id: params.uniqUserId,
-              value: params.url,
-              locale: params.language
-            }
-          });
-        }
-      },
-      talkAbout: {
-        onAnswer(params: {
-          widgetId: string;
-          storyId: string;
-          groupId: string;
-          uniqUserId: string;
-          answer: string;
-          language: string;
-        }) {
-          return axios({
-            method: 'post',
-            url: `/reactions`,
-            data: {
-              type: 'answer',
-              group_id: params.groupId,
-              story_id: params.storyId,
-              widget_id: params.widgetId,
-              user_id: params.uniqUserId,
-              value: params.answer,
               locale: params.language
             }
           });
