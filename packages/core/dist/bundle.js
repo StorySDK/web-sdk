@@ -70280,7 +70280,7 @@ const INIT_ELEMENT_STYLES$9 = {
     }
 };
 const EmojiReactionWidget = (props) => {
-    const { params, position, positionLimits } = props;
+    const { params, position, positionLimits, onAnswer } = props;
     const calculate = React.useCallback((size) => {
         if (position && positionLimits) {
             return calculateElementSizeByHeight(position, positionLimits, size);
@@ -70317,9 +70317,7 @@ const EmojiReactionWidget = (props) => {
         }
     }, delay);
     const handleReactionClick = (index, emoji) => {
-        if (props.onReact) {
-            props.onReact(emoji);
-        }
+        onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(emoji);
         setIsToched(true);
         setClickedIndex(index);
         setBigSize(initEmojiSize);
@@ -70616,8 +70614,8 @@ const SliderWidget = (props) => {
         }
     }, delay);
     React.useEffect(() => {
-        if (changeStatus === 'moved' && props.onSlide) {
-            props.onSlide(sliderValue);
+        if (changeStatus === 'moved' && props.onAnswer) {
+            props.onAnswer(sliderValue);
         }
         // eslint-disable-next-line
     }, [changeStatus, sliderValue]);
@@ -78693,7 +78691,7 @@ const API = {
             }
         },
         widgets: {
-            chooseAnswer: {
+            answer: {
                 onAnswer(params) {
                     return axios({
                         method: 'post',
@@ -78710,7 +78708,7 @@ const API = {
                     });
                 }
             },
-            clickMe: {
+            click: {
                 onClick(params) {
                     return axios({
                         method: 'post',
@@ -78726,164 +78724,46 @@ const API = {
                         }
                     });
                 }
-            },
-            emojiReaction: {
-                onReact(params) {
-                    return axios({
-                        method: 'post',
-                        url: `/reactions`,
-                        data: {
-                            type: 'answer',
-                            group_id: params.groupId,
-                            story_id: params.storyId,
-                            widget_id: params.widgetId,
-                            user_id: params.uniqUserId,
-                            value: params.emoji,
-                            locale: params.language
-                        }
-                    });
-                }
-            },
-            question: {
-                onAnswer(params) {
-                    return axios({
-                        method: 'post',
-                        url: `/reactions`,
-                        data: {
-                            type: 'answer',
-                            group_id: params.groupId,
-                            story_id: params.storyId,
-                            widget_id: params.widgetId,
-                            user_id: params.uniqUserId,
-                            value: params.answer,
-                            locale: params.language
-                        }
-                    });
-                }
-            },
-            slider: {
-                onSlide(params) {
-                    return axios({
-                        method: 'post',
-                        url: `/reactions`,
-                        data: {
-                            type: 'answer',
-                            group_id: params.groupId,
-                            story_id: params.storyId,
-                            widget_id: params.widgetId,
-                            user_id: params.uniqUserId,
-                            value: params.value,
-                            locale: params.language
-                        }
-                    });
-                }
-            },
-            swipeUp: {
-                onSwipe(params) {
-                    return axios({
-                        method: 'post',
-                        url: `/reactions`,
-                        data: {
-                            type: 'click',
-                            group_id: params.groupId,
-                            story_id: params.storyId,
-                            widget_id: params.widgetId,
-                            user_id: params.uniqUserId,
-                            value: params.url,
-                            locale: params.language
-                        }
-                    });
-                }
-            },
-            talkAbout: {
-                onAnswer(params) {
-                    return axios({
-                        method: 'post',
-                        url: `/reactions`,
-                        data: {
-                            type: 'answer',
-                            group_id: params.groupId,
-                            story_id: params.storyId,
-                            widget_id: params.widgetId,
-                            user_id: params.uniqUserId,
-                            value: params.answer,
-                            locale: params.language
-                        }
-                    });
-                }
             }
         }
     }
 };
 
+const answerWidgets = [
+    WidgetsTypes.CHOOSE_ANSWER,
+    WidgetsTypes.EMOJI_REACTION,
+    WidgetsTypes.TALK_ABOUT,
+    WidgetsTypes.QUESTION,
+    WidgetsTypes.SLIDER,
+    WidgetsTypes.QUIZ_ONE_ANSWER,
+    WidgetsTypes.QUIZ_OPEN_ANSWER,
+    WidgetsTypes.QUIZ_RATE,
+    WidgetsTypes.QUIZ_MULTIPLE_ANSWERS,
+    WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE
+];
+const clickWidgets = [WidgetsTypes.CLICK_ME, WidgetsTypes.SWIPE_UP];
 const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
-    switch (widget.content.type) {
-        case WidgetsTypes.CHOOSE_ANSWER:
-            return (answer) => API.statistics.widgets.chooseAnswer.onAnswer({
-                widgetId: widget.id,
-                storyId,
-                groupId,
-                uniqUserId,
-                answer,
-                language
-            });
-        case WidgetsTypes.EMOJI_REACTION:
-            return (emoji) => API.statistics.widgets.emojiReaction.onReact({
-                widgetId: widget.id,
-                storyId,
-                groupId,
-                uniqUserId,
-                emoji,
-                language
-            });
-        case WidgetsTypes.TALK_ABOUT:
-            return (answer) => API.statistics.widgets.talkAbout.onAnswer({
-                widgetId: widget.id,
-                storyId,
-                groupId,
-                uniqUserId,
-                answer,
-                language
-            });
-        case WidgetsTypes.CLICK_ME:
-            return () => API.statistics.widgets.clickMe.onClick({
-                widgetId: widget.id,
-                storyId,
-                groupId,
-                uniqUserId,
-                url: widget.content.params.url,
-                language
-            });
-        case WidgetsTypes.QUESTION:
-            return (answer) => API.statistics.widgets.question.onAnswer({
-                widgetId: widget.id,
-                answer,
-                storyId,
-                groupId,
-                uniqUserId,
-                language
-            });
-        case WidgetsTypes.SLIDER:
-            return (value) => API.statistics.widgets.slider.onSlide({
-                widgetId: widget.id,
-                value,
-                storyId,
-                groupId,
-                uniqUserId,
-                language
-            });
-        case WidgetsTypes.SWIPE_UP:
-            return () => API.statistics.widgets.swipeUp.onSwipe({
-                widgetId: widget.id,
-                storyId,
-                groupId,
-                uniqUserId,
-                url: widget.content.params.url,
-                language
-            });
-        default:
-            return undefined;
+    if (answerWidgets.includes(widget.content.type)) {
+        return (answer) => API.statistics.widgets.answer.onAnswer({
+            widgetId: widget.id,
+            storyId,
+            groupId,
+            uniqUserId,
+            answer,
+            language
+        });
     }
+    if (clickWidgets.includes(widget.content.type)) {
+        return () => API.statistics.widgets.click.onClick({
+            widgetId: widget.id,
+            storyId,
+            groupId,
+            uniqUserId,
+            url: widget.content.params.url,
+            language
+        });
+    }
+    return undefined;
 };
 const adaptWidgets = (widgets, storyId, groupId, uniqUserId, language) => widgets.map((widget) => (Object.assign(Object.assign({}, widget), { action: actionToWidget(widget, storyId, groupId, uniqUserId, language) })));
 const adaptGroupData = (data, uniqUserId, language) => data

@@ -4,5 +4,5 @@ export declare const EmojiReactionWidget: WidgetComponent<{
     params: EmojiReactionWidgetParamsType;
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;
-    onReact?(emoji: string): void;
+    onAnswer?(emoji: string): void;
 }>;

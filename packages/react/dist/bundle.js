@@ -64487,7 +64487,7 @@ const INIT_ELEMENT_STYLES$9 = {
     }
 };
 const EmojiReactionWidget = (props) => {
-    const { params, position, positionLimits } = props;
+    const { params, position, positionLimits, onAnswer } = props;
     const calculate = React.useCallback((size) => {
         if (position && positionLimits) {
             return calculateElementSizeByHeight(position, positionLimits, size);
@@ -64524,9 +64524,7 @@ const EmojiReactionWidget = (props) => {
         }
     }, delay);
     const handleReactionClick = (index, emoji) => {
-        if (props.onReact) {
-            props.onReact(emoji);
-        }
+        onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(emoji);
         setIsToched(true);
         setClickedIndex(index);
         setBigSize(initEmojiSize);
@@ -64823,8 +64821,8 @@ const SliderWidget = (props) => {
         }
     }, delay);
     React.useEffect(() => {
-        if (changeStatus === 'moved' && props.onSlide) {
-            props.onSlide(sliderValue);
+        if (changeStatus === 'moved' && props.onAnswer) {
+            props.onAnswer(sliderValue);
         }
         // eslint-disable-next-line
     }, [changeStatus, sliderValue]);

@@ -42,7 +42,7 @@ export const SliderWidget: WidgetComponent<{
   params: SliderWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
-  onSlide?(value: number): void;
+  onAnswer?(value: number): void;
 }> = (props) => {
   const { params, storyId, position, positionLimits } = props;
   const { color, text, emoji, value } = params;
@@ -96,8 +96,8 @@ export const SliderWidget: WidgetComponent<{
   }, delay);
 
   useEffect(() => {
-    if (changeStatus === 'moved' && props.onSlide) {
-      props.onSlide(sliderValue);
+    if (changeStatus === 'moved' && props.onAnswer) {
+      props.onAnswer(sliderValue);
     }
 
     // eslint-disable-next-line
