@@ -65390,7 +65390,7 @@ const INIT_ELEMENT_STYLES$1 = {
 };
 const RATE_MAX = 5;
 const QuizRateWidget = (props) => {
-    const { title, isTitleHidden, storyId } = props.params;
+    const { title, isTitleHidden, storyId, storeLinks } = props.params;
     const { position, positionLimits, onAnswer, onGoToStory } = props;
     const [isSent, setIsSent] = React.useState(false);
     const calculate = React.useCallback((size) => {
@@ -65410,7 +65410,13 @@ const QuizRateWidget = (props) => {
     }), [calculate]);
     const handleAnswer = (rate) => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(rate);
-        if (storyId) {
+        if (storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web) {
+            const tab = window.open(storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, '_blank');
+            if (tab) {
+                tab.focus();
+            }
+        }
+        else if (storyId) {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
         setIsSent(true);
@@ -65542,7 +65548,7 @@ class WidgetFactory extends React__default["default"].Component {
             case exports.WidgetsTypes.ELLIPSE:
                 return React__default["default"].createElement(EllipseWidget, { params: this.props.widget.content.params });
             case exports.WidgetsTypes.EMOJI_REACTION:
-                return (React__default["default"].createElement(EmojiReactionWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onReact: this.props.widget.action }));
+                return (React__default["default"].createElement(EmojiReactionWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action }));
             case exports.WidgetsTypes.GIPHY:
                 return React__default["default"].createElement(GiphyWidget, { params: this.props.widget.content.params });
             case exports.WidgetsTypes.QUESTION:
@@ -65550,7 +65556,7 @@ class WidgetFactory extends React__default["default"].Component {
             case exports.WidgetsTypes.RECTANGLE:
                 return React__default["default"].createElement(RectangleWidget, { params: this.props.widget.content.params });
             case exports.WidgetsTypes.SLIDER:
-                return (React__default["default"].createElement(SliderWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, storyId: this.props.storyId, onSlide: this.props.widget.action }));
+                return (React__default["default"].createElement(SliderWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, storyId: this.props.storyId, onAnswer: this.props.widget.action }));
             case exports.WidgetsTypes.SWIPE_UP:
                 return (React__default["default"].createElement(SwipeUpWidget, { params: this.props.widget.content.params, onSwipe: this.props.widget.action }));
             case exports.WidgetsTypes.TALK_ABOUT:

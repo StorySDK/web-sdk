@@ -35,7 +35,7 @@ declare const widgets: {
         params: import("@types").EmojiReactionWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
-        onReact?(emoji: string): void;
+        onAnswer?(emoji: string): void;
     }>;
     giphy: import("@types").WidgetComponent<{
         params: import("@types").GiphyWidgetParamsType;
@@ -54,7 +54,7 @@ declare const widgets: {
         params: import("@types").SliderWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
-        onSlide?(value: number): void;
+        onAnswer?(value: number): void;
     }>;
     swipe_up: import("@types").WidgetComponent<{
         params: import("@types").SwipeUpWidgetParamsType;

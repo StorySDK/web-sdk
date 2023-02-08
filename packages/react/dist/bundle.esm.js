@@ -65381,7 +65381,7 @@ const INIT_ELEMENT_STYLES$1 = {
 };
 const RATE_MAX = 5;
 const QuizRateWidget = (props) => {
-    const { title, isTitleHidden, storyId } = props.params;
+    const { title, isTitleHidden, storyId, storeLinks } = props.params;
     const { position, positionLimits, onAnswer, onGoToStory } = props;
     const [isSent, setIsSent] = useState(false);
     const calculate = useCallback((size) => {
@@ -65401,7 +65401,13 @@ const QuizRateWidget = (props) => {
     }), [calculate]);
     const handleAnswer = (rate) => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(rate);
-        if (storyId) {
+        if (storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web) {
+            const tab = window.open(storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, '_blank');
+            if (tab) {
+                tab.focus();
+            }
+        }
+        else if (storyId) {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
         setIsSent(true);
@@ -65533,7 +65539,7 @@ class WidgetFactory extends React.Component {
             case WidgetsTypes.ELLIPSE:
                 return React.createElement(EllipseWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.EMOJI_REACTION:
-                return (React.createElement(EmojiReactionWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onReact: this.props.widget.action }));
+                return (React.createElement(EmojiReactionWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action }));
             case WidgetsTypes.GIPHY:
                 return React.createElement(GiphyWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.QUESTION:
@@ -65541,7 +65547,7 @@ class WidgetFactory extends React.Component {
             case WidgetsTypes.RECTANGLE:
                 return React.createElement(RectangleWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.SLIDER:
-                return (React.createElement(SliderWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, storyId: this.props.storyId, onSlide: this.props.widget.action }));
+                return (React.createElement(SliderWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, storyId: this.props.storyId, onAnswer: this.props.widget.action }));
             case WidgetsTypes.SWIPE_UP:
                 return (React.createElement(SwipeUpWidget, { params: this.props.widget.content.params, onSwipe: this.props.widget.action }));
             case WidgetsTypes.TALK_ABOUT:

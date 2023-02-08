@@ -56,7 +56,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
-            onReact={this.props.widget.action}
+            onAnswer={this.props.widget.action}
           />
         );
       case WidgetsTypes.GIPHY:
@@ -79,7 +79,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
             storyId={this.props.storyId}
-            onSlide={this.props.widget.action}
+            onAnswer={this.props.widget.action}
           />
         );
       case WidgetsTypes.SWIPE_UP:

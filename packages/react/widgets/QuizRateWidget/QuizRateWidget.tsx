@@ -31,7 +31,7 @@ export const QuizRateWidget: WidgetComponent<{
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = (props) => {
-  const { title, isTitleHidden, storyId } = props.params;
+  const { title, isTitleHidden, storyId, storeLinks } = props.params;
   const { position, positionLimits, onAnswer, onGoToStory } = props;
 
   const [isSent, setIsSent] = useState<boolean>(false);
@@ -63,7 +63,12 @@ export const QuizRateWidget: WidgetComponent<{
   const handleAnswer = (rate: string) => {
     onAnswer?.(rate);
 
-    if (storyId) {
+    if (storeLinks?.web) {
+      const tab = window.open(storeLinks?.web, '_blank');
+      if (tab) {
+        tab.focus();
+      }
+    } else if (storyId) {
       onGoToStory?.(storyId);
     }
 
