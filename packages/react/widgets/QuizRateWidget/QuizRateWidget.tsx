@@ -28,11 +28,12 @@ export const QuizRateWidget: WidgetComponent<{
   params: QuizRateParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  isReadOnly?: boolean;
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = (props) => {
   const { title, isTitleHidden, storyId, storeLinks } = props.params;
-  const { position, positionLimits, onAnswer, onGoToStory } = props;
+  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const [isSent, setIsSent] = useState<boolean>(false);
 
@@ -84,7 +85,7 @@ export const QuizRateWidget: WidgetComponent<{
       )}
       <div
         className={b('starsContainer', {
-          disabled: isSent
+          disabled: isSent || isReadOnly
         })}
         style={{
           gap: elementSizes.stars.gap
@@ -99,7 +100,7 @@ export const QuizRateWidget: WidgetComponent<{
               type="radio"
               value={RATE_MAX - index}
               onChange={(e) => {
-                handleAnswer(e.target.value);
+                !isReadOnly && handleAnswer(e.target.value);
               }}
             />
             <label className={b('starItem')} htmlFor={`rate-star-${index}`}>

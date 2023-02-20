@@ -8,6 +8,7 @@ const b = block('ClickMeWidget');
 
 export const ClickMeWidget: WidgetComponent<{
   params: ClickMeWidgetParamsType;
+  isReadOnly?: boolean;
   onClick?(): void;
   onGoToStory?(storyId: string): void;
 }> = (props) => {
@@ -31,9 +32,11 @@ export const ClickMeWidget: WidgetComponent<{
     actionType
   } = props.params;
 
+  const { isReadOnly, onClick, onGoToStory } = props;
+
   const handleWidgetClick = () => {
-    if (props.onClick) {
-      props.onClick();
+    if (onClick) {
+      onClick();
     }
 
     if (actionType === 'link' && url) {
@@ -41,14 +44,14 @@ export const ClickMeWidget: WidgetComponent<{
       if (tab) {
         tab.focus();
       }
-    } else if (actionType === 'story' && props.onGoToStory && storyId) {
-      props.onGoToStory(storyId);
+    } else if (actionType === 'story' && onGoToStory && storyId) {
+      onGoToStory(storyId);
     }
   };
 
   return (
     <div
-      className={b()}
+      className={b({ disabled: isReadOnly })}
       role="button"
       style={{
         borderRadius,
@@ -57,8 +60,8 @@ export const ClickMeWidget: WidgetComponent<{
         borderColor: renderBackgroundStyles(borderColor)
       }}
       tabIndex={0}
-      onClick={handleWidgetClick}
-      onKeyDown={handleWidgetClick}
+      onClick={!isReadOnly ? handleWidgetClick : undefined}
+      onKeyDown={!isReadOnly ? handleWidgetClick : undefined}
     >
       <div
         className={b('container', { gradient: color.type === 'gradient' })}

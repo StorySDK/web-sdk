@@ -37,11 +37,12 @@ export const QuizOneAnswerWidget: WidgetComponent<{
   params: QuizOneAnswerParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  isReadOnly?: boolean;
   onAnswer?(id: string): any;
   onGoToStory?(storyId: string): void;
 }> = (props) => {
   const { title, answers, storyId, isTitleHidden } = props.params;
-  const { position, positionLimits, onAnswer, onGoToStory } = props;
+  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
 
@@ -102,10 +103,10 @@ export const QuizOneAnswerWidget: WidgetComponent<{
             className={b('answer', {
               selected: userAnswer === answer.id
             })}
-            disabled={userAnswer !== null}
+            disabled={userAnswer !== null || isReadOnly}
             key={answer.id}
             style={elementSizes.answer}
-            onClick={() => !userAnswer && handleAnswer(answer.id)}
+            onClick={() => !userAnswer && !isReadOnly && handleAnswer(answer.id)}
           >
             {answer.emoji && (
               <Emoji emoji={answer.emoji?.name} set="apple" size={elementSizes.emoji.width} />

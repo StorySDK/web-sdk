@@ -44,11 +44,12 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
   params: QuizMultipleAnswerParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  isReadOnly?: boolean;
   onAnswer?(answer: string[]): any;
   onGoToStory?(storyId: string): void;
 }> = (props) => {
   const { title, answers, isTitleHidden, storyId } = props.params;
-  const { position, positionLimits, onAnswer, onGoToStory } = props;
+  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isSent, setIsSent] = useState<boolean>(false);
@@ -124,10 +125,10 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
               noGap: !answer.title.length,
               selected: userAnswers.includes(answer.id)
             })}
-            disabled={isSent}
+            disabled={isSent || isReadOnly}
             key={answer.id}
             style={elementSizes.answer}
-            onClick={() => handleAnswer(answer.id)}
+            onClick={() => !isReadOnly && handleAnswer(answer.id)}
           >
             {answer.emoji && (
               <Emoji emoji={answer.emoji?.name} set="apple" size={elementSizes.emoji.width} />
@@ -146,8 +147,8 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
       </div>
       {userAnswers.length > 0 && (
         <button
-          className={b('sendBtn', { sent: isSent })}
-          disabled={isSent}
+          className={b('sendBtn', { sent: isSent || isReadOnly })}
+          disabled={isSent || isReadOnly}
           style={{ ...elementSizes.sendBtn, lineHeight: `${elementSizes.sendBtn.lineHeight}px` }}
           onClick={handleSendAnswer}
         >

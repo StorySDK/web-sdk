@@ -11,18 +11,6 @@
     -webkit-text-fill-color: transparent;
   }
 
-  &--isReadOnly {
-    align-items: center;
-    background: map-get($theme-colors, "black");
-    border-radius: 10px;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    height: 69px;
-    justify-content: center;
-    width: 196px;
-  }
-
   &__icon {
     display: flex;
     margin-bottom: 2px;

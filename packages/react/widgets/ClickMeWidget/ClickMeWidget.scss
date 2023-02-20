@@ -4,6 +4,10 @@
   cursor: pointer;
   width: 100%;
   height: 100%;
+
+  &_disabled {
+    cursor: auto;
+  }
   
   &__container {
     width: 100%;

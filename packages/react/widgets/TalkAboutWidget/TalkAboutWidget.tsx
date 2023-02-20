@@ -50,9 +50,10 @@ export const TalkAboutWidget: WidgetComponent<{
   params: TalkAboutWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  isReadOnly?: boolean;
   onAnswer?(answer: string): void;
 }> = (props) => {
-  const { params, position, positionLimits } = props;
+  const { params, position, positionLimits, isReadOnly } = props;
 
   const calculate = useCallback(
     (size) => {
@@ -188,21 +189,21 @@ export const TalkAboutWidget: WidgetComponent<{
 
             <input
               className={b('input')}
-              disabled={isSent}
+              disabled={isSent || isReadOnly}
               placeholder="Type something..."
               ref={inputRef}
               style={elementSizes.input}
               type="text"
               value={text}
-              onChange={handleTextChange}
+              onChange={!isReadOnly ? handleTextChange : undefined}
             />
           </div>
 
           {text && (
             <button
-              className={b('send', { disabled: isSent })}
+              className={b('send', { disabled: isSent || isReadOnly })}
               style={elementSizes.send}
-              onClick={!isSent ? handleSendClick : undefined}
+              onClick={!isSent && !isReadOnly ? handleSendClick : undefined}
             >
               <span className={b('sendText', { green: isSent })} style={elementSizes.sendText}>
                 {isSent ? 'Sent!' : 'Send'}

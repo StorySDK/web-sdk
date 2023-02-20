@@ -8,9 +8,11 @@ const b = block('SwipeUpWidget');
 
 export const SwipeUpWidget: WidgetComponent<{
   params: SwipeUpWidgetParamsType;
+  isReadOnly?: boolean;
   onSwipe?(): void;
 }> = (props) => {
   const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
+  const { isReadOnly, onSwipe } = props;
 
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
@@ -25,8 +27,8 @@ export const SwipeUpWidget: WidgetComponent<{
 
   const handleTouchEnd = () => {
     if (touchStart - touchEnd > 200) {
-      if (props.onSwipe) {
-        props.onSwipe();
+      if (onSwipe) {
+        onSwipe();
       }
 
       const tab = window.open(url, '_blank');
@@ -39,8 +41,8 @@ export const SwipeUpWidget: WidgetComponent<{
   };
 
   const handleClick = () => {
-    if (props.onSwipe) {
-      props.onSwipe();
+    if (onSwipe) {
+      onSwipe();
     }
 
     const tab = window.open(url, '_blank');
@@ -61,11 +63,11 @@ export const SwipeUpWidget: WidgetComponent<{
         ...renderTextBackgroundStyles({ color })
       }}
       tabIndex={0}
-      onClick={handleClick}
-      onKeyDown={handleClick}
-      onTouchEnd={handleTouchEnd}
-      onTouchMove={handleTouchMove}
-      onTouchStart={handleTouchStart}
+      onClick={!isReadOnly ? handleClick : undefined}
+      onKeyDown={!isReadOnly ? handleClick : undefined}
+      onTouchEnd={!isReadOnly ? handleTouchEnd : undefined}
+      onTouchMove={!isReadOnly ? handleTouchMove : undefined}
+      onTouchStart={!isReadOnly ? handleTouchStart : undefined}
     >
       <div className={b('icon')}>
         <MaterialIcon

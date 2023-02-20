@@ -27,9 +27,10 @@ export const QuestionWidget: WidgetComponent<{
   params: QuestionWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  isReadOnly?: boolean;
   onAnswer?(answer: string): any;
 }> = (props) => {
-  const { params, position, positionLimits } = props;
+  const { params, position, positionLimits, isReadOnly } = props;
   const [answer, setAnswer] = useState<string | null>(null);
 
   const calculate = useCallback(
@@ -123,14 +124,14 @@ export const QuestionWidget: WidgetComponent<{
             zero: answer && percents.confirm === 0,
             full: answer && percents.confirm === 100
           })}
-          disabled={!!answer}
+          disabled={!!answer || isReadOnly}
           style={{
             width: answer ? `${calculateWidth(percents.confirm)}%` : '50%',
             height: elementSizes.button.height,
             fontSize: elementSizes.button.fontSize
           }}
           type="button"
-          onClick={() => handleChange('confirm')}
+          onClick={() => !isReadOnly && handleChange('confirm')}
         >
           <div className={b('itemTextContainer')}>
             <span
@@ -152,14 +153,14 @@ export const QuestionWidget: WidgetComponent<{
             zero: answer && percents.decline === 0,
             full: answer && percents.decline === 100
           })}
-          disabled={!!answer}
+          disabled={!!answer || isReadOnly}
           style={{
             width: answer ? `${calculateWidth(percents.decline)}%` : '50%',
             height: elementSizes.button.height,
             fontSize: elementSizes.button.fontSize
           }}
           type="button"
-          onClick={() => handleChange('decline')}
+          onClick={() => !isReadOnly && handleChange('decline')}
         >
           <div className={b('itemTextContainer')}>
             <span
