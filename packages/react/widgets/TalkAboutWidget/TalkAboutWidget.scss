@@ -35,6 +35,11 @@
     margin: 0 auto;
     text-align: center;
     color: #ffffff;
+
+    &_gradient {
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   &_color_white &__text {

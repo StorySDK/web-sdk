@@ -97,6 +97,9 @@ export type SwipeUpWidgetParamsType = {
 
 export type TalkAboutWidgetParamsType = {
   text: string;
+  fontFamily: string;
+  fontParams: FontParamsType;
+  fontColor: BorderType;
   image: string | null;
   color: string;
   isTitleHidden: boolean;

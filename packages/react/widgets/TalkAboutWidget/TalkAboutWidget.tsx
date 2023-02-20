@@ -7,7 +7,7 @@ import {
 } from '@types';
 import { StoryContext } from '@components';
 import { IconLogoCircle } from '@components/icons';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, renderTextBackgroundStyles } from '@utils';
 import './TalkAboutWidget.scss';
 
 const b = block('TalkAboutWidget');
@@ -149,6 +149,10 @@ export const TalkAboutWidget: WidgetComponent<{
     };
   }, [handleClickOutside, isSent]);
 
+  const textStyles = params.fontColor
+    ? (renderTextBackgroundStyles({ color: params.fontColor }) as React.CSSProperties)
+    : undefined;
+
   return (
     <>
       <div className={b('container')} ref={ref}>
@@ -168,7 +172,16 @@ export const TalkAboutWidget: WidgetComponent<{
             style={elementSizes.content}
           >
             {!params.isTitleHidden && (
-              <div className={b('text')} style={elementSizes.text}>
+              <div
+                className={b('text', { gradient: params.fontColor?.type === 'gradient' })}
+                style={{
+                  ...elementSizes.text,
+                  fontStyle: params.fontParams?.style,
+                  fontWeight: params.fontParams?.weight,
+                  fontFamily: params.fontFamily,
+                  ...textStyles
+                }}
+              >
                 {params.text}
               </div>
             )}
