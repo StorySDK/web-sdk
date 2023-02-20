@@ -114,7 +114,7 @@ export declare type TimerWidgetParamsType = {
     text: string;
     color: string;
 };
-export declare type QuizMultipleAnswerParamsType = {
+export declare type QuizMultipleAnswerWidgetParamsType = {
     title: string;
     color?: string;
     answers: Array<{
@@ -125,7 +125,7 @@ export declare type QuizMultipleAnswerParamsType = {
     isTitleHidden: boolean;
     storyId?: string;
 };
-export declare type QuizMultipleAnswerWithImageParamsType = {
+export declare type QuizMultipleAnswerWithImageWidgetParamsType = {
     title: string;
     color?: string;
     answers: Array<{
@@ -139,7 +139,7 @@ export declare type QuizMultipleAnswerWithImageParamsType = {
     isTitleHidden: boolean;
     storyId?: string;
 };
-export declare type QuizOneAnswerParamsType = {
+export declare type QuizOneAnswerWidgetParamsType = {
     title: string;
     color?: string;
     answers: Array<{
@@ -150,12 +150,12 @@ export declare type QuizOneAnswerParamsType = {
     isTitleHidden: boolean;
     storyId?: string;
 };
-export declare type QuizOpenAnswerParamsType = {
+export declare type QuizOpenAnswerWidgetParamsType = {
     title: string;
     isTitleHidden: boolean;
     storyId?: string;
 };
-export declare type QuizRateParamsType = {
+export declare type QuizRateWidgetParamsType = {
     title: string;
     isTitleHidden: boolean;
     storeLinks: {

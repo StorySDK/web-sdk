@@ -1,7 +1,7 @@
-import { QuizOneAnswerParamsType, WidgetComponent, WidgetPositionLimitsType, WidgetPositionType } from '@types';
+import { QuizOneAnswerWidgetParamsType, WidgetComponent, WidgetPositionLimitsType, WidgetPositionType } from '@types';
 import './QuizOneAnswerWidget.scss';
 export declare const QuizOneAnswerWidget: WidgetComponent<{
-    params: QuizOneAnswerParamsType;
+    params: QuizOneAnswerWidgetParamsType;
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;
     isReadOnly?: boolean;

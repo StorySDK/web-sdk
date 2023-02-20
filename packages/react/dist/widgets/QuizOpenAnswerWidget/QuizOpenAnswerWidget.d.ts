@@ -1,7 +1,7 @@
-import { QuizOpenAnswerParamsType, WidgetComponent, WidgetPositionLimitsType, WidgetPositionType } from '@types';
+import { QuizOpenAnswerWidgetParamsType, WidgetComponent, WidgetPositionLimitsType, WidgetPositionType } from '@types';
 import './QuizOpenAnswerWidget.scss';
 export declare const QuizOpenAnswerWidget: WidgetComponent<{
-    params: QuizOpenAnswerParamsType;
+    params: QuizOpenAnswerWidgetParamsType;
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;
     isReadOnly?: boolean;

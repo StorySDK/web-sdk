@@ -1,4 +1,4 @@
-import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerParamsType, QuizOneAnswerParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageParamsType, QuizRateParamsType, QuizOpenAnswerParamsType } from './WidgetsParams';
+import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerWidgetParamsType, QuizOneAnswerWidgetParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageWidgetParamsType, QuizRateWidgetParamsType, QuizOpenAnswerWidgetParamsType } from './WidgetsParams';
 declare type ColorValue = {
     type: 'color';
     value: string;
@@ -42,18 +42,22 @@ export declare enum WidgetsTypes {
 export interface RectangleState {
     type: WidgetsTypes.RECTANGLE;
     params: RectangleWidgetParamsType;
+    widgetImage?: string;
 }
 export interface EllipseState {
     type: WidgetsTypes.ELLIPSE;
     params: EllipseWidgetParamsType;
+    widgetImage?: string;
 }
 export interface TextState {
     type: WidgetsTypes.TEXT;
     params: TextWidgetParamsType;
+    widgetImage?: string;
 }
 export interface SwipeUpState {
     type: WidgetsTypes.SWIPE_UP;
     params: SwipeUpWidgetParamsType;
+    widgetImage?: string;
 }
 export interface SliderState {
     type: WidgetsTypes.SLIDER;
@@ -66,6 +70,7 @@ export interface QuestionState {
 export interface ClickMeState {
     type: WidgetsTypes.CLICK_ME;
     params: ClickMeWidgetParamsType;
+    widgetImage?: string;
 }
 export interface TalkAboutState {
     type: WidgetsTypes.TALK_ABOUT;
@@ -89,23 +94,23 @@ export interface GiphyState {
 }
 export interface QuizOneAnswerState {
     type: WidgetsTypes.QUIZ_ONE_ANSWER;
-    params: QuizOneAnswerParamsType;
+    params: QuizOneAnswerWidgetParamsType;
 }
 export interface QuizMultipleAnswerState {
     type: WidgetsTypes.QUIZ_MULTIPLE_ANSWERS;
-    params: QuizMultipleAnswerParamsType;
+    params: QuizMultipleAnswerWidgetParamsType;
 }
 export interface QuizMultipleAnswerWithImageState {
     type: WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE;
-    params: QuizMultipleAnswerWithImageParamsType;
+    params: QuizMultipleAnswerWithImageWidgetParamsType;
 }
 export interface QuizRateState {
     type: WidgetsTypes.QUIZ_RATE;
-    params: QuizRateParamsType;
+    params: QuizRateWidgetParamsType;
 }
 export interface QuizOpenAnswerState {
     type: WidgetsTypes.QUIZ_OPEN_ANSWER;
-    params: QuizOpenAnswerParamsType;
+    params: QuizOpenAnswerWidgetParamsType;
 }
 export interface ElementSizeType {
     width: number | string;

@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useRef, useEffect, useMemo, useContext, memo } from 'react';
 import crypto from 'crypto';
 
-// eslint-disable-next-line no-shadow
 var WidgetsTypes;
 (function (WidgetsTypes) {
     WidgetsTypes["RECTANGLE"] = "rectangle";

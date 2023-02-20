@@ -6099,7 +6099,6 @@ axios$2.exports.default = axios$1;
 
 var axios = axios$2.exports;
 
-// eslint-disable-next-line no-shadow
 var WidgetsTypes;
 (function (WidgetsTypes) {
     WidgetsTypes["RECTANGLE"] = "rectangle";
