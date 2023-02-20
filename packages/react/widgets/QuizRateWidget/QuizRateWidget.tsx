@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { IconRateStar } from '@components/icons';
 import { block, calculateElementSize } from '@utils';
 import {
-  QuizRateParamsType,
+  QuizRateWidgetParamsType,
   WidgetComponent,
   WidgetPositionLimitsType,
   WidgetPositionType
@@ -25,7 +25,7 @@ const INIT_ELEMENT_STYLES = {
 const RATE_MAX = 5;
 
 export const QuizRateWidget: WidgetComponent<{
-  params: QuizRateParamsType;
+  params: QuizRateWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;

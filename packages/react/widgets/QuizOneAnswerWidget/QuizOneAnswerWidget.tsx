@@ -1,5 +1,5 @@
 import {
-  QuizOneAnswerParamsType,
+  QuizOneAnswerWidgetParamsType,
   WidgetComponent,
   WidgetPositionLimitsType,
   WidgetPositionType
@@ -34,7 +34,7 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuizOneAnswerWidget: WidgetComponent<{
-  params: QuizOneAnswerParamsType;
+  params: QuizOneAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;

@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import { StoryContext } from '@components';
 import { block, calculateElementSize } from '@utils';
 import {
-  QuizOpenAnswerParamsType,
+  QuizOpenAnswerWidgetParamsType,
   WidgetComponent,
   WidgetPositionLimitsType,
   WidgetPositionType
@@ -34,7 +34,7 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuizOpenAnswerWidget: WidgetComponent<{
-  params: QuizOpenAnswerParamsType;
+  params: QuizOpenAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;

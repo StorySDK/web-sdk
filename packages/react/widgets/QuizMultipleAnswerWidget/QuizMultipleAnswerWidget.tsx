@@ -2,7 +2,7 @@ import { Emoji } from 'emoji-mart';
 import React, { useCallback, useMemo, useState } from 'react';
 import { block, calculateElementSize } from '@utils';
 import {
-  QuizMultipleAnswerParamsType,
+  QuizMultipleAnswerWidgetParamsType,
   WidgetComponent,
   WidgetPositionLimitsType,
   WidgetPositionType
@@ -41,7 +41,7 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuizMultipleAnswerWidget: WidgetComponent<{
-  params: QuizMultipleAnswerParamsType;
+  params: QuizMultipleAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;

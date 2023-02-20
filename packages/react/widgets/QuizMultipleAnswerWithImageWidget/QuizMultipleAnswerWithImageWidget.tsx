@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import {
   WidgetPositionLimitsType,
   WidgetPositionType,
-  QuizMultipleAnswerWithImageParamsType,
+  QuizMultipleAnswerWithImageWidgetParamsType,
   WidgetComponent
 } from '@types';
 import { block, calculateElementSize } from '@utils';
@@ -38,7 +38,7 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
-  params: QuizMultipleAnswerWithImageParamsType;
+  params: QuizMultipleAnswerWithImageWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
