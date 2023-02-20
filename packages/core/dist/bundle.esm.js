@@ -70698,6 +70698,7 @@ const INIT_ELEMENT_STYLES$6 = {
     }
 };
 const TalkAboutWidget = (props) => {
+    var _a, _b, _c;
     const { params, position, positionLimits } = props;
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
@@ -70775,13 +70776,16 @@ const TalkAboutWidget = (props) => {
             document.removeEventListener('click', handleClickOutside, true);
         };
     }, [handleClickOutside, isSent]);
+    const textStyles = params.fontColor
+        ? renderTextBackgroundStyles({ color: params.fontColor })
+        : undefined;
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: b$a('container'), ref: ref },
             React.createElement("picture", { className: b$a('imageWrapper'), style: elementSizes.imageWrapper }, params.image ? (React.createElement("img", { alt: "", className: b$a('image'), src: params.image })) : (React.createElement(IconLogoCircle, { className: b$a('image').toString() }))),
             React.createElement("div", { className: b$a('empty'), style: elementSizes.empty }),
             React.createElement("div", { className: b$a({ color: params.color }), style: elementSizes.widget },
                 React.createElement("div", { className: b$a('contentContainer', { sendOpen: text.length > 0 }), style: elementSizes.content },
-                    !params.isTitleHidden && (React.createElement("div", { className: b$a('text'), style: elementSizes.text }, params.text)),
+                    !params.isTitleHidden && (React.createElement("div", { className: b$a('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, params.text)),
                     React.createElement("input", { className: b$a('input'), disabled: isSent, placeholder: "Type something...", ref: inputRef, style: elementSizes.input, type: "text", value: text, onChange: handleTextChange })),
                 text && (React.createElement("button", { className: b$a('send', { disabled: isSent }), style: elementSizes.send, onClick: !isSent ? handleSendClick : undefined },
                     React.createElement("span", { className: b$a('sendText', { green: isSent }), style: elementSizes.sendText }, isSent ? 'Sent!' : 'Send')))))));

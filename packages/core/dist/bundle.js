@@ -70717,6 +70717,7 @@ const INIT_ELEMENT_STYLES$6 = {
     }
 };
 const TalkAboutWidget = (props) => {
+    var _a, _b, _c;
     const { params, position, positionLimits } = props;
     const calculate = React.useCallback((size) => {
         if (position && positionLimits) {
@@ -70794,13 +70795,16 @@ const TalkAboutWidget = (props) => {
             document.removeEventListener('click', handleClickOutside, true);
         };
     }, [handleClickOutside, isSent]);
+    const textStyles = params.fontColor
+        ? renderTextBackgroundStyles({ color: params.fontColor })
+        : undefined;
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         React__default["default"].createElement("div", { className: b$a('container'), ref: ref },
             React__default["default"].createElement("picture", { className: b$a('imageWrapper'), style: elementSizes.imageWrapper }, params.image ? (React__default["default"].createElement("img", { alt: "", className: b$a('image'), src: params.image })) : (React__default["default"].createElement(IconLogoCircle, { className: b$a('image').toString() }))),
             React__default["default"].createElement("div", { className: b$a('empty'), style: elementSizes.empty }),
             React__default["default"].createElement("div", { className: b$a({ color: params.color }), style: elementSizes.widget },
                 React__default["default"].createElement("div", { className: b$a('contentContainer', { sendOpen: text.length > 0 }), style: elementSizes.content },
-                    !params.isTitleHidden && (React__default["default"].createElement("div", { className: b$a('text'), style: elementSizes.text }, params.text)),
+                    !params.isTitleHidden && (React__default["default"].createElement("div", { className: b$a('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, params.text)),
                     React__default["default"].createElement("input", { className: b$a('input'), disabled: isSent, placeholder: "Type something...", ref: inputRef, style: elementSizes.input, type: "text", value: text, onChange: handleTextChange })),
                 text && (React__default["default"].createElement("button", { className: b$a('send', { disabled: isSent }), style: elementSizes.send, onClick: !isSent ? handleSendClick : undefined },
                     React__default["default"].createElement("span", { className: b$a('sendText', { green: isSent }), style: elementSizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
