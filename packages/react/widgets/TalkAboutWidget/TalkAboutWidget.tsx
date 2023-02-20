@@ -7,7 +7,7 @@ import {
 } from '@types';
 import { StoryContext } from '@components';
 import { IconLogoCircle } from '@components/icons';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, renderTextBackgroundStyles } from '@utils';
 import './TalkAboutWidget.scss';
 
 const b = block('TalkAboutWidget');
@@ -50,9 +50,10 @@ export const TalkAboutWidget: WidgetComponent<{
   params: TalkAboutWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  isReadOnly?: boolean;
   onAnswer?(answer: string): void;
 }> = (props) => {
-  const { params, position, positionLimits } = props;
+  const { params, position, positionLimits, isReadOnly } = props;
 
   const calculate = useCallback(
     (size) => {
@@ -149,6 +150,10 @@ export const TalkAboutWidget: WidgetComponent<{
     };
   }, [handleClickOutside, isSent]);
 
+  const textStyles = params.fontColor
+    ? (renderTextBackgroundStyles({ color: params.fontColor }) as React.CSSProperties)
+    : undefined;
+
   return (
     <>
       <div className={b('container')} ref={ref}>
@@ -168,28 +173,37 @@ export const TalkAboutWidget: WidgetComponent<{
             style={elementSizes.content}
           >
             {!params.isTitleHidden && (
-              <div className={b('text')} style={elementSizes.text}>
+              <div
+                className={b('text', { gradient: params.fontColor?.type === 'gradient' })}
+                style={{
+                  ...elementSizes.text,
+                  fontStyle: params.fontParams?.style,
+                  fontWeight: params.fontParams?.weight,
+                  fontFamily: params.fontFamily,
+                  ...textStyles
+                }}
+              >
                 {params.text}
               </div>
             )}
 
             <input
               className={b('input')}
-              disabled={isSent}
+              disabled={isSent || isReadOnly}
               placeholder="Type something..."
               ref={inputRef}
               style={elementSizes.input}
               type="text"
               value={text}
-              onChange={handleTextChange}
+              onChange={!isReadOnly ? handleTextChange : undefined}
             />
           </div>
 
           {text && (
             <button
-              className={b('send', { disabled: isSent })}
+              className={b('send', { disabled: isSent || isReadOnly })}
               style={elementSizes.send}
-              onClick={!isSent ? handleSendClick : undefined}
+              onClick={!isSent && !isReadOnly ? handleSendClick : undefined}
             >
               <span className={b('sendText', { green: isSent })} style={elementSizes.sendText}>
                 {isSent ? 'Sent!' : 'Send'}

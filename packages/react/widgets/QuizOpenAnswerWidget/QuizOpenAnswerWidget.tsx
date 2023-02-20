@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import { StoryContext } from '@components';
 import { block, calculateElementSize } from '@utils';
 import {
-  QuizOpenAnswerParamsType,
+  QuizOpenAnswerWidgetParamsType,
   WidgetComponent,
   WidgetPositionLimitsType,
   WidgetPositionType
@@ -34,14 +34,15 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuizOpenAnswerWidget: WidgetComponent<{
-  params: QuizOpenAnswerParamsType;
+  params: QuizOpenAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  isReadOnly?: boolean;
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = (props) => {
   const { title, isTitleHidden, storyId } = props.params;
-  const { position, positionLimits, onAnswer, onGoToStory } = props;
+  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const storyContextVal = useContext(StoryContext);
 
@@ -146,19 +147,19 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
       >
         <input
           className={b('input')}
-          disabled={isSent}
+          disabled={isSent || isReadOnly}
           placeholder="Enter the text..."
           style={elementSizes.input}
           type="text"
           value={text}
-          onChange={handleTextChange}
+          onChange={!isReadOnly ? handleTextChange : undefined}
         />
         {text.length > 0 && (
           <button
             className={b('sendButton')}
-            disabled={isSent}
+            disabled={isSent || isReadOnly}
             style={elementSizes.sendButton}
-            onClick={handleSendClick}
+            onClick={!isReadOnly ? handleSendClick : undefined}
           >
             <IconArrowSend className={b('sendButtonIcon')} />
           </button>

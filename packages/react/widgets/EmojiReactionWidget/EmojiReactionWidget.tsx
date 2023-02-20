@@ -33,9 +33,10 @@ export const EmojiReactionWidget: WidgetComponent<{
   params: EmojiReactionWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  isReadOnly?: boolean;
   onAnswer?(emoji: string): void;
 }> = (props) => {
-  const { params, position, positionLimits, onAnswer } = props;
+  const { params, position, positionLimits, isReadOnly, onAnswer } = props;
 
   const calculate = useCallback(
     (size) => {
@@ -97,13 +98,13 @@ export const EmojiReactionWidget: WidgetComponent<{
     <div className={b({ color: params.color })} style={elementSizes.widget}>
       {params.emoji.map((emojiItem, index) => (
         <button
-          className={b('item')}
+          className={b('item', { disabled: isReadOnly || isToched })}
           key={`${emojiItem.unicode}-${index}`}
           style={elementSizes.item}
           onClick={(e) => {
             e.preventDefault();
 
-            if (!isToched) {
+            if (!isToched && !isReadOnly) {
               handleReactionClick(index, emojiItem.unicode);
             }
           }}

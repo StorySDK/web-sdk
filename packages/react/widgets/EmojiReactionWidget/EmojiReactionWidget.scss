@@ -26,6 +26,10 @@
     outline: none;
     background: none;
     padding: 0;
+
+    &_disabled {
+      cursor: auto;
+    }
   }
 
   &__subItem {

@@ -42,9 +42,10 @@ export const SliderWidget: WidgetComponent<{
   params: SliderWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  isReadOnly?: boolean;
   onAnswer?(value: number): void;
 }> = (props) => {
-  const { params, storyId, position, positionLimits } = props;
+  const { params, storyId, position, positionLimits, isReadOnly } = props;
   const { color, text, emoji, value } = params;
   const [sliderValue, setSliderValue] = useState<number>(0);
   const [changeStatus, setChangeStatus] = useState<ChangeStatus>('wait');
@@ -138,7 +139,7 @@ export const SliderWidget: WidgetComponent<{
       >
         <SliderCustom
           changeStatus={changeStatus}
-          disabled={changeStatus === 'moved'}
+          disabled={changeStatus === 'moved' || isReadOnly}
           emoji={emoji.name}
           height={elementSizes.slider.height}
           initSize={elementSizes.emoji.width}

@@ -44,9 +44,10 @@ export const ChooseAnswerWidget: WidgetComponent<{
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   jsConfetti?: any;
+  isReadOnly?: boolean;
   onAnswer?(answerId: string): void;
 }> = (props) => {
-  const { params, position, positionLimits, jsConfetti, onAnswer } = props;
+  const { params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
 
@@ -165,13 +166,13 @@ export const ChooseAnswerWidget: WidgetComponent<{
       }
       return (
         <div
-          className={b('answer', { clickable: !userAnswer })}
+          className={b('answer', { clickable: !userAnswer && !isReadOnly })}
           key={answer.id}
           role="button"
           style={elementSizes.answer}
           tabIndex={0}
-          onClick={!userAnswer ? () => handleMarkAnswer(answer.id) : undefined}
-          onKeyDown={!userAnswer ? () => handleMarkAnswer(answer.id) : undefined}
+          onClick={!userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined}
+          onKeyDown={!userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined}
         >
           <div className={b('answerId')} style={elementSizes.answerId}>
             {`${answer.id}`}
@@ -184,6 +185,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
     },
     [
       userAnswer,
+      isReadOnly,
       params.markCorrectAnswer,
       params.correct,
       elementSizes.answer,

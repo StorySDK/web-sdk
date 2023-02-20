@@ -5,5 +5,6 @@ export declare const SliderWidget: WidgetComponent<{
     params: SliderWidgetParamsType;
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;
+    isReadOnly?: boolean;
     onAnswer?(value: number): void;
 }>;

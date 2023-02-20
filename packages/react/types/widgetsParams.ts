@@ -97,6 +97,9 @@ export type SwipeUpWidgetParamsType = {
 
 export type TalkAboutWidgetParamsType = {
   text: string;
+  fontFamily: string;
+  fontParams: FontParamsType;
+  fontColor: BorderType;
   image: string | null;
   color: string;
   isTitleHidden: boolean;
@@ -122,7 +125,7 @@ export type TimerWidgetParamsType = {
   color: string;
 };
 
-export type QuizMultipleAnswerParamsType = {
+export type QuizMultipleAnswerWidgetParamsType = {
   title: string;
   color?: string;
   answers: Array<{ id: string; title: string; emoji: EmojiItemType | undefined }>;
@@ -130,7 +133,7 @@ export type QuizMultipleAnswerParamsType = {
   storyId?: string;
 };
 
-export type QuizMultipleAnswerWithImageParamsType = {
+export type QuizMultipleAnswerWithImageWidgetParamsType = {
   title: string;
   color?: string;
   answers: Array<{
@@ -145,7 +148,7 @@ export type QuizMultipleAnswerWithImageParamsType = {
   storyId?: string;
 };
 
-export type QuizOneAnswerParamsType = {
+export type QuizOneAnswerWidgetParamsType = {
   title: string;
   color?: string;
   answers: Array<{ id: string; title: string; emoji: EmojiItemType | undefined }>;
@@ -153,13 +156,13 @@ export type QuizOneAnswerParamsType = {
   storyId?: string;
 };
 
-export type QuizOpenAnswerParamsType = {
+export type QuizOpenAnswerWidgetParamsType = {
   title: string;
   isTitleHidden: boolean;
   storyId?: string;
 };
 
-export type QuizRateParamsType = {
+export type QuizRateWidgetParamsType = {
   title: string;
   isTitleHidden: boolean;
   storeLinks: {

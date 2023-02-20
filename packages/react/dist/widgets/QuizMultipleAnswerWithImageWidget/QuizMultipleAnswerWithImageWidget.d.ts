@@ -1,9 +1,10 @@
-import { WidgetPositionLimitsType, WidgetPositionType, QuizMultipleAnswerWithImageParamsType, WidgetComponent } from '@types';
+import { WidgetPositionLimitsType, WidgetPositionType, QuizMultipleAnswerWithImageWidgetParamsType, WidgetComponent } from '@types';
 import './QuizMultipleAnswerWithImageWidget.scss';
 export declare const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
-    params: QuizMultipleAnswerWithImageParamsType;
+    params: QuizMultipleAnswerWithImageWidgetParamsType;
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;
+    isReadOnly?: boolean;
     onAnswer?(answer: string[]): any;
     onGoToStory?(storyId: string): void;
 }>;

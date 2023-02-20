@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useRef, useEffect, useMemo, useContext, memo } from 'react';
 import crypto from 'crypto';
 
-// eslint-disable-next-line no-shadow
 var WidgetsTypes;
 (function (WidgetsTypes) {
     WidgetsTypes["RECTANGLE"] = "rectangle";
@@ -11352,7 +11351,7 @@ const INIT_ELEMENT_STYLES$a = {
     }
 };
 const ChooseAnswerWidget = (props) => {
-    const { params, position, positionLimits, jsConfetti, onAnswer } = props;
+    const { params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
     const [userAnswer, setUserAnswer] = useState(null);
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
@@ -11420,11 +11419,12 @@ const ChooseAnswerWidget = (props) => {
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer
                     }), style: elementSizes.answerTitle }, answer.title)));
         }
-        return (React.createElement("div", { className: b$l('answer', { clickable: !userAnswer }), key: answer.id, role: "button", style: elementSizes.answer, tabIndex: 0, onClick: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer ? () => handleMarkAnswer(answer.id) : undefined },
+        return (React.createElement("div", { className: b$l('answer', { clickable: !userAnswer && !isReadOnly }), key: answer.id, role: "button", style: elementSizes.answer, tabIndex: 0, onClick: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined },
             React.createElement("div", { className: b$l('answerId'), style: elementSizes.answerId }, `${answer.id}`),
             React.createElement("div", { className: b$l('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
     }, [
         userAnswer,
+        isReadOnly,
         params.markCorrectAnswer,
         params.correct,
         elementSizes.answer,
@@ -11449,9 +11449,10 @@ const ChooseAnswerWidget = (props) => {
 const b$k = block('ClickMeWidget');
 const ClickMeWidget = (props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url, storyId, actionType } = props.params;
+    const { isReadOnly, onClick, onGoToStory } = props;
     const handleWidgetClick = () => {
-        if (props.onClick) {
-            props.onClick();
+        if (onClick) {
+            onClick();
         }
         if (actionType === 'link' && url) {
             const tab = window.open(url, '_blank');
@@ -11459,16 +11460,16 @@ const ClickMeWidget = (props) => {
                 tab.focus();
             }
         }
-        else if (actionType === 'story' && props.onGoToStory && storyId) {
-            props.onGoToStory(storyId);
+        else if (actionType === 'story' && onGoToStory && storyId) {
+            onGoToStory(storyId);
         }
     };
-    return (React.createElement("div", { className: b$k(), role: "button", style: {
+    return (React.createElement("div", { className: b$k({ disabled: isReadOnly }), role: "button", style: {
             borderRadius,
             borderStyle: 'solid',
             borderWidth: `${hasBorder ? borderWidth : 0}px`,
             borderColor: renderBackgroundStyles(borderColor)
-        }, tabIndex: 0, onClick: handleWidgetClick, onKeyDown: handleWidgetClick },
+        }, tabIndex: 0, onClick: !isReadOnly ? handleWidgetClick : undefined, onKeyDown: !isReadOnly ? handleWidgetClick : undefined },
         React.createElement("div", { className: b$k('container', { gradient: color.type === 'gradient' }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
                 fontSize }, renderTextBackgroundStyles({ color })) },
             hasIcon ? (React.createElement(MaterialIcon, { background: color, className: b$k('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
@@ -64478,7 +64479,7 @@ const INIT_ELEMENT_STYLES$9 = {
     }
 };
 const EmojiReactionWidget = (props) => {
-    const { params, position, positionLimits, onAnswer } = props;
+    const { params, position, positionLimits, isReadOnly, onAnswer } = props;
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
             return calculateElementSizeByHeight(position, positionLimits, size);
@@ -64521,9 +64522,9 @@ const EmojiReactionWidget = (props) => {
         setBigSize(initEmojiSize);
         setDelay(50);
     };
-    return (React.createElement("div", { className: b$h({ color: params.color }), style: elementSizes.widget }, params.emoji.map((emojiItem, index) => (React.createElement("button", { className: b$h('item'), key: `${emojiItem.unicode}-${index}`, style: elementSizes.item, onClick: (e) => {
+    return (React.createElement("div", { className: b$h({ color: params.color }), style: elementSizes.widget }, params.emoji.map((emojiItem, index) => (React.createElement("button", { className: b$h('item', { disabled: isReadOnly || isToched }), key: `${emojiItem.unicode}-${index}`, style: elementSizes.item, onClick: (e) => {
             e.preventDefault();
-            if (!isToched) {
+            if (!isToched && !isReadOnly) {
                 handleReactionClick(index, emojiItem.unicode);
             }
         } },
@@ -64552,7 +64553,7 @@ const INIT_ELEMENT_STYLES$8 = {
     }
 };
 const QuestionWidget = (props) => {
-    const { params, position, positionLimits } = props;
+    const { params, position, positionLimits, isReadOnly } = props;
     const [answer, setAnswer] = useState(null);
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
@@ -64623,11 +64624,11 @@ const QuestionWidget = (props) => {
                     answerConfirm: answer && percents.confirm !== 100,
                     zero: answer && percents.confirm === 0,
                     full: answer && percents.confirm === 100
-                }), disabled: !!answer, style: {
+                }), disabled: !!answer || isReadOnly, style: {
                     width: answer ? `${calculateWidth(percents.confirm)}%` : '50%',
                     height: elementSizes.button.height,
                     fontSize: elementSizes.button.fontSize
-                }, type: "button", onClick: () => handleChange('confirm') },
+                }, type: "button", onClick: () => !isReadOnly && handleChange('confirm') },
                 React.createElement("div", { className: b$f('itemTextContainer') },
                     React.createElement("span", { className: cn(b$f('itemTextConfirm').toString(), b$f('itemText', { answered: answer !== null }).toString()) }, params.confirm),
                     answer && React.createElement("span", { className: b$f('itemTextPercent') },
@@ -64639,11 +64640,11 @@ const QuestionWidget = (props) => {
                     answerDecline: answer && percents.decline !== 100,
                     zero: answer && percents.decline === 0,
                     full: answer && percents.decline === 100
-                }), disabled: !!answer, style: {
+                }), disabled: !!answer || isReadOnly, style: {
                     width: answer ? `${calculateWidth(percents.decline)}%` : '50%',
                     height: elementSizes.button.height,
                     fontSize: elementSizes.button.fontSize
-                }, type: "button", onClick: () => handleChange('decline') },
+                }, type: "button", onClick: () => !isReadOnly && handleChange('decline') },
                 React.createElement("div", { className: b$f('itemTextContainer') },
                     React.createElement("span", { className: cn(b$f('itemTextDecline').toString(), b$f('itemText', { answered: answer !== null }).toString()) }, params.decline),
                     answer && React.createElement("span", { className: b$f('itemTextPercent') },
@@ -64771,7 +64772,7 @@ const INIT_ELEMENT_STYLES$7 = {
     }
 };
 const SliderWidget = (props) => {
-    const { params, storyId, position, positionLimits } = props;
+    const { params, storyId, position, positionLimits, isReadOnly } = props;
     const { color, text, emoji, value } = params;
     const [sliderValue, setSliderValue] = useState(0);
     const [changeStatus, setChangeStatus] = useState('wait');
@@ -64838,12 +64839,13 @@ const SliderWidget = (props) => {
         React.createElement("div", { className: b$c('sliderWrapper'), style: {
                 height: elementSizes.slider.height
             } },
-            React.createElement(SliderCustom, { changeStatus: changeStatus, disabled: changeStatus === 'moved', emoji: emoji.name, height: elementSizes.slider.height, initSize: elementSizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
+            React.createElement(SliderCustom, { changeStatus: changeStatus, disabled: changeStatus === 'moved' || isReadOnly, emoji: emoji.name, height: elementSizes.slider.height, initSize: elementSizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
 };
 
 const b$b = block('SwipeUpWidget');
 const SwipeUpWidget = (props) => {
     const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
+    const { isReadOnly, onSwipe } = props;
     const [touchStart, setTouchStart] = useState(0);
     const [touchEnd, setTouchEnd] = useState(0);
     const handleTouchStart = (e) => {
@@ -64854,8 +64856,8 @@ const SwipeUpWidget = (props) => {
     };
     const handleTouchEnd = () => {
         if (touchStart - touchEnd > 200) {
-            if (props.onSwipe) {
-                props.onSwipe();
+            if (onSwipe) {
+                onSwipe();
             }
             const tab = window.open(url, '_blank');
             if (tab) {
@@ -64866,15 +64868,15 @@ const SwipeUpWidget = (props) => {
         }
     };
     const handleClick = () => {
-        if (props.onSwipe) {
-            props.onSwipe();
+        if (onSwipe) {
+            onSwipe();
         }
         const tab = window.open(url, '_blank');
         if (tab) {
             tab.focus();
         }
     };
-    return (React.createElement("div", { className: b$b({ gradient: color.type === 'gradient' }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: handleClick, onKeyDown: handleClick, onTouchEnd: handleTouchEnd, onTouchMove: handleTouchMove, onTouchStart: handleTouchStart },
+    return (React.createElement("div", { className: b$b({ gradient: color.type === 'gradient' }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
         React.createElement("div", { className: b$b('icon') },
             React.createElement(MaterialIcon, { background: color, color: renderBackgroundStyles(color), name: icon.name, size: iconSize })),
         React.createElement("span", { className: b$b('text') }, text)));
@@ -64915,7 +64917,8 @@ const INIT_ELEMENT_STYLES$6 = {
     }
 };
 const TalkAboutWidget = (props) => {
-    const { params, position, positionLimits } = props;
+    var _a, _b, _c;
+    const { params, position, positionLimits, isReadOnly } = props;
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
             return calculateElementSize(position, positionLimits, size);
@@ -64992,15 +64995,18 @@ const TalkAboutWidget = (props) => {
             document.removeEventListener('click', handleClickOutside, true);
         };
     }, [handleClickOutside, isSent]);
+    const textStyles = params.fontColor
+        ? renderTextBackgroundStyles({ color: params.fontColor })
+        : undefined;
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: b$a('container'), ref: ref },
             React.createElement("picture", { className: b$a('imageWrapper'), style: elementSizes.imageWrapper }, params.image ? (React.createElement("img", { alt: "", className: b$a('image'), src: params.image })) : (React.createElement(IconLogoCircle, { className: b$a('image').toString() }))),
             React.createElement("div", { className: b$a('empty'), style: elementSizes.empty }),
             React.createElement("div", { className: b$a({ color: params.color }), style: elementSizes.widget },
                 React.createElement("div", { className: b$a('contentContainer', { sendOpen: text.length > 0 }), style: elementSizes.content },
-                    !params.isTitleHidden && (React.createElement("div", { className: b$a('text'), style: elementSizes.text }, params.text)),
-                    React.createElement("input", { className: b$a('input'), disabled: isSent, placeholder: "Type something...", ref: inputRef, style: elementSizes.input, type: "text", value: text, onChange: handleTextChange })),
-                text && (React.createElement("button", { className: b$a('send', { disabled: isSent }), style: elementSizes.send, onClick: !isSent ? handleSendClick : undefined },
+                    !params.isTitleHidden && (React.createElement("div", { className: b$a('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, params.text)),
+                    React.createElement("input", { className: b$a('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: elementSizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
+                text && (React.createElement("button", { className: b$a('send', { disabled: isSent || isReadOnly }), style: elementSizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
                     React.createElement("span", { className: b$a('sendText', { green: isSent }), style: elementSizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
 };
 
@@ -65136,7 +65142,7 @@ const INIT_ELEMENT_STYLES$4 = {
 };
 const QuizMultipleAnswerWidget = (props) => {
     const { title, answers, isTitleHidden, storyId } = props.params;
-    const { position, positionLimits, onAnswer, onGoToStory } = props;
+    const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const [userAnswers, setUserAnswers] = useState([]);
     const [isSent, setIsSent] = useState(false);
     const calculate = useCallback((size) => {
@@ -65189,11 +65195,11 @@ const QuizMultipleAnswerWidget = (props) => {
             return (React.createElement("button", { className: b$7('answer', {
                     noGap: !answer.title.length,
                     selected: userAnswers.includes(answer.id)
-                }), disabled: isSent, key: answer.id, style: elementSizes.answer, onClick: () => handleAnswer(answer.id) },
+                }), disabled: isSent || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
                 answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
                 React.createElement("p", { className: b$7('answerTitle'), style: Object.assign(Object.assign({}, elementSizes.answerTitle), { lineHeight: `${elementSizes.sendBtn.lineHeight}px` }) }, answer.title)));
         })),
-        userAnswers.length > 0 && (React.createElement("button", { className: b$7('sendBtn', { sent: isSent }), disabled: isSent, style: Object.assign(Object.assign({}, elementSizes.sendBtn), { lineHeight: `${elementSizes.sendBtn.lineHeight}px` }), onClick: handleSendAnswer }, isSent ? 'Sent!' : 'Send'))));
+        userAnswers.length > 0 && (React.createElement("button", { className: b$7('sendBtn', { sent: isSent || isReadOnly }), disabled: isSent || isReadOnly, style: Object.assign(Object.assign({}, elementSizes.sendBtn), { lineHeight: `${elementSizes.sendBtn.lineHeight}px` }), onClick: handleSendAnswer }, isSent ? 'Sent!' : 'Send'))));
 };
 
 const b$6 = block('QuizOneAnswerWidget');
@@ -65219,7 +65225,7 @@ const INIT_ELEMENT_STYLES$3 = {
 };
 const QuizOneAnswerWidget = (props) => {
     const { title, answers, storyId, isTitleHidden } = props.params;
-    const { position, positionLimits, onAnswer, onGoToStory } = props;
+    const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const [userAnswer, setUserAnswer] = useState(null);
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
@@ -65260,7 +65266,7 @@ const QuizOneAnswerWidget = (props) => {
             var _a;
             return (React.createElement("button", { className: b$6('answer', {
                     selected: userAnswer === answer.id
-                }), disabled: userAnswer !== null, key: answer.id, style: elementSizes.answer, onClick: () => !userAnswer && handleAnswer(answer.id) },
+                }), disabled: userAnswer !== null || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !userAnswer && !isReadOnly && handleAnswer(answer.id) },
                 answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
                 React.createElement("p", { className: b$6('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
         }))));
@@ -65289,7 +65295,7 @@ const INIT_ELEMENT_STYLES$2 = {
 };
 const QuizOpenAnswerWidget = (props) => {
     const { title, isTitleHidden, storyId } = props.params;
-    const { position, positionLimits, onAnswer, onGoToStory } = props;
+    const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const storyContextVal = useContext(StoryContext);
     const [text, setText] = useState('');
     const [isSent, setIsSent] = useState(false);
@@ -65363,8 +65369,8 @@ const QuizOpenAnswerWidget = (props) => {
                 borderRadius: elementSizes.inputWrapper.borderRadius,
                 paddingRight: elementSizes.inputWrapper.paddingRight
             } },
-            React.createElement("input", { className: b$5('input'), disabled: isSent, placeholder: "Enter the text...", style: elementSizes.input, type: "text", value: text, onChange: handleTextChange }),
-            text.length > 0 && (React.createElement("button", { className: b$5('sendButton'), disabled: isSent, style: elementSizes.sendButton, onClick: handleSendClick },
+            React.createElement("input", { className: b$5('input'), disabled: isSent || isReadOnly, placeholder: "Enter the text...", style: elementSizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined }),
+            text.length > 0 && (React.createElement("button", { className: b$5('sendButton'), disabled: isSent || isReadOnly, style: elementSizes.sendButton, onClick: !isReadOnly ? handleSendClick : undefined },
                 React.createElement(IconArrowSend, { className: b$5('sendButtonIcon') }))))));
 };
 
@@ -65381,8 +65387,8 @@ const INIT_ELEMENT_STYLES$1 = {
 };
 const RATE_MAX = 5;
 const QuizRateWidget = (props) => {
-    const { title, isTitleHidden, storyId } = props.params;
-    const { position, positionLimits, onAnswer, onGoToStory } = props;
+    const { title, isTitleHidden, storyId, storeLinks } = props.params;
+    const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const [isSent, setIsSent] = useState(false);
     const calculate = useCallback((size) => {
         if (position && positionLimits) {
@@ -65401,7 +65407,13 @@ const QuizRateWidget = (props) => {
     }), [calculate]);
     const handleAnswer = (rate) => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(rate);
-        if (storyId) {
+        if (storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web) {
+            const tab = window.open(storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, '_blank');
+            if (tab) {
+                tab.focus();
+            }
+        }
+        else if (storyId) {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
         setIsSent(true);
@@ -65409,12 +65421,12 @@ const QuizRateWidget = (props) => {
     return (React.createElement("div", { className: b$4() },
         !isTitleHidden && (React.createElement("div", { className: b$4('title'), style: elementSizes.title }, title)),
         React.createElement("div", { className: b$4('starsContainer', {
-                disabled: isSent
+                disabled: isSent || isReadOnly
             }), style: {
                 gap: elementSizes.stars.gap
             } }, new Array(RATE_MAX).fill(0).map((_, index) => (React.createElement(React.Fragment, { key: `rate-star-${index}` },
             React.createElement("input", { className: b$4('input'), disabled: isSent, id: `rate-star-${index}`, type: "radio", value: RATE_MAX - index, onChange: (e) => {
-                    handleAnswer(e.target.value);
+                    !isReadOnly && handleAnswer(e.target.value);
                 } }),
             React.createElement("label", { className: b$4('starItem'), htmlFor: `rate-star-${index}` },
                 React.createElement(IconRateStar, { className: b$4('star') }))))))));
@@ -65449,7 +65461,7 @@ const INIT_ELEMENT_STYLES = {
 };
 const QuizMultipleAnswerWithImageWidget = (props) => {
     const { title, answers, isTitleHidden, storyId } = props.params;
-    const { position, positionLimits, onAnswer, onGoToStory } = props;
+    const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const [userAnswers, setUserAnswers] = useState([]);
     const [isSent, setIsSent] = useState(false);
     const calculate = useCallback((size) => {
@@ -65495,12 +65507,12 @@ const QuizMultipleAnswerWithImageWidget = (props) => {
         !isTitleHidden && (React.createElement("div", { className: b$3('title'), style: elementSizes.title }, title)),
         React.createElement("div", { className: b$3('answers'), style: elementSizes.answers }, answers.map((answer) => (React.createElement("button", { className: b$3('answer', {
                 selected: userAnswers.includes(answer.id)
-            }), disabled: isSent, key: answer.id, style: elementSizes.answer, onClick: () => handleAnswer(answer.id) },
+            }), disabled: isSent || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => isReadOnly && handleAnswer(answer.id) },
             React.createElement("div", { className: b$3('answerImgContainer'), style: {
                     backgroundImage: answer.image ? `url(${answer.image.url})` : ''
                 } }),
             React.createElement("p", { className: b$3('answerTitle'), style: elementSizes.answerTitle }, answer.title))))),
-        userAnswers.length > 0 && (React.createElement("button", { className: b$3('sendBtn', { sent: isSent }), disabled: isSent, style: elementSizes.sendBtn, onClick: handleSendAnswer }, isSent ? 'Sent!' : 'Send'))));
+        userAnswers.length > 0 && (React.createElement("button", { className: b$3('sendBtn', { sent: isSent || isReadOnly }), disabled: isSent || isReadOnly, style: elementSizes.sendBtn, onClick: handleSendAnswer }, isSent ? 'Sent!' : 'Send'))));
 };
 
 ({
@@ -65533,7 +65545,7 @@ class WidgetFactory extends React.Component {
             case WidgetsTypes.ELLIPSE:
                 return React.createElement(EllipseWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.EMOJI_REACTION:
-                return (React.createElement(EmojiReactionWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onReact: this.props.widget.action }));
+                return (React.createElement(EmojiReactionWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action }));
             case WidgetsTypes.GIPHY:
                 return React.createElement(GiphyWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.QUESTION:
@@ -65541,7 +65553,7 @@ class WidgetFactory extends React.Component {
             case WidgetsTypes.RECTANGLE:
                 return React.createElement(RectangleWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.SLIDER:
-                return (React.createElement(SliderWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, storyId: this.props.storyId, onSlide: this.props.widget.action }));
+                return (React.createElement(SliderWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, storyId: this.props.storyId, onAnswer: this.props.widget.action }));
             case WidgetsTypes.SWIPE_UP:
                 return (React.createElement(SwipeUpWidget, { params: this.props.widget.content.params, onSwipe: this.props.widget.action }));
             case WidgetsTypes.TALK_ABOUT:
@@ -65743,4 +65755,4 @@ const MaterialIcon = memo(({ name = 'ArrowCircleUpOutlineIcon', className, color
     return null;
 });
 
-export { CustomGroupControl, GroupItem, GroupType, GroupsList, MOBILE_BREAKPOINT, MaterialIcon, PADDING_SIZE, STORY_SIZE, STORY_SIZE_LARGE, StoryContent, StoryContext, StoryModal, StorySize, WidgetsTypes };
+export { ChooseAnswerWidget, ClickMeWidget, CustomGroupControl, EllipseWidget, EmojiReactionWidget, GiphyWidget, GroupItem, GroupType, GroupsList, MOBILE_BREAKPOINT, MaterialIcon, PADDING_SIZE, QuestionWidget, QuizMultipleAnswerWidget, QuizMultipleAnswerWithImageWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, RectangleWidget, STORY_SIZE, STORY_SIZE_LARGE, SliderWidget, StoryContent, StoryContext, StoryModal, StorySize, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, WidgetsTypes };

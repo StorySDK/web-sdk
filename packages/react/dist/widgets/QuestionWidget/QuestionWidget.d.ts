@@ -4,5 +4,6 @@ export declare const QuestionWidget: WidgetComponent<{
     params: QuestionWidgetParamsType;
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;
+    isReadOnly?: boolean;
     onAnswer?(answer: string): any;
 }>;

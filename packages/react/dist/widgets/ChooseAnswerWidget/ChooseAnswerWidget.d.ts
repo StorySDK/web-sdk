@@ -5,5 +5,6 @@ export declare const ChooseAnswerWidget: WidgetComponent<{
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;
     jsConfetti?: any;
+    isReadOnly?: boolean;
     onAnswer?(answerId: string): void;
 }>;

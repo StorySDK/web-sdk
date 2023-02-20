@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { IconRateStar } from '@components/icons';
 import { block, calculateElementSize } from '@utils';
 import {
-  QuizRateParamsType,
+  QuizRateWidgetParamsType,
   WidgetComponent,
   WidgetPositionLimitsType,
   WidgetPositionType
@@ -25,14 +25,15 @@ const INIT_ELEMENT_STYLES = {
 const RATE_MAX = 5;
 
 export const QuizRateWidget: WidgetComponent<{
-  params: QuizRateParamsType;
+  params: QuizRateWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
+  isReadOnly?: boolean;
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = (props) => {
-  const { title, isTitleHidden, storyId } = props.params;
-  const { position, positionLimits, onAnswer, onGoToStory } = props;
+  const { title, isTitleHidden, storyId, storeLinks } = props.params;
+  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const [isSent, setIsSent] = useState<boolean>(false);
 
@@ -63,7 +64,12 @@ export const QuizRateWidget: WidgetComponent<{
   const handleAnswer = (rate: string) => {
     onAnswer?.(rate);
 
-    if (storyId) {
+    if (storeLinks?.web) {
+      const tab = window.open(storeLinks?.web, '_blank');
+      if (tab) {
+        tab.focus();
+      }
+    } else if (storyId) {
       onGoToStory?.(storyId);
     }
 
@@ -79,7 +85,7 @@ export const QuizRateWidget: WidgetComponent<{
       )}
       <div
         className={b('starsContainer', {
-          disabled: isSent
+          disabled: isSent || isReadOnly
         })}
         style={{
           gap: elementSizes.stars.gap
@@ -94,7 +100,7 @@ export const QuizRateWidget: WidgetComponent<{
               type="radio"
               value={RATE_MAX - index}
               onChange={(e) => {
-                handleAnswer(e.target.value);
+                !isReadOnly && handleAnswer(e.target.value);
               }}
             />
             <label className={b('starItem')} htmlFor={`rate-star-${index}`}>
