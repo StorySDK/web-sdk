@@ -136,9 +136,17 @@ export interface WidgetPositionLimitsType {
 export interface WidgetPositionType {
     x: number;
     y: number;
+    origin: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    };
     width: number | string;
     height: number;
     rotate: number;
+    realWidth: number;
+    realHeight: number;
 }
 export interface WidgetObjectType {
     id: string;
