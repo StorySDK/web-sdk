@@ -10,7 +10,7 @@ export const SwipeUpWidget: WidgetComponent<{
   params: SwipeUpWidgetParamsType;
   isReadOnly?: boolean;
   onSwipe?(): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
   const { isReadOnly, onSwipe } = props;
 
@@ -80,4 +80,4 @@ export const SwipeUpWidget: WidgetComponent<{
       <span className={b('text')}>{text}</span>
     </div>
   );
-};
+});

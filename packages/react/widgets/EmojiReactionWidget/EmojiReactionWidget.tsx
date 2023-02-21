@@ -35,7 +35,7 @@ export const EmojiReactionWidget: WidgetComponent<{
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(emoji: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { params, position, positionLimits, isReadOnly, onAnswer } = props;
 
   const calculate = useCallback(
@@ -117,4 +117,4 @@ export const EmojiReactionWidget: WidgetComponent<{
       ))}
     </div>
   );
-};
+});

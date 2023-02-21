@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import './SliderCustom.scss';
-interface Props {
+interface SliderCustomProps {
     emoji: string;
     changeStatus: string;
     value: number;
@@ -8,8 +8,9 @@ interface Props {
     disabled?: boolean;
     onChange?: (valueChanged: number) => void;
     height: number;
+    borderRadius: number;
     onAfterChange?: () => void;
     onBeforeChange?: () => void;
 }
-export declare const SliderCustom: FC<Props>;
+export declare const SliderCustom: FC<SliderCustomProps>;
 export {};

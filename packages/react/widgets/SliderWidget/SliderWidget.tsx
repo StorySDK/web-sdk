@@ -44,10 +44,10 @@ export const SliderWidget: WidgetComponent<{
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(value: number): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { params, storyId, position, positionLimits, isReadOnly } = props;
   const { color, text, emoji, value } = params;
-  const [sliderValue, setSliderValue] = useState<number>(0);
+  const [sliderValue, setSliderValue] = useState<number>(isReadOnly ? value : 0);
   const [changeStatus, setChangeStatus] = useState<ChangeStatus>('wait');
 
   const time = 500;
@@ -138,6 +138,7 @@ export const SliderWidget: WidgetComponent<{
         }}
       >
         <SliderCustom
+          borderRadius={elementSizes.slider.borderRadius}
           changeStatus={changeStatus}
           disabled={changeStatus === 'moved' || isReadOnly}
           emoji={emoji.name}
@@ -151,4 +152,4 @@ export const SliderWidget: WidgetComponent<{
       </div>
     </div>
   );
-};
+});

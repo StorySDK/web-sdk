@@ -41,6 +41,7 @@
     transform: translateY(-50%);
     z-index: 1;
     height: 10px;
+    overflow: hidden;
   }
 
   &__trackPart {

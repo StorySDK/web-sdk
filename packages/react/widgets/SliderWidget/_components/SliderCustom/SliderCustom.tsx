@@ -6,7 +6,7 @@ import './SliderCustom.scss';
 
 const b = block('SliderCustom');
 
-interface Props {
+interface SliderCustomProps {
   emoji: string;
   changeStatus: string;
   value: number;
@@ -14,17 +14,19 @@ interface Props {
   disabled?: boolean;
   onChange?: (valueChanged: number) => void;
   height: number;
+  borderRadius: number;
   onAfterChange?: () => void;
   onBeforeChange?: () => void;
 }
 
-export const SliderCustom: FC<Props> = ({
+export const SliderCustom: FC<SliderCustomProps> = ({
   emoji,
   changeStatus,
   value,
   initSize = 34,
   disabled,
   height,
+  borderRadius,
   onChange,
   onAfterChange,
   onBeforeChange
@@ -140,7 +142,7 @@ export const SliderCustom: FC<Props> = ({
         <Emoji emoji={emoji} set="apple" size={initSize} />
       </div>
 
-      <div className={b('track')} style={{ height }}>
+      <div className={b('track')} style={{ height, borderRadius }}>
         <span
           className={b('trackPart', { unselected: true })}
           style={{ width: `${Math.round(value)}%` }}

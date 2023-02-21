@@ -52,7 +52,7 @@
     }
 
     &:disabled {
-      cursor: auto;
+      cursor: auto !important;
       pointer-events: none;
     }
   }

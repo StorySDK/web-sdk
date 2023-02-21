@@ -40,7 +40,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(id: string): any;
   onGoToStory?(storyId: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { title, answers, storyId, isTitleHidden } = props.params;
   const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
@@ -119,4 +119,4 @@ export const QuizOneAnswerWidget: WidgetComponent<{
       </div>
     </div>
   );
-};
+});

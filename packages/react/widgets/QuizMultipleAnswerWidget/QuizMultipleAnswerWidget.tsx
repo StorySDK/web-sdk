@@ -47,7 +47,7 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(answer: string[]): any;
   onGoToStory?(storyId: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { title, answers, isTitleHidden, storyId } = props.params;
   const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
@@ -157,4 +157,4 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
       )}
     </div>
   );
-};
+});

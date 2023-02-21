@@ -41,7 +41,7 @@
     }
 
     &:disabled {
-      cursor: auto;
+      cursor: auto !important;
       pointer-events: none;
     }
   }
@@ -73,7 +73,7 @@
     }
 
     &:disabled {
-      cursor: auto;
+      cursor: auto !important;
       pointer-events: none;
     }
   }

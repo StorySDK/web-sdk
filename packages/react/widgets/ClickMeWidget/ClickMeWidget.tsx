@@ -11,7 +11,7 @@ export const ClickMeWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onClick?(): void;
   onGoToStory?(storyId: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const {
     fontFamily,
     fontParams,
@@ -96,4 +96,4 @@ export const ClickMeWidget: WidgetComponent<{
       />
     </div>
   );
-};
+});

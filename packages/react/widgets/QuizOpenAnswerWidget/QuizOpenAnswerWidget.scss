@@ -52,7 +52,7 @@
     cursor: pointer;
 
     &:disabled {
-      cursor: auto;
+      cursor: auto !important;
 
       .StorySdk-QuizOpenAnswerWidget__sendButtonIcon {
         opacity: 0.2;

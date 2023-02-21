@@ -43,7 +43,7 @@
 
     &_disabled {
       .StorySdk-QuizRateWidget__starItem {
-        cursor: auto;
+        cursor: auto !important;
         pointer-events: none;
 
         .StorySdk-QuizRateWidget__star {

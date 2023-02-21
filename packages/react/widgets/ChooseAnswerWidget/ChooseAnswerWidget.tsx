@@ -46,7 +46,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
   jsConfetti?: any;
   isReadOnly?: boolean;
   onAnswer?(answerId: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
@@ -221,4 +221,4 @@ export const ChooseAnswerWidget: WidgetComponent<{
       </div>
     </div>
   );
-};
+});

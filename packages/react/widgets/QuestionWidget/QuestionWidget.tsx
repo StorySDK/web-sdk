@@ -29,7 +29,7 @@ export const QuestionWidget: WidgetComponent<{
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
-}> = (props) => {
+}> = React.memo((props) => {
   const { params, position, positionLimits, isReadOnly } = props;
   const [answer, setAnswer] = useState<string | null>(null);
 
@@ -177,4 +177,4 @@ export const QuestionWidget: WidgetComponent<{
       </div>
     </div>
   );
-};
+});

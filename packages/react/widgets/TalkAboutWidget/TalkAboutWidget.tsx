@@ -52,7 +52,7 @@ export const TalkAboutWidget: WidgetComponent<{
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { params, position, positionLimits, isReadOnly } = props;
 
   const calculate = useCallback(
@@ -214,4 +214,4 @@ export const TalkAboutWidget: WidgetComponent<{
       </div>
     </>
   );
-};
+});

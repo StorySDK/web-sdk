@@ -48,7 +48,7 @@
     }
 
     &:disabled {
-      cursor: auto;
+      cursor: auto !important;
       pointer-events: none;
     }
   }
@@ -60,7 +60,7 @@
     overflow: hidden;
     background-size: cover;
     background-position: center;
-    background-color: map-get($theme-colors, "lightGrey");
+    background-color: map-get($theme-colors, "grey");
   }
 
   &__answerImg {
@@ -87,7 +87,7 @@
     }
 
     &:disabled {
-      cursor: auto;
+      cursor: auto !important;
       pointer-events: none;
     }
   }

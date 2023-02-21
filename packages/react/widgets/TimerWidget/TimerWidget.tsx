@@ -48,7 +48,7 @@ export const TimerWidget: WidgetComponent<{
   params: TimerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
-}> = (props) => {
+}> = React.memo((props) => {
   const { params, position, positionLimits } = props;
 
   const [time, setTime] = useState(calculateTime(params.time + 60000 - new Date().getTime()));
@@ -146,4 +146,4 @@ export const TimerWidget: WidgetComponent<{
       </ul>
     </div>
   );
-};
+});
