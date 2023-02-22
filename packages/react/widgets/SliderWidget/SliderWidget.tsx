@@ -55,13 +55,13 @@ export const SliderWidget: WidgetComponent<{
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -104,17 +104,17 @@ export const SliderWidget: WidgetComponent<{
     // eslint-disable-next-line
   }, [changeStatus, sliderValue]);
 
-  const handleChange = (valueChanged: number) => {
+  const handleChange = useCallback((valueChanged: number) => {
     setSliderValue(valueChanged);
-  };
+  }, []);
 
-  const handleBeforeChange = () => {
+  const handleBeforeChange = useCallback(() => {
     setChangeStatus('moving');
-  };
+  }, []);
 
-  const handleAfterChange = () => {
+  const handleAfterChange = useCallback(() => {
     setChangeStatus('moved');
-  };
+  }, []);
 
   const storyContextVal = useContext(StoryContext);
 

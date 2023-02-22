@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect, useContext, useRef, memo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef, useContext, memo } from 'react';
 import ReactDOM from 'react-dom';
 import require$$1$1 from 'http';
 import require$$2 from 'https';
@@ -17380,11 +17380,11 @@ const renderPosition = (position, positionLimits) => ({
 });
 const SCALE_INDEX = 2.76;
 const getScalableValue = (value) => Math.round(value * SCALE_INDEX);
-const calculateElementSize = (position, positionLimits, elementSize) => positionLimits.minWidth
-    ? getScalableValue(Math.round((elementSize * +position.width) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)))
+const calculateElementSize = (width, elementSize, minWidth) => minWidth
+    ? getScalableValue(Math.round((elementSize * +width) / minWidth))
     : getScalableValue(elementSize);
-const calculateElementSizeByHeight = (position, positionLimits, elementSize) => positionLimits.minHeight
-    ? getScalableValue(Math.round((elementSize * position.height) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight)))
+const calculateElementSizeByHeight = (height, elementSize, minHeight) => minHeight
+    ? getScalableValue(Math.round((elementSize * height) / minHeight))
     : getScalableValue(elementSize);
 
 const getClientPosition = (e) => {
@@ -17433,11 +17433,11 @@ const ChooseAnswerWidget = React.memo((props) => {
     const { params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
     const [userAnswer, setUserAnswer] = useState(null);
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+position.width, size, positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = useMemo(() => ({
         widget: {
             borderRadius: calculate(INIT_ELEMENT_STYLES$a.widget.borderRadius)
@@ -17529,7 +17529,7 @@ const b$k = block('ClickMeWidget');
 const ClickMeWidget = React.memo((props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url, storyId, actionType } = props.params;
     const { isReadOnly, onClick, onGoToStory } = props;
-    const handleWidgetClick = () => {
+    const handleWidgetClick = useCallback(() => {
         if (onClick) {
             onClick();
         }
@@ -17542,7 +17542,7 @@ const ClickMeWidget = React.memo((props) => {
         else if (actionType === 'story' && onGoToStory && storyId) {
             onGoToStory(storyId);
         }
-    };
+    }, [actionType, onClick, onGoToStory, storyId, url]);
     return (React.createElement("div", { className: b$k({ disabled: isReadOnly }), role: "button", style: {
             borderRadius,
             borderStyle: 'solid',
@@ -70264,11 +70264,11 @@ const INIT_ELEMENT_STYLES$9 = {
 const EmojiReactionWidget = React.memo((props) => {
     const { params, position, positionLimits, isReadOnly, onAnswer } = props;
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSizeByHeight(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.height) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight)) {
+            return calculateElementSizeByHeight(position.height, size, positionLimits.minHeight);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.height, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight]);
     const elementSizes = useMemo(() => ({
         widget: {
             borderRadius: calculate(INIT_ELEMENT_STYLES$9.widget.borderRadius),
@@ -70298,13 +70298,13 @@ const EmojiReactionWidget = React.memo((props) => {
             setClickedIndex(null);
         }
     }, delay);
-    const handleReactionClick = (index, emoji) => {
+    const handleReactionClick = useCallback((index, emoji) => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(emoji);
         setIsToched(true);
         setClickedIndex(index);
         setBigSize(initEmojiSize);
         setDelay(50);
-    };
+    }, [initEmojiSize, onAnswer]);
     return (React.createElement("div", { className: b$h({ color: params.color }), style: elementSizes.widget }, params.emoji.map((emojiItem, index) => (React.createElement("button", { className: b$h('item', { disabled: isReadOnly || isToched }), key: `${emojiItem.unicode}-${index}`, style: elementSizes.item, onClick: (e) => {
             e.preventDefault();
             if (!isToched && !isReadOnly) {
@@ -70336,14 +70336,14 @@ const INIT_ELEMENT_STYLES$8 = {
     }
 };
 const QuestionWidget = React.memo((props) => {
-    const { params, position, positionLimits, isReadOnly } = props;
+    const { params, position, positionLimits, isReadOnly, onAnswer } = props;
     const [answer, setAnswer] = useState(null);
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = useMemo(() => ({
         text: {
             fontSize: calculate(INIT_ELEMENT_STYLES$8.text.fontSize),
@@ -70359,10 +70359,10 @@ const QuestionWidget = React.memo((props) => {
         confirm: 0,
         decline: 0
     });
-    const handleChange = (option) => {
+    const handleChange = useCallback((option) => {
         if (!answer) {
-            if (props.onAnswer) {
-                props.onAnswer(option).then((res) => {
+            if (onAnswer) {
+                onAnswer(option).then((res) => {
                     if (res.data && !res.data.error) {
                         setAnswer(option);
                         setPercents((prevState) => (Object.assign(Object.assign({}, prevState), res.data.data)));
@@ -70373,17 +70373,17 @@ const QuestionWidget = React.memo((props) => {
                 setAnswer(option);
             }
         }
-    };
+    }, [answer, onAnswer]);
     useEffect(() => {
-        if (answer && !props.onAnswer) {
+        if (answer && !onAnswer) {
             const percentsFromApi = {
                 confirm: answer === 'confirm' ? 100 : 0,
                 decline: answer === 'decline' ? 100 : 0
             };
             setPercents(percentsFromApi);
         }
-    }, [answer, props.onAnswer]);
-    const calculateWidth = (percent) => {
+    }, [answer, onAnswer]);
+    const calculateWidth = useCallback((percent) => {
         if (percent === 0) {
             return 0;
         }
@@ -70397,7 +70397,7 @@ const QuestionWidget = React.memo((props) => {
             return 75;
         }
         return percent;
-    };
+    }, []);
     return (React.createElement("div", { className: b$f() },
         !params.isTitleHidden && (React.createElement("div", { className: b$f('question'), style: elementSizes.text }, params.question)),
         React.createElement("div", { className: b$f('buttons'), style: { borderRadius: elementSizes.button.borderRadius } },
@@ -70454,7 +70454,7 @@ const RectangleWidget = React.memo((props) => {
 });
 
 const b$d = block('SliderCustom');
-const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, height, borderRadius, onChange, onAfterChange, onBeforeChange }) => {
+const SliderCustom = React.memo(({ emoji, changeStatus, value, initSize = 34, disabled, height, borderRadius, onChange, onAfterChange, onBeforeChange }) => {
     const containerRef = useRef(null);
     const thumbRef = useRef(null);
     const [bigSize, setBigSize] = useState(initSize);
@@ -70465,7 +70465,7 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
     useEffect(() => {
         setBigSize(initSize + initSize * (value / 100));
     }, [value, initSize]);
-    const getPos = (e) => {
+    const getPos = useCallback((e) => {
         const clientPos = getClientPosition(e);
         const left = Math.round(clientPos.x - containerPos.current.start);
         if (left < 0) {
@@ -70475,16 +70475,29 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
             return 100;
         }
         return Math.round((left / containerPos.current.end) * 100);
-    };
-    const handleDrag = (e) => {
+    }, []);
+    const handleDrag = useCallback((e) => {
         if (disabled)
             return;
         e.preventDefault();
         if (onChange) {
             onChange(getPos(e));
         }
-    };
-    const handleMouseDown = (e) => {
+    }, [disabled, getPos, onChange]);
+    const handleDragEnd = useCallback((e) => {
+        if (disabled)
+            return;
+        e.preventDefault();
+        document.removeEventListener('mousemove', handleDrag);
+        document.removeEventListener('mouseup', handleDragEnd);
+        document.removeEventListener('touchmove', handleDrag);
+        document.removeEventListener('touchend', handleDragEnd);
+        document.removeEventListener('touchcancel', handleDragEnd);
+        if (onAfterChange) {
+            onAfterChange();
+        }
+    }, [disabled, handleDrag, onAfterChange]);
+    const handleMouseDown = useCallback((e) => {
         if (disabled)
             return;
         e.preventDefault();
@@ -70502,20 +70515,7 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
         if (onBeforeChange) {
             onBeforeChange();
         }
-    };
-    const handleDragEnd = (e) => {
-        if (disabled)
-            return;
-        e.preventDefault();
-        document.removeEventListener('mousemove', handleDrag);
-        document.removeEventListener('mouseup', handleDragEnd);
-        document.removeEventListener('touchmove', handleDrag);
-        document.removeEventListener('touchend', handleDragEnd);
-        document.removeEventListener('touchcancel', handleDragEnd);
-        if (onAfterChange) {
-            onAfterChange();
-        }
-    };
+    }, [disabled, handleDrag, handleDragEnd, onBeforeChange]);
     return (React.createElement("div", { className: b$d(), ref: containerRef, style: { height } },
         React.createElement("div", { className: b$d('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
                 e.stopPropagation();
@@ -70530,7 +70530,7 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
         React.createElement("div", { className: b$d('track'), style: { height, borderRadius } },
             React.createElement("span", { className: b$d('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
             React.createElement("span", { className: b$d('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
-};
+});
 
 const b$c = block('SliderWidget');
 const INIT_ELEMENT_STYLES$7 = {
@@ -70562,11 +70562,11 @@ const SliderWidget = React.memo((props) => {
     const time = 500;
     const [delay, setDelay] = useState(0);
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = useMemo(() => ({
         widget: {
             borderRadius: calculate(INIT_ELEMENT_STYLES$7.widget.borderRadius),
@@ -70601,15 +70601,15 @@ const SliderWidget = React.memo((props) => {
         }
         // eslint-disable-next-line
     }, [changeStatus, sliderValue]);
-    const handleChange = (valueChanged) => {
+    const handleChange = useCallback((valueChanged) => {
         setSliderValue(valueChanged);
-    };
-    const handleBeforeChange = () => {
+    }, []);
+    const handleBeforeChange = useCallback(() => {
         setChangeStatus('moving');
-    };
-    const handleAfterChange = () => {
+    }, []);
+    const handleAfterChange = useCallback(() => {
         setChangeStatus('moved');
-    };
+    }, []);
     const storyContextVal = useContext(StoryContext);
     useEffect(() => {
         if (storyContextVal.currentStoryId === storyId && changeStatus === 'wait') {
@@ -70631,13 +70631,13 @@ const SwipeUpWidget = React.memo((props) => {
     const { isReadOnly, onSwipe } = props;
     const [touchStart, setTouchStart] = useState(0);
     const [touchEnd, setTouchEnd] = useState(0);
-    const handleTouchStart = (e) => {
+    const handleTouchStart = useCallback((e) => {
         setTouchStart(e.targetTouches[0].clientY);
-    };
-    const handleTouchMove = (e) => {
+    }, []);
+    const handleTouchMove = useCallback((e) => {
         setTouchEnd(e.targetTouches[0].clientY);
-    };
-    const handleTouchEnd = () => {
+    }, []);
+    const handleTouchEnd = useCallback(() => {
         if (touchStart - touchEnd > 200) {
             if (onSwipe) {
                 onSwipe();
@@ -70649,8 +70649,8 @@ const SwipeUpWidget = React.memo((props) => {
                 setTouchEnd(0);
             }
         }
-    };
-    const handleClick = () => {
+    }, [onSwipe, touchEnd, touchStart, url]);
+    const handleClick = useCallback(() => {
         if (onSwipe) {
             onSwipe();
         }
@@ -70658,7 +70658,7 @@ const SwipeUpWidget = React.memo((props) => {
         if (tab) {
             tab.focus();
         }
-    };
+    }, [onSwipe, url]);
     return (React.createElement("div", { className: b$b({ gradient: color.type === 'gradient' }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
         React.createElement("div", { className: b$b('icon') },
             React.createElement(MaterialIcon, { background: color, color: renderBackgroundStyles(color), name: icon.name, size: iconSize })),
@@ -70703,11 +70703,11 @@ const TalkAboutWidget = React.memo((props) => {
     var _a, _b, _c;
     const { params, position, positionLimits, isReadOnly } = props;
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = useMemo(() => ({
         widget: {
             borderRadius: calculate(INIT_ELEMENT_STYLES$6.widget.borderRadius)
@@ -70743,11 +70743,12 @@ const TalkAboutWidget = React.memo((props) => {
     }), [calculate]);
     const [text, setText] = useState('');
     const [isSent, setIsSent] = useState(false);
-    const handleTextChange = (e) => {
+    const storyContextVal = useContext(StoryContext);
+    const handleTextChange = useCallback((e) => {
         setText(e.target.value);
         storyContextVal.playStatusChange('pause');
-    };
-    const handleSendClick = () => {
+    }, [storyContextVal]);
+    const handleSendClick = useCallback(() => {
         if (text.length) {
             if (props.onAnswer) {
                 props.onAnswer(text);
@@ -70755,8 +70756,7 @@ const TalkAboutWidget = React.memo((props) => {
             storyContextVal.playStatusChange('play');
             setIsSent(true);
         }
-    };
-    const storyContextVal = useContext(StoryContext);
+    }, [props, storyContextVal, text]);
     const ref = useRef(null);
     const inputRef = useRef(null);
     const handleClickOutside = useCallback((event) => {
@@ -70848,11 +70848,11 @@ const TimerWidget = React.memo((props) => {
         return () => clearTimeout(timeout);
     }, [params.time]);
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = useMemo(() => ({
         text: {
             fontSize: calculate(INIT_ELEMENT_STYLES$5.text.fontSize),
@@ -70929,11 +70929,11 @@ const QuizMultipleAnswerWidget = React.memo((props) => {
     const [userAnswers, setUserAnswers] = useState([]);
     const [isSent, setIsSent] = useState(false);
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+position.width, positionLimits.minWidth, size);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = useMemo(() => ({
         title: {
             fontSize: calculate(INIT_ELEMENT_STYLES$4.title.fontSize),
@@ -70961,16 +70961,16 @@ const QuizMultipleAnswerWidget = React.memo((props) => {
             lineHeight: calculate(INIT_ELEMENT_STYLES$4.sendBtn.lineHeight)
         }
     }), [calculate]);
-    const handleAnswer = (id) => {
+    const handleAnswer = useCallback((id) => {
         setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
-    };
-    const handleSendAnswer = () => {
+    }, []);
+    const handleSendAnswer = useCallback(() => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
         setIsSent(true);
         if (storyId) {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
-    };
+    }, [onAnswer, onGoToStory, storyId, userAnswers]);
     return (React.createElement("div", { className: b$7() },
         !isTitleHidden && (React.createElement("div", { className: b$7('title'), style: elementSizes.title }, title)),
         React.createElement("div", { className: b$7('answers'), style: elementSizes.answers }, answers.map((answer) => {
@@ -71011,11 +71011,11 @@ const QuizOneAnswerWidget = React.memo((props) => {
     const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const [userAnswer, setUserAnswer] = useState(null);
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+position.width, size, positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = useMemo(() => ({
         title: {
             fontSize: calculate(INIT_ELEMENT_STYLES$3.title.fontSize),
@@ -71036,13 +71036,13 @@ const QuizOneAnswerWidget = React.memo((props) => {
             fontSize: calculate(INIT_ELEMENT_STYLES$3.answerTitle.fontSize)
         }
     }), [calculate]);
-    const handleAnswer = (id) => {
+    const handleAnswer = useCallback((id) => {
         setUserAnswer(id);
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(id);
         if (storyId) {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
-    };
+    }, [onAnswer, onGoToStory, storyId]);
     return (React.createElement("div", { className: b$6() },
         !isTitleHidden && (React.createElement("div", { className: b$6('title'), style: elementSizes.title }, title)),
         React.createElement("div", { className: b$6('answers'), style: elementSizes.answers }, answers.map((answer) => {
@@ -71082,10 +71082,10 @@ const QuizOpenAnswerWidget = React.memo((props) => {
     const storyContextVal = useContext(StoryContext);
     const [text, setText] = useState('');
     const [isSent, setIsSent] = useState(false);
-    const handleTextChange = (e) => {
+    const handleTextChange = useCallback((e) => {
         setText(e.target.value);
         storyContextVal.playStatusChange('pause');
-    };
+    }, [storyContextVal]);
     const handleClickOutside = useCallback((event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             storyContextVal.playStatusChange('play');
@@ -71094,7 +71094,7 @@ const QuizOpenAnswerWidget = React.memo((props) => {
             storyContextVal.playStatusChange('pause');
         }
     }, [isSent, storyContextVal]);
-    const handleSendClick = () => {
+    const handleSendClick = useCallback(() => {
         if (text.length) {
             onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(text);
             if (storyId) {
@@ -71103,7 +71103,7 @@ const QuizOpenAnswerWidget = React.memo((props) => {
             storyContextVal.playStatusChange('play');
             setIsSent(true);
         }
-    };
+    }, [onAnswer, onGoToStory, storyContextVal, storyId, text]);
     useEffect(() => {
         if (!isSent) {
             document.addEventListener('click', handleClickOutside, true);
@@ -71118,11 +71118,11 @@ const QuizOpenAnswerWidget = React.memo((props) => {
     const ref = useRef(null);
     const inputRef = useRef(null);
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = useMemo(() => ({
         title: {
             fontSize: calculate(INIT_ELEMENT_STYLES$2.title.fontSize),
@@ -71174,11 +71174,11 @@ const QuizRateWidget = React.memo((props) => {
     const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const [isSent, setIsSent] = useState(false);
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = useMemo(() => ({
         title: {
             fontSize: calculate(INIT_ELEMENT_STYLES$1.title.fontSize),
@@ -71188,7 +71188,7 @@ const QuizRateWidget = React.memo((props) => {
             gap: calculate(INIT_ELEMENT_STYLES$1.stars.gap)
         }
     }), [calculate]);
-    const handleAnswer = (rate) => {
+    const handleAnswer = useCallback((rate) => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(rate);
         if (storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web) {
             const tab = window.open(storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, '_blank');
@@ -71200,7 +71200,7 @@ const QuizRateWidget = React.memo((props) => {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
         setIsSent(true);
-    };
+    }, [onAnswer, onGoToStory, storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, storyId]);
     return (React.createElement("div", { className: b$4() },
         !isTitleHidden && (React.createElement("div", { className: b$4('title'), style: elementSizes.title }, title)),
         React.createElement("div", { className: b$4('starsContainer', {
@@ -71248,11 +71248,11 @@ const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
     const [userAnswers, setUserAnswers] = useState([]);
     const [isSent, setIsSent] = useState(false);
     const calculate = useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+position.width, size, positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = useMemo(() => ({
         title: {
             fontSize: calculate(INIT_ELEMENT_STYLES.title.fontSize),
@@ -71276,16 +71276,16 @@ const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
             marginTop: calculate(INIT_ELEMENT_STYLES.sendBtn.marginTop)
         }
     }), [calculate]);
-    const handleAnswer = (id) => {
+    const handleAnswer = useCallback((id) => {
         setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
-    };
-    const handleSendAnswer = () => {
+    }, []);
+    const handleSendAnswer = useCallback(() => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
         setIsSent(true);
         if (storyId) {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
-    };
+    }, [onAnswer, onGoToStory, storyId, userAnswers]);
     return (React.createElement("div", { className: b$3() },
         !isTitleHidden && (React.createElement("div", { className: b$3('title'), style: elementSizes.title }, title)),
         React.createElement("div", { className: b$3('answers'), style: elementSizes.answers }, answers.map((answer) => (React.createElement("button", { className: b$3('answer', {

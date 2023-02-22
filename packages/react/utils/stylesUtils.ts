@@ -110,20 +110,16 @@ export const renderPosition = (
 const SCALE_INDEX = 2.76;
 export const getScalableValue = (value: number): number => Math.round(value * SCALE_INDEX);
 
-export const calculateElementSize = (
-  position: WidgetPositionType,
-  positionLimits: WidgetPositionLimitsType,
-  elementSize: number
-) =>
-  positionLimits.minWidth
-    ? getScalableValue(Math.round((elementSize * +position.width) / positionLimits?.minWidth))
+export const calculateElementSize = (width: number, elementSize: number, minWidth?: number) =>
+  minWidth
+    ? getScalableValue(Math.round((elementSize * +width) / minWidth))
     : getScalableValue(elementSize);
 
 export const calculateElementSizeByHeight = (
-  position: WidgetPositionType,
-  positionLimits: WidgetPositionLimitsType,
-  elementSize: number
+  height: number,
+  elementSize: number,
+  minHeight?: number
 ) =>
-  positionLimits.minHeight
-    ? getScalableValue(Math.round((elementSize * position.height) / positionLimits?.minHeight))
+  minHeight
+    ? getScalableValue(Math.round((elementSize * height) / minHeight))
     : getScalableValue(elementSize);

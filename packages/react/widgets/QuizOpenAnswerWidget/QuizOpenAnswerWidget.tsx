@@ -49,10 +49,13 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
   const [text, setText] = useState<string>('');
   const [isSent, setIsSent] = useState<boolean>(false);
 
-  const handleTextChange = (e: any) => {
-    setText(e.target.value);
-    storyContextVal.playStatusChange('pause');
-  };
+  const handleTextChange = useCallback(
+    (e: any) => {
+      setText(e.target.value);
+      storyContextVal.playStatusChange('pause');
+    },
+    [storyContextVal]
+  );
 
   const handleClickOutside = useCallback(
     (event: any) => {
@@ -65,7 +68,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
     [isSent, storyContextVal]
   );
 
-  const handleSendClick = () => {
+  const handleSendClick = useCallback(() => {
     if (text.length) {
       onAnswer?.(text);
 
@@ -76,7 +79,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
       storyContextVal.playStatusChange('play');
       setIsSent(true);
     }
-  };
+  }, [onAnswer, onGoToStory, storyContextVal, storyId, text]);
 
   useEffect(() => {
     if (!isSent) {
@@ -95,13 +98,13 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(

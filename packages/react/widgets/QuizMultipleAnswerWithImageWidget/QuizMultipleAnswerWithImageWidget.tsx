@@ -53,13 +53,13 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position.width, size, positionLimits.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -89,20 +89,20 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
     [calculate]
   );
 
-  const handleAnswer = (id: string) => {
+  const handleAnswer = useCallback((id: string) => {
     setUserAnswers((prevState) =>
       prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]
     );
-  };
+  }, []);
 
-  const handleSendAnswer = () => {
+  const handleSendAnswer = useCallback(() => {
     onAnswer?.(userAnswers);
     setIsSent(true);
 
     if (storyId) {
       onGoToStory?.(storyId);
     }
-  };
+  }, [onAnswer, onGoToStory, storyId, userAnswers]);
 
   return (
     <div className={b()}>

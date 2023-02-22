@@ -48,13 +48,13 @@ export const QuizOneAnswerWidget: WidgetComponent<{
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position.width, size, positionLimits.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -81,14 +81,17 @@ export const QuizOneAnswerWidget: WidgetComponent<{
     [calculate]
   );
 
-  const handleAnswer = (id: string) => {
-    setUserAnswer(id);
-    onAnswer?.(id);
+  const handleAnswer = useCallback(
+    (id: string) => {
+      setUserAnswer(id);
+      onAnswer?.(id);
 
-    if (storyId) {
-      onGoToStory?.(storyId);
-    }
-  };
+      if (storyId) {
+        onGoToStory?.(storyId);
+      }
+    },
+    [onAnswer, onGoToStory, storyId]
+  );
 
   return (
     <div className={b()}>

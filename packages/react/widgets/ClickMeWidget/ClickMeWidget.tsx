@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
 import { ClickMeWidgetParamsType, WidgetComponent } from '@types';
 import { MaterialIcon } from '@components';
@@ -34,7 +34,7 @@ export const ClickMeWidget: WidgetComponent<{
 
   const { isReadOnly, onClick, onGoToStory } = props;
 
-  const handleWidgetClick = () => {
+  const handleWidgetClick = useCallback(() => {
     if (onClick) {
       onClick();
     }
@@ -47,7 +47,7 @@ export const ClickMeWidget: WidgetComponent<{
     } else if (actionType === 'story' && onGoToStory && storyId) {
       onGoToStory(storyId);
     }
-  };
+  }, [actionType, onClick, onGoToStory, storyId, url]);
 
   return (
     <div

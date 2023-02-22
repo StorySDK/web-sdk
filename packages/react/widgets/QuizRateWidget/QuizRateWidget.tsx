@@ -39,13 +39,13 @@ export const QuizRateWidget: WidgetComponent<{
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -61,20 +61,23 @@ export const QuizRateWidget: WidgetComponent<{
     [calculate]
   );
 
-  const handleAnswer = (rate: string) => {
-    onAnswer?.(rate);
+  const handleAnswer = useCallback(
+    (rate: string) => {
+      onAnswer?.(rate);
 
-    if (storeLinks?.web) {
-      const tab = window.open(storeLinks?.web, '_blank');
-      if (tab) {
-        tab.focus();
+      if (storeLinks?.web) {
+        const tab = window.open(storeLinks?.web, '_blank');
+        if (tab) {
+          tab.focus();
+        }
+      } else if (storyId) {
+        onGoToStory?.(storyId);
       }
-    } else if (storyId) {
-      onGoToStory?.(storyId);
-    }
 
-    setIsSent(true);
-  };
+      setIsSent(true);
+    },
+    [onAnswer, onGoToStory, storeLinks?.web, storyId]
+  );
 
   return (
     <div className={b()}>
