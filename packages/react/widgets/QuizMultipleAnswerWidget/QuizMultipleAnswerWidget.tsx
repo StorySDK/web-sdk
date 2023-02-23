@@ -109,8 +109,8 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
   }, []);
 
   const handleSendAnswer = useCallback(() => {
-    if (!isReadOnly && userAnswers.length && !isSent && onAnswer) {
-      onAnswer(userAnswers);
+    if (!isReadOnly && userAnswers.length && !isSent) {
+      onAnswer?.(userAnswers);
       setIsSent(true);
     }
   }, [onAnswer, userAnswers, isSent, isReadOnly]);

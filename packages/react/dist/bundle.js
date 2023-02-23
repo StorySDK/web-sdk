@@ -65214,8 +65214,8 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
         setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
     }, []);
     const handleSendAnswer = React.useCallback(() => {
-        if (!isReadOnly && userAnswers.length && !isSent && onAnswer) {
-            onAnswer(userAnswers);
+        if (!isReadOnly && userAnswers.length && !isSent) {
+            onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
             setIsSent(true);
         }
     }, [onAnswer, userAnswers, isSent, isReadOnly]);
@@ -65543,8 +65543,8 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
         setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
     }, []);
     const handleSendAnswer = React.useCallback(() => {
-        if (!isReadOnly && userAnswers.length && !isSent && onAnswer) {
-            onAnswer(userAnswers);
+        if (!isReadOnly && userAnswers.length && !isSent) {
+            onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
             setIsSent(true);
         }
     }, [isReadOnly, isSent, onAnswer, userAnswers]);
