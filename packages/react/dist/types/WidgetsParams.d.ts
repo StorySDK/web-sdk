@@ -68,10 +68,16 @@ export declare type QuestionWidgetParamsType = {
     confirm: string;
     decline: string;
     color: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
     isTitleHidden: boolean;
 };
 export declare type SliderWidgetParamsType = {
     color: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
     emoji: EmojiItemType;
     text?: string;
     value: number;
@@ -124,6 +130,9 @@ export declare type QuizMultipleAnswerWidgetParamsType = {
     }>;
     isTitleHidden: boolean;
     storyId?: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
 };
 export declare type QuizMultipleAnswerWithImageWidgetParamsType = {
     title: string;
@@ -138,6 +147,9 @@ export declare type QuizMultipleAnswerWithImageWidgetParamsType = {
     }>;
     isTitleHidden: boolean;
     storyId?: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
 };
 export declare type QuizOneAnswerWidgetParamsType = {
     title: string;
@@ -149,11 +161,17 @@ export declare type QuizOneAnswerWidgetParamsType = {
     }>;
     isTitleHidden: boolean;
     storyId?: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
 };
 export declare type QuizOpenAnswerWidgetParamsType = {
     title: string;
     isTitleHidden: boolean;
     storyId?: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
 };
 export declare type QuizRateWidgetParamsType = {
     title: string;
@@ -162,4 +180,7 @@ export declare type QuizRateWidgetParamsType = {
         [key: string]: string;
     };
     storyId?: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
 };
