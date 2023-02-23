@@ -7,7 +7,7 @@ import {
 } from '@types';
 import { StoryContext } from '@components';
 import { IconLogoCircle } from '@components/icons';
-import { block, calculateElementSize, renderTextBackgroundStyles } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import './TalkAboutWidget.scss';
 
 const b = block('TalkAboutWidget');
@@ -152,9 +152,7 @@ export const TalkAboutWidget: WidgetComponent<{
     };
   }, [handleClickOutside, isSent]);
 
-  const textStyles = params.fontColor
-    ? (renderTextBackgroundStyles({ color: params.fontColor }) as React.CSSProperties)
-    : undefined;
+  const textStyles = getTextStyles(params.fontColor);
 
   return (
     <>

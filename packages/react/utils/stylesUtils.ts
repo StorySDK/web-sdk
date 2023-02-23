@@ -123,3 +123,6 @@ export const calculateElementSizeByHeight = (
   minHeight
     ? getScalableValue(Math.round((elementSize * height) / minHeight))
     : getScalableValue(elementSize);
+
+export const getTextStyles = (fontColor: BorderType) =>
+  fontColor ? (renderTextBackgroundStyles({ color: fontColor }) as React.CSSProperties) : undefined;

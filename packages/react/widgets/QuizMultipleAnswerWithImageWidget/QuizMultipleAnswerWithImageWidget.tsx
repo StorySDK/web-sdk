@@ -1,11 +1,17 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   WidgetPositionLimitsType,
   WidgetPositionType,
   QuizMultipleAnswerWithImageWidgetParamsType,
   WidgetComponent
 } from '@types';
-import { block, calculateElementSize } from '@utils';
+import {
+  block,
+  calculateElementSize,
+  eventSubscribe,
+  eventUnsubscribe,
+  getTextStyles
+} from '@utils';
 import './QuizMultipleAnswerWithImageWidget.scss';
 
 const b = block('QuizMultipleAnswerWithImageWidget');
@@ -45,8 +51,8 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
   onAnswer?(answer: string[]): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
-  const { title, answers, isTitleHidden, storyId } = props.params;
-  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { title, answers, isTitleHidden } = props.params;
+  const { params, position, positionLimits, isReadOnly, onAnswer } = props;
 
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isSent, setIsSent] = useState<boolean>(false);
@@ -96,18 +102,37 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
   }, []);
 
   const handleSendAnswer = useCallback(() => {
-    onAnswer?.(userAnswers);
-    setIsSent(true);
-
-    if (storyId) {
-      onGoToStory?.(storyId);
+    if (!isReadOnly && userAnswers.length && !isSent && onAnswer) {
+      onAnswer(userAnswers);
+      setIsSent(true);
     }
-  }, [onAnswer, onGoToStory, storyId, userAnswers]);
+  }, [isReadOnly, isSent, onAnswer, userAnswers]);
+
+  useEffect(() => {
+    eventSubscribe('nextStory', handleSendAnswer);
+    eventSubscribe('prevStory', handleSendAnswer);
+
+    return () => {
+      eventUnsubscribe('nextStory', handleSendAnswer);
+      eventUnsubscribe('prevStory', handleSendAnswer);
+    };
+  }, [handleSendAnswer]);
+
+  const textStyles = getTextStyles(params.fontColor);
 
   return (
     <div className={b()}>
       {!isTitleHidden && (
-        <div className={b('title')} style={elementSizes.title}>
+        <div
+          className={b('title', { gradient: params.fontColor?.type === 'gradient' })}
+          style={{
+            ...elementSizes.title,
+            fontStyle: params.fontParams?.style,
+            fontWeight: params.fontParams?.weight,
+            fontFamily: params.fontFamily,
+            ...textStyles
+          }}
+        >
           {title}
         </div>
       )}
@@ -120,7 +145,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
             disabled={isSent || isReadOnly}
             key={answer.id}
             style={elementSizes.answer}
-            onClick={() => isReadOnly && handleAnswer(answer.id)}
+            onClick={() => !isReadOnly && handleAnswer(answer.id)}
           >
             <div
               className={b('answerImgContainer')}
@@ -134,16 +159,6 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
           </button>
         ))}
       </div>
-      {userAnswers.length > 0 && (
-        <button
-          className={b('sendBtn', { sent: isSent || isReadOnly })}
-          disabled={isSent || isReadOnly}
-          style={elementSizes.sendBtn}
-          onClick={handleSendAnswer}
-        >
-          {isSent ? 'Sent!' : 'Send'}
-        </button>
-      )}
     </div>
   );
 });

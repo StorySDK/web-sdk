@@ -73,11 +73,17 @@ export type QuestionWidgetParamsType = {
   confirm: string;
   decline: string;
   color: string;
+  fontFamily: string;
+  fontParams: FontParamsType;
+  fontColor: BorderType;
   isTitleHidden: boolean;
 };
 
 export type SliderWidgetParamsType = {
   color: string;
+  fontFamily: string;
+  fontParams: FontParamsType;
+  fontColor: BorderType;
   emoji: EmojiItemType;
   text?: string;
   value: number;
@@ -131,6 +137,9 @@ export type QuizMultipleAnswerWidgetParamsType = {
   answers: Array<{ id: string; title: string; emoji: EmojiItemType | undefined }>;
   isTitleHidden: boolean;
   storyId?: string;
+  fontFamily: string;
+  fontParams: FontParamsType;
+  fontColor: BorderType;
 };
 
 export type QuizMultipleAnswerWithImageWidgetParamsType = {
@@ -146,6 +155,9 @@ export type QuizMultipleAnswerWithImageWidgetParamsType = {
   }>;
   isTitleHidden: boolean;
   storyId?: string;
+  fontFamily: string;
+  fontParams: FontParamsType;
+  fontColor: BorderType;
 };
 
 export type QuizOneAnswerWidgetParamsType = {
@@ -154,12 +166,18 @@ export type QuizOneAnswerWidgetParamsType = {
   answers: Array<{ id: string; title: string; emoji: EmojiItemType | undefined }>;
   isTitleHidden: boolean;
   storyId?: string;
+  fontFamily: string;
+  fontParams: FontParamsType;
+  fontColor: BorderType;
 };
 
 export type QuizOpenAnswerWidgetParamsType = {
   title: string;
   isTitleHidden: boolean;
   storyId?: string;
+  fontFamily: string;
+  fontParams: FontParamsType;
+  fontColor: BorderType;
 };
 
 export type QuizRateWidgetParamsType = {
@@ -169,4 +187,7 @@ export type QuizRateWidgetParamsType = {
     [key: string]: string;
   };
   storyId?: string;
+  fontFamily: string;
+  fontParams: FontParamsType;
+  fontColor: BorderType;
 };

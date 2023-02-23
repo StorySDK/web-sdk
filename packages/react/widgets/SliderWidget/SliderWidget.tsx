@@ -5,7 +5,7 @@ import {
   WidgetPositionType,
   WidgetPositionLimitsType
 } from '@types';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import { useInterval } from '@hooks';
 import { StoryContext } from '@components';
 import { SliderCustom } from './_components';
@@ -45,7 +45,7 @@ export const SliderWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(value: number): void;
 }> = React.memo((props) => {
-  const { params, storyId, position, positionLimits, isReadOnly } = props;
+  const { params, storyId, position, positionLimits, isReadOnly, onAnswer } = props;
   const { color, text, emoji, value } = params;
   const [sliderValue, setSliderValue] = useState<number>(isReadOnly ? value : 0);
   const [changeStatus, setChangeStatus] = useState<ChangeStatus>('wait');
@@ -97,12 +97,10 @@ export const SliderWidget: WidgetComponent<{
   }, delay);
 
   useEffect(() => {
-    if (changeStatus === 'moved' && props.onAnswer) {
-      props.onAnswer(sliderValue);
+    if (changeStatus === 'moved' && onAnswer) {
+      onAnswer(sliderValue);
     }
-
-    // eslint-disable-next-line
-  }, [changeStatus, sliderValue]);
+  }, [changeStatus, onAnswer, sliderValue]);
 
   const handleChange = useCallback((valueChanged: number) => {
     setSliderValue(valueChanged);
@@ -125,9 +123,20 @@ export const SliderWidget: WidgetComponent<{
     }
   }, [storyContextVal, storyId, changeStatus, value, time]);
 
+  const textStyles = getTextStyles(params.fontColor);
+
   return (
     <div className={b({ color })} style={elementSizes.widget}>
-      <div className={b('text')} style={elementSizes.text}>
+      <div
+        className={b('text', { gradient: params.fontColor?.type === 'gradient' })}
+        style={{
+          ...elementSizes.text,
+          fontStyle: params.fontParams?.style,
+          fontWeight: params.fontParams?.weight,
+          fontFamily: params.fontFamily,
+          ...textStyles
+        }}
+      >
         {text}
       </div>
 

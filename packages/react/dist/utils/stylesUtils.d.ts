@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { WidgetPositionType, WidgetPositionLimitsType, BackgroundType, BorderType } from '../types';
 interface Stroke {
     strokeThickness: number;
@@ -24,4 +25,5 @@ export declare const renderPosition: (position: WidgetPositionType, positionLimi
 export declare const getScalableValue: (value: number) => number;
 export declare const calculateElementSize: (width: number, elementSize: number, minWidth?: number | undefined) => number;
 export declare const calculateElementSizeByHeight: (height: number, elementSize: number, minHeight?: number | undefined) => number;
+export declare const getTextStyles: (fontColor: BorderType) => import("react").CSSProperties | undefined;
 export {};

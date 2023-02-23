@@ -1,4 +1,5 @@
 export * from './stylesUtils';
+export * from './events';
 
 export const getClientPosition = (e: any) => {
   const touches = e.touches;

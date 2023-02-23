@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { StoryContext } from '@components';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import {
   QuizOpenAnswerWidgetParamsType,
   WidgetComponent,
@@ -42,7 +42,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, isTitleHidden, storyId } = props.params;
-  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const storyContextVal = useContext(StoryContext);
 
@@ -131,10 +131,21 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
     [calculate]
   );
 
+  const textStyles = getTextStyles(params.fontColor);
+
   return (
     <div className={b()}>
       {!isTitleHidden && (
-        <div className={b('title')} style={elementSizes.title}>
+        <div
+          className={b('title')}
+          style={{
+            ...elementSizes.title,
+            fontStyle: params.fontParams?.style,
+            fontWeight: params.fontParams?.weight,
+            fontFamily: params.fontFamily,
+            ...textStyles
+          }}
+        >
           {title}
         </div>
       )}

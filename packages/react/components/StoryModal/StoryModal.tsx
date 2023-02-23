@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
+import { eventPublish } from '@utils';
 import { useAdaptiveValue } from '../../hooks';
 import { StoryType, Group, GroupType, StorySize } from '../../types';
 import { StoryContent } from '..';
@@ -263,6 +264,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [currentGroup.id, currentStory, onClose, onCloseStory, stories]);
 
   const handleNext = useCallback(() => {
+    eventPublish('nextStory', {
+      stotyId: stories[currentStory].id
+    });
+
     if (currentStory === stories.length - 1) {
       if (isLastGroup) {
         handleClose();
@@ -308,6 +313,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [handleNext]);
 
   const handlePrev = useCallback(() => {
+    eventPublish('prevStory', {
+      stotyId: stories[currentStory].id
+    });
+
     if (currentStory === 0) {
       isFirstGroup ? handleClose() : onPrevGroup();
     } else {
@@ -344,6 +353,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     const storyIndex = stories.findIndex((story) => story.id === storyId);
 
     if (storyIndex > -1) {
+      eventPublish('nextStory', {
+        stotyId: storyId
+      });
+
       if (onOpenStory) {
         setTimeout(() => {
           onOpenStory(currentGroup.id, stories[storyIndex].id);

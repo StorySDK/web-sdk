@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useCallback, useMemo, useState } from 'react';
 import { IconRateStar } from '@components/icons';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import {
   QuizRateWidgetParamsType,
   WidgetComponent,
@@ -33,7 +33,7 @@ export const QuizRateWidget: WidgetComponent<{
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, isTitleHidden, storyId, storeLinks } = props.params;
-  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const [isSent, setIsSent] = useState<boolean>(false);
 
@@ -79,10 +79,21 @@ export const QuizRateWidget: WidgetComponent<{
     [onAnswer, onGoToStory, storeLinks?.web, storyId]
   );
 
+  const textStyles = getTextStyles(params.fontColor);
+
   return (
     <div className={b()}>
       {!isTitleHidden && (
-        <div className={b('title')} style={elementSizes.title}>
+        <div
+          className={b('title', { gradient: params.fontColor?.type === 'gradient' })}
+          style={{
+            ...elementSizes.title,
+            fontStyle: params.fontParams?.style,
+            fontWeight: params.fontParams?.weight,
+            fontFamily: params.fontFamily,
+            ...textStyles
+          }}
+        >
           {title}
         </div>
       )}

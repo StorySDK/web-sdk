@@ -28,6 +28,11 @@
     display: flex;
     justify-content: center;
     width: 100%;
+
+    &_gradient {
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   &__buttons {

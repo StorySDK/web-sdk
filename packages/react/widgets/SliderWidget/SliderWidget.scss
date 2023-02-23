@@ -26,6 +26,11 @@
     line-height: 120%;
     text-align: center;
     color: #fff;
+
+    &_gradient {
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   &_color {

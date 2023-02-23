@@ -6,7 +6,7 @@ import {
   WidgetPositionType,
   WidgetPositionLimitsType
 } from '@types';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import './QuestionWidget.scss';
 
 const b = block('QuestionWidget');
@@ -110,10 +110,21 @@ export const QuestionWidget: WidgetComponent<{
     return percent;
   }, []);
 
+  const textStyles = getTextStyles(params.fontColor);
+
   return (
     <div className={b()}>
       {!params.isTitleHidden && (
-        <div className={b('question')} style={elementSizes.text}>
+        <div
+          className={b('question', { gradient: params.fontColor?.type === 'gradient' })}
+          style={{
+            ...elementSizes.text,
+            fontStyle: params.fontParams?.style,
+            fontWeight: params.fontParams?.weight,
+            fontFamily: params.fontFamily,
+            ...textStyles
+          }}
+        >
           {params.question}
         </div>
       )}

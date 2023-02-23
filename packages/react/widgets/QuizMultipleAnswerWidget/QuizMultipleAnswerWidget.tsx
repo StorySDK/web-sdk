@@ -1,6 +1,12 @@
 import { Emoji } from 'emoji-mart';
-import React, { useCallback, useMemo, useState } from 'react';
-import { block, calculateElementSize } from '@utils';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  block,
+  calculateElementSize,
+  eventSubscribe,
+  eventUnsubscribe,
+  getTextStyles
+} from '@utils';
 import {
   QuizMultipleAnswerWidgetParamsType,
   WidgetComponent,
@@ -48,8 +54,8 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
   onAnswer?(answer: string[]): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
-  const { title, answers, isTitleHidden, storyId } = props.params;
-  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { title, answers, isTitleHidden } = props.params;
+  const { params, position, positionLimits, isReadOnly, onAnswer } = props;
 
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isSent, setIsSent] = useState<boolean>(false);
@@ -57,7 +63,7 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
   const calculate = useCallback(
     (size) => {
       if (position?.width && positionLimits?.minWidth) {
-        return calculateElementSize(+position.width, positionLimits.minWidth, size);
+        return calculateElementSize(+position.width, size, positionLimits.minWidth);
       }
 
       return size;
@@ -103,18 +109,37 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
   }, []);
 
   const handleSendAnswer = useCallback(() => {
-    onAnswer?.(userAnswers);
-    setIsSent(true);
-
-    if (storyId) {
-      onGoToStory?.(storyId);
+    if (!isReadOnly && userAnswers.length && !isSent && onAnswer) {
+      onAnswer(userAnswers);
+      setIsSent(true);
     }
-  }, [onAnswer, onGoToStory, storyId, userAnswers]);
+  }, [onAnswer, userAnswers, isSent, isReadOnly]);
+
+  useEffect(() => {
+    eventSubscribe('nextStory', handleSendAnswer);
+    eventSubscribe('prevStory', handleSendAnswer);
+
+    return () => {
+      eventUnsubscribe('nextStory', handleSendAnswer);
+      eventUnsubscribe('prevStory', handleSendAnswer);
+    };
+  }, [handleSendAnswer]);
+
+  const textStyles = getTextStyles(params.fontColor);
 
   return (
     <div className={b()}>
       {!isTitleHidden && (
-        <div className={b('title')} style={elementSizes.title}>
+        <div
+          className={b('title', { gradient: params.fontColor?.type === 'gradient' })}
+          style={{
+            ...elementSizes.title,
+            fontStyle: params.fontParams?.style,
+            fontWeight: params.fontParams?.weight,
+            fontFamily: params.fontFamily,
+            ...textStyles
+          }}
+        >
           {title}
         </div>
       )}
@@ -145,16 +170,6 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
           </button>
         ))}
       </div>
-      {userAnswers.length > 0 && (
-        <button
-          className={b('sendBtn', { sent: isSent || isReadOnly })}
-          disabled={isSent || isReadOnly}
-          style={{ ...elementSizes.sendBtn, lineHeight: `${elementSizes.sendBtn.lineHeight}px` }}
-          onClick={handleSendAnswer}
-        >
-          {isSent ? 'Sent!' : 'Send'}
-        </button>
-      )}
     </div>
   );
 });

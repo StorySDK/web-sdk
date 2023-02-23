@@ -4,7 +4,7 @@ import {
   WidgetPositionLimitsType,
   WidgetPositionType
 } from '@types';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import { Emoji } from 'emoji-mart';
 import React, { useCallback, useMemo, useState } from 'react';
 
@@ -42,7 +42,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, answers, storyId, isTitleHidden } = props.params;
-  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
 
@@ -93,10 +93,21 @@ export const QuizOneAnswerWidget: WidgetComponent<{
     [onAnswer, onGoToStory, storyId]
   );
 
+  const textStyles = getTextStyles(params.fontColor);
+
   return (
     <div className={b()}>
       {!isTitleHidden && (
-        <div className={b('title')} style={elementSizes.title}>
+        <div
+          className={b('title', { gradient: params.fontColor?.type === 'gradient' })}
+          style={{
+            ...elementSizes.title,
+            fontStyle: params.fontParams?.style,
+            fontWeight: params.fontParams?.weight,
+            fontFamily: params.fontFamily,
+            ...textStyles
+          }}
+        >
           {title}
         </div>
       )}
