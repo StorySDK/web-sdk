@@ -29,6 +29,11 @@
     color: #000000;
     margin: 0;
     transition: 0.2s ease-out all;
+
+    &_gradient {
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   &__answer {

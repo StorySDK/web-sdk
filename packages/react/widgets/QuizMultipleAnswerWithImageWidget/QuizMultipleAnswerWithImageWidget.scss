@@ -29,6 +29,11 @@
     line-height: 123%;
     color: #000000;
     margin: 0;
+    
+    &_gradient {
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   &__answer {

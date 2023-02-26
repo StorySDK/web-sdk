@@ -65218,17 +65218,20 @@ const QuizMultipleAnswerWidget = React.memo((props) => {
             eventUnsubscribe('prevStory', handleSendAnswer);
         };
     }, [handleSendAnswer]);
-    const textStyles = getTextStyles(params.fontColor);
+    const titleTextStyles = getTextStyles(params.titleFont.fontColor);
+    const answerTextStyles = getTextStyles(params.answersFont.fontColor);
     return (React.createElement("div", { className: b$7() },
-        !isTitleHidden && (React.createElement("div", { className: b$7('title', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
+        !isTitleHidden && (React.createElement("div", { className: b$7('title', { gradient: ((_a = params.titleFont.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_b = params.titleFont.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.titleFont.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.titleFont.fontFamily }), titleTextStyles) }, title)),
         React.createElement("div", { className: b$7('answers'), style: elementSizes.answers }, answers.map((answer) => {
-            var _a;
+            var _a, _b, _c, _d;
             return (React.createElement("button", { className: b$7('answer', {
                     noGap: !answer.title.length,
                     selected: userAnswers.includes(answer.id)
                 }), disabled: isSent || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
                 answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
-                React.createElement("p", { className: b$7('answerTitle'), style: Object.assign(Object.assign({}, elementSizes.answerTitle), { lineHeight: `${elementSizes.sendBtn.lineHeight}px` }) }, answer.title)));
+                React.createElement("p", { className: b$7('answerTitle', {
+                        gradient: ((_b = params.answersFont.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient'
+                    }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { lineHeight: `${elementSizes.sendBtn.lineHeight}px`, fontStyle: (_c = params.answersFont.fontParams) === null || _c === void 0 ? void 0 : _c.style, fontWeight: (_d = params.answersFont.fontParams) === null || _d === void 0 ? void 0 : _d.weight, fontFamily: params.answersFont.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
@@ -65291,16 +65294,19 @@ const QuizOneAnswerWidget = React.memo((props) => {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
     }, [onAnswer, onGoToStory, storyId]);
-    const textStyles = getTextStyles(params.fontColor);
+    const titleTextStyles = getTextStyles(params.titleFont.fontColor);
+    const answerTextStyles = getTextStyles(params.answersFont.fontColor);
     return (React.createElement("div", { className: b$6() },
-        !isTitleHidden && (React.createElement("div", { className: b$6('title', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
+        !isTitleHidden && (React.createElement("div", { className: b$6('title', { gradient: ((_a = params.titleFont.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_b = params.titleFont.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.titleFont.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.titleFont.fontFamily }), titleTextStyles) }, title)),
         React.createElement("div", { className: b$6('answers'), style: elementSizes.answers }, answers.map((answer) => {
-            var _a;
+            var _a, _b, _c, _d;
             return (React.createElement("button", { className: b$6('answer', {
                     selected: userAnswer === answer.id
                 }), disabled: userAnswer !== null || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !userAnswer && !isReadOnly && handleAnswer(answer.id) },
                 answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
-                React.createElement("p", { className: b$6('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
+                React.createElement("p", { className: b$6('answerTitle', {
+                        gradient: ((_b = params.answersFont.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient'
+                    }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { fontStyle: (_c = params.answersFont.fontParams) === null || _c === void 0 ? void 0 : _c.style, fontWeight: (_d = params.answersFont.fontParams) === null || _d === void 0 ? void 0 : _d.weight, fontFamily: params.answersFont.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
@@ -65547,16 +65553,22 @@ const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
             eventUnsubscribe('prevStory', handleSendAnswer);
         };
     }, [handleSendAnswer]);
-    const textStyles = getTextStyles(params.fontColor);
+    const titleTextStyles = getTextStyles(params.titleFont.fontColor);
+    const answerTextStyles = getTextStyles(params.answersFont.fontColor);
     return (React.createElement("div", { className: b$3() },
-        !isTitleHidden && (React.createElement("div", { className: b$3('title', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
-        React.createElement("div", { className: b$3('answers'), style: elementSizes.answers }, answers.map((answer) => (React.createElement("button", { className: b$3('answer', {
-                selected: userAnswers.includes(answer.id)
-            }), disabled: isSent || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
-            React.createElement("div", { className: b$3('answerImgContainer'), style: {
-                    backgroundImage: answer.image ? `url(${answer.image.url})` : ''
-                } }),
-            React.createElement("p", { className: b$3('answerTitle'), style: elementSizes.answerTitle }, answer.title)))))));
+        !isTitleHidden && (React.createElement("div", { className: b$3('title', { gradient: ((_a = params.titleFont.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_b = params.titleFont.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.titleFont.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.titleFont.fontFamily }), titleTextStyles) }, title)),
+        React.createElement("div", { className: b$3('answers'), style: elementSizes.answers }, answers.map((answer) => {
+            var _a, _b, _c;
+            return (React.createElement("button", { className: b$3('answer', {
+                    selected: userAnswers.includes(answer.id)
+                }), disabled: isSent || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
+                React.createElement("div", { className: b$3('answerImgContainer'), style: {
+                        backgroundImage: answer.image ? `url(${answer.image.url})` : ''
+                    } }),
+                React.createElement("p", { className: b$3('answerTitle', {
+                        gradient: ((_a = params.answersFont.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient'
+                    }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { fontStyle: (_b = params.answersFont.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.answersFont.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.answersFont.fontFamily }), answerTextStyles) }, answer.title)));
+        }))));
 });
 
 ({

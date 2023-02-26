@@ -93,19 +93,20 @@ export const QuizOneAnswerWidget: WidgetComponent<{
     [onAnswer, onGoToStory, storyId]
   );
 
-  const textStyles = getTextStyles(params.fontColor);
+  const titleTextStyles = getTextStyles(params.titleFont.fontColor);
+  const answerTextStyles = getTextStyles(params.answersFont.fontColor);
 
   return (
     <div className={b()}>
       {!isTitleHidden && (
         <div
-          className={b('title', { gradient: params.fontColor?.type === 'gradient' })}
+          className={b('title', { gradient: params.titleFont.fontColor?.type === 'gradient' })}
           style={{
             ...elementSizes.title,
-            fontStyle: params.fontParams?.style,
-            fontWeight: params.fontParams?.weight,
-            fontFamily: params.fontFamily,
-            ...textStyles
+            fontStyle: params.titleFont.fontParams?.style,
+            fontWeight: params.titleFont.fontParams?.weight,
+            fontFamily: params.titleFont.fontFamily,
+            ...titleTextStyles
           }}
         >
           {title}
@@ -125,7 +126,18 @@ export const QuizOneAnswerWidget: WidgetComponent<{
             {answer.emoji && (
               <Emoji emoji={answer.emoji?.name} set="apple" size={elementSizes.emoji.width} />
             )}
-            <p className={b('answerTitle')} style={elementSizes.answerTitle}>
+            <p
+              className={b('answerTitle', {
+                gradient: params.answersFont.fontColor?.type === 'gradient'
+              })}
+              style={{
+                ...elementSizes.answerTitle,
+                fontStyle: params.answersFont.fontParams?.style,
+                fontWeight: params.answersFont.fontParams?.weight,
+                fontFamily: params.answersFont.fontFamily,
+                ...answerTextStyles
+              }}
+            >
               {answer.title}
             </p>
           </button>
