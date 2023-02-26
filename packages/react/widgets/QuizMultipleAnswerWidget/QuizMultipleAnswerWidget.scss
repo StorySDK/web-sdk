@@ -76,12 +76,12 @@
     font-size: 17px;
     line-height: 123%;
     color: #000000;
-    transition: 0.2s ease-out all;
+    transition: 0.2s ease-out background-color;
     cursor: pointer;
 
     &_sent, &:hover {
       background-color: map-get($theme-colors, "black");
-      color: #ffffff;
+      color: #ffffff !important;
     }
 
     &:disabled {

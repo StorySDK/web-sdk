@@ -45,15 +45,15 @@
     align-items: center;
     background-color: #ffffff;
     border-radius: 50px;
-    transition: 0.2s ease-out all;
+    transition: 0.2s ease-out background-color;
     cursor: pointer;
 
     &:hover, &_selected {
-      color: #ffffff;
+      color: #ffffff !important;
       background-color: map-get($theme-colors, "black");
 
       .StorySdk-QuizOneAnswerWidget__answerTitle {
-        color: #ffffff;
+        color: #ffffff !important;
       }
     }
 
