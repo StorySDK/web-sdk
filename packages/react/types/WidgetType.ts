@@ -177,7 +177,7 @@ export interface WidgetPositionType {
   rotate: number;
   realWidth: number;
   realHeight: number;
-  elementsSize: { [key: string]: any };
+  elementsSize?: { [key: string]: any };
 }
 
 export interface WidgetObjectType {
