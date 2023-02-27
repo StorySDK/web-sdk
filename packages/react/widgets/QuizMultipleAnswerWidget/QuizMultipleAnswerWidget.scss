@@ -39,11 +39,11 @@
     }
 
     &:hover, &_selected {
-      color: #ffffff;
+      color: #ffffff !important;
       background-color: map-get($theme-colors, "black");
 
       .StorySdk-QuizMultipleAnswerWidget__answerTitle {
-        color: #ffffff;
+        color: #ffffff !important;
       }
     }
 

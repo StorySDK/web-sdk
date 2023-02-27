@@ -49,11 +49,11 @@
     transition: 0.2s ease-out all;
 
     &:hover, &_selected {
-      color: #ffffff;
+      color: #ffffff !important;
       background-color: map-get($theme-colors, "black");
 
       .StorySdk-QuizMultipleAnswerWithImageWidget__answerTitle {
-        color: #ffffff;
+        color: #ffffff !important;
       }
     }
 
