@@ -40,6 +40,7 @@
 
     &:hover, &_selected {
       color: #ffffff !important;
+      background: none !important;
       background-color: map-get($theme-colors, "black");
 
       .StorySdk-QuizMultipleAnswerWidget__answerTitle {

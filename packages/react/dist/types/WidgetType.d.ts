@@ -164,4 +164,5 @@ export interface StoryType {
     background: BackgroundType;
     positionIndex: number;
 }
+export declare const ScoreWidgets: WidgetsTypes[];
 export {};

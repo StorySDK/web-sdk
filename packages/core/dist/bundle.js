@@ -6119,6 +6119,12 @@ var WidgetsTypes;
     WidgetsTypes["QUIZ_MULTIPLE_ANSWER_WITH_IMAGE"] = "quiz_one_multiple_with_image";
     WidgetsTypes["QUIZ_RATE"] = "quiz_rate";
 })(WidgetsTypes || (WidgetsTypes = {}));
+[
+    WidgetsTypes.CHOOSE_ANSWER,
+    WidgetsTypes.QUIZ_ONE_ANSWER,
+    WidgetsTypes.QUIZ_MULTIPLE_ANSWERS,
+    WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE
+];
 
 var GroupType;
 (function (GroupType) {

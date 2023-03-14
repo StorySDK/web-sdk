@@ -211,3 +211,10 @@ export interface StoryType {
   background: BackgroundType;
   positionIndex: number;
 }
+
+export const ScoreWidgets = [
+  WidgetsTypes.CHOOSE_ANSWER,
+  WidgetsTypes.QUIZ_ONE_ANSWER,
+  WidgetsTypes.QUIZ_MULTIPLE_ANSWERS,
+  WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE
+];

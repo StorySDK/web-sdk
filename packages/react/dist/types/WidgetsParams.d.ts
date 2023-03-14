@@ -1,5 +1,9 @@
 import { MaterialIconValueType } from '../components/MaterialIcon/_types';
 import { BackgroundType, BorderType, FontParamsType } from '.';
+export declare type QuizAnswersScoreParams = {
+    letter: string;
+    points: number;
+};
 export declare type EmojiItemType = {
     name: string;
     unicode: string;
@@ -50,6 +54,7 @@ export declare type ChooseAnswerWidgetParamsType = {
     answers: Array<{
         id: string;
         title: string;
+        score: QuizAnswersScoreParams;
     }>;
     correct: string;
     isTitleHidden: boolean;
@@ -127,6 +132,7 @@ export declare type QuizMultipleAnswerWidgetParamsType = {
         id: string;
         title: string;
         emoji: EmojiItemType | undefined;
+        score: QuizAnswersScoreParams;
     }>;
     isTitleHidden: boolean;
     storyId?: string;
@@ -147,6 +153,7 @@ export declare type QuizMultipleAnswerWithImageWidgetParamsType = {
     answers: Array<{
         id: string;
         title: string;
+        score: QuizAnswersScoreParams;
         image?: {
             url: string;
             fileId: string;
@@ -172,6 +179,7 @@ export declare type QuizOneAnswerWidgetParamsType = {
         id: string;
         title: string;
         emoji: EmojiItemType | undefined;
+        score: QuizAnswersScoreParams;
     }>;
     isTitleHidden: boolean;
     storyId?: string;

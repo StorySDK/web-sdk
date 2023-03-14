@@ -30,6 +30,12 @@ exports.WidgetsTypes = void 0;
     WidgetsTypes["QUIZ_MULTIPLE_ANSWER_WITH_IMAGE"] = "quiz_one_multiple_with_image";
     WidgetsTypes["QUIZ_RATE"] = "quiz_rate";
 })(exports.WidgetsTypes || (exports.WidgetsTypes = {}));
+const ScoreWidgets = [
+    exports.WidgetsTypes.CHOOSE_ANSWER,
+    exports.WidgetsTypes.QUIZ_ONE_ANSWER,
+    exports.WidgetsTypes.QUIZ_MULTIPLE_ANSWERS,
+    exports.WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE
+];
 
 exports.GroupType = void 0;
 (function (GroupType) {
@@ -65840,6 +65846,7 @@ exports.QuizRateWidget = QuizRateWidget;
 exports.RectangleWidget = RectangleWidget;
 exports.STORY_SIZE = STORY_SIZE;
 exports.STORY_SIZE_LARGE = STORY_SIZE_LARGE;
+exports.ScoreWidgets = ScoreWidgets;
 exports.SliderWidget = SliderWidget;
 exports.StoryContent = StoryContent;
 exports.StoryContext = StoryContext;

@@ -21,6 +21,12 @@ var WidgetsTypes;
     WidgetsTypes["QUIZ_MULTIPLE_ANSWER_WITH_IMAGE"] = "quiz_one_multiple_with_image";
     WidgetsTypes["QUIZ_RATE"] = "quiz_rate";
 })(WidgetsTypes || (WidgetsTypes = {}));
+const ScoreWidgets = [
+    WidgetsTypes.CHOOSE_ANSWER,
+    WidgetsTypes.QUIZ_ONE_ANSWER,
+    WidgetsTypes.QUIZ_MULTIPLE_ANSWERS,
+    WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE
+];
 
 var GroupType;
 (function (GroupType) {
@@ -65811,4 +65817,4 @@ const MaterialIcon = memo(({ name = 'ArrowCircleUpOutlineIcon', className, color
     return null;
 });
 
-export { ChooseAnswerWidget, ClickMeWidget, CustomGroupControl, EllipseWidget, EmojiReactionWidget, GiphyWidget, GroupItem, GroupType, GroupsList, MOBILE_BREAKPOINT, MaterialIcon, PADDING_SIZE, QuestionWidget, QuizMultipleAnswerWidget, QuizMultipleAnswerWithImageWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, RectangleWidget, STORY_SIZE, STORY_SIZE_LARGE, SliderWidget, StoryContent, StoryContext, StoryModal, StorySize, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, WidgetsTypes };
+export { ChooseAnswerWidget, ClickMeWidget, CustomGroupControl, EllipseWidget, EmojiReactionWidget, GiphyWidget, GroupItem, GroupType, GroupsList, MOBILE_BREAKPOINT, MaterialIcon, PADDING_SIZE, QuestionWidget, QuizMultipleAnswerWidget, QuizMultipleAnswerWithImageWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, RectangleWidget, STORY_SIZE, STORY_SIZE_LARGE, ScoreWidgets, SliderWidget, StoryContent, StoryContext, StoryModal, StorySize, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, WidgetsTypes };
