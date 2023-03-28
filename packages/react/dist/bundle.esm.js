@@ -11249,23 +11249,25 @@ const StoryModal = (props) => {
         return [];
     }, [(_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreResultLayersGroupId, stories]);
     const getResultStoryId = useCallback(() => {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
-        if (!resultStories.length) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+        if (!resultStories.length || !((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
             return '';
         }
-        const nextLayersGroupId = (_a = activeStoriesWithResult[currentStory + 1]) === null || _a === void 0 ? void 0 : _a.layerData.layersGroupId;
+        const nextLayersGroupId = (_b = activeStoriesWithResult[currentStory + 1]) === null || _b === void 0 ? void 0 : _b.layerData.layersGroupId;
+        const prevLayersGroupId = (_c = activeStoriesWithResult[currentStory - 1]) === null || _c === void 0 ? void 0 : _c.layerData.layersGroupId;
         let resultStoryId = '';
-        if (nextLayersGroupId &&
-            nextLayersGroupId === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
-            resultStoryId = (_d = (_c = resultStories.find((story) => story.isActiveLayer)) === null || _c === void 0 ? void 0 : _c.id) !== null && _d !== void 0 ? _d : '';
-            if (((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreType) === ScoreType.NUMBERS && quizState.points > 0) {
+        if ((nextLayersGroupId &&
+            nextLayersGroupId === ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId)) ||
+            (prevLayersGroupId && prevLayersGroupId === ((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreResultLayersGroupId))) {
+            resultStoryId = (_g = (_f = resultStories.find((story) => story.isActiveLayer)) === null || _f === void 0 ? void 0 : _f.id) !== null && _g !== void 0 ? _g : '';
+            if (((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.scoreType) === ScoreType.NUMBERS && quizState.points > 0) {
                 for (let i = 0; i < resultStories.length; i++) {
                     if (+resultStories[i].score.points <= quizState.points) {
                         resultStoryId = resultStories[i].id;
                     }
                 }
             }
-            else if (((_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreType) === ScoreType.LETTERS && quizState.letters) {
+            else if (((_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.scoreType) === ScoreType.LETTERS && quizState.letters) {
                 const lettersArr = quizState.letters.toLowerCase().split('');
                 let mostFrequentSymbol = '';
                 let maxCount = 0;
@@ -11284,7 +11286,7 @@ const StoryModal = (props) => {
                     }
                 }
                 resultStoryId =
-                    (_h = (_g = resultStories.find((story) => story.score.letter.toLowerCase() === mostFrequentSymbol)) === null || _g === void 0 ? void 0 : _g.id) !== null && _h !== void 0 ? _h : '';
+                    (_l = (_k = resultStories.find((story) => story.score.letter.toLowerCase() === mostFrequentSymbol)) === null || _k === void 0 ? void 0 : _k.id) !== null && _l !== void 0 ? _l : '';
             }
         }
         return resultStoryId;
@@ -11355,6 +11357,8 @@ const StoryModal = (props) => {
         eventPublish('prevStory', {
             stotyId: activeStoriesWithResult[currentStory].id
         });
+        const resultStoryId = getResultStoryId();
+        const resultStory = activeStoriesWithResult.find((story) => story.id === resultStoryId);
         if (currentStory === 0) {
             isFirstGroup ? handleClose() : onPrevGroup();
         }
@@ -11370,19 +11374,28 @@ const StoryModal = (props) => {
             if (onPrevStory) {
                 onPrevStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
-            setCurrentStory(currentStory - 1);
-            setCurrentStoryId(activeStoriesWithResult[currentStory - 1].id);
+            if (activeStoriesWithResult[currentStory - 1].layerData.layersGroupId ===
+                (resultStory === null || resultStory === void 0 ? void 0 : resultStory.layerData.layersGroupId)) {
+                const prevStoryIndex = activeStoriesWithResult.findIndex((story) => story.layerData.layersGroupId === (resultStory === null || resultStory === void 0 ? void 0 : resultStory.layerData.layersGroupId)) - 1;
+                setCurrentStory(prevStoryIndex);
+                setCurrentStoryId(activeStoriesWithResult[prevStoryIndex].id);
+            }
+            else {
+                setCurrentStory(currentStory - 1);
+                setCurrentStoryId(activeStoriesWithResult[currentStory - 1].id);
+            }
         }
     }, [
-        currentGroup.id,
+        activeStoriesWithResult,
         currentStory,
-        handleClose,
+        getResultStoryId,
         isFirstGroup,
+        handleClose,
+        onPrevGroup,
         onCloseStory,
         onOpenStory,
-        onPrevGroup,
         onPrevStory,
-        activeStoriesWithResult
+        currentGroup.id
     ]);
     const handleGoToStory = (storyId) => {
         const storyIndex = activeStoriesWithResult.findIndex((story) => story.id === storyId);

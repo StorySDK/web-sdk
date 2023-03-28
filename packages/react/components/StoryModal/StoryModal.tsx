@@ -351,16 +351,18 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [currentGroup.settings?.scoreResultLayersGroupId, stories]);
 
   const getResultStoryId = useCallback(() => {
-    if (!resultStories.length) {
+    if (!resultStories.length || !currentGroup.settings?.scoreResultLayersGroupId) {
       return '';
     }
 
     const nextLayersGroupId = activeStoriesWithResult[currentStory + 1]?.layerData.layersGroupId;
+    const prevLayersGroupId = activeStoriesWithResult[currentStory - 1]?.layerData.layersGroupId;
     let resultStoryId = '';
 
     if (
-      nextLayersGroupId &&
-      nextLayersGroupId === currentGroup.settings?.scoreResultLayersGroupId
+      (nextLayersGroupId &&
+        nextLayersGroupId === currentGroup.settings?.scoreResultLayersGroupId) ||
+      (prevLayersGroupId && prevLayersGroupId === currentGroup.settings?.scoreResultLayersGroupId)
     ) {
       resultStoryId = resultStories.find((story) => story.isActiveLayer)?.id ?? '';
 
@@ -476,6 +478,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       stotyId: activeStoriesWithResult[currentStory].id
     });
 
+    const resultStoryId = getResultStoryId();
+    const resultStory = activeStoriesWithResult.find((story) => story.id === resultStoryId);
+
     if (currentStory === 0) {
       isFirstGroup ? handleClose() : onPrevGroup();
     } else {
@@ -493,19 +498,33 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         onPrevStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
 
-      setCurrentStory(currentStory - 1);
-      setCurrentStoryId(activeStoriesWithResult[currentStory - 1].id);
+      if (
+        activeStoriesWithResult[currentStory - 1].layerData.layersGroupId ===
+        resultStory?.layerData.layersGroupId
+      ) {
+        const prevStoryIndex =
+          activeStoriesWithResult.findIndex(
+            (story) => story.layerData.layersGroupId === resultStory?.layerData.layersGroupId
+          ) - 1;
+
+        setCurrentStory(prevStoryIndex);
+        setCurrentStoryId(activeStoriesWithResult[prevStoryIndex].id);
+      } else {
+        setCurrentStory(currentStory - 1);
+        setCurrentStoryId(activeStoriesWithResult[currentStory - 1].id);
+      }
     }
   }, [
-    currentGroup.id,
+    activeStoriesWithResult,
     currentStory,
-    handleClose,
+    getResultStoryId,
     isFirstGroup,
+    handleClose,
+    onPrevGroup,
     onCloseStory,
     onOpenStory,
-    onPrevGroup,
     onPrevStory,
-    activeStoriesWithResult
+    currentGroup.id
   ]);
 
   const handleGoToStory = (storyId: string) => {
