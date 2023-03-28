@@ -482,6 +482,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     const resultStory = activeStoriesWithResult.find((story) => story.id === resultStoryId);
 
     if (currentStory === 0) {
+      dispatchQuizState({ type: 'reset' });
       isFirstGroup ? handleClose() : onPrevGroup();
     } else {
       if (onCloseStory) {

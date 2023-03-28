@@ -11369,6 +11369,7 @@ const StoryModal = (props) => {
         const resultStoryId = getResultStoryId();
         const resultStory = activeStoriesWithResult.find((story) => story.id === resultStoryId);
         if (currentStory === 0) {
+            dispatchQuizState({ type: 'reset' });
             isFirstGroup ? handleClose() : onPrevGroup();
         }
         else {
@@ -65968,7 +65969,7 @@ const CustomGroupControl = (props) => {
     const { children, group, isFirstGroup, isLastGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing } = props;
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         children,
-        React__default["default"].createElement(StoryModal, { currentGroup: group, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup })));
+        isShowing && (React__default["default"].createElement(StoryModal, { currentGroup: group, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))));
 };
 
 const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },

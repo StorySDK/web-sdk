@@ -17458,6 +17458,7 @@ const StoryModal = (props) => {
         const resultStoryId = getResultStoryId();
         const resultStory = activeStoriesWithResult.find((story) => story.id === resultStoryId);
         if (currentStory === 0) {
+            dispatchQuizState({ type: 'reset' });
             isFirstGroup ? handleClose() : onPrevGroup();
         }
         else {
