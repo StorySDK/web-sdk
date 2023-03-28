@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { SwipeUpWidgetParamsType, WidgetComponent } from '@types';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
 import { MaterialIcon } from '@components';
@@ -10,22 +10,22 @@ export const SwipeUpWidget: WidgetComponent<{
   params: SwipeUpWidgetParamsType;
   isReadOnly?: boolean;
   onSwipe?(): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
   const { isReadOnly, onSwipe } = props;
 
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
-  const handleTouchStart = (e: any) => {
+  const handleTouchStart = useCallback((e: any) => {
     setTouchStart(e.targetTouches[0].clientY);
-  };
+  }, []);
 
-  const handleTouchMove = (e: any) => {
+  const handleTouchMove = useCallback((e: any) => {
     setTouchEnd(e.targetTouches[0].clientY);
-  };
+  }, []);
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = useCallback(() => {
     if (touchStart - touchEnd > 200) {
       if (onSwipe) {
         onSwipe();
@@ -38,9 +38,9 @@ export const SwipeUpWidget: WidgetComponent<{
         setTouchEnd(0);
       }
     }
-  };
+  }, [onSwipe, touchEnd, touchStart, url]);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (onSwipe) {
       onSwipe();
     }
@@ -49,7 +49,7 @@ export const SwipeUpWidget: WidgetComponent<{
     if (tab) {
       tab.focus();
     }
-  };
+  }, [onSwipe, url]);
 
   return (
     <div
@@ -80,4 +80,4 @@ export const SwipeUpWidget: WidgetComponent<{
       <span className={b('text')}>{text}</span>
     </div>
   );
-};
+});

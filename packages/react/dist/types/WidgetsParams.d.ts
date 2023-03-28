@@ -1,5 +1,9 @@
 import { MaterialIconValueType } from '../components/MaterialIcon/_types';
 import { BackgroundType, BorderType, FontParamsType } from '.';
+export declare type QuizAnswersScoreParams = {
+    letter: string;
+    points: number;
+};
 export declare type EmojiItemType = {
     name: string;
     unicode: string;
@@ -50,6 +54,7 @@ export declare type ChooseAnswerWidgetParamsType = {
     answers: Array<{
         id: string;
         title: string;
+        score: QuizAnswersScoreParams;
     }>;
     correct: string;
     isTitleHidden: boolean;
@@ -68,10 +73,16 @@ export declare type QuestionWidgetParamsType = {
     confirm: string;
     decline: string;
     color: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
     isTitleHidden: boolean;
 };
 export declare type SliderWidgetParamsType = {
     color: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
     emoji: EmojiItemType;
     text?: string;
     value: number;
@@ -121,9 +132,20 @@ export declare type QuizMultipleAnswerWidgetParamsType = {
         id: string;
         title: string;
         emoji: EmojiItemType | undefined;
+        score: QuizAnswersScoreParams;
     }>;
     isTitleHidden: boolean;
     storyId?: string;
+    titleFont: {
+        fontFamily: string;
+        fontParams: FontParamsType;
+        fontColor: BorderType;
+    };
+    answersFont: {
+        fontFamily: string;
+        fontParams: FontParamsType;
+        fontColor: BorderType;
+    };
 };
 export declare type QuizMultipleAnswerWithImageWidgetParamsType = {
     title: string;
@@ -131,6 +153,7 @@ export declare type QuizMultipleAnswerWithImageWidgetParamsType = {
     answers: Array<{
         id: string;
         title: string;
+        score: QuizAnswersScoreParams;
         image?: {
             url: string;
             fileId: string;
@@ -138,6 +161,16 @@ export declare type QuizMultipleAnswerWithImageWidgetParamsType = {
     }>;
     isTitleHidden: boolean;
     storyId?: string;
+    titleFont: {
+        fontFamily: string;
+        fontParams: FontParamsType;
+        fontColor: BorderType;
+    };
+    answersFont: {
+        fontFamily: string;
+        fontParams: FontParamsType;
+        fontColor: BorderType;
+    };
 };
 export declare type QuizOneAnswerWidgetParamsType = {
     title: string;
@@ -146,14 +179,28 @@ export declare type QuizOneAnswerWidgetParamsType = {
         id: string;
         title: string;
         emoji: EmojiItemType | undefined;
+        score: QuizAnswersScoreParams;
     }>;
     isTitleHidden: boolean;
     storyId?: string;
+    titleFont: {
+        fontFamily: string;
+        fontParams: FontParamsType;
+        fontColor: BorderType;
+    };
+    answersFont: {
+        fontFamily: string;
+        fontParams: FontParamsType;
+        fontColor: BorderType;
+    };
 };
 export declare type QuizOpenAnswerWidgetParamsType = {
     title: string;
     isTitleHidden: boolean;
     storyId?: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
 };
 export declare type QuizRateWidgetParamsType = {
     title: string;
@@ -162,4 +209,7 @@ export declare type QuizRateWidgetParamsType = {
         [key: string]: string;
     };
     storyId?: string;
+    fontFamily: string;
+    fontParams: FontParamsType;
+    fontColor: BorderType;
 };

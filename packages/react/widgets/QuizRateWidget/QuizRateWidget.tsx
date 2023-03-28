@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useCallback, useMemo, useState } from 'react';
 import { IconRateStar } from '@components/icons';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import {
   QuizRateWidgetParamsType,
   WidgetComponent,
@@ -31,21 +31,21 @@ export const QuizRateWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { title, isTitleHidden, storyId, storeLinks } = props.params;
-  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const [isSent, setIsSent] = useState<boolean>(false);
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -61,25 +61,39 @@ export const QuizRateWidget: WidgetComponent<{
     [calculate]
   );
 
-  const handleAnswer = (rate: string) => {
-    onAnswer?.(rate);
+  const handleAnswer = useCallback(
+    (rate: string) => {
+      onAnswer?.(rate);
 
-    if (storeLinks?.web) {
-      const tab = window.open(storeLinks?.web, '_blank');
-      if (tab) {
-        tab.focus();
+      if (storeLinks?.web) {
+        const tab = window.open(storeLinks?.web, '_blank');
+        if (tab) {
+          tab.focus();
+        }
+      } else if (storyId) {
+        onGoToStory?.(storyId);
       }
-    } else if (storyId) {
-      onGoToStory?.(storyId);
-    }
 
-    setIsSent(true);
-  };
+      setIsSent(true);
+    },
+    [onAnswer, onGoToStory, storeLinks?.web, storyId]
+  );
+
+  const textStyles = getTextStyles(params.fontColor);
 
   return (
     <div className={b()}>
       {!isTitleHidden && (
-        <div className={b('title')} style={elementSizes.title}>
+        <div
+          className={b('title', { gradient: params.fontColor?.type === 'gradient' })}
+          style={{
+            ...elementSizes.title,
+            fontStyle: params.fontParams?.style,
+            fontWeight: params.fontParams?.weight,
+            fontFamily: params.fontFamily,
+            ...textStyles
+          }}
+        >
           {title}
         </div>
       )}
@@ -111,4 +125,4 @@ export const QuizRateWidget: WidgetComponent<{
       </div>
     </div>
   );
-};
+});

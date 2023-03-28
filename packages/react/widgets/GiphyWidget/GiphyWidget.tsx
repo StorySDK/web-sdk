@@ -1,19 +1,21 @@
-import block from 'bem-cn';
 import React from 'react';
 import { GiphyWidgetParamsType, WidgetComponent } from '@types';
 import './GiphyWidget.scss';
+import { block } from '@utils';
 
 const b = block('GiphyWidget');
 
-export const GiphyWidget: WidgetComponent<{ params: GiphyWidgetParamsType }> = (props) => {
-  const { params } = props;
+export const GiphyWidget: WidgetComponent<{ params: GiphyWidgetParamsType }> = React.memo(
+  (props) => {
+    const { params } = props;
 
-  return (
-    <div
-      className={b()}
-      style={{ opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius }}
-    >
-      <img alt="" className={b('img')} src={params.gif} />
-    </div>
-  );
-};
+    return (
+      <div
+        className={b()}
+        style={{ opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius }}
+      >
+        <img alt="" className={b('img')} src={params.gif} />
+      </div>
+    );
+  }
+);

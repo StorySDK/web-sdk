@@ -81,7 +81,7 @@
 
     &_choosen {
       border-color: transparent;
-      cursor: auto;
+      cursor: auto !important;
 
       &.StorySdk-ChooseAnswerWidget__answer_incorrect {
         background-color: rgba(

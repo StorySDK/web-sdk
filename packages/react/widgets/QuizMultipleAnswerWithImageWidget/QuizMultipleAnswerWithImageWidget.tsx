@@ -1,12 +1,20 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   WidgetPositionLimitsType,
   WidgetPositionType,
   QuizMultipleAnswerWithImageWidgetParamsType,
-  WidgetComponent
+  WidgetComponent,
+  ScoreType
 } from '@types';
-import { block, calculateElementSize } from '@utils';
+import {
+  block,
+  calculateElementSize,
+  eventSubscribe,
+  eventUnsubscribe,
+  getTextStyles
+} from '@utils';
 import './QuizMultipleAnswerWithImageWidget.scss';
+import { StoryContext } from '@components';
 
 const b = block('QuizMultipleAnswerWithImageWidget');
 
@@ -44,22 +52,24 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(answer: string[]): any;
   onGoToStory?(storyId: string): void;
-}> = (props) => {
-  const { title, answers, isTitleHidden, storyId } = props.params;
-  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+}> = React.memo((props) => {
+  const { title, answers, isTitleHidden } = props.params;
+  const { params, position, positionLimits, isReadOnly, onAnswer } = props;
 
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isSent, setIsSent] = useState<boolean>(false);
 
+  const storyContextVal = useContext(StoryContext);
+
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position.width, size, positionLimits.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -89,25 +99,80 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
     [calculate]
   );
 
-  const handleAnswer = (id: string) => {
+  const handleAnswer = useCallback((id: string) => {
     setUserAnswers((prevState) =>
       prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]
     );
-  };
+  }, []);
 
-  const handleSendAnswer = () => {
-    onAnswer?.(userAnswers);
-    setIsSent(true);
+  const handleSendScore = useCallback(
+    (currentAnswers: string[]) => {
+      if (!storyContextVal.quizMode) {
+        return;
+      }
 
-    if (storyId) {
-      onGoToStory?.(storyId);
+      const answerScore = currentAnswers.length
+        ? params.answers
+            .filter((answer) => currentAnswers.includes(answer.id))
+            .reduce(
+              (acc, answer) => {
+                if (storyContextVal.quizMode === ScoreType.LETTERS) {
+                  return acc + answer.score.letter;
+                }
+                if (storyContextVal.quizMode === ScoreType.NUMBERS) {
+                  return +acc + +answer.score.points;
+                }
+                return acc;
+              },
+              storyContextVal.quizMode === ScoreType.LETTERS ? '' : 0
+            )
+        : undefined;
+
+      if (
+        answerScore !== undefined &&
+        storyContextVal.quizMode &&
+        storyContextVal.handleQuizAnswer
+      ) {
+        storyContextVal.handleQuizAnswer(answerScore);
+      }
+    },
+    [params.answers, storyContextVal]
+  );
+
+  const handleSendAnswer = useCallback(() => {
+    if (!isReadOnly && userAnswers.length && !isSent) {
+      onAnswer?.(userAnswers);
+      setIsSent(true);
+      handleSendScore(userAnswers);
     }
-  };
+  }, [isReadOnly, isSent, onAnswer, handleSendScore, userAnswers]);
+
+  useEffect(() => {
+    eventSubscribe('nextStory', handleSendAnswer);
+    eventSubscribe('prevStory', handleSendAnswer);
+
+    return () => {
+      eventUnsubscribe('nextStory', handleSendAnswer);
+      eventUnsubscribe('prevStory', handleSendAnswer);
+    };
+  }, [handleSendAnswer]);
+
+  const titleTextStyles = getTextStyles(params.titleFont?.fontColor);
+  const answerTextStyles = getTextStyles(params.answersFont?.fontColor);
 
   return (
     <div className={b()}>
       {!isTitleHidden && (
-        <div className={b('title')} style={elementSizes.title}>
+        <div
+          className={b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' })}
+          style={{
+            ...elementSizes.title,
+            fontStyle: params.titleFont?.fontParams?.style,
+            fontWeight: params.titleFont?.fontParams?.weight,
+            fontFamily: params.titleFont?.fontFamily,
+            ...titleTextStyles
+          }}
+        >
           {title}
         </div>
       )}
@@ -120,7 +185,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
             disabled={isSent || isReadOnly}
             key={answer.id}
             style={elementSizes.answer}
-            onClick={() => isReadOnly && handleAnswer(answer.id)}
+            onClick={() => !isReadOnly && handleAnswer(answer.id)}
           >
             <div
               className={b('answerImgContainer')}
@@ -128,22 +193,23 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
                 backgroundImage: answer.image ? `url(${answer.image.url})` : ''
               }}
             />
-            <p className={b('answerTitle')} style={elementSizes.answerTitle}>
+            <p
+              className={b('answerTitle', {
+                gradient: params.answersFont?.fontColor?.type === 'gradient'
+              })}
+              style={{
+                ...elementSizes.answerTitle,
+                fontStyle: params.answersFont?.fontParams?.style,
+                fontWeight: params.answersFont?.fontParams?.weight,
+                fontFamily: params.answersFont?.fontFamily,
+                ...answerTextStyles
+              }}
+            >
               {answer.title}
             </p>
           </button>
         ))}
       </div>
-      {userAnswers.length > 0 && (
-        <button
-          className={b('sendBtn', { sent: isSent || isReadOnly })}
-          disabled={isSent || isReadOnly}
-          style={elementSizes.sendBtn}
-          onClick={handleSendAnswer}
-        >
-          {isSent ? 'Sent!' : 'Send'}
-        </button>
-      )}
     </div>
   );
-};
+});

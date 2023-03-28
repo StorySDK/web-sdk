@@ -10,6 +10,11 @@
     text-align: center;
     word-break: break-word;
     font-weight: 800;
+
+    &_gradient {
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   &__answers {
@@ -23,7 +28,12 @@
     line-height: 123%;
     color: #000000;
     margin: 0;
-    transition: 0.2s ease-out all;
+    transition: 0.2s ease-out background-color;
+
+    &_gradient {
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   &__answer {
@@ -35,15 +45,16 @@
     align-items: center;
     background-color: #ffffff;
     border-radius: 50px;
-    transition: 0.2s ease-out all;
+    transition: 0.2s ease-out background-color;
     cursor: pointer;
 
     &:hover, &_selected {
-      color: #ffffff;
+      color: #ffffff !important;
       background-color: map-get($theme-colors, "black");
 
       .StorySdk-QuizOneAnswerWidget__answerTitle {
-        color: #ffffff;
+        color: #ffffff !important;
+        background: none !important;
       }
     }
 
@@ -52,7 +63,7 @@
     }
 
     &:disabled {
-      cursor: auto;
+      cursor: auto !important;
       pointer-events: none;
     }
   }

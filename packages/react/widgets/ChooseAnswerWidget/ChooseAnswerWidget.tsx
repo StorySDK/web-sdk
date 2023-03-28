@@ -1,9 +1,11 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
+import { StoryContext } from '@components';
 import {
   ChooseAnswerWidgetParamsType,
   WidgetComponent,
   WidgetPositionType,
-  WidgetPositionLimitsType
+  WidgetPositionLimitsType,
+  ScoreType
 } from '@types';
 import { IconConfirm, IconDecline } from '@components/icons';
 import { block, calculateElementSize } from '@utils';
@@ -46,20 +48,22 @@ export const ChooseAnswerWidget: WidgetComponent<{
   jsConfetti?: any;
   isReadOnly?: boolean;
   onAnswer?(answerId: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
 
+  const storyContextVal = useContext(StoryContext);
+
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position.width, size, positionLimits.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -92,6 +96,21 @@ export const ChooseAnswerWidget: WidgetComponent<{
     [calculate]
   );
 
+  const handleSendScore = useCallback(
+    (currentAnswer: string) => {
+      const answerScore = currentAnswer
+        ? params.answers.find((answer) => answer.id === currentAnswer)?.score
+        : undefined;
+
+      if (answerScore && storyContextVal.quizMode && storyContextVal.handleQuizAnswer) {
+        storyContextVal.handleQuizAnswer(
+          storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points
+        );
+      }
+    },
+    [params.answers, storyContextVal]
+  );
+
   const handleMarkAnswer = useCallback(
     (answerId: string) => {
       if (onAnswer) {
@@ -99,8 +118,9 @@ export const ChooseAnswerWidget: WidgetComponent<{
       }
 
       setUserAnswer(answerId);
+      handleSendScore(answerId);
     },
-    [onAnswer]
+    [onAnswer, handleSendScore]
   );
 
   const renderAnswer = useCallback(
@@ -221,4 +241,4 @@ export const ChooseAnswerWidget: WidgetComponent<{
       </div>
     </div>
   );
-};
+});

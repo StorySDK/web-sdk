@@ -35,18 +35,18 @@ export const EmojiReactionWidget: WidgetComponent<{
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(emoji: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { params, position, positionLimits, isReadOnly, onAnswer } = props;
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSizeByHeight(position, positionLimits, size);
+      if (position?.height && positionLimits?.minHeight) {
+        return calculateElementSizeByHeight(position.height, size, positionLimits.minHeight);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.height, positionLimits?.minHeight]
   );
 
   const elementSizes = useMemo(
@@ -86,13 +86,16 @@ export const EmojiReactionWidget: WidgetComponent<{
     }
   }, delay);
 
-  const handleReactionClick = (index: number, emoji: string) => {
-    onAnswer?.(emoji);
-    setIsToched(true);
-    setClickedIndex(index);
-    setBigSize(initEmojiSize);
-    setDelay(50);
-  };
+  const handleReactionClick = useCallback(
+    (index: number, emoji: string) => {
+      onAnswer?.(emoji);
+      setIsToched(true);
+      setClickedIndex(index);
+      setBigSize(initEmojiSize);
+      setDelay(50);
+    },
+    [initEmojiSize, onAnswer]
+  );
 
   return (
     <div className={b({ color: params.color })} style={elementSizes.widget}>
@@ -117,4 +120,4 @@ export const EmojiReactionWidget: WidgetComponent<{
       ))}
     </div>
   );
-};
+});

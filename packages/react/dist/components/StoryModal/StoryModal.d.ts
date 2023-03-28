@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoryType, Group } from '../../types';
+import { StoryType, Group, StoryContenxt } from '../../types';
 import './StoryModal.scss';
 interface StoryModalProps {
     currentGroup: Group;
@@ -19,11 +19,7 @@ interface StoryModalProps {
     onOpenStory?(groupId: string, storyId: string): void;
     onCloseStory?(groupId: string, storyId: string): void;
 }
-export declare const StoryContext: React.Context<{
-    currentStoryId: string;
-    playStatusChange?: any;
-    confetti?: any;
-}>;
+export declare const StoryContext: React.Context<StoryContenxt>;
 export declare type StoryCurrentSize = {
     width: number;
     height: number;

@@ -6,7 +6,7 @@ import {
   WidgetPositionType,
   WidgetPositionLimitsType
 } from '@types';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import './QuestionWidget.scss';
 
 const b = block('QuestionWidget');
@@ -29,19 +29,19 @@ export const QuestionWidget: WidgetComponent<{
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
-}> = (props) => {
-  const { params, position, positionLimits, isReadOnly } = props;
+}> = React.memo((props) => {
+  const { params, position, positionLimits, isReadOnly, onAnswer } = props;
   const [answer, setAnswer] = useState<string | null>(null);
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -64,23 +64,26 @@ export const QuestionWidget: WidgetComponent<{
     decline: 0
   });
 
-  const handleChange = (option: string) => {
-    if (!answer) {
-      if (props.onAnswer) {
-        props.onAnswer(option).then((res: any) => {
-          if (res.data && !res.data.error) {
-            setAnswer(option);
-            setPercents((prevState) => ({ ...prevState, ...res.data.data }));
-          }
-        });
-      } else {
-        setAnswer(option);
+  const handleChange = useCallback(
+    (option: string) => {
+      if (!answer) {
+        if (onAnswer) {
+          onAnswer(option).then((res: any) => {
+            if (res.data && !res.data.error) {
+              setAnswer(option);
+              setPercents((prevState) => ({ ...prevState, ...res.data.data }));
+            }
+          });
+        } else {
+          setAnswer(option);
+        }
       }
-    }
-  };
+    },
+    [answer, onAnswer]
+  );
 
   useEffect(() => {
-    if (answer && !props.onAnswer) {
+    if (answer && !onAnswer) {
       const percentsFromApi = {
         confirm: answer === 'confirm' ? 100 : 0,
         decline: answer === 'decline' ? 100 : 0
@@ -88,9 +91,9 @@ export const QuestionWidget: WidgetComponent<{
 
       setPercents(percentsFromApi);
     }
-  }, [answer, props.onAnswer]);
+  }, [answer, onAnswer]);
 
-  const calculateWidth = (percent: number) => {
+  const calculateWidth = useCallback((percent: number) => {
     if (percent === 0) {
       return 0;
     }
@@ -105,12 +108,23 @@ export const QuestionWidget: WidgetComponent<{
     }
 
     return percent;
-  };
+  }, []);
+
+  const textStyles = getTextStyles(params.fontColor);
 
   return (
     <div className={b()}>
       {!params.isTitleHidden && (
-        <div className={b('question')} style={elementSizes.text}>
+        <div
+          className={b('question', { gradient: params.fontColor?.type === 'gradient' })}
+          style={{
+            ...elementSizes.text,
+            fontStyle: params.fontParams?.style,
+            fontWeight: params.fontParams?.weight,
+            fontFamily: params.fontFamily,
+            ...textStyles
+          }}
+        >
           {params.question}
         </div>
       )}
@@ -177,4 +191,4 @@ export const QuestionWidget: WidgetComponent<{
       </div>
     </div>
   );
-};
+});

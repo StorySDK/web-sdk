@@ -21,7 +21,12 @@ import {
 
 type ColorValue = { type: 'color'; value: string; isFilled?: boolean };
 type GradientValue = { type: 'gradient'; value: string[]; isFilled?: boolean };
-type BackgrounValue = { type: 'image' | 'video'; value: string; isFilled?: boolean };
+type BackgrounValue = {
+  type: 'image' | 'video';
+  value: string;
+  isFilled?: boolean;
+  fileId?: string;
+};
 
 export type BorderType = GradientValue | ColorValue;
 export type BackgroundType = GradientValue | ColorValue | BackgrounValue;
@@ -166,9 +171,18 @@ export interface WidgetPositionLimitsType {
 export interface WidgetPositionType {
   x: number;
   y: number;
+  origin: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
   width: number | string;
   height: number;
   rotate: number;
+  realWidth: number;
+  realHeight: number;
+  elementsSize?: { [key: string]: any };
 }
 
 export interface WidgetObjectType {
@@ -196,9 +210,27 @@ export interface WidgetObjectType {
   action?(): void;
 }
 
+export interface LayerData {
+  layersGroupId: string;
+  positionInGroup: number;
+  isActiveLayer: boolean;
+  score: {
+    letter: string;
+    points: number;
+  };
+}
+
 export interface StoryType {
   id: string;
   storyData: WidgetObjectType[];
+  layerData: LayerData;
   background: BackgroundType;
   positionIndex: number;
 }
+
+export const ScoreWidgets = [
+  WidgetsTypes.CHOOSE_ANSWER,
+  WidgetsTypes.QUIZ_ONE_ANSWER,
+  WidgetsTypes.QUIZ_MULTIPLE_ANSWERS,
+  WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE
+];

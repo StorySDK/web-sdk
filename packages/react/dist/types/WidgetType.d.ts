@@ -13,6 +13,7 @@ declare type BackgrounValue = {
     type: 'image' | 'video';
     value: string;
     isFilled?: boolean;
+    fileId?: string;
 };
 export declare type BorderType = GradientValue | ColorValue;
 export declare type BackgroundType = GradientValue | ColorValue | BackgrounValue;
@@ -136,9 +137,20 @@ export interface WidgetPositionLimitsType {
 export interface WidgetPositionType {
     x: number;
     y: number;
+    origin: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    };
     width: number | string;
     height: number;
     rotate: number;
+    realWidth: number;
+    realHeight: number;
+    elementsSize?: {
+        [key: string]: any;
+    };
 }
 export interface WidgetObjectType {
     id: string;
@@ -147,10 +159,21 @@ export interface WidgetObjectType {
     content: RectangleState | EllipseState | TextState | SwipeUpState | SliderState | QuestionState | ClickMeState | TalkAboutState | EmojiReactionState | TimerState | ChooseAnswerState | GiphyState | QuizOneAnswerState | QuizMultipleAnswerState | QuizMultipleAnswerWithImageState | QuizRateState | QuizOpenAnswerState;
     action?(): void;
 }
+export interface LayerData {
+    layersGroupId: string;
+    positionInGroup: number;
+    isActiveLayer: boolean;
+    score: {
+        letter: string;
+        points: number;
+    };
+}
 export interface StoryType {
     id: string;
     storyData: WidgetObjectType[];
+    layerData: LayerData;
     background: BackgroundType;
     positionIndex: number;
 }
+export declare const ScoreWidgets: WidgetsTypes[];
 export {};

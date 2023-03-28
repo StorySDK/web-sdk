@@ -8,6 +8,11 @@
     text-align: center;
     word-break: break-word;
     font-weight: 800;
+
+    &_gradient {
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   &__input {
@@ -52,7 +57,7 @@
     cursor: pointer;
 
     &:disabled {
-      cursor: auto;
+      cursor: auto !important;
 
       .StorySdk-QuizOpenAnswerWidget__sendButtonIcon {
         opacity: 0.2;

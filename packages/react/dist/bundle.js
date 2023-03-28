@@ -30,6 +30,12 @@ exports.WidgetsTypes = void 0;
     WidgetsTypes["QUIZ_MULTIPLE_ANSWER_WITH_IMAGE"] = "quiz_one_multiple_with_image";
     WidgetsTypes["QUIZ_RATE"] = "quiz_rate";
 })(exports.WidgetsTypes || (exports.WidgetsTypes = {}));
+const ScoreWidgets = [
+    exports.WidgetsTypes.CHOOSE_ANSWER,
+    exports.WidgetsTypes.QUIZ_ONE_ANSWER,
+    exports.WidgetsTypes.QUIZ_MULTIPLE_ANSWERS,
+    exports.WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE
+];
 
 exports.GroupType = void 0;
 (function (GroupType) {
@@ -41,6 +47,11 @@ exports.StorySize = void 0;
     StorySize["SMALL"] = "SMALL";
     StorySize["LARGE"] = "LARGE";
 })(exports.StorySize || (exports.StorySize = {}));
+exports.ScoreType = void 0;
+(function (ScoreType) {
+    ScoreType["NUMBERS"] = "numbers";
+    ScoreType["LETTERS"] = "letters";
+})(exports.ScoreType || (exports.ScoreType = {}));
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -731,6 +742,1042 @@ var JSConfetti = /*#__PURE__*/function () {
 
   return JSConfetti;
 }();
+
+var removeHash = function removeHash(hex) {
+  return hex.charAt(0) === '#' ? hex.slice(1) : hex;
+};
+
+var parseHex = function parseHex(nakedHex) {
+  var isShort = nakedHex.length === 3 || nakedHex.length === 4;
+  var twoDigitHexR = isShort ? "".concat(nakedHex.slice(0, 1)).concat(nakedHex.slice(0, 1)) : nakedHex.slice(0, 2);
+  var twoDigitHexG = isShort ? "".concat(nakedHex.slice(1, 2)).concat(nakedHex.slice(1, 2)) : nakedHex.slice(2, 4);
+  var twoDigitHexB = isShort ? "".concat(nakedHex.slice(2, 3)).concat(nakedHex.slice(2, 3)) : nakedHex.slice(4, 6);
+  var twoDigitHexA = (isShort ? "".concat(nakedHex.slice(3, 4)).concat(nakedHex.slice(3, 4)) : nakedHex.slice(6, 8)) || 'ff'; // const numericA = +((parseInt(a, 16) / 255).toFixed(2));
+
+  return {
+    r: twoDigitHexR,
+    g: twoDigitHexG,
+    b: twoDigitHexB,
+    a: twoDigitHexA
+  };
+};
+
+var hexToDecimal = function hexToDecimal(hex) {
+  return parseInt(hex, 16);
+};
+
+var hexesToDecimals = function hexesToDecimals(_ref) {
+  var r = _ref.r,
+      g = _ref.g,
+      b = _ref.b,
+      a = _ref.a;
+  return {
+    r: hexToDecimal(r),
+    g: hexToDecimal(g),
+    b: hexToDecimal(b),
+    a: +(hexToDecimal(a) / 255).toFixed(2)
+  };
+};
+
+var isNumeric = function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}; // eslint-disable-line no-restricted-globals, max-len
+
+
+var formatRgb = function formatRgb(decimalObject, parameterA) {
+  var r = decimalObject.r,
+      g = decimalObject.g,
+      b = decimalObject.b,
+      parsedA = decimalObject.a;
+  var a = isNumeric(parameterA) ? parameterA : parsedA;
+  return "rgba(".concat(r, ", ").concat(g, ", ").concat(b, ", ").concat(a, ")");
+};
+/**
+ * Turns an old-fashioned css hex color value into a rgb color value.
+ *
+ * If you specify an alpha value, you'll get a rgba() value instead.
+ *
+ * @param The hex value to convert. ('123456'. '#123456', ''123', '#123')
+ * @param An alpha value to apply. (optional) ('0.5', '0.25')
+ * @return An rgb or rgba value. ('rgb(11, 22, 33)'. 'rgba(11, 22, 33, 0.5)')
+ */
+
+
+var hexToRgba = function hexToRgba(hex, a) {
+  var hashlessHex = removeHash(hex);
+  var hexObject = parseHex(hashlessHex);
+  var decimalObject = hexesToDecimals(hexObject);
+  return formatRgb(decimalObject, a);
+};
+
+var build = hexToRgba;
+
+/* MIT license */
+
+var conversions$1 = {
+  rgb2hsl: rgb2hsl,
+  rgb2hsv: rgb2hsv,
+  rgb2hwb: rgb2hwb,
+  rgb2cmyk: rgb2cmyk,
+  rgb2keyword: rgb2keyword,
+  rgb2xyz: rgb2xyz,
+  rgb2lab: rgb2lab,
+  rgb2lch: rgb2lch,
+
+  hsl2rgb: hsl2rgb,
+  hsl2hsv: hsl2hsv,
+  hsl2hwb: hsl2hwb,
+  hsl2cmyk: hsl2cmyk,
+  hsl2keyword: hsl2keyword,
+
+  hsv2rgb: hsv2rgb,
+  hsv2hsl: hsv2hsl,
+  hsv2hwb: hsv2hwb,
+  hsv2cmyk: hsv2cmyk,
+  hsv2keyword: hsv2keyword,
+
+  hwb2rgb: hwb2rgb,
+  hwb2hsl: hwb2hsl,
+  hwb2hsv: hwb2hsv,
+  hwb2cmyk: hwb2cmyk,
+  hwb2keyword: hwb2keyword,
+
+  cmyk2rgb: cmyk2rgb,
+  cmyk2hsl: cmyk2hsl,
+  cmyk2hsv: cmyk2hsv,
+  cmyk2hwb: cmyk2hwb,
+  cmyk2keyword: cmyk2keyword,
+
+  keyword2rgb: keyword2rgb,
+  keyword2hsl: keyword2hsl,
+  keyword2hsv: keyword2hsv,
+  keyword2hwb: keyword2hwb,
+  keyword2cmyk: keyword2cmyk,
+  keyword2lab: keyword2lab,
+  keyword2xyz: keyword2xyz,
+
+  xyz2rgb: xyz2rgb,
+  xyz2lab: xyz2lab,
+  xyz2lch: xyz2lch,
+
+  lab2xyz: lab2xyz,
+  lab2rgb: lab2rgb,
+  lab2lch: lab2lch,
+
+  lch2lab: lch2lab,
+  lch2xyz: lch2xyz,
+  lch2rgb: lch2rgb
+};
+
+
+function rgb2hsl(rgb) {
+  var r = rgb[0]/255,
+      g = rgb[1]/255,
+      b = rgb[2]/255,
+      min = Math.min(r, g, b),
+      max = Math.max(r, g, b),
+      delta = max - min,
+      h, s, l;
+
+  if (max == min)
+    h = 0;
+  else if (r == max)
+    h = (g - b) / delta;
+  else if (g == max)
+    h = 2 + (b - r) / delta;
+  else if (b == max)
+    h = 4 + (r - g)/ delta;
+
+  h = Math.min(h * 60, 360);
+
+  if (h < 0)
+    h += 360;
+
+  l = (min + max) / 2;
+
+  if (max == min)
+    s = 0;
+  else if (l <= 0.5)
+    s = delta / (max + min);
+  else
+    s = delta / (2 - max - min);
+
+  return [h, s * 100, l * 100];
+}
+
+function rgb2hsv(rgb) {
+  var r = rgb[0],
+      g = rgb[1],
+      b = rgb[2],
+      min = Math.min(r, g, b),
+      max = Math.max(r, g, b),
+      delta = max - min,
+      h, s, v;
+
+  if (max == 0)
+    s = 0;
+  else
+    s = (delta/max * 1000)/10;
+
+  if (max == min)
+    h = 0;
+  else if (r == max)
+    h = (g - b) / delta;
+  else if (g == max)
+    h = 2 + (b - r) / delta;
+  else if (b == max)
+    h = 4 + (r - g) / delta;
+
+  h = Math.min(h * 60, 360);
+
+  if (h < 0)
+    h += 360;
+
+  v = ((max / 255) * 1000) / 10;
+
+  return [h, s, v];
+}
+
+function rgb2hwb(rgb) {
+  var r = rgb[0],
+      g = rgb[1],
+      b = rgb[2],
+      h = rgb2hsl(rgb)[0],
+      w = 1/255 * Math.min(r, Math.min(g, b)),
+      b = 1 - 1/255 * Math.max(r, Math.max(g, b));
+
+  return [h, w * 100, b * 100];
+}
+
+function rgb2cmyk(rgb) {
+  var r = rgb[0] / 255,
+      g = rgb[1] / 255,
+      b = rgb[2] / 255,
+      c, m, y, k;
+
+  k = Math.min(1 - r, 1 - g, 1 - b);
+  c = (1 - r - k) / (1 - k) || 0;
+  m = (1 - g - k) / (1 - k) || 0;
+  y = (1 - b - k) / (1 - k) || 0;
+  return [c * 100, m * 100, y * 100, k * 100];
+}
+
+function rgb2keyword(rgb) {
+  return reverseKeywords[JSON.stringify(rgb)];
+}
+
+function rgb2xyz(rgb) {
+  var r = rgb[0] / 255,
+      g = rgb[1] / 255,
+      b = rgb[2] / 255;
+
+  // assume sRGB
+  r = r > 0.04045 ? Math.pow(((r + 0.055) / 1.055), 2.4) : (r / 12.92);
+  g = g > 0.04045 ? Math.pow(((g + 0.055) / 1.055), 2.4) : (g / 12.92);
+  b = b > 0.04045 ? Math.pow(((b + 0.055) / 1.055), 2.4) : (b / 12.92);
+
+  var x = (r * 0.4124) + (g * 0.3576) + (b * 0.1805);
+  var y = (r * 0.2126) + (g * 0.7152) + (b * 0.0722);
+  var z = (r * 0.0193) + (g * 0.1192) + (b * 0.9505);
+
+  return [x * 100, y *100, z * 100];
+}
+
+function rgb2lab(rgb) {
+  var xyz = rgb2xyz(rgb),
+        x = xyz[0],
+        y = xyz[1],
+        z = xyz[2],
+        l, a, b;
+
+  x /= 95.047;
+  y /= 100;
+  z /= 108.883;
+
+  x = x > 0.008856 ? Math.pow(x, 1/3) : (7.787 * x) + (16 / 116);
+  y = y > 0.008856 ? Math.pow(y, 1/3) : (7.787 * y) + (16 / 116);
+  z = z > 0.008856 ? Math.pow(z, 1/3) : (7.787 * z) + (16 / 116);
+
+  l = (116 * y) - 16;
+  a = 500 * (x - y);
+  b = 200 * (y - z);
+
+  return [l, a, b];
+}
+
+function rgb2lch(args) {
+  return lab2lch(rgb2lab(args));
+}
+
+function hsl2rgb(hsl) {
+  var h = hsl[0] / 360,
+      s = hsl[1] / 100,
+      l = hsl[2] / 100,
+      t1, t2, t3, rgb, val;
+
+  if (s == 0) {
+    val = l * 255;
+    return [val, val, val];
+  }
+
+  if (l < 0.5)
+    t2 = l * (1 + s);
+  else
+    t2 = l + s - l * s;
+  t1 = 2 * l - t2;
+
+  rgb = [0, 0, 0];
+  for (var i = 0; i < 3; i++) {
+    t3 = h + 1 / 3 * - (i - 1);
+    t3 < 0 && t3++;
+    t3 > 1 && t3--;
+
+    if (6 * t3 < 1)
+      val = t1 + (t2 - t1) * 6 * t3;
+    else if (2 * t3 < 1)
+      val = t2;
+    else if (3 * t3 < 2)
+      val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
+    else
+      val = t1;
+
+    rgb[i] = val * 255;
+  }
+
+  return rgb;
+}
+
+function hsl2hsv(hsl) {
+  var h = hsl[0],
+      s = hsl[1] / 100,
+      l = hsl[2] / 100,
+      sv, v;
+
+  if(l === 0) {
+      // no need to do calc on black
+      // also avoids divide by 0 error
+      return [0, 0, 0];
+  }
+
+  l *= 2;
+  s *= (l <= 1) ? l : 2 - l;
+  v = (l + s) / 2;
+  sv = (2 * s) / (l + s);
+  return [h, sv * 100, v * 100];
+}
+
+function hsl2hwb(args) {
+  return rgb2hwb(hsl2rgb(args));
+}
+
+function hsl2cmyk(args) {
+  return rgb2cmyk(hsl2rgb(args));
+}
+
+function hsl2keyword(args) {
+  return rgb2keyword(hsl2rgb(args));
+}
+
+
+function hsv2rgb(hsv) {
+  var h = hsv[0] / 60,
+      s = hsv[1] / 100,
+      v = hsv[2] / 100,
+      hi = Math.floor(h) % 6;
+
+  var f = h - Math.floor(h),
+      p = 255 * v * (1 - s),
+      q = 255 * v * (1 - (s * f)),
+      t = 255 * v * (1 - (s * (1 - f))),
+      v = 255 * v;
+
+  switch(hi) {
+    case 0:
+      return [v, t, p];
+    case 1:
+      return [q, v, p];
+    case 2:
+      return [p, v, t];
+    case 3:
+      return [p, q, v];
+    case 4:
+      return [t, p, v];
+    case 5:
+      return [v, p, q];
+  }
+}
+
+function hsv2hsl(hsv) {
+  var h = hsv[0],
+      s = hsv[1] / 100,
+      v = hsv[2] / 100,
+      sl, l;
+
+  l = (2 - s) * v;
+  sl = s * v;
+  sl /= (l <= 1) ? l : 2 - l;
+  sl = sl || 0;
+  l /= 2;
+  return [h, sl * 100, l * 100];
+}
+
+function hsv2hwb(args) {
+  return rgb2hwb(hsv2rgb(args))
+}
+
+function hsv2cmyk(args) {
+  return rgb2cmyk(hsv2rgb(args));
+}
+
+function hsv2keyword(args) {
+  return rgb2keyword(hsv2rgb(args));
+}
+
+// http://dev.w3.org/csswg/css-color/#hwb-to-rgb
+function hwb2rgb(hwb) {
+  var h = hwb[0] / 360,
+      wh = hwb[1] / 100,
+      bl = hwb[2] / 100,
+      ratio = wh + bl,
+      i, v, f, n;
+
+  // wh + bl cant be > 1
+  if (ratio > 1) {
+    wh /= ratio;
+    bl /= ratio;
+  }
+
+  i = Math.floor(6 * h);
+  v = 1 - bl;
+  f = 6 * h - i;
+  if ((i & 0x01) != 0) {
+    f = 1 - f;
+  }
+  n = wh + f * (v - wh);  // linear interpolation
+
+  switch (i) {
+    default:
+    case 6:
+    case 0: r = v; g = n; b = wh; break;
+    case 1: r = n; g = v; b = wh; break;
+    case 2: r = wh; g = v; b = n; break;
+    case 3: r = wh; g = n; b = v; break;
+    case 4: r = n; g = wh; b = v; break;
+    case 5: r = v; g = wh; b = n; break;
+  }
+
+  return [r * 255, g * 255, b * 255];
+}
+
+function hwb2hsl(args) {
+  return rgb2hsl(hwb2rgb(args));
+}
+
+function hwb2hsv(args) {
+  return rgb2hsv(hwb2rgb(args));
+}
+
+function hwb2cmyk(args) {
+  return rgb2cmyk(hwb2rgb(args));
+}
+
+function hwb2keyword(args) {
+  return rgb2keyword(hwb2rgb(args));
+}
+
+function cmyk2rgb(cmyk) {
+  var c = cmyk[0] / 100,
+      m = cmyk[1] / 100,
+      y = cmyk[2] / 100,
+      k = cmyk[3] / 100,
+      r, g, b;
+
+  r = 1 - Math.min(1, c * (1 - k) + k);
+  g = 1 - Math.min(1, m * (1 - k) + k);
+  b = 1 - Math.min(1, y * (1 - k) + k);
+  return [r * 255, g * 255, b * 255];
+}
+
+function cmyk2hsl(args) {
+  return rgb2hsl(cmyk2rgb(args));
+}
+
+function cmyk2hsv(args) {
+  return rgb2hsv(cmyk2rgb(args));
+}
+
+function cmyk2hwb(args) {
+  return rgb2hwb(cmyk2rgb(args));
+}
+
+function cmyk2keyword(args) {
+  return rgb2keyword(cmyk2rgb(args));
+}
+
+
+function xyz2rgb(xyz) {
+  var x = xyz[0] / 100,
+      y = xyz[1] / 100,
+      z = xyz[2] / 100,
+      r, g, b;
+
+  r = (x * 3.2406) + (y * -1.5372) + (z * -0.4986);
+  g = (x * -0.9689) + (y * 1.8758) + (z * 0.0415);
+  b = (x * 0.0557) + (y * -0.2040) + (z * 1.0570);
+
+  // assume sRGB
+  r = r > 0.0031308 ? ((1.055 * Math.pow(r, 1.0 / 2.4)) - 0.055)
+    : r = (r * 12.92);
+
+  g = g > 0.0031308 ? ((1.055 * Math.pow(g, 1.0 / 2.4)) - 0.055)
+    : g = (g * 12.92);
+
+  b = b > 0.0031308 ? ((1.055 * Math.pow(b, 1.0 / 2.4)) - 0.055)
+    : b = (b * 12.92);
+
+  r = Math.min(Math.max(0, r), 1);
+  g = Math.min(Math.max(0, g), 1);
+  b = Math.min(Math.max(0, b), 1);
+
+  return [r * 255, g * 255, b * 255];
+}
+
+function xyz2lab(xyz) {
+  var x = xyz[0],
+      y = xyz[1],
+      z = xyz[2],
+      l, a, b;
+
+  x /= 95.047;
+  y /= 100;
+  z /= 108.883;
+
+  x = x > 0.008856 ? Math.pow(x, 1/3) : (7.787 * x) + (16 / 116);
+  y = y > 0.008856 ? Math.pow(y, 1/3) : (7.787 * y) + (16 / 116);
+  z = z > 0.008856 ? Math.pow(z, 1/3) : (7.787 * z) + (16 / 116);
+
+  l = (116 * y) - 16;
+  a = 500 * (x - y);
+  b = 200 * (y - z);
+
+  return [l, a, b];
+}
+
+function xyz2lch(args) {
+  return lab2lch(xyz2lab(args));
+}
+
+function lab2xyz(lab) {
+  var l = lab[0],
+      a = lab[1],
+      b = lab[2],
+      x, y, z, y2;
+
+  if (l <= 8) {
+    y = (l * 100) / 903.3;
+    y2 = (7.787 * (y / 100)) + (16 / 116);
+  } else {
+    y = 100 * Math.pow((l + 16) / 116, 3);
+    y2 = Math.pow(y / 100, 1/3);
+  }
+
+  x = x / 95.047 <= 0.008856 ? x = (95.047 * ((a / 500) + y2 - (16 / 116))) / 7.787 : 95.047 * Math.pow((a / 500) + y2, 3);
+
+  z = z / 108.883 <= 0.008859 ? z = (108.883 * (y2 - (b / 200) - (16 / 116))) / 7.787 : 108.883 * Math.pow(y2 - (b / 200), 3);
+
+  return [x, y, z];
+}
+
+function lab2lch(lab) {
+  var l = lab[0],
+      a = lab[1],
+      b = lab[2],
+      hr, h, c;
+
+  hr = Math.atan2(b, a);
+  h = hr * 360 / 2 / Math.PI;
+  if (h < 0) {
+    h += 360;
+  }
+  c = Math.sqrt(a * a + b * b);
+  return [l, c, h];
+}
+
+function lab2rgb(args) {
+  return xyz2rgb(lab2xyz(args));
+}
+
+function lch2lab(lch) {
+  var l = lch[0],
+      c = lch[1],
+      h = lch[2],
+      a, b, hr;
+
+  hr = h / 360 * 2 * Math.PI;
+  a = c * Math.cos(hr);
+  b = c * Math.sin(hr);
+  return [l, a, b];
+}
+
+function lch2xyz(args) {
+  return lab2xyz(lch2lab(args));
+}
+
+function lch2rgb(args) {
+  return lab2rgb(lch2lab(args));
+}
+
+function keyword2rgb(keyword) {
+  return cssKeywords[keyword];
+}
+
+function keyword2hsl(args) {
+  return rgb2hsl(keyword2rgb(args));
+}
+
+function keyword2hsv(args) {
+  return rgb2hsv(keyword2rgb(args));
+}
+
+function keyword2hwb(args) {
+  return rgb2hwb(keyword2rgb(args));
+}
+
+function keyword2cmyk(args) {
+  return rgb2cmyk(keyword2rgb(args));
+}
+
+function keyword2lab(args) {
+  return rgb2lab(keyword2rgb(args));
+}
+
+function keyword2xyz(args) {
+  return rgb2xyz(keyword2rgb(args));
+}
+
+var cssKeywords = {
+  aliceblue:  [240,248,255],
+  antiquewhite: [250,235,215],
+  aqua: [0,255,255],
+  aquamarine: [127,255,212],
+  azure:  [240,255,255],
+  beige:  [245,245,220],
+  bisque: [255,228,196],
+  black:  [0,0,0],
+  blanchedalmond: [255,235,205],
+  blue: [0,0,255],
+  blueviolet: [138,43,226],
+  brown:  [165,42,42],
+  burlywood:  [222,184,135],
+  cadetblue:  [95,158,160],
+  chartreuse: [127,255,0],
+  chocolate:  [210,105,30],
+  coral:  [255,127,80],
+  cornflowerblue: [100,149,237],
+  cornsilk: [255,248,220],
+  crimson:  [220,20,60],
+  cyan: [0,255,255],
+  darkblue: [0,0,139],
+  darkcyan: [0,139,139],
+  darkgoldenrod:  [184,134,11],
+  darkgray: [169,169,169],
+  darkgreen:  [0,100,0],
+  darkgrey: [169,169,169],
+  darkkhaki:  [189,183,107],
+  darkmagenta:  [139,0,139],
+  darkolivegreen: [85,107,47],
+  darkorange: [255,140,0],
+  darkorchid: [153,50,204],
+  darkred:  [139,0,0],
+  darksalmon: [233,150,122],
+  darkseagreen: [143,188,143],
+  darkslateblue:  [72,61,139],
+  darkslategray:  [47,79,79],
+  darkslategrey:  [47,79,79],
+  darkturquoise:  [0,206,209],
+  darkviolet: [148,0,211],
+  deeppink: [255,20,147],
+  deepskyblue:  [0,191,255],
+  dimgray:  [105,105,105],
+  dimgrey:  [105,105,105],
+  dodgerblue: [30,144,255],
+  firebrick:  [178,34,34],
+  floralwhite:  [255,250,240],
+  forestgreen:  [34,139,34],
+  fuchsia:  [255,0,255],
+  gainsboro:  [220,220,220],
+  ghostwhite: [248,248,255],
+  gold: [255,215,0],
+  goldenrod:  [218,165,32],
+  gray: [128,128,128],
+  green:  [0,128,0],
+  greenyellow:  [173,255,47],
+  grey: [128,128,128],
+  honeydew: [240,255,240],
+  hotpink:  [255,105,180],
+  indianred:  [205,92,92],
+  indigo: [75,0,130],
+  ivory:  [255,255,240],
+  khaki:  [240,230,140],
+  lavender: [230,230,250],
+  lavenderblush:  [255,240,245],
+  lawngreen:  [124,252,0],
+  lemonchiffon: [255,250,205],
+  lightblue:  [173,216,230],
+  lightcoral: [240,128,128],
+  lightcyan:  [224,255,255],
+  lightgoldenrodyellow: [250,250,210],
+  lightgray:  [211,211,211],
+  lightgreen: [144,238,144],
+  lightgrey:  [211,211,211],
+  lightpink:  [255,182,193],
+  lightsalmon:  [255,160,122],
+  lightseagreen:  [32,178,170],
+  lightskyblue: [135,206,250],
+  lightslategray: [119,136,153],
+  lightslategrey: [119,136,153],
+  lightsteelblue: [176,196,222],
+  lightyellow:  [255,255,224],
+  lime: [0,255,0],
+  limegreen:  [50,205,50],
+  linen:  [250,240,230],
+  magenta:  [255,0,255],
+  maroon: [128,0,0],
+  mediumaquamarine: [102,205,170],
+  mediumblue: [0,0,205],
+  mediumorchid: [186,85,211],
+  mediumpurple: [147,112,219],
+  mediumseagreen: [60,179,113],
+  mediumslateblue:  [123,104,238],
+  mediumspringgreen:  [0,250,154],
+  mediumturquoise:  [72,209,204],
+  mediumvioletred:  [199,21,133],
+  midnightblue: [25,25,112],
+  mintcream:  [245,255,250],
+  mistyrose:  [255,228,225],
+  moccasin: [255,228,181],
+  navajowhite:  [255,222,173],
+  navy: [0,0,128],
+  oldlace:  [253,245,230],
+  olive:  [128,128,0],
+  olivedrab:  [107,142,35],
+  orange: [255,165,0],
+  orangered:  [255,69,0],
+  orchid: [218,112,214],
+  palegoldenrod:  [238,232,170],
+  palegreen:  [152,251,152],
+  paleturquoise:  [175,238,238],
+  palevioletred:  [219,112,147],
+  papayawhip: [255,239,213],
+  peachpuff:  [255,218,185],
+  peru: [205,133,63],
+  pink: [255,192,203],
+  plum: [221,160,221],
+  powderblue: [176,224,230],
+  purple: [128,0,128],
+  rebeccapurple: [102, 51, 153],
+  red:  [255,0,0],
+  rosybrown:  [188,143,143],
+  royalblue:  [65,105,225],
+  saddlebrown:  [139,69,19],
+  salmon: [250,128,114],
+  sandybrown: [244,164,96],
+  seagreen: [46,139,87],
+  seashell: [255,245,238],
+  sienna: [160,82,45],
+  silver: [192,192,192],
+  skyblue:  [135,206,235],
+  slateblue:  [106,90,205],
+  slategray:  [112,128,144],
+  slategrey:  [112,128,144],
+  snow: [255,250,250],
+  springgreen:  [0,255,127],
+  steelblue:  [70,130,180],
+  tan:  [210,180,140],
+  teal: [0,128,128],
+  thistle:  [216,191,216],
+  tomato: [255,99,71],
+  turquoise:  [64,224,208],
+  violet: [238,130,238],
+  wheat:  [245,222,179],
+  white:  [255,255,255],
+  whitesmoke: [245,245,245],
+  yellow: [255,255,0],
+  yellowgreen:  [154,205,50]
+};
+
+var reverseKeywords = {};
+for (var key in cssKeywords) {
+  reverseKeywords[JSON.stringify(cssKeywords[key])] = key;
+}
+
+var conversions = conversions$1;
+
+var convert$2 = function() {
+   return new Converter();
+};
+
+for (var func in conversions) {
+  // export Raw versions
+  convert$2[func + "Raw"] =  (function(func) {
+    // accept array or plain args
+    return function(arg) {
+      if (typeof arg == "number")
+        arg = Array.prototype.slice.call(arguments);
+      return conversions[func](arg);
+    }
+  })(func);
+
+  var pair = /(\w+)2(\w+)/.exec(func),
+      from$1 = pair[1],
+      to = pair[2];
+
+  // export rgb2hsl and ["rgb"]["hsl"]
+  convert$2[from$1] = convert$2[from$1] || {};
+
+  convert$2[from$1][to] = convert$2[func] = (function(func) { 
+    return function(arg) {
+      if (typeof arg == "number")
+        arg = Array.prototype.slice.call(arguments);
+      
+      var val = conversions[func](arg);
+      if (typeof val == "string" || val === undefined)
+        return val; // keyword
+
+      for (var i = 0; i < val.length; i++)
+        val[i] = Math.round(val[i]);
+      return val;
+    }
+  })(func);
+}
+
+
+/* Converter does lazy conversion and caching */
+var Converter = function() {
+   this.convs = {};
+};
+
+/* Either get the values for a space or
+  set the values for a space, depending on args */
+Converter.prototype.routeSpace = function(space, args) {
+   var values = args[0];
+   if (values === undefined) {
+      // color.rgb()
+      return this.getValues(space);
+   }
+   // color.rgb(10, 10, 10)
+   if (typeof values == "number") {
+      values = Array.prototype.slice.call(args);        
+   }
+
+   return this.setValues(space, values);
+};
+  
+/* Set the values for a space, invalidating cache */
+Converter.prototype.setValues = function(space, values) {
+   this.space = space;
+   this.convs = {};
+   this.convs[space] = values;
+   return this;
+};
+
+/* Get the values for a space. If there's already
+  a conversion for the space, fetch it, otherwise
+  compute it */
+Converter.prototype.getValues = function(space) {
+   var vals = this.convs[space];
+   if (!vals) {
+      var fspace = this.space,
+          from = this.convs[fspace];
+      vals = convert$2[fspace][space](from);
+
+      this.convs[space] = vals;
+   }
+  return vals;
+};
+
+["rgb", "hsl", "hsv", "cmyk", "keyword"].forEach(function(space) {
+   Converter.prototype[space] = function(vals) {
+      return this.routeSpace(space, arguments);
+   };
+});
+
+var colorConvert = convert$2;
+
+var convert$1 = colorConvert;
+
+var parseColor = function (cstr) {
+    var m, conv, parts, alpha;
+    if (m = /^((?:rgb|hs[lv]|cmyk|xyz|lab)a?)\s*\(([^\)]*)\)/.exec(cstr)) {
+        var name = m[1];
+        var base = name.replace(/a$/, '');
+        var size = base === 'cmyk' ? 4 : 3;
+        conv = convert$1[base];
+        
+        parts = m[2].replace(/^\s+|\s+$/g, '')
+            .split(/\s*,\s*/)
+            .map(function (x, i) {
+                if (/%$/.test(x) && i === size) {
+                    return parseFloat(x) / 100;
+                }
+                else if (/%$/.test(x)) {
+                    return parseFloat(x);
+                }
+                return parseFloat(x);
+            })
+        ;
+        if (name === base) parts.push(1);
+        alpha = parts[size] === undefined ? 1 : parts[size];
+        parts = parts.slice(0, size);
+        
+        conv[base] = function () { return parts };
+    }
+    else if (/^#[A-Fa-f0-9]+$/.test(cstr)) {
+        var base = cstr.replace(/^#/,'');
+        var size = base.length;
+        conv = convert$1.rgb;
+        parts = base.split(size === 3 ? /(.)/ : /(..)/);
+        parts = parts.filter(Boolean)
+            .map(function (x) {
+                if (size === 3) {
+                    return parseInt(x + x, 16);
+                }
+                else {
+                    return parseInt(x, 16)
+                }
+            })
+        ;
+        alpha = 1;
+        conv.rgb = function () { return parts };
+        if (!parts[0]) parts[0] = 0;
+        if (!parts[1]) parts[1] = 0;
+        if (!parts[2]) parts[2] = 0;
+    }
+    else {
+        conv = convert$1.keyword;
+        conv.keyword = function () { return cstr };
+        parts = cstr;
+        alpha = 1;
+    }
+    
+    var res = {
+        rgb: undefined,
+        hsl: undefined,
+        hsv: undefined,
+        cmyk: undefined,
+        keyword: undefined,
+        hex: undefined
+    };
+    try { res.rgb = conv.rgb(parts); } catch (e) {}
+    try { res.hsl = conv.hsl(parts); } catch (e) {}
+    try { res.hsv = conv.hsv(parts); } catch (e) {}
+    try { res.cmyk = conv.cmyk(parts); } catch (e) {}
+    try { res.keyword = conv.keyword(parts); } catch (e) {}
+    
+    if (res.rgb) res.hex = '#' + res.rgb.map(function (x) {
+        var s = x.toString(16);
+        if (s.length === 1) return '0' + s;
+        return s;
+    }).join('');
+    
+    if (res.rgb) res.rgba = res.rgb.concat(alpha);
+    if (res.hsl) res.hsla = res.hsl.concat(alpha);
+    if (res.hsv) res.hsva = res.hsv.concat(alpha);
+    if (res.cmyk) res.cmyka = res.cmyk.concat(alpha);
+    
+    return res;
+};
+
+const block = lib.exports.setup({ ns: 'StorySdk-' });
+const renderColor = (color, opacity) => {
+    if (color.includes('#') && opacity) {
+        color = build(color, opacity / 100);
+    }
+    return color;
+};
+const renderGradient = (colors, opacity) => {
+    const first = renderColor(colors[0], opacity);
+    const second = renderColor(colors[1], opacity);
+    return `linear-gradient(180deg, ${first} 0%, ${second} 100%)`;
+};
+const renderBackgroundStyles = (background, opacity) => {
+    let color = background.value;
+    switch (background.type) {
+        case 'color':
+            if (color.includes('#') && opacity !== undefined) {
+                color = build(background.value, opacity / 100);
+            }
+            else if (opacity !== undefined) {
+                const parsed = parseColor(background.value);
+                return `rgba(${parsed.rgb[0]}, ${parsed.rgb[1]}, ${parsed.rgb[2]}, ${opacity / 100})`;
+            }
+            return color;
+        case 'gradient':
+            return `linear-gradient(180deg, ${background.value[0]} 0%, ${background.value[1]} 100%)`;
+        case 'image':
+            return `center / cover url("${background.value}")`;
+        default:
+            return 'transparent';
+    }
+};
+const renderTextBackgroundStyles = ({ color, opacity }) => {
+    switch (color.type) {
+        case 'color':
+            return {
+                color: color.value
+            };
+        case 'gradient':
+            return {
+                background: renderGradient(color.value, opacity)
+            };
+        default:
+            return {
+                background: 'transparent'
+            };
+    }
+};
+const renderPosition = (position, positionLimits) => ({
+    left: `${position.x}px`,
+    top: `${position.y}px`,
+    width: positionLimits.isAutoWidth ? 'auto' : `${position.width}px`,
+    height: positionLimits.isAutoHeight ? 'auto' : `${position.height}px`,
+    transform: `rotate(${position.rotate}deg)`
+});
+const SCALE_INDEX = 2.76;
+const getScalableValue = (value) => Math.round(value * SCALE_INDEX);
+const calculateElementSize = (width, elementSize, minWidth) => minWidth
+    ? getScalableValue(Math.round((elementSize * +width) / minWidth))
+    : getScalableValue(elementSize);
+const calculateElementSizeByHeight = (height, elementSize, minHeight) => minHeight
+    ? getScalableValue(Math.round((elementSize * height) / minHeight))
+    : getScalableValue(elementSize);
+const getTextStyles = (fontColor) => fontColor ? renderTextBackgroundStyles({ color: fontColor }) : undefined;
+
+const eventSubscribe = (eventName, listener) => {
+    document.addEventListener(eventName, listener);
+};
+const eventUnsubscribe = (eventName, listener) => {
+    document.removeEventListener(eventName, listener);
+};
+const eventPublish = (eventName, data) => {
+    const event = new CustomEvent(eventName, { detail: data });
+    document.dispatchEvent(event);
+};
+
+const getClientPosition = (e) => {
+    const touches = e.touches;
+    if (touches && touches.length) {
+        const finger = touches[0];
+        return {
+            x: finger.clientX,
+            y: finger.clientY
+        };
+    }
+    return {
+        x: e.clientX,
+        y: e.clientY
+    };
+};
 
 function useInterval(callback, delay) {
     const savedCallback = React.useRef(callback);
@@ -3400,7 +4447,7 @@ function antiTrunc(n) {
 }
 
 // NB: mutates parameters
-function convert$2(matrix, fromMap, fromUnit, toMap, toUnit) {
+function convert(matrix, fromMap, fromUnit, toMap, toUnit) {
   const conv = matrix[toUnit][fromUnit],
     raw = fromMap[fromUnit] / conv,
     sameSign = Math.sign(raw) === Math.sign(toMap[toUnit]),
@@ -3416,7 +4463,7 @@ function normalizeValues(matrix, vals) {
   reverseUnits.reduce((previous, current) => {
     if (!isUndefined(vals[current])) {
       if (previous) {
-        convert$2(matrix, vals, previous, vals, current);
+        convert(matrix, vals, previous, vals, current);
       }
       return current;
     } else {
@@ -4036,7 +5083,7 @@ class Duration {
         // plus anything further down the chain that should be rolled up in to this
         for (const down in vals) {
           if (orderedUnits$1.indexOf(down) > orderedUnits$1.indexOf(k)) {
-            convert$2(this.matrix, vals, down, built, k);
+            convert(this.matrix, vals, down, built, k);
           }
         }
         // otherwise, keep it in the wings to boil it later
@@ -8230,7 +9277,7 @@ function Buffer (arg, encodingOrOffset, length) {
     }
     return allocUnsafe(this, arg)
   }
-  return from$1(this, arg, encodingOrOffset, length)
+  return from(this, arg, encodingOrOffset, length)
 }
 
 Buffer.poolSize = 8192; // not used by this implementation
@@ -8241,7 +9288,7 @@ Buffer._augment = function (arr) {
   return arr
 };
 
-function from$1 (that, value, encodingOrOffset, length) {
+function from (that, value, encodingOrOffset, length) {
   if (typeof value === 'number') {
     throw new TypeError('"value" argument must not be a number')
   }
@@ -8266,7 +9313,7 @@ function from$1 (that, value, encodingOrOffset, length) {
  * Buffer.from(arrayBuffer[, byteOffset[, length]])
  **/
 Buffer.from = function (value, encodingOrOffset, length) {
-  return from$1(null, value, encodingOrOffset, length)
+  return from(null, value, encodingOrOffset, length)
 };
 
 if (Buffer.TYPED_ARRAY_SUPPORT) {
@@ -10042,18 +11089,63 @@ const INIT_CONTROL_SIDE_PADDING_LARGE = 14;
 const INIT_CONTAINER_BORDER_RADIUS = 50;
 const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
 const ratioIndexLarge = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
+const initQuizeState = {
+    points: 0,
+    letters: ''
+};
+const reducer = (state, action) => {
+    if (action.type === 'add_points') {
+        return {
+            points: state.points + +action.payload,
+            letters: state.letters
+        };
+    }
+    if (action.type === 'add_letters') {
+        return {
+            points: state.points,
+            letters: state.letters + action.payload
+        };
+    }
+    if (action.type === 'reset') {
+        return initQuizeState;
+    }
+    throw Error('Unknown action.');
+};
 const StoryModal = (props) => {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory } = props;
+    const [quizState, dispatchQuizState] = React.useReducer(reducer, initQuizeState);
     const [currentStory, setCurrentStory] = React.useState(0);
     const [currentStoryId, setCurrentStoryId] = React.useState('');
     const [playStatus, setPlayStatus] = React.useState('wait');
     const storyModalRef = React.useRef(null);
     const [width, height] = d$1();
+    const [activeStoriesWithResult, setActiveStoriesWithResult] = React.useState([]);
+    React.useEffect(() => {
+        setActiveStoriesWithResult(stories
+            .filter((story) => {
+            var _a;
+            if (story.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
+                return true;
+            }
+            return story.layerData.isActiveLayer;
+        })
+            .sort((storyA, storyB) => {
+            var _a, _b;
+            if (storyA.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
+                return 1;
+            }
+            if (storyB.layerData.layersGroupId === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
+                return -1;
+            }
+            return 0;
+        }));
+    }, [(_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId, stories]);
     const isMobile = width < MOBILE_BREAKPOINT;
     const currentGroupType = currentGroup.type || exports.GroupType.GROUP;
-    const isBackroundFilled = ((_b = (_a = stories[currentStory]) === null || _a === void 0 ? void 0 : _a.background) === null || _b === void 0 ? void 0 : _b.isFilled) && currentGroupType === exports.GroupType.GROUP;
-    const isLarge = (((_c = currentGroup.settings) === null || _c === void 0 ? void 0 : _c.storiesSize) === exports.StorySize.LARGE &&
+    const isBackroundFilled = ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.background) === null || _c === void 0 ? void 0 : _c.isFilled) &&
+        currentGroupType === exports.GroupType.GROUP;
+    const isLarge = (((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.storiesSize) === exports.StorySize.LARGE &&
         currentGroupType === exports.GroupType.ONBOARDING) ||
         (currentGroupType === exports.GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
     const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
@@ -10102,8 +11194,8 @@ const StoryModal = (props) => {
     }, [width, height]);
     React.useEffect(() => {
         let currentStoryIndex = 0;
-        if (startStoryId && stories.length) {
-            const storyIndex = stories.findIndex((story) => story.id === startStoryId);
+        if (startStoryId && activeStoriesWithResult.length) {
+            const storyIndex = activeStoriesWithResult.findIndex((story) => story.id === startStoryId);
             currentStoryIndex = storyIndex > -1 ? storyIndex : 0;
         }
         setCurrentStory(currentStoryIndex);
@@ -10120,78 +11212,162 @@ const StoryModal = (props) => {
                 body.style.overflow = 'auto';
             }
         }
-        if (isShowing && stories.length) {
-            setCurrentStoryId(stories[currentStoryIndex].id);
+        if (isShowing && activeStoriesWithResult.length) {
+            setCurrentStoryId(activeStoriesWithResult[currentStoryIndex].id);
             if (onOpenStory) {
-                onOpenStory(currentGroup.id, stories[currentStoryIndex].id);
+                onOpenStory(currentGroup.id, activeStoriesWithResult[currentStoryIndex].id);
             }
         }
-    }, [stories.length, onOpenStory, stories, currentGroup, isShowing, startStoryId]);
+    }, [
+        activeStoriesWithResult.length,
+        onOpenStory,
+        activeStoriesWithResult,
+        currentGroup,
+        isShowing,
+        startStoryId
+    ]);
     const handleClose = React.useCallback(() => {
         onClose();
         if (onCloseStory) {
-            onCloseStory(currentGroup.id, stories[currentStory].id);
+            onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
         }
-    }, [currentGroup.id, currentStory, onClose, onCloseStory, stories]);
+    }, [currentGroup.id, currentStory, onClose, onCloseStory, activeStoriesWithResult]);
+    const resultStories = React.useMemo(() => {
+        var _a;
+        if ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) {
+            return stories
+                .filter((story) => { var _a; return story.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId); })
+                .map((story) => ({
+                id: story.id,
+                isActiveLayer: story.layerData.isActiveLayer,
+                score: story.layerData.score
+            }));
+        }
+        return [];
+    }, [(_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreResultLayersGroupId, stories]);
+    const getResultStoryId = React.useCallback(() => {
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        if (!resultStories.length) {
+            return '';
+        }
+        const nextLayersGroupId = (_a = activeStoriesWithResult[currentStory + 1]) === null || _a === void 0 ? void 0 : _a.layerData.layersGroupId;
+        let resultStoryId = '';
+        if (nextLayersGroupId &&
+            nextLayersGroupId === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
+            resultStoryId = (_d = (_c = resultStories.find((story) => story.isActiveLayer)) === null || _c === void 0 ? void 0 : _c.id) !== null && _d !== void 0 ? _d : '';
+            if (((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreType) === exports.ScoreType.NUMBERS) {
+                for (let i = 0; i < resultStories.length; i++) {
+                    if (+resultStories[i].score.points <= quizState.points) {
+                        resultStoryId = resultStories[i].id;
+                    }
+                }
+            }
+            else if (((_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreType) === exports.ScoreType.LETTERS) {
+                const lettersArr = quizState.letters.toLowerCase().split('');
+                let mostFrequentSymbol = '';
+                let maxCount = 0;
+                const letterCounts = {};
+                for (let i = 0; i < lettersArr.length; i++) {
+                    const letter = lettersArr[i];
+                    if (!letterCounts[letter]) {
+                        letterCounts[letter] = 1;
+                    }
+                    else {
+                        letterCounts[letter]++;
+                    }
+                    if (letterCounts[letter] > maxCount) {
+                        maxCount = letterCounts[letter];
+                        mostFrequentSymbol = letter;
+                    }
+                }
+                resultStoryId =
+                    (_h = (_g = resultStories.find((story) => story.score.letter.toLowerCase() === mostFrequentSymbol)) === null || _g === void 0 ? void 0 : _g.id) !== null && _h !== void 0 ? _h : '';
+            }
+        }
+        return resultStoryId;
+    }, [
+        resultStories,
+        quizState,
+        activeStoriesWithResult,
+        (_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreResultLayersGroupId,
+        (_g = currentGroup.settings) === null || _g === void 0 ? void 0 : _g.scoreType,
+        currentStory
+    ]);
     const handleNext = React.useCallback(() => {
-        if (currentStory === stories.length - 1) {
+        eventPublish('nextStory', {
+            stotyId: activeStoriesWithResult[currentStory].id
+        });
+        const resultStoryId = getResultStoryId();
+        if (currentStory === activeStoriesWithResult.length - 1 ||
+            activeStoriesWithResult[currentStory].id === resultStoryId) {
             if (isLastGroup) {
                 handleClose();
             }
             else {
                 onNextGroup();
                 if (onCloseStory) {
-                    onCloseStory(currentGroup.id, stories[currentStory].id);
+                    onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
                 }
             }
         }
         else {
             if (onCloseStory) {
-                onCloseStory(currentGroup.id, stories[currentStory].id);
+                onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             if (onOpenStory) {
                 setTimeout(() => {
-                    onOpenStory(currentGroup.id, stories[currentStory + 1].id);
+                    onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
                 }, 0);
             }
             if (onNextStory) {
-                onNextStory(currentGroup.id, stories[currentStory].id);
+                onNextStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
-            setCurrentStory(currentStory + 1);
-            setCurrentStoryId(stories[currentStory + 1].id);
+            if (resultStoryId) {
+                const resultStoryIndex = activeStoriesWithResult.findIndex((story) => story.id === resultStoryId);
+                setCurrentStory(resultStoryIndex);
+                setCurrentStoryId(activeStoriesWithResult[resultStoryIndex].id);
+            }
+            else {
+                setCurrentStory(currentStory + 1);
+                setCurrentStoryId(activeStoriesWithResult[currentStory + 1].id);
+            }
         }
     }, [
-        currentGroup.id,
+        activeStoriesWithResult,
         currentStory,
-        handleClose,
+        getResultStoryId,
         isLastGroup,
-        onCloseStory,
+        handleClose,
         onNextGroup,
-        onNextStory,
+        onCloseStory,
+        currentGroup.id,
         onOpenStory,
-        stories
+        onNextStory
     ]);
     const handleAnimationEnd = React.useCallback(() => {
         handleNext();
     }, [handleNext]);
     const handlePrev = React.useCallback(() => {
+        eventPublish('prevStory', {
+            stotyId: activeStoriesWithResult[currentStory].id
+        });
         if (currentStory === 0) {
             isFirstGroup ? handleClose() : onPrevGroup();
         }
         else {
             if (onCloseStory) {
-                onCloseStory(currentGroup.id, stories[currentStory].id);
+                onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             if (onOpenStory) {
                 setTimeout(() => {
-                    onOpenStory(currentGroup.id, stories[currentStory - 1].id);
+                    onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
                 }, 0);
             }
             if (onPrevStory) {
-                onPrevStory(currentGroup.id, stories[currentStory].id);
+                onPrevStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             setCurrentStory(currentStory - 1);
-            setCurrentStoryId(stories[currentStory - 1].id);
+            setCurrentStoryId(activeStoriesWithResult[currentStory - 1].id);
         }
     }, [
         currentGroup.id,
@@ -10202,18 +11378,21 @@ const StoryModal = (props) => {
         onOpenStory,
         onPrevGroup,
         onPrevStory,
-        stories
+        activeStoriesWithResult
     ]);
     const handleGoToStory = (storyId) => {
-        const storyIndex = stories.findIndex((story) => story.id === storyId);
+        const storyIndex = activeStoriesWithResult.findIndex((story) => story.id === storyId);
         if (storyIndex > -1) {
+            eventPublish('nextStory', {
+                stotyId: storyId
+            });
             if (onOpenStory) {
                 setTimeout(() => {
-                    onOpenStory(currentGroup.id, stories[storyIndex].id);
+                    onOpenStory(currentGroup.id, activeStoriesWithResult[storyIndex].id);
                 }, 0);
             }
             setCurrentStory(storyIndex);
-            setCurrentStoryId(stories[storyIndex].id);
+            setCurrentStoryId(activeStoriesWithResult[storyIndex].id);
         }
     };
     const canvasRef = React.useRef(null);
@@ -10221,14 +11400,34 @@ const StoryModal = (props) => {
         canvas: canvasRef.current
     }));
     const noTopShadow = currentGroupType === exports.GroupType.ONBOARDING &&
-        ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.isProgressHidden) &&
-        ((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.isProhibitToClose);
-    return (React__default["default"].createElement(StoryContext.Provider, { value: { currentStoryId, playStatusChange: setPlayStatus } },
+        ((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProgressHidden) &&
+        ((_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProhibitToClose);
+    const handleQuizAnswer = (answer) => {
+        var _a, _b;
+        if (((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreType) === exports.ScoreType.LETTERS) {
+            dispatchQuizState({
+                type: 'add_letters',
+                payload: answer
+            });
+        }
+        else if (((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreType) === exports.ScoreType.NUMBERS) {
+            dispatchQuizState({
+                type: 'add_points',
+                payload: answer
+            });
+        }
+    };
+    return (React__default["default"].createElement(StoryContext.Provider, { value: {
+            currentStoryId,
+            quizMode: (_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.scoreType,
+            playStatusChange: setPlayStatus,
+            handleQuizAnswer
+        } },
         React__default["default"].createElement("div", { className: b$m({ isShowing }), ref: storyModalRef, style: {
                 top: window.pageYOffset || document.documentElement.scrollTop
             } },
             React__default["default"].createElement("div", { className: b$m('body') },
-                stories.length > 1 && (React__default["default"].createElement("button", { className: b$m('arrowButton', { left: true }), onClick: handlePrev },
+                activeStoriesWithResult.length > 1 && (React__default["default"].createElement("button", { className: b$m('arrowButton', { left: true }), onClick: handlePrev },
                     React__default["default"].createElement(LeftArrowIcon, null))),
                 React__default["default"].createElement("div", { className: b$m('bodyContainer', {
                         black: currentGroupType === exports.GroupType.GROUP && !isBackroundFilled && !isMobile
@@ -10254,7 +11453,7 @@ const StoryModal = (props) => {
                             height: `calc(100% - ${isShowMockup && !isMobile ? heightGap : 0}px)`,
                             borderRadius: getBorderRadius()
                         } },
-                        React__default["default"].createElement("div", { className: b$m('swiperContent') }, stories.map((story, index) => {
+                        React__default["default"].createElement("div", { className: b$m('swiperContent') }, activeStoriesWithResult.map((story, index) => {
                             var _a;
                             return (React__default["default"].createElement("div", { className: b$m('story', { current: index === currentStory }), key: story.id },
                                 React__default["default"].createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === exports.GroupType.GROUP && isLarge
@@ -10271,17 +11470,19 @@ const StoryModal = (props) => {
                                         paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
                                         paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
                                     } },
-                                    !((_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.isProgressHidden) && (React__default["default"].createElement("div", { className: b$m('indicators', {
+                                    !((_l = currentGroup.settings) === null || _l === void 0 ? void 0 : _l.isProgressHidden) && (React__default["default"].createElement("div", { className: b$m('indicators', {
                                             stopAnimation: playStatus === 'pause',
                                             widePadding: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeIndicatorTop : undefined
-                                        } }, stories.map((story, index) => (React__default["default"].createElement("div", { className: b$m('indicator', {
+                                        } }, activeStoriesWithResult
+                                        .filter((story) => story.layerData.isActiveLayer)
+                                        .map((story, index) => (React__default["default"].createElement("div", { className: b$m('indicator', {
                                             filled: index < currentStory,
                                             current: index === currentStory
                                         }), key: story.id, onAnimationEnd: handleAnimationEnd }))))),
                                     currentGroupType === exports.GroupType.GROUP && (React__default["default"].createElement("div", { className: b$m('group', {
-                                            noProgress: (_g = currentGroup.settings) === null || _g === void 0 ? void 0 : _g.isProgressHidden,
+                                            noProgress: (_m = currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden,
                                             wideLeft: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeElementsTop : undefined
@@ -10289,8 +11490,8 @@ const StoryModal = (props) => {
                                         React__default["default"].createElement("div", { className: b$m('groupImgWrapper') },
                                             React__default["default"].createElement("img", { alt: "", className: b$m('groupImg'), src: currentGroup.imageUrl })),
                                         React__default["default"].createElement("p", { className: b$m('groupTitle') }, currentGroup.title))),
-                                    !((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$m('close', {
-                                            noProgress: (_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProgressHidden,
+                                    !((_o = currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$m('close', {
+                                            noProgress: (_p = currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
                                             wideRight: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeElementsTop : undefined
@@ -10299,1037 +11500,13 @@ const StoryModal = (props) => {
                     isShowMockup && (React__default["default"].createElement("img", { className: b$m('mockup'), src: isLarge || currentGroupType === exports.GroupType.GROUP
                             ? img$2
                             : img$1 }))),
-                stories.length > 1 && (React__default["default"].createElement("button", { className: b$m('arrowButton', { right: true }), onClick: handleNext },
+                activeStoriesWithResult.length > 1 && (React__default["default"].createElement("button", { className: b$m('arrowButton', { right: true }), onClick: handleNext },
                     React__default["default"].createElement(RightArrowIcon, null)))),
-            isForceCloseAvailable && ((_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
+            isForceCloseAvailable && ((_q = currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
                 React__default["default"].createElement(CloseIcon, null)))),
         React__default["default"].createElement("canvas", { ref: canvasRef, style: {
                 display: 'none'
             } })));
-};
-
-var removeHash = function removeHash(hex) {
-  return hex.charAt(0) === '#' ? hex.slice(1) : hex;
-};
-
-var parseHex = function parseHex(nakedHex) {
-  var isShort = nakedHex.length === 3 || nakedHex.length === 4;
-  var twoDigitHexR = isShort ? "".concat(nakedHex.slice(0, 1)).concat(nakedHex.slice(0, 1)) : nakedHex.slice(0, 2);
-  var twoDigitHexG = isShort ? "".concat(nakedHex.slice(1, 2)).concat(nakedHex.slice(1, 2)) : nakedHex.slice(2, 4);
-  var twoDigitHexB = isShort ? "".concat(nakedHex.slice(2, 3)).concat(nakedHex.slice(2, 3)) : nakedHex.slice(4, 6);
-  var twoDigitHexA = (isShort ? "".concat(nakedHex.slice(3, 4)).concat(nakedHex.slice(3, 4)) : nakedHex.slice(6, 8)) || 'ff'; // const numericA = +((parseInt(a, 16) / 255).toFixed(2));
-
-  return {
-    r: twoDigitHexR,
-    g: twoDigitHexG,
-    b: twoDigitHexB,
-    a: twoDigitHexA
-  };
-};
-
-var hexToDecimal = function hexToDecimal(hex) {
-  return parseInt(hex, 16);
-};
-
-var hexesToDecimals = function hexesToDecimals(_ref) {
-  var r = _ref.r,
-      g = _ref.g,
-      b = _ref.b,
-      a = _ref.a;
-  return {
-    r: hexToDecimal(r),
-    g: hexToDecimal(g),
-    b: hexToDecimal(b),
-    a: +(hexToDecimal(a) / 255).toFixed(2)
-  };
-};
-
-var isNumeric = function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
-}; // eslint-disable-line no-restricted-globals, max-len
-
-
-var formatRgb = function formatRgb(decimalObject, parameterA) {
-  var r = decimalObject.r,
-      g = decimalObject.g,
-      b = decimalObject.b,
-      parsedA = decimalObject.a;
-  var a = isNumeric(parameterA) ? parameterA : parsedA;
-  return "rgba(".concat(r, ", ").concat(g, ", ").concat(b, ", ").concat(a, ")");
-};
-/**
- * Turns an old-fashioned css hex color value into a rgb color value.
- *
- * If you specify an alpha value, you'll get a rgba() value instead.
- *
- * @param The hex value to convert. ('123456'. '#123456', ''123', '#123')
- * @param An alpha value to apply. (optional) ('0.5', '0.25')
- * @return An rgb or rgba value. ('rgb(11, 22, 33)'. 'rgba(11, 22, 33, 0.5)')
- */
-
-
-var hexToRgba = function hexToRgba(hex, a) {
-  var hashlessHex = removeHash(hex);
-  var hexObject = parseHex(hashlessHex);
-  var decimalObject = hexesToDecimals(hexObject);
-  return formatRgb(decimalObject, a);
-};
-
-var build = hexToRgba;
-
-/* MIT license */
-
-var conversions$1 = {
-  rgb2hsl: rgb2hsl,
-  rgb2hsv: rgb2hsv,
-  rgb2hwb: rgb2hwb,
-  rgb2cmyk: rgb2cmyk,
-  rgb2keyword: rgb2keyword,
-  rgb2xyz: rgb2xyz,
-  rgb2lab: rgb2lab,
-  rgb2lch: rgb2lch,
-
-  hsl2rgb: hsl2rgb,
-  hsl2hsv: hsl2hsv,
-  hsl2hwb: hsl2hwb,
-  hsl2cmyk: hsl2cmyk,
-  hsl2keyword: hsl2keyword,
-
-  hsv2rgb: hsv2rgb,
-  hsv2hsl: hsv2hsl,
-  hsv2hwb: hsv2hwb,
-  hsv2cmyk: hsv2cmyk,
-  hsv2keyword: hsv2keyword,
-
-  hwb2rgb: hwb2rgb,
-  hwb2hsl: hwb2hsl,
-  hwb2hsv: hwb2hsv,
-  hwb2cmyk: hwb2cmyk,
-  hwb2keyword: hwb2keyword,
-
-  cmyk2rgb: cmyk2rgb,
-  cmyk2hsl: cmyk2hsl,
-  cmyk2hsv: cmyk2hsv,
-  cmyk2hwb: cmyk2hwb,
-  cmyk2keyword: cmyk2keyword,
-
-  keyword2rgb: keyword2rgb,
-  keyword2hsl: keyword2hsl,
-  keyword2hsv: keyword2hsv,
-  keyword2hwb: keyword2hwb,
-  keyword2cmyk: keyword2cmyk,
-  keyword2lab: keyword2lab,
-  keyword2xyz: keyword2xyz,
-
-  xyz2rgb: xyz2rgb,
-  xyz2lab: xyz2lab,
-  xyz2lch: xyz2lch,
-
-  lab2xyz: lab2xyz,
-  lab2rgb: lab2rgb,
-  lab2lch: lab2lch,
-
-  lch2lab: lch2lab,
-  lch2xyz: lch2xyz,
-  lch2rgb: lch2rgb
-};
-
-
-function rgb2hsl(rgb) {
-  var r = rgb[0]/255,
-      g = rgb[1]/255,
-      b = rgb[2]/255,
-      min = Math.min(r, g, b),
-      max = Math.max(r, g, b),
-      delta = max - min,
-      h, s, l;
-
-  if (max == min)
-    h = 0;
-  else if (r == max)
-    h = (g - b) / delta;
-  else if (g == max)
-    h = 2 + (b - r) / delta;
-  else if (b == max)
-    h = 4 + (r - g)/ delta;
-
-  h = Math.min(h * 60, 360);
-
-  if (h < 0)
-    h += 360;
-
-  l = (min + max) / 2;
-
-  if (max == min)
-    s = 0;
-  else if (l <= 0.5)
-    s = delta / (max + min);
-  else
-    s = delta / (2 - max - min);
-
-  return [h, s * 100, l * 100];
-}
-
-function rgb2hsv(rgb) {
-  var r = rgb[0],
-      g = rgb[1],
-      b = rgb[2],
-      min = Math.min(r, g, b),
-      max = Math.max(r, g, b),
-      delta = max - min,
-      h, s, v;
-
-  if (max == 0)
-    s = 0;
-  else
-    s = (delta/max * 1000)/10;
-
-  if (max == min)
-    h = 0;
-  else if (r == max)
-    h = (g - b) / delta;
-  else if (g == max)
-    h = 2 + (b - r) / delta;
-  else if (b == max)
-    h = 4 + (r - g) / delta;
-
-  h = Math.min(h * 60, 360);
-
-  if (h < 0)
-    h += 360;
-
-  v = ((max / 255) * 1000) / 10;
-
-  return [h, s, v];
-}
-
-function rgb2hwb(rgb) {
-  var r = rgb[0],
-      g = rgb[1],
-      b = rgb[2],
-      h = rgb2hsl(rgb)[0],
-      w = 1/255 * Math.min(r, Math.min(g, b)),
-      b = 1 - 1/255 * Math.max(r, Math.max(g, b));
-
-  return [h, w * 100, b * 100];
-}
-
-function rgb2cmyk(rgb) {
-  var r = rgb[0] / 255,
-      g = rgb[1] / 255,
-      b = rgb[2] / 255,
-      c, m, y, k;
-
-  k = Math.min(1 - r, 1 - g, 1 - b);
-  c = (1 - r - k) / (1 - k) || 0;
-  m = (1 - g - k) / (1 - k) || 0;
-  y = (1 - b - k) / (1 - k) || 0;
-  return [c * 100, m * 100, y * 100, k * 100];
-}
-
-function rgb2keyword(rgb) {
-  return reverseKeywords[JSON.stringify(rgb)];
-}
-
-function rgb2xyz(rgb) {
-  var r = rgb[0] / 255,
-      g = rgb[1] / 255,
-      b = rgb[2] / 255;
-
-  // assume sRGB
-  r = r > 0.04045 ? Math.pow(((r + 0.055) / 1.055), 2.4) : (r / 12.92);
-  g = g > 0.04045 ? Math.pow(((g + 0.055) / 1.055), 2.4) : (g / 12.92);
-  b = b > 0.04045 ? Math.pow(((b + 0.055) / 1.055), 2.4) : (b / 12.92);
-
-  var x = (r * 0.4124) + (g * 0.3576) + (b * 0.1805);
-  var y = (r * 0.2126) + (g * 0.7152) + (b * 0.0722);
-  var z = (r * 0.0193) + (g * 0.1192) + (b * 0.9505);
-
-  return [x * 100, y *100, z * 100];
-}
-
-function rgb2lab(rgb) {
-  var xyz = rgb2xyz(rgb),
-        x = xyz[0],
-        y = xyz[1],
-        z = xyz[2],
-        l, a, b;
-
-  x /= 95.047;
-  y /= 100;
-  z /= 108.883;
-
-  x = x > 0.008856 ? Math.pow(x, 1/3) : (7.787 * x) + (16 / 116);
-  y = y > 0.008856 ? Math.pow(y, 1/3) : (7.787 * y) + (16 / 116);
-  z = z > 0.008856 ? Math.pow(z, 1/3) : (7.787 * z) + (16 / 116);
-
-  l = (116 * y) - 16;
-  a = 500 * (x - y);
-  b = 200 * (y - z);
-
-  return [l, a, b];
-}
-
-function rgb2lch(args) {
-  return lab2lch(rgb2lab(args));
-}
-
-function hsl2rgb(hsl) {
-  var h = hsl[0] / 360,
-      s = hsl[1] / 100,
-      l = hsl[2] / 100,
-      t1, t2, t3, rgb, val;
-
-  if (s == 0) {
-    val = l * 255;
-    return [val, val, val];
-  }
-
-  if (l < 0.5)
-    t2 = l * (1 + s);
-  else
-    t2 = l + s - l * s;
-  t1 = 2 * l - t2;
-
-  rgb = [0, 0, 0];
-  for (var i = 0; i < 3; i++) {
-    t3 = h + 1 / 3 * - (i - 1);
-    t3 < 0 && t3++;
-    t3 > 1 && t3--;
-
-    if (6 * t3 < 1)
-      val = t1 + (t2 - t1) * 6 * t3;
-    else if (2 * t3 < 1)
-      val = t2;
-    else if (3 * t3 < 2)
-      val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
-    else
-      val = t1;
-
-    rgb[i] = val * 255;
-  }
-
-  return rgb;
-}
-
-function hsl2hsv(hsl) {
-  var h = hsl[0],
-      s = hsl[1] / 100,
-      l = hsl[2] / 100,
-      sv, v;
-
-  if(l === 0) {
-      // no need to do calc on black
-      // also avoids divide by 0 error
-      return [0, 0, 0];
-  }
-
-  l *= 2;
-  s *= (l <= 1) ? l : 2 - l;
-  v = (l + s) / 2;
-  sv = (2 * s) / (l + s);
-  return [h, sv * 100, v * 100];
-}
-
-function hsl2hwb(args) {
-  return rgb2hwb(hsl2rgb(args));
-}
-
-function hsl2cmyk(args) {
-  return rgb2cmyk(hsl2rgb(args));
-}
-
-function hsl2keyword(args) {
-  return rgb2keyword(hsl2rgb(args));
-}
-
-
-function hsv2rgb(hsv) {
-  var h = hsv[0] / 60,
-      s = hsv[1] / 100,
-      v = hsv[2] / 100,
-      hi = Math.floor(h) % 6;
-
-  var f = h - Math.floor(h),
-      p = 255 * v * (1 - s),
-      q = 255 * v * (1 - (s * f)),
-      t = 255 * v * (1 - (s * (1 - f))),
-      v = 255 * v;
-
-  switch(hi) {
-    case 0:
-      return [v, t, p];
-    case 1:
-      return [q, v, p];
-    case 2:
-      return [p, v, t];
-    case 3:
-      return [p, q, v];
-    case 4:
-      return [t, p, v];
-    case 5:
-      return [v, p, q];
-  }
-}
-
-function hsv2hsl(hsv) {
-  var h = hsv[0],
-      s = hsv[1] / 100,
-      v = hsv[2] / 100,
-      sl, l;
-
-  l = (2 - s) * v;
-  sl = s * v;
-  sl /= (l <= 1) ? l : 2 - l;
-  sl = sl || 0;
-  l /= 2;
-  return [h, sl * 100, l * 100];
-}
-
-function hsv2hwb(args) {
-  return rgb2hwb(hsv2rgb(args))
-}
-
-function hsv2cmyk(args) {
-  return rgb2cmyk(hsv2rgb(args));
-}
-
-function hsv2keyword(args) {
-  return rgb2keyword(hsv2rgb(args));
-}
-
-// http://dev.w3.org/csswg/css-color/#hwb-to-rgb
-function hwb2rgb(hwb) {
-  var h = hwb[0] / 360,
-      wh = hwb[1] / 100,
-      bl = hwb[2] / 100,
-      ratio = wh + bl,
-      i, v, f, n;
-
-  // wh + bl cant be > 1
-  if (ratio > 1) {
-    wh /= ratio;
-    bl /= ratio;
-  }
-
-  i = Math.floor(6 * h);
-  v = 1 - bl;
-  f = 6 * h - i;
-  if ((i & 0x01) != 0) {
-    f = 1 - f;
-  }
-  n = wh + f * (v - wh);  // linear interpolation
-
-  switch (i) {
-    default:
-    case 6:
-    case 0: r = v; g = n; b = wh; break;
-    case 1: r = n; g = v; b = wh; break;
-    case 2: r = wh; g = v; b = n; break;
-    case 3: r = wh; g = n; b = v; break;
-    case 4: r = n; g = wh; b = v; break;
-    case 5: r = v; g = wh; b = n; break;
-  }
-
-  return [r * 255, g * 255, b * 255];
-}
-
-function hwb2hsl(args) {
-  return rgb2hsl(hwb2rgb(args));
-}
-
-function hwb2hsv(args) {
-  return rgb2hsv(hwb2rgb(args));
-}
-
-function hwb2cmyk(args) {
-  return rgb2cmyk(hwb2rgb(args));
-}
-
-function hwb2keyword(args) {
-  return rgb2keyword(hwb2rgb(args));
-}
-
-function cmyk2rgb(cmyk) {
-  var c = cmyk[0] / 100,
-      m = cmyk[1] / 100,
-      y = cmyk[2] / 100,
-      k = cmyk[3] / 100,
-      r, g, b;
-
-  r = 1 - Math.min(1, c * (1 - k) + k);
-  g = 1 - Math.min(1, m * (1 - k) + k);
-  b = 1 - Math.min(1, y * (1 - k) + k);
-  return [r * 255, g * 255, b * 255];
-}
-
-function cmyk2hsl(args) {
-  return rgb2hsl(cmyk2rgb(args));
-}
-
-function cmyk2hsv(args) {
-  return rgb2hsv(cmyk2rgb(args));
-}
-
-function cmyk2hwb(args) {
-  return rgb2hwb(cmyk2rgb(args));
-}
-
-function cmyk2keyword(args) {
-  return rgb2keyword(cmyk2rgb(args));
-}
-
-
-function xyz2rgb(xyz) {
-  var x = xyz[0] / 100,
-      y = xyz[1] / 100,
-      z = xyz[2] / 100,
-      r, g, b;
-
-  r = (x * 3.2406) + (y * -1.5372) + (z * -0.4986);
-  g = (x * -0.9689) + (y * 1.8758) + (z * 0.0415);
-  b = (x * 0.0557) + (y * -0.2040) + (z * 1.0570);
-
-  // assume sRGB
-  r = r > 0.0031308 ? ((1.055 * Math.pow(r, 1.0 / 2.4)) - 0.055)
-    : r = (r * 12.92);
-
-  g = g > 0.0031308 ? ((1.055 * Math.pow(g, 1.0 / 2.4)) - 0.055)
-    : g = (g * 12.92);
-
-  b = b > 0.0031308 ? ((1.055 * Math.pow(b, 1.0 / 2.4)) - 0.055)
-    : b = (b * 12.92);
-
-  r = Math.min(Math.max(0, r), 1);
-  g = Math.min(Math.max(0, g), 1);
-  b = Math.min(Math.max(0, b), 1);
-
-  return [r * 255, g * 255, b * 255];
-}
-
-function xyz2lab(xyz) {
-  var x = xyz[0],
-      y = xyz[1],
-      z = xyz[2],
-      l, a, b;
-
-  x /= 95.047;
-  y /= 100;
-  z /= 108.883;
-
-  x = x > 0.008856 ? Math.pow(x, 1/3) : (7.787 * x) + (16 / 116);
-  y = y > 0.008856 ? Math.pow(y, 1/3) : (7.787 * y) + (16 / 116);
-  z = z > 0.008856 ? Math.pow(z, 1/3) : (7.787 * z) + (16 / 116);
-
-  l = (116 * y) - 16;
-  a = 500 * (x - y);
-  b = 200 * (y - z);
-
-  return [l, a, b];
-}
-
-function xyz2lch(args) {
-  return lab2lch(xyz2lab(args));
-}
-
-function lab2xyz(lab) {
-  var l = lab[0],
-      a = lab[1],
-      b = lab[2],
-      x, y, z, y2;
-
-  if (l <= 8) {
-    y = (l * 100) / 903.3;
-    y2 = (7.787 * (y / 100)) + (16 / 116);
-  } else {
-    y = 100 * Math.pow((l + 16) / 116, 3);
-    y2 = Math.pow(y / 100, 1/3);
-  }
-
-  x = x / 95.047 <= 0.008856 ? x = (95.047 * ((a / 500) + y2 - (16 / 116))) / 7.787 : 95.047 * Math.pow((a / 500) + y2, 3);
-
-  z = z / 108.883 <= 0.008859 ? z = (108.883 * (y2 - (b / 200) - (16 / 116))) / 7.787 : 108.883 * Math.pow(y2 - (b / 200), 3);
-
-  return [x, y, z];
-}
-
-function lab2lch(lab) {
-  var l = lab[0],
-      a = lab[1],
-      b = lab[2],
-      hr, h, c;
-
-  hr = Math.atan2(b, a);
-  h = hr * 360 / 2 / Math.PI;
-  if (h < 0) {
-    h += 360;
-  }
-  c = Math.sqrt(a * a + b * b);
-  return [l, c, h];
-}
-
-function lab2rgb(args) {
-  return xyz2rgb(lab2xyz(args));
-}
-
-function lch2lab(lch) {
-  var l = lch[0],
-      c = lch[1],
-      h = lch[2],
-      a, b, hr;
-
-  hr = h / 360 * 2 * Math.PI;
-  a = c * Math.cos(hr);
-  b = c * Math.sin(hr);
-  return [l, a, b];
-}
-
-function lch2xyz(args) {
-  return lab2xyz(lch2lab(args));
-}
-
-function lch2rgb(args) {
-  return lab2rgb(lch2lab(args));
-}
-
-function keyword2rgb(keyword) {
-  return cssKeywords[keyword];
-}
-
-function keyword2hsl(args) {
-  return rgb2hsl(keyword2rgb(args));
-}
-
-function keyword2hsv(args) {
-  return rgb2hsv(keyword2rgb(args));
-}
-
-function keyword2hwb(args) {
-  return rgb2hwb(keyword2rgb(args));
-}
-
-function keyword2cmyk(args) {
-  return rgb2cmyk(keyword2rgb(args));
-}
-
-function keyword2lab(args) {
-  return rgb2lab(keyword2rgb(args));
-}
-
-function keyword2xyz(args) {
-  return rgb2xyz(keyword2rgb(args));
-}
-
-var cssKeywords = {
-  aliceblue:  [240,248,255],
-  antiquewhite: [250,235,215],
-  aqua: [0,255,255],
-  aquamarine: [127,255,212],
-  azure:  [240,255,255],
-  beige:  [245,245,220],
-  bisque: [255,228,196],
-  black:  [0,0,0],
-  blanchedalmond: [255,235,205],
-  blue: [0,0,255],
-  blueviolet: [138,43,226],
-  brown:  [165,42,42],
-  burlywood:  [222,184,135],
-  cadetblue:  [95,158,160],
-  chartreuse: [127,255,0],
-  chocolate:  [210,105,30],
-  coral:  [255,127,80],
-  cornflowerblue: [100,149,237],
-  cornsilk: [255,248,220],
-  crimson:  [220,20,60],
-  cyan: [0,255,255],
-  darkblue: [0,0,139],
-  darkcyan: [0,139,139],
-  darkgoldenrod:  [184,134,11],
-  darkgray: [169,169,169],
-  darkgreen:  [0,100,0],
-  darkgrey: [169,169,169],
-  darkkhaki:  [189,183,107],
-  darkmagenta:  [139,0,139],
-  darkolivegreen: [85,107,47],
-  darkorange: [255,140,0],
-  darkorchid: [153,50,204],
-  darkred:  [139,0,0],
-  darksalmon: [233,150,122],
-  darkseagreen: [143,188,143],
-  darkslateblue:  [72,61,139],
-  darkslategray:  [47,79,79],
-  darkslategrey:  [47,79,79],
-  darkturquoise:  [0,206,209],
-  darkviolet: [148,0,211],
-  deeppink: [255,20,147],
-  deepskyblue:  [0,191,255],
-  dimgray:  [105,105,105],
-  dimgrey:  [105,105,105],
-  dodgerblue: [30,144,255],
-  firebrick:  [178,34,34],
-  floralwhite:  [255,250,240],
-  forestgreen:  [34,139,34],
-  fuchsia:  [255,0,255],
-  gainsboro:  [220,220,220],
-  ghostwhite: [248,248,255],
-  gold: [255,215,0],
-  goldenrod:  [218,165,32],
-  gray: [128,128,128],
-  green:  [0,128,0],
-  greenyellow:  [173,255,47],
-  grey: [128,128,128],
-  honeydew: [240,255,240],
-  hotpink:  [255,105,180],
-  indianred:  [205,92,92],
-  indigo: [75,0,130],
-  ivory:  [255,255,240],
-  khaki:  [240,230,140],
-  lavender: [230,230,250],
-  lavenderblush:  [255,240,245],
-  lawngreen:  [124,252,0],
-  lemonchiffon: [255,250,205],
-  lightblue:  [173,216,230],
-  lightcoral: [240,128,128],
-  lightcyan:  [224,255,255],
-  lightgoldenrodyellow: [250,250,210],
-  lightgray:  [211,211,211],
-  lightgreen: [144,238,144],
-  lightgrey:  [211,211,211],
-  lightpink:  [255,182,193],
-  lightsalmon:  [255,160,122],
-  lightseagreen:  [32,178,170],
-  lightskyblue: [135,206,250],
-  lightslategray: [119,136,153],
-  lightslategrey: [119,136,153],
-  lightsteelblue: [176,196,222],
-  lightyellow:  [255,255,224],
-  lime: [0,255,0],
-  limegreen:  [50,205,50],
-  linen:  [250,240,230],
-  magenta:  [255,0,255],
-  maroon: [128,0,0],
-  mediumaquamarine: [102,205,170],
-  mediumblue: [0,0,205],
-  mediumorchid: [186,85,211],
-  mediumpurple: [147,112,219],
-  mediumseagreen: [60,179,113],
-  mediumslateblue:  [123,104,238],
-  mediumspringgreen:  [0,250,154],
-  mediumturquoise:  [72,209,204],
-  mediumvioletred:  [199,21,133],
-  midnightblue: [25,25,112],
-  mintcream:  [245,255,250],
-  mistyrose:  [255,228,225],
-  moccasin: [255,228,181],
-  navajowhite:  [255,222,173],
-  navy: [0,0,128],
-  oldlace:  [253,245,230],
-  olive:  [128,128,0],
-  olivedrab:  [107,142,35],
-  orange: [255,165,0],
-  orangered:  [255,69,0],
-  orchid: [218,112,214],
-  palegoldenrod:  [238,232,170],
-  palegreen:  [152,251,152],
-  paleturquoise:  [175,238,238],
-  palevioletred:  [219,112,147],
-  papayawhip: [255,239,213],
-  peachpuff:  [255,218,185],
-  peru: [205,133,63],
-  pink: [255,192,203],
-  plum: [221,160,221],
-  powderblue: [176,224,230],
-  purple: [128,0,128],
-  rebeccapurple: [102, 51, 153],
-  red:  [255,0,0],
-  rosybrown:  [188,143,143],
-  royalblue:  [65,105,225],
-  saddlebrown:  [139,69,19],
-  salmon: [250,128,114],
-  sandybrown: [244,164,96],
-  seagreen: [46,139,87],
-  seashell: [255,245,238],
-  sienna: [160,82,45],
-  silver: [192,192,192],
-  skyblue:  [135,206,235],
-  slateblue:  [106,90,205],
-  slategray:  [112,128,144],
-  slategrey:  [112,128,144],
-  snow: [255,250,250],
-  springgreen:  [0,255,127],
-  steelblue:  [70,130,180],
-  tan:  [210,180,140],
-  teal: [0,128,128],
-  thistle:  [216,191,216],
-  tomato: [255,99,71],
-  turquoise:  [64,224,208],
-  violet: [238,130,238],
-  wheat:  [245,222,179],
-  white:  [255,255,255],
-  whitesmoke: [245,245,245],
-  yellow: [255,255,0],
-  yellowgreen:  [154,205,50]
-};
-
-var reverseKeywords = {};
-for (var key in cssKeywords) {
-  reverseKeywords[JSON.stringify(cssKeywords[key])] = key;
-}
-
-var conversions = conversions$1;
-
-var convert$1 = function() {
-   return new Converter();
-};
-
-for (var func in conversions) {
-  // export Raw versions
-  convert$1[func + "Raw"] =  (function(func) {
-    // accept array or plain args
-    return function(arg) {
-      if (typeof arg == "number")
-        arg = Array.prototype.slice.call(arguments);
-      return conversions[func](arg);
-    }
-  })(func);
-
-  var pair = /(\w+)2(\w+)/.exec(func),
-      from = pair[1],
-      to = pair[2];
-
-  // export rgb2hsl and ["rgb"]["hsl"]
-  convert$1[from] = convert$1[from] || {};
-
-  convert$1[from][to] = convert$1[func] = (function(func) { 
-    return function(arg) {
-      if (typeof arg == "number")
-        arg = Array.prototype.slice.call(arguments);
-      
-      var val = conversions[func](arg);
-      if (typeof val == "string" || val === undefined)
-        return val; // keyword
-
-      for (var i = 0; i < val.length; i++)
-        val[i] = Math.round(val[i]);
-      return val;
-    }
-  })(func);
-}
-
-
-/* Converter does lazy conversion and caching */
-var Converter = function() {
-   this.convs = {};
-};
-
-/* Either get the values for a space or
-  set the values for a space, depending on args */
-Converter.prototype.routeSpace = function(space, args) {
-   var values = args[0];
-   if (values === undefined) {
-      // color.rgb()
-      return this.getValues(space);
-   }
-   // color.rgb(10, 10, 10)
-   if (typeof values == "number") {
-      values = Array.prototype.slice.call(args);        
-   }
-
-   return this.setValues(space, values);
-};
-  
-/* Set the values for a space, invalidating cache */
-Converter.prototype.setValues = function(space, values) {
-   this.space = space;
-   this.convs = {};
-   this.convs[space] = values;
-   return this;
-};
-
-/* Get the values for a space. If there's already
-  a conversion for the space, fetch it, otherwise
-  compute it */
-Converter.prototype.getValues = function(space) {
-   var vals = this.convs[space];
-   if (!vals) {
-      var fspace = this.space,
-          from = this.convs[fspace];
-      vals = convert$1[fspace][space](from);
-
-      this.convs[space] = vals;
-   }
-  return vals;
-};
-
-["rgb", "hsl", "hsv", "cmyk", "keyword"].forEach(function(space) {
-   Converter.prototype[space] = function(vals) {
-      return this.routeSpace(space, arguments);
-   };
-});
-
-var colorConvert = convert$1;
-
-var convert = colorConvert;
-
-var parseColor = function (cstr) {
-    var m, conv, parts, alpha;
-    if (m = /^((?:rgb|hs[lv]|cmyk|xyz|lab)a?)\s*\(([^\)]*)\)/.exec(cstr)) {
-        var name = m[1];
-        var base = name.replace(/a$/, '');
-        var size = base === 'cmyk' ? 4 : 3;
-        conv = convert[base];
-        
-        parts = m[2].replace(/^\s+|\s+$/g, '')
-            .split(/\s*,\s*/)
-            .map(function (x, i) {
-                if (/%$/.test(x) && i === size) {
-                    return parseFloat(x) / 100;
-                }
-                else if (/%$/.test(x)) {
-                    return parseFloat(x);
-                }
-                return parseFloat(x);
-            })
-        ;
-        if (name === base) parts.push(1);
-        alpha = parts[size] === undefined ? 1 : parts[size];
-        parts = parts.slice(0, size);
-        
-        conv[base] = function () { return parts };
-    }
-    else if (/^#[A-Fa-f0-9]+$/.test(cstr)) {
-        var base = cstr.replace(/^#/,'');
-        var size = base.length;
-        conv = convert.rgb;
-        parts = base.split(size === 3 ? /(.)/ : /(..)/);
-        parts = parts.filter(Boolean)
-            .map(function (x) {
-                if (size === 3) {
-                    return parseInt(x + x, 16);
-                }
-                else {
-                    return parseInt(x, 16)
-                }
-            })
-        ;
-        alpha = 1;
-        conv.rgb = function () { return parts };
-        if (!parts[0]) parts[0] = 0;
-        if (!parts[1]) parts[1] = 0;
-        if (!parts[2]) parts[2] = 0;
-    }
-    else {
-        conv = convert.keyword;
-        conv.keyword = function () { return cstr };
-        parts = cstr;
-        alpha = 1;
-    }
-    
-    var res = {
-        rgb: undefined,
-        hsl: undefined,
-        hsv: undefined,
-        cmyk: undefined,
-        keyword: undefined,
-        hex: undefined
-    };
-    try { res.rgb = conv.rgb(parts); } catch (e) {}
-    try { res.hsl = conv.hsl(parts); } catch (e) {}
-    try { res.hsv = conv.hsv(parts); } catch (e) {}
-    try { res.cmyk = conv.cmyk(parts); } catch (e) {}
-    try { res.keyword = conv.keyword(parts); } catch (e) {}
-    
-    if (res.rgb) res.hex = '#' + res.rgb.map(function (x) {
-        var s = x.toString(16);
-        if (s.length === 1) return '0' + s;
-        return s;
-    }).join('');
-    
-    if (res.rgb) res.rgba = res.rgb.concat(alpha);
-    if (res.hsl) res.hsla = res.hsl.concat(alpha);
-    if (res.hsv) res.hsva = res.hsv.concat(alpha);
-    if (res.cmyk) res.cmyka = res.cmyk.concat(alpha);
-    
-    return res;
-};
-
-const block = lib.exports.setup({ ns: 'StorySdk-' });
-const renderColor = (color, opacity) => {
-    if (color.includes('#') && opacity) {
-        color = build(color, opacity / 100);
-    }
-    return color;
-};
-const renderGradient = (colors, opacity) => {
-    const first = renderColor(colors[0], opacity);
-    const second = renderColor(colors[1], opacity);
-    return `linear-gradient(180deg, ${first} 0%, ${second} 100%)`;
-};
-const renderBackgroundStyles = (background, opacity) => {
-    let color = background.value;
-    switch (background.type) {
-        case 'color':
-            if (color.includes('#') && opacity !== undefined) {
-                color = build(background.value, opacity / 100);
-            }
-            else if (opacity !== undefined) {
-                const parsed = parseColor(background.value);
-                return `rgba(${parsed.rgb[0]}, ${parsed.rgb[1]}, ${parsed.rgb[2]}, ${opacity / 100})`;
-            }
-            return color;
-        case 'gradient':
-            return `linear-gradient(180deg, ${background.value[0]} 0%, ${background.value[1]} 100%)`;
-        case 'image':
-            return `center / cover url("${background.value}")`;
-        default:
-            return 'transparent';
-    }
-};
-const renderTextBackgroundStyles = ({ color, opacity }) => {
-    switch (color.type) {
-        case 'color':
-            return {
-                color: color.value
-            };
-        case 'gradient':
-            return {
-                background: renderGradient(color.value, opacity)
-            };
-        default:
-            return {
-                background: 'transparent'
-            };
-    }
-};
-const renderPosition = (position, positionLimits) => ({
-    left: `${position.x}px`,
-    top: `${position.y}px`,
-    width: positionLimits.isAutoWidth ? 'auto' : `${position.width}px`,
-    height: positionLimits.isAutoHeight ? 'auto' : `${position.height}px`,
-    transform: `rotate(${position.rotate}deg)`
-});
-const SCALE_INDEX = 2.76;
-const getScalableValue = (value) => Math.round(value * SCALE_INDEX);
-const calculateElementSize = (position, positionLimits, elementSize) => positionLimits.minWidth
-    ? getScalableValue(Math.round((elementSize * +position.width) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)))
-    : getScalableValue(elementSize);
-const calculateElementSizeByHeight = (position, positionLimits, elementSize) => positionLimits.minHeight
-    ? getScalableValue(Math.round((elementSize * position.height) / (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight)))
-    : getScalableValue(elementSize);
-
-const getClientPosition = (e) => {
-    const touches = e.touches;
-    if (touches && touches.length) {
-        const finger = touches[0];
-        return {
-            x: finger.clientX,
-            y: finger.clientY
-        };
-    }
-    return {
-        x: e.clientX,
-        y: e.clientY
-    };
 };
 
 const b$l = block('ChooseAnswerWidget');
@@ -11359,15 +11536,16 @@ const INIT_ELEMENT_STYLES$a = {
         fontSize: 10
     }
 };
-const ChooseAnswerWidget = (props) => {
+const ChooseAnswerWidget = React__default["default"].memo((props) => {
     const { params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
     const [userAnswer, setUserAnswer] = React.useState(null);
+    const storyContextVal = React.useContext(StoryContext);
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+position.width, size, positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = React.useMemo(() => ({
         widget: {
             borderRadius: calculate(INIT_ELEMENT_STYLES$a.widget.borderRadius)
@@ -11394,12 +11572,22 @@ const ChooseAnswerWidget = (props) => {
             fontSize: calculate(INIT_ELEMENT_STYLES$a.answerTitle.fontSize)
         }
     }), [calculate]);
+    const handleSendScore = React.useCallback((currentAnswer) => {
+        var _a;
+        const answerScore = currentAnswer
+            ? (_a = params.answers.find((answer) => answer.id === currentAnswer)) === null || _a === void 0 ? void 0 : _a.score
+            : undefined;
+        if (answerScore && storyContextVal.quizMode && storyContextVal.handleQuizAnswer) {
+            storyContextVal.handleQuizAnswer(storyContextVal.quizMode === exports.ScoreType.LETTERS ? answerScore.letter : answerScore.points);
+        }
+    }, [params.answers, storyContextVal]);
     const handleMarkAnswer = React.useCallback((answerId) => {
         if (onAnswer) {
             onAnswer(answerId);
         }
         setUserAnswer(answerId);
-    }, [onAnswer]);
+        handleSendScore(answerId);
+    }, [onAnswer, handleSendScore]);
     const renderAnswer = React.useCallback((answer) => {
         if (userAnswer) {
             return (React__default["default"].createElement("div", { className: b$l('answer', {
@@ -11453,13 +11641,13 @@ const ChooseAnswerWidget = (props) => {
         }), style: elementSizes.widget },
         !params.isTitleHidden && (React__default["default"].createElement("div", { className: b$l('header'), style: elementSizes.header }, params.text)),
         React__default["default"].createElement("div", { className: b$l('answers'), style: elementSizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
-};
+});
 
 const b$k = block('ClickMeWidget');
-const ClickMeWidget = (props) => {
+const ClickMeWidget = React__default["default"].memo((props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url, storyId, actionType } = props.params;
     const { isReadOnly, onClick, onGoToStory } = props;
-    const handleWidgetClick = () => {
+    const handleWidgetClick = React.useCallback(() => {
         if (onClick) {
             onClick();
         }
@@ -11472,7 +11660,7 @@ const ClickMeWidget = (props) => {
         else if (actionType === 'story' && onGoToStory && storyId) {
             onGoToStory(storyId);
         }
-    };
+    }, [actionType, onClick, onGoToStory, storyId, url]);
     return (React__default["default"].createElement("div", { className: b$k({ disabled: isReadOnly }), role: "button", style: {
             borderRadius,
             borderStyle: 'solid',
@@ -11486,10 +11674,10 @@ const ClickMeWidget = (props) => {
         React__default["default"].createElement("div", { className: b$k('background'), style: {
                 background: renderBackgroundStyles(backgroundColor)
             } })));
-};
+});
 
 const b$j = block('EllipseWidget');
-const EllipseWidget = (props) => {
+const EllipseWidget = React__default["default"].memo((props) => {
     const { fillColor, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
         opacity: widgetOpacity / 100,
@@ -11502,7 +11690,7 @@ const EllipseWidget = (props) => {
     };
     return (React__default["default"].createElement("div", { className: b$j(), style: styles },
         React__default["default"].createElement("div", { className: b$j('background'), style: backgroundStyles })));
-};
+});
 
 var compressed = true;
 var categories$1 = [
@@ -64487,14 +64675,14 @@ const INIT_ELEMENT_STYLES$9 = {
         marginLeft: 11
     }
 };
-const EmojiReactionWidget = (props) => {
+const EmojiReactionWidget = React__default["default"].memo((props) => {
     const { params, position, positionLimits, isReadOnly, onAnswer } = props;
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSizeByHeight(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.height) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight)) {
+            return calculateElementSizeByHeight(position.height, size, positionLimits.minHeight);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.height, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight]);
     const elementSizes = React.useMemo(() => ({
         widget: {
             borderRadius: calculate(INIT_ELEMENT_STYLES$9.widget.borderRadius),
@@ -64524,13 +64712,13 @@ const EmojiReactionWidget = (props) => {
             setClickedIndex(null);
         }
     }, delay);
-    const handleReactionClick = (index, emoji) => {
+    const handleReactionClick = React.useCallback((index, emoji) => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(emoji);
         setIsToched(true);
         setClickedIndex(index);
         setBigSize(initEmojiSize);
         setDelay(50);
-    };
+    }, [initEmojiSize, onAnswer]);
     return (React__default["default"].createElement("div", { className: b$h({ color: params.color }), style: elementSizes.widget }, params.emoji.map((emojiItem, index) => (React__default["default"].createElement("button", { className: b$h('item', { disabled: isReadOnly || isToched }), key: `${emojiItem.unicode}-${index}`, style: elementSizes.item, onClick: (e) => {
             e.preventDefault();
             if (!isToched && !isReadOnly) {
@@ -64540,14 +64728,14 @@ const EmojiReactionWidget = (props) => {
         React__default["default"].createElement("div", { className: b$h('subItem', { clicked: index === clickedIndex }) },
             React__default["default"].createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: bigSize })),
         React__default["default"].createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: elementSizes.emoji.width }))))));
-};
+});
 
-const b$g = block$1('GiphyWidget');
-const GiphyWidget = (props) => {
+const b$g = block('GiphyWidget');
+const GiphyWidget = React__default["default"].memo((props) => {
     const { params } = props;
     return (React__default["default"].createElement("div", { className: b$g(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
         React__default["default"].createElement("img", { alt: "", className: b$g('img'), src: params.gif })));
-};
+});
 
 const b$f = block('QuestionWidget');
 const INIT_ELEMENT_STYLES$8 = {
@@ -64561,15 +64749,16 @@ const INIT_ELEMENT_STYLES$8 = {
         borderRadius: 10
     }
 };
-const QuestionWidget = (props) => {
-    const { params, position, positionLimits, isReadOnly } = props;
+const QuestionWidget = React__default["default"].memo((props) => {
+    var _a, _b, _c;
+    const { params, position, positionLimits, isReadOnly, onAnswer } = props;
     const [answer, setAnswer] = React.useState(null);
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = React.useMemo(() => ({
         text: {
             fontSize: calculate(INIT_ELEMENT_STYLES$8.text.fontSize),
@@ -64585,10 +64774,10 @@ const QuestionWidget = (props) => {
         confirm: 0,
         decline: 0
     });
-    const handleChange = (option) => {
+    const handleChange = React.useCallback((option) => {
         if (!answer) {
-            if (props.onAnswer) {
-                props.onAnswer(option).then((res) => {
+            if (onAnswer) {
+                onAnswer(option).then((res) => {
                     if (res.data && !res.data.error) {
                         setAnswer(option);
                         setPercents((prevState) => (Object.assign(Object.assign({}, prevState), res.data.data)));
@@ -64599,17 +64788,17 @@ const QuestionWidget = (props) => {
                 setAnswer(option);
             }
         }
-    };
+    }, [answer, onAnswer]);
     React.useEffect(() => {
-        if (answer && !props.onAnswer) {
+        if (answer && !onAnswer) {
             const percentsFromApi = {
                 confirm: answer === 'confirm' ? 100 : 0,
                 decline: answer === 'decline' ? 100 : 0
             };
             setPercents(percentsFromApi);
         }
-    }, [answer, props.onAnswer]);
-    const calculateWidth = (percent) => {
+    }, [answer, onAnswer]);
+    const calculateWidth = React.useCallback((percent) => {
         if (percent === 0) {
             return 0;
         }
@@ -64623,9 +64812,10 @@ const QuestionWidget = (props) => {
             return 75;
         }
         return percent;
-    };
+    }, []);
+    const textStyles = getTextStyles(params.fontColor);
     return (React__default["default"].createElement("div", { className: b$f() },
-        !params.isTitleHidden && (React__default["default"].createElement("div", { className: b$f('question'), style: elementSizes.text }, params.question)),
+        !params.isTitleHidden && (React__default["default"].createElement("div", { className: b$f('question', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, params.question)),
         React__default["default"].createElement("div", { className: b$f('buttons'), style: { borderRadius: elementSizes.button.borderRadius } },
             React__default["default"].createElement("button", { className: b$f('item', {
                     answered: answer === 'confirm',
@@ -64659,10 +64849,10 @@ const QuestionWidget = (props) => {
                     answer && React__default["default"].createElement("span", { className: b$f('itemTextPercent') },
                         percents.decline,
                         "%"))))));
-};
+});
 
 const b$e = block('RectangleWidget');
-const RectangleWidget = (props) => {
+const RectangleWidget = React__default["default"].memo((props) => {
     const { fillColor, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
         borderStyle: 'solid',
@@ -64677,10 +64867,10 @@ const RectangleWidget = (props) => {
     };
     return (React__default["default"].createElement("div", { className: b$e(), style: styles },
         React__default["default"].createElement("div", { className: b$e('background'), style: backgroundStyles })));
-};
+});
 
 const b$d = block('SliderCustom');
-const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, height, onChange, onAfterChange, onBeforeChange }) => {
+const SliderCustom = React__default["default"].memo(({ emoji, changeStatus, value, initSize = 34, disabled, height, borderRadius, onChange, onAfterChange, onBeforeChange }) => {
     const containerRef = React.useRef(null);
     const thumbRef = React.useRef(null);
     const [bigSize, setBigSize] = React.useState(initSize);
@@ -64691,7 +64881,7 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
     React.useEffect(() => {
         setBigSize(initSize + initSize * (value / 100));
     }, [value, initSize]);
-    const getPos = (e) => {
+    const getPos = React.useCallback((e) => {
         const clientPos = getClientPosition(e);
         const left = Math.round(clientPos.x - containerPos.current.start);
         if (left < 0) {
@@ -64701,16 +64891,29 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
             return 100;
         }
         return Math.round((left / containerPos.current.end) * 100);
-    };
-    const handleDrag = (e) => {
+    }, []);
+    const handleDrag = React.useCallback((e) => {
         if (disabled)
             return;
         e.preventDefault();
         if (onChange) {
             onChange(getPos(e));
         }
-    };
-    const handleMouseDown = (e) => {
+    }, [disabled, getPos, onChange]);
+    const handleDragEnd = React.useCallback((e) => {
+        if (disabled)
+            return;
+        e.preventDefault();
+        document.removeEventListener('mousemove', handleDrag);
+        document.removeEventListener('mouseup', handleDragEnd);
+        document.removeEventListener('touchmove', handleDrag);
+        document.removeEventListener('touchend', handleDragEnd);
+        document.removeEventListener('touchcancel', handleDragEnd);
+        if (onAfterChange) {
+            onAfterChange();
+        }
+    }, [disabled, handleDrag, onAfterChange]);
+    const handleMouseDown = React.useCallback((e) => {
         if (disabled)
             return;
         e.preventDefault();
@@ -64728,20 +64931,7 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
         if (onBeforeChange) {
             onBeforeChange();
         }
-    };
-    const handleDragEnd = (e) => {
-        if (disabled)
-            return;
-        e.preventDefault();
-        document.removeEventListener('mousemove', handleDrag);
-        document.removeEventListener('mouseup', handleDragEnd);
-        document.removeEventListener('touchmove', handleDrag);
-        document.removeEventListener('touchend', handleDragEnd);
-        document.removeEventListener('touchcancel', handleDragEnd);
-        if (onAfterChange) {
-            onAfterChange();
-        }
-    };
+    }, [disabled, handleDrag, handleDragEnd, onBeforeChange]);
     return (React__default["default"].createElement("div", { className: b$d(), ref: containerRef, style: { height } },
         React__default["default"].createElement("div", { className: b$d('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
                 e.stopPropagation();
@@ -64753,10 +64943,10 @@ const SliderCustom = ({ emoji, changeStatus, value, initSize = 34, disabled, hei
             changeStatus === 'moving' || changeStatus === 'moved' ? (React__default["default"].createElement("div", { className: b$d('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
                 React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
             React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })),
-        React__default["default"].createElement("div", { className: b$d('track'), style: { height } },
+        React__default["default"].createElement("div", { className: b$d('track'), style: { height, borderRadius } },
             React__default["default"].createElement("span", { className: b$d('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
             React__default["default"].createElement("span", { className: b$d('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
-};
+});
 
 const b$c = block('SliderWidget');
 const INIT_ELEMENT_STYLES$7 = {
@@ -64780,19 +64970,20 @@ const INIT_ELEMENT_STYLES$7 = {
         borderRadius: 6
     }
 };
-const SliderWidget = (props) => {
-    const { params, storyId, position, positionLimits, isReadOnly } = props;
+const SliderWidget = React__default["default"].memo((props) => {
+    var _a, _b, _c;
+    const { params, storyId, position, positionLimits, isReadOnly, onAnswer } = props;
     const { color, text, emoji, value } = params;
-    const [sliderValue, setSliderValue] = React.useState(0);
+    const [sliderValue, setSliderValue] = React.useState(isReadOnly ? value : 0);
     const [changeStatus, setChangeStatus] = React.useState('wait');
     const time = 500;
     const [delay, setDelay] = React.useState(0);
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = React.useMemo(() => ({
         widget: {
             borderRadius: calculate(INIT_ELEMENT_STYLES$7.widget.borderRadius),
@@ -64822,20 +65013,19 @@ const SliderWidget = (props) => {
         }
     }, delay);
     React.useEffect(() => {
-        if (changeStatus === 'moved' && props.onAnswer) {
-            props.onAnswer(sliderValue);
+        if (changeStatus === 'moved' && onAnswer) {
+            onAnswer(sliderValue);
         }
-        // eslint-disable-next-line
-    }, [changeStatus, sliderValue]);
-    const handleChange = (valueChanged) => {
+    }, [changeStatus, onAnswer, sliderValue]);
+    const handleChange = React.useCallback((valueChanged) => {
         setSliderValue(valueChanged);
-    };
-    const handleBeforeChange = () => {
+    }, []);
+    const handleBeforeChange = React.useCallback(() => {
         setChangeStatus('moving');
-    };
-    const handleAfterChange = () => {
+    }, []);
+    const handleAfterChange = React.useCallback(() => {
         setChangeStatus('moved');
-    };
+    }, []);
     const storyContextVal = React.useContext(StoryContext);
     React.useEffect(() => {
         if (storyContextVal.currentStoryId === storyId && changeStatus === 'wait') {
@@ -64843,27 +65033,28 @@ const SliderWidget = (props) => {
             setChangeStatus('init');
         }
     }, [storyContextVal, storyId, changeStatus, value, time]);
+    const textStyles = getTextStyles(params.fontColor);
     return (React__default["default"].createElement("div", { className: b$c({ color }), style: elementSizes.widget },
-        React__default["default"].createElement("div", { className: b$c('text'), style: elementSizes.text }, text),
+        React__default["default"].createElement("div", { className: b$c('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
         React__default["default"].createElement("div", { className: b$c('sliderWrapper'), style: {
                 height: elementSizes.slider.height
             } },
-            React__default["default"].createElement(SliderCustom, { changeStatus: changeStatus, disabled: changeStatus === 'moved' || isReadOnly, emoji: emoji.name, height: elementSizes.slider.height, initSize: elementSizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
-};
+            React__default["default"].createElement(SliderCustom, { borderRadius: elementSizes.slider.borderRadius, changeStatus: changeStatus, disabled: changeStatus === 'moved' || isReadOnly, emoji: emoji.name, height: elementSizes.slider.height, initSize: elementSizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
+});
 
 const b$b = block('SwipeUpWidget');
-const SwipeUpWidget = (props) => {
+const SwipeUpWidget = React__default["default"].memo((props) => {
     const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
     const { isReadOnly, onSwipe } = props;
     const [touchStart, setTouchStart] = React.useState(0);
     const [touchEnd, setTouchEnd] = React.useState(0);
-    const handleTouchStart = (e) => {
+    const handleTouchStart = React.useCallback((e) => {
         setTouchStart(e.targetTouches[0].clientY);
-    };
-    const handleTouchMove = (e) => {
+    }, []);
+    const handleTouchMove = React.useCallback((e) => {
         setTouchEnd(e.targetTouches[0].clientY);
-    };
-    const handleTouchEnd = () => {
+    }, []);
+    const handleTouchEnd = React.useCallback(() => {
         if (touchStart - touchEnd > 200) {
             if (onSwipe) {
                 onSwipe();
@@ -64875,8 +65066,8 @@ const SwipeUpWidget = (props) => {
                 setTouchEnd(0);
             }
         }
-    };
-    const handleClick = () => {
+    }, [onSwipe, touchEnd, touchStart, url]);
+    const handleClick = React.useCallback(() => {
         if (onSwipe) {
             onSwipe();
         }
@@ -64884,12 +65075,12 @@ const SwipeUpWidget = (props) => {
         if (tab) {
             tab.focus();
         }
-    };
+    }, [onSwipe, url]);
     return (React__default["default"].createElement("div", { className: b$b({ gradient: color.type === 'gradient' }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
         React__default["default"].createElement("div", { className: b$b('icon') },
             React__default["default"].createElement(MaterialIcon, { background: color, color: renderBackgroundStyles(color), name: icon.name, size: iconSize })),
         React__default["default"].createElement("span", { className: b$b('text') }, text)));
-};
+});
 
 const b$a = block('TalkAboutWidget');
 const INIT_ELEMENT_STYLES$6 = {
@@ -64925,15 +65116,15 @@ const INIT_ELEMENT_STYLES$6 = {
         fontSize: 14
     }
 };
-const TalkAboutWidget = (props) => {
+const TalkAboutWidget = React__default["default"].memo((props) => {
     var _a, _b, _c;
     const { params, position, positionLimits, isReadOnly } = props;
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = React.useMemo(() => ({
         widget: {
             borderRadius: calculate(INIT_ELEMENT_STYLES$6.widget.borderRadius)
@@ -64969,11 +65160,12 @@ const TalkAboutWidget = (props) => {
     }), [calculate]);
     const [text, setText] = React.useState('');
     const [isSent, setIsSent] = React.useState(false);
-    const handleTextChange = (e) => {
+    const storyContextVal = React.useContext(StoryContext);
+    const handleTextChange = React.useCallback((e) => {
         setText(e.target.value);
         storyContextVal.playStatusChange('pause');
-    };
-    const handleSendClick = () => {
+    }, [storyContextVal]);
+    const handleSendClick = React.useCallback(() => {
         if (text.length) {
             if (props.onAnswer) {
                 props.onAnswer(text);
@@ -64981,8 +65173,7 @@ const TalkAboutWidget = (props) => {
             storyContextVal.playStatusChange('play');
             setIsSent(true);
         }
-    };
-    const storyContextVal = React.useContext(StoryContext);
+    }, [props, storyContextVal, text]);
     const ref = React.useRef(null);
     const inputRef = React.useRef(null);
     const handleClickOutside = React.useCallback((event) => {
@@ -65004,9 +65195,7 @@ const TalkAboutWidget = (props) => {
             document.removeEventListener('click', handleClickOutside, true);
         };
     }, [handleClickOutside, isSent]);
-    const textStyles = params.fontColor
-        ? renderTextBackgroundStyles({ color: params.fontColor })
-        : undefined;
+    const textStyles = getTextStyles(params.fontColor);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         React__default["default"].createElement("div", { className: b$a('container'), ref: ref },
             React__default["default"].createElement("picture", { className: b$a('imageWrapper'), style: elementSizes.imageWrapper }, params.image ? (React__default["default"].createElement("img", { alt: "", className: b$a('image'), src: params.image })) : (React__default["default"].createElement(IconLogoCircle, { className: b$a('image').toString() }))),
@@ -65017,10 +65206,10 @@ const TalkAboutWidget = (props) => {
                     React__default["default"].createElement("input", { className: b$a('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: elementSizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
                 text && (React__default["default"].createElement("button", { className: b$a('send', { disabled: isSent || isReadOnly }), style: elementSizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
                     React__default["default"].createElement("span", { className: b$a('sendText', { green: isSent }), style: elementSizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
-};
+});
 
 const b$9 = block('TextWidget');
-const TextWidget = (props) => {
+const TextWidget = React__default["default"].memo((props) => {
     const { params } = props;
     return (React__default["default"].createElement("div", { className: b$9() },
         React__default["default"].createElement("div", { className: b$9('container', { gradient: params.color.type === 'gradient' }), style: Object.assign({ opacity: params.widgetOpacity / 100, fontStyle: params.fontParams.style, fontWeight: params.fontParams.weight, fontFamily: params.fontFamily, fontSize: `${params.fontSize}px`, textAlign: params.align }, renderTextBackgroundStyles({ color: params.color })) },
@@ -65028,7 +65217,7 @@ const TextWidget = (props) => {
         params.withFill ? (React__default["default"].createElement("div", { className: b$9('background'), style: {
                 background: renderBackgroundStyles(params.backgroundColor)
             } })) : null));
-};
+});
 
 const ONE_SECOND_IN_MILLISECONDS = 1000;
 const ONE_MINUTE_IN_SECONDS = 60;
@@ -65064,7 +65253,7 @@ const INIT_ELEMENT_STYLES$5 = {
         fontSize: 6
     }
 };
-const TimerWidget = (props) => {
+const TimerWidget = React__default["default"].memo((props) => {
     const { params, position, positionLimits } = props;
     const [time, setTime] = React.useState(calculateTime(params.time + 60000 - new Date().getTime()));
     React.useEffect(() => {
@@ -65074,11 +65263,11 @@ const TimerWidget = (props) => {
         return () => clearTimeout(timeout);
     }, [params.time]);
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = React.useMemo(() => ({
         text: {
             fontSize: calculate(INIT_ELEMENT_STYLES$5.text.fontSize),
@@ -65119,7 +65308,7 @@ const TimerWidget = (props) => {
                     React__default["default"].createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.minutes[0]),
                     React__default["default"].createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.minutes[1])),
                 React__default["default"].createElement("div", { className: b$8('caption'), style: elementSizes.caption }, "Minutes")))));
-};
+});
 
 const b$7 = block('QuizMultipleAnswerWidget');
 const INIT_ELEMENT_STYLES$4 = {
@@ -65149,17 +65338,19 @@ const INIT_ELEMENT_STYLES$4 = {
         lineHeight: 11
     }
 };
-const QuizMultipleAnswerWidget = (props) => {
-    const { title, answers, isTitleHidden, storyId } = props.params;
-    const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    const { title, answers, isTitleHidden } = props.params;
+    const { params, position, positionLimits, isReadOnly, onAnswer } = props;
     const [userAnswers, setUserAnswers] = React.useState([]);
     const [isSent, setIsSent] = React.useState(false);
+    const storyContextVal = React.useContext(StoryContext);
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+position.width, size, positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = React.useMemo(() => ({
         title: {
             fontSize: calculate(INIT_ELEMENT_STYLES$4.title.fontSize),
@@ -65187,29 +65378,63 @@ const QuizMultipleAnswerWidget = (props) => {
             lineHeight: calculate(INIT_ELEMENT_STYLES$4.sendBtn.lineHeight)
         }
     }), [calculate]);
-    const handleAnswer = (id) => {
+    const handleAnswer = React.useCallback((id) => {
         setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
-    };
-    const handleSendAnswer = () => {
-        onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
-        setIsSent(true);
-        if (storyId) {
-            onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
+    }, []);
+    const handleSendScore = React.useCallback((currentAnswers) => {
+        if (!storyContextVal.quizMode) {
+            return;
         }
-    };
+        const answerScore = currentAnswers.length
+            ? params.answers
+                .filter((answer) => currentAnswers.includes(answer.id))
+                .reduce((acc, answer) => {
+                if (storyContextVal.quizMode === exports.ScoreType.LETTERS) {
+                    return acc + answer.score.letter;
+                }
+                if (storyContextVal.quizMode === exports.ScoreType.NUMBERS) {
+                    return +acc + +answer.score.points;
+                }
+                return acc;
+            }, storyContextVal.quizMode === exports.ScoreType.LETTERS ? '' : 0)
+            : undefined;
+        if (answerScore !== undefined &&
+            storyContextVal.quizMode &&
+            storyContextVal.handleQuizAnswer) {
+            storyContextVal.handleQuizAnswer(answerScore);
+        }
+    }, [params.answers, storyContextVal]);
+    const handleSendAnswer = React.useCallback(() => {
+        if (!isReadOnly && userAnswers.length && !isSent) {
+            onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
+            setIsSent(true);
+            handleSendScore(userAnswers);
+        }
+    }, [onAnswer, handleSendScore, userAnswers, isSent, isReadOnly]);
+    React.useEffect(() => {
+        eventSubscribe('nextStory', handleSendAnswer);
+        eventSubscribe('prevStory', handleSendAnswer);
+        return () => {
+            eventUnsubscribe('nextStory', handleSendAnswer);
+            eventUnsubscribe('prevStory', handleSendAnswer);
+        };
+    }, [handleSendAnswer]);
+    const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
+    const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
     return (React__default["default"].createElement("div", { className: b$7() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: b$7('title'), style: elementSizes.title }, title)),
+        !isTitleHidden && (React__default["default"].createElement("div", { className: b$7('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
         React__default["default"].createElement("div", { className: b$7('answers'), style: elementSizes.answers }, answers.map((answer) => {
-            var _a;
+            var _a, _b, _c, _d, _e, _f, _g, _h;
             return (React__default["default"].createElement("button", { className: b$7('answer', {
                     noGap: !answer.title.length,
                     selected: userAnswers.includes(answer.id)
                 }), disabled: isSent || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
                 answer.emoji && (React__default["default"].createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
-                React__default["default"].createElement("p", { className: b$7('answerTitle'), style: Object.assign(Object.assign({}, elementSizes.answerTitle), { lineHeight: `${elementSizes.sendBtn.lineHeight}px` }) }, answer.title)));
-        })),
-        userAnswers.length > 0 && (React__default["default"].createElement("button", { className: b$7('sendBtn', { sent: isSent || isReadOnly }), disabled: isSent || isReadOnly, style: Object.assign(Object.assign({}, elementSizes.sendBtn), { lineHeight: `${elementSizes.sendBtn.lineHeight}px` }), onClick: handleSendAnswer }, isSent ? 'Sent!' : 'Send'))));
-};
+                React__default["default"].createElement("p", { className: b$7('answerTitle', {
+                        gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === 'gradient'
+                    }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { lineHeight: `${elementSizes.sendBtn.lineHeight}px`, fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
+        }))));
+});
 
 const b$6 = block('QuizOneAnswerWidget');
 const INIT_ELEMENT_STYLES$3 = {
@@ -65232,16 +65457,18 @@ const INIT_ELEMENT_STYLES$3 = {
         fontSize: 11
     }
 };
-const QuizOneAnswerWidget = (props) => {
+const QuizOneAnswerWidget = React__default["default"].memo((props) => {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const { title, answers, storyId, isTitleHidden } = props.params;
-    const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+    const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const [userAnswer, setUserAnswer] = React.useState(null);
+    const storyContextVal = React.useContext(StoryContext);
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+position.width, size, positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = React.useMemo(() => ({
         title: {
             fontSize: calculate(INIT_ELEMENT_STYLES$3.title.fontSize),
@@ -65262,24 +65489,38 @@ const QuizOneAnswerWidget = (props) => {
             fontSize: calculate(INIT_ELEMENT_STYLES$3.answerTitle.fontSize)
         }
     }), [calculate]);
-    const handleAnswer = (id) => {
+    const handleSendScore = React.useCallback((currentAnswer) => {
+        var _a;
+        const answerScore = currentAnswer
+            ? (_a = params.answers.find((answer) => answer.id === currentAnswer)) === null || _a === void 0 ? void 0 : _a.score
+            : undefined;
+        if (answerScore && storyContextVal.quizMode && storyContextVal.handleQuizAnswer) {
+            storyContextVal.handleQuizAnswer(storyContextVal.quizMode === exports.ScoreType.LETTERS ? answerScore.letter : answerScore.points);
+        }
+    }, [params.answers, storyContextVal]);
+    const handleAnswer = React.useCallback((id) => {
         setUserAnswer(id);
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(id);
+        handleSendScore(id);
         if (storyId) {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
-    };
+    }, [onAnswer, onGoToStory, handleSendScore, storyId]);
+    const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
+    const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
     return (React__default["default"].createElement("div", { className: b$6() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: b$6('title'), style: elementSizes.title }, title)),
+        !isTitleHidden && (React__default["default"].createElement("div", { className: b$6('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
         React__default["default"].createElement("div", { className: b$6('answers'), style: elementSizes.answers }, answers.map((answer) => {
-            var _a;
+            var _a, _b, _c, _d, _e, _f, _g, _h;
             return (React__default["default"].createElement("button", { className: b$6('answer', {
                     selected: userAnswer === answer.id
                 }), disabled: userAnswer !== null || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !userAnswer && !isReadOnly && handleAnswer(answer.id) },
                 answer.emoji && (React__default["default"].createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
-                React__default["default"].createElement("p", { className: b$6('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
+                React__default["default"].createElement("p", { className: b$6('answerTitle', {
+                        gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === 'gradient'
+                    }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
-};
+});
 
 const b$5 = block('QuizOpenAnswerWidget');
 const INIT_ELEMENT_STYLES$2 = {
@@ -65302,16 +65543,17 @@ const INIT_ELEMENT_STYLES$2 = {
         right: 4
     }
 };
-const QuizOpenAnswerWidget = (props) => {
+const QuizOpenAnswerWidget = React__default["default"].memo((props) => {
+    var _a, _b;
     const { title, isTitleHidden, storyId } = props.params;
-    const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+    const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const storyContextVal = React.useContext(StoryContext);
     const [text, setText] = React.useState('');
     const [isSent, setIsSent] = React.useState(false);
-    const handleTextChange = (e) => {
+    const handleTextChange = React.useCallback((e) => {
         setText(e.target.value);
         storyContextVal.playStatusChange('pause');
-    };
+    }, [storyContextVal]);
     const handleClickOutside = React.useCallback((event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             storyContextVal.playStatusChange('play');
@@ -65320,7 +65562,7 @@ const QuizOpenAnswerWidget = (props) => {
             storyContextVal.playStatusChange('pause');
         }
     }, [isSent, storyContextVal]);
-    const handleSendClick = () => {
+    const handleSendClick = React.useCallback(() => {
         if (text.length) {
             onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(text);
             if (storyId) {
@@ -65329,7 +65571,7 @@ const QuizOpenAnswerWidget = (props) => {
             storyContextVal.playStatusChange('play');
             setIsSent(true);
         }
-    };
+    }, [onAnswer, onGoToStory, storyContextVal, storyId, text]);
     React.useEffect(() => {
         if (!isSent) {
             document.addEventListener('click', handleClickOutside, true);
@@ -65344,11 +65586,11 @@ const QuizOpenAnswerWidget = (props) => {
     const ref = React.useRef(null);
     const inputRef = React.useRef(null);
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = React.useMemo(() => ({
         title: {
             fontSize: calculate(INIT_ELEMENT_STYLES$2.title.fontSize),
@@ -65369,8 +65611,9 @@ const QuizOpenAnswerWidget = (props) => {
             height: calculate(INIT_ELEMENT_STYLES$2.sendButton.height)
         }
     }), [calculate]);
+    const textStyles = getTextStyles(params.fontColor);
     return (React__default["default"].createElement("div", { className: b$5() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: b$5('title'), style: elementSizes.title }, title)),
+        !isTitleHidden && (React__default["default"].createElement("div", { className: b$5('title'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_a = params.fontParams) === null || _a === void 0 ? void 0 : _a.style, fontWeight: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
         React__default["default"].createElement("div", { className: b$5('inputWrapper'), style: {
                 paddingTop: elementSizes.inputWrapper.paddingVertical,
                 paddingBottom: elementSizes.inputWrapper.paddingVertical,
@@ -65381,7 +65624,7 @@ const QuizOpenAnswerWidget = (props) => {
             React__default["default"].createElement("input", { className: b$5('input'), disabled: isSent || isReadOnly, placeholder: "Enter the text...", style: elementSizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined }),
             text.length > 0 && (React__default["default"].createElement("button", { className: b$5('sendButton'), disabled: isSent || isReadOnly, style: elementSizes.sendButton, onClick: !isReadOnly ? handleSendClick : undefined },
                 React__default["default"].createElement(IconArrowSend, { className: b$5('sendButtonIcon') }))))));
-};
+});
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
 const b$4 = block('QuizRateWidget');
@@ -65395,16 +65638,17 @@ const INIT_ELEMENT_STYLES$1 = {
     }
 };
 const RATE_MAX = 5;
-const QuizRateWidget = (props) => {
+const QuizRateWidget = React__default["default"].memo((props) => {
+    var _a, _b, _c;
     const { title, isTitleHidden, storyId, storeLinks } = props.params;
-    const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+    const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const [isSent, setIsSent] = React.useState(false);
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = React.useMemo(() => ({
         title: {
             fontSize: calculate(INIT_ELEMENT_STYLES$1.title.fontSize),
@@ -65414,7 +65658,7 @@ const QuizRateWidget = (props) => {
             gap: calculate(INIT_ELEMENT_STYLES$1.stars.gap)
         }
     }), [calculate]);
-    const handleAnswer = (rate) => {
+    const handleAnswer = React.useCallback((rate) => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(rate);
         if (storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web) {
             const tab = window.open(storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, '_blank');
@@ -65426,9 +65670,10 @@ const QuizRateWidget = (props) => {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
         setIsSent(true);
-    };
+    }, [onAnswer, onGoToStory, storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, storyId]);
+    const textStyles = getTextStyles(params.fontColor);
     return (React__default["default"].createElement("div", { className: b$4() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: b$4('title'), style: elementSizes.title }, title)),
+        !isTitleHidden && (React__default["default"].createElement("div", { className: b$4('title', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
         React__default["default"].createElement("div", { className: b$4('starsContainer', {
                 disabled: isSent || isReadOnly
             }), style: {
@@ -65439,7 +65684,7 @@ const QuizRateWidget = (props) => {
                 } }),
             React__default["default"].createElement("label", { className: b$4('starItem'), htmlFor: `rate-star-${index}` },
                 React__default["default"].createElement(IconRateStar, { className: b$4('star') }))))))));
-};
+});
 
 const b$3 = block('QuizMultipleAnswerWithImageWidget');
 const INIT_ELEMENT_STYLES = {
@@ -65468,17 +65713,19 @@ const INIT_ELEMENT_STYLES = {
         marginTop: 5
     }
 };
-const QuizMultipleAnswerWithImageWidget = (props) => {
-    const { title, answers, isTitleHidden, storyId } = props.params;
-    const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props) => {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    const { title, answers, isTitleHidden } = props.params;
+    const { params, position, positionLimits, isReadOnly, onAnswer } = props;
     const [userAnswers, setUserAnswers] = React.useState([]);
     const [isSent, setIsSent] = React.useState(false);
+    const storyContextVal = React.useContext(StoryContext);
     const calculate = React.useCallback((size) => {
-        if (position && positionLimits) {
-            return calculateElementSize(position, positionLimits, size);
+        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
+            return calculateElementSize(+position.width, size, positionLimits.minWidth);
         }
         return size;
-    }, [position, positionLimits]);
+    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
     const elementSizes = React.useMemo(() => ({
         title: {
             fontSize: calculate(INIT_ELEMENT_STYLES.title.fontSize),
@@ -65502,27 +65749,64 @@ const QuizMultipleAnswerWithImageWidget = (props) => {
             marginTop: calculate(INIT_ELEMENT_STYLES.sendBtn.marginTop)
         }
     }), [calculate]);
-    const handleAnswer = (id) => {
+    const handleAnswer = React.useCallback((id) => {
         setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
-    };
-    const handleSendAnswer = () => {
-        onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
-        setIsSent(true);
-        if (storyId) {
-            onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
+    }, []);
+    const handleSendScore = React.useCallback((currentAnswers) => {
+        if (!storyContextVal.quizMode) {
+            return;
         }
-    };
+        const answerScore = currentAnswers.length
+            ? params.answers
+                .filter((answer) => currentAnswers.includes(answer.id))
+                .reduce((acc, answer) => {
+                if (storyContextVal.quizMode === exports.ScoreType.LETTERS) {
+                    return acc + answer.score.letter;
+                }
+                if (storyContextVal.quizMode === exports.ScoreType.NUMBERS) {
+                    return +acc + +answer.score.points;
+                }
+                return acc;
+            }, storyContextVal.quizMode === exports.ScoreType.LETTERS ? '' : 0)
+            : undefined;
+        if (answerScore !== undefined &&
+            storyContextVal.quizMode &&
+            storyContextVal.handleQuizAnswer) {
+            storyContextVal.handleQuizAnswer(answerScore);
+        }
+    }, [params.answers, storyContextVal]);
+    const handleSendAnswer = React.useCallback(() => {
+        if (!isReadOnly && userAnswers.length && !isSent) {
+            onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
+            setIsSent(true);
+            handleSendScore(userAnswers);
+        }
+    }, [isReadOnly, isSent, onAnswer, handleSendScore, userAnswers]);
+    React.useEffect(() => {
+        eventSubscribe('nextStory', handleSendAnswer);
+        eventSubscribe('prevStory', handleSendAnswer);
+        return () => {
+            eventUnsubscribe('nextStory', handleSendAnswer);
+            eventUnsubscribe('prevStory', handleSendAnswer);
+        };
+    }, [handleSendAnswer]);
+    const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
+    const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
     return (React__default["default"].createElement("div", { className: b$3() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: b$3('title'), style: elementSizes.title }, title)),
-        React__default["default"].createElement("div", { className: b$3('answers'), style: elementSizes.answers }, answers.map((answer) => (React__default["default"].createElement("button", { className: b$3('answer', {
-                selected: userAnswers.includes(answer.id)
-            }), disabled: isSent || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => isReadOnly && handleAnswer(answer.id) },
-            React__default["default"].createElement("div", { className: b$3('answerImgContainer'), style: {
-                    backgroundImage: answer.image ? `url(${answer.image.url})` : ''
-                } }),
-            React__default["default"].createElement("p", { className: b$3('answerTitle'), style: elementSizes.answerTitle }, answer.title))))),
-        userAnswers.length > 0 && (React__default["default"].createElement("button", { className: b$3('sendBtn', { sent: isSent || isReadOnly }), disabled: isSent || isReadOnly, style: elementSizes.sendBtn, onClick: handleSendAnswer }, isSent ? 'Sent!' : 'Send'))));
-};
+        !isTitleHidden && (React__default["default"].createElement("div", { className: b$3('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
+        React__default["default"].createElement("div", { className: b$3('answers'), style: elementSizes.answers }, answers.map((answer) => {
+            var _a, _b, _c, _d, _e, _f, _g;
+            return (React__default["default"].createElement("button", { className: b$3('answer', {
+                    selected: userAnswers.includes(answer.id)
+                }), disabled: isSent || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
+                React__default["default"].createElement("div", { className: b$3('answerImgContainer'), style: {
+                        backgroundImage: answer.image ? `url(${answer.image.url})` : ''
+                    } }),
+                React__default["default"].createElement("p", { className: b$3('answerTitle', {
+                        gradient: ((_b = (_a = params.answersFont) === null || _a === void 0 ? void 0 : _a.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient'
+                    }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { fontStyle: (_d = (_c = params.answersFont) === null || _c === void 0 ? void 0 : _c.fontParams) === null || _d === void 0 ? void 0 : _d.style, fontWeight: (_f = (_e = params.answersFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.weight, fontFamily: (_g = params.answersFont) === null || _g === void 0 ? void 0 : _g.fontFamily }), answerTextStyles) }, answer.title)));
+        }))));
+});
 
 ({
     [exports.WidgetsTypes.CHOOSE_ANSWER]: ChooseAnswerWidget,
@@ -65784,6 +66068,7 @@ exports.QuizRateWidget = QuizRateWidget;
 exports.RectangleWidget = RectangleWidget;
 exports.STORY_SIZE = STORY_SIZE;
 exports.STORY_SIZE_LARGE = STORY_SIZE_LARGE;
+exports.ScoreWidgets = ScoreWidgets;
 exports.SliderWidget = SliderWidget;
 exports.StoryContent = StoryContent;
 exports.StoryContext = StoryContext;

@@ -75,6 +75,7 @@ export const adaptGroupData = (data: any, uniqUserId: string, language: string) 
         id: story.id,
         background: story.story_data.background,
         storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId, language),
+        layerData: story.layer_data,
         positionIndex: index
       }))
     }));

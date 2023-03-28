@@ -7,7 +7,7 @@ import {
 } from '@types';
 import { StoryContext } from '@components';
 import { IconLogoCircle } from '@components/icons';
-import { block, calculateElementSize, renderTextBackgroundStyles } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import './TalkAboutWidget.scss';
 
 const b = block('TalkAboutWidget');
@@ -52,18 +52,18 @@ export const TalkAboutWidget: WidgetComponent<{
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { params, position, positionLimits, isReadOnly } = props;
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -105,13 +105,17 @@ export const TalkAboutWidget: WidgetComponent<{
 
   const [text, setText] = useState<string>('');
   const [isSent, setIsSent] = useState<boolean>(false);
+  const storyContextVal = useContext(StoryContext);
 
-  const handleTextChange = (e: any) => {
-    setText(e.target.value);
-    storyContextVal.playStatusChange('pause');
-  };
+  const handleTextChange = useCallback(
+    (e: any) => {
+      setText(e.target.value);
+      storyContextVal.playStatusChange('pause');
+    },
+    [storyContextVal]
+  );
 
-  const handleSendClick = () => {
+  const handleSendClick = useCallback(() => {
     if (text.length) {
       if (props.onAnswer) {
         props.onAnswer(text);
@@ -120,9 +124,7 @@ export const TalkAboutWidget: WidgetComponent<{
       storyContextVal.playStatusChange('play');
       setIsSent(true);
     }
-  };
-
-  const storyContextVal = useContext(StoryContext);
+  }, [props, storyContextVal, text]);
 
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -150,9 +152,7 @@ export const TalkAboutWidget: WidgetComponent<{
     };
   }, [handleClickOutside, isSent]);
 
-  const textStyles = params.fontColor
-    ? (renderTextBackgroundStyles({ color: params.fontColor }) as React.CSSProperties)
-    : undefined;
+  const textStyles = getTextStyles(params.fontColor);
 
   return (
     <>
@@ -214,4 +214,4 @@ export const TalkAboutWidget: WidgetComponent<{
       </div>
     </>
   );
-};
+});

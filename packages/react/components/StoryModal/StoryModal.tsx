@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useRef, useReducer, useMemo } from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
+import { eventPublish } from '@utils';
 import { useAdaptiveValue } from '../../hooks';
-import { StoryType, Group, GroupType, StorySize } from '../../types';
+import { StoryType, Group, GroupType, StorySize, StoryContenxt, ScoreType } from '../../types';
 import { StoryContent } from '..';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.png';
 import smallIphoneMockup from '../../assets/images/iphone-mockup-small.svg';
@@ -89,11 +90,7 @@ const RightArrowIcon: React.FC = () => (
   </svg>
 );
 
-export const StoryContext = React.createContext<{
-  currentStoryId: string;
-  playStatusChange?: any;
-  confetti?: any;
-}>({
+export const StoryContext = React.createContext<StoryContenxt>({
   currentStoryId: '',
   playStatusChange: () => {},
   confetti: null
@@ -135,6 +132,30 @@ const INIT_CONTAINER_BORDER_RADIUS = 50;
 const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
 const ratioIndexLarge = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
 
+const initQuizeState = {
+  points: 0,
+  letters: ''
+};
+
+const reducer = (state: any, action: any) => {
+  if (action.type === 'add_points') {
+    return {
+      points: state.points + +action.payload,
+      letters: state.letters
+    };
+  }
+  if (action.type === 'add_letters') {
+    return {
+      points: state.points,
+      letters: state.letters + action.payload
+    };
+  }
+  if (action.type === 'reset') {
+    return initQuizeState;
+  }
+  throw Error('Unknown action.');
+};
+
 export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const {
     stories,
@@ -155,6 +176,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onCloseStory
   } = props;
 
+  const [quizState, dispatchQuizState] = useReducer(reducer, initQuizeState);
   const [currentStory, setCurrentStory] = useState(0);
   const [currentStoryId, setCurrentStoryId] = useState('');
   const [playStatus, setPlayStatus] = useState<PlayStatusType>('wait');
@@ -162,10 +184,35 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const [width, height] = useWindowSize();
 
+  const [activeStoriesWithResult, setActiveStoriesWithResult] = useState<StoryType[]>([]);
+
+  useEffect(() => {
+    setActiveStoriesWithResult(
+      stories
+        .filter((story) => {
+          if (story.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+            return true;
+          }
+
+          return story.layerData.isActiveLayer;
+        })
+        .sort((storyA, storyB) => {
+          if (storyA.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+            return 1;
+          }
+          if (storyB.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+            return -1;
+          }
+          return 0;
+        })
+    );
+  }, [currentGroup.settings?.scoreResultLayersGroupId, stories]);
+
   const isMobile = width < MOBILE_BREAKPOINT;
   const currentGroupType = currentGroup.type || GroupType.GROUP;
   const isBackroundFilled =
-    stories[currentStory]?.background?.isFilled && currentGroupType === GroupType.GROUP;
+    activeStoriesWithResult[currentStory]?.background?.isFilled &&
+    currentGroupType === GroupType.GROUP;
   const isLarge =
     (currentGroup.settings?.storiesSize === StorySize.LARGE &&
       currentGroupType === GroupType.ONBOARDING) ||
@@ -222,8 +269,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   useEffect(() => {
     let currentStoryIndex = 0;
 
-    if (startStoryId && stories.length) {
-      const storyIndex = stories.findIndex((story) => story.id === startStoryId);
+    if (startStoryId && activeStoriesWithResult.length) {
+      const storyIndex = activeStoriesWithResult.findIndex((story) => story.id === startStoryId);
       currentStoryIndex = storyIndex > -1 ? storyIndex : 0;
     }
 
@@ -245,62 +292,161 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       }
     }
 
-    if (isShowing && stories.length) {
-      setCurrentStoryId(stories[currentStoryIndex].id);
+    if (isShowing && activeStoriesWithResult.length) {
+      setCurrentStoryId(activeStoriesWithResult[currentStoryIndex].id);
 
       if (onOpenStory) {
-        onOpenStory(currentGroup.id, stories[currentStoryIndex].id);
+        onOpenStory(currentGroup.id, activeStoriesWithResult[currentStoryIndex].id);
       }
     }
-  }, [stories.length, onOpenStory, stories, currentGroup, isShowing, startStoryId]);
+  }, [
+    activeStoriesWithResult.length,
+    onOpenStory,
+    activeStoriesWithResult,
+    currentGroup,
+    isShowing,
+    startStoryId
+  ]);
 
   const handleClose = useCallback(() => {
     onClose();
 
     if (onCloseStory) {
-      onCloseStory(currentGroup.id, stories[currentStory].id);
+      onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
     }
-  }, [currentGroup.id, currentStory, onClose, onCloseStory, stories]);
+  }, [currentGroup.id, currentStory, onClose, onCloseStory, activeStoriesWithResult]);
+
+  const resultStories = useMemo(() => {
+    if (currentGroup.settings?.scoreResultLayersGroupId) {
+      return stories
+        .filter(
+          (story) =>
+            story.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
+        )
+        .map((story) => ({
+          id: story.id,
+          isActiveLayer: story.layerData.isActiveLayer,
+          score: story.layerData.score
+        }));
+    }
+
+    return [];
+  }, [currentGroup.settings?.scoreResultLayersGroupId, stories]);
+
+  const getResultStoryId = useCallback(() => {
+    if (!resultStories.length) {
+      return '';
+    }
+
+    const nextLayersGroupId = activeStoriesWithResult[currentStory + 1]?.layerData.layersGroupId;
+    let resultStoryId = '';
+
+    if (
+      nextLayersGroupId &&
+      nextLayersGroupId === currentGroup.settings?.scoreResultLayersGroupId
+    ) {
+      resultStoryId = resultStories.find((story) => story.isActiveLayer)?.id ?? '';
+
+      if (currentGroup.settings?.scoreType === ScoreType.NUMBERS) {
+        for (let i = 0; i < resultStories.length; i++) {
+          if (+resultStories[i].score.points <= quizState.points) {
+            resultStoryId = resultStories[i].id;
+          }
+        }
+      } else if (currentGroup.settings?.scoreType === ScoreType.LETTERS) {
+        const lettersArr = quizState.letters.toLowerCase().split('');
+
+        let mostFrequentSymbol = '';
+        let maxCount = 0;
+        const letterCounts = {};
+
+        for (let i = 0; i < lettersArr.length; i++) {
+          const letter = lettersArr[i];
+          if (!letterCounts[letter]) {
+            letterCounts[letter] = 1;
+          } else {
+            letterCounts[letter]++;
+          }
+          if (letterCounts[letter] > maxCount) {
+            maxCount = letterCounts[letter];
+            mostFrequentSymbol = letter;
+          }
+        }
+
+        resultStoryId =
+          resultStories.find((story) => story.score.letter.toLowerCase() === mostFrequentSymbol)
+            ?.id ?? '';
+      }
+    }
+
+    return resultStoryId;
+  }, [
+    resultStories,
+    quizState,
+    activeStoriesWithResult,
+    currentGroup.settings?.scoreResultLayersGroupId,
+    currentGroup.settings?.scoreType,
+    currentStory
+  ]);
 
   const handleNext = useCallback(() => {
-    if (currentStory === stories.length - 1) {
+    eventPublish('nextStory', {
+      stotyId: activeStoriesWithResult[currentStory].id
+    });
+
+    const resultStoryId = getResultStoryId();
+
+    if (
+      currentStory === activeStoriesWithResult.length - 1 ||
+      activeStoriesWithResult[currentStory].id === resultStoryId
+    ) {
       if (isLastGroup) {
         handleClose();
       } else {
         onNextGroup();
 
         if (onCloseStory) {
-          onCloseStory(currentGroup.id, stories[currentStory].id);
+          onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
         }
       }
     } else {
       if (onCloseStory) {
-        onCloseStory(currentGroup.id, stories[currentStory].id);
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
 
       if (onOpenStory) {
         setTimeout(() => {
-          onOpenStory(currentGroup.id, stories[currentStory + 1].id);
+          onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
         }, 0);
       }
 
       if (onNextStory) {
-        onNextStory(currentGroup.id, stories[currentStory].id);
+        onNextStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
 
-      setCurrentStory(currentStory + 1);
-      setCurrentStoryId(stories[currentStory + 1].id);
+      if (resultStoryId) {
+        const resultStoryIndex = activeStoriesWithResult.findIndex(
+          (story) => story.id === resultStoryId
+        );
+
+        setCurrentStory(resultStoryIndex);
+        setCurrentStoryId(activeStoriesWithResult[resultStoryIndex].id);
+      } else {
+        setCurrentStory(currentStory + 1);
+        setCurrentStoryId(activeStoriesWithResult[currentStory + 1].id);
+      }
     }
   }, [
-    currentGroup.id,
+    activeStoriesWithResult,
     currentStory,
-    handleClose,
+    getResultStoryId,
     isLastGroup,
-    onCloseStory,
+    handleClose,
     onNextGroup,
-    onNextStory,
+    onCloseStory,
+    currentGroup.id,
     onOpenStory,
-    stories
+    onNextStory
   ]);
 
   const handleAnimationEnd = useCallback(() => {
@@ -308,25 +454,29 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [handleNext]);
 
   const handlePrev = useCallback(() => {
+    eventPublish('prevStory', {
+      stotyId: activeStoriesWithResult[currentStory].id
+    });
+
     if (currentStory === 0) {
       isFirstGroup ? handleClose() : onPrevGroup();
     } else {
       if (onCloseStory) {
-        onCloseStory(currentGroup.id, stories[currentStory].id);
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
 
       if (onOpenStory) {
         setTimeout(() => {
-          onOpenStory(currentGroup.id, stories[currentStory - 1].id);
+          onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
         }, 0);
       }
 
       if (onPrevStory) {
-        onPrevStory(currentGroup.id, stories[currentStory].id);
+        onPrevStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
 
       setCurrentStory(currentStory - 1);
-      setCurrentStoryId(stories[currentStory - 1].id);
+      setCurrentStoryId(activeStoriesWithResult[currentStory - 1].id);
     }
   }, [
     currentGroup.id,
@@ -337,21 +487,25 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onOpenStory,
     onPrevGroup,
     onPrevStory,
-    stories
+    activeStoriesWithResult
   ]);
 
   const handleGoToStory = (storyId: string) => {
-    const storyIndex = stories.findIndex((story) => story.id === storyId);
+    const storyIndex = activeStoriesWithResult.findIndex((story) => story.id === storyId);
 
     if (storyIndex > -1) {
+      eventPublish('nextStory', {
+        stotyId: storyId
+      });
+
       if (onOpenStory) {
         setTimeout(() => {
-          onOpenStory(currentGroup.id, stories[storyIndex].id);
+          onOpenStory(currentGroup.id, activeStoriesWithResult[storyIndex].id);
         }, 0);
       }
 
       setCurrentStory(storyIndex);
-      setCurrentStoryId(stories[storyIndex].id);
+      setCurrentStoryId(activeStoriesWithResult[storyIndex].id);
     }
   };
 
@@ -367,8 +521,29 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentGroup.settings?.isProgressHidden &&
     currentGroup.settings?.isProhibitToClose;
 
+  const handleQuizAnswer = (answer: string | number) => {
+    if (currentGroup.settings?.scoreType === ScoreType.LETTERS) {
+      dispatchQuizState({
+        type: 'add_letters',
+        payload: answer
+      });
+    } else if (currentGroup.settings?.scoreType === ScoreType.NUMBERS) {
+      dispatchQuizState({
+        type: 'add_points',
+        payload: answer
+      });
+    }
+  };
+
   return (
-    <StoryContext.Provider value={{ currentStoryId, playStatusChange: setPlayStatus }}>
+    <StoryContext.Provider
+      value={{
+        currentStoryId,
+        quizMode: currentGroup.settings?.scoreType,
+        playStatusChange: setPlayStatus,
+        handleQuizAnswer
+      }}
+    >
       <div
         className={b({ isShowing })}
         ref={storyModalRef}
@@ -377,7 +552,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         }}
       >
         <div className={b('body')}>
-          {stories.length > 1 && (
+          {activeStoriesWithResult.length > 1 && (
             <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
               <LeftArrowIcon />
             </button>
@@ -427,7 +602,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               }}
             >
               <div className={b('swiperContent')}>
-                {stories.map((story, index) => (
+                {activeStoriesWithResult.map((story, index) => (
                   <div className={b('story', { current: index === currentStory })} key={story.id}>
                     <StoryContent
                       currentPaddingSize={currentPaddingSize}
@@ -476,16 +651,18 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           top: isShowMockup && isLarge ? largeIndicatorTop : undefined
                         }}
                       >
-                        {stories.map((story, index) => (
-                          <div
-                            className={b('indicator', {
-                              filled: index < currentStory,
-                              current: index === currentStory
-                            })}
-                            key={story.id}
-                            onAnimationEnd={handleAnimationEnd}
-                          />
-                        ))}
+                        {activeStoriesWithResult
+                          .filter((story) => story.layerData.isActiveLayer)
+                          .map((story, index) => (
+                            <div
+                              className={b('indicator', {
+                                filled: index < currentStory,
+                                current: index === currentStory
+                              })}
+                              key={story.id}
+                              onAnimationEnd={handleAnimationEnd}
+                            />
+                          ))}
                       </div>
                     )}
 
@@ -537,7 +714,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             )}
           </div>
 
-          {stories.length > 1 && (
+          {activeStoriesWithResult.length > 1 && (
             <button className={b('arrowButton', { right: true })} onClick={handleNext}>
               <RightArrowIcon />
             </button>

@@ -1,12 +1,14 @@
+import { StoryContext } from '@components';
 import {
   QuizOneAnswerWidgetParamsType,
+  ScoreType,
   WidgetComponent,
   WidgetPositionLimitsType,
   WidgetPositionType
 } from '@types';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import { Emoji } from 'emoji-mart';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import './QuizOneAnswerWidget.scss';
 
@@ -40,21 +42,23 @@ export const QuizOneAnswerWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(id: string): any;
   onGoToStory?(storyId: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { title, answers, storyId, isTitleHidden } = props.params;
-  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
 
+  const storyContextVal = useContext(StoryContext);
+
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position.width, size, positionLimits.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -81,19 +85,50 @@ export const QuizOneAnswerWidget: WidgetComponent<{
     [calculate]
   );
 
-  const handleAnswer = (id: string) => {
-    setUserAnswer(id);
-    onAnswer?.(id);
+  const handleSendScore = useCallback(
+    (currentAnswer: string) => {
+      const answerScore = currentAnswer
+        ? params.answers.find((answer) => answer.id === currentAnswer)?.score
+        : undefined;
 
-    if (storyId) {
-      onGoToStory?.(storyId);
-    }
-  };
+      if (answerScore && storyContextVal.quizMode && storyContextVal.handleQuizAnswer) {
+        storyContextVal.handleQuizAnswer(
+          storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points
+        );
+      }
+    },
+    [params.answers, storyContextVal]
+  );
+
+  const handleAnswer = useCallback(
+    (id: string) => {
+      setUserAnswer(id);
+      onAnswer?.(id);
+      handleSendScore(id);
+
+      if (storyId) {
+        onGoToStory?.(storyId);
+      }
+    },
+    [onAnswer, onGoToStory, handleSendScore, storyId]
+  );
+
+  const titleTextStyles = getTextStyles(params.titleFont?.fontColor);
+  const answerTextStyles = getTextStyles(params.answersFont?.fontColor);
 
   return (
     <div className={b()}>
       {!isTitleHidden && (
-        <div className={b('title')} style={elementSizes.title}>
+        <div
+          className={b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' })}
+          style={{
+            ...elementSizes.title,
+            fontStyle: params.titleFont?.fontParams?.style,
+            fontWeight: params.titleFont?.fontParams?.weight,
+            fontFamily: params.titleFont?.fontFamily,
+            ...titleTextStyles
+          }}
+        >
           {title}
         </div>
       )}
@@ -111,7 +146,18 @@ export const QuizOneAnswerWidget: WidgetComponent<{
             {answer.emoji && (
               <Emoji emoji={answer.emoji?.name} set="apple" size={elementSizes.emoji.width} />
             )}
-            <p className={b('answerTitle')} style={elementSizes.answerTitle}>
+            <p
+              className={b('answerTitle', {
+                gradient: params.answersFont?.fontColor?.type === 'gradient'
+              })}
+              style={{
+                ...elementSizes.answerTitle,
+                fontStyle: params.answersFont?.fontParams?.style,
+                fontWeight: params.answersFont?.fontParams?.weight,
+                fontFamily: params.answersFont?.fontFamily,
+                ...answerTextStyles
+              }}
+            >
               {answer.title}
             </p>
           </button>
@@ -119,4 +165,4 @@ export const QuizOneAnswerWidget: WidgetComponent<{
       </div>
     </div>
   );
-};
+});

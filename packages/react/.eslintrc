@@ -24,6 +24,7 @@
         "printWidth": 100
       }
     ],
+    "no-plusplus": "off",
     "arrow-body-style": [
       "error",
       "as-needed"

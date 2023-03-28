@@ -21,10 +21,12 @@ declare const widgets: {
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
         jsConfetti?: any;
+        isReadOnly?: boolean | undefined;
         onAnswer?(answerId: string): void;
     }>;
     click_me: import("@types").WidgetComponent<{
         params: import("@types").ClickMeWidgetParamsType;
+        isReadOnly?: boolean | undefined;
         onClick?(): void;
         onGoToStory?(storyId: string): void;
     }>;
@@ -35,6 +37,7 @@ declare const widgets: {
         params: import("@types").EmojiReactionWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        isReadOnly?: boolean | undefined;
         onAnswer?(emoji: string): void;
     }>;
     giphy: import("@types").WidgetComponent<{
@@ -44,6 +47,7 @@ declare const widgets: {
         params: import("@types").QuestionWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        isReadOnly?: boolean | undefined;
         onAnswer?(answer: string): any;
     }>;
     rectangle: import("@types").WidgetComponent<{
@@ -54,16 +58,19 @@ declare const widgets: {
         params: import("@types").SliderWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        isReadOnly?: boolean | undefined;
         onAnswer?(value: number): void;
     }>;
     swipe_up: import("@types").WidgetComponent<{
         params: import("@types").SwipeUpWidgetParamsType;
+        isReadOnly?: boolean | undefined;
         onSwipe?(): void;
     }>;
     talk_about: import("@types").WidgetComponent<{
         params: import("@types").TalkAboutWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        isReadOnly?: boolean | undefined;
         onAnswer?(answer: string): void;
     }>;
     text: import("@types").WidgetComponent<{
@@ -75,37 +82,42 @@ declare const widgets: {
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
     }>;
     quiz_multiple_answers: import("@types").WidgetComponent<{
-        params: import("@types").QuizMultipleAnswerParamsType;
+        params: import("@types").QuizMultipleAnswerWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        isReadOnly?: boolean | undefined;
         onAnswer?(answer: string[]): any;
         onGoToStory?(storyId: string): void;
     }>;
     quiz_one_answer: import("@types").WidgetComponent<{
-        params: import("@types").QuizOneAnswerParamsType;
+        params: import("@types").QuizOneAnswerWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        isReadOnly?: boolean | undefined;
         onAnswer?(id: string): any;
         onGoToStory?(storyId: string): void;
     }>;
     quiz_open_answer: import("@types").WidgetComponent<{
-        params: import("@types").QuizOpenAnswerParamsType;
+        params: import("@types").QuizOpenAnswerWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        isReadOnly?: boolean | undefined;
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
     }>;
     quiz_rate: import("@types").WidgetComponent<{
-        params: import("@types").QuizRateParamsType;
+        params: import("@types").QuizRateWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        isReadOnly?: boolean | undefined;
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
     }>;
     quiz_one_multiple_with_image: import("@types").WidgetComponent<{
-        params: import("@types").QuizMultipleAnswerWithImageParamsType;
+        params: import("@types").QuizMultipleAnswerWithImageWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        isReadOnly?: boolean | undefined;
         onAnswer?(answer: string[]): any;
         onGoToStory?(storyId: string): void;
     }>;

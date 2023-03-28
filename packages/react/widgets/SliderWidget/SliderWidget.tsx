@@ -5,7 +5,7 @@ import {
   WidgetPositionType,
   WidgetPositionLimitsType
 } from '@types';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import { useInterval } from '@hooks';
 import { StoryContext } from '@components';
 import { SliderCustom } from './_components';
@@ -44,10 +44,10 @@ export const SliderWidget: WidgetComponent<{
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(value: number): void;
-}> = (props) => {
-  const { params, storyId, position, positionLimits, isReadOnly } = props;
+}> = React.memo((props) => {
+  const { params, storyId, position, positionLimits, isReadOnly, onAnswer } = props;
   const { color, text, emoji, value } = params;
-  const [sliderValue, setSliderValue] = useState<number>(0);
+  const [sliderValue, setSliderValue] = useState<number>(isReadOnly ? value : 0);
   const [changeStatus, setChangeStatus] = useState<ChangeStatus>('wait');
 
   const time = 500;
@@ -55,13 +55,13 @@ export const SliderWidget: WidgetComponent<{
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -97,24 +97,22 @@ export const SliderWidget: WidgetComponent<{
   }, delay);
 
   useEffect(() => {
-    if (changeStatus === 'moved' && props.onAnswer) {
-      props.onAnswer(sliderValue);
+    if (changeStatus === 'moved' && onAnswer) {
+      onAnswer(sliderValue);
     }
+  }, [changeStatus, onAnswer, sliderValue]);
 
-    // eslint-disable-next-line
-  }, [changeStatus, sliderValue]);
-
-  const handleChange = (valueChanged: number) => {
+  const handleChange = useCallback((valueChanged: number) => {
     setSliderValue(valueChanged);
-  };
+  }, []);
 
-  const handleBeforeChange = () => {
+  const handleBeforeChange = useCallback(() => {
     setChangeStatus('moving');
-  };
+  }, []);
 
-  const handleAfterChange = () => {
+  const handleAfterChange = useCallback(() => {
     setChangeStatus('moved');
-  };
+  }, []);
 
   const storyContextVal = useContext(StoryContext);
 
@@ -125,9 +123,20 @@ export const SliderWidget: WidgetComponent<{
     }
   }, [storyContextVal, storyId, changeStatus, value, time]);
 
+  const textStyles = getTextStyles(params.fontColor);
+
   return (
     <div className={b({ color })} style={elementSizes.widget}>
-      <div className={b('text')} style={elementSizes.text}>
+      <div
+        className={b('text', { gradient: params.fontColor?.type === 'gradient' })}
+        style={{
+          ...elementSizes.text,
+          fontStyle: params.fontParams?.style,
+          fontWeight: params.fontParams?.weight,
+          fontFamily: params.fontFamily,
+          ...textStyles
+        }}
+      >
         {text}
       </div>
 
@@ -138,6 +147,7 @@ export const SliderWidget: WidgetComponent<{
         }}
       >
         <SliderCustom
+          borderRadius={elementSizes.slider.borderRadius}
           changeStatus={changeStatus}
           disabled={changeStatus === 'moved' || isReadOnly}
           emoji={emoji.name}
@@ -151,4 +161,4 @@ export const SliderWidget: WidgetComponent<{
       </div>
     </div>
   );
-};
+});

@@ -11,11 +11,18 @@ export enum StorySize {
   LARGE = 'LARGE'
 }
 
+export enum ScoreType {
+  NUMBERS = 'numbers',
+  LETTERS = 'letters'
+}
+
 export interface StoriesGroupSettings {
   storiesSize?: StorySize;
   isProgressHidden?: boolean;
   isProhibitToClose?: boolean;
   addToStories?: boolean;
+  scoreType?: ScoreType;
+  scoreResultLayersGroupId?: string;
 }
 
 export interface Group {

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { StoryContext } from '@components';
-import { block, calculateElementSize } from '@utils';
+import { block, calculateElementSize, getTextStyles } from '@utils';
 import {
   QuizOpenAnswerWidgetParamsType,
   WidgetComponent,
@@ -40,19 +40,22 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
-}> = (props) => {
+}> = React.memo((props) => {
   const { title, isTitleHidden, storyId } = props.params;
-  const { position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const storyContextVal = useContext(StoryContext);
 
   const [text, setText] = useState<string>('');
   const [isSent, setIsSent] = useState<boolean>(false);
 
-  const handleTextChange = (e: any) => {
-    setText(e.target.value);
-    storyContextVal.playStatusChange('pause');
-  };
+  const handleTextChange = useCallback(
+    (e: any) => {
+      setText(e.target.value);
+      storyContextVal.playStatusChange('pause');
+    },
+    [storyContextVal]
+  );
 
   const handleClickOutside = useCallback(
     (event: any) => {
@@ -65,7 +68,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
     [isSent, storyContextVal]
   );
 
-  const handleSendClick = () => {
+  const handleSendClick = useCallback(() => {
     if (text.length) {
       onAnswer?.(text);
 
@@ -76,7 +79,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
       storyContextVal.playStatusChange('play');
       setIsSent(true);
     }
-  };
+  }, [onAnswer, onGoToStory, storyContextVal, storyId, text]);
 
   useEffect(() => {
     if (!isSent) {
@@ -95,13 +98,13 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
 
   const calculate = useCallback(
     (size) => {
-      if (position && positionLimits) {
-        return calculateElementSize(position, positionLimits, size);
+      if (position?.width && positionLimits?.minWidth) {
+        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
       }
 
       return size;
     },
-    [position, positionLimits]
+    [position?.width, positionLimits?.minWidth]
   );
 
   const elementSizes = useMemo(
@@ -128,10 +131,21 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
     [calculate]
   );
 
+  const textStyles = getTextStyles(params.fontColor);
+
   return (
     <div className={b()}>
       {!isTitleHidden && (
-        <div className={b('title')} style={elementSizes.title}>
+        <div
+          className={b('title')}
+          style={{
+            ...elementSizes.title,
+            fontStyle: params.fontParams?.style,
+            fontWeight: params.fontParams?.weight,
+            fontFamily: params.fontFamily,
+            ...textStyles
+          }}
+        >
           {title}
         </div>
       )}
@@ -167,4 +181,4 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
       </div>
     </div>
   );
-};
+});
