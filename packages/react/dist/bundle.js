@@ -11106,6 +11106,18 @@ const reducer = (state, action) => {
             letters: state.letters + action.payload
         };
     }
+    if (action.type === 'remove_points') {
+        return {
+            points: state.points - +action.payload,
+            letters: state.letters
+        };
+    }
+    if (action.type === 'remove_letters') {
+        return {
+            points: state.points,
+            letters: state.letters.replace(action.payload, '')
+        };
+    }
     if (action.type === 'reset') {
         return initQuizeState;
     }
@@ -11255,14 +11267,14 @@ const StoryModal = (props) => {
         if (nextLayersGroupId &&
             nextLayersGroupId === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
             resultStoryId = (_d = (_c = resultStories.find((story) => story.isActiveLayer)) === null || _c === void 0 ? void 0 : _c.id) !== null && _d !== void 0 ? _d : '';
-            if (((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreType) === exports.ScoreType.NUMBERS) {
+            if (((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreType) === exports.ScoreType.NUMBERS && quizState.points > 0) {
                 for (let i = 0; i < resultStories.length; i++) {
                     if (+resultStories[i].score.points <= quizState.points) {
                         resultStoryId = resultStories[i].id;
                     }
                 }
             }
-            else if (((_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreType) === exports.ScoreType.LETTERS) {
+            else if (((_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreType) === exports.ScoreType.LETTERS && quizState.letters) {
                 const lettersArr = quizState.letters.toLowerCase().split('');
                 let mostFrequentSymbol = '';
                 let maxCount = 0;
@@ -11287,11 +11299,11 @@ const StoryModal = (props) => {
         return resultStoryId;
     }, [
         resultStories,
-        quizState,
         activeStoriesWithResult,
         (_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreResultLayersGroupId,
         (_g = currentGroup.settings) === null || _g === void 0 ? void 0 : _g.scoreType,
-        currentStory
+        currentStory,
+        quizState
     ]);
     const handleNext = React.useCallback(() => {
         eventPublish('nextStory', {
@@ -11300,6 +11312,7 @@ const StoryModal = (props) => {
         const resultStoryId = getResultStoryId();
         if (currentStory === activeStoriesWithResult.length - 1 ||
             activeStoriesWithResult[currentStory].id === resultStoryId) {
+            dispatchQuizState({ type: 'reset' });
             if (isLastGroup) {
                 handleClose();
             }
@@ -11402,18 +11415,30 @@ const StoryModal = (props) => {
     const noTopShadow = currentGroupType === exports.GroupType.ONBOARDING &&
         ((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProgressHidden) &&
         ((_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProhibitToClose);
-    const handleQuizAnswer = (answer) => {
-        var _a, _b;
-        if (((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreType) === exports.ScoreType.LETTERS) {
+    const handleQuizAnswer = (params) => {
+        var _a, _b, _c, _d;
+        if (((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreType) === exports.ScoreType.LETTERS && params.type === 'add') {
             dispatchQuizState({
                 type: 'add_letters',
-                payload: answer
+                payload: params.answer
             });
         }
-        else if (((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreType) === exports.ScoreType.NUMBERS) {
+        else if (((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreType) === exports.ScoreType.NUMBERS && params.type === 'add') {
             dispatchQuizState({
                 type: 'add_points',
-                payload: answer
+                payload: +params.answer
+            });
+        }
+        else if (((_c = currentGroup.settings) === null || _c === void 0 ? void 0 : _c.scoreType) === exports.ScoreType.LETTERS && params.type === 'remove') {
+            dispatchQuizState({
+                type: 'remove_letters',
+                payload: params.answer
+            });
+        }
+        else if (((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreType) === exports.ScoreType.NUMBERS && params.type === 'remove') {
+            dispatchQuizState({
+                type: 'remove_points',
+                payload: +params.answer
             });
         }
     };
@@ -11578,7 +11603,10 @@ const ChooseAnswerWidget = React__default["default"].memo((props) => {
             ? (_a = params.answers.find((answer) => answer.id === currentAnswer)) === null || _a === void 0 ? void 0 : _a.score
             : undefined;
         if (answerScore && storyContextVal.quizMode && storyContextVal.handleQuizAnswer) {
-            storyContextVal.handleQuizAnswer(storyContextVal.quizMode === exports.ScoreType.LETTERS ? answerScore.letter : answerScore.points);
+            storyContextVal.handleQuizAnswer({
+                type: 'add',
+                answer: storyContextVal.quizMode === exports.ScoreType.LETTERS ? answerScore.letter : answerScore.points
+            });
         }
     }, [params.answers, storyContextVal]);
     const handleMarkAnswer = React.useCallback((answerId) => {
@@ -65378,10 +65406,7 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
             lineHeight: calculate(INIT_ELEMENT_STYLES$4.sendBtn.lineHeight)
         }
     }), [calculate]);
-    const handleAnswer = React.useCallback((id) => {
-        setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
-    }, []);
-    const handleSendScore = React.useCallback((currentAnswers) => {
+    const handleSendScore = React.useCallback((currentAnswers, type) => {
         if (!storyContextVal.quizMode) {
             return;
         }
@@ -65401,16 +65426,25 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
         if (answerScore !== undefined &&
             storyContextVal.quizMode &&
             storyContextVal.handleQuizAnswer) {
-            storyContextVal.handleQuizAnswer(answerScore);
+            storyContextVal.handleQuizAnswer({ type, answer: answerScore });
         }
     }, [params.answers, storyContextVal]);
+    const handleAnswer = React.useCallback((id) => {
+        if (userAnswers.includes(id)) {
+            handleSendScore([id], 'remove');
+            setUserAnswers((prevState) => prevState.filter((answer) => answer !== id));
+        }
+        else {
+            handleSendScore([id], 'add');
+            setUserAnswers((prevState) => [...prevState, id]);
+        }
+    }, [handleSendScore, userAnswers]);
     const handleSendAnswer = React.useCallback(() => {
         if (!isReadOnly && userAnswers.length && !isSent) {
             onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
             setIsSent(true);
-            handleSendScore(userAnswers);
         }
-    }, [onAnswer, handleSendScore, userAnswers, isSent, isReadOnly]);
+    }, [onAnswer, userAnswers, isSent, isReadOnly]);
     React.useEffect(() => {
         eventSubscribe('nextStory', handleSendAnswer);
         eventSubscribe('prevStory', handleSendAnswer);
@@ -65495,7 +65529,10 @@ const QuizOneAnswerWidget = React__default["default"].memo((props) => {
             ? (_a = params.answers.find((answer) => answer.id === currentAnswer)) === null || _a === void 0 ? void 0 : _a.score
             : undefined;
         if (answerScore && storyContextVal.quizMode && storyContextVal.handleQuizAnswer) {
-            storyContextVal.handleQuizAnswer(storyContextVal.quizMode === exports.ScoreType.LETTERS ? answerScore.letter : answerScore.points);
+            storyContextVal.handleQuizAnswer({
+                type: 'add',
+                answer: storyContextVal.quizMode === exports.ScoreType.LETTERS ? answerScore.letter : answerScore.points
+            });
         }
     }, [params.answers, storyContextVal]);
     const handleAnswer = React.useCallback((id) => {
@@ -65749,10 +65786,7 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
             marginTop: calculate(INIT_ELEMENT_STYLES.sendBtn.marginTop)
         }
     }), [calculate]);
-    const handleAnswer = React.useCallback((id) => {
-        setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
-    }, []);
-    const handleSendScore = React.useCallback((currentAnswers) => {
+    const handleSendScore = React.useCallback((currentAnswers, type) => {
         if (!storyContextVal.quizMode) {
             return;
         }
@@ -65772,16 +65806,25 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
         if (answerScore !== undefined &&
             storyContextVal.quizMode &&
             storyContextVal.handleQuizAnswer) {
-            storyContextVal.handleQuizAnswer(answerScore);
+            storyContextVal.handleQuizAnswer({ type, answer: answerScore });
         }
     }, [params.answers, storyContextVal]);
+    const handleAnswer = React.useCallback((id) => {
+        if (userAnswers.includes(id)) {
+            handleSendScore([id], 'remove');
+            setUserAnswers((prevState) => prevState.filter((answer) => answer !== id));
+        }
+        else {
+            handleSendScore([id], 'add');
+            setUserAnswers((prevState) => [...prevState, id]);
+        }
+    }, [handleSendScore, userAnswers]);
     const handleSendAnswer = React.useCallback(() => {
         if (!isReadOnly && userAnswers.length && !isSent) {
             onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
             setIsSent(true);
-            handleSendScore(userAnswers);
         }
-    }, [isReadOnly, isSent, onAnswer, handleSendScore, userAnswers]);
+    }, [isReadOnly, isSent, onAnswer, userAnswers]);
     React.useEffect(() => {
         eventSubscribe('nextStory', handleSendAnswer);
         eventSubscribe('prevStory', handleSendAnswer);

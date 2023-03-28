@@ -92,9 +92,11 @@ export const QuizOneAnswerWidget: WidgetComponent<{
         : undefined;
 
       if (answerScore && storyContextVal.quizMode && storyContextVal.handleQuizAnswer) {
-        storyContextVal.handleQuizAnswer(
-          storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points
-        );
+        storyContextVal.handleQuizAnswer({
+          type: 'add',
+          answer:
+            storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points
+        });
       }
     },
     [params.answers, storyContextVal]

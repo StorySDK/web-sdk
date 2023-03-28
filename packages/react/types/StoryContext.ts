@@ -5,5 +5,5 @@ export interface StoryContenxt {
   quizMode?: ScoreType;
   playStatusChange?: any;
   confetti?: any;
-  handleQuizAnswer?(answer: number | string): void;
+  handleQuizAnswer?: (params: { type: string; answer: number | string }) => void;
 }

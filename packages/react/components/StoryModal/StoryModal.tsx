@@ -132,6 +132,11 @@ const INIT_CONTAINER_BORDER_RADIUS = 50;
 const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
 const ratioIndexLarge = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
 
+type QuizStateType = {
+  points: number;
+  letters: string;
+};
+
 const initQuizeState = {
   points: 0,
   letters: ''
@@ -148,6 +153,18 @@ const reducer = (state: any, action: any) => {
     return {
       points: state.points,
       letters: state.letters + action.payload
+    };
+  }
+  if (action.type === 'remove_points') {
+    return {
+      points: state.points - +action.payload,
+      letters: state.letters
+    };
+  }
+  if (action.type === 'remove_letters') {
+    return {
+      points: state.points,
+      letters: state.letters.replace(action.payload, '')
     };
   }
   if (action.type === 'reset') {
@@ -347,13 +364,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     ) {
       resultStoryId = resultStories.find((story) => story.isActiveLayer)?.id ?? '';
 
-      if (currentGroup.settings?.scoreType === ScoreType.NUMBERS) {
+      if (currentGroup.settings?.scoreType === ScoreType.NUMBERS && quizState.points > 0) {
         for (let i = 0; i < resultStories.length; i++) {
           if (+resultStories[i].score.points <= quizState.points) {
             resultStoryId = resultStories[i].id;
           }
         }
-      } else if (currentGroup.settings?.scoreType === ScoreType.LETTERS) {
+      } else if (currentGroup.settings?.scoreType === ScoreType.LETTERS && quizState.letters) {
         const lettersArr = quizState.letters.toLowerCase().split('');
 
         let mostFrequentSymbol = '';
@@ -382,11 +399,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     return resultStoryId;
   }, [
     resultStories,
-    quizState,
     activeStoriesWithResult,
     currentGroup.settings?.scoreResultLayersGroupId,
     currentGroup.settings?.scoreType,
-    currentStory
+    currentStory,
+    quizState
   ]);
 
   const handleNext = useCallback(() => {
@@ -400,6 +417,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       currentStory === activeStoriesWithResult.length - 1 ||
       activeStoriesWithResult[currentStory].id === resultStoryId
     ) {
+      dispatchQuizState({ type: 'reset' });
       if (isLastGroup) {
         handleClose();
       } else {
@@ -521,16 +539,26 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentGroup.settings?.isProgressHidden &&
     currentGroup.settings?.isProhibitToClose;
 
-  const handleQuizAnswer = (answer: string | number) => {
-    if (currentGroup.settings?.scoreType === ScoreType.LETTERS) {
+  const handleQuizAnswer = (params: { type: string; answer: string | number }) => {
+    if (currentGroup.settings?.scoreType === ScoreType.LETTERS && params.type === 'add') {
       dispatchQuizState({
         type: 'add_letters',
-        payload: answer
+        payload: params.answer
       });
-    } else if (currentGroup.settings?.scoreType === ScoreType.NUMBERS) {
+    } else if (currentGroup.settings?.scoreType === ScoreType.NUMBERS && params.type === 'add') {
       dispatchQuizState({
         type: 'add_points',
-        payload: answer
+        payload: +params.answer
+      });
+    } else if (currentGroup.settings?.scoreType === ScoreType.LETTERS && params.type === 'remove') {
+      dispatchQuizState({
+        type: 'remove_letters',
+        payload: params.answer
+      });
+    } else if (currentGroup.settings?.scoreType === ScoreType.NUMBERS && params.type === 'remove') {
+      dispatchQuizState({
+        type: 'remove_points',
+        payload: +params.answer
       });
     }
   };
