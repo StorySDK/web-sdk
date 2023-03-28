@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   WidgetPositionLimitsType,
   WidgetPositionType,
   QuizMultipleAnswerWithImageWidgetParamsType,
-  WidgetComponent
+  WidgetComponent,
+  ScoreType
 } from '@types';
 import {
   block,
@@ -13,6 +14,7 @@ import {
   getTextStyles
 } from '@utils';
 import './QuizMultipleAnswerWithImageWidget.scss';
+import { StoryContext } from '@components';
 
 const b = block('QuizMultipleAnswerWithImageWidget');
 
@@ -56,6 +58,8 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
 
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isSent, setIsSent] = useState<boolean>(false);
+
+  const storyContextVal = useContext(StoryContext);
 
   const calculate = useCallback(
     (size) => {
@@ -101,12 +105,47 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
     );
   }, []);
 
+  const handleSendScore = useCallback(
+    (currentAnswers: string[]) => {
+      if (!storyContextVal.quizMode) {
+        return;
+      }
+
+      const answerScore = currentAnswers.length
+        ? params.answers
+            .filter((answer) => currentAnswers.includes(answer.id))
+            .reduce(
+              (acc, answer) => {
+                if (storyContextVal.quizMode === ScoreType.LETTERS) {
+                  return acc + answer.score.letter;
+                }
+                if (storyContextVal.quizMode === ScoreType.NUMBERS) {
+                  return +acc + +answer.score.points;
+                }
+                return acc;
+              },
+              storyContextVal.quizMode === ScoreType.LETTERS ? '' : 0
+            )
+        : undefined;
+
+      if (
+        answerScore !== undefined &&
+        storyContextVal.quizMode &&
+        storyContextVal.handleQuizAnswer
+      ) {
+        storyContextVal.handleQuizAnswer(answerScore);
+      }
+    },
+    [params.answers, storyContextVal]
+  );
+
   const handleSendAnswer = useCallback(() => {
     if (!isReadOnly && userAnswers.length && !isSent) {
       onAnswer?.(userAnswers);
       setIsSent(true);
+      handleSendScore(userAnswers);
     }
-  }, [isReadOnly, isSent, onAnswer, userAnswers]);
+  }, [isReadOnly, isSent, onAnswer, handleSendScore, userAnswers]);
 
   useEffect(() => {
     eventSubscribe('nextStory', handleSendAnswer);

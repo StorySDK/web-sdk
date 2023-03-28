@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef, useEffect, useMemo, useContext, memo } from 'react';
+import React, { useCallback, useState, useRef, useEffect, useMemo, useReducer, useContext, memo } from 'react';
 import crypto from 'crypto';
 
 var WidgetsTypes;
@@ -38,6 +38,11 @@ var StorySize;
     StorySize["SMALL"] = "SMALL";
     StorySize["LARGE"] = "LARGE";
 })(StorySize || (StorySize = {}));
+var ScoreType;
+(function (ScoreType) {
+    ScoreType["NUMBERS"] = "numbers";
+    ScoreType["LETTERS"] = "letters";
+})(ScoreType || (ScoreType = {}));
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -11075,18 +11080,63 @@ const INIT_CONTROL_SIDE_PADDING_LARGE = 14;
 const INIT_CONTAINER_BORDER_RADIUS = 50;
 const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
 const ratioIndexLarge = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
+const initQuizeState = {
+    points: 0,
+    letters: ''
+};
+const reducer = (state, action) => {
+    if (action.type === 'add_points') {
+        return {
+            points: state.points + +action.payload,
+            letters: state.letters
+        };
+    }
+    if (action.type === 'add_letters') {
+        return {
+            points: state.points,
+            letters: state.letters + action.payload
+        };
+    }
+    if (action.type === 'reset') {
+        return initQuizeState;
+    }
+    throw Error('Unknown action.');
+};
 const StoryModal = (props) => {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory } = props;
+    const [quizState, dispatchQuizState] = useReducer(reducer, initQuizeState);
     const [currentStory, setCurrentStory] = useState(0);
     const [currentStoryId, setCurrentStoryId] = useState('');
     const [playStatus, setPlayStatus] = useState('wait');
     const storyModalRef = useRef(null);
     const [width, height] = d$1();
+    const [activeStoriesWithResult, setActiveStoriesWithResult] = useState([]);
+    useEffect(() => {
+        setActiveStoriesWithResult(stories
+            .filter((story) => {
+            var _a;
+            if (story.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
+                return true;
+            }
+            return story.layerData.isActiveLayer;
+        })
+            .sort((storyA, storyB) => {
+            var _a, _b;
+            if (storyA.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
+                return 1;
+            }
+            if (storyB.layerData.layersGroupId === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
+                return -1;
+            }
+            return 0;
+        }));
+    }, [(_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId, stories]);
     const isMobile = width < MOBILE_BREAKPOINT;
     const currentGroupType = currentGroup.type || GroupType.GROUP;
-    const isBackroundFilled = ((_b = (_a = stories[currentStory]) === null || _a === void 0 ? void 0 : _a.background) === null || _b === void 0 ? void 0 : _b.isFilled) && currentGroupType === GroupType.GROUP;
-    const isLarge = (((_c = currentGroup.settings) === null || _c === void 0 ? void 0 : _c.storiesSize) === StorySize.LARGE &&
+    const isBackroundFilled = ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.background) === null || _c === void 0 ? void 0 : _c.isFilled) &&
+        currentGroupType === GroupType.GROUP;
+    const isLarge = (((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.storiesSize) === StorySize.LARGE &&
         currentGroupType === GroupType.ONBOARDING) ||
         (currentGroupType === GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
     const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
@@ -11135,8 +11185,8 @@ const StoryModal = (props) => {
     }, [width, height]);
     useEffect(() => {
         let currentStoryIndex = 0;
-        if (startStoryId && stories.length) {
-            const storyIndex = stories.findIndex((story) => story.id === startStoryId);
+        if (startStoryId && activeStoriesWithResult.length) {
+            const storyIndex = activeStoriesWithResult.findIndex((story) => story.id === startStoryId);
             currentStoryIndex = storyIndex > -1 ? storyIndex : 0;
         }
         setCurrentStory(currentStoryIndex);
@@ -11153,84 +11203,162 @@ const StoryModal = (props) => {
                 body.style.overflow = 'auto';
             }
         }
-        if (isShowing && stories.length) {
-            setCurrentStoryId(stories[currentStoryIndex].id);
+        if (isShowing && activeStoriesWithResult.length) {
+            setCurrentStoryId(activeStoriesWithResult[currentStoryIndex].id);
             if (onOpenStory) {
-                onOpenStory(currentGroup.id, stories[currentStoryIndex].id);
+                onOpenStory(currentGroup.id, activeStoriesWithResult[currentStoryIndex].id);
             }
         }
-    }, [stories.length, onOpenStory, stories, currentGroup, isShowing, startStoryId]);
+    }, [
+        activeStoriesWithResult.length,
+        onOpenStory,
+        activeStoriesWithResult,
+        currentGroup,
+        isShowing,
+        startStoryId
+    ]);
     const handleClose = useCallback(() => {
         onClose();
         if (onCloseStory) {
-            onCloseStory(currentGroup.id, stories[currentStory].id);
+            onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
         }
-    }, [currentGroup.id, currentStory, onClose, onCloseStory, stories]);
+    }, [currentGroup.id, currentStory, onClose, onCloseStory, activeStoriesWithResult]);
+    const resultStories = useMemo(() => {
+        var _a;
+        if ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) {
+            return stories
+                .filter((story) => { var _a; return story.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId); })
+                .map((story) => ({
+                id: story.id,
+                isActiveLayer: story.layerData.isActiveLayer,
+                score: story.layerData.score
+            }));
+        }
+        return [];
+    }, [(_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreResultLayersGroupId, stories]);
+    const getResultStoryId = useCallback(() => {
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        if (!resultStories.length) {
+            return '';
+        }
+        const nextLayersGroupId = (_a = activeStoriesWithResult[currentStory + 1]) === null || _a === void 0 ? void 0 : _a.layerData.layersGroupId;
+        let resultStoryId = '';
+        if (nextLayersGroupId &&
+            nextLayersGroupId === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
+            resultStoryId = (_d = (_c = resultStories.find((story) => story.isActiveLayer)) === null || _c === void 0 ? void 0 : _c.id) !== null && _d !== void 0 ? _d : '';
+            if (((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreType) === ScoreType.NUMBERS) {
+                for (let i = 0; i < resultStories.length; i++) {
+                    if (+resultStories[i].score.points <= quizState.points) {
+                        resultStoryId = resultStories[i].id;
+                    }
+                }
+            }
+            else if (((_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreType) === ScoreType.LETTERS) {
+                const lettersArr = quizState.letters.toLowerCase().split('');
+                let mostFrequentSymbol = '';
+                let maxCount = 0;
+                const letterCounts = {};
+                for (let i = 0; i < lettersArr.length; i++) {
+                    const letter = lettersArr[i];
+                    if (!letterCounts[letter]) {
+                        letterCounts[letter] = 1;
+                    }
+                    else {
+                        letterCounts[letter]++;
+                    }
+                    if (letterCounts[letter] > maxCount) {
+                        maxCount = letterCounts[letter];
+                        mostFrequentSymbol = letter;
+                    }
+                }
+                resultStoryId =
+                    (_h = (_g = resultStories.find((story) => story.score.letter.toLowerCase() === mostFrequentSymbol)) === null || _g === void 0 ? void 0 : _g.id) !== null && _h !== void 0 ? _h : '';
+            }
+        }
+        return resultStoryId;
+    }, [
+        resultStories,
+        quizState,
+        activeStoriesWithResult,
+        (_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreResultLayersGroupId,
+        (_g = currentGroup.settings) === null || _g === void 0 ? void 0 : _g.scoreType,
+        currentStory
+    ]);
     const handleNext = useCallback(() => {
         eventPublish('nextStory', {
-            stotyId: stories[currentStory].id
+            stotyId: activeStoriesWithResult[currentStory].id
         });
-        if (currentStory === stories.length - 1) {
+        const resultStoryId = getResultStoryId();
+        if (currentStory === activeStoriesWithResult.length - 1 ||
+            activeStoriesWithResult[currentStory].id === resultStoryId) {
             if (isLastGroup) {
                 handleClose();
             }
             else {
                 onNextGroup();
                 if (onCloseStory) {
-                    onCloseStory(currentGroup.id, stories[currentStory].id);
+                    onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
                 }
             }
         }
         else {
             if (onCloseStory) {
-                onCloseStory(currentGroup.id, stories[currentStory].id);
+                onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             if (onOpenStory) {
                 setTimeout(() => {
-                    onOpenStory(currentGroup.id, stories[currentStory + 1].id);
+                    onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
                 }, 0);
             }
             if (onNextStory) {
-                onNextStory(currentGroup.id, stories[currentStory].id);
+                onNextStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
-            setCurrentStory(currentStory + 1);
-            setCurrentStoryId(stories[currentStory + 1].id);
+            if (resultStoryId) {
+                const resultStoryIndex = activeStoriesWithResult.findIndex((story) => story.id === resultStoryId);
+                setCurrentStory(resultStoryIndex);
+                setCurrentStoryId(activeStoriesWithResult[resultStoryIndex].id);
+            }
+            else {
+                setCurrentStory(currentStory + 1);
+                setCurrentStoryId(activeStoriesWithResult[currentStory + 1].id);
+            }
         }
     }, [
-        currentGroup.id,
+        activeStoriesWithResult,
         currentStory,
-        handleClose,
+        getResultStoryId,
         isLastGroup,
-        onCloseStory,
+        handleClose,
         onNextGroup,
-        onNextStory,
+        onCloseStory,
+        currentGroup.id,
         onOpenStory,
-        stories
+        onNextStory
     ]);
     const handleAnimationEnd = useCallback(() => {
         handleNext();
     }, [handleNext]);
     const handlePrev = useCallback(() => {
         eventPublish('prevStory', {
-            stotyId: stories[currentStory].id
+            stotyId: activeStoriesWithResult[currentStory].id
         });
         if (currentStory === 0) {
             isFirstGroup ? handleClose() : onPrevGroup();
         }
         else {
             if (onCloseStory) {
-                onCloseStory(currentGroup.id, stories[currentStory].id);
+                onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             if (onOpenStory) {
                 setTimeout(() => {
-                    onOpenStory(currentGroup.id, stories[currentStory - 1].id);
+                    onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
                 }, 0);
             }
             if (onPrevStory) {
-                onPrevStory(currentGroup.id, stories[currentStory].id);
+                onPrevStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             setCurrentStory(currentStory - 1);
-            setCurrentStoryId(stories[currentStory - 1].id);
+            setCurrentStoryId(activeStoriesWithResult[currentStory - 1].id);
         }
     }, [
         currentGroup.id,
@@ -11241,21 +11369,21 @@ const StoryModal = (props) => {
         onOpenStory,
         onPrevGroup,
         onPrevStory,
-        stories
+        activeStoriesWithResult
     ]);
     const handleGoToStory = (storyId) => {
-        const storyIndex = stories.findIndex((story) => story.id === storyId);
+        const storyIndex = activeStoriesWithResult.findIndex((story) => story.id === storyId);
         if (storyIndex > -1) {
             eventPublish('nextStory', {
                 stotyId: storyId
             });
             if (onOpenStory) {
                 setTimeout(() => {
-                    onOpenStory(currentGroup.id, stories[storyIndex].id);
+                    onOpenStory(currentGroup.id, activeStoriesWithResult[storyIndex].id);
                 }, 0);
             }
             setCurrentStory(storyIndex);
-            setCurrentStoryId(stories[storyIndex].id);
+            setCurrentStoryId(activeStoriesWithResult[storyIndex].id);
         }
     };
     const canvasRef = useRef(null);
@@ -11263,14 +11391,34 @@ const StoryModal = (props) => {
         canvas: canvasRef.current
     }));
     const noTopShadow = currentGroupType === GroupType.ONBOARDING &&
-        ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.isProgressHidden) &&
-        ((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.isProhibitToClose);
-    return (React.createElement(StoryContext.Provider, { value: { currentStoryId, playStatusChange: setPlayStatus } },
+        ((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProgressHidden) &&
+        ((_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProhibitToClose);
+    const handleQuizAnswer = (answer) => {
+        var _a, _b;
+        if (((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreType) === ScoreType.LETTERS) {
+            dispatchQuizState({
+                type: 'add_letters',
+                payload: answer
+            });
+        }
+        else if (((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreType) === ScoreType.NUMBERS) {
+            dispatchQuizState({
+                type: 'add_points',
+                payload: answer
+            });
+        }
+    };
+    return (React.createElement(StoryContext.Provider, { value: {
+            currentStoryId,
+            quizMode: (_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.scoreType,
+            playStatusChange: setPlayStatus,
+            handleQuizAnswer
+        } },
         React.createElement("div", { className: b$m({ isShowing }), ref: storyModalRef, style: {
                 top: window.pageYOffset || document.documentElement.scrollTop
             } },
             React.createElement("div", { className: b$m('body') },
-                stories.length > 1 && (React.createElement("button", { className: b$m('arrowButton', { left: true }), onClick: handlePrev },
+                activeStoriesWithResult.length > 1 && (React.createElement("button", { className: b$m('arrowButton', { left: true }), onClick: handlePrev },
                     React.createElement(LeftArrowIcon, null))),
                 React.createElement("div", { className: b$m('bodyContainer', {
                         black: currentGroupType === GroupType.GROUP && !isBackroundFilled && !isMobile
@@ -11296,7 +11444,7 @@ const StoryModal = (props) => {
                             height: `calc(100% - ${isShowMockup && !isMobile ? heightGap : 0}px)`,
                             borderRadius: getBorderRadius()
                         } },
-                        React.createElement("div", { className: b$m('swiperContent') }, stories.map((story, index) => {
+                        React.createElement("div", { className: b$m('swiperContent') }, activeStoriesWithResult.map((story, index) => {
                             var _a;
                             return (React.createElement("div", { className: b$m('story', { current: index === currentStory }), key: story.id },
                                 React.createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP && isLarge
@@ -11313,17 +11461,19 @@ const StoryModal = (props) => {
                                         paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
                                         paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
                                     } },
-                                    !((_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.isProgressHidden) && (React.createElement("div", { className: b$m('indicators', {
+                                    !((_l = currentGroup.settings) === null || _l === void 0 ? void 0 : _l.isProgressHidden) && (React.createElement("div", { className: b$m('indicators', {
                                             stopAnimation: playStatus === 'pause',
                                             widePadding: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeIndicatorTop : undefined
-                                        } }, stories.map((story, index) => (React.createElement("div", { className: b$m('indicator', {
+                                        } }, activeStoriesWithResult
+                                        .filter((story) => story.layerData.isActiveLayer)
+                                        .map((story, index) => (React.createElement("div", { className: b$m('indicator', {
                                             filled: index < currentStory,
                                             current: index === currentStory
                                         }), key: story.id, onAnimationEnd: handleAnimationEnd }))))),
                                     currentGroupType === GroupType.GROUP && (React.createElement("div", { className: b$m('group', {
-                                            noProgress: (_g = currentGroup.settings) === null || _g === void 0 ? void 0 : _g.isProgressHidden,
+                                            noProgress: (_m = currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden,
                                             wideLeft: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeElementsTop : undefined
@@ -11331,8 +11481,8 @@ const StoryModal = (props) => {
                                         React.createElement("div", { className: b$m('groupImgWrapper') },
                                             React.createElement("img", { alt: "", className: b$m('groupImg'), src: currentGroup.imageUrl })),
                                         React.createElement("p", { className: b$m('groupTitle') }, currentGroup.title))),
-                                    !((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProhibitToClose) && (React.createElement("button", { className: b$m('close', {
-                                            noProgress: (_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProgressHidden,
+                                    !((_o = currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) && (React.createElement("button", { className: b$m('close', {
+                                            noProgress: (_p = currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
                                             wideRight: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeElementsTop : undefined
@@ -11341,9 +11491,9 @@ const StoryModal = (props) => {
                     isShowMockup && (React.createElement("img", { className: b$m('mockup'), src: isLarge || currentGroupType === GroupType.GROUP
                             ? img$2
                             : img$1 }))),
-                stories.length > 1 && (React.createElement("button", { className: b$m('arrowButton', { right: true }), onClick: handleNext },
+                activeStoriesWithResult.length > 1 && (React.createElement("button", { className: b$m('arrowButton', { right: true }), onClick: handleNext },
                     React.createElement(RightArrowIcon, null)))),
-            isForceCloseAvailable && ((_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.isProhibitToClose) && (React.createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
+            isForceCloseAvailable && ((_q = currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProhibitToClose) && (React.createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
                 React.createElement(CloseIcon, null)))),
         React.createElement("canvas", { ref: canvasRef, style: {
                 display: 'none'
@@ -11380,6 +11530,7 @@ const INIT_ELEMENT_STYLES$a = {
 const ChooseAnswerWidget = React.memo((props) => {
     const { params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
     const [userAnswer, setUserAnswer] = useState(null);
+    const storyContextVal = useContext(StoryContext);
     const calculate = useCallback((size) => {
         if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
             return calculateElementSize(+position.width, size, positionLimits.minWidth);
@@ -11412,12 +11563,22 @@ const ChooseAnswerWidget = React.memo((props) => {
             fontSize: calculate(INIT_ELEMENT_STYLES$a.answerTitle.fontSize)
         }
     }), [calculate]);
+    const handleSendScore = useCallback((currentAnswer) => {
+        var _a;
+        const answerScore = currentAnswer
+            ? (_a = params.answers.find((answer) => answer.id === currentAnswer)) === null || _a === void 0 ? void 0 : _a.score
+            : undefined;
+        if (answerScore && storyContextVal.quizMode && storyContextVal.handleQuizAnswer) {
+            storyContextVal.handleQuizAnswer(storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points);
+        }
+    }, [params.answers, storyContextVal]);
     const handleMarkAnswer = useCallback((answerId) => {
         if (onAnswer) {
             onAnswer(answerId);
         }
         setUserAnswer(answerId);
-    }, [onAnswer]);
+        handleSendScore(answerId);
+    }, [onAnswer, handleSendScore]);
     const renderAnswer = useCallback((answer) => {
         if (userAnswer) {
             return (React.createElement("div", { className: b$l('answer', {
@@ -65174,6 +65335,7 @@ const QuizMultipleAnswerWidget = React.memo((props) => {
     const { params, position, positionLimits, isReadOnly, onAnswer } = props;
     const [userAnswers, setUserAnswers] = useState([]);
     const [isSent, setIsSent] = useState(false);
+    const storyContextVal = useContext(StoryContext);
     const calculate = useCallback((size) => {
         if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
             return calculateElementSize(+position.width, size, positionLimits.minWidth);
@@ -65210,12 +65372,36 @@ const QuizMultipleAnswerWidget = React.memo((props) => {
     const handleAnswer = useCallback((id) => {
         setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
     }, []);
+    const handleSendScore = useCallback((currentAnswers) => {
+        if (!storyContextVal.quizMode) {
+            return;
+        }
+        const answerScore = currentAnswers.length
+            ? params.answers
+                .filter((answer) => currentAnswers.includes(answer.id))
+                .reduce((acc, answer) => {
+                if (storyContextVal.quizMode === ScoreType.LETTERS) {
+                    return acc + answer.score.letter;
+                }
+                if (storyContextVal.quizMode === ScoreType.NUMBERS) {
+                    return +acc + +answer.score.points;
+                }
+                return acc;
+            }, storyContextVal.quizMode === ScoreType.LETTERS ? '' : 0)
+            : undefined;
+        if (answerScore !== undefined &&
+            storyContextVal.quizMode &&
+            storyContextVal.handleQuizAnswer) {
+            storyContextVal.handleQuizAnswer(answerScore);
+        }
+    }, [params.answers, storyContextVal]);
     const handleSendAnswer = useCallback(() => {
         if (!isReadOnly && userAnswers.length && !isSent) {
             onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
             setIsSent(true);
+            handleSendScore(userAnswers);
         }
-    }, [onAnswer, userAnswers, isSent, isReadOnly]);
+    }, [onAnswer, handleSendScore, userAnswers, isSent, isReadOnly]);
     useEffect(() => {
         eventSubscribe('nextStory', handleSendAnswer);
         eventSubscribe('prevStory', handleSendAnswer);
@@ -65267,6 +65453,7 @@ const QuizOneAnswerWidget = React.memo((props) => {
     const { title, answers, storyId, isTitleHidden } = props.params;
     const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
     const [userAnswer, setUserAnswer] = useState(null);
+    const storyContextVal = useContext(StoryContext);
     const calculate = useCallback((size) => {
         if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
             return calculateElementSize(+position.width, size, positionLimits.minWidth);
@@ -65293,13 +65480,23 @@ const QuizOneAnswerWidget = React.memo((props) => {
             fontSize: calculate(INIT_ELEMENT_STYLES$3.answerTitle.fontSize)
         }
     }), [calculate]);
+    const handleSendScore = useCallback((currentAnswer) => {
+        var _a;
+        const answerScore = currentAnswer
+            ? (_a = params.answers.find((answer) => answer.id === currentAnswer)) === null || _a === void 0 ? void 0 : _a.score
+            : undefined;
+        if (answerScore && storyContextVal.quizMode && storyContextVal.handleQuizAnswer) {
+            storyContextVal.handleQuizAnswer(storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points);
+        }
+    }, [params.answers, storyContextVal]);
     const handleAnswer = useCallback((id) => {
         setUserAnswer(id);
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(id);
+        handleSendScore(id);
         if (storyId) {
             onGoToStory === null || onGoToStory === void 0 ? void 0 : onGoToStory(storyId);
         }
-    }, [onAnswer, onGoToStory, storyId]);
+    }, [onAnswer, onGoToStory, handleSendScore, storyId]);
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
     return (React.createElement("div", { className: b$6() },
@@ -65513,6 +65710,7 @@ const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
     const { params, position, positionLimits, isReadOnly, onAnswer } = props;
     const [userAnswers, setUserAnswers] = useState([]);
     const [isSent, setIsSent] = useState(false);
+    const storyContextVal = useContext(StoryContext);
     const calculate = useCallback((size) => {
         if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
             return calculateElementSize(+position.width, size, positionLimits.minWidth);
@@ -65545,12 +65743,36 @@ const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
     const handleAnswer = useCallback((id) => {
         setUserAnswers((prevState) => prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]);
     }, []);
+    const handleSendScore = useCallback((currentAnswers) => {
+        if (!storyContextVal.quizMode) {
+            return;
+        }
+        const answerScore = currentAnswers.length
+            ? params.answers
+                .filter((answer) => currentAnswers.includes(answer.id))
+                .reduce((acc, answer) => {
+                if (storyContextVal.quizMode === ScoreType.LETTERS) {
+                    return acc + answer.score.letter;
+                }
+                if (storyContextVal.quizMode === ScoreType.NUMBERS) {
+                    return +acc + +answer.score.points;
+                }
+                return acc;
+            }, storyContextVal.quizMode === ScoreType.LETTERS ? '' : 0)
+            : undefined;
+        if (answerScore !== undefined &&
+            storyContextVal.quizMode &&
+            storyContextVal.handleQuizAnswer) {
+            storyContextVal.handleQuizAnswer(answerScore);
+        }
+    }, [params.answers, storyContextVal]);
     const handleSendAnswer = useCallback(() => {
         if (!isReadOnly && userAnswers.length && !isSent) {
             onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
             setIsSent(true);
+            handleSendScore(userAnswers);
         }
-    }, [isReadOnly, isSent, onAnswer, userAnswers]);
+    }, [isReadOnly, isSent, onAnswer, handleSendScore, userAnswers]);
     useEffect(() => {
         eventSubscribe('nextStory', handleSendAnswer);
         eventSubscribe('prevStory', handleSendAnswer);
@@ -65817,4 +66039,4 @@ const MaterialIcon = memo(({ name = 'ArrowCircleUpOutlineIcon', className, color
     return null;
 });
 
-export { ChooseAnswerWidget, ClickMeWidget, CustomGroupControl, EllipseWidget, EmojiReactionWidget, GiphyWidget, GroupItem, GroupType, GroupsList, MOBILE_BREAKPOINT, MaterialIcon, PADDING_SIZE, QuestionWidget, QuizMultipleAnswerWidget, QuizMultipleAnswerWithImageWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, RectangleWidget, STORY_SIZE, STORY_SIZE_LARGE, ScoreWidgets, SliderWidget, StoryContent, StoryContext, StoryModal, StorySize, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, WidgetsTypes };
+export { ChooseAnswerWidget, ClickMeWidget, CustomGroupControl, EllipseWidget, EmojiReactionWidget, GiphyWidget, GroupItem, GroupType, GroupsList, MOBILE_BREAKPOINT, MaterialIcon, PADDING_SIZE, QuestionWidget, QuizMultipleAnswerWidget, QuizMultipleAnswerWithImageWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, RectangleWidget, STORY_SIZE, STORY_SIZE_LARGE, ScoreType, ScoreWidgets, SliderWidget, StoryContent, StoryContext, StoryModal, StorySize, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, WidgetsTypes };

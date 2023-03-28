@@ -21,7 +21,12 @@ import {
 
 type ColorValue = { type: 'color'; value: string; isFilled?: boolean };
 type GradientValue = { type: 'gradient'; value: string[]; isFilled?: boolean };
-type BackgrounValue = { type: 'image' | 'video'; value: string; isFilled?: boolean };
+type BackgrounValue = {
+  type: 'image' | 'video';
+  value: string;
+  isFilled?: boolean;
+  fileId?: string;
+};
 
 export type BorderType = GradientValue | ColorValue;
 export type BackgroundType = GradientValue | ColorValue | BackgrounValue;
@@ -205,9 +210,20 @@ export interface WidgetObjectType {
   action?(): void;
 }
 
+export interface LayerData {
+  layersGroupId: string;
+  positionInGroup: number;
+  isActiveLayer: boolean;
+  score: {
+    letter: string;
+    points: number;
+  };
+}
+
 export interface StoryType {
   id: string;
   storyData: WidgetObjectType[];
+  layerData: LayerData;
   background: BackgroundType;
   positionIndex: number;
 }

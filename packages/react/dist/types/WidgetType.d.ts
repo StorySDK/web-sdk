@@ -13,6 +13,7 @@ declare type BackgrounValue = {
     type: 'image' | 'video';
     value: string;
     isFilled?: boolean;
+    fileId?: string;
 };
 export declare type BorderType = GradientValue | ColorValue;
 export declare type BackgroundType = GradientValue | ColorValue | BackgrounValue;
@@ -158,9 +159,19 @@ export interface WidgetObjectType {
     content: RectangleState | EllipseState | TextState | SwipeUpState | SliderState | QuestionState | ClickMeState | TalkAboutState | EmojiReactionState | TimerState | ChooseAnswerState | GiphyState | QuizOneAnswerState | QuizMultipleAnswerState | QuizMultipleAnswerWithImageState | QuizRateState | QuizOpenAnswerState;
     action?(): void;
 }
+export interface LayerData {
+    layersGroupId: string;
+    positionInGroup: number;
+    isActiveLayer: boolean;
+    score: {
+        letter: string;
+        points: number;
+    };
+}
 export interface StoryType {
     id: string;
     storyData: WidgetObjectType[];
+    layerData: LayerData;
     background: BackgroundType;
     positionIndex: number;
 }

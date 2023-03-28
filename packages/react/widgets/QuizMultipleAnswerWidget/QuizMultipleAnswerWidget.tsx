@@ -1,5 +1,5 @@
 import { Emoji } from 'emoji-mart';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import {
   block,
   calculateElementSize,
@@ -9,11 +9,12 @@ import {
 } from '@utils';
 import {
   QuizMultipleAnswerWidgetParamsType,
+  ScoreType,
   WidgetComponent,
   WidgetPositionLimitsType,
   WidgetPositionType
 } from '@types';
-
+import { StoryContext } from '@components';
 import './QuizMultipleAnswerWidget.scss';
 
 const b = block('QuizMultipleAnswerWidget');
@@ -59,6 +60,8 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
 
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isSent, setIsSent] = useState<boolean>(false);
+
+  const storyContextVal = useContext(StoryContext);
 
   const calculate = useCallback(
     (size) => {
@@ -108,12 +111,47 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
     );
   }, []);
 
+  const handleSendScore = useCallback(
+    (currentAnswers: string[]) => {
+      if (!storyContextVal.quizMode) {
+        return;
+      }
+
+      const answerScore = currentAnswers.length
+        ? params.answers
+            .filter((answer) => currentAnswers.includes(answer.id))
+            .reduce(
+              (acc, answer) => {
+                if (storyContextVal.quizMode === ScoreType.LETTERS) {
+                  return acc + answer.score.letter;
+                }
+                if (storyContextVal.quizMode === ScoreType.NUMBERS) {
+                  return +acc + +answer.score.points;
+                }
+                return acc;
+              },
+              storyContextVal.quizMode === ScoreType.LETTERS ? '' : 0
+            )
+        : undefined;
+
+      if (
+        answerScore !== undefined &&
+        storyContextVal.quizMode &&
+        storyContextVal.handleQuizAnswer
+      ) {
+        storyContextVal.handleQuizAnswer(answerScore);
+      }
+    },
+    [params.answers, storyContextVal]
+  );
+
   const handleSendAnswer = useCallback(() => {
     if (!isReadOnly && userAnswers.length && !isSent) {
       onAnswer?.(userAnswers);
       setIsSent(true);
+      handleSendScore(userAnswers);
     }
-  }, [onAnswer, userAnswers, isSent, isReadOnly]);
+  }, [onAnswer, handleSendScore, userAnswers, isSent, isReadOnly]);
 
   useEffect(() => {
     eventSubscribe('nextStory', handleSendAnswer);

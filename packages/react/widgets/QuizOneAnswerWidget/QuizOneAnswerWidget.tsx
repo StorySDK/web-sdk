@@ -1,12 +1,14 @@
+import { StoryContext } from '@components';
 import {
   QuizOneAnswerWidgetParamsType,
+  ScoreType,
   WidgetComponent,
   WidgetPositionLimitsType,
   WidgetPositionType
 } from '@types';
 import { block, calculateElementSize, getTextStyles } from '@utils';
 import { Emoji } from 'emoji-mart';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import './QuizOneAnswerWidget.scss';
 
@@ -46,6 +48,8 @@ export const QuizOneAnswerWidget: WidgetComponent<{
 
   const [userAnswer, setUserAnswer] = useState<null | string>(null);
 
+  const storyContextVal = useContext(StoryContext);
+
   const calculate = useCallback(
     (size) => {
       if (position?.width && positionLimits?.minWidth) {
@@ -81,16 +85,32 @@ export const QuizOneAnswerWidget: WidgetComponent<{
     [calculate]
   );
 
+  const handleSendScore = useCallback(
+    (currentAnswer: string) => {
+      const answerScore = currentAnswer
+        ? params.answers.find((answer) => answer.id === currentAnswer)?.score
+        : undefined;
+
+      if (answerScore && storyContextVal.quizMode && storyContextVal.handleQuizAnswer) {
+        storyContextVal.handleQuizAnswer(
+          storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points
+        );
+      }
+    },
+    [params.answers, storyContextVal]
+  );
+
   const handleAnswer = useCallback(
     (id: string) => {
       setUserAnswer(id);
       onAnswer?.(id);
+      handleSendScore(id);
 
       if (storyId) {
         onGoToStory?.(storyId);
       }
     },
-    [onAnswer, onGoToStory, storyId]
+    [onAnswer, onGoToStory, handleSendScore, storyId]
   );
 
   const titleTextStyles = getTextStyles(params.titleFont?.fontColor);
