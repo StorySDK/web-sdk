@@ -105,14 +105,8 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
     [calculate]
   );
 
-  const handleAnswer = useCallback((id: string) => {
-    setUserAnswers((prevState) =>
-      prevState.includes(id) ? prevState.filter((answer) => answer !== id) : [...prevState, id]
-    );
-  }, []);
-
   const handleSendScore = useCallback(
-    (currentAnswers: string[]) => {
+    (currentAnswers: string[], type: 'add' | 'remove') => {
       if (!storyContextVal.quizMode) {
         return;
       }
@@ -139,19 +133,31 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
         storyContextVal.quizMode &&
         storyContextVal.handleQuizAnswer
       ) {
-        storyContextVal.handleQuizAnswer(answerScore);
+        storyContextVal.handleQuizAnswer({ type, answer: answerScore });
       }
     },
     [params.answers, storyContextVal]
+  );
+
+  const handleAnswer = useCallback(
+    (id: string) => {
+      if (userAnswers.includes(id)) {
+        handleSendScore([id], 'remove');
+        setUserAnswers((prevState) => prevState.filter((answer) => answer !== id));
+      } else {
+        handleSendScore([id], 'add');
+        setUserAnswers((prevState) => [...prevState, id]);
+      }
+    },
+    [handleSendScore, userAnswers]
   );
 
   const handleSendAnswer = useCallback(() => {
     if (!isReadOnly && userAnswers.length && !isSent) {
       onAnswer?.(userAnswers);
       setIsSent(true);
-      handleSendScore(userAnswers);
     }
-  }, [onAnswer, handleSendScore, userAnswers, isSent, isReadOnly]);
+  }, [onAnswer, userAnswers, isSent, isReadOnly]);
 
   useEffect(() => {
     eventSubscribe('nextStory', handleSendAnswer);
