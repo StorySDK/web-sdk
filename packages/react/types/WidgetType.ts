@@ -213,7 +213,7 @@ export interface WidgetObjectType {
 export interface LayerData {
   layersGroupId: string;
   positionInGroup: number;
-  isActiveLayer: boolean;
+  isDefaultLayer: boolean;
   score: {
     letter: string;
     points: number;

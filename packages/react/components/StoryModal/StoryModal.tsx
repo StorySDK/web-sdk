@@ -211,7 +211,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             return true;
           }
 
-          return story.layerData.isActiveLayer;
+          return story.layerData.isDefaultLayer;
         })
         .sort((storyA, storyB) => {
           if (storyA.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
@@ -342,7 +342,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         )
         .map((story) => ({
           id: story.id,
-          isActiveLayer: story.layerData.isActiveLayer,
+          isDefaultLayer: story.layerData.isDefaultLayer,
           score: story.layerData.score
         }));
     }
@@ -364,7 +364,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         nextLayersGroupId === currentGroup.settings?.scoreResultLayersGroupId) ||
       (prevLayersGroupId && prevLayersGroupId === currentGroup.settings?.scoreResultLayersGroupId)
     ) {
-      resultStoryId = resultStories.find((story) => story.isActiveLayer)?.id ?? '';
+      resultStoryId = resultStories.find((story) => story.isDefaultLayer)?.id ?? '';
 
       if (currentGroup.settings?.scoreType === ScoreType.NUMBERS && quizState.points > 0) {
         for (let i = 0; i < resultStories.length; i++) {
@@ -700,7 +700,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                         }}
                       >
                         {activeStoriesWithResult
-                          .filter((story) => story.layerData.isActiveLayer)
+                          .filter((story) => story.layerData.isDefaultLayer)
                           .map((story, index) => (
                             <div
                               className={b('indicator', {
