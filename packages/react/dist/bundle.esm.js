@@ -11131,7 +11131,7 @@ const StoryModal = (props) => {
             if (story.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
                 return true;
             }
-            return story.layerData.isActiveLayer;
+            return story.layerData.isDefaultLayer;
         })
             .sort((storyA, storyB) => {
             var _a, _b;
@@ -11242,7 +11242,7 @@ const StoryModal = (props) => {
                 .filter((story) => { var _a; return story.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId); })
                 .map((story) => ({
                 id: story.id,
-                isActiveLayer: story.layerData.isActiveLayer,
+                isDefaultLayer: story.layerData.isDefaultLayer,
                 score: story.layerData.score
             }));
         }
@@ -11259,7 +11259,7 @@ const StoryModal = (props) => {
         if ((nextLayersGroupId &&
             nextLayersGroupId === ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId)) ||
             (prevLayersGroupId && prevLayersGroupId === ((_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreResultLayersGroupId))) {
-            resultStoryId = (_g = (_f = resultStories.find((story) => story.isActiveLayer)) === null || _f === void 0 ? void 0 : _f.id) !== null && _g !== void 0 ? _g : '';
+            resultStoryId = (_g = (_f = resultStories.find((story) => story.isDefaultLayer)) === null || _f === void 0 ? void 0 : _f.id) !== null && _g !== void 0 ? _g : '';
             if (((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.scoreType) === ScoreType.NUMBERS && quizState.points > 0) {
                 for (let i = 0; i < resultStories.length; i++) {
                     if (+resultStories[i].score.points <= quizState.points) {
@@ -11360,6 +11360,7 @@ const StoryModal = (props) => {
         const resultStoryId = getResultStoryId();
         const resultStory = activeStoriesWithResult.find((story) => story.id === resultStoryId);
         if (currentStory === 0) {
+            dispatchQuizState({ type: 'reset' });
             isFirstGroup ? handleClose() : onPrevGroup();
         }
         else {
@@ -11505,7 +11506,7 @@ const StoryModal = (props) => {
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeIndicatorTop : undefined
                                         } }, activeStoriesWithResult
-                                        .filter((story) => story.layerData.isActiveLayer)
+                                        .filter((story) => story.layerData.isDefaultLayer)
                                         .map((story, index) => (React.createElement("div", { className: b$m('indicator', {
                                             filled: index < currentStory,
                                             current: index === currentStory
@@ -65959,7 +65960,7 @@ const CustomGroupControl = (props) => {
     const { children, group, isFirstGroup, isLastGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing } = props;
     return (React.createElement(React.Fragment, null,
         children,
-        React.createElement(StoryModal, { currentGroup: group, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup })));
+        isShowing && (React.createElement(StoryModal, { currentGroup: group, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))));
 };
 
 const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },

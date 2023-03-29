@@ -36,20 +36,22 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     <>
       {children}
 
-      <StoryModal
-        currentGroup={group}
-        isFirstGroup={isFirstGroup}
-        isForceCloseAvailable={isForceCloseAvailable}
-        isLastGroup={isLastGroup}
-        isShowMockup={isShowMockup}
-        isShowing={isShowing}
-        isStatusBarActive={isStatusBarActive}
-        startStoryId={startStoryId}
-        stories={group.stories}
-        onClose={handleCloseModal}
-        onNextGroup={handleNextGroup}
-        onPrevGroup={handlePrevGroup}
-      />
+      {isShowing && (
+        <StoryModal
+          currentGroup={group}
+          isFirstGroup={isFirstGroup}
+          isForceCloseAvailable={isForceCloseAvailable}
+          isLastGroup={isLastGroup}
+          isShowMockup={isShowMockup}
+          isShowing={isShowing}
+          isStatusBarActive={isStatusBarActive}
+          startStoryId={startStoryId}
+          stories={group.stories}
+          onClose={handleCloseModal}
+          onNextGroup={handleNextGroup}
+          onPrevGroup={handlePrevGroup}
+        />
+      )}
     </>
   );
 };
