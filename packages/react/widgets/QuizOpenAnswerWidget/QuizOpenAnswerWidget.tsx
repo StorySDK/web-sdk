@@ -7,6 +7,7 @@ import {
   WidgetPositionLimitsType,
   WidgetPositionType
 } from '@types';
+import cn from 'classnames';
 import { IconArrowSend } from '@components/icons';
 import './QuizOpenAnswerWidget.scss';
 
@@ -137,7 +138,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
     <div className={b()}>
       {!isTitleHidden && (
         <div
-          className={b('title')}
+          className={cn(b('title').toString(), 'StorySdk-widgetTitle')}
           style={{
             ...elementSizes.title,
             fontStyle: params.fontParams?.style,

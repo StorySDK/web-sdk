@@ -1,3 +1,4 @@
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { StoryContext } from '@components';
 import {
   QuizOneAnswerWidgetParamsType,
@@ -8,8 +9,7 @@ import {
 } from '@types';
 import { block, calculateElementSize, getTextStyles } from '@utils';
 import { Emoji } from 'emoji-mart';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
-
+import cn from 'classnames';
 import './QuizOneAnswerWidget.scss';
 
 const b = block('QuizOneAnswerWidget');
@@ -122,7 +122,10 @@ export const QuizOneAnswerWidget: WidgetComponent<{
     <div className={b()}>
       {!isTitleHidden && (
         <div
-          className={b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' })}
+          className={cn(
+            b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' }).toString(),
+            'StorySdk-widgetTitle'
+          )}
           style={{
             ...elementSizes.title,
             fontStyle: params.titleFont?.fontParams?.style,
@@ -149,9 +152,12 @@ export const QuizOneAnswerWidget: WidgetComponent<{
               <Emoji emoji={answer.emoji?.name} set="apple" size={elementSizes.emoji.width} />
             )}
             <p
-              className={b('answerTitle', {
-                gradient: params.answersFont?.fontColor?.type === 'gradient'
-              })}
+              className={cn(
+                b('answerTitle', {
+                  gradient: params.answersFont?.fontColor?.type === 'gradient'
+                }).toString(),
+                'StorySdk-widgetAnswerTitle'
+              )}
               style={{
                 ...elementSizes.answerTitle,
                 fontStyle: params.answersFont?.fontParams?.style,

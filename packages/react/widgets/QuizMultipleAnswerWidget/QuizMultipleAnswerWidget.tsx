@@ -7,6 +7,7 @@ import {
   eventUnsubscribe,
   getTextStyles
 } from '@utils';
+import cn from 'classnames';
 import {
   QuizMultipleAnswerWidgetParamsType,
   ScoreType,
@@ -176,7 +177,10 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
     <div className={b()}>
       {!isTitleHidden && (
         <div
-          className={b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' })}
+          className={cn(
+            b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' }).toString(),
+            'StorySdk-widgetTitle'
+          )}
           style={{
             ...elementSizes.title,
             fontStyle: params.titleFont?.fontParams?.style,
@@ -204,9 +208,12 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
               <Emoji emoji={answer.emoji?.name} set="apple" size={elementSizes.emoji.width} />
             )}
             <p
-              className={b('answerTitle', {
-                gradient: params.answersFont?.fontColor?.type === 'gradient'
-              })}
+              className={cn(
+                b('answerTitle', {
+                  gradient: params.answersFont?.fontColor?.type === 'gradient'
+                }).toString(),
+                'StorySdk-widgetAnswerTitle'
+              )}
               style={{
                 ...elementSizes.answerTitle,
                 lineHeight: `${elementSizes.sendBtn.lineHeight}px`,

@@ -5,6 +5,7 @@ import {
   WidgetPositionType,
   WidgetPositionLimitsType
 } from '@types';
+import cn from 'classnames';
 import { StoryContext } from '@components';
 import { IconLogoCircle } from '@components/icons';
 import { block, calculateElementSize, getTextStyles } from '@utils';
@@ -174,7 +175,10 @@ export const TalkAboutWidget: WidgetComponent<{
           >
             {!params.isTitleHidden && (
               <div
-                className={b('text', { gradient: params.fontColor?.type === 'gradient' })}
+                className={
+                  (cn(b('text', { gradient: params.fontColor?.type === 'gradient' }).toString()),
+                  'StorySdk-widgetTitle')
+                }
                 style={{
                   ...elementSizes.text,
                   fontStyle: params.fontParams?.style,

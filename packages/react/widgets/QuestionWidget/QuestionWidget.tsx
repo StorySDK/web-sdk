@@ -116,7 +116,10 @@ export const QuestionWidget: WidgetComponent<{
     <div className={b()}>
       {!params.isTitleHidden && (
         <div
-          className={b('question', { gradient: params.fontColor?.type === 'gradient' })}
+          className={cn(
+            b('question', { gradient: params.fontColor?.type === 'gradient' }).toString(),
+            'StorySdk-widgetTitle'
+          )}
           style={{
             ...elementSizes.text,
             fontStyle: params.fontParams?.style,
