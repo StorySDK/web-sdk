@@ -5,6 +5,7 @@ import {
   WidgetPositionType,
   WidgetPositionLimitsType
 } from '@types';
+import cn from 'classnames';
 import { block, calculateElementSize, getTextStyles } from '@utils';
 import { useInterval } from '@hooks';
 import { StoryContext } from '@components';
@@ -128,7 +129,10 @@ export const SliderWidget: WidgetComponent<{
   return (
     <div className={b({ color })} style={elementSizes.widget}>
       <div
-        className={b('text', { gradient: params.fontColor?.type === 'gradient' })}
+        className={cn(
+          b('text', { gradient: params.fontColor?.type === 'gradient' }).toString(),
+          'StorySdk-widgetTitle'
+        )}
         style={{
           ...elementSizes.text,
           fontStyle: params.fontParams?.style,

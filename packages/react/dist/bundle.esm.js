@@ -65068,7 +65068,7 @@ const SliderWidget = React.memo((props) => {
     }, [storyContextVal, storyId, changeStatus, value, time]);
     const textStyles = getTextStyles(params.fontColor);
     return (React.createElement("div", { className: b$c({ color }), style: elementSizes.widget },
-        React.createElement("div", { className: b$c('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }), style: Object.assign(Object.assign(Object.assign({}, elementSizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
+        React.createElement("div", { className: cn(b$c('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
         React.createElement("div", { className: b$c('sliderWrapper'), style: {
                 height: elementSizes.slider.height
             } },
