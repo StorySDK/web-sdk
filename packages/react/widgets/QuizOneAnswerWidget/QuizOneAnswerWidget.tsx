@@ -158,6 +158,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
                 }).toString(),
                 'StorySdk-widgetAnswerTitle'
               )}
+              data-id={answer.id}
               style={{
                 ...elementSizes.answerTitle,
                 fontStyle: params.answersFont?.fontParams?.style,

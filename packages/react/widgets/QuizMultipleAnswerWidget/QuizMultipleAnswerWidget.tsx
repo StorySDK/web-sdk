@@ -214,6 +214,7 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
                 }).toString(),
                 'StorySdk-widgetAnswerTitle'
               )}
+              data-id={answer.id}
               style={{
                 ...elementSizes.answerTitle,
                 lineHeight: `${elementSizes.sendBtn.lineHeight}px`,
