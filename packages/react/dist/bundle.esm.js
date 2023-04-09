@@ -65472,7 +65472,7 @@ const QuizMultipleAnswerWidget = React.memo((props) => {
                 answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
                 React.createElement("p", { className: cn(b$7('answerTitle', {
                         gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === 'gradient'
-                    }).toString(), 'StorySdk-widgetAnswerTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { lineHeight: `${elementSizes.sendBtn.lineHeight}px`, fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
+                    }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { lineHeight: `${elementSizes.sendBtn.lineHeight}px`, fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
@@ -65561,7 +65561,7 @@ const QuizOneAnswerWidget = React.memo((props) => {
                 answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
                 React.createElement("p", { className: cn(b$6('answerTitle', {
                         gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === 'gradient'
-                    }).toString(), 'StorySdk-widgetAnswerTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
+                    }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
@@ -65853,7 +65853,7 @@ const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
                     } }),
                 React.createElement("p", { className: cn(b$3('answerTitle', {
                         gradient: ((_b = (_a = params.answersFont) === null || _a === void 0 ? void 0 : _a.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient'
-                    }).toString(), 'StorySdk-widgetAnswerTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { fontStyle: (_d = (_c = params.answersFont) === null || _c === void 0 ? void 0 : _c.fontParams) === null || _d === void 0 ? void 0 : _d.style, fontWeight: (_f = (_e = params.answersFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.weight, fontFamily: (_g = params.answersFont) === null || _g === void 0 ? void 0 : _g.fontFamily }), answerTextStyles) }, answer.title)));
+                    }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { fontStyle: (_d = (_c = params.answersFont) === null || _c === void 0 ? void 0 : _c.fontParams) === null || _d === void 0 ? void 0 : _d.style, fontWeight: (_f = (_e = params.answersFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.weight, fontFamily: (_g = params.answersFont) === null || _g === void 0 ? void 0 : _g.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
