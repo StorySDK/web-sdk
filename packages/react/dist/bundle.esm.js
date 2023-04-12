@@ -11127,18 +11127,18 @@ const StoryModal = (props) => {
     useEffect(() => {
         setActiveStoriesWithResult(stories
             .filter((story) => {
-            var _a;
-            if (story.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
+            var _a, _b, _c;
+            if (((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
                 return true;
             }
-            return story.layerData.isDefaultLayer;
+            return (_c = story.layerData) === null || _c === void 0 ? void 0 : _c.isDefaultLayer;
         })
             .sort((storyA, storyB) => {
-            var _a, _b;
-            if (storyA.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
+            var _a, _b, _c, _d;
+            if (((_a = storyA.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
                 return 1;
             }
-            if (storyB.layerData.layersGroupId === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
+            if (((_c = storyB.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId) === ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId)) {
                 return -1;
             }
             return 0;
@@ -11239,12 +11239,15 @@ const StoryModal = (props) => {
         var _a;
         if ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) {
             return stories
-                .filter((story) => { var _a; return story.layerData.layersGroupId === ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId); })
-                .map((story) => ({
-                id: story.id,
-                isDefaultLayer: story.layerData.isDefaultLayer,
-                score: story.layerData.score
-            }));
+                .filter((story) => { var _a, _b; return ((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId); })
+                .map((story) => {
+                var _a;
+                return ({
+                    id: story.id,
+                    isDefaultLayer: (_a = story.layerData) === null || _a === void 0 ? void 0 : _a.isDefaultLayer,
+                    score: story.layerData.score
+                });
+            });
         }
         return [];
     }, [(_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreResultLayersGroupId, stories]);
@@ -11506,7 +11509,7 @@ const StoryModal = (props) => {
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeIndicatorTop : undefined
                                         } }, activeStoriesWithResult
-                                        .filter((story) => story.layerData.isDefaultLayer)
+                                        .filter((story) => { var _a; return (_a = story.layerData) === null || _a === void 0 ? void 0 : _a.isDefaultLayer; })
                                         .map((story, index) => (React.createElement("div", { className: b$m('indicator', {
                                             filled: index < currentStory,
                                             current: index === currentStory

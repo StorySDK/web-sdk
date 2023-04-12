@@ -132,11 +132,6 @@ const INIT_CONTAINER_BORDER_RADIUS = 50;
 const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
 const ratioIndexLarge = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
 
-type QuizStateType = {
-  points: number;
-  letters: string;
-};
-
 const initQuizeState = {
   points: 0,
   letters: ''
@@ -207,17 +202,17 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     setActiveStoriesWithResult(
       stories
         .filter((story) => {
-          if (story.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+          if (story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
             return true;
           }
 
-          return story.layerData.isDefaultLayer;
+          return story.layerData?.isDefaultLayer;
         })
         .sort((storyA, storyB) => {
-          if (storyA.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+          if (storyA.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
             return 1;
           }
-          if (storyB.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+          if (storyB.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
             return -1;
           }
           return 0;
@@ -338,11 +333,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       return stories
         .filter(
           (story) =>
-            story.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
+            story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
         )
         .map((story) => ({
           id: story.id,
-          isDefaultLayer: story.layerData.isDefaultLayer,
+          isDefaultLayer: story.layerData?.isDefaultLayer,
           score: story.layerData.score
         }));
     }
@@ -700,7 +695,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                         }}
                       >
                         {activeStoriesWithResult
-                          .filter((story) => story.layerData.isDefaultLayer)
+                          .filter((story) => story.layerData?.isDefaultLayer)
                           .map((story, index) => (
                             <div
                               className={b('indicator', {

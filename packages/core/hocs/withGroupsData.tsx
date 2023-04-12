@@ -196,11 +196,17 @@ const withGroupsData =
               if (!groupsData.data.error) {
                 const groupsFetchedData = groupsData.data.data
                   .filter((item: any) => {
+                    const isActive =
+                      item.active &&
+                      item.type &&
+                      +item.start_time < DateTime.now().toMillis() &&
+                      (!item.end_time || +item.end_time > DateTime.now().toMillis());
+
                     if (item.type === 'onboarding') {
-                      return item.active && item.settings?.addToStories;
+                      return isActive && item.settings?.addToStories;
                     }
 
-                    return item.active;
+                    return isActive;
                   })
                   .map((item: any) => ({
                     id: item.id,
