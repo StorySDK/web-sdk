@@ -11,6 +11,7 @@ interface StoryModalProps {
     startStoryId?: string;
     isStatusBarActive?: boolean;
     isForceCloseAvailable?: boolean;
+    isCacheDisabled?: boolean;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;

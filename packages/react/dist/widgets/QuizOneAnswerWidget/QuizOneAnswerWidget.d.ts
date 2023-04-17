@@ -1,6 +1,7 @@
 import { QuizOneAnswerWidgetParamsType, WidgetComponent, WidgetPositionLimitsType, WidgetPositionType } from '@types';
 import './QuizOneAnswerWidget.scss';
 export declare const QuizOneAnswerWidget: WidgetComponent<{
+    id: string;
     params: QuizOneAnswerWidgetParamsType;
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;

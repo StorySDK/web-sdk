@@ -39,6 +39,7 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const SliderWidget: WidgetComponent<{
+  id: string;
   storyId: string;
   params: SliderWidgetParamsType;
   position?: WidgetPositionType;
@@ -46,10 +47,23 @@ export const SliderWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(value: number): void;
 }> = React.memo((props) => {
-  const { params, storyId, position, positionLimits, isReadOnly, onAnswer } = props;
+  const { id, params, storyId, position, positionLimits, isReadOnly, onAnswer } = props;
   const { color, text, emoji, value } = params;
-  const [sliderValue, setSliderValue] = useState<number>(isReadOnly ? value : 0);
-  const [changeStatus, setChangeStatus] = useState<ChangeStatus>('wait');
+
+  const storyContextVal = useContext(StoryContext);
+
+  const answerFromCache = storyContextVal.getAnswerCache
+    ? storyContextVal.getAnswerCache(id)
+    : undefined;
+
+  const defaultAnswer = answerFromCache || 0;
+
+  const isReadMode = isReadOnly || answerFromCache !== undefined;
+
+  const [sliderValue, setSliderValue] = useState<number>(isReadOnly ? value : defaultAnswer);
+  const [changeStatus, setChangeStatus] = useState<ChangeStatus>(
+    answerFromCache !== undefined ? 'moved' : 'wait'
+  );
 
   const time = 500;
   const [delay, setDelay] = useState<number>(0);
@@ -98,10 +112,14 @@ export const SliderWidget: WidgetComponent<{
   }, delay);
 
   useEffect(() => {
-    if (changeStatus === 'moved' && onAnswer) {
-      onAnswer(sliderValue);
+    if (changeStatus === 'moved') {
+      onAnswer?.(sliderValue);
+
+      if (storyContextVal.setAnswerCache && id) {
+        storyContextVal.setAnswerCache(id, sliderValue);
+      }
     }
-  }, [changeStatus, onAnswer, sliderValue]);
+  }, [changeStatus, onAnswer]);
 
   const handleChange = useCallback((valueChanged: number) => {
     setSliderValue(valueChanged);
@@ -114,8 +132,6 @@ export const SliderWidget: WidgetComponent<{
   const handleAfterChange = useCallback(() => {
     setChangeStatus('moved');
   }, []);
-
-  const storyContextVal = useContext(StoryContext);
 
   useEffect(() => {
     if (storyContextVal.currentStoryId === storyId && changeStatus === 'wait') {
@@ -153,7 +169,7 @@ export const SliderWidget: WidgetComponent<{
         <SliderCustom
           borderRadius={elementSizes.slider.borderRadius}
           changeStatus={changeStatus}
-          disabled={changeStatus === 'moved' || isReadOnly}
+          disabled={changeStatus === 'moved' || isReadMode}
           emoji={emoji.name}
           height={elementSizes.slider.height}
           initSize={elementSizes.emoji.width}

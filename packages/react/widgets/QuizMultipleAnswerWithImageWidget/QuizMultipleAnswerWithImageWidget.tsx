@@ -47,6 +47,7 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
+  id: string;
   params: QuizMultipleAnswerWithImageWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
@@ -55,12 +56,16 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, answers, isTitleHidden } = props.params;
-  const { params, position, positionLimits, isReadOnly, onAnswer } = props;
-
-  const [userAnswers, setUserAnswers] = useState<string[]>([]);
-  const [isSent, setIsSent] = useState<boolean>(false);
+  const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
 
   const storyContextVal = useContext(StoryContext);
+
+  const answerFromCache = storyContextVal.getAnswerCache
+    ? storyContextVal.getAnswerCache(id)
+    : null;
+
+  const [userAnswers, setUserAnswers] = useState<string[]>(answerFromCache || []);
+  const [isSent, setIsSent] = useState<boolean>(!!answerFromCache);
 
   const calculate = useCallback(
     (size) => {
@@ -135,13 +140,13 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
   );
 
   const handleAnswer = useCallback(
-    (id: string) => {
-      if (userAnswers.includes(id)) {
-        handleSendScore([id], 'remove');
-        setUserAnswers((prevState) => prevState.filter((answer) => answer !== id));
+    (answerId: string) => {
+      if (userAnswers.includes(answerId)) {
+        handleSendScore([answerId], 'remove');
+        setUserAnswers((prevState) => prevState.filter((answer) => answer !== answerId));
       } else {
-        handleSendScore([id], 'add');
-        setUserAnswers((prevState) => [...prevState, id]);
+        handleSendScore([answerId], 'add');
+        setUserAnswers((prevState) => [...prevState, answerId]);
       }
     },
     [handleSendScore, userAnswers]
@@ -151,8 +156,12 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
     if (!isReadOnly && userAnswers.length && !isSent) {
       onAnswer?.(userAnswers);
       setIsSent(true);
+
+      if (storyContextVal.setAnswerCache && id) {
+        storyContextVal.setAnswerCache(id, userAnswers);
+      }
     }
-  }, [isReadOnly, isSent, onAnswer, userAnswers]);
+  }, [id, isReadOnly, isSent, onAnswer, storyContextVal, userAnswers]);
 
   useEffect(() => {
     eventSubscribe('nextStory', handleSendAnswer);

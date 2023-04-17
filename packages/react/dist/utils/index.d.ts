@@ -1,6 +1,4 @@
 export * from './stylesUtils';
 export * from './events';
-export declare const getClientPosition: (e: any) => {
-    x: any;
-    y: any;
-};
+export * from './getClientPosition';
+export * from './getUniqUserId';

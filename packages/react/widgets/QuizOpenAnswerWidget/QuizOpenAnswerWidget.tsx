@@ -35,6 +35,7 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuizOpenAnswerWidget: WidgetComponent<{
+  id: string;
   params: QuizOpenAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
@@ -43,12 +44,16 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, isTitleHidden, storyId } = props.params;
-  const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { id, params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const storyContextVal = useContext(StoryContext);
 
-  const [text, setText] = useState<string>('');
-  const [isSent, setIsSent] = useState<boolean>(false);
+  const answerFromCache = storyContextVal.getAnswerCache
+    ? storyContextVal.getAnswerCache(id)
+    : null;
+
+  const [text, setText] = useState<string>(answerFromCache ?? '');
+  const [isSent, setIsSent] = useState<boolean>(!!answerFromCache);
 
   const handleTextChange = useCallback(
     (e: any) => {
@@ -77,10 +82,14 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
         onGoToStory?.(storyId);
       }
 
+      if (storyContextVal.setAnswerCache && id) {
+        storyContextVal.setAnswerCache(id, text);
+      }
+
       storyContextVal.playStatusChange('play');
       setIsSent(true);
     }
-  }, [onAnswer, onGoToStory, storyContextVal, storyId, text]);
+  }, [id, onAnswer, onGoToStory, storyContextVal, storyId, text]);
 
   useEffect(() => {
     if (!isSent) {

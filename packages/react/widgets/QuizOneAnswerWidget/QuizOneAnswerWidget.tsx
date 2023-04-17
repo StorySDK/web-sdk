@@ -36,6 +36,7 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuizOneAnswerWidget: WidgetComponent<{
+  id: string;
   params: QuizOneAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
@@ -44,11 +45,15 @@ export const QuizOneAnswerWidget: WidgetComponent<{
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, answers, storyId, isTitleHidden } = props.params;
-  const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
-
-  const [userAnswer, setUserAnswer] = useState<null | string>(null);
+  const { id, params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const storyContextVal = useContext(StoryContext);
+
+  const answerFromCache = storyContextVal.getAnswerCache
+    ? storyContextVal.getAnswerCache(id)
+    : null;
+
+  const [userAnswer, setUserAnswer] = useState<null | string>(answerFromCache || null);
 
   const calculate = useCallback(
     (size) => {
@@ -103,16 +108,20 @@ export const QuizOneAnswerWidget: WidgetComponent<{
   );
 
   const handleAnswer = useCallback(
-    (id: string) => {
-      setUserAnswer(id);
-      onAnswer?.(id);
-      handleSendScore(id);
+    (answerId: string) => {
+      setUserAnswer(answerId);
+      onAnswer?.(answerId);
+      handleSendScore(answerId);
+
+      if (storyContextVal.setAnswerCache && id) {
+        storyContextVal.setAnswerCache(id, answerId);
+      }
 
       if (storyId) {
         onGoToStory?.(storyId);
       }
     },
-    [onAnswer, onGoToStory, handleSendScore, storyId]
+    [onAnswer, handleSendScore, storyContextVal, id, storyId, onGoToStory]
   );
 
   const titleTextStyles = getTextStyles(params.titleFont?.fontColor);

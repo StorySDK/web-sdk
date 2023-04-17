@@ -48,13 +48,20 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const TalkAboutWidget: WidgetComponent<{
+  id: string;
   params: TalkAboutWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): void;
 }> = React.memo((props) => {
-  const { params, position, positionLimits, isReadOnly } = props;
+  const { id, params, position, positionLimits, isReadOnly } = props;
+
+  const storyContextVal = useContext(StoryContext);
+
+  const answerFromCache = storyContextVal.getAnswerCache
+    ? storyContextVal.getAnswerCache(id)
+    : null;
 
   const calculate = useCallback(
     (size) => {
@@ -104,9 +111,8 @@ export const TalkAboutWidget: WidgetComponent<{
     [calculate]
   );
 
-  const [text, setText] = useState<string>('');
-  const [isSent, setIsSent] = useState<boolean>(false);
-  const storyContextVal = useContext(StoryContext);
+  const [text, setText] = useState<string>(answerFromCache || '');
+  const [isSent, setIsSent] = useState<boolean>(!!answerFromCache);
 
   const handleTextChange = useCallback(
     (e: any) => {
@@ -118,14 +124,16 @@ export const TalkAboutWidget: WidgetComponent<{
 
   const handleSendClick = useCallback(() => {
     if (text.length) {
-      if (props.onAnswer) {
-        props.onAnswer(text);
+      props.onAnswer?.(text);
+
+      if (storyContextVal.setAnswerCache && id) {
+        storyContextVal.setAnswerCache(id, text);
       }
 
       storyContextVal.playStatusChange('play');
       setIsSent(true);
     }
-  }, [props, storyContextVal, text]);
+  }, [id, props, storyContextVal, text]);
 
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);

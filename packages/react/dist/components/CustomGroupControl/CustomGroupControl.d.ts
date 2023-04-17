@@ -12,6 +12,7 @@ interface GroupProps {
     isShowMockup?: boolean;
     isStatusBarActive?: boolean;
     startStoryId?: string;
+    isCacheDisabled?: boolean;
 }
 export declare const CustomGroupControl: React.FC<GroupProps>;
 export {};

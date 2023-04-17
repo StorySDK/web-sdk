@@ -14,6 +14,7 @@ interface GroupProps {
   isShowMockup?: boolean;
   isStatusBarActive?: boolean;
   startStoryId?: string;
+  isCacheDisabled?: boolean;
 }
 
 export const CustomGroupControl: React.FC<GroupProps> = (props) => {
@@ -29,7 +30,8 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     handleCloseModal,
     handleNextGroup,
     handlePrevGroup,
-    isShowing
+    isShowing,
+    isCacheDisabled
   } = props;
 
   return (
@@ -39,6 +41,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
       {isShowing && (
         <StoryModal
           currentGroup={group}
+          isCacheDisabled={isCacheDisabled}
           isFirstGroup={isFirstGroup}
           isForceCloseAvailable={isForceCloseAvailable}
           isLastGroup={isLastGroup}

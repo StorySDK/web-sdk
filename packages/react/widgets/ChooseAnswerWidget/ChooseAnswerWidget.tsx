@@ -42,6 +42,7 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const ChooseAnswerWidget: WidgetComponent<{
+  id: string;
   params: ChooseAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
@@ -49,11 +50,15 @@ export const ChooseAnswerWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(answerId: string): void;
 }> = React.memo((props) => {
-  const { params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
-
-  const [userAnswer, setUserAnswer] = useState<null | string>(null);
+  const { id, params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
 
   const storyContextVal = useContext(StoryContext);
+
+  const answerFromCache = storyContextVal.getAnswerCache
+    ? storyContextVal.getAnswerCache(id)
+    : null;
+
+  const [userAnswer, setUserAnswer] = useState<string | null>(answerFromCache);
 
   const calculate = useCallback(
     (size) => {
@@ -119,10 +124,14 @@ export const ChooseAnswerWidget: WidgetComponent<{
         onAnswer(answerId);
       }
 
+      if (storyContextVal.setAnswerCache && id) {
+        storyContextVal.setAnswerCache(id, answerId);
+      }
+
       setUserAnswer(answerId);
       handleSendScore(answerId);
     },
-    [onAnswer, handleSendScore]
+    [onAnswer, storyContextVal, id, handleSendScore]
   );
 
   const renderAnswer = useCallback(

@@ -2,8 +2,8 @@ import React, { useEffect, useState, useCallback, useRef, useReducer, useMemo } 
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
-import { eventPublish } from '@utils';
-import { useAdaptiveValue } from '../../hooks';
+import { eventPublish, getUniqUserId } from '@utils';
+import { useAdaptiveValue, useAnswersCache } from '../../hooks';
 import { StoryType, Group, GroupType, StorySize, StoryContenxt, ScoreType } from '../../types';
 import { StoryContent } from '..';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.png';
@@ -24,6 +24,7 @@ interface StoryModalProps {
   startStoryId?: string;
   isStatusBarActive?: boolean;
   isForceCloseAvailable?: boolean;
+  isCacheDisabled?: boolean;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -179,6 +180,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isShowMockup,
     isStatusBarActive,
     currentGroup,
+    isCacheDisabled,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -578,13 +580,18 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     }
   };
 
+  const uniqUserId = getUniqUserId();
+  const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
+
   return (
     <StoryContext.Provider
       value={{
         currentStoryId,
         quizMode: currentGroup.settings?.scoreType,
         playStatusChange: setPlayStatus,
-        handleQuizAnswer
+        handleQuizAnswer,
+        getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
+        setAnswerCache: isCacheDisabled ? undefined : setAnswerCache
       }}
     >
       <div

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useContext } from 'react';
 import { Emoji } from 'emoji-mart';
 import { block, calculateElementSizeByHeight, getScalableValue } from '@utils';
 import {
@@ -9,6 +9,7 @@ import {
 } from '@types';
 import { useInterval } from '@hooks';
 import './EmojiReactionWidget.scss';
+import { StoryContext } from '@components';
 
 const b = block('EmojiReactionWidget');
 
@@ -30,13 +31,14 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const EmojiReactionWidget: WidgetComponent<{
+  id: string;
   params: EmojiReactionWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(emoji: string): void;
 }> = React.memo((props) => {
-  const { params, position, positionLimits, isReadOnly, onAnswer } = props;
+  const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
 
   const calculate = useCallback(
     (size) => {
@@ -69,9 +71,15 @@ export const EmojiReactionWidget: WidgetComponent<{
     [calculate]
   );
 
+  const storyContextVal = useContext(StoryContext);
+
   const initEmojiSize = useMemo(() => elementSizes.emoji.width, [elementSizes]);
 
-  const [clickedIndex, setClickedIndex] = useState<number | null>(null);
+  const answerFromCache = storyContextVal.getAnswerCache
+    ? storyContextVal.getAnswerCache(id)
+    : null;
+
+  const [clickedIndex, setClickedIndex] = useState<number | null>(answerFromCache);
   const [bigSize, setBigSize] = useState(initEmojiSize);
   const [delay, setDelay] = useState(0);
   const [isToched, setIsToched] = useState<boolean>(false);
@@ -89,25 +97,30 @@ export const EmojiReactionWidget: WidgetComponent<{
   const handleReactionClick = useCallback(
     (index: number, emoji: string) => {
       onAnswer?.(emoji);
+
+      if (storyContextVal.setAnswerCache && id) {
+        storyContextVal.setAnswerCache(id, index);
+      }
+
       setIsToched(true);
       setClickedIndex(index);
       setBigSize(initEmojiSize);
       setDelay(50);
     },
-    [initEmojiSize, onAnswer]
+    [id, initEmojiSize, onAnswer, storyContextVal]
   );
 
   return (
     <div className={b({ color: params.color })} style={elementSizes.widget}>
       {params.emoji.map((emojiItem, index) => (
         <button
-          className={b('item', { disabled: isReadOnly || isToched })}
+          className={b('item', { disabled: isReadOnly || isToched || clickedIndex !== null })}
           key={`${emojiItem.unicode}-${index}`}
           style={elementSizes.item}
           onClick={(e) => {
             e.preventDefault();
 
-            if (!isToched && !isReadOnly) {
+            if (!isToched && !isReadOnly && clickedIndex === null) {
               handleReactionClick(index, emojiItem.unicode);
             }
           }}

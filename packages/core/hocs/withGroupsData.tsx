@@ -7,6 +7,7 @@ import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage } from '../utils/fontsInclude';
+import { getUniqUserId } from '../utils';
 
 interface GroupsListProps {
   groups: Group[];
@@ -62,17 +63,7 @@ const withGroupsData =
       startTime: 0
     });
 
-    const getUniqUserId = useCallback(() => {
-      if (localStorage.getItem('userId')) {
-        return localStorage.getItem('userId');
-      }
-      const id = nanoid();
-      localStorage.setItem('userId', id);
-
-      return id;
-    }, []);
-
-    const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), [getUniqUserId]);
+    const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
 
     const language = useMemo(() => {
       if (appLocale) {
@@ -196,11 +187,7 @@ const withGroupsData =
               if (!groupsData.data.error) {
                 const groupsFetchedData = groupsData.data.data
                   .filter((item: any) => {
-                    const isActive =
-                      item.active &&
-                      item.type &&
-                      +item.start_time < DateTime.now().toMillis() &&
-                      (!item.end_time || +item.end_time > DateTime.now().toMillis());
+                    const isActive = item.active && item.type;
 
                     if (item.type === 'onboarding') {
                       return isActive && item.settings?.addToStories;
