@@ -8,4 +8,6 @@ export interface StoryContenxt {
         type: string;
         answer: number | string;
     }) => void;
+    getAnswerCache?: (widgetId: string) => any;
+    setAnswerCache?: (widgetId: string, answer: any) => void;
 }

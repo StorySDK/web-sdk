@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import cn from 'classnames';
 import {
   QuestionWidgetParamsType,
@@ -8,6 +8,7 @@ import {
 } from '@types';
 import { block, calculateElementSize, getTextStyles } from '@utils';
 import './QuestionWidget.scss';
+import { StoryContext } from '@components';
 
 const b = block('QuestionWidget');
 
@@ -24,14 +25,28 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuestionWidget: WidgetComponent<{
+  id: string;
   params: QuestionWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
 }> = React.memo((props) => {
-  const { params, position, positionLimits, isReadOnly, onAnswer } = props;
-  const [answer, setAnswer] = useState<string | null>(null);
+  const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
+  const storyContextVal = useContext(StoryContext);
+
+  const answerFromCache = storyContextVal.getAnswerCache
+    ? storyContextVal.getAnswerCache(id)
+    : null;
+
+  const [answer, setAnswer] = useState<string | null>(answerFromCache?.answer || null);
+
+  const [percents, setPercents] = useState(
+    answerFromCache?.percents ?? {
+      confirm: 0,
+      decline: 0
+    }
+  );
 
   const calculate = useCallback(
     (size) => {
@@ -59,11 +74,6 @@ export const QuestionWidget: WidgetComponent<{
     [calculate]
   );
 
-  const [percents, setPercents] = useState({
-    confirm: 0,
-    decline: 0
-  });
-
   const handleChange = useCallback(
     (option: string) => {
       if (!answer) {
@@ -71,7 +81,14 @@ export const QuestionWidget: WidgetComponent<{
           onAnswer(option).then((res: any) => {
             if (res.data && !res.data.error) {
               setAnswer(option);
-              setPercents((prevState) => ({ ...prevState, ...res.data.data }));
+              setPercents((prevState: any) => ({ ...prevState, ...res.data.data }));
+
+              if (storyContextVal.setAnswerCache && id) {
+                storyContextVal.setAnswerCache(id, {
+                  answer: option,
+                  percents: res.data.data
+                });
+              }
             }
           });
         } else {
@@ -79,7 +96,7 @@ export const QuestionWidget: WidgetComponent<{
         }
       }
     },
-    [answer, onAnswer]
+    [answer, id, onAnswer, storyContextVal]
   );
 
   useEffect(() => {
@@ -116,7 +133,10 @@ export const QuestionWidget: WidgetComponent<{
     <div className={b()}>
       {!params.isTitleHidden && (
         <div
-          className={b('question', { gradient: params.fontColor?.type === 'gradient' })}
+          className={cn(
+            b('question', { gradient: params.fontColor?.type === 'gradient' }).toString(),
+            'StorySdk-widgetTitle'
+          )}
           style={{
             ...elementSizes.text,
             fontStyle: params.fontParams?.style,

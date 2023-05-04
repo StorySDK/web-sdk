@@ -1,3 +1,4 @@
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { StoryContext } from '@components';
 import {
   QuizOneAnswerWidgetParamsType,
@@ -8,8 +9,7 @@ import {
 } from '@types';
 import { block, calculateElementSize, getTextStyles } from '@utils';
 import { Emoji } from 'emoji-mart';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
-
+import cn from 'classnames';
 import './QuizOneAnswerWidget.scss';
 
 const b = block('QuizOneAnswerWidget');
@@ -36,6 +36,7 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuizOneAnswerWidget: WidgetComponent<{
+  id: string;
   params: QuizOneAnswerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
@@ -44,11 +45,15 @@ export const QuizOneAnswerWidget: WidgetComponent<{
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, answers, storyId, isTitleHidden } = props.params;
-  const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
-
-  const [userAnswer, setUserAnswer] = useState<null | string>(null);
+  const { id, params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
 
   const storyContextVal = useContext(StoryContext);
+
+  const answerFromCache = storyContextVal.getAnswerCache
+    ? storyContextVal.getAnswerCache(id)
+    : null;
+
+  const [userAnswer, setUserAnswer] = useState<null | string>(answerFromCache || null);
 
   const calculate = useCallback(
     (size) => {
@@ -103,16 +108,20 @@ export const QuizOneAnswerWidget: WidgetComponent<{
   );
 
   const handleAnswer = useCallback(
-    (id: string) => {
-      setUserAnswer(id);
-      onAnswer?.(id);
-      handleSendScore(id);
+    (answerId: string) => {
+      setUserAnswer(answerId);
+      onAnswer?.(answerId);
+      handleSendScore(answerId);
+
+      if (storyContextVal.setAnswerCache && id) {
+        storyContextVal.setAnswerCache(id, answerId);
+      }
 
       if (storyId) {
         onGoToStory?.(storyId);
       }
     },
-    [onAnswer, onGoToStory, handleSendScore, storyId]
+    [onAnswer, handleSendScore, storyContextVal, id, storyId, onGoToStory]
   );
 
   const titleTextStyles = getTextStyles(params.titleFont?.fontColor);
@@ -122,7 +131,10 @@ export const QuizOneAnswerWidget: WidgetComponent<{
     <div className={b()}>
       {!isTitleHidden && (
         <div
-          className={b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' })}
+          className={cn(
+            b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' }).toString(),
+            'StorySdk-widgetTitle'
+          )}
           style={{
             ...elementSizes.title,
             fontStyle: params.titleFont?.fontParams?.style,
@@ -149,9 +161,13 @@ export const QuizOneAnswerWidget: WidgetComponent<{
               <Emoji emoji={answer.emoji?.name} set="apple" size={elementSizes.emoji.width} />
             )}
             <p
-              className={b('answerTitle', {
-                gradient: params.answersFont?.fontColor?.type === 'gradient'
-              })}
+              className={cn(
+                b('answerTitle', {
+                  gradient: params.answersFont?.fontColor?.type === 'gradient'
+                }).toString(),
+                'StorySdk-widgetAnswerTitle'
+              )}
+              data-id={answer.id}
               style={{
                 ...elementSizes.answerTitle,
                 fontStyle: params.answersFont?.fontParams?.style,

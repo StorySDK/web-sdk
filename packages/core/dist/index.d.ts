@@ -1,3 +1,3 @@
 import { Story } from './core';
-export { adaptGroupData } from './utils/groupsAdapter';
+export { adaptGroupData } from './utils';
 export default Story;

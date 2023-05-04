@@ -8,6 +8,7 @@ import {
   WidgetPositionLimitsType,
   WidgetPositionType
 } from '@types';
+import cn from 'classnames';
 import './QuizRateWidget.scss';
 
 const b = block('QuizRateWidget');
@@ -85,7 +86,10 @@ export const QuizRateWidget: WidgetComponent<{
     <div className={b()}>
       {!isTitleHidden && (
         <div
-          className={b('title', { gradient: params.fontColor?.type === 'gradient' })}
+          className={cn(
+            b('title', { gradient: params.fontColor?.type === 'gradient' }).toString(),
+            'StorySdk-widgetTitle'
+          )}
           style={{
             ...elementSizes.title,
             fontStyle: params.fontParams?.style,

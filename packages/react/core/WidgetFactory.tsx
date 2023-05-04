@@ -33,6 +33,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.CHOOSE_ANSWER:
         return (
           <ChooseAnswerWidget
+            id={this.props.widget.id}
             jsConfetti={this.props.jsConfetti}
             params={this.props.widget.content.params}
             position={this.props.widget.position}
@@ -53,6 +54,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.EMOJI_REACTION:
         return (
           <EmojiReactionWidget
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
@@ -64,6 +66,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.QUESTION:
         return (
           <QuestionWidget
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
@@ -75,6 +78,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.SLIDER:
         return (
           <SliderWidget
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
@@ -92,6 +96,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.TALK_ABOUT:
         return (
           <TalkAboutWidget
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
@@ -111,6 +116,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.QUIZ_ONE_ANSWER:
         return (
           <QuizOneAnswerWidget
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
@@ -121,6 +127,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.QUIZ_MULTIPLE_ANSWERS:
         return (
           <QuizMultipleAnswerWidget
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
@@ -131,6 +138,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE:
         return (
           <QuizMultipleAnswerWithImageWidget
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}
@@ -141,6 +149,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.QUIZ_OPEN_ANSWER:
         return (
           <QuizOpenAnswerWidget
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             position={this.props.widget.position}
             positionLimits={this.props.widget.positionLimits}

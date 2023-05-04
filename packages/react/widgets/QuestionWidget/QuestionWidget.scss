@@ -135,6 +135,16 @@
       }
     }
 
+    &_noAnimation {
+      &.StorySdk-QuestionWidget__item_answerConfirm, &.StorySdk-QuestionWidget__item_answerDecline, &.StorySdk-QuestionWidget__item_full {
+        &::after {
+          width: 100%;
+          height: 100%;
+          animation: none;
+        }
+      }
+    }
+
     &_full {
       border-radius: 10px;
     }
@@ -144,10 +154,6 @@
       box-shadow: none;
       border: none;
     }
-  }
-
-  &--isActive {
-    background-color: rgb(4, 4, 4) !important;
   }
 }
 

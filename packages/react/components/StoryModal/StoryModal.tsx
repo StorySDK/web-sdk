@@ -2,8 +2,8 @@ import React, { useEffect, useState, useCallback, useRef, useReducer, useMemo } 
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
-import { eventPublish } from '@utils';
-import { useAdaptiveValue } from '../../hooks';
+import { eventPublish, getUniqUserId } from '@utils';
+import { useAdaptiveValue, useAnswersCache } from '../../hooks';
 import { StoryType, Group, GroupType, StorySize, StoryContenxt, ScoreType } from '../../types';
 import { StoryContent } from '..';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.png';
@@ -24,6 +24,7 @@ interface StoryModalProps {
   startStoryId?: string;
   isStatusBarActive?: boolean;
   isForceCloseAvailable?: boolean;
+  isCacheDisabled?: boolean;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -132,11 +133,6 @@ const INIT_CONTAINER_BORDER_RADIUS = 50;
 const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
 const ratioIndexLarge = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
 
-type QuizStateType = {
-  points: number;
-  letters: string;
-};
-
 const initQuizeState = {
   points: 0,
   letters: ''
@@ -184,6 +180,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isShowMockup,
     isStatusBarActive,
     currentGroup,
+    isCacheDisabled,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -207,17 +204,17 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     setActiveStoriesWithResult(
       stories
         .filter((story) => {
-          if (story.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+          if (story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
             return true;
           }
 
-          return story.layerData.isDefaultLayer;
+          return story.layerData?.isDefaultLayer;
         })
         .sort((storyA, storyB) => {
-          if (storyA.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+          if (storyA.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
             return 1;
           }
-          if (storyB.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+          if (storyB.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
             return -1;
           }
           return 0;
@@ -338,11 +335,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       return stories
         .filter(
           (story) =>
-            story.layerData.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
+            story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
         )
         .map((story) => ({
           id: story.id,
-          isDefaultLayer: story.layerData.isDefaultLayer,
+          isDefaultLayer: story.layerData?.isDefaultLayer,
           score: story.layerData.score
         }));
     }
@@ -583,13 +580,18 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     }
   };
 
+  const uniqUserId = getUniqUserId();
+  const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
+
   return (
     <StoryContext.Provider
       value={{
         currentStoryId,
         quizMode: currentGroup.settings?.scoreType,
         playStatusChange: setPlayStatus,
-        handleQuizAnswer
+        handleQuizAnswer,
+        getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
+        setAnswerCache: isCacheDisabled ? undefined : setAnswerCache
       }}
     >
       <div
@@ -700,7 +702,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                         }}
                       >
                         {activeStoriesWithResult
-                          .filter((story) => story.layerData.isDefaultLayer)
+                          .filter((story) => story.layerData?.isDefaultLayer)
                           .map((story, index) => (
                             <div
                               className={b('indicator', {

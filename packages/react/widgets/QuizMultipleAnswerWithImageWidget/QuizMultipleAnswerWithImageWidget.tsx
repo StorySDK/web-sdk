@@ -13,6 +13,7 @@ import {
   eventUnsubscribe,
   getTextStyles
 } from '@utils';
+import cn from 'classnames';
 import './QuizMultipleAnswerWithImageWidget.scss';
 import { StoryContext } from '@components';
 
@@ -46,20 +47,25 @@ const INIT_ELEMENT_STYLES = {
 };
 
 export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
+  id: string;
   params: QuizMultipleAnswerWithImageWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
-  onAnswer?(answer: string[]): any;
+  onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, answers, isTitleHidden } = props.params;
-  const { params, position, positionLimits, isReadOnly, onAnswer } = props;
-
-  const [userAnswers, setUserAnswers] = useState<string[]>([]);
-  const [isSent, setIsSent] = useState<boolean>(false);
+  const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
 
   const storyContextVal = useContext(StoryContext);
+
+  const answerFromCache = storyContextVal.getAnswerCache
+    ? storyContextVal.getAnswerCache(id)
+    : null;
+
+  const [userAnswers, setUserAnswers] = useState<string[]>(answerFromCache || []);
+  const [isSent, setIsSent] = useState<boolean>(!!answerFromCache);
 
   const calculate = useCallback(
     (size) => {
@@ -134,13 +140,13 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
   );
 
   const handleAnswer = useCallback(
-    (id: string) => {
-      if (userAnswers.includes(id)) {
-        handleSendScore([id], 'remove');
-        setUserAnswers((prevState) => prevState.filter((answer) => answer !== id));
+    (answerId: string) => {
+      if (userAnswers.includes(answerId)) {
+        handleSendScore([answerId], 'remove');
+        setUserAnswers((prevState) => prevState.filter((answer) => answer !== answerId));
       } else {
-        handleSendScore([id], 'add');
-        setUserAnswers((prevState) => [...prevState, id]);
+        handleSendScore([answerId], 'add');
+        setUserAnswers((prevState) => [...prevState, answerId]);
       }
     },
     [handleSendScore, userAnswers]
@@ -148,10 +154,17 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
 
   const handleSendAnswer = useCallback(() => {
     if (!isReadOnly && userAnswers.length && !isSent) {
-      onAnswer?.(userAnswers);
+      userAnswers.forEach((answer: string) => {
+        onAnswer?.(answer);
+      });
+
       setIsSent(true);
+
+      if (storyContextVal.setAnswerCache && id) {
+        storyContextVal.setAnswerCache(id, userAnswers);
+      }
     }
-  }, [isReadOnly, isSent, onAnswer, userAnswers]);
+  }, [id, isReadOnly, isSent, onAnswer, storyContextVal, userAnswers]);
 
   useEffect(() => {
     eventSubscribe('nextStory', handleSendAnswer);
@@ -170,7 +183,10 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
     <div className={b()}>
       {!isTitleHidden && (
         <div
-          className={b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' })}
+          className={cn(
+            b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' }).toString(),
+            'StorySdk-widgetTitle'
+          )}
           style={{
             ...elementSizes.title,
             fontStyle: params.titleFont?.fontParams?.style,
@@ -200,9 +216,13 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
               }}
             />
             <p
-              className={b('answerTitle', {
-                gradient: params.answersFont?.fontColor?.type === 'gradient'
-              })}
+              className={cn(
+                b('answerTitle', {
+                  gradient: params.answersFont?.fontColor?.type === 'gradient'
+                }).toString(),
+                'StorySdk-widgetAnswerTitle'
+              )}
+              data-id={answer.id}
               style={{
                 ...elementSizes.answerTitle,
                 fontStyle: params.answersFont?.fontParams?.style,

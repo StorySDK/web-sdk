@@ -7,6 +7,7 @@ import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage } from '../utils/fontsInclude';
+import { getUniqUserId } from '../utils';
 
 interface GroupsListProps {
   groups: Group[];
@@ -62,17 +63,7 @@ const withGroupsData =
       startTime: 0
     });
 
-    const getUniqUserId = useCallback(() => {
-      if (localStorage.getItem('userId')) {
-        return localStorage.getItem('userId');
-      }
-      const id = nanoid();
-      localStorage.setItem('userId', id);
-
-      return id;
-    }, []);
-
-    const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), [getUniqUserId]);
+    const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
 
     const language = useMemo(() => {
       if (appLocale) {
@@ -196,11 +187,13 @@ const withGroupsData =
               if (!groupsData.data.error) {
                 const groupsFetchedData = groupsData.data.data
                   .filter((item: any) => {
+                    const isActive = item.active && item.type;
+
                     if (item.type === 'onboarding') {
-                      return item.active && item.settings?.addToStories;
+                      return isActive && item.settings?.addToStories;
                     }
 
-                    return item.active;
+                    return isActive;
                   })
                   .map((item: any) => ({
                     id: item.id,
@@ -231,7 +224,9 @@ const withGroupsData =
             .then((storiesData) => {
               if (!storiesData.data.error) {
                 const stories = storiesData.data.data.filter(
-                  (storyItem: any) => storyItem.story_data.status === 'active'
+                  (storyItem: any) => storyItem.story_data.status === 'active' 
+                  && DateTime.fromISO(storyItem.story_data.start_time).toSeconds() < DateTime.now().toSeconds() 
+                  && (storyItem.story_data.end_time ? DateTime.fromISO(storyItem.story_data.end_time).toSeconds() > DateTime.now().toSeconds() : true)
                 );
 
                 // @ts-ignore

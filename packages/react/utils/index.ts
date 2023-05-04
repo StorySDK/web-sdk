@@ -1,19 +1,4 @@
 export * from './stylesUtils';
 export * from './events';
-
-export const getClientPosition = (e: any) => {
-  const touches = e.touches;
-
-  if (touches && touches.length) {
-    const finger = touches[0];
-    return {
-      x: finger.clientX,
-      y: finger.clientY
-    };
-  }
-
-  return {
-    x: e.clientX,
-    y: e.clientY
-  };
-};
+export * from './getClientPosition';
+export * from './getUniqUserId';

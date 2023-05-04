@@ -17,6 +17,7 @@ import { QuizRateWidget } from './QuizRateWidget';
 import { QuizMultipleAnswerWithImageWidget } from './QuizMultipleAnswerWithImageWidget';
 declare const widgets: {
     choose_answer: import("@types").WidgetComponent<{
+        id: string;
         params: import("@types").ChooseAnswerWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
@@ -34,6 +35,7 @@ declare const widgets: {
         params: import("@types").EllipseWidgetParamsType;
     }>;
     emoji_reaction: import("@types").WidgetComponent<{
+        id: string;
         params: import("@types").EmojiReactionWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
@@ -44,6 +46,7 @@ declare const widgets: {
         params: import("@types").GiphyWidgetParamsType;
     }>;
     question: import("@types").WidgetComponent<{
+        id: string;
         params: import("@types").QuestionWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
@@ -54,6 +57,7 @@ declare const widgets: {
         params: import("@types").RectangleWidgetParamsType;
     }>;
     slider: import("@types").WidgetComponent<{
+        id: string;
         storyId: string;
         params: import("@types").SliderWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
@@ -67,6 +71,7 @@ declare const widgets: {
         onSwipe?(): void;
     }>;
     talk_about: import("@types").WidgetComponent<{
+        id: string;
         params: import("@types").TalkAboutWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
@@ -82,6 +87,7 @@ declare const widgets: {
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
     }>;
     quiz_multiple_answers: import("@types").WidgetComponent<{
+        id: string;
         params: import("@types").QuizMultipleAnswerWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
@@ -90,6 +96,7 @@ declare const widgets: {
         onGoToStory?(storyId: string): void;
     }>;
     quiz_one_answer: import("@types").WidgetComponent<{
+        id: string;
         params: import("@types").QuizOneAnswerWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
@@ -98,6 +105,7 @@ declare const widgets: {
         onGoToStory?(storyId: string): void;
     }>;
     quiz_open_answer: import("@types").WidgetComponent<{
+        id: string;
         params: import("@types").QuizOpenAnswerWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
@@ -114,6 +122,7 @@ declare const widgets: {
         onGoToStory?(storyId: string): void;
     }>;
     quiz_one_multiple_with_image: import("@types").WidgetComponent<{
+        id: string;
         params: import("@types").QuizMultipleAnswerWithImageWidgetParamsType;
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;

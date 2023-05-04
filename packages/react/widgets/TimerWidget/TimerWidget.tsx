@@ -5,6 +5,7 @@ import {
   WidgetPositionType,
   WidgetPositionLimitsType
 } from '@types';
+import cn from 'classnames';
 import { block, calculateElementSize } from '@utils';
 import './TimerWidget.scss';
 import { ONE_MINUTE_IN_SECONDS, ONE_SECOND_IN_MILLISECONDS } from '@constants';
@@ -98,7 +99,7 @@ export const TimerWidget: WidgetComponent<{
 
   return (
     <div className={b({ color: params.color })} style={elementSizes.widget}>
-      <div className={b('text')} style={elementSizes.text}>
+      <div className={cn(b('text'), 'StorySdk-widgetTitle')} style={elementSizes.text}>
         {params.text}
       </div>
       <ul className={b('dial')}>
