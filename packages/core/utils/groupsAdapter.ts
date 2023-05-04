@@ -24,7 +24,7 @@ const actionToWidget = (
   language: string
 ) => {
   if (answerWidgets.includes(widget.content.type)) {
-    return (answer: string | string[]) =>
+    return (answer: string) =>
       API.statistics.widgets.answer.onAnswer({
         widgetId: widget.id as string,
         storyId,

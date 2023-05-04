@@ -6,6 +6,6 @@ export declare const QuizMultipleAnswerWidget: WidgetComponent<{
     position?: WidgetPositionType;
     positionLimits?: WidgetPositionLimitsType;
     isReadOnly?: boolean;
-    onAnswer?(answer: string[]): any;
+    onAnswer?(answer: string): any;
     onGoToStory?(storyId: string): void;
 }>;

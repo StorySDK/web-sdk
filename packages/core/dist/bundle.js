@@ -71337,7 +71337,9 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
     }, [handleSendScore, id, userAnswers]);
     const handleSendAnswer = React.useCallback(() => {
         if (!isReadOnly && userAnswers.length && !isSent) {
-            onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
+            userAnswers.forEach((answer) => {
+                onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(answer);
+            });
             setIsSent(true);
             if (storyContextVal.setAnswerCache && id) {
                 storyContextVal.setAnswerCache(id, userAnswers);
@@ -71735,7 +71737,9 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
     }, [handleSendScore, userAnswers]);
     const handleSendAnswer = React.useCallback(() => {
         if (!isReadOnly && userAnswers.length && !isSent) {
-            onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
+            userAnswers.forEach((answer) => {
+                onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(answer);
+            });
             setIsSent(true);
             if (storyContextVal.setAnswerCache && id) {
                 storyContextVal.setAnswerCache(id, userAnswers);
@@ -79422,7 +79426,9 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
                 })
                     .then((storiesData) => {
                     if (!storiesData.data.error) {
-                        const stories = storiesData.data.data.filter((storyItem) => storyItem.story_data.status === 'active');
+                        const stories = storiesData.data.data.filter((storyItem) => storyItem.story_data.status === 'active'
+                            && DateTime.fromISO(storyItem.story_data.start_time).toSeconds() < DateTime.now().toSeconds()
+                            && (storyItem.story_data.end_time ? DateTime.fromISO(storyItem.story_data.end_time).toSeconds() > DateTime.now().toSeconds() : true));
                         // @ts-ignore
                         setGroupsWithStories((prevState) => prevState.map((item) => {
                             if (item.id === groupItem.id) {

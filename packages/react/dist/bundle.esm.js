@@ -65535,7 +65535,9 @@ const QuizMultipleAnswerWidget = React.memo((props) => {
     }, [handleSendScore, id, userAnswers]);
     const handleSendAnswer = useCallback(() => {
         if (!isReadOnly && userAnswers.length && !isSent) {
-            onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
+            userAnswers.forEach((answer) => {
+                onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(answer);
+            });
             setIsSent(true);
             if (storyContextVal.setAnswerCache && id) {
                 storyContextVal.setAnswerCache(id, userAnswers);
@@ -65933,7 +65935,9 @@ const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
     }, [handleSendScore, userAnswers]);
     const handleSendAnswer = useCallback(() => {
         if (!isReadOnly && userAnswers.length && !isSent) {
-            onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(userAnswers);
+            userAnswers.forEach((answer) => {
+                onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(answer);
+            });
             setIsSent(true);
             if (storyContextVal.setAnswerCache && id) {
                 storyContextVal.setAnswerCache(id, userAnswers);

@@ -224,7 +224,9 @@ const withGroupsData =
             .then((storiesData) => {
               if (!storiesData.data.error) {
                 const stories = storiesData.data.data.filter(
-                  (storyItem: any) => storyItem.story_data.status === 'active'
+                  (storyItem: any) => storyItem.story_data.status === 'active' 
+                  && DateTime.fromISO(storyItem.story_data.start_time).toSeconds() < DateTime.now().toSeconds() 
+                  && (storyItem.story_data.end_time ? DateTime.fromISO(storyItem.story_data.end_time).toSeconds() > DateTime.now().toSeconds() : true)
                 );
 
                 // @ts-ignore

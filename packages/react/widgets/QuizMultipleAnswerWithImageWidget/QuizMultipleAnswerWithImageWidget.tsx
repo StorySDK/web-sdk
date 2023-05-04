@@ -52,7 +52,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
   isReadOnly?: boolean;
-  onAnswer?(answer: string[]): any;
+  onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, answers, isTitleHidden } = props.params;
@@ -154,7 +154,10 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
 
   const handleSendAnswer = useCallback(() => {
     if (!isReadOnly && userAnswers.length && !isSent) {
-      onAnswer?.(userAnswers);
+      userAnswers.forEach((answer: string) => {
+        onAnswer?.(answer);
+      });
+
       setIsSent(true);
 
       if (storyContextVal.setAnswerCache && id) {
