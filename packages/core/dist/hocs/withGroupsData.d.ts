@@ -12,10 +12,12 @@ interface GroupsListProps {
     isShowMockup?: boolean;
     onOpenGroup?(id: string): void;
     onCloseGroup?(id: string): void;
+    onStartQuiz?(groupId: string, storyId?: string): void;
+    onFinishQuiz?(groupId: string, storyId?: string): void;
     onNextStory?(groupId: string, storyId: string): void;
     onPrevStory?(groupId: string, storyId: string): void;
     onOpenStory?(groupId: string, storyId: string): void;
     onCloseStory?(groupId: string, storyId: string): void;
 }
-declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, token: string, groupImageWidth?: number | undefined, groupImageHeight?: number | undefined, groupTitleSize?: number | undefined, groupClassName?: string | undefined, groupsClassName?: string | undefined) => () => JSX.Element;
+declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, groupImageWidth?: number | undefined, groupImageHeight?: number | undefined, groupTitleSize?: number | undefined, groupClassName?: string | undefined, groupsClassName?: string | undefined) => () => JSX.Element;
 export default withGroupsData;

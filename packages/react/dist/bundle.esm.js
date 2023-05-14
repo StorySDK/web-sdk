@@ -256,7 +256,7 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
 
 const b$o = block$1('GroupsSdkList');
 const GroupsList = (props) => {
-    const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, isShowMockup, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
+    const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, isShowMockup, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory, onStartQuiz, onFinishQuiz } = props;
     const [currentGroup, setCurrentGroup] = useState(0);
     const [modalShow, setModalShow] = useState(false);
     const handleSelectGroup = useCallback((groupIndex) => {
@@ -312,7 +312,7 @@ const GroupsList = (props) => {
             React.createElement("div", { className: b$o('carousel') }, groups
                 .filter((group) => group.stories.length)
                 .map((group, index) => (React.createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))),
-        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, isShowMockup: isShowMockup, isShowing: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("div", { className: b$o({ empty: true }) },
+        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, isShowMockup: isShowMockup, isShowing: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz }))) : (React.createElement("div", { className: b$o({ empty: true }) },
         React.createElement("p", { className: b$o('emptyText') }, "Stories will be here")))))));
 };
 
@@ -11157,13 +11157,15 @@ const reducer = (state, action) => {
     throw Error('Unknown action.');
 };
 const StoryModal = (props) => {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
-    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory } = props;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
+    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
     const [quizState, dispatchQuizState] = useReducer(reducer, initQuizeState);
     const [currentStory, setCurrentStory] = useState(0);
     const [currentStoryId, setCurrentStoryId] = useState('');
     const [playStatus, setPlayStatus] = useState('wait');
     const storyModalRef = useRef(null);
+    const [isQuizStarted, setIsQuizStarted] = useState(false);
+    const [quizStartedStoryIds, setQuizStartedStoryIds] = useState({});
     const [width, height] = d$1();
     const [activeStoriesWithResult, setActiveStoriesWithResult] = useState([]);
     useEffect(() => {
@@ -11274,9 +11276,16 @@ const StoryModal = (props) => {
     const handleClose = useCallback(() => {
         onClose();
         if (onCloseStory) {
-            onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+            onCloseStory(currentGroup.id, currentStoryId);
         }
-    }, [currentGroup.id, currentStory, onClose, onCloseStory, activeStoriesWithResult]);
+    }, [
+        currentGroup.id,
+        currentStory,
+        onClose,
+        onCloseStory,
+        activeStoriesWithResult,
+        currentStoryId
+    ]);
     const resultStories = useMemo(() => {
         var _a;
         if ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) {
@@ -11343,6 +11352,21 @@ const StoryModal = (props) => {
         currentStory,
         quizState
     ]);
+    const handleFinishStoryQuiz = useCallback(() => {
+        var _a, _b, _c, _d;
+        const isNotResultStory = ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) !==
+            ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId);
+        if (onFinishQuiz && ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId) && isNotResultStory) {
+            onFinishQuiz(currentGroup.id, currentStoryId);
+        }
+    }, [
+        activeStoriesWithResult,
+        currentGroup.id,
+        (_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.scoreResultLayersGroupId,
+        currentStory,
+        currentStoryId,
+        onFinishQuiz
+    ]);
     const handleNext = useCallback(() => {
         eventPublish('nextStory', {
             stotyId: activeStoriesWithResult[currentStory].id
@@ -11362,6 +11386,7 @@ const StoryModal = (props) => {
             }
         }
         else {
+            handleFinishStoryQuiz();
             if (onCloseStory) {
                 onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
@@ -11386,6 +11411,7 @@ const StoryModal = (props) => {
     }, [
         activeStoriesWithResult,
         currentStory,
+        currentStoryId,
         getResultStoryId,
         isLastGroup,
         handleClose,
@@ -11412,6 +11438,7 @@ const StoryModal = (props) => {
             if (onCloseStory) {
                 onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
+            handleFinishStoryQuiz();
             if (onOpenStory) {
                 setTimeout(() => {
                     onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
@@ -11463,10 +11490,18 @@ const StoryModal = (props) => {
         canvas: canvasRef.current
     }));
     const noTopShadow = currentGroupType === GroupType.ONBOARDING &&
-        ((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProgressHidden) &&
-        ((_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProhibitToClose);
+        ((_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProgressHidden) &&
+        ((_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.isProhibitToClose);
     const handleQuizAnswer = (params) => {
         var _a, _b, _c, _d;
+        if (params.type === 'add' && !isQuizStarted) {
+            onStartQuiz && onStartQuiz(currentGroup.id);
+            setIsQuizStarted(true);
+        }
+        if (params.type === 'add' && !quizStartedStoryIds[currentStoryId]) {
+            onStartQuiz && onStartQuiz(currentGroup.id, currentStoryId);
+            setQuizStartedStoryIds((prevState) => (Object.assign(Object.assign({}, prevState), { [currentStoryId]: true })));
+        }
         if (((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreType) === ScoreType.LETTERS && params.type === 'add') {
             dispatchQuizState({
                 type: 'add_letters',
@@ -11496,7 +11531,7 @@ const StoryModal = (props) => {
     const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
     return (React.createElement(StoryContext.Provider, { value: {
             currentStoryId,
-            quizMode: (_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.scoreType,
+            quizMode: (_l = currentGroup.settings) === null || _l === void 0 ? void 0 : _l.scoreType,
             playStatusChange: setPlayStatus,
             handleQuizAnswer,
             getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
@@ -11549,7 +11584,7 @@ const StoryModal = (props) => {
                                         paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
                                         paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
                                     } },
-                                    !((_l = currentGroup.settings) === null || _l === void 0 ? void 0 : _l.isProgressHidden) && (React.createElement("div", { className: b$m('indicators', {
+                                    !((_m = currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden) && (React.createElement("div", { className: b$m('indicators', {
                                             stopAnimation: playStatus === 'pause',
                                             widePadding: isShowMockup && isLarge
                                         }), style: {
@@ -11561,7 +11596,7 @@ const StoryModal = (props) => {
                                             current: index === currentStory
                                         }), key: story.id, onAnimationEnd: handleAnimationEnd }))))),
                                     currentGroupType === GroupType.GROUP && (React.createElement("div", { className: b$m('group', {
-                                            noProgress: (_m = currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden,
+                                            noProgress: (_o = currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProgressHidden,
                                             wideLeft: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeElementsTop : undefined
@@ -11569,8 +11604,8 @@ const StoryModal = (props) => {
                                         React.createElement("div", { className: b$m('groupImgWrapper') },
                                             React.createElement("img", { alt: "", className: b$m('groupImg'), src: currentGroup.imageUrl })),
                                         React.createElement("p", { className: b$m('groupTitle') }, currentGroup.title))),
-                                    !((_o = currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) && (React.createElement("button", { className: b$m('close', {
-                                            noProgress: (_p = currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
+                                    !((_p = currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProhibitToClose) && (React.createElement("button", { className: b$m('close', {
+                                            noProgress: (_q = currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProgressHidden,
                                             wideRight: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeElementsTop : undefined
@@ -11581,7 +11616,7 @@ const StoryModal = (props) => {
                             : img$1 }))),
                 activeStoriesWithResult.length > 1 && (React.createElement("button", { className: b$m('arrowButton', { right: true }), onClick: handleNext },
                     React.createElement(RightArrowIcon, null)))),
-            isForceCloseAvailable && ((_q = currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProhibitToClose) && (React.createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
+            isForceCloseAvailable && ((_r = currentGroup.settings) === null || _r === void 0 ? void 0 : _r.isProhibitToClose) && (React.createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
                 React.createElement(CloseIcon, null)))),
         React.createElement("canvas", { ref: canvasRef, style: {
                 display: 'none'

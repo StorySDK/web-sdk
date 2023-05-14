@@ -6335,7 +6335,7 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
 
 const b$o = block$1('GroupsSdkList');
 const GroupsList = (props) => {
-    const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, isShowMockup, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory } = props;
+    const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, isShowMockup, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory, onStartQuiz, onFinishQuiz } = props;
     const [currentGroup, setCurrentGroup] = useState(0);
     const [modalShow, setModalShow] = useState(false);
     const handleSelectGroup = useCallback((groupIndex) => {
@@ -6391,7 +6391,7 @@ const GroupsList = (props) => {
             React.createElement("div", { className: b$o('carousel') }, groups
                 .filter((group) => group.stories.length)
                 .map((group, index) => (React.createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))),
-        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, isShowMockup: isShowMockup, isShowing: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory }))) : (React.createElement("div", { className: b$o({ empty: true }) },
+        React.createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, isShowMockup: isShowMockup, isShowing: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz }))) : (React.createElement("div", { className: b$o({ empty: true }) },
         React.createElement("p", { className: b$o('emptyText') }, "Stories will be here")))))));
 };
 
@@ -9880,7 +9880,7 @@ const useAdaptiveValue = (initValue) => {
     return cardSize;
 };
 
-const useLocalStorage = (key, initialValue) => {
+const useLocalStorage$1 = (key, initialValue) => {
     const [storedValue, setStoredValue] = useState(() => {
         try {
             const item = window.localStorage.getItem(key);
@@ -9905,7 +9905,7 @@ const useLocalStorage = (key, initialValue) => {
 };
 
 const useAnswersCache = (userId) => {
-    const [storedValue, setValue] = useLocalStorage(`StorySdkAnswers-${userId}`, {});
+    const [storedValue, setValue] = useLocalStorage$1(`StorySdkAnswers-${userId}`, {});
     const setAnswer = (widgetId, answer) => {
         setValue(Object.assign(Object.assign({}, storedValue), { [widgetId]: answer }));
     };
@@ -17236,13 +17236,15 @@ const reducer = (state, action) => {
     throw Error('Unknown action.');
 };
 const StoryModal = (props) => {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
-    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory } = props;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
+    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
     const [quizState, dispatchQuizState] = useReducer(reducer, initQuizeState);
     const [currentStory, setCurrentStory] = useState(0);
     const [currentStoryId, setCurrentStoryId] = useState('');
     const [playStatus, setPlayStatus] = useState('wait');
     const storyModalRef = useRef(null);
+    const [isQuizStarted, setIsQuizStarted] = useState(false);
+    const [quizStartedStoryIds, setQuizStartedStoryIds] = useState({});
     const [width, height] = d$1();
     const [activeStoriesWithResult, setActiveStoriesWithResult] = useState([]);
     useEffect(() => {
@@ -17353,9 +17355,16 @@ const StoryModal = (props) => {
     const handleClose = useCallback(() => {
         onClose();
         if (onCloseStory) {
-            onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+            onCloseStory(currentGroup.id, currentStoryId);
         }
-    }, [currentGroup.id, currentStory, onClose, onCloseStory, activeStoriesWithResult]);
+    }, [
+        currentGroup.id,
+        currentStory,
+        onClose,
+        onCloseStory,
+        activeStoriesWithResult,
+        currentStoryId
+    ]);
     const resultStories = useMemo(() => {
         var _a;
         if ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) {
@@ -17422,6 +17431,21 @@ const StoryModal = (props) => {
         currentStory,
         quizState
     ]);
+    const handleFinishStoryQuiz = useCallback(() => {
+        var _a, _b, _c, _d;
+        const isNotResultStory = ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) !==
+            ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId);
+        if (onFinishQuiz && ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId) && isNotResultStory) {
+            onFinishQuiz(currentGroup.id, currentStoryId);
+        }
+    }, [
+        activeStoriesWithResult,
+        currentGroup.id,
+        (_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.scoreResultLayersGroupId,
+        currentStory,
+        currentStoryId,
+        onFinishQuiz
+    ]);
     const handleNext = useCallback(() => {
         eventPublish('nextStory', {
             stotyId: activeStoriesWithResult[currentStory].id
@@ -17441,6 +17465,7 @@ const StoryModal = (props) => {
             }
         }
         else {
+            handleFinishStoryQuiz();
             if (onCloseStory) {
                 onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
@@ -17465,6 +17490,7 @@ const StoryModal = (props) => {
     }, [
         activeStoriesWithResult,
         currentStory,
+        currentStoryId,
         getResultStoryId,
         isLastGroup,
         handleClose,
@@ -17491,6 +17517,7 @@ const StoryModal = (props) => {
             if (onCloseStory) {
                 onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
+            handleFinishStoryQuiz();
             if (onOpenStory) {
                 setTimeout(() => {
                     onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
@@ -17542,10 +17569,18 @@ const StoryModal = (props) => {
         canvas: canvasRef.current
     }));
     const noTopShadow = currentGroupType === GroupType.ONBOARDING &&
-        ((_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProgressHidden) &&
-        ((_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProhibitToClose);
+        ((_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProgressHidden) &&
+        ((_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.isProhibitToClose);
     const handleQuizAnswer = (params) => {
         var _a, _b, _c, _d;
+        if (params.type === 'add' && !isQuizStarted) {
+            onStartQuiz && onStartQuiz(currentGroup.id);
+            setIsQuizStarted(true);
+        }
+        if (params.type === 'add' && !quizStartedStoryIds[currentStoryId]) {
+            onStartQuiz && onStartQuiz(currentGroup.id, currentStoryId);
+            setQuizStartedStoryIds((prevState) => (Object.assign(Object.assign({}, prevState), { [currentStoryId]: true })));
+        }
         if (((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreType) === ScoreType.LETTERS && params.type === 'add') {
             dispatchQuizState({
                 type: 'add_letters',
@@ -17575,7 +17610,7 @@ const StoryModal = (props) => {
     const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
     return (React.createElement(StoryContext.Provider, { value: {
             currentStoryId,
-            quizMode: (_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.scoreType,
+            quizMode: (_l = currentGroup.settings) === null || _l === void 0 ? void 0 : _l.scoreType,
             playStatusChange: setPlayStatus,
             handleQuizAnswer,
             getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
@@ -17628,7 +17663,7 @@ const StoryModal = (props) => {
                                         paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
                                         paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
                                     } },
-                                    !((_l = currentGroup.settings) === null || _l === void 0 ? void 0 : _l.isProgressHidden) && (React.createElement("div", { className: b$m('indicators', {
+                                    !((_m = currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden) && (React.createElement("div", { className: b$m('indicators', {
                                             stopAnimation: playStatus === 'pause',
                                             widePadding: isShowMockup && isLarge
                                         }), style: {
@@ -17640,7 +17675,7 @@ const StoryModal = (props) => {
                                             current: index === currentStory
                                         }), key: story.id, onAnimationEnd: handleAnimationEnd }))))),
                                     currentGroupType === GroupType.GROUP && (React.createElement("div", { className: b$m('group', {
-                                            noProgress: (_m = currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden,
+                                            noProgress: (_o = currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProgressHidden,
                                             wideLeft: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeElementsTop : undefined
@@ -17648,8 +17683,8 @@ const StoryModal = (props) => {
                                         React.createElement("div", { className: b$m('groupImgWrapper') },
                                             React.createElement("img", { alt: "", className: b$m('groupImg'), src: currentGroup.imageUrl })),
                                         React.createElement("p", { className: b$m('groupTitle') }, currentGroup.title))),
-                                    !((_o = currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) && (React.createElement("button", { className: b$m('close', {
-                                            noProgress: (_p = currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
+                                    !((_p = currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProhibitToClose) && (React.createElement("button", { className: b$m('close', {
+                                            noProgress: (_q = currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProgressHidden,
                                             wideRight: isShowMockup && isLarge
                                         }), style: {
                                             top: isShowMockup && isLarge ? largeElementsTop : undefined
@@ -17660,7 +17695,7 @@ const StoryModal = (props) => {
                             : img$1 }))),
                 activeStoriesWithResult.length > 1 && (React.createElement("button", { className: b$m('arrowButton', { right: true }), onClick: handleNext },
                     React.createElement(RightArrowIcon, null)))),
-            isForceCloseAvailable && ((_q = currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProhibitToClose) && (React.createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
+            isForceCloseAvailable && ((_r = currentGroup.settings) === null || _r === void 0 ? void 0 : _r.isProhibitToClose) && (React.createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
                 React.createElement(CloseIcon, null)))),
         React.createElement("canvas", { ref: canvasRef, style: {
                 display: 'none'
@@ -79173,6 +79208,36 @@ const API = {
                     });
                 }
             }
+        },
+        quiz: {
+            onQuizStart(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'start',
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        story_id: params.storyId,
+                        value: params.time,
+                        locale: params.language
+                    }
+                });
+            },
+            onQuizFinish(params) {
+                return axios({
+                    method: 'post',
+                    url: `/reactions`,
+                    data: {
+                        type: 'finish',
+                        user_id: params.uniqUserId,
+                        group_id: params.groupId,
+                        value: params.time,
+                        story_id: params.storyId,
+                        locale: params.language
+                    }
+                });
+            }
         }
     }
 };
@@ -79275,7 +79340,49 @@ const getUniqUserId = () => {
     return id;
 };
 
-const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, groupTitleSize, groupClassName, groupsClassName) => () => {
+const useLocalStorage = (key, initialValue) => {
+    const [storedValue, setStoredValue] = useState(() => {
+        try {
+            const item = window.localStorage.getItem(key);
+            return item ? JSON.parse(item) : initialValue;
+        }
+        catch (error) {
+            console.log(error);
+            return initialValue;
+        }
+    });
+    const setValue = (value) => {
+        try {
+            const valueToStore = value instanceof Function ? value(storedValue) : value;
+            setStoredValue(valueToStore);
+            window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+    return [storedValue, setValue];
+};
+
+const useStoryCache = (userId) => {
+    const [storedValue, setValue] = useLocalStorage(`StorySdkStoriesData-${userId}`, {});
+    const setData = (storyId, data) => {
+        setValue(Object.assign(Object.assign({}, storedValue), { [storyId]: data }));
+    };
+    const getData = (storyId) => storedValue[storyId];
+    return [getData, setData];
+};
+
+const useGroupCache = (userId) => {
+    const [storedValue, setValue] = useLocalStorage(`StorySdkGroupsData-${userId}`, {});
+    const setData = (groupId, data) => {
+        setValue(Object.assign(Object.assign({}, storedValue), { [groupId]: data }));
+    };
+    const getData = (groupId) => storedValue[groupId];
+    return [getData, setData];
+};
+
+const withGroupsData = (GroupsList, groupImageWidth, groupImageHeight, groupTitleSize, groupClassName, groupsClassName) => () => {
     const [data, setData] = useState([]);
     const [groups, setGroups] = useState([]);
     const [groupView, setGroupView] = useState('circle');
@@ -79283,6 +79390,9 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
     const [appLocale, setAppLocale] = useState(null);
     const [groupsWithStories, setGroupsWithStories] = useState([]);
     const [loadStatus, setLoadStatus] = useState('pending');
+    const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
+    const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
+    const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
     const [groupDuration, setGroupDuration] = useState({
         groupId: '',
         startTime: 0
@@ -79292,7 +79402,6 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
         groupId: '',
         startTime: 0
     });
-    const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
     const language = useMemo(() => {
         if (appLocale) {
             return getNavigatorLanguage(appLocale);
@@ -79311,6 +79420,32 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
         }));
         return API.statistics.group.onOpen({ groupId, uniqUserId, language });
     }, [uniqUserId, language]);
+    const handleStartQuiz = useCallback((groupId, storyId) => {
+        const time = DateTime.now().toISO();
+        return API.statistics.quiz.onQuizStart({ groupId, storyId, uniqUserId, time, language });
+    }, [uniqUserId, language]);
+    const handleFinishQuiz = useCallback((groupId, storyId) => {
+        if (!storyId) {
+            const groupCache = getGroupCache(groupId);
+            if (groupCache === null || groupCache === void 0 ? void 0 : groupCache.isFinished) {
+                return undefined;
+            }
+            setGroupCache(groupId, {
+                isFinished: true
+            });
+        }
+        else {
+            const storyCache = getStoryCache(storyId);
+            if (storyCache === null || storyCache === void 0 ? void 0 : storyCache.isFinished) {
+                return undefined;
+            }
+            setStoryCache(storyId, {
+                isFinished: true
+            });
+        }
+        const time = DateTime.now().toISO();
+        return API.statistics.quiz.onQuizFinish({ groupId, storyId, uniqUserId, time, language });
+    }, [uniqUserId, language]);
     const handleCloseGroup = useCallback((groupId) => {
         const duration = DateTime.now().toSeconds() - groupDuration.startTime;
         API.statistics.group.sendDuration({
@@ -79322,13 +79457,21 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
         return API.statistics.group.onClose({ groupId, uniqUserId, language });
     }, [groupDuration, uniqUserId, language]);
     const handleOpenStory = useCallback((groupId, storyId) => {
+        var _a, _b, _c;
+        const currentGroup = data === null || data === void 0 ? void 0 : data.find((group) => group.id === groupId);
+        const currentStory = (_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.stories) === null || _a === void 0 ? void 0 : _a.find((story) => story.id === storyId);
+        const isResultStory = ((_b = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId) ===
+            ((_c = currentStory === null || currentStory === void 0 ? void 0 : currentStory.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId);
+        if (isResultStory) {
+            handleFinishQuiz(groupId);
+        }
         setStoryDuration(() => ({
             groupId,
             storyId,
             startTime: DateTime.now().toSeconds()
         }));
         API.statistics.story.onOpen({ groupId, storyId, uniqUserId, language });
-    }, [uniqUserId, language]);
+    }, [data, uniqUserId, language, handleFinishQuiz]);
     const handleCloseStory = useCallback((groupId, storyId) => {
         if (storyDuration.storyId === storyId && storyDuration.groupId === groupId) {
             const duration = DateTime.now().toSeconds() - storyDuration.startTime;
@@ -79392,6 +79535,7 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
                                 .sort((a, b) => (a.type > b.type ? -1 : 1));
                             setGroups(groupsFetchedData);
                             setGroupsWithStories(groupsFetchedData);
+                            setLoadStatus('pending');
                         }
                     });
                 }
@@ -79400,6 +79544,7 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
     }, []);
     useEffect(() => {
         if (groups.length) {
+            setLoadStatus('loading');
             groups.forEach((groupItem, groupIndex) => {
                 API.stories
                     .getList({
@@ -79407,9 +79552,13 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
                 })
                     .then((storiesData) => {
                     if (!storiesData.data.error) {
-                        const stories = storiesData.data.data.filter((storyItem) => storyItem.story_data.status === 'active'
-                            && DateTime.fromISO(storyItem.story_data.start_time).toSeconds() < DateTime.now().toSeconds()
-                            && (storyItem.story_data.end_time ? DateTime.fromISO(storyItem.story_data.end_time).toSeconds() > DateTime.now().toSeconds() : true));
+                        const stories = storiesData.data.data.filter((storyItem) => storyItem.story_data.status === 'active' &&
+                            DateTime.fromISO(storyItem.story_data.start_time).toSeconds() <
+                                DateTime.now().toSeconds() &&
+                            (storyItem.story_data.end_time
+                                ? DateTime.fromISO(storyItem.story_data.end_time).toSeconds() >
+                                    DateTime.now().toSeconds()
+                                : true));
                         // @ts-ignore
                         setGroupsWithStories((prevState) => prevState.map((item) => {
                             if (item.id === groupItem.id) {
@@ -79431,7 +79580,7 @@ const withGroupsData = (GroupsList, token, groupImageWidth, groupImageHeight, gr
             setData(adaptedData);
         }
     }, [loadStatus, groupsWithStories, uniqUserId, language]);
-    return (React.createElement(GroupsList, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, groupView: groupView, groups: data, groupsClassName: groupsClassName, isLoading: loadStatus === 'loading', isShowMockup: isShowMockup, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory }));
+    return (React.createElement(GroupsList, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, groupView: groupView, groups: data, groupsClassName: groupsClassName, isLoading: loadStatus === 'loading', isShowMockup: isShowMockup, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onFinishQuiz: handleFinishQuiz, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory, onStartQuiz: handleStartQuiz }));
 };
 
 class Story {
@@ -79460,7 +79609,7 @@ class Story {
             }
             return;
         }
-        const Groups = withGroupsData(GroupsList, this.token, this.groupImageWidth, this.groupImageHeight, this.groupTitleSize, this.groupClassName, this.groupsClassName);
+        const Groups = withGroupsData(GroupsList, this.groupImageWidth, this.groupImageHeight, this.groupTitleSize, this.groupClassName, this.groupsClassName);
         if (element) {
             ReactDOM.render(React.createElement(Groups, null), element);
         }

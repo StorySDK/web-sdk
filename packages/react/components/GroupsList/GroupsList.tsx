@@ -26,6 +26,8 @@ interface GroupsListProps {
   onPrevStory?(groupId: string, storyId: string): void;
   onCloseStory?(groupId: string, storyId: string): void;
   onOpenStory?(groupId: string, storyId: string): void;
+  onStartQuiz?(groupId: string, storyId?: string): void;
+  onFinishQuiz?(groupId: string, storyId?: string): void;
 }
 
 export const GroupsList: React.FC<GroupsListProps> = (props) => {
@@ -44,7 +46,9 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     onNextStory,
     onPrevStory,
     onCloseStory,
-    onOpenStory
+    onOpenStory,
+    onStartQuiz,
+    onFinishQuiz
   } = props;
 
   const [currentGroup, setCurrentGroup] = useState(0);
@@ -156,11 +160,13 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                 stories={groups[currentGroup].stories}
                 onClose={handleCloseModal}
                 onCloseStory={onCloseStory}
+                onFinishQuiz={onFinishQuiz}
                 onNextGroup={handleNextGroup}
                 onNextStory={onNextStory}
                 onOpenStory={onOpenStory}
                 onPrevGroup={handlePrevGroup}
                 onPrevStory={onPrevStory}
+                onStartQuiz={onStartQuiz}
               />
             </>
           ) : (

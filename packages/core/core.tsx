@@ -59,7 +59,6 @@ export class Story {
 
     const Groups = withGroupsData(
       GroupsList,
-      this.token,
       this.groupImageWidth,
       this.groupImageHeight,
       this.groupTitleSize,
