@@ -8,6 +8,7 @@ import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage } from '../utils/fontsInclude';
 import { getUniqUserId } from '../utils';
+import { useGroupCache, useStoryCache } from '../hooks';
 
 interface GroupsListProps {
   groups: Group[];
@@ -21,6 +22,8 @@ interface GroupsListProps {
   isShowMockup?: boolean;
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
+  onStartQuiz?(groupId: string, storyId?: string): void;
+  onFinishQuiz?(groupId: string, storyId?: string): void;
   onNextStory?(groupId: string, storyId: string): void;
   onPrevStory?(groupId: string, storyId: string): void;
   onOpenStory?(groupId: string, storyId: string): void;
@@ -36,7 +39,6 @@ interface DurationProps {
 const withGroupsData =
   (
     GroupsList: React.FC<GroupsListProps>,
-    token: string,
     groupImageWidth?: number,
     groupImageHeight?: number,
     groupTitleSize?: number,
@@ -44,13 +46,16 @@ const withGroupsData =
     groupsClassName?: string
   ) =>
   () => {
-    const [data, setData] = useState([]);
-    const [groups, setGroups] = useState([]);
+    const [data, setData] = useState<any[]>([]);
+    const [groups, setGroups] = useState<Group[]>([]);
     const [groupView, setGroupView] = useState('circle');
     const [isShowMockup, setIsShowMockup] = useState(false);
     const [appLocale, setAppLocale] = useState(null);
     const [groupsWithStories, setGroupsWithStories] = useState([]);
     const [loadStatus, setLoadStatus] = useState('pending');
+    const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
+    const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
+    const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
 
     const [groupDuration, setGroupDuration] = useState<DurationProps>({
       groupId: '',
@@ -62,8 +67,6 @@ const withGroupsData =
       groupId: '',
       startTime: 0
     });
-
-    const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
 
     const language = useMemo(() => {
       if (appLocale) {
@@ -91,6 +94,46 @@ const withGroupsData =
       [uniqUserId, language]
     );
 
+    const handleStartQuiz = useCallback(
+      (groupId: string, storyId?: string) => {
+        const time = DateTime.now().toISO();
+
+        return API.statistics.quiz.onQuizStart({ groupId, storyId, uniqUserId, time, language });
+      },
+      [uniqUserId, language]
+    );
+
+    const handleFinishQuiz = useCallback(
+      (groupId: string, storyId?: string) => {
+        if (!storyId) {
+          const groupCache = getGroupCache(groupId);
+
+          if (groupCache?.isFinished) {
+            return undefined;
+          }
+
+          setGroupCache(groupId, {
+            isFinished: true
+          });
+        } else {
+          const storyCache = getStoryCache(storyId);
+
+          if (storyCache?.isFinished) {
+            return undefined;
+          }
+
+          setStoryCache(storyId, {
+            isFinished: true
+          });
+        }
+
+        const time = DateTime.now().toISO();
+
+        return API.statistics.quiz.onQuizFinish({ groupId, storyId, uniqUserId, time, language });
+      },
+      [uniqUserId, language]
+    );
+
     const handleCloseGroup = useCallback(
       (groupId: string) => {
         const duration = DateTime.now().toSeconds() - groupDuration.startTime;
@@ -109,6 +152,17 @@ const withGroupsData =
 
     const handleOpenStory = useCallback(
       (groupId: string, storyId: string) => {
+        const currentGroup = data?.find((group) => group.id === groupId);
+        const currentStory = currentGroup?.stories?.find((story: any) => story.id === storyId);
+
+        const isResultStory =
+          currentGroup?.settings?.scoreResultLayersGroupId ===
+          currentStory?.layerData?.layersGroupId;
+
+        if (isResultStory) {
+          handleFinishQuiz(groupId);
+        }
+
         setStoryDuration(() => ({
           groupId,
           storyId,
@@ -118,7 +172,7 @@ const withGroupsData =
         API.statistics.story.onOpen({ groupId, storyId, uniqUserId, language });
       },
 
-      [uniqUserId, language]
+      [data, uniqUserId, language, handleFinishQuiz]
     );
 
     const handleCloseStory = useCallback(
@@ -207,6 +261,7 @@ const withGroupsData =
 
                 setGroups(groupsFetchedData);
                 setGroupsWithStories(groupsFetchedData);
+                setLoadStatus('pending');
               }
             });
           }
@@ -216,6 +271,7 @@ const withGroupsData =
 
     useEffect(() => {
       if (groups.length) {
+        setLoadStatus('loading');
         groups.forEach((groupItem: any, groupIndex: number) => {
           API.stories
             .getList({
@@ -224,9 +280,14 @@ const withGroupsData =
             .then((storiesData) => {
               if (!storiesData.data.error) {
                 const stories = storiesData.data.data.filter(
-                  (storyItem: any) => storyItem.story_data.status === 'active' 
-                  && DateTime.fromISO(storyItem.story_data.start_time).toSeconds() < DateTime.now().toSeconds() 
-                  && (storyItem.story_data.end_time ? DateTime.fromISO(storyItem.story_data.end_time).toSeconds() > DateTime.now().toSeconds() : true)
+                  (storyItem: any) =>
+                    storyItem.story_data.status === 'active' &&
+                    DateTime.fromISO(storyItem.story_data.start_time).toSeconds() <
+                      DateTime.now().toSeconds() &&
+                    (storyItem.story_data.end_time
+                      ? DateTime.fromISO(storyItem.story_data.end_time).toSeconds() >
+                        DateTime.now().toSeconds()
+                      : true)
                 );
 
                 // @ts-ignore
@@ -270,10 +331,12 @@ const withGroupsData =
         isShowMockup={isShowMockup}
         onCloseGroup={handleCloseGroup}
         onCloseStory={handleCloseStory}
+        onFinishQuiz={handleFinishQuiz}
         onNextStory={handleNextStory}
         onOpenGroup={handleOpenGroup}
         onOpenStory={handleOpenStory}
         onPrevStory={handlePrevStory}
+        onStartQuiz={handleStartQuiz}
       />
     );
   };

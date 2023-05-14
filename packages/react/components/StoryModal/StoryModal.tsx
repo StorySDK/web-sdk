@@ -32,6 +32,8 @@ interface StoryModalProps {
   onPrevStory?(groupId: string, storyId: string): void;
   onOpenStory?(groupId: string, storyId: string): void;
   onCloseStory?(groupId: string, storyId: string): void;
+  onStartQuiz?(groupId: string, storyId?: string): void;
+  onFinishQuiz?(groupId: string, storyId?: string): void;
 }
 
 const CloseIcon: React.FC = () => (
@@ -187,7 +189,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onNextStory,
     onPrevStory,
     onOpenStory,
-    onCloseStory
+    onCloseStory,
+    onStartQuiz,
+    onFinishQuiz
   } = props;
 
   const [quizState, dispatchQuizState] = useReducer(reducer, initQuizeState);
@@ -195,6 +199,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [currentStoryId, setCurrentStoryId] = useState('');
   const [playStatus, setPlayStatus] = useState<PlayStatusType>('wait');
   const storyModalRef = useRef<HTMLDivElement>(null);
+  const [isQuizStarted, setIsQuizStarted] = useState(false);
+  const [quizStartedStoryIds, setQuizStartedStoryIds] = useState<{ [key: string]: boolean }>({});
 
   const [width, height] = useWindowSize();
 
@@ -326,9 +332,16 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onClose();
 
     if (onCloseStory) {
-      onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+      onCloseStory(currentGroup.id, currentStoryId);
     }
-  }, [currentGroup.id, currentStory, onClose, onCloseStory, activeStoriesWithResult]);
+  }, [
+    currentGroup.id,
+    currentStory,
+    onClose,
+    onCloseStory,
+    activeStoriesWithResult,
+    currentStoryId
+  ]);
 
   const resultStories = useMemo(() => {
     if (currentGroup.settings?.scoreResultLayersGroupId) {
@@ -405,6 +418,23 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     quizState
   ]);
 
+  const handleFinishStoryQuiz = useCallback(() => {
+    const isNotResultStory =
+      currentGroup.settings?.scoreResultLayersGroupId !==
+      activeStoriesWithResult[currentStory]?.layerData?.layersGroupId;
+
+    if (onFinishQuiz && currentGroup.settings?.scoreResultLayersGroupId && isNotResultStory) {
+      onFinishQuiz(currentGroup.id, currentStoryId);
+    }
+  }, [
+    activeStoriesWithResult,
+    currentGroup.id,
+    currentGroup.settings?.scoreResultLayersGroupId,
+    currentStory,
+    currentStoryId,
+    onFinishQuiz
+  ]);
+
   const handleNext = useCallback(() => {
     eventPublish('nextStory', {
       stotyId: activeStoriesWithResult[currentStory].id
@@ -427,6 +457,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         }
       }
     } else {
+      handleFinishStoryQuiz();
+
       if (onCloseStory) {
         onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
@@ -456,6 +488,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [
     activeStoriesWithResult,
     currentStory,
+    currentStoryId,
     getResultStoryId,
     isLastGroup,
     handleClose,
@@ -485,6 +518,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       if (onCloseStory) {
         onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
+
+      handleFinishStoryQuiz();
 
       if (onOpenStory) {
         setTimeout(() => {
@@ -557,6 +592,16 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentGroup.settings?.isProhibitToClose;
 
   const handleQuizAnswer = (params: { type: string; answer: string | number }) => {
+    if (params.type === 'add' && !isQuizStarted) {
+      onStartQuiz && onStartQuiz(currentGroup.id);
+      setIsQuizStarted(true);
+    }
+
+    if (params.type === 'add' && !quizStartedStoryIds[currentStoryId]) {
+      onStartQuiz && onStartQuiz(currentGroup.id, currentStoryId);
+      setQuizStartedStoryIds((prevState) => ({ ...prevState, [currentStoryId]: true }));
+    }
+
     if (currentGroup.settings?.scoreType === ScoreType.LETTERS && params.type === 'add') {
       dispatchQuizState({
         type: 'add_letters',

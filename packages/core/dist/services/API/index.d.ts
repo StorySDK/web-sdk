@@ -91,5 +91,21 @@ export declare const API: {
                 }): import("axios").AxiosPromise<any>;
             };
         };
+        quiz: {
+            onQuizStart(params: {
+                groupId: string;
+                uniqUserId: string;
+                time: string;
+                language: string;
+                storyId?: string;
+            }): import("axios").AxiosPromise<any>;
+            onQuizFinish(params: {
+                groupId: string;
+                uniqUserId: string;
+                time: string;
+                language: string;
+                storyId?: string;
+            }): import("axios").AxiosPromise<any>;
+        };
     };
 };

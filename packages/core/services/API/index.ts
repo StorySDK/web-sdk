@@ -220,6 +220,48 @@ export const API = {
           });
         }
       }
+    },
+    quiz: {
+      onQuizStart(params: {
+        groupId: string;
+        uniqUserId: string;
+        time: string;
+        language: string;
+        storyId?: string;
+      }) {
+        return axios({
+          method: 'post',
+          url: `/reactions`,
+          data: {
+            type: 'start',
+            user_id: params.uniqUserId,
+            group_id: params.groupId,
+            story_id: params.storyId,
+            value: params.time,
+            locale: params.language
+          }
+        });
+      },
+      onQuizFinish(params: {
+        groupId: string;
+        uniqUserId: string;
+        time: string;
+        language: string;
+        storyId?: string;
+      }) {
+        return axios({
+          method: 'post',
+          url: `/reactions`,
+          data: {
+            type: 'finish',
+            user_id: params.uniqUserId,
+            group_id: params.groupId,
+            value: params.time,
+            story_id: params.storyId,
+            locale: params.language
+          }
+        });
+      }
     }
   }
 };
