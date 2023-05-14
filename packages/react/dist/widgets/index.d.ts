@@ -92,7 +92,7 @@ declare const widgets: {
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
         isReadOnly?: boolean | undefined;
-        onAnswer?(answer: string[]): any;
+        onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
     }>;
     quiz_one_answer: import("@types").WidgetComponent<{
@@ -127,7 +127,7 @@ declare const widgets: {
         position?: import("@types").WidgetPositionType | undefined;
         positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
         isReadOnly?: boolean | undefined;
-        onAnswer?(answer: string[]): any;
+        onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
     }>;
 };
