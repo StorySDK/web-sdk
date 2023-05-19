@@ -1,11 +1,10 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { StoryContext } from '@components';
-import { block, calculateElementSize, getTextStyles } from '@utils';
+import { block, getTextStyles } from '@utils';
 import {
+  QuizOpenAnswerWidgetElementsType,
   QuizOpenAnswerWidgetParamsType,
-  WidgetComponent,
-  WidgetPositionLimitsType,
-  WidgetPositionType
+  WidgetComponent
 } from '@types';
 import cn from 'classnames';
 import { IconArrowSend } from '@components/icons';
@@ -37,16 +36,17 @@ const INIT_ELEMENT_STYLES = {
 export const QuizOpenAnswerWidget: WidgetComponent<{
   id: string;
   params: QuizOpenAnswerWidgetParamsType;
-  position?: WidgetPositionType;
-  positionLimits?: WidgetPositionLimitsType;
+  elementsSize?: QuizOpenAnswerWidgetElementsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, isTitleHidden, storyId } = props.params;
-  const { id, params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { id, params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
 
   const storyContextVal = useContext(StoryContext);
+
+  const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
   const answerFromCache = storyContextVal.getAnswerCache
     ? storyContextVal.getAnswerCache(id)
@@ -106,41 +106,6 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const calculate = useCallback(
-    (size) => {
-      if (position?.width && positionLimits?.minWidth) {
-        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
-      }
-
-      return size;
-    },
-    [position?.width, positionLimits?.minWidth]
-  );
-
-  const elementSizes = useMemo(
-    () => ({
-      title: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.title.fontSize),
-        marginBottom: calculate(INIT_ELEMENT_STYLES.title.marginBottom)
-      },
-      input: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.input.fontSize)
-      },
-      inputWrapper: {
-        paddingVertical: calculate(INIT_ELEMENT_STYLES.inputWrapper.paddingVertical),
-        paddingHorizontal: calculate(INIT_ELEMENT_STYLES.inputWrapper.paddingHorizontal),
-        borderRadius: calculate(INIT_ELEMENT_STYLES.inputWrapper.borderRadius),
-        paddingRight: calculate(INIT_ELEMENT_STYLES.inputWrapper.paddingRight)
-      },
-      sendButton: {
-        right: calculate(INIT_ELEMENT_STYLES.sendButton.right),
-        width: calculate(INIT_ELEMENT_STYLES.sendButton.width),
-        height: calculate(INIT_ELEMENT_STYLES.sendButton.height)
-      }
-    }),
-    [calculate]
-  );
-
   const textStyles = getTextStyles(params.fontColor);
 
   return (
@@ -149,7 +114,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
         <div
           className={cn(b('title').toString(), 'StorySdk-widgetTitle')}
           style={{
-            ...elementSizes.title,
+            ...sizes.title,
             fontStyle: params.fontParams?.style,
             fontWeight: params.fontParams?.weight,
             fontFamily: params.fontFamily,
@@ -162,18 +127,18 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
       <div
         className={b('inputWrapper')}
         style={{
-          paddingTop: elementSizes.inputWrapper.paddingVertical,
-          paddingBottom: elementSizes.inputWrapper.paddingVertical,
-          paddingLeft: elementSizes.inputWrapper.paddingHorizontal,
-          borderRadius: elementSizes.inputWrapper.borderRadius,
-          paddingRight: elementSizes.inputWrapper.paddingRight
+          paddingTop: sizes.inputWrapper.paddingVertical,
+          paddingBottom: sizes.inputWrapper.paddingVertical,
+          paddingLeft: sizes.inputWrapper.paddingHorizontal,
+          borderRadius: sizes.inputWrapper.borderRadius,
+          paddingRight: sizes.inputWrapper.paddingRight
         }}
       >
         <input
           className={b('input')}
           disabled={isSent || isReadOnly}
           placeholder="Enter the text..."
-          style={elementSizes.input}
+          style={sizes.input}
           type="text"
           value={text}
           onChange={!isReadOnly ? handleTextChange : undefined}
@@ -182,7 +147,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
           <button
             className={b('sendButton')}
             disabled={isSent || isReadOnly}
-            style={elementSizes.sendButton}
+            style={sizes.sendButton}
             onClick={!isReadOnly ? handleSendClick : undefined}
           >
             <IconArrowSend className={b('sendButtonIcon')} />

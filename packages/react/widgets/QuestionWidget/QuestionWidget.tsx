@@ -1,12 +1,7 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import cn from 'classnames';
-import {
-  QuestionWidgetParamsType,
-  WidgetComponent,
-  WidgetPositionType,
-  WidgetPositionLimitsType
-} from '@types';
-import { block, calculateElementSize, getTextStyles } from '@utils';
+import { QuestionWidgetParamsType, WidgetComponent, QuestionWidgetElementsType } from '@types';
+import { block, getTextStyles } from '@utils';
 import './QuestionWidget.scss';
 import { StoryContext } from '@components';
 
@@ -27,12 +22,11 @@ const INIT_ELEMENT_STYLES = {
 export const QuestionWidget: WidgetComponent<{
   id: string;
   params: QuestionWidgetParamsType;
-  position?: WidgetPositionType;
-  positionLimits?: WidgetPositionLimitsType;
+  elementsSize?: QuestionWidgetElementsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
 }> = React.memo((props) => {
-  const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
+  const { id, params, elementsSize, isReadOnly, onAnswer } = props;
   const storyContextVal = useContext(StoryContext);
 
   const answerFromCache = storyContextVal.getAnswerCache
@@ -48,31 +42,7 @@ export const QuestionWidget: WidgetComponent<{
     }
   );
 
-  const calculate = useCallback(
-    (size) => {
-      if (position?.width && positionLimits?.minWidth) {
-        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
-      }
-
-      return size;
-    },
-    [position?.width, positionLimits?.minWidth]
-  );
-
-  const elementSizes = useMemo(
-    () => ({
-      text: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.text.fontSize),
-        marginBottom: calculate(INIT_ELEMENT_STYLES.text.marginBottom)
-      },
-      button: {
-        height: calculate(INIT_ELEMENT_STYLES.button.height),
-        fontSize: calculate(INIT_ELEMENT_STYLES.button.fontSize),
-        borderRadius: calculate(INIT_ELEMENT_STYLES.button.borderRadius)
-      }
-    }),
-    [calculate]
-  );
+  const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
   const handleChange = useCallback(
     (option: string) => {
@@ -138,7 +108,7 @@ export const QuestionWidget: WidgetComponent<{
             'StorySdk-widgetTitle'
           )}
           style={{
-            ...elementSizes.text,
+            ...sizes.text,
             fontStyle: params.fontParams?.style,
             fontWeight: params.fontParams?.weight,
             fontFamily: params.fontFamily,
@@ -149,7 +119,7 @@ export const QuestionWidget: WidgetComponent<{
         </div>
       )}
 
-      <div className={b('buttons')} style={{ borderRadius: elementSizes.button.borderRadius }}>
+      <div className={b('buttons')} style={{ borderRadius: sizes.button.borderRadius }}>
         <button
           className={b('item', {
             answered: answer === 'confirm',
@@ -161,8 +131,8 @@ export const QuestionWidget: WidgetComponent<{
           disabled={!!answer || isReadOnly}
           style={{
             width: answer ? `${calculateWidth(percents.confirm)}%` : '50%',
-            height: elementSizes.button.height,
-            fontSize: elementSizes.button.fontSize
+            height: sizes.button.height,
+            fontSize: sizes.button.fontSize
           }}
           type="button"
           onClick={() => !isReadOnly && handleChange('confirm')}
@@ -190,8 +160,8 @@ export const QuestionWidget: WidgetComponent<{
           disabled={!!answer || isReadOnly}
           style={{
             width: answer ? `${calculateWidth(percents.decline)}%` : '50%',
-            height: elementSizes.button.height,
-            fontSize: elementSizes.button.fontSize
+            height: sizes.button.height,
+            fontSize: sizes.button.fontSize
           }}
           type="button"
           onClick={() => !isReadOnly && handleChange('decline')}

@@ -19,8 +19,7 @@ declare const widgets: {
     choose_answer: import("@types").WidgetComponent<{
         id: string;
         params: import("@types").ChooseAnswerWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        elementsSize?: import("@types").ChooseAnswerWidgetElemetsType | undefined;
         jsConfetti?: any;
         isReadOnly?: boolean | undefined;
         onAnswer?(answerId: string): void;
@@ -37,8 +36,7 @@ declare const widgets: {
     emoji_reaction: import("@types").WidgetComponent<{
         id: string;
         params: import("@types").EmojiReactionWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        elementsSize?: import("@types").EmojiReactionWidgetElemetsType | undefined;
         isReadOnly?: boolean | undefined;
         onAnswer?(emoji: string): void;
     }>;
@@ -48,8 +46,7 @@ declare const widgets: {
     question: import("@types").WidgetComponent<{
         id: string;
         params: import("@types").QuestionWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        elementsSize?: import("@types").QuestionWidgetElementsType | undefined;
         isReadOnly?: boolean | undefined;
         onAnswer?(answer: string): any;
     }>;
@@ -60,8 +57,7 @@ declare const widgets: {
         id: string;
         storyId: string;
         params: import("@types").SliderWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        elementsSize?: import("@types").SliderWidgetElementsType | undefined;
         isReadOnly?: boolean | undefined;
         onAnswer?(value: number): void;
     }>;
@@ -73,8 +69,7 @@ declare const widgets: {
     talk_about: import("@types").WidgetComponent<{
         id: string;
         params: import("@types").TalkAboutWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        elementsSize?: import("@types").TalkAboutElementsType | undefined;
         isReadOnly?: boolean | undefined;
         onAnswer?(answer: string): void;
     }>;
@@ -89,8 +84,7 @@ declare const widgets: {
     quiz_multiple_answers: import("@types").WidgetComponent<{
         id: string;
         params: import("@types").QuizMultipleAnswerWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        elementsSize?: import("@types").QuizMultipleAnswerWidgetElementsType | undefined;
         isReadOnly?: boolean | undefined;
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
@@ -98,8 +92,7 @@ declare const widgets: {
     quiz_one_answer: import("@types").WidgetComponent<{
         id: string;
         params: import("@types").QuizOneAnswerWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        elementsSize?: import("@types").QuizOneAnswerWidgetElementsType | undefined;
         isReadOnly?: boolean | undefined;
         onAnswer?(id: string): any;
         onGoToStory?(storyId: string): void;
@@ -107,16 +100,14 @@ declare const widgets: {
     quiz_open_answer: import("@types").WidgetComponent<{
         id: string;
         params: import("@types").QuizOpenAnswerWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        elementsSize?: import("@types").QuizOpenAnswerWidgetElementsType | undefined;
         isReadOnly?: boolean | undefined;
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
     }>;
     quiz_rate: import("@types").WidgetComponent<{
         params: import("@types").QuizRateWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        elementsSize: import("@types").QuizRateWidgetElementsType;
         isReadOnly?: boolean | undefined;
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
@@ -124,8 +115,7 @@ declare const widgets: {
     quiz_one_multiple_with_image: import("@types").WidgetComponent<{
         id: string;
         params: import("@types").QuizMultipleAnswerWithImageWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+        elementsSize?: import("@types").QuizMultipleAnswerWidgetWithImageElementsType | undefined;
         isReadOnly?: boolean | undefined;
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;

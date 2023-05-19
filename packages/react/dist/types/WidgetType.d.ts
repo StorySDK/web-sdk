@@ -1,4 +1,5 @@
-import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerWidgetParamsType, QuizOneAnswerWidgetParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageWidgetParamsType, QuizRateWidgetParamsType, QuizOpenAnswerWidgetParamsType } from './WidgetsParams';
+import { ChooseAnswerWidgetElemetsType, EmojiReactionWidgetElemetsType, QuestionWidgetElementsType, QuizMultipleAnswerWidgetElementsType, QuizMultipleAnswerWidgetWithImageElementsType, QuizOneAnswerWidgetElementsType, QuizOpenAnswerWidgetElementsType, QuizRateWidgetElementsType, SliderWidgetElementsType, TalkAboutElementsType } from './WidgetElementsTypes';
+import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerWidgetParamsType, QuizOneAnswerWidgetParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageWidgetParamsType, QuizRateWidgetParamsType, QuizOpenAnswerWidgetParamsType } from './widgetsParams';
 declare type ColorValue = {
     type: 'color';
     value: string;
@@ -156,6 +157,7 @@ export interface WidgetObjectType {
     id: string;
     position: WidgetPositionType;
     positionLimits: WidgetPositionLimitsType;
+    elementsSize?: ChooseAnswerWidgetElemetsType | EmojiReactionWidgetElemetsType | QuestionWidgetElementsType | QuizMultipleAnswerWidgetElementsType | QuizOneAnswerWidgetElementsType | QuizMultipleAnswerWidgetWithImageElementsType | QuizOpenAnswerWidgetElementsType | QuizRateWidgetElementsType | SliderWidgetElementsType | TalkAboutElementsType;
     content: RectangleState | EllipseState | TextState | SwipeUpState | SliderState | QuestionState | ClickMeState | TalkAboutState | EmojiReactionState | TimerState | ChooseAnswerState | GiphyState | QuizOneAnswerState | QuizMultipleAnswerState | QuizMultipleAnswerWithImageState | QuizRateState | QuizOpenAnswerState;
     action?(): void;
 }

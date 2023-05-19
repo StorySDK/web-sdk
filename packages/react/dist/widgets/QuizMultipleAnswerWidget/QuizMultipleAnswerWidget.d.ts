@@ -1,10 +1,9 @@
-import { QuizMultipleAnswerWidgetParamsType, WidgetComponent, WidgetPositionLimitsType, WidgetPositionType } from '@types';
+import { QuizMultipleAnswerWidgetElementsType, QuizMultipleAnswerWidgetParamsType, WidgetComponent } from '@types';
 import './QuizMultipleAnswerWidget.scss';
 export declare const QuizMultipleAnswerWidget: WidgetComponent<{
     id: string;
     params: QuizMultipleAnswerWidgetParamsType;
-    position?: WidgetPositionType;
-    positionLimits?: WidgetPositionLimitsType;
+    elementsSize?: QuizMultipleAnswerWidgetElementsType;
     isReadOnly?: boolean;
     onAnswer?(answer: string): any;
     onGoToStory?(storyId: string): void;

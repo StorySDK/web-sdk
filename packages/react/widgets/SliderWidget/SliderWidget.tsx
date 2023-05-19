@@ -1,12 +1,7 @@
-import React, { useState, useCallback, useMemo, useContext, useEffect } from 'react';
-import {
-  SliderWidgetParamsType,
-  WidgetComponent,
-  WidgetPositionType,
-  WidgetPositionLimitsType
-} from '@types';
+import React, { useState, useCallback, useContext, useEffect } from 'react';
+import { SliderWidgetElementsType, SliderWidgetParamsType, WidgetComponent } from '@types';
 import cn from 'classnames';
-import { block, calculateElementSize, getTextStyles } from '@utils';
+import { block, getTextStyles } from '@utils';
 import { useInterval } from '@hooks';
 import { StoryContext } from '@components';
 import { SliderCustom } from './_components';
@@ -42,12 +37,11 @@ export const SliderWidget: WidgetComponent<{
   id: string;
   storyId: string;
   params: SliderWidgetParamsType;
-  position?: WidgetPositionType;
-  positionLimits?: WidgetPositionLimitsType;
+  elementsSize?: SliderWidgetElementsType;
   isReadOnly?: boolean;
   onAnswer?(value: number): void;
 }> = React.memo((props) => {
-  const { id, params, storyId, position, positionLimits, isReadOnly, onAnswer } = props;
+  const { id, params, storyId, elementsSize, isReadOnly, onAnswer } = props;
   const { color, text, emoji, value } = params;
 
   const storyContextVal = useContext(StoryContext);
@@ -67,41 +61,6 @@ export const SliderWidget: WidgetComponent<{
 
   const time = 500;
   const [delay, setDelay] = useState<number>(0);
-
-  const calculate = useCallback(
-    (size) => {
-      if (position?.width && positionLimits?.minWidth) {
-        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
-      }
-
-      return size;
-    },
-    [position?.width, positionLimits?.minWidth]
-  );
-
-  const elementSizes = useMemo(
-    () => ({
-      widget: {
-        borderRadius: calculate(INIT_ELEMENT_STYLES.widget.borderRadius),
-        paddingTop: calculate(INIT_ELEMENT_STYLES.widget.paddingTop),
-        paddingRight: calculate(INIT_ELEMENT_STYLES.widget.paddingRight),
-        paddingLeft: calculate(INIT_ELEMENT_STYLES.widget.paddingLeft),
-        paddingBottom: calculate(INIT_ELEMENT_STYLES.widget.paddingBottom)
-      },
-      emoji: {
-        width: calculate(INIT_ELEMENT_STYLES.emoji.width)
-      },
-      text: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.text.fontSize),
-        marginBottom: calculate(INIT_ELEMENT_STYLES.text.marginBottom)
-      },
-      slider: {
-        height: calculate(INIT_ELEMENT_STYLES.slider.height),
-        borderRadius: calculate(INIT_ELEMENT_STYLES.slider.borderRadius)
-      }
-    }),
-    [calculate]
-  );
 
   useInterval(() => {
     if (sliderValue < value - 1 && changeStatus === 'init') {
@@ -142,15 +101,17 @@ export const SliderWidget: WidgetComponent<{
 
   const textStyles = getTextStyles(params.fontColor);
 
+  const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
+
   return (
-    <div className={b({ color })} style={elementSizes.widget}>
+    <div className={b({ color })} style={sizes.widget}>
       <div
         className={cn(
           b('text', { gradient: params.fontColor?.type === 'gradient' }).toString(),
           'StorySdk-widgetTitle'
         )}
         style={{
-          ...elementSizes.text,
+          ...sizes.text,
           fontStyle: params.fontParams?.style,
           fontWeight: params.fontParams?.weight,
           fontFamily: params.fontFamily,
@@ -163,16 +124,16 @@ export const SliderWidget: WidgetComponent<{
       <div
         className={b('sliderWrapper')}
         style={{
-          height: elementSizes.slider.height
+          height: sizes.slider.height
         }}
       >
         <SliderCustom
-          borderRadius={elementSizes.slider.borderRadius}
+          borderRadius={sizes.slider.borderRadius}
           changeStatus={changeStatus}
           disabled={changeStatus === 'moved' || isReadMode}
           emoji={emoji.name}
-          height={elementSizes.slider.height}
-          initSize={elementSizes.emoji.width}
+          height={sizes.slider.height}
+          initSize={sizes.emoji.width}
           value={sliderValue}
           onAfterChange={handleAfterChange}
           onBeforeChange={handleBeforeChange}

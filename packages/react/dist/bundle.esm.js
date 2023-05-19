@@ -1739,9 +1739,6 @@ const getScalableValue = (value) => Math.round(value * SCALE_INDEX);
 const calculateElementSize = (width, elementSize, minWidth) => minWidth
     ? getScalableValue(Math.round((elementSize * +width) / minWidth))
     : getScalableValue(elementSize);
-const calculateElementSizeByHeight = (height, elementSize, minHeight) => minHeight
-    ? getScalableValue(Math.round((elementSize * height) / minHeight))
-    : getScalableValue(elementSize);
 const getTextStyles = (fontColor) => fontColor ? renderTextBackgroundStyles({ color: fontColor }) : undefined;
 
 const eventSubscribe = (eventName, listener) => {
@@ -11651,44 +11648,13 @@ const INIT_ELEMENT_STYLES$a = {
     }
 };
 const ChooseAnswerWidget = React.memo((props) => {
-    const { id, params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
+    const { id, params, isReadOnly, jsConfetti, elementsSize, onAnswer } = props;
+    const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$a;
     const storyContextVal = useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
     const [userAnswer, setUserAnswer] = useState(answerFromCache);
-    const calculate = useCallback((size) => {
-        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
-            return calculateElementSize(+position.width, size, positionLimits.minWidth);
-        }
-        return size;
-    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
-    const elementSizes = useMemo(() => ({
-        widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES$a.widget.borderRadius)
-        },
-        header: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$a.header.fontSize),
-            paddingTop: calculate(INIT_ELEMENT_STYLES$a.header.paddingTop),
-            paddingBottom: calculate(INIT_ELEMENT_STYLES$a.header.paddingBottom)
-        },
-        answers: {
-            padding: calculate(INIT_ELEMENT_STYLES$a.answers.padding)
-        },
-        answer: {
-            padding: calculate(INIT_ELEMENT_STYLES$a.answer.padding),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$a.answer.marginBottom)
-        },
-        answerId: {
-            width: calculate(INIT_ELEMENT_STYLES$a.answerId.width),
-            height: calculate(INIT_ELEMENT_STYLES$a.answerId.height),
-            marginRight: calculate(INIT_ELEMENT_STYLES$a.answerId.marginRight),
-            fontSize: calculate(INIT_ELEMENT_STYLES$a.answerId.fontSize)
-        },
-        answerTitle: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$a.answerTitle.fontSize)
-        }
-    }), [calculate]);
     const handleSendScore = useCallback((currentAnswer) => {
         var _a;
         const answerScore = currentAnswer
@@ -11718,13 +11684,13 @@ const ChooseAnswerWidget = React.memo((props) => {
                     incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                     choosen: userAnswer === answer.id && params.markCorrectAnswer,
                     filled: userAnswer === answer.id && !params.markCorrectAnswer
-                }), key: `answer-${answer.id}`, style: elementSizes.answer },
+                }), key: `answer-${answer.id}`, style: sizes.answer },
                 React.createElement("div", { className: b$l('answerCircle', {
                         correct: answer.id === params.correct && params.markCorrectAnswer,
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                         choosen: userAnswer === answer.id && params.markCorrectAnswer,
                         filled: userAnswer === answer.id && !params.markCorrectAnswer
-                    }), style: elementSizes.answerId }, params.markCorrectAnswer ? (React.createElement(React.Fragment, null, answer.id === params.correct ? (React.createElement(IconConfirm, { className: b$l('answerIcon', {
+                    }), style: sizes.answerId }, params.markCorrectAnswer ? (React.createElement(React.Fragment, null, answer.id === params.correct ? (React.createElement(IconConfirm, { className: b$l('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
@@ -11737,19 +11703,19 @@ const ChooseAnswerWidget = React.memo((props) => {
                         choosen: userAnswer === answer.id,
                         correct: answer.id === params.correct && params.markCorrectAnswer,
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer
-                    }), style: elementSizes.answerTitle }, answer.title)));
+                    }), style: sizes.answerTitle }, answer.title)));
         }
-        return (React.createElement("div", { className: b$l('answer', { clickable: !userAnswer && !isReadOnly }), key: answer.id, role: "button", style: elementSizes.answer, tabIndex: 0, onClick: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined },
-            React.createElement("div", { className: b$l('answerId'), style: elementSizes.answerId }, `${answer.id}`),
-            React.createElement("div", { className: b$l('answerTitle'), style: elementSizes.answerTitle }, answer.title)));
+        return (React.createElement("div", { className: b$l('answer', { clickable: !userAnswer && !isReadOnly }), key: answer.id, role: "button", style: sizes.answer, tabIndex: 0, onClick: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined },
+            React.createElement("div", { className: b$l('answerId'), style: sizes.answerId }, `${answer.id}`),
+            React.createElement("div", { className: b$l('answerTitle'), style: sizes.answerTitle }, answer.title)));
     }, [
         userAnswer,
         isReadOnly,
         params.markCorrectAnswer,
         params.correct,
-        elementSizes.answer,
-        elementSizes.answerId,
-        elementSizes.answerTitle,
+        sizes.answer,
+        sizes.answerId,
+        sizes.answerTitle,
         handleMarkAnswer
     ]);
     useEffect(() => {
@@ -11761,9 +11727,9 @@ const ChooseAnswerWidget = React.memo((props) => {
             color: params.color,
             shake: userAnswer && params.markCorrectAnswer && userAnswer !== params.correct,
             celebrate: userAnswer && params.markCorrectAnswer && userAnswer === params.correct
-        }), style: elementSizes.widget },
-        !params.isTitleHidden && (React.createElement("div", { className: b$l('header'), style: elementSizes.header }, params.text)),
-        React.createElement("div", { className: b$l('answers'), style: elementSizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
+        }), style: sizes.widget },
+        !params.isTitleHidden && (React.createElement("div", { className: b$l('header'), style: sizes.header }, params.text)),
+        React.createElement("div", { className: b$l('answers'), style: sizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
 });
 
 const b$k = block('ClickMeWidget');
@@ -64799,31 +64765,10 @@ const INIT_ELEMENT_STYLES$9 = {
     }
 };
 const EmojiReactionWidget = React.memo((props) => {
-    const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
-    const calculate = useCallback((size) => {
-        if ((position === null || position === void 0 ? void 0 : position.height) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight)) {
-            return calculateElementSizeByHeight(position.height, size, positionLimits.minHeight);
-        }
-        return size;
-    }, [position === null || position === void 0 ? void 0 : position.height, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minHeight]);
-    const elementSizes = useMemo(() => ({
-        widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES$9.widget.borderRadius),
-            paddingTop: calculate(INIT_ELEMENT_STYLES$9.widget.paddingTop),
-            paddingBottom: calculate(INIT_ELEMENT_STYLES$9.widget.paddingBottom),
-            paddingRight: calculate(INIT_ELEMENT_STYLES$9.widget.paddingRight),
-            paddingLeft: calculate(INIT_ELEMENT_STYLES$9.widget.paddingLeft)
-        },
-        emoji: {
-            width: calculate(INIT_ELEMENT_STYLES$9.emoji.width)
-        },
-        item: {
-            marginRight: calculate(INIT_ELEMENT_STYLES$9.item.marginRight),
-            marginLeft: calculate(INIT_ELEMENT_STYLES$9.item.marginLeft)
-        }
-    }), [calculate]);
+    const { id, params, elementsSize, isReadOnly, onAnswer } = props;
+    const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$9;
     const storyContextVal = useContext(StoryContext);
-    const initEmojiSize = useMemo(() => elementSizes.emoji.width, [elementSizes]);
+    const initEmojiSize = useMemo(() => sizes.emoji.width, [sizes]);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
@@ -64849,7 +64794,7 @@ const EmojiReactionWidget = React.memo((props) => {
         setBigSize(initEmojiSize);
         setDelay(50);
     }, [id, initEmojiSize, onAnswer, storyContextVal]);
-    return (React.createElement("div", { className: b$h({ color: params.color }), style: elementSizes.widget }, params.emoji.map((emojiItem, index) => (React.createElement("button", { className: b$h('item', { disabled: isReadOnly || isToched || clickedIndex !== null }), key: `${emojiItem.unicode}-${index}`, style: elementSizes.item, onClick: (e) => {
+    return (React.createElement("div", { className: b$h({ color: params.color }), style: sizes.widget }, params.emoji.map((emojiItem, index) => (React.createElement("button", { className: b$h('item', { disabled: isReadOnly || isToched || clickedIndex !== null }), key: `${emojiItem.unicode}-${index}`, style: sizes.item, onClick: (e) => {
             e.preventDefault();
             if (!isToched && !isReadOnly && clickedIndex === null) {
                 handleReactionClick(index, emojiItem.unicode);
@@ -64857,7 +64802,7 @@ const EmojiReactionWidget = React.memo((props) => {
         } },
         React.createElement("div", { className: b$h('subItem', { clicked: index === clickedIndex }) },
             React.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: bigSize })),
-        React.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: elementSizes.emoji.width }))))));
+        React.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: sizes.emoji.width }))))));
 });
 
 const b$g = block('GiphyWidget');
@@ -64881,7 +64826,7 @@ const INIT_ELEMENT_STYLES$8 = {
 };
 const QuestionWidget = React.memo((props) => {
     var _a, _b, _c, _d;
-    const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
+    const { id, params, elementsSize, isReadOnly, onAnswer } = props;
     const storyContextVal = useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
@@ -64891,23 +64836,7 @@ const QuestionWidget = React.memo((props) => {
         confirm: 0,
         decline: 0
     });
-    const calculate = useCallback((size) => {
-        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
-            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
-        }
-        return size;
-    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
-    const elementSizes = useMemo(() => ({
-        text: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$8.text.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$8.text.marginBottom)
-        },
-        button: {
-            height: calculate(INIT_ELEMENT_STYLES$8.button.height),
-            fontSize: calculate(INIT_ELEMENT_STYLES$8.button.fontSize),
-            borderRadius: calculate(INIT_ELEMENT_STYLES$8.button.borderRadius)
-        }
-    }), [calculate]);
+    const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$8;
     const handleChange = useCallback((option) => {
         if (!answer) {
             if (onAnswer) {
@@ -64955,8 +64884,8 @@ const QuestionWidget = React.memo((props) => {
     }, []);
     const textStyles = getTextStyles(params.fontColor);
     return (React.createElement("div", { className: b$f() },
-        !params.isTitleHidden && (React.createElement("div", { className: cn(b$f('question', { gradient: ((_b = params.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.text), { fontStyle: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.style, fontWeight: (_d = params.fontParams) === null || _d === void 0 ? void 0 : _d.weight, fontFamily: params.fontFamily }), textStyles) }, params.question)),
-        React.createElement("div", { className: b$f('buttons'), style: { borderRadius: elementSizes.button.borderRadius } },
+        !params.isTitleHidden && (React.createElement("div", { className: cn(b$f('question', { gradient: ((_b = params.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.style, fontWeight: (_d = params.fontParams) === null || _d === void 0 ? void 0 : _d.weight, fontFamily: params.fontFamily }), textStyles) }, params.question)),
+        React.createElement("div", { className: b$f('buttons'), style: { borderRadius: sizes.button.borderRadius } },
             React.createElement("button", { className: b$f('item', {
                     answered: answer === 'confirm',
                     confirm: true,
@@ -64965,8 +64894,8 @@ const QuestionWidget = React.memo((props) => {
                     full: answer && percents.confirm === 100
                 }), disabled: !!answer || isReadOnly, style: {
                     width: answer ? `${calculateWidth(percents.confirm)}%` : '50%',
-                    height: elementSizes.button.height,
-                    fontSize: elementSizes.button.fontSize
+                    height: sizes.button.height,
+                    fontSize: sizes.button.fontSize
                 }, type: "button", onClick: () => !isReadOnly && handleChange('confirm') },
                 React.createElement("div", { className: b$f('itemTextContainer') },
                     React.createElement("span", { className: cn(b$f('itemTextConfirm').toString(), b$f('itemText', { answered: answer !== null }).toString()) }, params.confirm),
@@ -64981,8 +64910,8 @@ const QuestionWidget = React.memo((props) => {
                     full: answer && percents.decline === 100
                 }), disabled: !!answer || isReadOnly, style: {
                     width: answer ? `${calculateWidth(percents.decline)}%` : '50%',
-                    height: elementSizes.button.height,
-                    fontSize: elementSizes.button.fontSize
+                    height: sizes.button.height,
+                    fontSize: sizes.button.fontSize
                 }, type: "button", onClick: () => !isReadOnly && handleChange('decline') },
                 React.createElement("div", { className: b$f('itemTextContainer') },
                     React.createElement("span", { className: cn(b$f('itemTextDecline').toString(), b$f('itemText', { answered: answer !== null }).toString()) }, params.decline),
@@ -65112,7 +65041,7 @@ const INIT_ELEMENT_STYLES$7 = {
 };
 const SliderWidget = React.memo((props) => {
     var _a, _b, _c;
-    const { id, params, storyId, position, positionLimits, isReadOnly, onAnswer } = props;
+    const { id, params, storyId, elementsSize, isReadOnly, onAnswer } = props;
     const { color, text, emoji, value } = params;
     const storyContextVal = useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
@@ -65124,32 +65053,6 @@ const SliderWidget = React.memo((props) => {
     const [changeStatus, setChangeStatus] = useState(answerFromCache !== undefined ? 'moved' : 'wait');
     const time = 500;
     const [delay, setDelay] = useState(0);
-    const calculate = useCallback((size) => {
-        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
-            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
-        }
-        return size;
-    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
-    const elementSizes = useMemo(() => ({
-        widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES$7.widget.borderRadius),
-            paddingTop: calculate(INIT_ELEMENT_STYLES$7.widget.paddingTop),
-            paddingRight: calculate(INIT_ELEMENT_STYLES$7.widget.paddingRight),
-            paddingLeft: calculate(INIT_ELEMENT_STYLES$7.widget.paddingLeft),
-            paddingBottom: calculate(INIT_ELEMENT_STYLES$7.widget.paddingBottom)
-        },
-        emoji: {
-            width: calculate(INIT_ELEMENT_STYLES$7.emoji.width)
-        },
-        text: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$7.text.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$7.text.marginBottom)
-        },
-        slider: {
-            height: calculate(INIT_ELEMENT_STYLES$7.slider.height),
-            borderRadius: calculate(INIT_ELEMENT_STYLES$7.slider.borderRadius)
-        }
-    }), [calculate]);
     useInterval(() => {
         if (sliderValue < value - 1 && changeStatus === 'init') {
             setSliderValue(sliderValue + 1);
@@ -65182,12 +65085,13 @@ const SliderWidget = React.memo((props) => {
         }
     }, [storyContextVal, storyId, changeStatus, value, time]);
     const textStyles = getTextStyles(params.fontColor);
-    return (React.createElement("div", { className: b$c({ color }), style: elementSizes.widget },
-        React.createElement("div", { className: cn(b$c('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
+    const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$7;
+    return (React.createElement("div", { className: b$c({ color }), style: sizes.widget },
+        React.createElement("div", { className: cn(b$c('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
         React.createElement("div", { className: b$c('sliderWrapper'), style: {
-                height: elementSizes.slider.height
+                height: sizes.slider.height
             } },
-            React.createElement(SliderCustom, { borderRadius: elementSizes.slider.borderRadius, changeStatus: changeStatus, disabled: changeStatus === 'moved' || isReadMode, emoji: emoji.name, height: elementSizes.slider.height, initSize: elementSizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
+            React.createElement(SliderCustom, { borderRadius: sizes.slider.borderRadius, changeStatus: changeStatus, disabled: changeStatus === 'moved' || isReadMode, emoji: emoji.name, height: sizes.slider.height, initSize: sizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
 });
 
 const b$b = block('SwipeUpWidget');
@@ -65266,50 +65170,12 @@ const INIT_ELEMENT_STYLES$6 = {
 };
 const TalkAboutWidget = React.memo((props) => {
     var _a, _b, _c;
-    const { id, params, position, positionLimits, isReadOnly } = props;
+    const { id, params, elementsSize, isReadOnly } = props;
+    const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$6;
     const storyContextVal = useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
-    const calculate = useCallback((size) => {
-        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
-            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
-        }
-        return size;
-    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
-    const elementSizes = useMemo(() => ({
-        widget: {
-            borderRadius: calculate(INIT_ELEMENT_STYLES$6.widget.borderRadius)
-        },
-        content: {
-            paddingRight: calculate(INIT_ELEMENT_STYLES$6.content.paddingRight),
-            paddingLeft: calculate(INIT_ELEMENT_STYLES$6.content.paddingLeft),
-            paddingBottom: calculate(INIT_ELEMENT_STYLES$6.content.paddingBottom),
-            paddingTop: calculate(INIT_ELEMENT_STYLES$6.content.paddingTop)
-        },
-        text: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$6.text.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$6.text.marginBottom)
-        },
-        input: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$6.input.fontSize),
-            padding: calculate(INIT_ELEMENT_STYLES$6.input.padding),
-            borderRadius: calculate(INIT_ELEMENT_STYLES$6.input.borderRadius)
-        },
-        empty: {
-            height: calculate(INIT_ELEMENT_STYLES$6.empty.height)
-        },
-        imageWrapper: {
-            width: calculate(INIT_ELEMENT_STYLES$6.imageWrapper.width),
-            height: calculate(INIT_ELEMENT_STYLES$6.imageWrapper.height)
-        },
-        send: {
-            height: calculate(INIT_ELEMENT_STYLES$6.send.height)
-        },
-        sendText: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$6.sendText.fontSize)
-        }
-    }), [calculate]);
     const [text, setText] = useState(answerFromCache || '');
     const [isSent, setIsSent] = useState(!!answerFromCache);
     const handleTextChange = useCallback((e) => {
@@ -65351,15 +65217,15 @@ const TalkAboutWidget = React.memo((props) => {
     const textStyles = getTextStyles(params.fontColor);
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: b$a('container'), ref: ref },
-            React.createElement("picture", { className: b$a('imageWrapper'), style: elementSizes.imageWrapper }, params.image ? (React.createElement("img", { alt: "", className: b$a('image'), src: params.image })) : (React.createElement(IconLogoCircle, { className: b$a('image').toString() }))),
-            React.createElement("div", { className: b$a('empty'), style: elementSizes.empty }),
-            React.createElement("div", { className: b$a({ color: params.color }), style: elementSizes.widget },
-                React.createElement("div", { className: b$a('contentContainer', { sendOpen: text.length > 0 }), style: elementSizes.content },
+            React.createElement("picture", { className: b$a('imageWrapper'), style: sizes.imageWrapper }, params.image ? (React.createElement("img", { alt: "", className: b$a('image'), src: params.image })) : (React.createElement(IconLogoCircle, { className: b$a('image').toString() }))),
+            React.createElement("div", { className: b$a('empty'), style: sizes.empty }),
+            React.createElement("div", { className: b$a({ color: params.color }), style: sizes.widget },
+                React.createElement("div", { className: b$a('contentContainer', { sendOpen: text.length > 0 }), style: sizes.content },
                     !params.isTitleHidden && (React.createElement("div", { className: (cn(b$a('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString()),
-                            'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, params.text)),
-                    React.createElement("input", { className: b$a('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: elementSizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
-                text && (React.createElement("button", { className: b$a('send', { disabled: isSent || isReadOnly }), style: elementSizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
-                    React.createElement("span", { className: b$a('sendText', { green: isSent }), style: elementSizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
+                            'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, params.text)),
+                    React.createElement("input", { className: b$a('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
+                text && (React.createElement("button", { className: b$a('send', { disabled: isSent || isReadOnly }), style: sizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
+                    React.createElement("span", { className: b$a('sendText', { green: isSent }), style: sizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
 });
 
 const b$9 = block('TextWidget');
@@ -65495,46 +65361,14 @@ const INIT_ELEMENT_STYLES$4 = {
 const QuizMultipleAnswerWidget = React.memo((props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const { title, answers, isTitleHidden } = props.params;
-    const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
+    const { id, params, elementsSize, isReadOnly, onAnswer } = props;
     const storyContextVal = useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
     const [userAnswers, setUserAnswers] = useState(answerFromCache || []);
     const [isSent, setIsSent] = useState(!!answerFromCache);
-    const calculate = useCallback((size) => {
-        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
-            return calculateElementSize(+position.width, size, positionLimits.minWidth);
-        }
-        return size;
-    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
-    const elementSizes = useMemo(() => ({
-        title: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$4.title.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$4.title.marginBottom)
-        },
-        answers: {
-            gap: calculate(INIT_ELEMENT_STYLES$4.answers.gap)
-        },
-        answer: {
-            gap: calculate(INIT_ELEMENT_STYLES$4.answer.gap),
-            borderRadius: calculate(INIT_ELEMENT_STYLES$4.answer.borderRadius),
-            padding: calculate(INIT_ELEMENT_STYLES$4.answer.padding)
-        },
-        emoji: {
-            width: calculate(INIT_ELEMENT_STYLES$4.emoji.width)
-        },
-        answerTitle: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$4.answerTitle.fontSize)
-        },
-        sendBtn: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$4.sendBtn.fontSize),
-            borderRadius: calculate(INIT_ELEMENT_STYLES$4.sendBtn.borderRadius),
-            padding: calculate(INIT_ELEMENT_STYLES$4.sendBtn.padding),
-            marginTop: calculate(INIT_ELEMENT_STYLES$4.sendBtn.marginTop),
-            lineHeight: calculate(INIT_ELEMENT_STYLES$4.sendBtn.lineHeight)
-        }
-    }), [calculate]);
+    const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$4;
     const handleSendScore = useCallback((currentAnswers, type) => {
         if (!storyContextVal.quizMode) {
             return;
@@ -65590,17 +65424,17 @@ const QuizMultipleAnswerWidget = React.memo((props) => {
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
     return (React.createElement("div", { className: b$7() },
-        !isTitleHidden && (React.createElement("div", { className: cn(b$7('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React.createElement("div", { className: b$7('answers'), style: elementSizes.answers }, answers.map((answer) => {
+        !isTitleHidden && (React.createElement("div", { className: cn(b$7('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
+        React.createElement("div", { className: b$7('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g, _h;
             return (React.createElement("button", { className: b$7('answer', {
                     noGap: !answer.title.length,
                     selected: userAnswers.includes(answer.id)
-                }), disabled: isSent || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
-                answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
+                }), disabled: isSent || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
+                answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
                 React.createElement("p", { className: cn(b$7('answerTitle', {
                         gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === 'gradient'
-                    }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { lineHeight: `${elementSizes.sendBtn.lineHeight}px`, fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
+                    }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { lineHeight: `${sizes.sendBtn.lineHeight}px`, fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
@@ -65628,38 +65462,13 @@ const INIT_ELEMENT_STYLES$3 = {
 const QuizOneAnswerWidget = React.memo((props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const { title, answers, storyId, isTitleHidden } = props.params;
-    const { id, params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+    const { id, params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
+    const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$3;
     const storyContextVal = useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
     const [userAnswer, setUserAnswer] = useState(answerFromCache || null);
-    const calculate = useCallback((size) => {
-        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
-            return calculateElementSize(+position.width, size, positionLimits.minWidth);
-        }
-        return size;
-    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
-    const elementSizes = useMemo(() => ({
-        title: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$3.title.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$3.title.marginBottom)
-        },
-        answers: {
-            gap: calculate(INIT_ELEMENT_STYLES$3.answers.gap)
-        },
-        answer: {
-            gap: calculate(INIT_ELEMENT_STYLES$3.answer.gap),
-            borderRadius: calculate(INIT_ELEMENT_STYLES$3.answer.borderRadius),
-            padding: calculate(INIT_ELEMENT_STYLES$3.answer.padding)
-        },
-        emoji: {
-            width: calculate(INIT_ELEMENT_STYLES$3.emoji.width)
-        },
-        answerTitle: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$3.answerTitle.fontSize)
-        }
-    }), [calculate]);
     const handleSendScore = useCallback((currentAnswer) => {
         var _a;
         const answerScore = currentAnswer
@@ -65686,16 +65495,16 @@ const QuizOneAnswerWidget = React.memo((props) => {
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
     return (React.createElement("div", { className: b$6() },
-        !isTitleHidden && (React.createElement("div", { className: cn(b$6('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React.createElement("div", { className: b$6('answers'), style: elementSizes.answers }, answers.map((answer) => {
+        !isTitleHidden && (React.createElement("div", { className: cn(b$6('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
+        React.createElement("div", { className: b$6('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g, _h;
             return (React.createElement("button", { className: b$6('answer', {
                     selected: userAnswer === answer.id
-                }), disabled: userAnswer !== null || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !userAnswer && !isReadOnly && handleAnswer(answer.id) },
-                answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: elementSizes.emoji.width })),
+                }), disabled: userAnswer !== null || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !userAnswer && !isReadOnly && handleAnswer(answer.id) },
+                answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
                 React.createElement("p", { className: cn(b$6('answerTitle', {
                         gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === 'gradient'
-                    }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
+                    }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
@@ -65723,8 +65532,9 @@ const INIT_ELEMENT_STYLES$2 = {
 const QuizOpenAnswerWidget = React.memo((props) => {
     var _a, _b;
     const { title, isTitleHidden, storyId } = props.params;
-    const { id, params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+    const { id, params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
     const storyContextVal = useContext(StoryContext);
+    const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$2;
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
@@ -65768,44 +65578,18 @@ const QuizOpenAnswerWidget = React.memo((props) => {
     }, [handleClickOutside, isSent]);
     const ref = useRef(null);
     const inputRef = useRef(null);
-    const calculate = useCallback((size) => {
-        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
-            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
-        }
-        return size;
-    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
-    const elementSizes = useMemo(() => ({
-        title: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$2.title.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$2.title.marginBottom)
-        },
-        input: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$2.input.fontSize)
-        },
-        inputWrapper: {
-            paddingVertical: calculate(INIT_ELEMENT_STYLES$2.inputWrapper.paddingVertical),
-            paddingHorizontal: calculate(INIT_ELEMENT_STYLES$2.inputWrapper.paddingHorizontal),
-            borderRadius: calculate(INIT_ELEMENT_STYLES$2.inputWrapper.borderRadius),
-            paddingRight: calculate(INIT_ELEMENT_STYLES$2.inputWrapper.paddingRight)
-        },
-        sendButton: {
-            right: calculate(INIT_ELEMENT_STYLES$2.sendButton.right),
-            width: calculate(INIT_ELEMENT_STYLES$2.sendButton.width),
-            height: calculate(INIT_ELEMENT_STYLES$2.sendButton.height)
-        }
-    }), [calculate]);
     const textStyles = getTextStyles(params.fontColor);
     return (React.createElement("div", { className: b$5() },
-        !isTitleHidden && (React.createElement("div", { className: cn(b$5('title').toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_a = params.fontParams) === null || _a === void 0 ? void 0 : _a.style, fontWeight: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
+        !isTitleHidden && (React.createElement("div", { className: cn(b$5('title').toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_a = params.fontParams) === null || _a === void 0 ? void 0 : _a.style, fontWeight: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
         React.createElement("div", { className: b$5('inputWrapper'), style: {
-                paddingTop: elementSizes.inputWrapper.paddingVertical,
-                paddingBottom: elementSizes.inputWrapper.paddingVertical,
-                paddingLeft: elementSizes.inputWrapper.paddingHorizontal,
-                borderRadius: elementSizes.inputWrapper.borderRadius,
-                paddingRight: elementSizes.inputWrapper.paddingRight
+                paddingTop: sizes.inputWrapper.paddingVertical,
+                paddingBottom: sizes.inputWrapper.paddingVertical,
+                paddingLeft: sizes.inputWrapper.paddingHorizontal,
+                borderRadius: sizes.inputWrapper.borderRadius,
+                paddingRight: sizes.inputWrapper.paddingRight
             } },
-            React.createElement("input", { className: b$5('input'), disabled: isSent || isReadOnly, placeholder: "Enter the text...", style: elementSizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined }),
-            text.length > 0 && (React.createElement("button", { className: b$5('sendButton'), disabled: isSent || isReadOnly, style: elementSizes.sendButton, onClick: !isReadOnly ? handleSendClick : undefined },
+            React.createElement("input", { className: b$5('input'), disabled: isSent || isReadOnly, placeholder: "Enter the text...", style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined }),
+            text.length > 0 && (React.createElement("button", { className: b$5('sendButton'), disabled: isSent || isReadOnly, style: sizes.sendButton, onClick: !isReadOnly ? handleSendClick : undefined },
                 React.createElement(IconArrowSend, { className: b$5('sendButtonIcon') }))))));
 });
 
@@ -65824,23 +65608,9 @@ const RATE_MAX = 5;
 const QuizRateWidget = React.memo((props) => {
     var _a, _b, _c;
     const { title, isTitleHidden, storyId, storeLinks } = props.params;
-    const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+    const { params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
     const [isSent, setIsSent] = useState(false);
-    const calculate = useCallback((size) => {
-        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
-            return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
-        }
-        return size;
-    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
-    const elementSizes = useMemo(() => ({
-        title: {
-            fontSize: calculate(INIT_ELEMENT_STYLES$1.title.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES$1.title.marginBottom)
-        },
-        stars: {
-            gap: calculate(INIT_ELEMENT_STYLES$1.stars.gap)
-        }
-    }), [calculate]);
+    const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$1;
     const handleAnswer = useCallback((rate) => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(rate);
         if (storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web) {
@@ -65856,11 +65626,11 @@ const QuizRateWidget = React.memo((props) => {
     }, [onAnswer, onGoToStory, storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, storyId]);
     const textStyles = getTextStyles(params.fontColor);
     return (React.createElement("div", { className: b$4() },
-        !isTitleHidden && (React.createElement("div", { className: cn(b$4('title', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
+        !isTitleHidden && (React.createElement("div", { className: cn(b$4('title', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
         React.createElement("div", { className: b$4('starsContainer', {
                 disabled: isSent || isReadOnly
             }), style: {
-                gap: elementSizes.stars.gap
+                gap: sizes.stars.gap
             } }, new Array(RATE_MAX).fill(0).map((_, index) => (React.createElement(React.Fragment, { key: `rate-star-${index}` },
             React.createElement("input", { className: b$4('input'), disabled: isSent, id: `rate-star-${index}`, type: "radio", value: RATE_MAX - index, onChange: (e) => {
                     !isReadOnly && handleAnswer(e.target.value);
@@ -65899,42 +65669,14 @@ const INIT_ELEMENT_STYLES = {
 const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const { title, answers, isTitleHidden } = props.params;
-    const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
+    const { id, params, elementsSize, isReadOnly, onAnswer } = props;
+    const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES;
     const storyContextVal = useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
     const [userAnswers, setUserAnswers] = useState(answerFromCache || []);
     const [isSent, setIsSent] = useState(!!answerFromCache);
-    const calculate = useCallback((size) => {
-        if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
-            return calculateElementSize(+position.width, size, positionLimits.minWidth);
-        }
-        return size;
-    }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
-    const elementSizes = useMemo(() => ({
-        title: {
-            fontSize: calculate(INIT_ELEMENT_STYLES.title.fontSize),
-            marginBottom: calculate(INIT_ELEMENT_STYLES.title.marginBottom)
-        },
-        answers: {
-            gap: calculate(INIT_ELEMENT_STYLES.answers.gap)
-        },
-        answer: {
-            gap: calculate(INIT_ELEMENT_STYLES.answer.gap),
-            borderRadius: calculate(INIT_ELEMENT_STYLES.answer.borderRadius),
-            padding: calculate(INIT_ELEMENT_STYLES.answer.padding)
-        },
-        answerTitle: {
-            fontSize: calculate(INIT_ELEMENT_STYLES.answerTitle.fontSize)
-        },
-        sendBtn: {
-            fontSize: calculate(INIT_ELEMENT_STYLES.sendBtn.fontSize),
-            borderRadius: calculate(INIT_ELEMENT_STYLES.sendBtn.borderRadius),
-            padding: calculate(INIT_ELEMENT_STYLES.sendBtn.padding),
-            marginTop: calculate(INIT_ELEMENT_STYLES.sendBtn.marginTop)
-        }
-    }), [calculate]);
     const handleSendScore = useCallback((currentAnswers, type) => {
         if (!storyContextVal.quizMode) {
             return;
@@ -65990,18 +65732,18 @@ const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
     return (React.createElement("div", { className: b$3() },
-        !isTitleHidden && (React.createElement("div", { className: cn(b$3('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, elementSizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React.createElement("div", { className: b$3('answers'), style: elementSizes.answers }, answers.map((answer) => {
+        !isTitleHidden && (React.createElement("div", { className: cn(b$3('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
+        React.createElement("div", { className: b$3('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g;
             return (React.createElement("button", { className: b$3('answer', {
                     selected: userAnswers.includes(answer.id)
-                }), disabled: isSent || isReadOnly, key: answer.id, style: elementSizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
+                }), disabled: isSent || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
                 React.createElement("div", { className: b$3('answerImgContainer'), style: {
                         backgroundImage: answer.image ? `url(${answer.image.url})` : ''
                     } }),
                 React.createElement("p", { className: cn(b$3('answerTitle', {
                         gradient: ((_b = (_a = params.answersFont) === null || _a === void 0 ? void 0 : _a.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient'
-                    }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, elementSizes.answerTitle), { fontStyle: (_d = (_c = params.answersFont) === null || _c === void 0 ? void 0 : _c.fontParams) === null || _d === void 0 ? void 0 : _d.style, fontWeight: (_f = (_e = params.answersFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.weight, fontFamily: (_g = params.answersFont) === null || _g === void 0 ? void 0 : _g.fontFamily }), answerTextStyles) }, answer.title)));
+                    }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { fontStyle: (_d = (_c = params.answersFont) === null || _c === void 0 ? void 0 : _c.fontParams) === null || _d === void 0 ? void 0 : _d.style, fontWeight: (_f = (_e = params.answersFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.weight, fontFamily: (_g = params.answersFont) === null || _g === void 0 ? void 0 : _g.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
@@ -66029,39 +65771,39 @@ class WidgetFactory extends React.Component {
     makeWidget() {
         switch (this.props.widget.content.type) {
             case WidgetsTypes.CHOOSE_ANSWER:
-                return (React.createElement(ChooseAnswerWidget, { id: this.props.widget.id, jsConfetti: this.props.jsConfetti, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action }));
+                return (React.createElement(ChooseAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, jsConfetti: this.props.jsConfetti, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.CLICK_ME:
                 return (React.createElement(ClickMeWidget, { params: this.props.widget.content.params, onClick: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.ELLIPSE:
                 return React.createElement(EllipseWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.EMOJI_REACTION:
-                return (React.createElement(EmojiReactionWidget, { id: this.props.widget.id, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action }));
+                return (React.createElement(EmojiReactionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.GIPHY:
                 return React.createElement(GiphyWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.QUESTION:
-                return (React.createElement(QuestionWidget, { id: this.props.widget.id, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action }));
+                return (React.createElement(QuestionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.RECTANGLE:
                 return React.createElement(RectangleWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.SLIDER:
-                return (React.createElement(SliderWidget, { id: this.props.widget.id, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, storyId: this.props.storyId, onAnswer: this.props.widget.action }));
+                return (React.createElement(SliderWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, storyId: this.props.storyId, onAnswer: this.props.widget.action }));
             case WidgetsTypes.SWIPE_UP:
                 return (React.createElement(SwipeUpWidget, { params: this.props.widget.content.params, onSwipe: this.props.widget.action }));
             case WidgetsTypes.TALK_ABOUT:
-                return (React.createElement(TalkAboutWidget, { id: this.props.widget.id, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action }));
+                return (React.createElement(TalkAboutWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.TEXT:
                 return React.createElement(TextWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.TIMER:
                 return (React.createElement(TimerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
             case WidgetsTypes.QUIZ_ONE_ANSWER:
-                return (React.createElement(QuizOneAnswerWidget, { id: this.props.widget.id, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React.createElement(QuizOneAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_MULTIPLE_ANSWERS:
-                return (React.createElement(QuizMultipleAnswerWidget, { id: this.props.widget.id, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React.createElement(QuizMultipleAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE:
-                return (React.createElement(QuizMultipleAnswerWithImageWidget, { id: this.props.widget.id, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React.createElement(QuizMultipleAnswerWithImageWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_OPEN_ANSWER:
-                return (React.createElement(QuizOpenAnswerWidget, { id: this.props.widget.id, params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React.createElement(QuizOpenAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_RATE:
-                return (React.createElement(QuizRateWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React.createElement(QuizRateWidget, { elementsSize: this.props.widget.elementsSize, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             default:
                 return undefined;
         }

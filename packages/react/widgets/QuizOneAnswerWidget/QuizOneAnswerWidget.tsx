@@ -1,13 +1,12 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { StoryContext } from '@components';
 import {
+  QuizOneAnswerWidgetElementsType,
   QuizOneAnswerWidgetParamsType,
   ScoreType,
-  WidgetComponent,
-  WidgetPositionLimitsType,
-  WidgetPositionType
+  WidgetComponent
 } from '@types';
-import { block, calculateElementSize, getTextStyles } from '@utils';
+import { block, getTextStyles } from '@utils';
 import { Emoji } from 'emoji-mart';
 import cn from 'classnames';
 import './QuizOneAnswerWidget.scss';
@@ -38,14 +37,15 @@ const INIT_ELEMENT_STYLES = {
 export const QuizOneAnswerWidget: WidgetComponent<{
   id: string;
   params: QuizOneAnswerWidgetParamsType;
-  position?: WidgetPositionType;
-  positionLimits?: WidgetPositionLimitsType;
+  elementsSize?: QuizOneAnswerWidgetElementsType;
   isReadOnly?: boolean;
   onAnswer?(id: string): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, answers, storyId, isTitleHidden } = props.params;
-  const { id, params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { id, params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
+
+  const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
   const storyContextVal = useContext(StoryContext);
 
@@ -54,41 +54,6 @@ export const QuizOneAnswerWidget: WidgetComponent<{
     : null;
 
   const [userAnswer, setUserAnswer] = useState<null | string>(answerFromCache || null);
-
-  const calculate = useCallback(
-    (size) => {
-      if (position?.width && positionLimits?.minWidth) {
-        return calculateElementSize(+position.width, size, positionLimits.minWidth);
-      }
-
-      return size;
-    },
-    [position?.width, positionLimits?.minWidth]
-  );
-
-  const elementSizes = useMemo(
-    () => ({
-      title: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.title.fontSize),
-        marginBottom: calculate(INIT_ELEMENT_STYLES.title.marginBottom)
-      },
-      answers: {
-        gap: calculate(INIT_ELEMENT_STYLES.answers.gap)
-      },
-      answer: {
-        gap: calculate(INIT_ELEMENT_STYLES.answer.gap),
-        borderRadius: calculate(INIT_ELEMENT_STYLES.answer.borderRadius),
-        padding: calculate(INIT_ELEMENT_STYLES.answer.padding)
-      },
-      emoji: {
-        width: calculate(INIT_ELEMENT_STYLES.emoji.width)
-      },
-      answerTitle: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.answerTitle.fontSize)
-      }
-    }),
-    [calculate]
-  );
 
   const handleSendScore = useCallback(
     (currentAnswer: string) => {
@@ -136,7 +101,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
             'StorySdk-widgetTitle'
           )}
           style={{
-            ...elementSizes.title,
+            ...sizes.title,
             fontStyle: params.titleFont?.fontParams?.style,
             fontWeight: params.titleFont?.fontParams?.weight,
             fontFamily: params.titleFont?.fontFamily,
@@ -146,7 +111,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
           {title}
         </div>
       )}
-      <div className={b('answers')} style={elementSizes.answers}>
+      <div className={b('answers')} style={sizes.answers}>
         {answers.map((answer) => (
           <button
             className={b('answer', {
@@ -154,11 +119,11 @@ export const QuizOneAnswerWidget: WidgetComponent<{
             })}
             disabled={userAnswer !== null || isReadOnly}
             key={answer.id}
-            style={elementSizes.answer}
+            style={sizes.answer}
             onClick={() => !userAnswer && !isReadOnly && handleAnswer(answer.id)}
           >
             {answer.emoji && (
-              <Emoji emoji={answer.emoji?.name} set="apple" size={elementSizes.emoji.width} />
+              <Emoji emoji={answer.emoji?.name} set="apple" size={sizes.emoji.width} />
             )}
             <p
               className={cn(
@@ -169,7 +134,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
               )}
               data-id={answer.id}
               style={{
-                ...elementSizes.answerTitle,
+                ...sizes.answerTitle,
                 fontStyle: params.answersFont?.fontParams?.style,
                 fontWeight: params.answersFont?.fontParams?.weight,
                 fontFamily: params.answersFont?.fontFamily,
