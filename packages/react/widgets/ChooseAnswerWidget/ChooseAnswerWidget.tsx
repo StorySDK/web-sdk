@@ -1,14 +1,13 @@
-import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { StoryContext } from '@components';
 import {
   ChooseAnswerWidgetParamsType,
   WidgetComponent,
-  WidgetPositionType,
-  WidgetPositionLimitsType,
-  ScoreType
+  ScoreType,
+  ChooseAnswerWidgetElemetsType
 } from '@types';
 import { IconConfirm, IconDecline } from '@components/icons';
-import { block, calculateElementSize } from '@utils';
+import { block } from '@utils';
 
 import './ChooseAnswerWidget.scss';
 
@@ -44,13 +43,14 @@ const INIT_ELEMENT_STYLES = {
 export const ChooseAnswerWidget: WidgetComponent<{
   id: string;
   params: ChooseAnswerWidgetParamsType;
-  position?: WidgetPositionType;
-  positionLimits?: WidgetPositionLimitsType;
+  elementsSize?: ChooseAnswerWidgetElemetsType;
   jsConfetti?: any;
   isReadOnly?: boolean;
   onAnswer?(answerId: string): void;
 }> = React.memo((props) => {
-  const { id, params, position, positionLimits, isReadOnly, jsConfetti, onAnswer } = props;
+  const { id, params, isReadOnly, jsConfetti, elementsSize, onAnswer } = props;
+
+  const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
   const storyContextVal = useContext(StoryContext);
 
@@ -59,47 +59,6 @@ export const ChooseAnswerWidget: WidgetComponent<{
     : null;
 
   const [userAnswer, setUserAnswer] = useState<string | null>(answerFromCache);
-
-  const calculate = useCallback(
-    (size) => {
-      if (position?.width && positionLimits?.minWidth) {
-        return calculateElementSize(+position.width, size, positionLimits.minWidth);
-      }
-
-      return size;
-    },
-    [position?.width, positionLimits?.minWidth]
-  );
-
-  const elementSizes = useMemo(
-    () => ({
-      widget: {
-        borderRadius: calculate(INIT_ELEMENT_STYLES.widget.borderRadius)
-      },
-      header: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.header.fontSize),
-        paddingTop: calculate(INIT_ELEMENT_STYLES.header.paddingTop),
-        paddingBottom: calculate(INIT_ELEMENT_STYLES.header.paddingBottom)
-      },
-      answers: {
-        padding: calculate(INIT_ELEMENT_STYLES.answers.padding)
-      },
-      answer: {
-        padding: calculate(INIT_ELEMENT_STYLES.answer.padding),
-        marginBottom: calculate(INIT_ELEMENT_STYLES.answer.marginBottom)
-      },
-      answerId: {
-        width: calculate(INIT_ELEMENT_STYLES.answerId.width),
-        height: calculate(INIT_ELEMENT_STYLES.answerId.height),
-        marginRight: calculate(INIT_ELEMENT_STYLES.answerId.marginRight),
-        fontSize: calculate(INIT_ELEMENT_STYLES.answerId.fontSize)
-      },
-      answerTitle: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.answerTitle.fontSize)
-      }
-    }),
-    [calculate]
-  );
 
   const handleSendScore = useCallback(
     (currentAnswer: string) => {
@@ -146,7 +105,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
               filled: userAnswer === answer.id && !params.markCorrectAnswer
             })}
             key={`answer-${answer.id}`}
-            style={elementSizes.answer}
+            style={sizes.answer}
           >
             <div
               className={b('answerCircle', {
@@ -155,7 +114,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
                 choosen: userAnswer === answer.id && params.markCorrectAnswer,
                 filled: userAnswer === answer.id && !params.markCorrectAnswer
               })}
-              style={elementSizes.answerId}
+              style={sizes.answerId}
             >
               {params.markCorrectAnswer ? (
                 <>
@@ -188,7 +147,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
                 correct: answer.id === params.correct && params.markCorrectAnswer,
                 incorrect: answer.id !== params.correct && params.markCorrectAnswer
               })}
-              style={elementSizes.answerTitle}
+              style={sizes.answerTitle}
             >
               {answer.title}
             </div>
@@ -200,15 +159,15 @@ export const ChooseAnswerWidget: WidgetComponent<{
           className={b('answer', { clickable: !userAnswer && !isReadOnly })}
           key={answer.id}
           role="button"
-          style={elementSizes.answer}
+          style={sizes.answer}
           tabIndex={0}
           onClick={!userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined}
           onKeyDown={!userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined}
         >
-          <div className={b('answerId')} style={elementSizes.answerId}>
+          <div className={b('answerId')} style={sizes.answerId}>
             {`${answer.id}`}
           </div>
-          <div className={b('answerTitle')} style={elementSizes.answerTitle}>
+          <div className={b('answerTitle')} style={sizes.answerTitle}>
             {answer.title}
           </div>
         </div>
@@ -219,9 +178,9 @@ export const ChooseAnswerWidget: WidgetComponent<{
       isReadOnly,
       params.markCorrectAnswer,
       params.correct,
-      elementSizes.answer,
-      elementSizes.answerId,
-      elementSizes.answerTitle,
+      sizes.answer,
+      sizes.answerId,
+      sizes.answerTitle,
       handleMarkAnswer
     ]
   );
@@ -239,15 +198,15 @@ export const ChooseAnswerWidget: WidgetComponent<{
         shake: userAnswer && params.markCorrectAnswer && userAnswer !== params.correct,
         celebrate: userAnswer && params.markCorrectAnswer && userAnswer === params.correct
       })}
-      style={elementSizes.widget}
+      style={sizes.widget}
     >
       {!params.isTitleHidden && (
-        <div className={b('header')} style={elementSizes.header}>
+        <div className={b('header')} style={sizes.header}>
           {params.text}
         </div>
       )}
 
-      <div className={b('answers')} style={elementSizes.answers}>
+      <div className={b('answers')} style={sizes.answers}>
         {params.answers.map((answer) => renderAnswer(answer))}
       </div>
     </div>

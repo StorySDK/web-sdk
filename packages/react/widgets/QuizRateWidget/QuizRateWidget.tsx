@@ -1,13 +1,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { IconRateStar } from '@components/icons';
-import { block, calculateElementSize, getTextStyles } from '@utils';
-import {
-  QuizRateWidgetParamsType,
-  WidgetComponent,
-  WidgetPositionLimitsType,
-  WidgetPositionType
-} from '@types';
+import { block, getTextStyles } from '@utils';
+import { QuizRateWidgetElementsType, QuizRateWidgetParamsType, WidgetComponent } from '@types';
 import cn from 'classnames';
 import './QuizRateWidget.scss';
 
@@ -27,40 +22,17 @@ const RATE_MAX = 5;
 
 export const QuizRateWidget: WidgetComponent<{
   params: QuizRateWidgetParamsType;
-  position?: WidgetPositionType;
-  positionLimits?: WidgetPositionLimitsType;
+  elementsSize: QuizRateWidgetElementsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, isTitleHidden, storyId, storeLinks } = props.params;
-  const { params, position, positionLimits, isReadOnly, onAnswer, onGoToStory } = props;
+  const { params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
 
   const [isSent, setIsSent] = useState<boolean>(false);
 
-  const calculate = useCallback(
-    (size) => {
-      if (position?.width && positionLimits?.minWidth) {
-        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
-      }
-
-      return size;
-    },
-    [position?.width, positionLimits?.minWidth]
-  );
-
-  const elementSizes = useMemo(
-    () => ({
-      title: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.title.fontSize),
-        marginBottom: calculate(INIT_ELEMENT_STYLES.title.marginBottom)
-      },
-      stars: {
-        gap: calculate(INIT_ELEMENT_STYLES.stars.gap)
-      }
-    }),
-    [calculate]
-  );
+  const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
   const handleAnswer = useCallback(
     (rate: string) => {
@@ -91,7 +63,7 @@ export const QuizRateWidget: WidgetComponent<{
             'StorySdk-widgetTitle'
           )}
           style={{
-            ...elementSizes.title,
+            ...sizes.title,
             fontStyle: params.fontParams?.style,
             fontWeight: params.fontParams?.weight,
             fontFamily: params.fontFamily,
@@ -106,7 +78,7 @@ export const QuizRateWidget: WidgetComponent<{
           disabled: isSent || isReadOnly
         })}
         style={{
-          gap: elementSizes.stars.gap
+          gap: sizes.stars.gap
         }}
       >
         {new Array(RATE_MAX).fill(0).map((_, index) => (

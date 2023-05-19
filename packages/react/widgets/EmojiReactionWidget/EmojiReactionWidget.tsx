@@ -1,11 +1,10 @@
 import React, { useState, useCallback, useMemo, useContext } from 'react';
 import { Emoji } from 'emoji-mart';
-import { block, calculateElementSizeByHeight, getScalableValue } from '@utils';
+import { block, getScalableValue } from '@utils';
 import {
   EmojiReactionWidgetParamsType,
   WidgetComponent,
-  WidgetPositionType,
-  WidgetPositionLimitsType
+  EmojiReactionWidgetElemetsType
 } from '@types';
 import { useInterval } from '@hooks';
 import './EmojiReactionWidget.scss';
@@ -33,47 +32,17 @@ const INIT_ELEMENT_STYLES = {
 export const EmojiReactionWidget: WidgetComponent<{
   id: string;
   params: EmojiReactionWidgetParamsType;
-  position?: WidgetPositionType;
-  positionLimits?: WidgetPositionLimitsType;
+  elementsSize?: EmojiReactionWidgetElemetsType;
   isReadOnly?: boolean;
   onAnswer?(emoji: string): void;
 }> = React.memo((props) => {
-  const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
+  const { id, params, elementsSize, isReadOnly, onAnswer } = props;
 
-  const calculate = useCallback(
-    (size) => {
-      if (position?.height && positionLimits?.minHeight) {
-        return calculateElementSizeByHeight(position.height, size, positionLimits.minHeight);
-      }
-
-      return size;
-    },
-    [position?.height, positionLimits?.minHeight]
-  );
-
-  const elementSizes = useMemo(
-    () => ({
-      widget: {
-        borderRadius: calculate(INIT_ELEMENT_STYLES.widget.borderRadius),
-        paddingTop: calculate(INIT_ELEMENT_STYLES.widget.paddingTop),
-        paddingBottom: calculate(INIT_ELEMENT_STYLES.widget.paddingBottom),
-        paddingRight: calculate(INIT_ELEMENT_STYLES.widget.paddingRight),
-        paddingLeft: calculate(INIT_ELEMENT_STYLES.widget.paddingLeft)
-      },
-      emoji: {
-        width: calculate(INIT_ELEMENT_STYLES.emoji.width)
-      },
-      item: {
-        marginRight: calculate(INIT_ELEMENT_STYLES.item.marginRight),
-        marginLeft: calculate(INIT_ELEMENT_STYLES.item.marginLeft)
-      }
-    }),
-    [calculate]
-  );
+  const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
   const storyContextVal = useContext(StoryContext);
 
-  const initEmojiSize = useMemo(() => elementSizes.emoji.width, [elementSizes]);
+  const initEmojiSize = useMemo(() => sizes.emoji.width, [sizes]);
 
   const answerFromCache = storyContextVal.getAnswerCache
     ? storyContextVal.getAnswerCache(id)
@@ -111,12 +80,12 @@ export const EmojiReactionWidget: WidgetComponent<{
   );
 
   return (
-    <div className={b({ color: params.color })} style={elementSizes.widget}>
+    <div className={b({ color: params.color })} style={sizes.widget}>
       {params.emoji.map((emojiItem, index) => (
         <button
           className={b('item', { disabled: isReadOnly || isToched || clickedIndex !== null })}
           key={`${emojiItem.unicode}-${index}`}
-          style={elementSizes.item}
+          style={sizes.item}
           onClick={(e) => {
             e.preventDefault();
 
@@ -128,7 +97,7 @@ export const EmojiReactionWidget: WidgetComponent<{
           <div className={b('subItem', { clicked: index === clickedIndex })}>
             <Emoji emoji={emojiItem.name} set="apple" size={bigSize} />
           </div>
-          <Emoji emoji={emojiItem.name} set="apple" size={elementSizes.emoji.width} />
+          <Emoji emoji={emojiItem.name} set="apple" size={sizes.emoji.width} />
         </button>
       ))}
     </div>

@@ -1,5 +1,17 @@
 /* eslint-disable no-shadow */
 import {
+  ChooseAnswerWidgetElemetsType,
+  EmojiReactionWidgetElemetsType,
+  QuestionWidgetElementsType,
+  QuizMultipleAnswerWidgetElementsType,
+  QuizMultipleAnswerWidgetWithImageElementsType,
+  QuizOneAnswerWidgetElementsType,
+  QuizOpenAnswerWidgetElementsType,
+  QuizRateWidgetElementsType,
+  SliderWidgetElementsType,
+  TalkAboutElementsType
+} from './widgetElementsTypes';
+import {
   ChooseAnswerWidgetParamsType,
   ClickMeWidgetParamsType,
   EllipseWidgetParamsType,
@@ -17,7 +29,7 @@ import {
   QuizMultipleAnswerWithImageWidgetParamsType,
   QuizRateWidgetParamsType,
   QuizOpenAnswerWidgetParamsType
-} from './WidgetsParams';
+} from './widgetsParams';
 
 type ColorValue = { type: 'color'; value: string; isFilled?: boolean };
 type GradientValue = { type: 'gradient'; value: string[]; isFilled?: boolean };
@@ -189,6 +201,17 @@ export interface WidgetObjectType {
   id: string;
   position: WidgetPositionType;
   positionLimits: WidgetPositionLimitsType;
+  elementsSize?:
+    | ChooseAnswerWidgetElemetsType
+    | EmojiReactionWidgetElemetsType
+    | QuestionWidgetElementsType
+    | QuizMultipleAnswerWidgetElementsType
+    | QuizOneAnswerWidgetElementsType
+    | QuizMultipleAnswerWidgetWithImageElementsType
+    | QuizOpenAnswerWidgetElementsType
+    | QuizRateWidgetElementsType
+    | SliderWidgetElementsType
+    | TalkAboutElementsType;
   content:
     | RectangleState
     | EllipseState

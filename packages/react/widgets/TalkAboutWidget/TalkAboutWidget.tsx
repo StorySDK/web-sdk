@@ -3,7 +3,8 @@ import {
   TalkAboutWidgetParamsType,
   WidgetComponent,
   WidgetPositionType,
-  WidgetPositionLimitsType
+  WidgetPositionLimitsType,
+  TalkAboutElementsType
 } from '@types';
 import cn from 'classnames';
 import { StoryContext } from '@components';
@@ -50,66 +51,19 @@ const INIT_ELEMENT_STYLES = {
 export const TalkAboutWidget: WidgetComponent<{
   id: string;
   params: TalkAboutWidgetParamsType;
-  position?: WidgetPositionType;
-  positionLimits?: WidgetPositionLimitsType;
+  elementsSize?: TalkAboutElementsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): void;
 }> = React.memo((props) => {
-  const { id, params, position, positionLimits, isReadOnly } = props;
+  const { id, params, elementsSize, isReadOnly } = props;
+
+  const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
   const storyContextVal = useContext(StoryContext);
 
   const answerFromCache = storyContextVal.getAnswerCache
     ? storyContextVal.getAnswerCache(id)
     : null;
-
-  const calculate = useCallback(
-    (size) => {
-      if (position?.width && positionLimits?.minWidth) {
-        return calculateElementSize(+position?.width, size, positionLimits?.minWidth);
-      }
-
-      return size;
-    },
-    [position?.width, positionLimits?.minWidth]
-  );
-
-  const elementSizes = useMemo(
-    () => ({
-      widget: {
-        borderRadius: calculate(INIT_ELEMENT_STYLES.widget.borderRadius)
-      },
-      content: {
-        paddingRight: calculate(INIT_ELEMENT_STYLES.content.paddingRight),
-        paddingLeft: calculate(INIT_ELEMENT_STYLES.content.paddingLeft),
-        paddingBottom: calculate(INIT_ELEMENT_STYLES.content.paddingBottom),
-        paddingTop: calculate(INIT_ELEMENT_STYLES.content.paddingTop)
-      },
-      text: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.text.fontSize),
-        marginBottom: calculate(INIT_ELEMENT_STYLES.text.marginBottom)
-      },
-      input: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.input.fontSize),
-        padding: calculate(INIT_ELEMENT_STYLES.input.padding),
-        borderRadius: calculate(INIT_ELEMENT_STYLES.input.borderRadius)
-      },
-      empty: {
-        height: calculate(INIT_ELEMENT_STYLES.empty.height)
-      },
-      imageWrapper: {
-        width: calculate(INIT_ELEMENT_STYLES.imageWrapper.width),
-        height: calculate(INIT_ELEMENT_STYLES.imageWrapper.height)
-      },
-      send: {
-        height: calculate(INIT_ELEMENT_STYLES.send.height)
-      },
-      sendText: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.sendText.fontSize)
-      }
-    }),
-    [calculate]
-  );
 
   const [text, setText] = useState<string>(answerFromCache || '');
   const [isSent, setIsSent] = useState<boolean>(!!answerFromCache);
@@ -166,7 +120,7 @@ export const TalkAboutWidget: WidgetComponent<{
   return (
     <>
       <div className={b('container')} ref={ref}>
-        <picture className={b('imageWrapper')} style={elementSizes.imageWrapper}>
+        <picture className={b('imageWrapper')} style={sizes.imageWrapper}>
           {params.image ? (
             <img alt="" className={b('image')} src={params.image} />
           ) : (
@@ -174,12 +128,12 @@ export const TalkAboutWidget: WidgetComponent<{
           )}
         </picture>
 
-        <div className={b('empty')} style={elementSizes.empty} />
+        <div className={b('empty')} style={sizes.empty} />
 
-        <div className={b({ color: params.color })} style={elementSizes.widget}>
+        <div className={b({ color: params.color })} style={sizes.widget}>
           <div
             className={b('contentContainer', { sendOpen: text.length > 0 })}
-            style={elementSizes.content}
+            style={sizes.content}
           >
             {!params.isTitleHidden && (
               <div
@@ -188,7 +142,7 @@ export const TalkAboutWidget: WidgetComponent<{
                   'StorySdk-widgetTitle')
                 }
                 style={{
-                  ...elementSizes.text,
+                  ...sizes.text,
                   fontStyle: params.fontParams?.style,
                   fontWeight: params.fontParams?.weight,
                   fontFamily: params.fontFamily,
@@ -204,7 +158,7 @@ export const TalkAboutWidget: WidgetComponent<{
               disabled={isSent || isReadOnly}
               placeholder="Type something..."
               ref={inputRef}
-              style={elementSizes.input}
+              style={sizes.input}
               type="text"
               value={text}
               onChange={!isReadOnly ? handleTextChange : undefined}
@@ -214,10 +168,10 @@ export const TalkAboutWidget: WidgetComponent<{
           {text && (
             <button
               className={b('send', { disabled: isSent || isReadOnly })}
-              style={elementSizes.send}
+              style={sizes.send}
               onClick={!isSent && !isReadOnly ? handleSendClick : undefined}
             >
-              <span className={b('sendText', { green: isSent })} style={elementSizes.sendText}>
+              <span className={b('sendText', { green: isSent })} style={sizes.sendText}>
                 {isSent ? 'Sent!' : 'Send'}
               </span>
             </button>

@@ -1,10 +1,9 @@
-import { EmojiReactionWidgetParamsType, WidgetComponent, WidgetPositionType, WidgetPositionLimitsType } from '@types';
+import { EmojiReactionWidgetParamsType, WidgetComponent, EmojiReactionWidgetElemetsType } from '@types';
 import './EmojiReactionWidget.scss';
 export declare const EmojiReactionWidget: WidgetComponent<{
     id: string;
     params: EmojiReactionWidgetParamsType;
-    position?: WidgetPositionType;
-    positionLimits?: WidgetPositionLimitsType;
+    elementsSize?: EmojiReactionWidgetElemetsType;
     isReadOnly?: boolean;
     onAnswer?(emoji: string): void;
 }>;

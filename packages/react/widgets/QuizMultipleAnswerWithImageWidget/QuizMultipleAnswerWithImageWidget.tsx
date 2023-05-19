@@ -1,18 +1,11 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
-  WidgetPositionLimitsType,
-  WidgetPositionType,
   QuizMultipleAnswerWithImageWidgetParamsType,
   WidgetComponent,
-  ScoreType
+  ScoreType,
+  QuizMultipleAnswerWidgetWithImageElementsType
 } from '@types';
-import {
-  block,
-  calculateElementSize,
-  eventSubscribe,
-  eventUnsubscribe,
-  getTextStyles
-} from '@utils';
+import { block, eventSubscribe, eventUnsubscribe, getTextStyles } from '@utils';
 import cn from 'classnames';
 import './QuizMultipleAnswerWithImageWidget.scss';
 import { StoryContext } from '@components';
@@ -49,14 +42,15 @@ const INIT_ELEMENT_STYLES = {
 export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
   id: string;
   params: QuizMultipleAnswerWithImageWidgetParamsType;
-  position?: WidgetPositionType;
-  positionLimits?: WidgetPositionLimitsType;
+  elementsSize?: QuizMultipleAnswerWidgetWithImageElementsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, answers, isTitleHidden } = props.params;
-  const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
+  const { id, params, elementsSize, isReadOnly, onAnswer } = props;
+
+  const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
   const storyContextVal = useContext(StoryContext);
 
@@ -66,44 +60,6 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
 
   const [userAnswers, setUserAnswers] = useState<string[]>(answerFromCache || []);
   const [isSent, setIsSent] = useState<boolean>(!!answerFromCache);
-
-  const calculate = useCallback(
-    (size) => {
-      if (position?.width && positionLimits?.minWidth) {
-        return calculateElementSize(+position.width, size, positionLimits.minWidth);
-      }
-
-      return size;
-    },
-    [position?.width, positionLimits?.minWidth]
-  );
-
-  const elementSizes = useMemo(
-    () => ({
-      title: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.title.fontSize),
-        marginBottom: calculate(INIT_ELEMENT_STYLES.title.marginBottom)
-      },
-      answers: {
-        gap: calculate(INIT_ELEMENT_STYLES.answers.gap)
-      },
-      answer: {
-        gap: calculate(INIT_ELEMENT_STYLES.answer.gap),
-        borderRadius: calculate(INIT_ELEMENT_STYLES.answer.borderRadius),
-        padding: calculate(INIT_ELEMENT_STYLES.answer.padding)
-      },
-      answerTitle: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.answerTitle.fontSize)
-      },
-      sendBtn: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.sendBtn.fontSize),
-        borderRadius: calculate(INIT_ELEMENT_STYLES.sendBtn.borderRadius),
-        padding: calculate(INIT_ELEMENT_STYLES.sendBtn.padding),
-        marginTop: calculate(INIT_ELEMENT_STYLES.sendBtn.marginTop)
-      }
-    }),
-    [calculate]
-  );
 
   const handleSendScore = useCallback(
     (currentAnswers: string[], type: 'add' | 'remove') => {
@@ -188,7 +144,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
             'StorySdk-widgetTitle'
           )}
           style={{
-            ...elementSizes.title,
+            ...sizes.title,
             fontStyle: params.titleFont?.fontParams?.style,
             fontWeight: params.titleFont?.fontParams?.weight,
             fontFamily: params.titleFont?.fontFamily,
@@ -198,7 +154,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
           {title}
         </div>
       )}
-      <div className={b('answers')} style={elementSizes.answers}>
+      <div className={b('answers')} style={sizes.answers}>
         {answers.map((answer) => (
           <button
             className={b('answer', {
@@ -206,7 +162,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
             })}
             disabled={isSent || isReadOnly}
             key={answer.id}
-            style={elementSizes.answer}
+            style={sizes.answer}
             onClick={() => !isReadOnly && handleAnswer(answer.id)}
           >
             <div
@@ -224,7 +180,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
               )}
               data-id={answer.id}
               style={{
-                ...elementSizes.answerTitle,
+                ...sizes.answerTitle,
                 fontStyle: params.answersFont?.fontParams?.style,
                 fontWeight: params.answersFont?.fontParams?.weight,
                 fontFamily: params.answersFont?.fontFamily,

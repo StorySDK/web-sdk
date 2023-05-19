@@ -1,19 +1,12 @@
 import { Emoji } from 'emoji-mart';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import {
-  block,
-  calculateElementSize,
-  eventSubscribe,
-  eventUnsubscribe,
-  getTextStyles
-} from '@utils';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { block, eventSubscribe, eventUnsubscribe, getTextStyles } from '@utils';
 import cn from 'classnames';
 import {
+  QuizMultipleAnswerWidgetElementsType,
   QuizMultipleAnswerWidgetParamsType,
   ScoreType,
-  WidgetComponent,
-  WidgetPositionLimitsType,
-  WidgetPositionType
+  WidgetComponent
 } from '@types';
 import { StoryContext } from '@components';
 import './QuizMultipleAnswerWidget.scss';
@@ -51,14 +44,13 @@ const INIT_ELEMENT_STYLES = {
 export const QuizMultipleAnswerWidget: WidgetComponent<{
   id: string;
   params: QuizMultipleAnswerWidgetParamsType;
-  position?: WidgetPositionType;
-  positionLimits?: WidgetPositionLimitsType;
+  elementsSize?: QuizMultipleAnswerWidgetElementsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, answers, isTitleHidden } = props.params;
-  const { id, params, position, positionLimits, isReadOnly, onAnswer } = props;
+  const { id, params, elementsSize, isReadOnly, onAnswer } = props;
 
   const storyContextVal = useContext(StoryContext);
 
@@ -69,47 +61,7 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
   const [userAnswers, setUserAnswers] = useState<string[]>(answerFromCache || []);
   const [isSent, setIsSent] = useState<boolean>(!!answerFromCache);
 
-  const calculate = useCallback(
-    (size) => {
-      if (position?.width && positionLimits?.minWidth) {
-        return calculateElementSize(+position.width, size, positionLimits.minWidth);
-      }
-
-      return size;
-    },
-    [position?.width, positionLimits?.minWidth]
-  );
-
-  const elementSizes = useMemo(
-    () => ({
-      title: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.title.fontSize),
-        marginBottom: calculate(INIT_ELEMENT_STYLES.title.marginBottom)
-      },
-      answers: {
-        gap: calculate(INIT_ELEMENT_STYLES.answers.gap)
-      },
-      answer: {
-        gap: calculate(INIT_ELEMENT_STYLES.answer.gap),
-        borderRadius: calculate(INIT_ELEMENT_STYLES.answer.borderRadius),
-        padding: calculate(INIT_ELEMENT_STYLES.answer.padding)
-      },
-      emoji: {
-        width: calculate(INIT_ELEMENT_STYLES.emoji.width)
-      },
-      answerTitle: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.answerTitle.fontSize)
-      },
-      sendBtn: {
-        fontSize: calculate(INIT_ELEMENT_STYLES.sendBtn.fontSize),
-        borderRadius: calculate(INIT_ELEMENT_STYLES.sendBtn.borderRadius),
-        padding: calculate(INIT_ELEMENT_STYLES.sendBtn.padding),
-        marginTop: calculate(INIT_ELEMENT_STYLES.sendBtn.marginTop),
-        lineHeight: calculate(INIT_ELEMENT_STYLES.sendBtn.lineHeight)
-      }
-    }),
-    [calculate]
-  );
+  const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
   const handleSendScore = useCallback(
     (currentAnswers: string[], type: 'add' | 'remove') => {
@@ -194,7 +146,7 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
             'StorySdk-widgetTitle'
           )}
           style={{
-            ...elementSizes.title,
+            ...sizes.title,
             fontStyle: params.titleFont?.fontParams?.style,
             fontWeight: params.titleFont?.fontParams?.weight,
             fontFamily: params.titleFont?.fontFamily,
@@ -204,7 +156,7 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
           {title}
         </div>
       )}
-      <div className={b('answers')} style={elementSizes.answers}>
+      <div className={b('answers')} style={sizes.answers}>
         {answers.map((answer) => (
           <button
             className={b('answer', {
@@ -213,11 +165,11 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
             })}
             disabled={isSent || isReadOnly}
             key={answer.id}
-            style={elementSizes.answer}
+            style={sizes.answer}
             onClick={() => !isReadOnly && handleAnswer(answer.id)}
           >
             {answer.emoji && (
-              <Emoji emoji={answer.emoji?.name} set="apple" size={elementSizes.emoji.width} />
+              <Emoji emoji={answer.emoji?.name} set="apple" size={sizes.emoji.width} />
             )}
             <p
               className={cn(
@@ -228,8 +180,8 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
               )}
               data-id={answer.id}
               style={{
-                ...elementSizes.answerTitle,
-                lineHeight: `${elementSizes.sendBtn.lineHeight}px`,
+                ...sizes.answerTitle,
+                lineHeight: `${sizes.sendBtn.lineHeight}px`,
                 fontStyle: params.answersFont?.fontParams?.style,
                 fontWeight: params.answersFont?.fontParams?.weight,
                 fontFamily: params.answersFont?.fontFamily,
