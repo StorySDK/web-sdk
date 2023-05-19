@@ -10,7 +10,7 @@ import {
   QuizRateWidgetElementsType,
   SliderWidgetElementsType,
   TalkAboutElementsType
-} from './WidgetElementsTypes';
+} from './widgetElementsTypes';
 import {
   ChooseAnswerWidgetParamsType,
   ClickMeWidgetParamsType,
