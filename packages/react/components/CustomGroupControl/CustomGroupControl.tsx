@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Group } from '../../types';
 import { StoryModal } from '..';
 
@@ -33,6 +33,14 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     isShowing,
     isCacheDisabled
   } = props;
+
+  useEffect(() => {
+    if (isShowing) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isShowing]);
 
   return (
     <>

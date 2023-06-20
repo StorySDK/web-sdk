@@ -235,7 +235,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentGroupType === GroupType.GROUP;
   const isLarge =
     (currentGroup.settings?.storiesSize === StorySize.LARGE &&
-      currentGroupType === GroupType.ONBOARDING) ||
+      (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
     (currentGroupType === GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
 
   const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);

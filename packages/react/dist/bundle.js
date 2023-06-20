@@ -41,6 +41,7 @@ exports.GroupType = void 0;
 (function (GroupType) {
     GroupType["GROUP"] = "group";
     GroupType["ONBOARDING"] = "onboarding";
+    GroupType["TEMPLATE"] = "template";
 })(exports.GroupType || (exports.GroupType = {}));
 exports.StorySize = void 0;
 (function (StorySize) {
@@ -11199,7 +11200,7 @@ const StoryModal = (props) => {
     const isBackroundFilled = ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.background) === null || _c === void 0 ? void 0 : _c.isFilled) &&
         currentGroupType === exports.GroupType.GROUP;
     const isLarge = (((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.storiesSize) === exports.StorySize.LARGE &&
-        currentGroupType === exports.GroupType.ONBOARDING) ||
+        (currentGroupType === exports.GroupType.ONBOARDING || currentGroupType === exports.GroupType.TEMPLATE)) ||
         (currentGroupType === exports.GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
     const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
     const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
@@ -65858,6 +65859,14 @@ const StoryContent = (props) => {
 
 const CustomGroupControl = (props) => {
     const { children, group, isFirstGroup, isLastGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing, isCacheDisabled } = props;
+    React.useEffect(() => {
+        if (isShowing) {
+            document.body.style.overflow = 'hidden';
+        }
+        else {
+            document.body.style.overflow = 'auto';
+        }
+    }, [isShowing]);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         children,
         isShowing && (React__default["default"].createElement(StoryModal, { currentGroup: group, isCacheDisabled: isCacheDisabled, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))));

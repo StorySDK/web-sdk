@@ -32,6 +32,7 @@ var GroupType;
 (function (GroupType) {
     GroupType["GROUP"] = "group";
     GroupType["ONBOARDING"] = "onboarding";
+    GroupType["TEMPLATE"] = "template";
 })(GroupType || (GroupType = {}));
 var StorySize;
 (function (StorySize) {
@@ -11190,7 +11191,7 @@ const StoryModal = (props) => {
     const isBackroundFilled = ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.background) === null || _c === void 0 ? void 0 : _c.isFilled) &&
         currentGroupType === GroupType.GROUP;
     const isLarge = (((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.storiesSize) === StorySize.LARGE &&
-        currentGroupType === GroupType.ONBOARDING) ||
+        (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
         (currentGroupType === GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
     const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
     const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
@@ -65849,6 +65850,14 @@ const StoryContent = (props) => {
 
 const CustomGroupControl = (props) => {
     const { children, group, isFirstGroup, isLastGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing, isCacheDisabled } = props;
+    useEffect(() => {
+        if (isShowing) {
+            document.body.style.overflow = 'hidden';
+        }
+        else {
+            document.body.style.overflow = 'auto';
+        }
+    }, [isShowing]);
     return (React.createElement(React.Fragment, null,
         children,
         isShowing && (React.createElement(StoryModal, { currentGroup: group, isCacheDisabled: isCacheDisabled, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))));
