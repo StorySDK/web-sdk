@@ -820,7 +820,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                             </div>
                           )}
 
-                          {(!currentGroup?.settings?.isProhibitToClose || !forbidClose) && (
+                          {!currentGroup?.settings?.isProhibitToClose && !forbidClose && (
                             <button
                               className={b('close', {
                                 noProgress: currentGroup?.settings?.isProgressHidden,

@@ -17732,7 +17732,7 @@ const StoryModal = (props) => {
                                             (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl) && (React__default["default"].createElement("div", { className: b$m('groupImgWrapper') },
                                                 React__default["default"].createElement("img", { alt: "", className: b$m('groupImg'), src: currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl }))),
                                             (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title) && (React__default["default"].createElement("p", { className: b$m('groupTitle') }, currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title)))),
-                                        (!((_o = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) || !forbidClose) && (React__default["default"].createElement("button", { className: b$m('close', {
+                                        !((_o = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) && !forbidClose && (React__default["default"].createElement("button", { className: b$m('close', {
                                                 noProgress: (_p = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
                                                 wideRight: isShowMockup && isLarge
                                             }), style: {
