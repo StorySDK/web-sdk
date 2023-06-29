@@ -1,7 +1,7 @@
 import React from 'react';
 import { Group } from '../../types';
 interface GroupProps {
-    group: Group;
+    group?: Group;
     isFirstGroup: boolean;
     isLastGroup: boolean;
     isForceCloseAvailable?: boolean;

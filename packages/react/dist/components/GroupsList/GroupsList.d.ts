@@ -2,7 +2,7 @@ import React from 'react';
 import { Group } from '../../types';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
-interface GroupsListProps {
+export interface GroupsListProps {
     groups: Group[];
     groupImageWidth?: number;
     groupImageHeight?: number;
@@ -11,6 +11,9 @@ interface GroupsListProps {
     groupClassName?: string;
     isShowMockup?: boolean;
     isLoading?: boolean;
+    autoplay?: boolean;
+    startStoryId?: string;
+    forbidClose?: boolean;
     groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
     onOpenGroup?(id: string): void;
     onCloseGroup?(id: string): void;
@@ -22,4 +25,3 @@ interface GroupsListProps {
     onFinishQuiz?(groupId: string, storyId?: string): void;
 }
 export declare const GroupsList: React.FC<GroupsListProps>;
-export {};

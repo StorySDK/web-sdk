@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Group } from '@storysdk/react';
+import { Group, GroupsListProps } from '@storysdk/react';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
 import axios from 'axios';
@@ -10,26 +10,6 @@ import { loadFontsToPage } from '../utils/fontsInclude';
 import { getUniqUserId } from '../utils';
 import { useGroupCache, useStoryCache } from '../hooks';
 
-interface GroupsListProps {
-  groups: Group[];
-  groupImageWidth?: number;
-  groupImageHeight?: number;
-  groupTitleSize?: number;
-  groupClassName?: string;
-  groupsClassName?: string;
-  groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle' | string;
-  isLoading?: boolean;
-  isShowMockup?: boolean;
-  onOpenGroup?(id: string): void;
-  onCloseGroup?(id: string): void;
-  onStartQuiz?(groupId: string, storyId?: string): void;
-  onFinishQuiz?(groupId: string, storyId?: string): void;
-  onNextStory?(groupId: string, storyId: string): void;
-  onPrevStory?(groupId: string, storyId: string): void;
-  onOpenStory?(groupId: string, storyId: string): void;
-  onCloseStory?(groupId: string, storyId: string): void;
-}
-
 interface DurationProps {
   storyId?: string;
   groupId: string;
@@ -39,16 +19,25 @@ interface DurationProps {
 const withGroupsData =
   (
     GroupsList: React.FC<GroupsListProps>,
-    groupImageWidth?: number,
-    groupImageHeight?: number,
-    groupTitleSize?: number,
-    groupClassName?: string,
-    groupsClassName?: string
+    viewOptions?: {
+      groupImageWidth?: number;
+      groupImageHeight?: number;
+      groupTitleSize?: number;
+      groupClassName?: string;
+      groupsClassName?: string;
+    },
+    playOptions?: {
+      autoplay?: boolean;
+      groupId?: string;
+      startStoryId?: string;
+      forbidClose?: boolean;
+      devMode?: boolean;
+    }
   ) =>
   () => {
     const [data, setData] = useState<any[]>([]);
     const [groups, setGroups] = useState<Group[]>([]);
-    const [groupView, setGroupView] = useState('circle');
+    const [groupView, setGroupView] = useState<GroupsListProps['groupView']>('circle');
     const [isShowMockup, setIsShowMockup] = useState(false);
     const [appLocale, setAppLocale] = useState(null);
     const [groupsWithStories, setGroupsWithStories] = useState([]);
@@ -243,6 +232,10 @@ const withGroupsData =
                   .filter((item: any) => {
                     const isActive = item.active && item.type;
 
+                    if (playOptions?.groupId) {
+                      return isActive && item.id === playOptions.groupId;
+                    }
+
                     if (item.type === 'onboarding') {
                       return isActive && item.settings?.addToStories;
                     }
@@ -320,15 +313,18 @@ const withGroupsData =
 
     return (
       <GroupsList
-        groupClassName={groupClassName}
-        groupImageHeight={groupImageHeight}
-        groupImageWidth={groupImageWidth}
-        groupTitleSize={groupTitleSize}
+        autoplay={playOptions?.autoplay}
+        forbidClose={playOptions?.forbidClose}
+        groupClassName={viewOptions?.groupClassName}
+        groupImageHeight={viewOptions?.groupImageHeight}
+        groupImageWidth={viewOptions?.groupImageWidth}
+        groupTitleSize={viewOptions?.groupTitleSize}
         groupView={groupView}
         groups={data}
-        groupsClassName={groupsClassName}
+        groupsClassName={viewOptions?.groupsClassName}
         isLoading={loadStatus === 'loading'}
         isShowMockup={isShowMockup}
+        startStoryId={playOptions?.startStoryId}
         onCloseGroup={handleCloseGroup}
         onCloseStory={handleCloseStory}
         onFinishQuiz={handleFinishQuiz}

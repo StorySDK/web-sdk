@@ -3,6 +3,7 @@ import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
+import { IconLoader } from '@components/icons';
 import { useAdaptiveValue, useAnswersCache } from '../../hooks';
 import { StoryType, Group, GroupType, StorySize, StoryContenxt, ScoreType } from '../../types';
 import { StoryContent } from '..';
@@ -15,9 +16,10 @@ import './StoryModal.scss';
 const b = block('StorySdkModal');
 
 interface StoryModalProps {
-  currentGroup: Group;
-  stories: StoryType[];
+  currentGroup?: Group;
+  stories?: StoryType[];
   isShowing: boolean;
+  forbidClose?: boolean;
   isShowMockup?: boolean;
   isLastGroup: boolean;
   isFirstGroup: boolean;
@@ -25,6 +27,7 @@ interface StoryModalProps {
   isStatusBarActive?: boolean;
   isForceCloseAvailable?: boolean;
   isCacheDisabled?: boolean;
+  isLoading?: boolean;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -183,6 +186,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isStatusBarActive,
     currentGroup,
     isCacheDisabled,
+    forbidClose,
+    isLoading,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -207,34 +212,42 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [activeStoriesWithResult, setActiveStoriesWithResult] = useState<StoryType[]>([]);
 
   useEffect(() => {
-    setActiveStoriesWithResult(
-      stories
-        .filter((story) => {
-          if (story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
-            return true;
-          }
+    if (stories && currentGroup) {
+      setActiveStoriesWithResult(
+        stories
+          .filter((story) => {
+            if (
+              story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
+            ) {
+              return true;
+            }
 
-          return story.layerData?.isDefaultLayer;
-        })
-        .sort((storyA, storyB) => {
-          if (storyA.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
-            return 1;
-          }
-          if (storyB.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
-            return -1;
-          }
-          return 0;
-        })
-    );
-  }, [currentGroup.settings?.scoreResultLayersGroupId, stories]);
+            return story.layerData?.isDefaultLayer;
+          })
+          .sort((storyA, storyB) => {
+            if (
+              storyA.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
+            ) {
+              return 1;
+            }
+            if (
+              storyB.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
+            ) {
+              return -1;
+            }
+            return 0;
+          })
+      );
+    }
+  }, [currentGroup, stories]);
 
   const isMobile = width < MOBILE_BREAKPOINT;
-  const currentGroupType = currentGroup.type || GroupType.GROUP;
+  const currentGroupType = currentGroup?.type || GroupType.GROUP;
   const isBackroundFilled =
     activeStoriesWithResult[currentStory]?.background?.isFilled &&
     currentGroupType === GroupType.GROUP;
   const isLarge =
-    (currentGroup.settings?.storiesSize === StorySize.LARGE &&
+    (currentGroup?.settings?.storiesSize === StorySize.LARGE &&
       (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
     (currentGroupType === GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
 
@@ -315,7 +328,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     if (isShowing && activeStoriesWithResult.length) {
       setCurrentStoryId(activeStoriesWithResult[currentStoryIndex].id);
 
-      if (onOpenStory) {
+      if (onOpenStory && currentGroup) {
         onOpenStory(currentGroup.id, activeStoriesWithResult[currentStoryIndex].id);
       }
     }
@@ -331,11 +344,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const handleClose = useCallback(() => {
     onClose();
 
-    if (onCloseStory) {
+    if (onCloseStory && currentGroup) {
       onCloseStory(currentGroup.id, currentStoryId);
     }
   }, [
-    currentGroup.id,
+    currentGroup?.id,
     currentStory,
     onClose,
     onCloseStory,
@@ -344,7 +357,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const resultStories = useMemo(() => {
-    if (currentGroup.settings?.scoreResultLayersGroupId) {
+    if (currentGroup?.settings?.scoreResultLayersGroupId && stories) {
       return stories
         .filter(
           (story) =>
@@ -358,10 +371,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     }
 
     return [];
-  }, [currentGroup.settings?.scoreResultLayersGroupId, stories]);
+  }, [currentGroup?.settings?.scoreResultLayersGroupId, stories]);
 
   const getResultStoryId = useCallback(() => {
-    if (!resultStories.length || !currentGroup.settings?.scoreResultLayersGroupId) {
+    if (!resultStories.length || !currentGroup?.settings?.scoreResultLayersGroupId) {
       return '';
     }
 
@@ -412,24 +425,24 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [
     resultStories,
     activeStoriesWithResult,
-    currentGroup.settings?.scoreResultLayersGroupId,
-    currentGroup.settings?.scoreType,
+    currentGroup?.settings?.scoreResultLayersGroupId,
+    currentGroup?.settings?.scoreType,
     currentStory,
     quizState
   ]);
 
   const handleFinishStoryQuiz = useCallback(() => {
     const isNotResultStory =
-      currentGroup.settings?.scoreResultLayersGroupId !==
+      currentGroup?.settings?.scoreResultLayersGroupId !==
       activeStoriesWithResult[currentStory]?.layerData?.layersGroupId;
 
-    if (onFinishQuiz && currentGroup.settings?.scoreResultLayersGroupId && isNotResultStory) {
+    if (onFinishQuiz && currentGroup?.settings?.scoreResultLayersGroupId && isNotResultStory) {
       onFinishQuiz(currentGroup.id, currentStoryId);
     }
   }, [
     activeStoriesWithResult,
-    currentGroup.id,
-    currentGroup.settings?.scoreResultLayersGroupId,
+    currentGroup?.id,
+    currentGroup?.settings?.scoreResultLayersGroupId,
     currentStory,
     currentStoryId,
     onFinishQuiz
@@ -452,24 +465,24 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       } else {
         onNextGroup();
 
-        if (onCloseStory) {
+        if (onCloseStory && currentGroup) {
           onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
         }
       }
     } else {
       handleFinishStoryQuiz();
 
-      if (onCloseStory) {
+      if (onCloseStory && currentGroup) {
         onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
 
-      if (onOpenStory) {
+      if (onOpenStory && currentGroup) {
         setTimeout(() => {
           onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
         }, 0);
       }
 
-      if (onNextStory) {
+      if (onNextStory && currentGroup) {
         onNextStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
 
@@ -494,7 +507,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     handleClose,
     onNextGroup,
     onCloseStory,
-    currentGroup.id,
+    currentGroup?.id,
     onOpenStory,
     onNextStory
   ]);
@@ -515,19 +528,19 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       dispatchQuizState({ type: 'reset' });
       isFirstGroup ? handleClose() : onPrevGroup();
     } else {
-      if (onCloseStory) {
+      if (onCloseStory && currentGroup) {
         onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
 
       handleFinishStoryQuiz();
 
-      if (onOpenStory) {
+      if (onOpenStory && currentGroup) {
         setTimeout(() => {
           onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
         }, 0);
       }
 
-      if (onPrevStory) {
+      if (onPrevStory && currentGroup) {
         onPrevStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
       }
 
@@ -557,7 +570,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onCloseStory,
     onOpenStory,
     onPrevStory,
-    currentGroup.id
+    currentGroup?.id
   ]);
 
   const handleGoToStory = (storyId: string) => {
@@ -568,7 +581,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         stotyId: storyId
       });
 
-      if (onOpenStory) {
+      if (onOpenStory && currentGroup) {
         setTimeout(() => {
           onOpenStory(currentGroup.id, activeStoriesWithResult[storyIndex].id);
         }, 0);
@@ -588,36 +601,42 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const noTopShadow =
     currentGroupType === GroupType.ONBOARDING &&
-    currentGroup.settings?.isProgressHidden &&
-    currentGroup.settings?.isProhibitToClose;
+    currentGroup?.settings?.isProgressHidden &&
+    currentGroup?.settings?.isProhibitToClose;
 
   const handleQuizAnswer = (params: { type: string; answer: string | number }) => {
-    if (params.type === 'add' && !isQuizStarted) {
+    if (params.type === 'add' && !isQuizStarted && currentGroup) {
       onStartQuiz && onStartQuiz(currentGroup.id);
       setIsQuizStarted(true);
     }
 
-    if (params.type === 'add' && !quizStartedStoryIds[currentStoryId]) {
+    if (params.type === 'add' && !quizStartedStoryIds[currentStoryId] && currentGroup) {
       onStartQuiz && onStartQuiz(currentGroup.id, currentStoryId);
       setQuizStartedStoryIds((prevState) => ({ ...prevState, [currentStoryId]: true }));
     }
 
-    if (currentGroup.settings?.scoreType === ScoreType.LETTERS && params.type === 'add') {
+    if (currentGroup?.settings?.scoreType === ScoreType.LETTERS && params.type === 'add') {
       dispatchQuizState({
         type: 'add_letters',
         payload: params.answer
       });
-    } else if (currentGroup.settings?.scoreType === ScoreType.NUMBERS && params.type === 'add') {
+    } else if (currentGroup?.settings?.scoreType === ScoreType.NUMBERS && params.type === 'add') {
       dispatchQuizState({
         type: 'add_points',
         payload: +params.answer
       });
-    } else if (currentGroup.settings?.scoreType === ScoreType.LETTERS && params.type === 'remove') {
+    } else if (
+      currentGroup?.settings?.scoreType === ScoreType.LETTERS &&
+      params.type === 'remove'
+    ) {
       dispatchQuizState({
         type: 'remove_letters',
         payload: params.answer
       });
-    } else if (currentGroup.settings?.scoreType === ScoreType.NUMBERS && params.type === 'remove') {
+    } else if (
+      currentGroup?.settings?.scoreType === ScoreType.NUMBERS &&
+      params.type === 'remove'
+    ) {
       dispatchQuizState({
         type: 'remove_points',
         payload: +params.answer
@@ -632,7 +651,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     <StoryContext.Provider
       value={{
         currentStoryId,
-        quizMode: currentGroup.settings?.scoreType,
+        quizMode: currentGroup?.settings?.scoreType,
         playStatusChange: setPlayStatus,
         handleQuizAnswer,
         getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
@@ -647,7 +666,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         }}
       >
         <div className={b('body')}>
-          {activeStoriesWithResult.length > 1 && (
+          {activeStoriesWithResult.length > 1 && !isLoading && (
             <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
               <LeftArrowIcon />
             </button>
@@ -655,7 +674,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
           <div
             className={b('bodyContainer', {
-              black: currentGroupType === GroupType.GROUP && !isBackroundFilled && !isMobile
+              black:
+                currentGroupType === GroupType.GROUP &&
+                !isBackroundFilled &&
+                !isMobile &&
+                isShowMockup
             })}
             style={{
               borderRadius: containerBorderRadius
@@ -696,105 +719,128 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                 borderRadius: getBorderRadius()
               }}
             >
-              <div className={b('swiperContent')}>
-                {activeStoriesWithResult.map((story, index) => (
-                  <div className={b('story', { current: index === currentStory })} key={story.id}>
-                    <StoryContent
-                      currentPaddingSize={currentPaddingSize}
-                      handleGoToStory={handleGoToStory}
-                      innerHeightGap={
-                        isShowMockup && currentGroupType === GroupType.GROUP && isLarge
-                          ? groupInnerHeightGap
-                          : 0
-                      }
-                      isLarge={
-                        currentGroup.settings?.storiesSize === StorySize.LARGE &&
-                        currentGroupType === GroupType.ONBOARDING
-                      }
-                      isLargeBackground={isShowMockup && currentGroupType === GroupType.GROUP}
-                      jsConfetti={jsConfetti}
-                      noTopShadow={noTopShadow}
-                      story={story}
-                      storyCurrentSize={currentStorySize}
-                    />
+              <>
+                {isLoading || !currentGroup?.stories ? (
+                  <div className={b('loader')}>
+                    <IconLoader className={b('loaderIcon').toString()} />
                   </div>
-                ))}
-              </div>
-
-              <div className={b('topContainer')}>
-                <>
-                  {isShowStatusBarInStory && <StatusBar />}
-
-                  <div
-                    className={b('controls')}
-                    style={{
-                      gap: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
-                      paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
-                      paddingLeft:
-                        !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
-                      paddingRight:
-                        !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
-                    }}
-                  >
-                    {!currentGroup.settings?.isProgressHidden && (
-                      <div
-                        className={b('indicators', {
-                          stopAnimation: playStatus === 'pause',
-                          widePadding: isShowMockup && isLarge
-                        })}
-                        style={{
-                          top: isShowMockup && isLarge ? largeIndicatorTop : undefined
-                        }}
-                      >
-                        {activeStoriesWithResult
-                          .filter((story) => story.layerData?.isDefaultLayer)
-                          .map((story, index) => (
-                            <div
-                              className={b('indicator', {
-                                filled: index < currentStory,
-                                current: index === currentStory
-                              })}
-                              key={story.id}
-                              onAnimationEnd={handleAnimationEnd}
-                            />
-                          ))}
-                      </div>
-                    )}
-
-                    {currentGroupType === GroupType.GROUP && (
-                      <div
-                        className={b('group', {
-                          noProgress: currentGroup.settings?.isProgressHidden,
-                          wideLeft: isShowMockup && isLarge
-                        })}
-                        style={{
-                          top: isShowMockup && isLarge ? largeElementsTop : undefined
-                        }}
-                      >
-                        <div className={b('groupImgWrapper')}>
-                          <img alt="" className={b('groupImg')} src={currentGroup.imageUrl} />
+                ) : (
+                  <>
+                    <div className={b('swiperContent')}>
+                      {activeStoriesWithResult.map((story, index) => (
+                        <div
+                          className={b('story', { current: index === currentStory })}
+                          key={story.id}
+                        >
+                          <StoryContent
+                            currentPaddingSize={currentPaddingSize}
+                            handleGoToStory={handleGoToStory}
+                            innerHeightGap={
+                              isShowMockup && currentGroupType === GroupType.GROUP && isLarge
+                                ? groupInnerHeightGap
+                                : 0
+                            }
+                            isLarge={
+                              currentGroup?.settings?.storiesSize === StorySize.LARGE &&
+                              currentGroupType === GroupType.ONBOARDING
+                            }
+                            isLargeBackground={isShowMockup && currentGroupType === GroupType.GROUP}
+                            jsConfetti={jsConfetti}
+                            noTopShadow={noTopShadow}
+                            story={story}
+                            storyCurrentSize={currentStorySize}
+                          />
                         </div>
-                        <p className={b('groupTitle')}>{currentGroup.title}</p>
-                      </div>
-                    )}
+                      ))}
+                    </div>
 
-                    {!currentGroup.settings?.isProhibitToClose && (
-                      <button
-                        className={b('close', {
-                          noProgress: currentGroup.settings?.isProgressHidden,
-                          wideRight: isShowMockup && isLarge
-                        })}
-                        style={{
-                          top: isShowMockup && isLarge ? largeElementsTop : undefined
-                        }}
-                        onClick={handleClose}
-                      >
-                        <CloseIcon />
-                      </button>
-                    )}
-                  </div>
-                </>
-              </div>
+                    <div className={b('topContainer')}>
+                      <>
+                        {isShowStatusBarInStory && <StatusBar />}
+
+                        <div
+                          className={b('controls')}
+                          style={{
+                            gap:
+                              !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
+                            paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
+                            paddingLeft:
+                              !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
+                            paddingRight:
+                              !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
+                          }}
+                        >
+                          {!currentGroup?.settings?.isProgressHidden && (
+                            <div
+                              className={b('indicators', {
+                                stopAnimation: playStatus === 'pause',
+                                widePadding: isShowMockup && isLarge
+                              })}
+                              style={{
+                                top: isShowMockup && isLarge ? largeIndicatorTop : undefined
+                              }}
+                            >
+                              {activeStoriesWithResult
+                                .filter((story) => story.layerData?.isDefaultLayer)
+                                .map((story, index) => (
+                                  <div
+                                    className={b('indicator', {
+                                      filled: index < currentStory,
+                                      current: index === currentStory
+                                    })}
+                                    key={story.id}
+                                    onAnimationEnd={handleAnimationEnd}
+                                  />
+                                ))}
+                            </div>
+                          )}
+
+                          {currentGroupType === GroupType.GROUP && (
+                            <div
+                              className={b('group', {
+                                noProgress: currentGroup?.settings?.isProgressHidden,
+                                wideLeft: isShowMockup && isLarge
+                              })}
+                              style={{
+                                top: isShowMockup && isLarge ? largeElementsTop : undefined
+                              }}
+                            >
+                              {currentGroup?.imageUrl && (
+                                <div className={b('groupImgWrapper')}>
+                                  <img
+                                    alt=""
+                                    className={b('groupImg')}
+                                    src={currentGroup?.imageUrl}
+                                  />
+                                </div>
+                              )}
+                              {currentGroup?.title && (
+                                <p className={b('groupTitle')}>{currentGroup?.title}</p>
+                              )}
+                            </div>
+                          )}
+
+                          {!currentGroup?.settings?.isProhibitToClose ||
+                            (!forbidClose && (
+                              <button
+                                className={b('close', {
+                                  noProgress: currentGroup?.settings?.isProgressHidden,
+                                  wideRight: isShowMockup && isLarge
+                                })}
+                                style={{
+                                  top: isShowMockup && isLarge ? largeElementsTop : undefined
+                                }}
+                                onClick={handleClose}
+                              >
+                                <CloseIcon />
+                              </button>
+                            ))}
+                        </div>
+                      </>
+                    </div>
+                  </>
+                )}
+              </>
             </div>
 
             {isShowMockup && (
@@ -809,14 +855,14 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             )}
           </div>
 
-          {activeStoriesWithResult.length > 1 && (
+          {activeStoriesWithResult.length > 1 && !isLoading && (
             <button className={b('arrowButton', { right: true })} onClick={handleNext}>
               <RightArrowIcon />
             </button>
           )}
         </div>
 
-        {isForceCloseAvailable && currentGroup.settings?.isProhibitToClose && (
+        {isForceCloseAvailable && currentGroup?.settings?.isProhibitToClose && (
           <button className={b('close', { general: true })} onClick={handleClose}>
             <CloseIcon />
           </button>

@@ -6355,9 +6355,15 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
 
 const b$o = block$1('GroupsSdkList');
 const GroupsList = (props) => {
-    const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, isShowMockup, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory, onStartQuiz, onFinishQuiz } = props;
+    var _a;
+    const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, isShowMockup, autoplay, startStoryId, forbidClose, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory, onStartQuiz, onFinishQuiz } = props;
     const [currentGroup, setCurrentGroup] = React.useState(0);
-    const [modalShow, setModalShow] = React.useState(false);
+    const [modalShow, setModalShow] = React.useState(!!autoplay);
+    React.useEffect(() => {
+        if (autoplay && onOpenGroup && (groups === null || groups === void 0 ? void 0 : groups.length)) {
+            onOpenGroup(groups[0].id);
+        }
+    }, [autoplay, groups, onOpenGroup]);
     const handleSelectGroup = React.useCallback((groupIndex) => {
         setCurrentGroup(groupIndex);
         setModalShow(true);
@@ -6388,12 +6394,14 @@ const GroupsList = (props) => {
         }
     }, [currentGroup, groups, onCloseGroup, onOpenGroup]);
     const handleCloseModal = React.useCallback(() => {
-        if (onCloseGroup) {
+        if (onCloseGroup && (groups === null || groups === void 0 ? void 0 : groups[currentGroup])) {
             onCloseGroup(groups[currentGroup].id);
         }
-        setModalShow(false);
-    }, [currentGroup, groups, onCloseGroup]);
-    return (React__default["default"].createElement(React__default["default"].Fragment, null, isLoading ? (React__default["default"].createElement("div", { className: b$o() },
+        if (!forbidClose) {
+            setModalShow(false);
+        }
+    }, [currentGroup, forbidClose, groups, onCloseGroup]);
+    return (React__default["default"].createElement(React__default["default"].Fragment, null, isLoading && !autoplay ? (React__default["default"].createElement("div", { className: b$o() },
         React__default["default"].createElement("div", { className: b$o('carousel') },
             React__default["default"].createElement("div", { className: b$o('loaderItem') },
                 React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
@@ -6406,13 +6414,14 @@ const GroupsList = (props) => {
                 React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
             React__default["default"].createElement("div", { className: b$o('loaderItem') },
                 React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
-                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React__default["default"].createElement(React__default["default"].Fragment, null, groups.length ? (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement("div", { className: cn(b$o(), groupsClassName) },
-            React__default["default"].createElement("div", { className: b$o('carousel') }, groups
-                .filter((group) => group.stories.length)
-                .map((group, index) => (React__default["default"].createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))),
-        React__default["default"].createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, isShowMockup: isShowMockup, isShowing: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz }))) : (React__default["default"].createElement("div", { className: b$o({ empty: true }) },
-        React__default["default"].createElement("p", { className: b$o('emptyText') }, "Stories will be here")))))));
+                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React__default["default"].createElement(React__default["default"].Fragment, null,
+        groups.length ? (React__default["default"].createElement(React__default["default"].Fragment, null,
+            React__default["default"].createElement("div", { className: cn(b$o(), groupsClassName) },
+                React__default["default"].createElement("div", { className: b$o('carousel') }, groups
+                    .filter((group) => group.stories.length)
+                    .map((group, index) => (React__default["default"].createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))))) : (React__default["default"].createElement("div", { className: b$o({ empty: true }) },
+            React__default["default"].createElement("p", { className: b$o('emptyText') }, "Stories will be here"))),
+        React__default["default"].createElement(StoryModal, { currentGroup: groups === null || groups === void 0 ? void 0 : groups[currentGroup], forbidClose: forbidClose, isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === (groups === null || groups === void 0 ? void 0 : groups.length) - 1, isLoading: isLoading, isShowMockup: isShowMockup, isShowing: modalShow, startStoryId: startStoryId, stories: (_a = groups === null || groups === void 0 ? void 0 : groups[currentGroup]) === null || _a === void 0 ? void 0 : _a.stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz })))));
 };
 
 var u = e=>{var a=React.useRef(e);return React.useEffect(()=>{a.current=e;}),a};
@@ -9871,6 +9880,60 @@ const getUniqUserId$1 = () => {
     localStorage.setItem('StorySdkUserId', id);
     return id;
 };
+
+const IconLogoCircle = ({ className }) => {
+    const gradientId = React.useMemo(() => nanoid$1(), []);
+    return (React__default["default"].createElement("svg", { className: className, fill: "none", height: "34", viewBox: "0 0 34 34", width: "34", xmlns: "http://www.w3.org/2000/svg" },
+        React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", r: "17" }),
+        React__default["default"].createElement("path", { d: "M17 0C7.59621 0 0 7.59887 0 17C0 26.4038 7.59887 34 17 34C26.4038 34 34 26.4011 34 17C34 7.59621 26.4011 0 17 0ZM6.44938 24.5006C5.3198 22.9161 4.55215 21.068 4.23074 19.1575L6.19504 18.8268C6.4673 20.4418 7.11609 22.0037 8.07168 23.3445L6.44938 24.5006ZM6.19504 15.1732L4.23074 14.8425C4.55215 12.932 5.3198 11.0839 6.44938 9.49941L8.07168 10.6555C7.11609 11.9963 6.4673 13.5582 6.19504 15.1732ZM14.8425 29.7693C12.932 29.4479 11.0839 28.6802 9.49941 27.5506L10.6555 25.9283C11.9963 26.8839 13.5582 27.5327 15.1732 27.805L14.8425 29.7693ZM10.6555 8.07168L9.49941 6.44938C11.0839 5.3198 12.932 4.55215 14.8425 4.23074L15.1732 6.19504C13.5582 6.4673 11.9963 7.11609 10.6555 8.07168ZM27.5506 9.49941C28.6802 11.0839 29.4479 12.9313 29.7693 14.8425L27.805 15.1732C27.5327 13.5582 26.8839 11.9963 25.929 10.6555L27.5506 9.49941ZM19.1575 29.7693L18.8268 27.805C20.4418 27.5327 22.0037 26.8839 23.3445 25.9283L24.5006 27.5506C22.9161 28.6802 21.068 29.4479 19.1575 29.7693ZM23.3445 8.07168C22.0037 7.11609 20.4418 6.4673 18.8268 6.19504L19.1575 4.23074C21.068 4.55215 22.9161 5.3198 24.5006 6.44938L23.3445 8.07168ZM27.5506 24.5006L25.929 23.3445C26.8839 22.0037 27.5327 20.4418 27.805 18.8268L29.7693 19.1575C29.4479 21.0687 28.6802 22.9161 27.5506 24.5006Z", fill: `url(#${gradientId})` }),
+        React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", opacity: "0.6", r: "5" }),
+        React__default["default"].createElement("defs", null,
+            React__default["default"].createElement("linearGradient", { gradientUnits: "userSpaceOnUse", id: gradientId, x1: "7.5", x2: "22", y1: "3.5", y2: "32.5" },
+                React__default["default"].createElement("stop", { stopColor: "#FF0198" }),
+                React__default["default"].createElement("stop", { offset: "1", stopColor: "#B90AE0" })))));
+};
+
+const IconConfirm = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("path", { d: "M1.5 9.5C3.66667 11.6667 9 17 9 17L18.5 3", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.5" })));
+
+const IconDecline = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("path", { d: "M17 3L10 10M3 17L10 10M10 10L3 3M10 10L17 17", strokeLinecap: "round", strokeWidth: "1.5" })));
+
+const IconIphoneBattery = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 25 12", width: "25", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("rect", { height: "10.3333", opacity: "0.35", rx: "2.16667", stroke: "white", width: "21", x: "0.833008", y: "0.50293" }),
+    React__default["default"].createElement("path", { d: "M23.333 3.66943V7.66943C24.1377 7.33066 24.661 6.54257 24.661 5.66943C24.661 4.7963 24.1377 4.00821 23.333 3.66943Z", fill: "white", opacity: "0.4" }),
+    React__default["default"].createElement("rect", { fill: "white", height: "7.33333", rx: "1.33333", width: "18", x: "2.33301", y: "2.00293" })));
+
+const IconIphoneWifi = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "11", viewBox: "0 0 16 11", width: "16", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("path", { clipRule: "evenodd", d: "M7.66707 2.28448C9.8918 2.28457 12.0315 3.13869 13.6438 4.67028C13.7652 4.78852 13.9593 4.78703 14.0789 4.66693L15.2395 3.4966C15.3 3.43569 15.3338 3.35318 15.3333 3.26733C15.3328 3.18148 15.2981 3.09937 15.2368 3.03917C11.0049 -1.01306 4.32857 -1.01306 0.0966565 3.03917C0.0353544 3.09933 0.000572274 3.18141 6.99859e-06 3.26726C-0.000558277 3.35311 0.0331399 3.43565 0.0936446 3.4966L1.25459 4.66693C1.37409 4.78721 1.56831 4.78871 1.68965 4.67028C3.30221 3.13859 5.44212 2.28447 7.66707 2.28448ZM7.66707 6.09206C8.88942 6.09199 10.0681 6.54594 10.9742 7.36571C11.0968 7.48206 11.2898 7.47954 11.4093 7.36003L12.5685 6.1897C12.6296 6.12831 12.6635 6.04504 12.6626 5.9585C12.6617 5.87196 12.6261 5.78939 12.5639 5.72926C9.8047 3.16485 5.53178 3.16485 2.77262 5.72926C2.7103 5.78939 2.67474 5.87201 2.67392 5.95857C2.6731 6.04513 2.70709 6.1284 2.76827 6.1897L3.92721 7.36003C4.04667 7.47954 4.23972 7.48206 4.36227 7.36571C5.26774 6.54648 6.44553 6.09257 7.66707 6.09206ZM9.98929 8.6539C9.99106 8.74068 9.95692 8.82434 9.89492 8.88514L7.88962 10.9071C7.83084 10.9666 7.75069 11 7.66707 11C7.58345 11 7.5033 10.9666 7.44452 10.9071L5.43888 8.88514C5.37693 8.8243 5.34284 8.7406 5.34468 8.65383C5.34652 8.56705 5.38411 8.48487 5.44859 8.4267C6.72925 7.34443 8.60489 7.34443 9.88555 8.4267C9.94998 8.48492 9.98752 8.56712 9.98929 8.6539Z", fill: "white", fillRule: "evenodd" })));
+
+const IconIphoneCellular = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 17 12", width: "17", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("path", { clipRule: "evenodd", d: "M16 0.335938H15C14.4477 0.335938 14 0.783653 14 1.33594V10.0026C14 10.5549 14.4477 11.0026 15 11.0026H16C16.5523 11.0026 17 10.5549 17 10.0026V1.33594C17 0.783653 16.5523 0.335938 16 0.335938ZM10.3333 2.66927H11.3333C11.8856 2.66927 12.3333 3.11699 12.3333 3.66927V10.0026C12.3333 10.5549 11.8856 11.0026 11.3333 11.0026H10.3333C9.78105 11.0026 9.33333 10.5549 9.33333 10.0026V3.66927C9.33333 3.11699 9.78105 2.66927 10.3333 2.66927ZM6.66667 5.0026H5.66667C5.11438 5.0026 4.66667 5.45032 4.66667 6.0026V10.0026C4.66667 10.5549 5.11438 11.0026 5.66667 11.0026H6.66667C7.21895 11.0026 7.66667 10.5549 7.66667 10.0026V6.0026C7.66667 5.45032 7.21895 5.0026 6.66667 5.0026ZM2 7.0026H1C0.447715 7.0026 0 7.45032 0 8.0026V10.0026C0 10.5549 0.447715 11.0026 1 11.0026H2C2.55228 11.0026 3 10.5549 3 10.0026V8.0026C3 7.45032 2.55228 7.0026 2 7.0026Z", fill: "white", fillRule: "evenodd" })));
+
+const IconRateStar = ({ className }) => (React__default["default"].createElement("svg", { className: className, viewBox: "0 0 52 50", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("path", { d: "M26 1L33.725 16.7981L51 19.347L38.5 31.6372L41.45 49L26 40.7981L10.55 49L13.5 31.6372L1 19.347L18.275 16.7981L26 1Z", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
+
+const IconArrowSend = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "32", viewBox: "0 0 32 32", width: "32", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("g", { strokeWidth: "2" },
+        React__default["default"].createElement("circle", { cx: "16", cy: "16", r: "15" }),
+        React__default["default"].createElement("g", { strokeLinecap: "round" },
+            React__default["default"].createElement("path", { d: "m23 16-5.5-5.5" }),
+            React__default["default"].createElement("path", { d: "m23 16-5.5 5.5" }),
+            React__default["default"].createElement("path", { d: "m23 16h-14" })))));
+
+const IconLoader = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "69", viewBox: "0 0 68 69", width: "68", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("g", { filter: "url(#filter0_d_3254_16668)", opacity: "0.8" },
+        React__default["default"].createElement("path", { d: "M17.9999 61.7127C2.71925 52.8904 -2.53519 33.2806 6.28711 17.9999C6.80672 17.0999 7.95793 16.791 8.85845 17.3109C9.75897 17.8308 10.067 18.9823 9.54744 19.8823C1.76313 33.3651 6.39892 50.6678 19.8823 58.4524C33.3656 66.237 50.6681 61.6004 58.4524 48.1176C66.2367 34.6347 61.6009 17.3321 48.1176 9.54744C43.1491 6.67887 37.5114 5.39943 31.8147 5.84619C30.7781 5.92837 29.8731 5.15261 29.7909 4.11739C29.7092 3.08112 30.484 2.17421 31.5205 2.0934C37.9797 1.58589 44.3697 3.0365 49.9999 6.28711C65.2806 15.1094 70.535 34.7192 61.7127 49.9999C52.8904 65.2806 33.2806 70.535 17.9999 61.7127Z", fill: "white" })),
+    React__default["default"].createElement("defs", null,
+        React__default["default"].createElement("filter", { colorInterpolationFilters: "sRGB", filterUnits: "userSpaceOnUse", height: "67.9991", id: "filter0_d_3254_16668", width: "67.9872", x: "0.00634766", y: "0.994385" },
+            React__default["default"].createElement("feFlood", { floodOpacity: "0", result: "BackgroundImageFix" }),
+            React__default["default"].createElement("feColorMatrix", { in: "SourceAlpha", result: "hardAlpha", type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" }),
+            React__default["default"].createElement("feOffset", { dy: "1" }),
+            React__default["default"].createElement("feGaussianBlur", { stdDeviation: "1" }),
+            React__default["default"].createElement("feComposite", { in2: "hardAlpha", operator: "out" }),
+            React__default["default"].createElement("feColorMatrix", { type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0" }),
+            React__default["default"].createElement("feBlend", { in2: "BackgroundImageFix", mode: "normal", result: "effect1_dropShadow_3254_16668" }),
+            React__default["default"].createElement("feBlend", { in: "SourceGraphic", in2: "effect1_dropShadow_3254_16668", mode: "normal", result: "shape" })))));
 
 function useInterval(callback, delay) {
     const savedCallback = React.useRef(callback);
@@ -17112,46 +17175,6 @@ function friendlyDateTime$1(dateTimeish) {
   }
 }
 
-const IconLogoCircle = ({ className }) => {
-    const gradientId = React.useMemo(() => nanoid$1(), []);
-    return (React__default["default"].createElement("svg", { className: className, fill: "none", height: "34", viewBox: "0 0 34 34", width: "34", xmlns: "http://www.w3.org/2000/svg" },
-        React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", r: "17" }),
-        React__default["default"].createElement("path", { d: "M17 0C7.59621 0 0 7.59887 0 17C0 26.4038 7.59887 34 17 34C26.4038 34 34 26.4011 34 17C34 7.59621 26.4011 0 17 0ZM6.44938 24.5006C5.3198 22.9161 4.55215 21.068 4.23074 19.1575L6.19504 18.8268C6.4673 20.4418 7.11609 22.0037 8.07168 23.3445L6.44938 24.5006ZM6.19504 15.1732L4.23074 14.8425C4.55215 12.932 5.3198 11.0839 6.44938 9.49941L8.07168 10.6555C7.11609 11.9963 6.4673 13.5582 6.19504 15.1732ZM14.8425 29.7693C12.932 29.4479 11.0839 28.6802 9.49941 27.5506L10.6555 25.9283C11.9963 26.8839 13.5582 27.5327 15.1732 27.805L14.8425 29.7693ZM10.6555 8.07168L9.49941 6.44938C11.0839 5.3198 12.932 4.55215 14.8425 4.23074L15.1732 6.19504C13.5582 6.4673 11.9963 7.11609 10.6555 8.07168ZM27.5506 9.49941C28.6802 11.0839 29.4479 12.9313 29.7693 14.8425L27.805 15.1732C27.5327 13.5582 26.8839 11.9963 25.929 10.6555L27.5506 9.49941ZM19.1575 29.7693L18.8268 27.805C20.4418 27.5327 22.0037 26.8839 23.3445 25.9283L24.5006 27.5506C22.9161 28.6802 21.068 29.4479 19.1575 29.7693ZM23.3445 8.07168C22.0037 7.11609 20.4418 6.4673 18.8268 6.19504L19.1575 4.23074C21.068 4.55215 22.9161 5.3198 24.5006 6.44938L23.3445 8.07168ZM27.5506 24.5006L25.929 23.3445C26.8839 22.0037 27.5327 20.4418 27.805 18.8268L29.7693 19.1575C29.4479 21.0687 28.6802 22.9161 27.5506 24.5006Z", fill: `url(#${gradientId})` }),
-        React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", opacity: "0.6", r: "5" }),
-        React__default["default"].createElement("defs", null,
-            React__default["default"].createElement("linearGradient", { gradientUnits: "userSpaceOnUse", id: gradientId, x1: "7.5", x2: "22", y1: "3.5", y2: "32.5" },
-                React__default["default"].createElement("stop", { stopColor: "#FF0198" }),
-                React__default["default"].createElement("stop", { offset: "1", stopColor: "#B90AE0" })))));
-};
-
-const IconConfirm = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M1.5 9.5C3.66667 11.6667 9 17 9 17L18.5 3", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.5" })));
-
-const IconDecline = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M17 3L10 10M3 17L10 10M10 10L3 3M10 10L17 17", strokeLinecap: "round", strokeWidth: "1.5" })));
-
-const IconIphoneBattery = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 25 12", width: "25", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("rect", { height: "10.3333", opacity: "0.35", rx: "2.16667", stroke: "white", width: "21", x: "0.833008", y: "0.50293" }),
-    React__default["default"].createElement("path", { d: "M23.333 3.66943V7.66943C24.1377 7.33066 24.661 6.54257 24.661 5.66943C24.661 4.7963 24.1377 4.00821 23.333 3.66943Z", fill: "white", opacity: "0.4" }),
-    React__default["default"].createElement("rect", { fill: "white", height: "7.33333", rx: "1.33333", width: "18", x: "2.33301", y: "2.00293" })));
-
-const IconIphoneWifi = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "11", viewBox: "0 0 16 11", width: "16", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { clipRule: "evenodd", d: "M7.66707 2.28448C9.8918 2.28457 12.0315 3.13869 13.6438 4.67028C13.7652 4.78852 13.9593 4.78703 14.0789 4.66693L15.2395 3.4966C15.3 3.43569 15.3338 3.35318 15.3333 3.26733C15.3328 3.18148 15.2981 3.09937 15.2368 3.03917C11.0049 -1.01306 4.32857 -1.01306 0.0966565 3.03917C0.0353544 3.09933 0.000572274 3.18141 6.99859e-06 3.26726C-0.000558277 3.35311 0.0331399 3.43565 0.0936446 3.4966L1.25459 4.66693C1.37409 4.78721 1.56831 4.78871 1.68965 4.67028C3.30221 3.13859 5.44212 2.28447 7.66707 2.28448ZM7.66707 6.09206C8.88942 6.09199 10.0681 6.54594 10.9742 7.36571C11.0968 7.48206 11.2898 7.47954 11.4093 7.36003L12.5685 6.1897C12.6296 6.12831 12.6635 6.04504 12.6626 5.9585C12.6617 5.87196 12.6261 5.78939 12.5639 5.72926C9.8047 3.16485 5.53178 3.16485 2.77262 5.72926C2.7103 5.78939 2.67474 5.87201 2.67392 5.95857C2.6731 6.04513 2.70709 6.1284 2.76827 6.1897L3.92721 7.36003C4.04667 7.47954 4.23972 7.48206 4.36227 7.36571C5.26774 6.54648 6.44553 6.09257 7.66707 6.09206ZM9.98929 8.6539C9.99106 8.74068 9.95692 8.82434 9.89492 8.88514L7.88962 10.9071C7.83084 10.9666 7.75069 11 7.66707 11C7.58345 11 7.5033 10.9666 7.44452 10.9071L5.43888 8.88514C5.37693 8.8243 5.34284 8.7406 5.34468 8.65383C5.34652 8.56705 5.38411 8.48487 5.44859 8.4267C6.72925 7.34443 8.60489 7.34443 9.88555 8.4267C9.94998 8.48492 9.98752 8.56712 9.98929 8.6539Z", fill: "white", fillRule: "evenodd" })));
-
-const IconIphoneCellular = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 17 12", width: "17", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { clipRule: "evenodd", d: "M16 0.335938H15C14.4477 0.335938 14 0.783653 14 1.33594V10.0026C14 10.5549 14.4477 11.0026 15 11.0026H16C16.5523 11.0026 17 10.5549 17 10.0026V1.33594C17 0.783653 16.5523 0.335938 16 0.335938ZM10.3333 2.66927H11.3333C11.8856 2.66927 12.3333 3.11699 12.3333 3.66927V10.0026C12.3333 10.5549 11.8856 11.0026 11.3333 11.0026H10.3333C9.78105 11.0026 9.33333 10.5549 9.33333 10.0026V3.66927C9.33333 3.11699 9.78105 2.66927 10.3333 2.66927ZM6.66667 5.0026H5.66667C5.11438 5.0026 4.66667 5.45032 4.66667 6.0026V10.0026C4.66667 10.5549 5.11438 11.0026 5.66667 11.0026H6.66667C7.21895 11.0026 7.66667 10.5549 7.66667 10.0026V6.0026C7.66667 5.45032 7.21895 5.0026 6.66667 5.0026ZM2 7.0026H1C0.447715 7.0026 0 7.45032 0 8.0026V10.0026C0 10.5549 0.447715 11.0026 1 11.0026H2C2.55228 11.0026 3 10.5549 3 10.0026V8.0026C3 7.45032 2.55228 7.0026 2 7.0026Z", fill: "white", fillRule: "evenodd" })));
-
-const IconRateStar = ({ className }) => (React__default["default"].createElement("svg", { className: className, viewBox: "0 0 52 50", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M26 1L33.725 16.7981L51 19.347L38.5 31.6372L41.45 49L26 40.7981L10.55 49L13.5 31.6372L1 19.347L18.275 16.7981L26 1Z", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
-
-const IconArrowSend = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "32", viewBox: "0 0 32 32", width: "32", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("g", { strokeWidth: "2" },
-        React__default["default"].createElement("circle", { cx: "16", cy: "16", r: "15" }),
-        React__default["default"].createElement("g", { strokeLinecap: "round" },
-            React__default["default"].createElement("path", { d: "m23 16-5.5-5.5" }),
-            React__default["default"].createElement("path", { d: "m23 16-5.5 5.5" }),
-            React__default["default"].createElement("path", { d: "m23 16h-14" })))));
-
 const b$n = block$1('StorySdkStatusBar');
 const INIT_VERTICAL_PADDING = 10;
 const INIT_SIDE_PADDING = 20;
@@ -17253,8 +17276,8 @@ const reducer = (state, action) => {
     throw Error('Unknown action.');
 };
 const StoryModal = (props) => {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
-    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, forbidClose, isLoading, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
     const [quizState, dispatchQuizState] = React.useReducer(reducer, initQuizeState);
     const [currentStory, setCurrentStory] = React.useState(0);
     const [currentStoryId, setCurrentStoryId] = React.useState('');
@@ -17265,30 +17288,32 @@ const StoryModal = (props) => {
     const [width, height] = d$1();
     const [activeStoriesWithResult, setActiveStoriesWithResult] = React.useState([]);
     React.useEffect(() => {
-        setActiveStoriesWithResult(stories
-            .filter((story) => {
-            var _a, _b, _c;
-            if (((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
-                return true;
-            }
-            return (_c = story.layerData) === null || _c === void 0 ? void 0 : _c.isDefaultLayer;
-        })
-            .sort((storyA, storyB) => {
-            var _a, _b, _c, _d;
-            if (((_a = storyA.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
-                return 1;
-            }
-            if (((_c = storyB.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId) === ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId)) {
-                return -1;
-            }
-            return 0;
-        }));
-    }, [(_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId, stories]);
+        if (stories && currentGroup) {
+            setActiveStoriesWithResult(stories
+                .filter((story) => {
+                var _a, _b, _c;
+                if (((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
+                    return true;
+                }
+                return (_c = story.layerData) === null || _c === void 0 ? void 0 : _c.isDefaultLayer;
+            })
+                .sort((storyA, storyB) => {
+                var _a, _b, _c, _d;
+                if (((_a = storyA.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
+                    return 1;
+                }
+                if (((_c = storyB.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId) === ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId)) {
+                    return -1;
+                }
+                return 0;
+            }));
+        }
+    }, [currentGroup, stories]);
     const isMobile = width < MOBILE_BREAKPOINT;
-    const currentGroupType = currentGroup.type || GroupType.GROUP;
-    const isBackroundFilled = ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.background) === null || _c === void 0 ? void 0 : _c.isFilled) &&
+    const currentGroupType = (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.type) || GroupType.GROUP;
+    const isBackroundFilled = ((_b = (_a = activeStoriesWithResult[currentStory]) === null || _a === void 0 ? void 0 : _a.background) === null || _b === void 0 ? void 0 : _b.isFilled) &&
         currentGroupType === GroupType.GROUP;
-    const isLarge = (((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.storiesSize) === StorySize.LARGE &&
+    const isLarge = (((_c = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _c === void 0 ? void 0 : _c.storiesSize) === StorySize.LARGE &&
         (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
         (currentGroupType === GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
     const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
@@ -17357,7 +17382,7 @@ const StoryModal = (props) => {
         }
         if (isShowing && activeStoriesWithResult.length) {
             setCurrentStoryId(activeStoriesWithResult[currentStoryIndex].id);
-            if (onOpenStory) {
+            if (onOpenStory && currentGroup) {
                 onOpenStory(currentGroup.id, activeStoriesWithResult[currentStoryIndex].id);
             }
         }
@@ -17371,11 +17396,11 @@ const StoryModal = (props) => {
     ]);
     const handleClose = React.useCallback(() => {
         onClose();
-        if (onCloseStory) {
+        if (onCloseStory && currentGroup) {
             onCloseStory(currentGroup.id, currentStoryId);
         }
     }, [
-        currentGroup.id,
+        currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.id,
         currentStory,
         onClose,
         onCloseStory,
@@ -17384,7 +17409,7 @@ const StoryModal = (props) => {
     ]);
     const resultStories = React.useMemo(() => {
         var _a;
-        if ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) {
+        if (((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) && stories) {
             return stories
                 .filter((story) => { var _a, _b; return ((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId); })
                 .map((story) => {
@@ -17397,10 +17422,10 @@ const StoryModal = (props) => {
             });
         }
         return [];
-    }, [(_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreResultLayersGroupId, stories]);
+    }, [(_d = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId, stories]);
     const getResultStoryId = React.useCallback(() => {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
-        if (!resultStories.length || !((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
+        if (!resultStories.length || !((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
             return '';
         }
         const nextLayersGroupId = (_b = activeStoriesWithResult[currentStory + 1]) === null || _b === void 0 ? void 0 : _b.layerData.layersGroupId;
@@ -17443,22 +17468,22 @@ const StoryModal = (props) => {
     }, [
         resultStories,
         activeStoriesWithResult,
-        (_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreResultLayersGroupId,
-        (_g = currentGroup.settings) === null || _g === void 0 ? void 0 : _g.scoreType,
+        (_e = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreResultLayersGroupId,
+        (_f = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreType,
         currentStory,
         quizState
     ]);
     const handleFinishStoryQuiz = React.useCallback(() => {
         var _a, _b, _c, _d;
-        const isNotResultStory = ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) !==
+        const isNotResultStory = ((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) !==
             ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId);
-        if (onFinishQuiz && ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId) && isNotResultStory) {
+        if (onFinishQuiz && ((_d = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId) && isNotResultStory) {
             onFinishQuiz(currentGroup.id, currentStoryId);
         }
     }, [
         activeStoriesWithResult,
-        currentGroup.id,
-        (_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.scoreResultLayersGroupId,
+        currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.id,
+        (_g = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _g === void 0 ? void 0 : _g.scoreResultLayersGroupId,
         currentStory,
         currentStoryId,
         onFinishQuiz
@@ -17476,22 +17501,22 @@ const StoryModal = (props) => {
             }
             else {
                 onNextGroup();
-                if (onCloseStory) {
+                if (onCloseStory && currentGroup) {
                     onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
                 }
             }
         }
         else {
             handleFinishStoryQuiz();
-            if (onCloseStory) {
+            if (onCloseStory && currentGroup) {
                 onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
-            if (onOpenStory) {
+            if (onOpenStory && currentGroup) {
                 setTimeout(() => {
                     onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
                 }, 0);
             }
-            if (onNextStory) {
+            if (onNextStory && currentGroup) {
                 onNextStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             if (resultStoryId) {
@@ -17513,7 +17538,7 @@ const StoryModal = (props) => {
         handleClose,
         onNextGroup,
         onCloseStory,
-        currentGroup.id,
+        currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.id,
         onOpenStory,
         onNextStory
     ]);
@@ -17531,16 +17556,16 @@ const StoryModal = (props) => {
             isFirstGroup ? handleClose() : onPrevGroup();
         }
         else {
-            if (onCloseStory) {
+            if (onCloseStory && currentGroup) {
                 onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             handleFinishStoryQuiz();
-            if (onOpenStory) {
+            if (onOpenStory && currentGroup) {
                 setTimeout(() => {
                     onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
                 }, 0);
             }
-            if (onPrevStory) {
+            if (onPrevStory && currentGroup) {
                 onPrevStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             if (activeStoriesWithResult[currentStory - 1].layerData.layersGroupId ===
@@ -17564,7 +17589,7 @@ const StoryModal = (props) => {
         onCloseStory,
         onOpenStory,
         onPrevStory,
-        currentGroup.id
+        currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.id
     ]);
     const handleGoToStory = (storyId) => {
         const storyIndex = activeStoriesWithResult.findIndex((story) => story.id === storyId);
@@ -17572,7 +17597,7 @@ const StoryModal = (props) => {
             eventPublish('nextStory', {
                 stotyId: storyId
             });
-            if (onOpenStory) {
+            if (onOpenStory && currentGroup) {
                 setTimeout(() => {
                     onOpenStory(currentGroup.id, activeStoriesWithResult[storyIndex].id);
                 }, 0);
@@ -17586,37 +17611,39 @@ const StoryModal = (props) => {
         canvas: canvasRef.current
     }));
     const noTopShadow = currentGroupType === GroupType.ONBOARDING &&
-        ((_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProgressHidden) &&
-        ((_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.isProhibitToClose);
+        ((_h = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProgressHidden) &&
+        ((_j = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProhibitToClose);
     const handleQuizAnswer = (params) => {
         var _a, _b, _c, _d;
-        if (params.type === 'add' && !isQuizStarted) {
+        if (params.type === 'add' && !isQuizStarted && currentGroup) {
             onStartQuiz && onStartQuiz(currentGroup.id);
             setIsQuizStarted(true);
         }
-        if (params.type === 'add' && !quizStartedStoryIds[currentStoryId]) {
+        if (params.type === 'add' && !quizStartedStoryIds[currentStoryId] && currentGroup) {
             onStartQuiz && onStartQuiz(currentGroup.id, currentStoryId);
             setQuizStartedStoryIds((prevState) => (Object.assign(Object.assign({}, prevState), { [currentStoryId]: true })));
         }
-        if (((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreType) === ScoreType.LETTERS && params.type === 'add') {
+        if (((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreType) === ScoreType.LETTERS && params.type === 'add') {
             dispatchQuizState({
                 type: 'add_letters',
                 payload: params.answer
             });
         }
-        else if (((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreType) === ScoreType.NUMBERS && params.type === 'add') {
+        else if (((_b = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreType) === ScoreType.NUMBERS && params.type === 'add') {
             dispatchQuizState({
                 type: 'add_points',
                 payload: +params.answer
             });
         }
-        else if (((_c = currentGroup.settings) === null || _c === void 0 ? void 0 : _c.scoreType) === ScoreType.LETTERS && params.type === 'remove') {
+        else if (((_c = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _c === void 0 ? void 0 : _c.scoreType) === ScoreType.LETTERS &&
+            params.type === 'remove') {
             dispatchQuizState({
                 type: 'remove_letters',
                 payload: params.answer
             });
         }
-        else if (((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreType) === ScoreType.NUMBERS && params.type === 'remove') {
+        else if (((_d = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreType) === ScoreType.NUMBERS &&
+            params.type === 'remove') {
             dispatchQuizState({
                 type: 'remove_points',
                 payload: +params.answer
@@ -17627,7 +17654,7 @@ const StoryModal = (props) => {
     const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
     return (React__default["default"].createElement(StoryContext.Provider, { value: {
             currentStoryId,
-            quizMode: (_l = currentGroup.settings) === null || _l === void 0 ? void 0 : _l.scoreType,
+            quizMode: (_k = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _k === void 0 ? void 0 : _k.scoreType,
             playStatusChange: setPlayStatus,
             handleQuizAnswer,
             getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
@@ -17637,10 +17664,13 @@ const StoryModal = (props) => {
                 top: window.pageYOffset || document.documentElement.scrollTop
             } },
             React__default["default"].createElement("div", { className: b$m('body') },
-                activeStoriesWithResult.length > 1 && (React__default["default"].createElement("button", { className: b$m('arrowButton', { left: true }), onClick: handlePrev },
+                activeStoriesWithResult.length > 1 && !isLoading && (React__default["default"].createElement("button", { className: b$m('arrowButton', { left: true }), onClick: handlePrev },
                     React__default["default"].createElement(LeftArrowIcon, null))),
                 React__default["default"].createElement("div", { className: b$m('bodyContainer', {
-                        black: currentGroupType === GroupType.GROUP && !isBackroundFilled && !isMobile
+                        black: currentGroupType === GroupType.GROUP &&
+                            !isBackroundFilled &&
+                            !isMobile &&
+                            isShowMockup
                     }), style: {
                         borderRadius: containerBorderRadius
                     } },
@@ -17663,56 +17693,59 @@ const StoryModal = (props) => {
                             height: `calc(100% - ${isShowMockup && !isMobile ? heightGap : 0}px)`,
                             borderRadius: getBorderRadius()
                         } },
-                        React__default["default"].createElement("div", { className: b$m('swiperContent') }, activeStoriesWithResult.map((story, index) => {
-                            var _a;
-                            return (React__default["default"].createElement("div", { className: b$m('story', { current: index === currentStory }), key: story.id },
-                                React__default["default"].createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP && isLarge
-                                        ? groupInnerHeightGap
-                                        : 0, isLarge: ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.storiesSize) === StorySize.LARGE &&
-                                        currentGroupType === GroupType.ONBOARDING, isLargeBackground: isShowMockup && currentGroupType === GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize })));
-                        })),
-                        React__default["default"].createElement("div", { className: b$m('topContainer') },
-                            React__default["default"].createElement(React__default["default"].Fragment, null,
-                                isShowStatusBarInStory && React__default["default"].createElement(StatusBar, null),
-                                React__default["default"].createElement("div", { className: b$m('controls'), style: {
-                                        gap: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
-                                        paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
-                                        paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
-                                        paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
-                                    } },
-                                    !((_m = currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden) && (React__default["default"].createElement("div", { className: b$m('indicators', {
-                                            stopAnimation: playStatus === 'pause',
-                                            widePadding: isShowMockup && isLarge
-                                        }), style: {
-                                            top: isShowMockup && isLarge ? largeIndicatorTop : undefined
-                                        } }, activeStoriesWithResult
-                                        .filter((story) => { var _a; return (_a = story.layerData) === null || _a === void 0 ? void 0 : _a.isDefaultLayer; })
-                                        .map((story, index) => (React__default["default"].createElement("div", { className: b$m('indicator', {
-                                            filled: index < currentStory,
-                                            current: index === currentStory
-                                        }), key: story.id, onAnimationEnd: handleAnimationEnd }))))),
-                                    currentGroupType === GroupType.GROUP && (React__default["default"].createElement("div", { className: b$m('group', {
-                                            noProgress: (_o = currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProgressHidden,
-                                            wideLeft: isShowMockup && isLarge
-                                        }), style: {
-                                            top: isShowMockup && isLarge ? largeElementsTop : undefined
+                        React__default["default"].createElement(React__default["default"].Fragment, null, isLoading || !(currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.stories) ? (React__default["default"].createElement("div", { className: b$m('loader') },
+                            React__default["default"].createElement(IconLoader, { className: b$m('loaderIcon').toString() }))) : (React__default["default"].createElement(React__default["default"].Fragment, null,
+                            React__default["default"].createElement("div", { className: b$m('swiperContent') }, activeStoriesWithResult.map((story, index) => {
+                                var _a;
+                                return (React__default["default"].createElement("div", { className: b$m('story', { current: index === currentStory }), key: story.id },
+                                    React__default["default"].createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP && isLarge
+                                            ? groupInnerHeightGap
+                                            : 0, isLarge: ((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.storiesSize) === StorySize.LARGE &&
+                                            currentGroupType === GroupType.ONBOARDING, isLargeBackground: isShowMockup && currentGroupType === GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize })));
+                            })),
+                            React__default["default"].createElement("div", { className: b$m('topContainer') },
+                                React__default["default"].createElement(React__default["default"].Fragment, null,
+                                    isShowStatusBarInStory && React__default["default"].createElement(StatusBar, null),
+                                    React__default["default"].createElement("div", { className: b$m('controls'), style: {
+                                            gap: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
+                                            paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
+                                            paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
+                                            paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
                                         } },
-                                        React__default["default"].createElement("div", { className: b$m('groupImgWrapper') },
-                                            React__default["default"].createElement("img", { alt: "", className: b$m('groupImg'), src: currentGroup.imageUrl })),
-                                        React__default["default"].createElement("p", { className: b$m('groupTitle') }, currentGroup.title))),
-                                    !((_p = currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$m('close', {
-                                            noProgress: (_q = currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProgressHidden,
-                                            wideRight: isShowMockup && isLarge
-                                        }), style: {
-                                            top: isShowMockup && isLarge ? largeElementsTop : undefined
-                                        }, onClick: handleClose },
-                                        React__default["default"].createElement(CloseIcon, null))))))),
+                                        !((_l = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _l === void 0 ? void 0 : _l.isProgressHidden) && (React__default["default"].createElement("div", { className: b$m('indicators', {
+                                                stopAnimation: playStatus === 'pause',
+                                                widePadding: isShowMockup && isLarge
+                                            }), style: {
+                                                top: isShowMockup && isLarge ? largeIndicatorTop : undefined
+                                            } }, activeStoriesWithResult
+                                            .filter((story) => { var _a; return (_a = story.layerData) === null || _a === void 0 ? void 0 : _a.isDefaultLayer; })
+                                            .map((story, index) => (React__default["default"].createElement("div", { className: b$m('indicator', {
+                                                filled: index < currentStory,
+                                                current: index === currentStory
+                                            }), key: story.id, onAnimationEnd: handleAnimationEnd }))))),
+                                        currentGroupType === GroupType.GROUP && (React__default["default"].createElement("div", { className: b$m('group', {
+                                                noProgress: (_m = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden,
+                                                wideLeft: isShowMockup && isLarge
+                                            }), style: {
+                                                top: isShowMockup && isLarge ? largeElementsTop : undefined
+                                            } },
+                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl) && (React__default["default"].createElement("div", { className: b$m('groupImgWrapper') },
+                                                React__default["default"].createElement("img", { alt: "", className: b$m('groupImg'), src: currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl }))),
+                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title) && (React__default["default"].createElement("p", { className: b$m('groupTitle') }, currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title)))),
+                                        !((_o = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) ||
+                                            (!forbidClose && (React__default["default"].createElement("button", { className: b$m('close', {
+                                                    noProgress: (_p = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
+                                                    wideRight: isShowMockup && isLarge
+                                                }), style: {
+                                                    top: isShowMockup && isLarge ? largeElementsTop : undefined
+                                                }, onClick: handleClose },
+                                                React__default["default"].createElement(CloseIcon, null))))))))))),
                     isShowMockup && (React__default["default"].createElement("img", { className: b$m('mockup'), src: isLarge || currentGroupType === GroupType.GROUP
                             ? img$2
                             : img$1 }))),
-                activeStoriesWithResult.length > 1 && (React__default["default"].createElement("button", { className: b$m('arrowButton', { right: true }), onClick: handleNext },
+                activeStoriesWithResult.length > 1 && !isLoading && (React__default["default"].createElement("button", { className: b$m('arrowButton', { right: true }), onClick: handleNext },
                     React__default["default"].createElement(RightArrowIcon, null)))),
-            isForceCloseAvailable && ((_r = currentGroup.settings) === null || _r === void 0 ? void 0 : _r.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
+            isForceCloseAvailable && ((_q = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
                 React__default["default"].createElement(CloseIcon, null)))),
         React__default["default"].createElement("canvas", { ref: canvasRef, style: {
                 display: 'none'
@@ -79144,7 +79177,7 @@ const useGroupCache = (userId) => {
     return [getData, setData];
 };
 
-const withGroupsData = (GroupsList, groupImageWidth, groupImageHeight, groupTitleSize, groupClassName, groupsClassName) => () => {
+const withGroupsData = (GroupsList, viewOptions, playOptions) => () => {
     const [data, setData] = React.useState([]);
     const [groups, setGroups] = React.useState([]);
     const [groupView, setGroupView] = React.useState('circle');
@@ -79281,6 +79314,9 @@ const withGroupsData = (GroupsList, groupImageWidth, groupImageHeight, groupTitl
                                 .filter((item) => {
                                 var _a;
                                 const isActive = item.active && item.type;
+                                if (playOptions === null || playOptions === void 0 ? void 0 : playOptions.groupId) {
+                                    return isActive && item.id === playOptions.groupId;
+                                }
                                 if (item.type === 'onboarding') {
                                     return isActive && ((_a = item.settings) === null || _a === void 0 ? void 0 : _a.addToStories);
                                 }
@@ -79342,19 +79378,29 @@ const withGroupsData = (GroupsList, groupImageWidth, groupImageHeight, groupTitl
             setData(adaptedData);
         }
     }, [loadStatus, groupsWithStories, uniqUserId, language]);
-    return (React__default["default"].createElement(GroupsList, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, groupView: groupView, groups: data, groupsClassName: groupsClassName, isLoading: loadStatus === 'loading', isShowMockup: isShowMockup, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onFinishQuiz: handleFinishQuiz, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory, onStartQuiz: handleStartQuiz }));
+    return (React__default["default"].createElement(GroupsList, { autoplay: playOptions === null || playOptions === void 0 ? void 0 : playOptions.autoplay, forbidClose: playOptions === null || playOptions === void 0 ? void 0 : playOptions.forbidClose, groupClassName: viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupClassName, groupImageHeight: viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupImageHeight, groupImageWidth: viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupImageWidth, groupTitleSize: viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupTitleSize, groupView: groupView, groups: data, groupsClassName: viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupsClassName, isLoading: loadStatus === 'loading', isShowMockup: isShowMockup, startStoryId: playOptions === null || playOptions === void 0 ? void 0 : playOptions.startStoryId, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onFinishQuiz: handleFinishQuiz, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory, onStartQuiz: handleStartQuiz }));
 };
 
 class Story {
-    constructor(token, groupImageWidth, groupImageHeight, groupTitleSize, groupClassName, groupsClassName, devMode) {
+    constructor(token, viewOptions, playOptions) {
         this.token = token;
-        this.groupImageWidth = groupImageWidth;
-        this.groupImageHeight = groupImageHeight;
-        this.groupTitleSize = groupTitleSize;
-        this.groupClassName = groupClassName;
-        this.groupsClassName = groupsClassName;
-        this.devMode = devMode;
-        axios.defaults.baseURL = devMode
+        this.viewOptions = {};
+        this.playOptions = {};
+        if (this.viewOptions) {
+            this.viewOptions.groupImageWidth = viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupImageWidth;
+            this.viewOptions.groupImageHeight = viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupImageHeight;
+            this.viewOptions.groupTitleSize = viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupTitleSize;
+            this.viewOptions.groupClassName = viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupClassName;
+            this.viewOptions.groupsClassName = viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupsClassName;
+        }
+        if (this.playOptions) {
+            this.playOptions.autoplay = playOptions === null || playOptions === void 0 ? void 0 : playOptions.autoplay;
+            this.playOptions.groupId = playOptions === null || playOptions === void 0 ? void 0 : playOptions.groupId;
+            this.playOptions.forbidClose = playOptions === null || playOptions === void 0 ? void 0 : playOptions.forbidClose;
+            this.playOptions.startStoryId = playOptions === null || playOptions === void 0 ? void 0 : playOptions.startStoryId;
+            this.playOptions.devMode = playOptions === null || playOptions === void 0 ? void 0 : playOptions.devMode;
+        }
+        axios.defaults.baseURL = (playOptions === null || playOptions === void 0 ? void 0 : playOptions.devMode)
             ? 'https://api.diffapp.link/sdk/v1'
             : 'https://api.storysdk.com/sdk/v1';
         if (token) {
@@ -79371,7 +79417,7 @@ class Story {
             }
             return;
         }
-        const Groups = withGroupsData(GroupsList, this.groupImageWidth, this.groupImageHeight, this.groupTitleSize, this.groupClassName, this.groupsClassName);
+        const Groups = withGroupsData(GroupsList, this.viewOptions, this.playOptions);
         if (element) {
             ReactDOM__default["default"].render(React__default["default"].createElement(Groups, null), element);
         }

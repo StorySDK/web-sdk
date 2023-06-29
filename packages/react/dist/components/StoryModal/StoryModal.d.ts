@@ -2,9 +2,10 @@ import React from 'react';
 import { StoryType, Group, StoryContenxt } from '../../types';
 import './StoryModal.scss';
 interface StoryModalProps {
-    currentGroup: Group;
-    stories: StoryType[];
+    currentGroup?: Group;
+    stories?: StoryType[];
     isShowing: boolean;
+    forbidClose?: boolean;
     isShowMockup?: boolean;
     isLastGroup: boolean;
     isFirstGroup: boolean;
@@ -12,6 +13,7 @@ interface StoryModalProps {
     isStatusBarActive?: boolean;
     isForceCloseAvailable?: boolean;
     isCacheDisabled?: boolean;
+    isLoading?: boolean;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;

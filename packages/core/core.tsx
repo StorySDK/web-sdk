@@ -8,36 +8,60 @@ import '@storysdk/react/dist/bundle.css';
 export class Story {
   token: string;
 
-  groupImageWidth?: number;
+  viewOptions?: {
+    groupImageWidth?: number;
+    groupImageHeight?: number;
+    groupTitleSize?: number;
+    groupClassName?: string;
+    groupsClassName?: string;
+  };
 
-  groupImageHeight?: number;
-
-  groupTitleSize?: number;
-
-  groupClassName?: string;
-
-  groupsClassName?: string;
-
-  devMode?: boolean;
+  playOptions?: {
+    autoplay?: boolean;
+    groupId?: string;
+    startStoryId?: string;
+    forbidClose?: boolean;
+    devMode?: boolean;
+  };
 
   constructor(
     token: string,
-    groupImageWidth?: number,
-    groupImageHeight?: number,
-    groupTitleSize?: number,
-    groupClassName?: string,
-    groupsClassName?: string,
-    devMode?: boolean
+    viewOptions?: {
+      groupImageWidth?: number;
+      groupImageHeight?: number;
+      groupTitleSize?: number;
+      groupClassName?: string;
+      groupsClassName?: string;
+    },
+    playOptions?: {
+      autoplay?: boolean;
+      groupId?: string;
+      startStoryId?: string;
+      forbidClose?: boolean;
+      devMode?: boolean;
+    }
   ) {
     this.token = token;
-    this.groupImageWidth = groupImageWidth;
-    this.groupImageHeight = groupImageHeight;
-    this.groupTitleSize = groupTitleSize;
-    this.groupClassName = groupClassName;
-    this.groupsClassName = groupsClassName;
-    this.devMode = devMode;
+    this.viewOptions = {};
+    this.playOptions = {};
 
-    axios.defaults.baseURL = devMode
+    if (this.viewOptions) {
+      this.viewOptions.groupImageWidth = viewOptions?.groupImageWidth;
+      this.viewOptions.groupImageHeight = viewOptions?.groupImageHeight;
+      this.viewOptions.groupTitleSize = viewOptions?.groupTitleSize;
+      this.viewOptions.groupClassName = viewOptions?.groupClassName;
+      this.viewOptions.groupsClassName = viewOptions?.groupsClassName;
+    }
+
+    if (this.playOptions) {
+      this.playOptions.autoplay = playOptions?.autoplay;
+      this.playOptions.groupId = playOptions?.groupId;
+      this.playOptions.forbidClose = playOptions?.forbidClose;
+      this.playOptions.startStoryId = playOptions?.startStoryId;
+      this.playOptions.devMode = playOptions?.devMode;
+    }
+
+    axios.defaults.baseURL = playOptions?.devMode
       ? 'https://api.diffapp.link/sdk/v1'
       : 'https://api.storysdk.com/sdk/v1';
 
@@ -57,14 +81,7 @@ export class Story {
       return;
     }
 
-    const Groups = withGroupsData(
-      GroupsList,
-      this.groupImageWidth,
-      this.groupImageHeight,
-      this.groupTitleSize,
-      this.groupClassName,
-      this.groupsClassName
-    );
+    const Groups = withGroupsData(GroupsList, this.viewOptions, this.playOptions);
 
     if (element) {
       ReactDOM.render(<Groups />, element);

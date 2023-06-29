@@ -3,7 +3,7 @@ import { Group } from '../../types';
 import { StoryModal } from '..';
 
 interface GroupProps {
-  group: Group;
+  group?: Group;
   isFirstGroup: boolean;
   isLastGroup: boolean;
   isForceCloseAvailable?: boolean;
@@ -57,7 +57,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
           isShowing={isShowing}
           isStatusBarActive={isStatusBarActive}
           startStoryId={startStoryId}
-          stories={group.stories}
+          stories={group?.stories}
           onClose={handleCloseModal}
           onNextGroup={handleNextGroup}
           onPrevGroup={handlePrevGroup}
