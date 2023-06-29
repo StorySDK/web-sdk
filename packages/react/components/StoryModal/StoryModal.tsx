@@ -820,21 +820,20 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                             </div>
                           )}
 
-                          {!currentGroup?.settings?.isProhibitToClose ||
-                            (!forbidClose && (
-                              <button
-                                className={b('close', {
-                                  noProgress: currentGroup?.settings?.isProgressHidden,
-                                  wideRight: isShowMockup && isLarge
-                                })}
-                                style={{
-                                  top: isShowMockup && isLarge ? largeElementsTop : undefined
-                                }}
-                                onClick={handleClose}
-                              >
-                                <CloseIcon />
-                              </button>
-                            ))}
+                          {(!currentGroup?.settings?.isProhibitToClose || !forbidClose) && (
+                            <button
+                              className={b('close', {
+                                noProgress: currentGroup?.settings?.isProgressHidden,
+                                wideRight: isShowMockup && isLarge
+                              })}
+                              style={{
+                                top: isShowMockup && isLarge ? largeElementsTop : undefined
+                              }}
+                              onClick={handleClose}
+                            >
+                              <CloseIcon />
+                            </button>
+                          )}
                         </div>
                       </>
                     </div>

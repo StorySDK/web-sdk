@@ -19,14 +19,12 @@ interface DurationProps {
 const withGroupsData =
   (
     GroupsList: React.FC<GroupsListProps>,
-    viewOptions?: {
+    options?: {
       groupImageWidth?: number;
       groupImageHeight?: number;
       groupTitleSize?: number;
       groupClassName?: string;
       groupsClassName?: string;
-    },
-    playOptions?: {
       autoplay?: boolean;
       groupId?: string;
       startStoryId?: string;
@@ -232,8 +230,8 @@ const withGroupsData =
                   .filter((item: any) => {
                     const isActive = item.active && item.type;
 
-                    if (playOptions?.groupId) {
-                      return isActive && item.id === playOptions.groupId;
+                    if (options?.groupId) {
+                      return isActive && item.id === options.groupId;
                     }
 
                     if (item.type === 'onboarding') {
@@ -313,18 +311,18 @@ const withGroupsData =
 
     return (
       <GroupsList
-        autoplay={playOptions?.autoplay}
-        forbidClose={playOptions?.forbidClose}
-        groupClassName={viewOptions?.groupClassName}
-        groupImageHeight={viewOptions?.groupImageHeight}
-        groupImageWidth={viewOptions?.groupImageWidth}
-        groupTitleSize={viewOptions?.groupTitleSize}
+        autoplay={options?.autoplay}
+        forbidClose={options?.forbidClose}
+        groupClassName={options?.groupClassName}
+        groupImageHeight={options?.groupImageHeight}
+        groupImageWidth={options?.groupImageWidth}
+        groupTitleSize={options?.groupTitleSize}
         groupView={groupView}
         groups={data}
-        groupsClassName={viewOptions?.groupsClassName}
+        groupsClassName={options?.groupsClassName}
         isLoading={loadStatus === 'loading'}
         isShowMockup={isShowMockup}
-        startStoryId={playOptions?.startStoryId}
+        startStoryId={options?.startStoryId}
         onCloseGroup={handleCloseGroup}
         onCloseStory={handleCloseStory}
         onFinishQuiz={handleFinishQuiz}

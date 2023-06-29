@@ -17732,14 +17732,13 @@ const StoryModal = (props) => {
                                             (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl) && (React__default["default"].createElement("div", { className: b$m('groupImgWrapper') },
                                                 React__default["default"].createElement("img", { alt: "", className: b$m('groupImg'), src: currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl }))),
                                             (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title) && (React__default["default"].createElement("p", { className: b$m('groupTitle') }, currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title)))),
-                                        !((_o = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) ||
-                                            (!forbidClose && (React__default["default"].createElement("button", { className: b$m('close', {
-                                                    noProgress: (_p = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
-                                                    wideRight: isShowMockup && isLarge
-                                                }), style: {
-                                                    top: isShowMockup && isLarge ? largeElementsTop : undefined
-                                                }, onClick: handleClose },
-                                                React__default["default"].createElement(CloseIcon, null))))))))))),
+                                        (!((_o = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) || !forbidClose) && (React__default["default"].createElement("button", { className: b$m('close', {
+                                                noProgress: (_p = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
+                                                wideRight: isShowMockup && isLarge
+                                            }), style: {
+                                                top: isShowMockup && isLarge ? largeElementsTop : undefined
+                                            }, onClick: handleClose },
+                                            React__default["default"].createElement(CloseIcon, null)))))))))),
                     isShowMockup && (React__default["default"].createElement("img", { className: b$m('mockup'), src: isLarge || currentGroupType === GroupType.GROUP
                             ? img$2
                             : img$1 }))),
@@ -79177,7 +79176,7 @@ const useGroupCache = (userId) => {
     return [getData, setData];
 };
 
-const withGroupsData = (GroupsList, viewOptions, playOptions) => () => {
+const withGroupsData = (GroupsList, options) => () => {
     const [data, setData] = React.useState([]);
     const [groups, setGroups] = React.useState([]);
     const [groupView, setGroupView] = React.useState('circle');
@@ -79314,8 +79313,8 @@ const withGroupsData = (GroupsList, viewOptions, playOptions) => () => {
                                 .filter((item) => {
                                 var _a;
                                 const isActive = item.active && item.type;
-                                if (playOptions === null || playOptions === void 0 ? void 0 : playOptions.groupId) {
-                                    return isActive && item.id === playOptions.groupId;
+                                if (options === null || options === void 0 ? void 0 : options.groupId) {
+                                    return isActive && item.id === options.groupId;
                                 }
                                 if (item.type === 'onboarding') {
                                     return isActive && ((_a = item.settings) === null || _a === void 0 ? void 0 : _a.addToStories);
@@ -79378,29 +79377,26 @@ const withGroupsData = (GroupsList, viewOptions, playOptions) => () => {
             setData(adaptedData);
         }
     }, [loadStatus, groupsWithStories, uniqUserId, language]);
-    return (React__default["default"].createElement(GroupsList, { autoplay: playOptions === null || playOptions === void 0 ? void 0 : playOptions.autoplay, forbidClose: playOptions === null || playOptions === void 0 ? void 0 : playOptions.forbidClose, groupClassName: viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupClassName, groupImageHeight: viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupImageHeight, groupImageWidth: viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupImageWidth, groupTitleSize: viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupTitleSize, groupView: groupView, groups: data, groupsClassName: viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupsClassName, isLoading: loadStatus === 'loading', isShowMockup: isShowMockup, startStoryId: playOptions === null || playOptions === void 0 ? void 0 : playOptions.startStoryId, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onFinishQuiz: handleFinishQuiz, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory, onStartQuiz: handleStartQuiz }));
+    return (React__default["default"].createElement(GroupsList, { autoplay: options === null || options === void 0 ? void 0 : options.autoplay, forbidClose: options === null || options === void 0 ? void 0 : options.forbidClose, groupClassName: options === null || options === void 0 ? void 0 : options.groupClassName, groupImageHeight: options === null || options === void 0 ? void 0 : options.groupImageHeight, groupImageWidth: options === null || options === void 0 ? void 0 : options.groupImageWidth, groupTitleSize: options === null || options === void 0 ? void 0 : options.groupTitleSize, groupView: groupView, groups: data, groupsClassName: options === null || options === void 0 ? void 0 : options.groupsClassName, isLoading: loadStatus === 'loading', isShowMockup: isShowMockup, startStoryId: options === null || options === void 0 ? void 0 : options.startStoryId, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onFinishQuiz: handleFinishQuiz, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory, onStartQuiz: handleStartQuiz }));
 };
 
 class Story {
-    constructor(token, viewOptions, playOptions) {
+    constructor(token, options) {
         this.token = token;
-        this.viewOptions = {};
-        this.playOptions = {};
-        if (this.viewOptions) {
-            this.viewOptions.groupImageWidth = viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupImageWidth;
-            this.viewOptions.groupImageHeight = viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupImageHeight;
-            this.viewOptions.groupTitleSize = viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupTitleSize;
-            this.viewOptions.groupClassName = viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupClassName;
-            this.viewOptions.groupsClassName = viewOptions === null || viewOptions === void 0 ? void 0 : viewOptions.groupsClassName;
+        this.options = {};
+        if (this.options) {
+            this.options.groupImageWidth = options === null || options === void 0 ? void 0 : options.groupImageWidth;
+            this.options.groupImageHeight = options === null || options === void 0 ? void 0 : options.groupImageHeight;
+            this.options.groupTitleSize = options === null || options === void 0 ? void 0 : options.groupTitleSize;
+            this.options.groupClassName = options === null || options === void 0 ? void 0 : options.groupClassName;
+            this.options.groupsClassName = options === null || options === void 0 ? void 0 : options.groupsClassName;
+            this.options.autoplay = options === null || options === void 0 ? void 0 : options.autoplay;
+            this.options.groupId = options === null || options === void 0 ? void 0 : options.groupId;
+            this.options.forbidClose = options === null || options === void 0 ? void 0 : options.forbidClose;
+            this.options.startStoryId = options === null || options === void 0 ? void 0 : options.startStoryId;
+            this.options.devMode = options === null || options === void 0 ? void 0 : options.devMode;
         }
-        if (this.playOptions) {
-            this.playOptions.autoplay = playOptions === null || playOptions === void 0 ? void 0 : playOptions.autoplay;
-            this.playOptions.groupId = playOptions === null || playOptions === void 0 ? void 0 : playOptions.groupId;
-            this.playOptions.forbidClose = playOptions === null || playOptions === void 0 ? void 0 : playOptions.forbidClose;
-            this.playOptions.startStoryId = playOptions === null || playOptions === void 0 ? void 0 : playOptions.startStoryId;
-            this.playOptions.devMode = playOptions === null || playOptions === void 0 ? void 0 : playOptions.devMode;
-        }
-        axios.defaults.baseURL = (playOptions === null || playOptions === void 0 ? void 0 : playOptions.devMode)
+        axios.defaults.baseURL = (options === null || options === void 0 ? void 0 : options.devMode)
             ? 'https://api.diffapp.link/sdk/v1'
             : 'https://api.storysdk.com/sdk/v1';
         if (token) {
@@ -79417,7 +79413,7 @@ class Story {
             }
             return;
         }
-        const Groups = withGroupsData(GroupsList, this.viewOptions, this.playOptions);
+        const Groups = withGroupsData(GroupsList, this.options);
         if (element) {
             ReactDOM__default["default"].render(React__default["default"].createElement(Groups, null), element);
         }

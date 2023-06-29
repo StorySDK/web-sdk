@@ -8,15 +8,12 @@ import '@storysdk/react/dist/bundle.css';
 export class Story {
   token: string;
 
-  viewOptions?: {
+  options?: {
     groupImageWidth?: number;
     groupImageHeight?: number;
     groupTitleSize?: number;
     groupClassName?: string;
     groupsClassName?: string;
-  };
-
-  playOptions?: {
     autoplay?: boolean;
     groupId?: string;
     startStoryId?: string;
@@ -26,14 +23,12 @@ export class Story {
 
   constructor(
     token: string,
-    viewOptions?: {
+    options?: {
       groupImageWidth?: number;
       groupImageHeight?: number;
       groupTitleSize?: number;
       groupClassName?: string;
       groupsClassName?: string;
-    },
-    playOptions?: {
       autoplay?: boolean;
       groupId?: string;
       startStoryId?: string;
@@ -42,26 +37,22 @@ export class Story {
     }
   ) {
     this.token = token;
-    this.viewOptions = {};
-    this.playOptions = {};
+    this.options = {};
 
-    if (this.viewOptions) {
-      this.viewOptions.groupImageWidth = viewOptions?.groupImageWidth;
-      this.viewOptions.groupImageHeight = viewOptions?.groupImageHeight;
-      this.viewOptions.groupTitleSize = viewOptions?.groupTitleSize;
-      this.viewOptions.groupClassName = viewOptions?.groupClassName;
-      this.viewOptions.groupsClassName = viewOptions?.groupsClassName;
+    if (this.options) {
+      this.options.groupImageWidth = options?.groupImageWidth;
+      this.options.groupImageHeight = options?.groupImageHeight;
+      this.options.groupTitleSize = options?.groupTitleSize;
+      this.options.groupClassName = options?.groupClassName;
+      this.options.groupsClassName = options?.groupsClassName;
+      this.options.autoplay = options?.autoplay;
+      this.options.groupId = options?.groupId;
+      this.options.forbidClose = options?.forbidClose;
+      this.options.startStoryId = options?.startStoryId;
+      this.options.devMode = options?.devMode;
     }
 
-    if (this.playOptions) {
-      this.playOptions.autoplay = playOptions?.autoplay;
-      this.playOptions.groupId = playOptions?.groupId;
-      this.playOptions.forbidClose = playOptions?.forbidClose;
-      this.playOptions.startStoryId = playOptions?.startStoryId;
-      this.playOptions.devMode = playOptions?.devMode;
-    }
-
-    axios.defaults.baseURL = playOptions?.devMode
+    axios.defaults.baseURL = options?.devMode
       ? 'https://api.diffapp.link/sdk/v1'
       : 'https://api.storysdk.com/sdk/v1';
 
@@ -81,7 +72,7 @@ export class Story {
       return;
     }
 
-    const Groups = withGroupsData(GroupsList, this.viewOptions, this.playOptions);
+    const Groups = withGroupsData(GroupsList, this.options);
 
     if (element) {
       ReactDOM.render(<Groups />, element);

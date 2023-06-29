@@ -1,27 +1,24 @@
 import '@storysdk/react/dist/bundle.css';
 export declare class Story {
     token: string;
-    viewOptions?: {
+    options?: {
         groupImageWidth?: number;
         groupImageHeight?: number;
         groupTitleSize?: number;
         groupClassName?: string;
         groupsClassName?: string;
-    };
-    playOptions?: {
         autoplay?: boolean;
         groupId?: string;
         startStoryId?: string;
         forbidClose?: boolean;
         devMode?: boolean;
     };
-    constructor(token: string, viewOptions?: {
+    constructor(token: string, options?: {
         groupImageWidth?: number;
         groupImageHeight?: number;
         groupTitleSize?: number;
         groupClassName?: string;
         groupsClassName?: string;
-    }, playOptions?: {
         autoplay?: boolean;
         groupId?: string;
         startStoryId?: string;
