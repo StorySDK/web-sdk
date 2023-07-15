@@ -152,6 +152,10 @@ export interface WidgetPositionType {
     elementsSize?: {
         [key: string]: any;
     };
+    alternative: {
+        x: number;
+        y: number;
+    };
 }
 export interface WidgetObjectType {
     id: string;
