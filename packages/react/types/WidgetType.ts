@@ -195,7 +195,7 @@ export interface WidgetPositionType {
   realWidth: number;
   realHeight: number;
   elementsSize?: { [key: string]: any };
-  alternative: {
+  alternative?: {
     x: number;
     y: number;
   };
