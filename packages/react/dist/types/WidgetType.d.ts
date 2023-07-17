@@ -152,7 +152,7 @@ export interface WidgetPositionType {
     elementsSize?: {
         [key: string]: any;
     };
-    alternative: {
+    alternative?: {
         x: number;
         y: number;
     };
