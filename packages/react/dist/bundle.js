@@ -11188,7 +11188,7 @@ const reducer = (state, action) => {
 };
 const StoryModal = (props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
-    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, forbidClose, isLoading, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
+    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, forbidClose, isLoading, isEditorMode, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
     const [quizState, dispatchQuizState] = React.useReducer(reducer, initQuizeState);
     const [currentStory, setCurrentStory] = React.useState(0);
     const [currentStoryId, setCurrentStoryId] = React.useState('');
@@ -11202,11 +11202,14 @@ const StoryModal = (props) => {
         if (stories && currentGroup) {
             setActiveStoriesWithResult(stories
                 .filter((story) => {
-                var _a, _b, _c;
+                var _a, _b, _c, _d;
                 if (((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
                     return true;
                 }
-                return (_c = story.layerData) === null || _c === void 0 ? void 0 : _c.isDefaultLayer;
+                if (isEditorMode) {
+                    return ((_c = story.layerData) === null || _c === void 0 ? void 0 : _c.isDefaultLayer) || story.id === startStoryId;
+                }
+                return (_d = story.layerData) === null || _d === void 0 ? void 0 : _d.isDefaultLayer;
             })
                 .sort((storyA, storyB) => {
                 var _a, _b, _c, _d;
@@ -65890,7 +65893,7 @@ const StoryContent = (props) => {
 };
 
 const CustomGroupControl = (props) => {
-    const { children, group, isFirstGroup, isLastGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing, isCacheDisabled } = props;
+    const { children, group, isFirstGroup, isLastGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, isEditorMode, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing, isCacheDisabled } = props;
     React.useEffect(() => {
         if (isShowing) {
             document.body.style.overflow = 'hidden';
@@ -65901,7 +65904,7 @@ const CustomGroupControl = (props) => {
     }, [isShowing]);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         children,
-        isShowing && (React__default["default"].createElement(StoryModal, { currentGroup: group, isCacheDisabled: isCacheDisabled, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group === null || group === void 0 ? void 0 : group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))));
+        isShowing && (React__default["default"].createElement(StoryModal, { currentGroup: group, isCacheDisabled: isCacheDisabled, isEditorMode: isEditorMode, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group === null || group === void 0 ? void 0 : group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))));
 };
 
 const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },

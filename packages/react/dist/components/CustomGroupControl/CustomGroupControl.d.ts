@@ -13,6 +13,7 @@ interface GroupProps {
     isStatusBarActive?: boolean;
     startStoryId?: string;
     isCacheDisabled?: boolean;
+    isEditorMode?: boolean;
 }
 export declare const CustomGroupControl: React.FC<GroupProps>;
 export {};

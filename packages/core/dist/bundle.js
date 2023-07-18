@@ -17277,7 +17277,7 @@ const reducer = (state, action) => {
 };
 const StoryModal = (props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
-    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, forbidClose, isLoading, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
+    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, forbidClose, isLoading, isEditorMode, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
     const [quizState, dispatchQuizState] = React.useReducer(reducer, initQuizeState);
     const [currentStory, setCurrentStory] = React.useState(0);
     const [currentStoryId, setCurrentStoryId] = React.useState('');
@@ -17291,11 +17291,14 @@ const StoryModal = (props) => {
         if (stories && currentGroup) {
             setActiveStoriesWithResult(stories
                 .filter((story) => {
-                var _a, _b, _c;
+                var _a, _b, _c, _d;
                 if (((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
                     return true;
                 }
-                return (_c = story.layerData) === null || _c === void 0 ? void 0 : _c.isDefaultLayer;
+                if (isEditorMode) {
+                    return ((_c = story.layerData) === null || _c === void 0 ? void 0 : _c.isDefaultLayer) || story.id === startStoryId;
+                }
+                return (_d = story.layerData) === null || _d === void 0 ? void 0 : _d.isDefaultLayer;
             })
                 .sort((storyA, storyB) => {
                 var _a, _b, _c, _d;

@@ -28,6 +28,7 @@ interface StoryModalProps {
   isForceCloseAvailable?: boolean;
   isCacheDisabled?: boolean;
   isLoading?: boolean;
+  isEditorMode?: boolean;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -188,6 +189,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isCacheDisabled,
     forbidClose,
     isLoading,
+    isEditorMode,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -220,6 +222,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
             ) {
               return true;
+            }
+
+            if (isEditorMode) {
+              return story.layerData?.isDefaultLayer || story.id === startStoryId;
             }
 
             return story.layerData?.isDefaultLayer;
