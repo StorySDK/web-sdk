@@ -64971,8 +64971,7 @@ const RectangleWidget = React.memo((props) => {
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
     return (React.createElement("div", { className: b$e(), style: styles },
-        React.createElement("div", { className: b$e('background'), style: backgroundStyles }, fillColor.type === 'video' && (React.createElement("video", { autoPlay: true, className: b$e('video'), disablePictureInPicture: true, loop: true, muted: true, preload: "metadata" },
-            React.createElement("source", { src: fillColor.value }))))));
+        React.createElement("div", { className: b$e('background'), style: backgroundStyles }, fillColor.type === 'video' && (React.createElement("video", { autoPlay: true, className: b$e('video'), disablePictureInPicture: true, loop: true, muted: true, preload: "metadata", src: fillColor.value })))));
 });
 
 const b$d = block('SliderCustom');

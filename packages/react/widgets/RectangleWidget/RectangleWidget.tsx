@@ -34,9 +34,8 @@ export const RectangleWidget: WidgetComponent<{ params: RectangleWidgetParamsTyp
               loop
               muted
               preload="metadata"
-            >
-              <source src={fillColor.value} />
-            </video>
+              src={fillColor.value}
+            />
           )}
         </div>
       </div>
