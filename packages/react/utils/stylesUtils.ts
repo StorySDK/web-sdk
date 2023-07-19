@@ -44,7 +44,7 @@ export const renderBackgroundStyles = (background: BackgroundType, opacity?: num
     case 'image':
       return `center / cover url("${background.value}")`;
     default:
-      return 'transparent';
+      return '#dddbde';
   }
 };
 

@@ -7816,7 +7816,7 @@ const renderBackgroundStyles = (background, opacity) => {
         case 'image':
             return `center / cover url("${background.value}")`;
         default:
-            return 'transparent';
+            return '#dddbde';
     }
 };
 const renderTextBackgroundStyles = ({ color, opacity }) => {
@@ -70760,7 +70760,7 @@ const QuestionWidget = React__default["default"].memo((props) => {
 
 const b$e = block('RectangleWidget');
 const RectangleWidget = React__default["default"].memo((props) => {
-    const { fillColor, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
+    const { background, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
         borderStyle: 'solid',
         borderWidth: `${hasBorder ? strokeThickness : 0}px`,
@@ -70769,11 +70769,12 @@ const RectangleWidget = React__default["default"].memo((props) => {
         opacity: widgetOpacity / 100
     };
     const backgroundStyles = {
-        background: renderBackgroundStyles(fillColor),
+        background: renderBackgroundStyles(background),
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
     return (React__default["default"].createElement("div", { className: b$e(), style: styles },
-        React__default["default"].createElement("div", { className: b$e('background'), style: backgroundStyles })));
+        React__default["default"].createElement("div", { className: b$e('background'), style: backgroundStyles }, background.type === 'video' && (React__default["default"].createElement("video", { autoPlay: true, className: b$e('video'), loop: true, muted: true, preload: "metadata" },
+            React__default["default"].createElement("source", { src: background.value }))))));
 });
 
 const b$d = block('SliderCustom');

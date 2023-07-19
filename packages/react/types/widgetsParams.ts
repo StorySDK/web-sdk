@@ -12,7 +12,7 @@ export type EmojiItemType = {
 };
 
 export type RectangleWidgetParamsType = {
-  fillColor: BackgroundType;
+  background: BackgroundType;
   fillBorderRadius: number;
   fillOpacity: number;
   widgetOpacity: number;
