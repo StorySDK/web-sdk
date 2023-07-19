@@ -23,6 +23,7 @@ export const StoryVideoBackground = ({
     <video
       autoPlay={autoplay}
       className={b('video', { loading: isLoading })}
+      disablePictureInPicture
       loop
       muted
       preload="metadata"

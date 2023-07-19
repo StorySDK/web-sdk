@@ -1718,7 +1718,7 @@ const renderBackgroundStyles = (background, opacity) => {
         case 'image':
             return `center / cover url("${background.value}")`;
         default:
-            return '#dddbde';
+            return 'transparent';
     }
 };
 const renderTextBackgroundStyles = ({ color, opacity }) => {
@@ -64971,7 +64971,7 @@ const RectangleWidget = React.memo((props) => {
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
     return (React.createElement("div", { className: b$e(), style: styles },
-        React.createElement("div", { className: b$e('background'), style: backgroundStyles }, fillColor.type === 'video' && (React.createElement("video", { autoPlay: true, className: b$e('video'), loop: true, muted: true, preload: "metadata" },
+        React.createElement("div", { className: b$e('background'), style: backgroundStyles }, fillColor.type === 'video' && (React.createElement("video", { autoPlay: true, className: b$e('video'), disablePictureInPicture: true, loop: true, muted: true, preload: "metadata" },
             React.createElement("source", { src: fillColor.value }))))));
 });
 
@@ -65852,7 +65852,7 @@ class WidgetFactory extends React.Component {
 
 const b$2 = block$1('StorySdkVideoBackground');
 const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, onLoadEnd }) => (React.createElement("div", { className: b$2() },
-    React.createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), loop: true, muted: true, preload: "metadata", onLoadStart: onLoadStart, onLoadedData: onLoadEnd },
+    React.createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), disablePictureInPicture: true, loop: true, muted: true, preload: "metadata", onLoadStart: onLoadStart, onLoadedData: onLoadEnd },
         React.createElement("source", { src: src })),
     React.createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
