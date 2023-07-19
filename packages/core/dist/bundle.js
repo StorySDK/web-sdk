@@ -70760,7 +70760,7 @@ const QuestionWidget = React__default["default"].memo((props) => {
 
 const b$e = block('RectangleWidget');
 const RectangleWidget = React__default["default"].memo((props) => {
-    const { background, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
+    const { fillColor, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
         borderStyle: 'solid',
         borderWidth: `${hasBorder ? strokeThickness : 0}px`,
@@ -70769,12 +70769,12 @@ const RectangleWidget = React__default["default"].memo((props) => {
         opacity: widgetOpacity / 100
     };
     const backgroundStyles = {
-        background: renderBackgroundStyles(background),
+        background: renderBackgroundStyles(fillColor),
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
     return (React__default["default"].createElement("div", { className: b$e(), style: styles },
-        React__default["default"].createElement("div", { className: b$e('background'), style: backgroundStyles }, background.type === 'video' && (React__default["default"].createElement("video", { autoPlay: true, className: b$e('video'), loop: true, muted: true, preload: "metadata" },
-            React__default["default"].createElement("source", { src: background.value }))))));
+        React__default["default"].createElement("div", { className: b$e('background'), style: backgroundStyles }, fillColor.type === 'video' && (React__default["default"].createElement("video", { autoPlay: true, className: b$e('video'), loop: true, muted: true, preload: "metadata" },
+            React__default["default"].createElement("source", { src: fillColor.value }))))));
 });
 
 const b$d = block('SliderCustom');

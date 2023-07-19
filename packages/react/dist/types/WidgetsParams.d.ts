@@ -9,7 +9,7 @@ export declare type EmojiItemType = {
     unicode: string;
 };
 export declare type RectangleWidgetParamsType = {
-    background: BackgroundType;
+    fillColor: BackgroundType;
     fillBorderRadius: number;
     fillOpacity: number;
     widgetOpacity: number;

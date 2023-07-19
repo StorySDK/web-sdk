@@ -7,7 +7,7 @@ const b = block('RectangleWidget');
 
 export const RectangleWidget: WidgetComponent<{ params: RectangleWidgetParamsType }> = React.memo(
   (props) => {
-    const { background, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } =
+    const { fillColor, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } =
       props.params;
 
     const styles = {
@@ -19,16 +19,16 @@ export const RectangleWidget: WidgetComponent<{ params: RectangleWidgetParamsTyp
     };
 
     const backgroundStyles = {
-      background: renderBackgroundStyles(background),
+      background: renderBackgroundStyles(fillColor),
       borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
 
     return (
       <div className={b()} style={styles}>
         <div className={b('background')} style={backgroundStyles}>
-          {background.type === 'video' && (
+          {fillColor.type === 'video' && (
             <video autoPlay className={b('video')} loop muted preload="metadata">
-              <source src={background.value} />
+              <source src={fillColor.value} />
             </video>
           )}
         </div>
