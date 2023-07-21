@@ -11223,13 +11223,15 @@ const StoryModal = (props) => {
             }));
         }
     }, [currentGroup, stories]);
-    const isMobile = width < MOBILE_BREAKPOINT;
+    const isMobile = React.useMemo(() => width < MOBILE_BREAKPOINT, [width]);
     const currentGroupType = (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.type) || exports.GroupType.GROUP;
     const isBackroundFilled = ((_b = (_a = activeStoriesWithResult[currentStory]) === null || _a === void 0 ? void 0 : _a.background) === null || _b === void 0 ? void 0 : _b.isFilled) &&
         currentGroupType === exports.GroupType.GROUP;
     const isLarge = (((_c = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _c === void 0 ? void 0 : _c.storiesSize) === exports.StorySize.LARGE &&
+        isShowMockup &&
+        !isMobile &&
         (currentGroupType === exports.GroupType.ONBOARDING || currentGroupType === exports.GroupType.TEMPLATE)) ||
-        (currentGroupType === exports.GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
+        (currentGroupType === exports.GroupType.GROUP && isBackroundFilled);
     const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
     const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
     const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
@@ -11609,14 +11611,10 @@ const StoryModal = (props) => {
                         } },
                         React__default["default"].createElement(React__default["default"].Fragment, null, isLoading || !(currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.stories) ? (React__default["default"].createElement("div", { className: b$m('loader') },
                             React__default["default"].createElement(IconLoader, { className: b$m('loaderIcon').toString() }))) : (React__default["default"].createElement(React__default["default"].Fragment, null,
-                            React__default["default"].createElement("div", { className: b$m('swiperContent') }, activeStoriesWithResult.map((story, index) => {
-                                var _a;
-                                return (React__default["default"].createElement("div", { className: b$m('story', { current: index === currentStory }), key: story.id },
-                                    React__default["default"].createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === exports.GroupType.GROUP && isLarge
-                                            ? groupInnerHeightGap
-                                            : 0, isLarge: ((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.storiesSize) === exports.StorySize.LARGE &&
-                                            currentGroupType === exports.GroupType.ONBOARDING, isLargeBackground: isShowMockup && currentGroupType === exports.GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize })));
-                            })),
+                            React__default["default"].createElement("div", { className: b$m('swiperContent') }, activeStoriesWithResult.map((story, index) => (React__default["default"].createElement("div", { className: b$m('story', { current: index === currentStory }), key: story.id },
+                                React__default["default"].createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === exports.GroupType.GROUP && isLarge
+                                        ? groupInnerHeightGap
+                                        : 0, isLarge: isLarge, isLargeBackground: isShowMockup && currentGroupType === exports.GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize }))))),
                             React__default["default"].createElement("div", { className: b$m('topContainer') },
                                 React__default["default"].createElement(React__default["default"].Fragment, null,
                                     isShowStatusBarInStory && React__default["default"].createElement(StatusBar, null),
@@ -11778,24 +11776,34 @@ const ChooseAnswerWidget = React__default["default"].memo((props) => {
 });
 
 const b$k = block('ClickMeWidget');
+const DELAY_MS = 200;
 const ClickMeWidget = React__default["default"].memo((props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url, storyId, actionType } = props.params;
     const { isReadOnly, onClick, onGoToStory } = props;
+    const [isClicked, setIsClicked] = React.useState(false);
     const handleWidgetClick = React.useCallback(() => {
+        setIsClicked(true);
+        setTimeout(() => {
+            setIsClicked(false);
+        }, DELAY_MS);
         if (onClick) {
             onClick();
         }
         if (actionType === 'link' && url) {
-            const tab = window.open(url, '_blank');
-            if (tab) {
-                tab.focus();
-            }
+            setTimeout(() => {
+                const tab = window.open(url, '_blank');
+                if (tab) {
+                    tab.focus();
+                }
+            }, DELAY_MS);
         }
         else if (actionType === 'story' && onGoToStory && storyId) {
-            onGoToStory(storyId);
+            setTimeout(() => {
+                onGoToStory(storyId);
+            }, DELAY_MS);
         }
     }, [actionType, onClick, onGoToStory, storyId, url]);
-    return (React__default["default"].createElement("div", { className: b$k({ disabled: isReadOnly }), role: "button", style: {
+    return (React__default["default"].createElement("div", { className: b$k({ disabled: isReadOnly, clicked: isClicked }), role: "button", style: {
             borderRadius,
             borderStyle: 'solid',
             borderWidth: `${hasBorder ? borderWidth : 0}px`,
@@ -64980,7 +64988,7 @@ const RectangleWidget = React__default["default"].memo((props) => {
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
     return (React__default["default"].createElement("div", { className: b$e(), style: styles },
-        React__default["default"].createElement("div", { className: b$e('background'), style: backgroundStyles }, fillColor.type === 'video' && (React__default["default"].createElement("video", { autoPlay: true, className: b$e('video'), disablePictureInPicture: true, loop: true, muted: true, preload: "metadata", src: fillColor.value })))));
+        React__default["default"].createElement("div", { className: b$e('background'), style: backgroundStyles }, fillColor.type === 'video' && (React__default["default"].createElement("video", { autoPlay: !fillColor.stopAutoplay, className: b$e('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: fillColor.value })))));
 });
 
 const b$d = block('SliderCustom');
@@ -65860,8 +65868,7 @@ class WidgetFactory extends React__default["default"].Component {
 
 const b$2 = block$1('StorySdkVideoBackground');
 const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, onLoadEnd }) => (React__default["default"].createElement("div", { className: b$2() },
-    React__default["default"].createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), disablePictureInPicture: true, loop: true, muted: true, preload: "metadata", onLoadStart: onLoadStart, onLoadedData: onLoadEnd },
-        React__default["default"].createElement("source", { src: src })),
+    React__default["default"].createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: src, onLoadStart: onLoadStart, onLoadedData: onLoadEnd }),
     React__default["default"].createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
 const b$1 = block$1('StorySdkContent');
@@ -65869,7 +65876,7 @@ const StoryContent = (props) => {
     const { story, jsConfetti, noTopShadow, storyCurrentSize, currentPaddingSize, isLarge, isLargeBackground, innerHeightGap, handleGoToStory } = props;
     const [isVideoLoading, setVideoLoading] = React.useState(false);
     const [width, height] = d$1();
-    const isMobile = width < MOBILE_BREAKPOINT;
+    const isMobile = React.useMemo(() => width < MOBILE_BREAKPOINT, [width]);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         React__default["default"].createElement("div", { className: b$1('background', { noTopShadow }), style: {
                 background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',

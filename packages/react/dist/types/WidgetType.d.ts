@@ -15,6 +15,7 @@ declare type BackgrounValue = {
     value: string;
     isFilled?: boolean;
     fileId?: string;
+    stopAutoplay?: boolean;
 };
 export declare type BorderType = GradientValue | ColorValue;
 export declare type BackgroundType = GradientValue | ColorValue | BackgrounValue;

@@ -247,15 +247,17 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     }
   }, [currentGroup, stories]);
 
-  const isMobile = width < MOBILE_BREAKPOINT;
+  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
   const currentGroupType = currentGroup?.type || GroupType.GROUP;
   const isBackroundFilled =
     activeStoriesWithResult[currentStory]?.background?.isFilled &&
     currentGroupType === GroupType.GROUP;
   const isLarge =
     (currentGroup?.settings?.storiesSize === StorySize.LARGE &&
+      isShowMockup &&
+      !isMobile &&
       (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
-    (currentGroupType === GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
+    (currentGroupType === GroupType.GROUP && isBackroundFilled);
 
   const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
@@ -746,10 +748,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                                 ? groupInnerHeightGap
                                 : 0
                             }
-                            isLarge={
-                              currentGroup?.settings?.storiesSize === StorySize.LARGE &&
-                              currentGroupType === GroupType.ONBOARDING
-                            }
+                            isLarge={isLarge}
                             isLargeBackground={isShowMockup && currentGroupType === GroupType.GROUP}
                             jsConfetti={jsConfetti}
                             noTopShadow={noTopShadow}

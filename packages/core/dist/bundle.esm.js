@@ -17293,13 +17293,15 @@ const StoryModal = (props) => {
             }));
         }
     }, [currentGroup, stories]);
-    const isMobile = width < MOBILE_BREAKPOINT;
+    const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
     const currentGroupType = (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.type) || GroupType.GROUP;
     const isBackroundFilled = ((_b = (_a = activeStoriesWithResult[currentStory]) === null || _a === void 0 ? void 0 : _a.background) === null || _b === void 0 ? void 0 : _b.isFilled) &&
         currentGroupType === GroupType.GROUP;
     const isLarge = (((_c = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _c === void 0 ? void 0 : _c.storiesSize) === StorySize.LARGE &&
+        isShowMockup &&
+        !isMobile &&
         (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
-        (currentGroupType === GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
+        (currentGroupType === GroupType.GROUP && isBackroundFilled);
     const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
     const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
     const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
@@ -17679,14 +17681,10 @@ const StoryModal = (props) => {
                         } },
                         React.createElement(React.Fragment, null, isLoading || !(currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.stories) ? (React.createElement("div", { className: b$m('loader') },
                             React.createElement(IconLoader, { className: b$m('loaderIcon').toString() }))) : (React.createElement(React.Fragment, null,
-                            React.createElement("div", { className: b$m('swiperContent') }, activeStoriesWithResult.map((story, index) => {
-                                var _a;
-                                return (React.createElement("div", { className: b$m('story', { current: index === currentStory }), key: story.id },
-                                    React.createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP && isLarge
-                                            ? groupInnerHeightGap
-                                            : 0, isLarge: ((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.storiesSize) === StorySize.LARGE &&
-                                            currentGroupType === GroupType.ONBOARDING, isLargeBackground: isShowMockup && currentGroupType === GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize })));
-                            })),
+                            React.createElement("div", { className: b$m('swiperContent') }, activeStoriesWithResult.map((story, index) => (React.createElement("div", { className: b$m('story', { current: index === currentStory }), key: story.id },
+                                React.createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP && isLarge
+                                        ? groupInnerHeightGap
+                                        : 0, isLarge: isLarge, isLargeBackground: isShowMockup && currentGroupType === GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize }))))),
                             React.createElement("div", { className: b$m('topContainer') },
                                 React.createElement(React.Fragment, null,
                                     isShowStatusBarInStory && React.createElement(StatusBar, null),
@@ -17848,24 +17846,34 @@ const ChooseAnswerWidget = React.memo((props) => {
 });
 
 const b$k = block('ClickMeWidget');
+const DELAY_MS = 200;
 const ClickMeWidget = React.memo((props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url, storyId, actionType } = props.params;
     const { isReadOnly, onClick, onGoToStory } = props;
+    const [isClicked, setIsClicked] = useState(false);
     const handleWidgetClick = useCallback(() => {
+        setIsClicked(true);
+        setTimeout(() => {
+            setIsClicked(false);
+        }, DELAY_MS);
         if (onClick) {
             onClick();
         }
         if (actionType === 'link' && url) {
-            const tab = window.open(url, '_blank');
-            if (tab) {
-                tab.focus();
-            }
+            setTimeout(() => {
+                const tab = window.open(url, '_blank');
+                if (tab) {
+                    tab.focus();
+                }
+            }, DELAY_MS);
         }
         else if (actionType === 'story' && onGoToStory && storyId) {
-            onGoToStory(storyId);
+            setTimeout(() => {
+                onGoToStory(storyId);
+            }, DELAY_MS);
         }
     }, [actionType, onClick, onGoToStory, storyId, url]);
-    return (React.createElement("div", { className: b$k({ disabled: isReadOnly }), role: "button", style: {
+    return (React.createElement("div", { className: b$k({ disabled: isReadOnly, clicked: isClicked }), role: "button", style: {
             borderRadius,
             borderStyle: 'solid',
             borderWidth: `${hasBorder ? borderWidth : 0}px`,
@@ -70754,7 +70762,7 @@ const RectangleWidget = React.memo((props) => {
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
     return (React.createElement("div", { className: b$e(), style: styles },
-        React.createElement("div", { className: b$e('background'), style: backgroundStyles }, fillColor.type === 'video' && (React.createElement("video", { autoPlay: true, className: b$e('video'), disablePictureInPicture: true, loop: true, muted: true, preload: "metadata", src: fillColor.value })))));
+        React.createElement("div", { className: b$e('background'), style: backgroundStyles }, fillColor.type === 'video' && (React.createElement("video", { autoPlay: !fillColor.stopAutoplay, className: b$e('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: fillColor.value })))));
 });
 
 const b$d = block('SliderCustom');
@@ -71634,8 +71642,7 @@ class WidgetFactory extends React.Component {
 
 const b$2 = block$1('StorySdkVideoBackground');
 const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, onLoadEnd }) => (React.createElement("div", { className: b$2() },
-    React.createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), disablePictureInPicture: true, loop: true, muted: true, preload: "metadata", onLoadStart: onLoadStart, onLoadedData: onLoadEnd },
-        React.createElement("source", { src: src })),
+    React.createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: src, onLoadStart: onLoadStart, onLoadedData: onLoadEnd }),
     React.createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
 const b$1 = block$1('StorySdkContent');
@@ -71643,7 +71650,7 @@ const StoryContent = (props) => {
     const { story, jsConfetti, noTopShadow, storyCurrentSize, currentPaddingSize, isLarge, isLargeBackground, innerHeightGap, handleGoToStory } = props;
     const [isVideoLoading, setVideoLoading] = useState(false);
     const [width, height] = d$1();
-    const isMobile = width < MOBILE_BREAKPOINT;
+    const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
     return (React.createElement(React.Fragment, null,
         React.createElement("div", { className: b$1('background', { noTopShadow }), style: {
                 background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
@@ -79056,8 +79063,15 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
     }
     return undefined;
 };
-const adaptWidgets = (widgets, storyId, groupId, uniqUserId, language) => widgets.map((widget) => (Object.assign(Object.assign({}, widget), { action: actionToWidget(widget, storyId, groupId, uniqUserId, language) })));
-const adaptGroupData = (data, uniqUserId, language) => data
+const adaptWidgets = (widgets, storyId, groupId, uniqUserId, language, useAlternativePosition) => widgets.map((widget) => {
+    const newWidget = Object.assign({}, widget);
+    if (useAlternativePosition && newWidget.position.alternative) {
+        newWidget.position.x = newWidget.position.alternative.x;
+        newWidget.position.y = newWidget.position.alternative.y;
+    }
+    return Object.assign(Object.assign({}, newWidget), { action: actionToWidget(newWidget, storyId, groupId, uniqUserId, language) });
+});
+const adaptGroupData = (data, uniqUserId, language, isMobile) => data
     .filter((group) => (group.stories ? group.stories.length : 0))
     .map((group) => ({
     id: group.id,
@@ -79065,13 +79079,16 @@ const adaptGroupData = (data, uniqUserId, language) => data
     imageUrl: group.image_url,
     type: group.type,
     settings: group.settings,
-    stories: group.stories.map((story, index) => ({
-        id: story.id,
-        background: story.story_data.background,
-        storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId, language),
-        layerData: story.layer_data,
-        positionIndex: index
-    }))
+    stories: group.stories.map((story, index) => {
+        var _a;
+        return ({
+            id: story.id,
+            background: story.story_data.background,
+            storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId, language, ((_a = group.settings) === null || _a === void 0 ? void 0 : _a.storiesSize) === 'LARGE' && isMobile),
+            layerData: story.layer_data,
+            positionIndex: index
+        });
+    })
 }));
 
 const getNavigatorLanguage = (appLocale) => {
@@ -79171,6 +79188,7 @@ const withGroupsData = (GroupsList, options) => () => {
     const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
     const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
     const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
+    const isMobile = window.innerWidth < 768;
     const [groupDuration, setGroupDuration] = useState({
         groupId: '',
         startTime: 0
@@ -79340,7 +79358,6 @@ const withGroupsData = (GroupsList, options) => () => {
                                 ? DateTime.fromISO(storyItem.story_data.end_time).toSeconds() >
                                     DateTime.now().toSeconds()
                                 : true));
-                        // @ts-ignore
                         setGroupsWithStories((prevState) => prevState.map((item) => {
                             if (item.id === groupItem.id) {
                                 return Object.assign(Object.assign({}, item), { stories });
@@ -79357,7 +79374,7 @@ const withGroupsData = (GroupsList, options) => () => {
     }, [groups]);
     useEffect(() => {
         if (loadStatus === 'loaded' && groupsWithStories.length) {
-            const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language);
+            const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language, isMobile);
             setData(adaptedData);
         }
     }, [loadStatus, groupsWithStories, uniqUserId, language]);

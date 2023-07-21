@@ -38,6 +38,7 @@ type BackgrounValue = {
   value: string;
   isFilled?: boolean;
   fileId?: string;
+  stopAutoplay?: boolean;
 };
 
 export type BorderType = GradientValue | ColorValue;

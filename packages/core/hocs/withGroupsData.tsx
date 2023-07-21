@@ -38,11 +38,13 @@ const withGroupsData =
     const [groupView, setGroupView] = useState<GroupsListProps['groupView']>('circle');
     const [isShowMockup, setIsShowMockup] = useState(false);
     const [appLocale, setAppLocale] = useState(null);
-    const [groupsWithStories, setGroupsWithStories] = useState([]);
+    const [groupsWithStories, setGroupsWithStories] = useState<Group[]>([]);
     const [loadStatus, setLoadStatus] = useState('pending');
     const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
     const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
     const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
+
+    const isMobile = window.innerWidth < 768;
 
     const [groupDuration, setGroupDuration] = useState<DurationProps>({
       groupId: '',
@@ -263,7 +265,7 @@ const withGroupsData =
     useEffect(() => {
       if (groups.length) {
         setLoadStatus('loading');
-        groups.forEach((groupItem: any, groupIndex: number) => {
+        groups.forEach((groupItem: Group, groupIndex: number) => {
           API.stories
             .getList({
               groupId: groupItem.id
@@ -281,7 +283,6 @@ const withGroupsData =
                       : true)
                 );
 
-                // @ts-ignore
                 setGroupsWithStories((prevState) =>
                   prevState.map((item: any) => {
                     if (item.id === groupItem.id) {
@@ -303,7 +304,7 @@ const withGroupsData =
 
     useEffect(() => {
       if (loadStatus === 'loaded' && groupsWithStories.length) {
-        const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language);
+        const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language, isMobile);
 
         setData(adaptedData);
       }

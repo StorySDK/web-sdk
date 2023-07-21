@@ -55,14 +55,31 @@ const adaptWidgets = (
   storyId: string,
   groupId: string,
   uniqUserId: string,
-  language: string
+  language: string,
+  useAlternativePosition?: boolean
 ) =>
-  widgets.map((widget: any) => ({
-    ...widget,
-    action: actionToWidget(widget, storyId, groupId, uniqUserId, language)
-  }));
+  widgets.map((widget: any) => {
+    const newWidget = {
+      ...widget
+    };
 
-export const adaptGroupData = (data: any, uniqUserId: string, language: string) =>
+    if (useAlternativePosition && newWidget.position.alternative) {
+      newWidget.position.x = newWidget.position.alternative.x;
+      newWidget.position.y = newWidget.position.alternative.y;
+    }
+
+    return {
+      ...newWidget,
+      action: actionToWidget(newWidget, storyId, groupId, uniqUserId, language)
+    };
+  });
+
+export const adaptGroupData = (
+  data: any,
+  uniqUserId: string,
+  language: string,
+  isMobile?: boolean
+) =>
   data
     .filter((group: any) => (group.stories ? group.stories.length : 0))
     .map((group: any) => ({
@@ -74,7 +91,14 @@ export const adaptGroupData = (data: any, uniqUserId: string, language: string) 
       stories: group.stories.map((story: any, index: number) => ({
         id: story.id,
         background: story.story_data.background,
-        storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId, language),
+        storyData: adaptWidgets(
+          story.story_data.widgets,
+          story.id,
+          group.id,
+          uniqUserId,
+          language,
+          group.settings?.storiesSize === 'LARGE' && isMobile
+        ),
         layerData: story.layer_data,
         positionIndex: index
       }))
