@@ -51,6 +51,9 @@ export type ClickMeWidgetParamsType = {
   borderOpacity: number;
   storyId?: string;
   url?: string;
+  customFields?: {
+    [key: string]: string;
+  };
 };
 
 export type ChooseAnswerWidgetParamsType = {
