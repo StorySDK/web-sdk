@@ -11219,10 +11219,9 @@ const StoryModal = (props) => {
     const isBackroundFilled = ((_b = (_a = activeStoriesWithResult[currentStory]) === null || _a === void 0 ? void 0 : _a.background) === null || _b === void 0 ? void 0 : _b.isFilled) &&
         currentGroupType === GroupType.GROUP;
     const isLarge = (((_c = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _c === void 0 ? void 0 : _c.storiesSize) === StorySize.LARGE &&
-        isShowMockup &&
         !isMobile &&
         (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
-        (currentGroupType === GroupType.GROUP && isBackroundFilled);
+        (currentGroupType === GroupType.GROUP && !isMobile && isShowMockup && isBackroundFilled);
     const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
     const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
     const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);

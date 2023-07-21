@@ -254,10 +254,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentGroupType === GroupType.GROUP;
   const isLarge =
     (currentGroup?.settings?.storiesSize === StorySize.LARGE &&
-      isShowMockup &&
       !isMobile &&
       (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
-    (currentGroupType === GroupType.GROUP && isBackroundFilled);
+    (currentGroupType === GroupType.GROUP && !isMobile && isShowMockup && isBackroundFilled);
 
   const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);

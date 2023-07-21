@@ -3239,9 +3239,9 @@ var browser = {exports: {}};
 var s$2 = 1000;
 var m = s$2 * 60;
 var h = m * 60;
-var d = h * 24;
-var w = d * 7;
-var y = d * 365.25;
+var d$2 = h * 24;
+var w = d$2 * 7;
+var y = d$2 * 365.25;
 
 /**
  * Parse or format the given `val`.
@@ -3306,7 +3306,7 @@ function parse$2(str) {
     case 'days':
     case 'day':
     case 'd':
-      return n * d;
+      return n * d$2;
     case 'hours':
     case 'hour':
     case 'hrs':
@@ -3346,8 +3346,8 @@ function parse$2(str) {
 
 function fmtShort(ms) {
   var msAbs = Math.abs(ms);
-  if (msAbs >= d) {
-    return Math.round(ms / d) + 'd';
+  if (msAbs >= d$2) {
+    return Math.round(ms / d$2) + 'd';
   }
   if (msAbs >= h) {
     return Math.round(ms / h) + 'h';
@@ -3371,8 +3371,8 @@ function fmtShort(ms) {
 
 function fmtLong(ms) {
   var msAbs = Math.abs(ms);
-  if (msAbs >= d) {
-    return plural(ms, msAbs, d, 'day');
+  if (msAbs >= d$2) {
+    return plural(ms, msAbs, d$2, 'day');
   }
   if (msAbs >= h) {
     return plural(ms, msAbs, h, 'hour');
@@ -6405,13 +6405,13 @@ const GroupsList = (props) => {
         React.createElement(StoryModal, { currentGroup: groups === null || groups === void 0 ? void 0 : groups[currentGroup], forbidClose: forbidClose, isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === (groups === null || groups === void 0 ? void 0 : groups.length) - 1, isLoading: isLoading, isShowMockup: isShowMockup, isShowing: modalShow, startStoryId: startStoryId, stories: (_a = groups === null || groups === void 0 ? void 0 : groups[currentGroup]) === null || _a === void 0 ? void 0 : _a.stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz })))));
 };
 
-var u = e=>{var a=useRef(e);return useEffect(()=>{a.current=e;}),a};
+var u$1 = e=>{var a=useRef(e);return useEffect(()=>{a.current=e;}),a};
 
-var o$1=function(n,o,c){function i(){l.current&&clearTimeout(l.current),l.current=void 0;}function a(){l.current=void 0;}void 0===o&&(o=100),void 0===c&&(c=0);var v=u(n),l=useRef(),m=[o,c,v];return useEffect(()=>i,m),useCallback((function(){var r=arguments,{current:t}=l;if(void 0===t&&c)return l.current=setTimeout(a,o),v.current.apply(null,r);t&&clearTimeout(t),l.current=setTimeout(()=>{l.current=void 0,v.current.apply(null,r);},o);}),m)},c$1=(r,t,e)=>{var u=useState(r);return [u[0],o$1(u[1],t,e)]};
+var o$1$1=function(n,o,c){function i(){l.current&&clearTimeout(l.current),l.current=void 0;}function a(){l.current=void 0;}void 0===o&&(o=100),void 0===c&&(c=0);var v=u$1(n),l=useRef(),m=[o,c,v];return useEffect(()=>i,m),useCallback((function(){var r=arguments,{current:t}=l;if(void 0===t&&c)return l.current=setTimeout(a,o),v.current.apply(null,r);t&&clearTimeout(t),l.current=setTimeout(()=>{l.current=void 0,v.current.apply(null,r);},o);}),m)},c$1=(r,t,e)=>{var u=useState(r);return [u[0],o$1$1(u[1],t,e)]};
 
 function t$1(t,n,a,u){var c=useRef(a),i=useRef(u);useEffect(()=>{c.current=a,i.current=u;}),useEffect(()=>{function r(){if(!a){for(var r=arguments.length,e=new Array(r),t=0;r>t;t++)e[t]=arguments[t];c.current.apply(this,e);}}var e=t&&"current"in t?t.current:t;if(e){var a=0;e.addEventListener(n,r);var u=i.current;return ()=>{a=1,e.removeEventListener(n,r),u&&u();}}},[t,n]);}
 
-var n$2={},i="undefined"==typeof window?null:window,o=()=>[document.documentElement.clientWidth,document.documentElement.clientHeight],d$1=function(d){void 0===d&&(d=n$2);var{wait:r,leading:c,initialWidth:m=0,initialHeight:u=0}=d,[a,l]=c$1("undefined"==typeof document?[m,u]:o,r,c),f=()=>l(o);return t$1(i,"resize",f),t$1(i,"orientationchange",f),a};
+var n$2={},i$1="undefined"==typeof window?null:window,o$2=()=>[document.documentElement.clientWidth,document.documentElement.clientHeight],d$1=function(d){void 0===d&&(d=n$2);var{wait:r,leading:c,initialWidth:m=0,initialHeight:u=0}=d,[a,l]=c$1("undefined"==typeof document?[m,u]:o$2,r,c),f=()=>l(o$2);return t$1(i$1,"resize",f),t$1(i$1,"orientationchange",f),a};
 
 function _classCallCheck$1(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -10046,176 +10046,176 @@ class ZoneIsAbstractError$1 extends LuxonError$1 {
  * @private
  */
 
-const n$1 = "numeric",
+const n$1$1 = "numeric",
   s$1 = "short",
   l$1 = "long";
 
 const DATE_SHORT$1 = {
-  year: n$1,
-  month: n$1,
-  day: n$1,
+  year: n$1$1,
+  month: n$1$1,
+  day: n$1$1,
 };
 
 const DATE_MED$1 = {
-  year: n$1,
+  year: n$1$1,
   month: s$1,
-  day: n$1,
+  day: n$1$1,
 };
 
 const DATE_MED_WITH_WEEKDAY$1 = {
-  year: n$1,
+  year: n$1$1,
   month: s$1,
-  day: n$1,
+  day: n$1$1,
   weekday: s$1,
 };
 
 const DATE_FULL$1 = {
-  year: n$1,
+  year: n$1$1,
   month: l$1,
-  day: n$1,
+  day: n$1$1,
 };
 
 const DATE_HUGE$1 = {
-  year: n$1,
+  year: n$1$1,
   month: l$1,
-  day: n$1,
+  day: n$1$1,
   weekday: l$1,
 };
 
 const TIME_SIMPLE$1 = {
-  hour: n$1,
-  minute: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
 };
 
 const TIME_WITH_SECONDS$1 = {
-  hour: n$1,
-  minute: n$1,
-  second: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
+  second: n$1$1,
 };
 
 const TIME_WITH_SHORT_OFFSET$1 = {
-  hour: n$1,
-  minute: n$1,
-  second: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
+  second: n$1$1,
   timeZoneName: s$1,
 };
 
 const TIME_WITH_LONG_OFFSET$1 = {
-  hour: n$1,
-  minute: n$1,
-  second: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
+  second: n$1$1,
   timeZoneName: l$1,
 };
 
 const TIME_24_SIMPLE$1 = {
-  hour: n$1,
-  minute: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
   hourCycle: "h23",
 };
 
 const TIME_24_WITH_SECONDS$1 = {
-  hour: n$1,
-  minute: n$1,
-  second: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
+  second: n$1$1,
   hourCycle: "h23",
 };
 
 const TIME_24_WITH_SHORT_OFFSET$1 = {
-  hour: n$1,
-  minute: n$1,
-  second: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
+  second: n$1$1,
   hourCycle: "h23",
   timeZoneName: s$1,
 };
 
 const TIME_24_WITH_LONG_OFFSET$1 = {
-  hour: n$1,
-  minute: n$1,
-  second: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
+  second: n$1$1,
   hourCycle: "h23",
   timeZoneName: l$1,
 };
 
 const DATETIME_SHORT$1 = {
-  year: n$1,
-  month: n$1,
-  day: n$1,
-  hour: n$1,
-  minute: n$1,
+  year: n$1$1,
+  month: n$1$1,
+  day: n$1$1,
+  hour: n$1$1,
+  minute: n$1$1,
 };
 
 const DATETIME_SHORT_WITH_SECONDS$1 = {
-  year: n$1,
-  month: n$1,
-  day: n$1,
-  hour: n$1,
-  minute: n$1,
-  second: n$1,
+  year: n$1$1,
+  month: n$1$1,
+  day: n$1$1,
+  hour: n$1$1,
+  minute: n$1$1,
+  second: n$1$1,
 };
 
 const DATETIME_MED$1 = {
-  year: n$1,
+  year: n$1$1,
   month: s$1,
-  day: n$1,
-  hour: n$1,
-  minute: n$1,
+  day: n$1$1,
+  hour: n$1$1,
+  minute: n$1$1,
 };
 
 const DATETIME_MED_WITH_SECONDS$1 = {
-  year: n$1,
+  year: n$1$1,
   month: s$1,
-  day: n$1,
-  hour: n$1,
-  minute: n$1,
-  second: n$1,
+  day: n$1$1,
+  hour: n$1$1,
+  minute: n$1$1,
+  second: n$1$1,
 };
 
 const DATETIME_MED_WITH_WEEKDAY$1 = {
-  year: n$1,
+  year: n$1$1,
   month: s$1,
-  day: n$1,
+  day: n$1$1,
   weekday: s$1,
-  hour: n$1,
-  minute: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
 };
 
 const DATETIME_FULL$1 = {
-  year: n$1,
+  year: n$1$1,
   month: l$1,
-  day: n$1,
-  hour: n$1,
-  minute: n$1,
+  day: n$1$1,
+  hour: n$1$1,
+  minute: n$1$1,
   timeZoneName: s$1,
 };
 
 const DATETIME_FULL_WITH_SECONDS$1 = {
-  year: n$1,
+  year: n$1$1,
   month: l$1,
-  day: n$1,
-  hour: n$1,
-  minute: n$1,
-  second: n$1,
+  day: n$1$1,
+  hour: n$1$1,
+  minute: n$1$1,
+  second: n$1$1,
   timeZoneName: s$1,
 };
 
 const DATETIME_HUGE$1 = {
-  year: n$1,
+  year: n$1$1,
   month: l$1,
-  day: n$1,
+  day: n$1$1,
   weekday: l$1,
-  hour: n$1,
-  minute: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
   timeZoneName: l$1,
 };
 
 const DATETIME_HUGE_WITH_SECONDS$1 = {
-  year: n$1,
+  year: n$1$1,
   month: l$1,
-  day: n$1,
+  day: n$1$1,
   weekday: l$1,
-  hour: n$1,
-  minute: n$1,
-  second: n$1,
+  hour: n$1$1,
+  minute: n$1$1,
+  second: n$1$1,
   timeZoneName: l$1,
 };
 
@@ -17298,10 +17298,9 @@ const StoryModal = (props) => {
     const isBackroundFilled = ((_b = (_a = activeStoriesWithResult[currentStory]) === null || _a === void 0 ? void 0 : _a.background) === null || _b === void 0 ? void 0 : _b.isFilled) &&
         currentGroupType === GroupType.GROUP;
     const isLarge = (((_c = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _c === void 0 ? void 0 : _c.storiesSize) === StorySize.LARGE &&
-        isShowMockup &&
         !isMobile &&
         (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
-        (currentGroupType === GroupType.GROUP && isBackroundFilled);
+        (currentGroupType === GroupType.GROUP && !isMobile && isShowMockup && isBackroundFilled);
     const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
     const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
     const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
@@ -71806,6 +71805,14 @@ const MaterialIcon = memo(({ name = 'ArrowCircleUpOutlineIcon', className, color
     return null;
 });
 
+var u = e=>{var a=useRef(e);return useEffect(()=>{a.current=e;}),a};
+
+var o$1=function(n,o,c){function i(){l.current&&clearTimeout(l.current),l.current=void 0;}function a(){l.current=void 0;}void 0===o&&(o=100),void 0===c&&(c=0);var v=u(n),l=useRef(),m=[o,c,v];return useEffect(()=>i,m),useCallback((function(){var r=arguments,{current:t}=l;if(void 0===t&&c)return l.current=setTimeout(a,o),v.current.apply(null,r);t&&clearTimeout(t),l.current=setTimeout(()=>{l.current=void 0,v.current.apply(null,r);},o);}),m)},c=(r,t,e)=>{var u=useState(r);return [u[0],o$1(u[1],t,e)]};
+
+function i(t,n,a,u){var c=useRef(a),i=useRef(u);useEffect(()=>{c.current=a,i.current=u;}),useEffect(()=>{function r(){if(!a){for(var r=arguments.length,e=new Array(r),t=0;r>t;t++)e[t]=arguments[t];c.current.apply(this,e);}}var e=t&&"current"in t?t.current:t;if(e){var a=0;e.addEventListener(n,r);var u=i.current;return ()=>{a=1,e.removeEventListener(n,r),u&&u();}}},[t,n]);}
+
+var t={},n$1="undefined"==typeof window?null:window,o=n$1&&void 0!==n$1.visualViewport?n$1.visualViewport:null,d=()=>[document.documentElement.clientWidth,document.documentElement.clientHeight],r$1=function(r){void 0===r&&(r=t);var{wait:u,leading:l,initialWidth:a=0,initialHeight:c$1=0}=r,[m,f]=c("undefined"==typeof document?[a,c$1]:d,u,l),h=()=>f(d);return i(n$1,"resize",h),i(o,"resize",h),i(n$1,"orientationchange",h),m};
+
 let urlAlphabet =
   'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
 
@@ -79064,7 +79071,7 @@ const actionToWidget = (widget, storyId, groupId, uniqUserId, language) => {
     return undefined;
 };
 const adaptWidgets = (widgets, storyId, groupId, uniqUserId, language, useAlternativePosition) => widgets.map((widget) => {
-    const newWidget = Object.assign({}, widget);
+    const newWidget = JSON.parse(JSON.stringify(widget));
     if (useAlternativePosition && newWidget.position.alternative) {
         newWidget.position.x = newWidget.position.alternative.x;
         newWidget.position.y = newWidget.position.alternative.y;
@@ -79188,7 +79195,8 @@ const withGroupsData = (GroupsList, options) => () => {
     const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
     const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
     const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
-    const isMobile = window.innerWidth < 768;
+    const [width] = r$1();
+    const isMobile = useMemo(() => width < 768, [width]);
     const [groupDuration, setGroupDuration] = useState({
         groupId: '',
         startTime: 0
@@ -79377,7 +79385,7 @@ const withGroupsData = (GroupsList, options) => () => {
             const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language, isMobile);
             setData(adaptedData);
         }
-    }, [loadStatus, groupsWithStories, uniqUserId, language]);
+    }, [loadStatus, groupsWithStories, uniqUserId, language, isMobile]);
     return (React.createElement(GroupsList, { autoplay: options === null || options === void 0 ? void 0 : options.autoplay, forbidClose: options === null || options === void 0 ? void 0 : options.forbidClose, groupClassName: options === null || options === void 0 ? void 0 : options.groupClassName, groupImageHeight: options === null || options === void 0 ? void 0 : options.groupImageHeight, groupImageWidth: options === null || options === void 0 ? void 0 : options.groupImageWidth, groupTitleSize: options === null || options === void 0 ? void 0 : options.groupTitleSize, groupView: groupView, groups: data, groupsClassName: options === null || options === void 0 ? void 0 : options.groupsClassName, isLoading: loadStatus === 'loading', isShowMockup: isShowMockup, startStoryId: options === null || options === void 0 ? void 0 : options.startStoryId, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onFinishQuiz: handleFinishQuiz, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory, onStartQuiz: handleStartQuiz }));
 };
 

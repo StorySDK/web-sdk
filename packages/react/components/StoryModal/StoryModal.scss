@@ -47,7 +47,11 @@
   &_isShowing {
     display: flex;
     justify-content: center;
-    padding: 10px 0;
+    padding: 0;
+
+    @media (min-width: 768px) {
+      padding: 10px 0;
+    }
   }
 
   &__controls {

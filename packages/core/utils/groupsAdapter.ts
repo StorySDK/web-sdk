@@ -59,9 +59,7 @@ const adaptWidgets = (
   useAlternativePosition?: boolean
 ) =>
   widgets.map((widget: any) => {
-    const newWidget = {
-      ...widget
-    };
+    const newWidget = JSON.parse(JSON.stringify(widget));
 
     if (useAlternativePosition && newWidget.position.alternative) {
       newWidget.position.x = newWidget.position.alternative.x;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Group, GroupsListProps } from '@storysdk/react';
+import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
 import axios from 'axios';
@@ -43,8 +44,9 @@ const withGroupsData =
     const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
     const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
     const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
+    const [width] = useWindowSize();
 
-    const isMobile = window.innerWidth < 768;
+    const isMobile = useMemo(() => width < 768, [width]);
 
     const [groupDuration, setGroupDuration] = useState<DurationProps>({
       groupId: '',
@@ -308,7 +310,7 @@ const withGroupsData =
 
         setData(adaptedData);
       }
-    }, [loadStatus, groupsWithStories, uniqUserId, language]);
+    }, [loadStatus, groupsWithStories, uniqUserId, language, isMobile]);
 
     return (
       <GroupsList
