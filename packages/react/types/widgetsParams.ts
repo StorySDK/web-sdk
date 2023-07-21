@@ -41,7 +41,7 @@ export type ClickMeWidgetParamsType = {
   color: BorderType;
   text: string;
   icon: MaterialIconValueType;
-  actionType: 'link' | 'story';
+  actionType: 'link' | 'story' | 'custom';
   borderRadius: number;
   backgroundColor: BackgroundType;
   hasBorder: boolean;
