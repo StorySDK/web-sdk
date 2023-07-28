@@ -71614,6 +71614,8 @@ class WidgetFactory extends React.Component {
                 return (React.createElement(ClickMeWidget, { params: this.props.widget.content.params, onClick: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.ELLIPSE:
                 return React.createElement(EllipseWidget, { params: this.props.widget.content.params });
+            case WidgetsTypes.IMAGE:
+                return React.createElement(ImageWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.EMOJI_REACTION:
                 return (React.createElement(EmojiReactionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.GIPHY:

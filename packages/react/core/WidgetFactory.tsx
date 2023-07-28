@@ -5,6 +5,7 @@ import {
   EllipseWidget,
   EmojiReactionWidget,
   GiphyWidget,
+  ImageWidget,
   QuestionWidget,
   QuizMultipleAnswerWidget,
   QuizMultipleAnswerWithImageWidget,
@@ -63,6 +64,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         );
       case WidgetsTypes.ELLIPSE:
         return <EllipseWidget params={this.props.widget.content.params} />;
+      case WidgetsTypes.IMAGE:
+        return <ImageWidget params={this.props.widget.content.params} />;
       case WidgetsTypes.EMOJI_REACTION:
         return (
           <EmojiReactionWidget

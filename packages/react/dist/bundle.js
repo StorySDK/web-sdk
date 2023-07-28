@@ -65840,6 +65840,8 @@ class WidgetFactory extends React__default["default"].Component {
                 return (React__default["default"].createElement(ClickMeWidget, { params: this.props.widget.content.params, onClick: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case exports.WidgetsTypes.ELLIPSE:
                 return React__default["default"].createElement(EllipseWidget, { params: this.props.widget.content.params });
+            case exports.WidgetsTypes.IMAGE:
+                return React__default["default"].createElement(ImageWidget, { params: this.props.widget.content.params });
             case exports.WidgetsTypes.EMOJI_REACTION:
                 return (React__default["default"].createElement(EmojiReactionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case exports.WidgetsTypes.GIPHY:

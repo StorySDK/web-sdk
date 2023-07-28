@@ -26,6 +26,7 @@ export type ImageWidgetParamsType = {
   borderRadius: number;
   widgetOpacity: number;
   imageUrl: string;
+  fileId?: string;
 };
 
 export type EllipseWidgetParamsType = {
