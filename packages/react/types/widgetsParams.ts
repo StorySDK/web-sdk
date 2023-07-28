@@ -22,6 +22,12 @@ export type RectangleWidgetParamsType = {
   hasBorder: boolean;
 };
 
+export type ImageWidgetParamsType = {
+  borderRadius: number;
+  widgetOpacity: number;
+  imageUrl: string;
+};
+
 export type EllipseWidgetParamsType = {
   fillColor: BackgroundType;
   fillOpacity: number;

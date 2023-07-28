@@ -28,7 +28,8 @@ import {
   TimerWidgetParamsType,
   QuizMultipleAnswerWithImageWidgetParamsType,
   QuizRateWidgetParamsType,
-  QuizOpenAnswerWidgetParamsType
+  QuizOpenAnswerWidgetParamsType,
+  ImageWidgetParamsType
 } from './widgetsParams';
 
 type ColorValue = { type: 'color'; value: string; isFilled?: boolean };
@@ -50,6 +51,7 @@ export interface FontParamsType {
 
 export enum WidgetsTypes {
   RECTANGLE = 'rectangle',
+  IMAGE = 'image',
   ELLIPSE = 'ellipse',
   TEXT = 'text',
   SWIPE_UP = 'swipe_up',
@@ -72,6 +74,11 @@ export interface RectangleState {
   type: WidgetsTypes.RECTANGLE;
   params: RectangleWidgetParamsType;
   widgetImage?: string;
+}
+
+export interface ImageState {
+  type: WidgetsTypes.IMAGE;
+  params: ImageWidgetParamsType;
 }
 
 export interface EllipseState {
@@ -219,6 +226,7 @@ export interface WidgetObjectType {
     | TalkAboutElementsType;
   content:
     | RectangleState
+    | ImageState
     | EllipseState
     | TextState
     | SwipeUpState

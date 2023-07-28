@@ -16,9 +16,11 @@ import { QuizOneAnswerWidget } from './QuizOneAnswerWidget';
 import { QuizOpenAnswerWidget } from './QuizOpenAnswerWidget';
 import { QuizRateWidget } from './QuizRateWidget';
 import { QuizMultipleAnswerWithImageWidget } from './QuizMultipleAnswerWithImageWidget';
+import { ImageWidget } from './ImageWidget';
 
 const widgets = {
   [WidgetsTypes.CHOOSE_ANSWER]: ChooseAnswerWidget,
+  [WidgetsTypes.IMAGE]: ImageWidget,
   [WidgetsTypes.CLICK_ME]: ClickMeWidget,
   [WidgetsTypes.ELLIPSE]: EllipseWidget,
   [WidgetsTypes.EMOJI_REACTION]: EmojiReactionWidget,
@@ -41,6 +43,7 @@ export default widgets;
 
 export {
   ChooseAnswerWidget,
+  ImageWidget,
   ClickMeWidget,
   EllipseWidget,
   EmojiReactionWidget,

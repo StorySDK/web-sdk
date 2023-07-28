@@ -18,6 +18,11 @@ export declare type RectangleWidgetParamsType = {
     strokeOpacity: number;
     hasBorder: boolean;
 };
+export declare type ImageWidgetParamsType = {
+    borderRadius: number;
+    widgetOpacity: number;
+    imageUrl: string;
+};
 export declare type EllipseWidgetParamsType = {
     fillColor: BackgroundType;
     fillOpacity: number;
