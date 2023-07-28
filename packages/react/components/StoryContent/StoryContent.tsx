@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import { WidgetFactory } from '../../core';
@@ -38,7 +38,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
 
   const [width, height] = useWindowSize();
 
-  const isMobile = width < MOBILE_BREAKPOINT;
+  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
 
   return (
     <>

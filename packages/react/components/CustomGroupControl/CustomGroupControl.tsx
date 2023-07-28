@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Group } from '../../types';
 import { StoryModal } from '..';
 
 interface GroupProps {
-  group: Group;
+  group?: Group;
   isFirstGroup: boolean;
   isLastGroup: boolean;
   isForceCloseAvailable?: boolean;
@@ -15,6 +15,7 @@ interface GroupProps {
   isStatusBarActive?: boolean;
   startStoryId?: string;
   isCacheDisabled?: boolean;
+  isEditorMode?: boolean;
 }
 
 export const CustomGroupControl: React.FC<GroupProps> = (props) => {
@@ -27,12 +28,21 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     isForceCloseAvailable,
     isShowMockup,
     isStatusBarActive,
+    isEditorMode,
     handleCloseModal,
     handleNextGroup,
     handlePrevGroup,
     isShowing,
     isCacheDisabled
   } = props;
+
+  useEffect(() => {
+    if (isShowing) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isShowing]);
 
   return (
     <>
@@ -42,6 +52,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
         <StoryModal
           currentGroup={group}
           isCacheDisabled={isCacheDisabled}
+          isEditorMode={isEditorMode}
           isFirstGroup={isFirstGroup}
           isForceCloseAvailable={isForceCloseAvailable}
           isLastGroup={isLastGroup}
@@ -49,7 +60,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
           isShowing={isShowing}
           isStatusBarActive={isStatusBarActive}
           startStoryId={startStoryId}
-          stories={group.stories}
+          stories={group?.stories}
           onClose={handleCloseModal}
           onNextGroup={handleNextGroup}
           onPrevGroup={handlePrevGroup}

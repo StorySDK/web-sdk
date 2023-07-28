@@ -13,6 +13,7 @@ var crypto__default = /*#__PURE__*/_interopDefaultLegacy(crypto);
 exports.WidgetsTypes = void 0;
 (function (WidgetsTypes) {
     WidgetsTypes["RECTANGLE"] = "rectangle";
+    WidgetsTypes["IMAGE"] = "image";
     WidgetsTypes["ELLIPSE"] = "ellipse";
     WidgetsTypes["TEXT"] = "text";
     WidgetsTypes["SWIPE_UP"] = "swipe_up";
@@ -41,6 +42,7 @@ exports.GroupType = void 0;
 (function (GroupType) {
     GroupType["GROUP"] = "group";
     GroupType["ONBOARDING"] = "onboarding";
+    GroupType["TEMPLATE"] = "template";
 })(exports.GroupType || (exports.GroupType = {}));
 exports.StorySize = void 0;
 (function (StorySize) {
@@ -133,7 +135,7 @@ var classnames = {exports: {}};
 
 var cn = classnames.exports;
 
-const b$p = block$1('GroupSdkItem');
+const b$q = block$1('GroupSdkItem');
 const GroupItem = (props) => {
     const { imageUrl, title, view, index, type, groupClassName, groupTitleSize, groupImageWidth, groupImageHeight, onClick } = props;
     const BASE_CONTAINER_WIDTH_INDEX = 1.32;
@@ -171,19 +173,19 @@ const GroupItem = (props) => {
         }
         return undefined;
     }, [view]);
-    return (React__default["default"].createElement("button", { className: cn(b$p({ view, type }).toString(), groupClassName || ''), style: {
+    return (React__default["default"].createElement("button", { className: cn(b$q({ view, type }).toString(), groupClassName || ''), style: {
             width: getContainerSize(),
             minHeight: view === 'rectangle' && groupImageWidth
                 ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
                 : getContainerSize()
         }, onClick: () => onClick && onClick(index) },
-        React__default["default"].createElement("div", { className: b$p('imgContainer', { view, type }), style: { width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' } },
-            React__default["default"].createElement("img", { alt: "", className: b$p('img', { view }), src: imageUrl, style: {
+        React__default["default"].createElement("div", { className: b$q('imgContainer', { view, type }), style: { width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' } },
+            React__default["default"].createElement("img", { alt: "", className: b$q('img', { view }), src: imageUrl, style: {
                     width: getImageSize(groupImageWidth),
                     height: getImageSize(groupImageHeight, true)
                 } })),
-        React__default["default"].createElement("div", { className: b$p('titleContainer', { view }) },
-            React__default["default"].createElement("p", { className: b$p('title', { view }), style: {
+        React__default["default"].createElement("div", { className: b$q('titleContainer', { view }) },
+            React__default["default"].createElement("p", { className: b$q('title', { view }), style: {
                     fontSize: groupTitleSize || undefined
                 } }, title))));
 };
@@ -263,11 +265,17 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
         : elements));
 }
 
-const b$o = block$1('GroupsSdkList');
+const b$p = block$1('GroupsSdkList');
 const GroupsList = (props) => {
-    const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, isShowMockup, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory, onStartQuiz, onFinishQuiz } = props;
+    var _a;
+    const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, isShowMockup, autoplay, startStoryId, forbidClose, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory, onStartQuiz, onFinishQuiz } = props;
     const [currentGroup, setCurrentGroup] = React.useState(0);
-    const [modalShow, setModalShow] = React.useState(false);
+    const [modalShow, setModalShow] = React.useState(!!autoplay);
+    React.useEffect(() => {
+        if (autoplay && onOpenGroup && (groups === null || groups === void 0 ? void 0 : groups.length)) {
+            onOpenGroup(groups[0].id);
+        }
+    }, [autoplay, groups, onOpenGroup]);
     const handleSelectGroup = React.useCallback((groupIndex) => {
         setCurrentGroup(groupIndex);
         setModalShow(true);
@@ -298,31 +306,34 @@ const GroupsList = (props) => {
         }
     }, [currentGroup, groups, onCloseGroup, onOpenGroup]);
     const handleCloseModal = React.useCallback(() => {
-        if (onCloseGroup) {
+        if (onCloseGroup && (groups === null || groups === void 0 ? void 0 : groups[currentGroup])) {
             onCloseGroup(groups[currentGroup].id);
         }
-        setModalShow(false);
-    }, [currentGroup, groups, onCloseGroup]);
-    return (React__default["default"].createElement(React__default["default"].Fragment, null, isLoading ? (React__default["default"].createElement("div", { className: b$o() },
-        React__default["default"].createElement("div", { className: b$o('carousel') },
-            React__default["default"].createElement("div", { className: b$o('loaderItem') },
+        if (!forbidClose) {
+            setModalShow(false);
+        }
+    }, [currentGroup, forbidClose, groups, onCloseGroup]);
+    return (React__default["default"].createElement(React__default["default"].Fragment, null, isLoading && !autoplay ? (React__default["default"].createElement("div", { className: b$p() },
+        React__default["default"].createElement("div", { className: b$p('carousel') },
+            React__default["default"].createElement("div", { className: b$p('loaderItem') },
                 React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
                 React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React__default["default"].createElement("div", { className: b$o('loaderItem') },
+            React__default["default"].createElement("div", { className: b$p('loaderItem') },
                 React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
                 React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React__default["default"].createElement("div", { className: b$o('loaderItem') },
+            React__default["default"].createElement("div", { className: b$p('loaderItem') },
                 React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
                 React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React__default["default"].createElement("div", { className: b$o('loaderItem') },
+            React__default["default"].createElement("div", { className: b$p('loaderItem') },
                 React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
-                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React__default["default"].createElement(React__default["default"].Fragment, null, groups.length ? (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement("div", { className: cn(b$o(), groupsClassName) },
-            React__default["default"].createElement("div", { className: b$o('carousel') }, groups
-                .filter((group) => group.stories.length)
-                .map((group, index) => (React__default["default"].createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))),
-        React__default["default"].createElement(StoryModal, { currentGroup: groups[currentGroup], isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === groups.length - 1, isShowMockup: isShowMockup, isShowing: modalShow, stories: groups[currentGroup].stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz }))) : (React__default["default"].createElement("div", { className: b$o({ empty: true }) },
-        React__default["default"].createElement("p", { className: b$o('emptyText') }, "Stories will be here")))))));
+                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React__default["default"].createElement(React__default["default"].Fragment, null,
+        groups.length ? (React__default["default"].createElement(React__default["default"].Fragment, null,
+            React__default["default"].createElement("div", { className: cn(b$p(), groupsClassName) },
+                React__default["default"].createElement("div", { className: b$p('carousel') }, groups
+                    .filter((group) => group.stories.length)
+                    .map((group, index) => (React__default["default"].createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))))) : (React__default["default"].createElement("div", { className: b$p({ empty: true }) },
+            React__default["default"].createElement("p", { className: b$p('emptyText') }, "Stories will be here"))),
+        React__default["default"].createElement(StoryModal, { currentGroup: groups === null || groups === void 0 ? void 0 : groups[currentGroup], forbidClose: forbidClose, isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === (groups === null || groups === void 0 ? void 0 : groups.length) - 1, isLoading: isLoading, isShowMockup: isShowMockup, isShowing: modalShow, startStoryId: startStoryId, stories: (_a = groups === null || groups === void 0 ? void 0 : groups[currentGroup]) === null || _a === void 0 ? void 0 : _a.stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz })))));
 };
 
 var u = e=>{var a=React.useRef(e);return React.useEffect(()=>{a.current=e;}),a};
@@ -3781,6 +3792,60 @@ const getUniqUserId = () => {
     localStorage.setItem('StorySdkUserId', id);
     return id;
 };
+
+const IconLogoCircle = ({ className }) => {
+    const gradientId = React.useMemo(() => nanoid(), []);
+    return (React__default["default"].createElement("svg", { className: className, fill: "none", height: "34", viewBox: "0 0 34 34", width: "34", xmlns: "http://www.w3.org/2000/svg" },
+        React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", r: "17" }),
+        React__default["default"].createElement("path", { d: "M17 0C7.59621 0 0 7.59887 0 17C0 26.4038 7.59887 34 17 34C26.4038 34 34 26.4011 34 17C34 7.59621 26.4011 0 17 0ZM6.44938 24.5006C5.3198 22.9161 4.55215 21.068 4.23074 19.1575L6.19504 18.8268C6.4673 20.4418 7.11609 22.0037 8.07168 23.3445L6.44938 24.5006ZM6.19504 15.1732L4.23074 14.8425C4.55215 12.932 5.3198 11.0839 6.44938 9.49941L8.07168 10.6555C7.11609 11.9963 6.4673 13.5582 6.19504 15.1732ZM14.8425 29.7693C12.932 29.4479 11.0839 28.6802 9.49941 27.5506L10.6555 25.9283C11.9963 26.8839 13.5582 27.5327 15.1732 27.805L14.8425 29.7693ZM10.6555 8.07168L9.49941 6.44938C11.0839 5.3198 12.932 4.55215 14.8425 4.23074L15.1732 6.19504C13.5582 6.4673 11.9963 7.11609 10.6555 8.07168ZM27.5506 9.49941C28.6802 11.0839 29.4479 12.9313 29.7693 14.8425L27.805 15.1732C27.5327 13.5582 26.8839 11.9963 25.929 10.6555L27.5506 9.49941ZM19.1575 29.7693L18.8268 27.805C20.4418 27.5327 22.0037 26.8839 23.3445 25.9283L24.5006 27.5506C22.9161 28.6802 21.068 29.4479 19.1575 29.7693ZM23.3445 8.07168C22.0037 7.11609 20.4418 6.4673 18.8268 6.19504L19.1575 4.23074C21.068 4.55215 22.9161 5.3198 24.5006 6.44938L23.3445 8.07168ZM27.5506 24.5006L25.929 23.3445C26.8839 22.0037 27.5327 20.4418 27.805 18.8268L29.7693 19.1575C29.4479 21.0687 28.6802 22.9161 27.5506 24.5006Z", fill: `url(#${gradientId})` }),
+        React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", opacity: "0.6", r: "5" }),
+        React__default["default"].createElement("defs", null,
+            React__default["default"].createElement("linearGradient", { gradientUnits: "userSpaceOnUse", id: gradientId, x1: "7.5", x2: "22", y1: "3.5", y2: "32.5" },
+                React__default["default"].createElement("stop", { stopColor: "#FF0198" }),
+                React__default["default"].createElement("stop", { offset: "1", stopColor: "#B90AE0" })))));
+};
+
+const IconConfirm = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("path", { d: "M1.5 9.5C3.66667 11.6667 9 17 9 17L18.5 3", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.5" })));
+
+const IconDecline = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("path", { d: "M17 3L10 10M3 17L10 10M10 10L3 3M10 10L17 17", strokeLinecap: "round", strokeWidth: "1.5" })));
+
+const IconIphoneBattery = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 25 12", width: "25", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("rect", { height: "10.3333", opacity: "0.35", rx: "2.16667", stroke: "white", width: "21", x: "0.833008", y: "0.50293" }),
+    React__default["default"].createElement("path", { d: "M23.333 3.66943V7.66943C24.1377 7.33066 24.661 6.54257 24.661 5.66943C24.661 4.7963 24.1377 4.00821 23.333 3.66943Z", fill: "white", opacity: "0.4" }),
+    React__default["default"].createElement("rect", { fill: "white", height: "7.33333", rx: "1.33333", width: "18", x: "2.33301", y: "2.00293" })));
+
+const IconIphoneWifi = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "11", viewBox: "0 0 16 11", width: "16", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("path", { clipRule: "evenodd", d: "M7.66707 2.28448C9.8918 2.28457 12.0315 3.13869 13.6438 4.67028C13.7652 4.78852 13.9593 4.78703 14.0789 4.66693L15.2395 3.4966C15.3 3.43569 15.3338 3.35318 15.3333 3.26733C15.3328 3.18148 15.2981 3.09937 15.2368 3.03917C11.0049 -1.01306 4.32857 -1.01306 0.0966565 3.03917C0.0353544 3.09933 0.000572274 3.18141 6.99859e-06 3.26726C-0.000558277 3.35311 0.0331399 3.43565 0.0936446 3.4966L1.25459 4.66693C1.37409 4.78721 1.56831 4.78871 1.68965 4.67028C3.30221 3.13859 5.44212 2.28447 7.66707 2.28448ZM7.66707 6.09206C8.88942 6.09199 10.0681 6.54594 10.9742 7.36571C11.0968 7.48206 11.2898 7.47954 11.4093 7.36003L12.5685 6.1897C12.6296 6.12831 12.6635 6.04504 12.6626 5.9585C12.6617 5.87196 12.6261 5.78939 12.5639 5.72926C9.8047 3.16485 5.53178 3.16485 2.77262 5.72926C2.7103 5.78939 2.67474 5.87201 2.67392 5.95857C2.6731 6.04513 2.70709 6.1284 2.76827 6.1897L3.92721 7.36003C4.04667 7.47954 4.23972 7.48206 4.36227 7.36571C5.26774 6.54648 6.44553 6.09257 7.66707 6.09206ZM9.98929 8.6539C9.99106 8.74068 9.95692 8.82434 9.89492 8.88514L7.88962 10.9071C7.83084 10.9666 7.75069 11 7.66707 11C7.58345 11 7.5033 10.9666 7.44452 10.9071L5.43888 8.88514C5.37693 8.8243 5.34284 8.7406 5.34468 8.65383C5.34652 8.56705 5.38411 8.48487 5.44859 8.4267C6.72925 7.34443 8.60489 7.34443 9.88555 8.4267C9.94998 8.48492 9.98752 8.56712 9.98929 8.6539Z", fill: "white", fillRule: "evenodd" })));
+
+const IconIphoneCellular = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 17 12", width: "17", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("path", { clipRule: "evenodd", d: "M16 0.335938H15C14.4477 0.335938 14 0.783653 14 1.33594V10.0026C14 10.5549 14.4477 11.0026 15 11.0026H16C16.5523 11.0026 17 10.5549 17 10.0026V1.33594C17 0.783653 16.5523 0.335938 16 0.335938ZM10.3333 2.66927H11.3333C11.8856 2.66927 12.3333 3.11699 12.3333 3.66927V10.0026C12.3333 10.5549 11.8856 11.0026 11.3333 11.0026H10.3333C9.78105 11.0026 9.33333 10.5549 9.33333 10.0026V3.66927C9.33333 3.11699 9.78105 2.66927 10.3333 2.66927ZM6.66667 5.0026H5.66667C5.11438 5.0026 4.66667 5.45032 4.66667 6.0026V10.0026C4.66667 10.5549 5.11438 11.0026 5.66667 11.0026H6.66667C7.21895 11.0026 7.66667 10.5549 7.66667 10.0026V6.0026C7.66667 5.45032 7.21895 5.0026 6.66667 5.0026ZM2 7.0026H1C0.447715 7.0026 0 7.45032 0 8.0026V10.0026C0 10.5549 0.447715 11.0026 1 11.0026H2C2.55228 11.0026 3 10.5549 3 10.0026V8.0026C3 7.45032 2.55228 7.0026 2 7.0026Z", fill: "white", fillRule: "evenodd" })));
+
+const IconRateStar = ({ className }) => (React__default["default"].createElement("svg", { className: className, viewBox: "0 0 52 50", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("path", { d: "M26 1L33.725 16.7981L51 19.347L38.5 31.6372L41.45 49L26 40.7981L10.55 49L13.5 31.6372L1 19.347L18.275 16.7981L26 1Z", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
+
+const IconArrowSend = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "32", viewBox: "0 0 32 32", width: "32", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("g", { strokeWidth: "2" },
+        React__default["default"].createElement("circle", { cx: "16", cy: "16", r: "15" }),
+        React__default["default"].createElement("g", { strokeLinecap: "round" },
+            React__default["default"].createElement("path", { d: "m23 16-5.5-5.5" }),
+            React__default["default"].createElement("path", { d: "m23 16-5.5 5.5" }),
+            React__default["default"].createElement("path", { d: "m23 16h-14" })))));
+
+const IconLoader = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "69", viewBox: "0 0 68 69", width: "68", xmlns: "http://www.w3.org/2000/svg" },
+    React__default["default"].createElement("g", { filter: "url(#filter0_d_3254_16668)", opacity: "0.8" },
+        React__default["default"].createElement("path", { d: "M17.9999 61.7127C2.71925 52.8904 -2.53519 33.2806 6.28711 17.9999C6.80672 17.0999 7.95793 16.791 8.85845 17.3109C9.75897 17.8308 10.067 18.9823 9.54744 19.8823C1.76313 33.3651 6.39892 50.6678 19.8823 58.4524C33.3656 66.237 50.6681 61.6004 58.4524 48.1176C66.2367 34.6347 61.6009 17.3321 48.1176 9.54744C43.1491 6.67887 37.5114 5.39943 31.8147 5.84619C30.7781 5.92837 29.8731 5.15261 29.7909 4.11739C29.7092 3.08112 30.484 2.17421 31.5205 2.0934C37.9797 1.58589 44.3697 3.0365 49.9999 6.28711C65.2806 15.1094 70.535 34.7192 61.7127 49.9999C52.8904 65.2806 33.2806 70.535 17.9999 61.7127Z", fill: "white" })),
+    React__default["default"].createElement("defs", null,
+        React__default["default"].createElement("filter", { colorInterpolationFilters: "sRGB", filterUnits: "userSpaceOnUse", height: "67.9991", id: "filter0_d_3254_16668", width: "67.9872", x: "0.00634766", y: "0.994385" },
+            React__default["default"].createElement("feFlood", { floodOpacity: "0", result: "BackgroundImageFix" }),
+            React__default["default"].createElement("feColorMatrix", { in: "SourceAlpha", result: "hardAlpha", type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" }),
+            React__default["default"].createElement("feOffset", { dy: "1" }),
+            React__default["default"].createElement("feGaussianBlur", { stdDeviation: "1" }),
+            React__default["default"].createElement("feComposite", { in2: "hardAlpha", operator: "out" }),
+            React__default["default"].createElement("feColorMatrix", { type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0" }),
+            React__default["default"].createElement("feBlend", { in2: "BackgroundImageFix", mode: "normal", result: "effect1_dropShadow_3254_16668" }),
+            React__default["default"].createElement("feBlend", { in: "SourceGraphic", in2: "effect1_dropShadow_3254_16668", mode: "normal", result: "shape" })))));
 
 function useInterval(callback, delay) {
     const savedCallback = React.useRef(callback);
@@ -11022,47 +11087,7 @@ function friendlyDateTime(dateTimeish) {
   }
 }
 
-const IconLogoCircle = ({ className }) => {
-    const gradientId = React.useMemo(() => nanoid(), []);
-    return (React__default["default"].createElement("svg", { className: className, fill: "none", height: "34", viewBox: "0 0 34 34", width: "34", xmlns: "http://www.w3.org/2000/svg" },
-        React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", r: "17" }),
-        React__default["default"].createElement("path", { d: "M17 0C7.59621 0 0 7.59887 0 17C0 26.4038 7.59887 34 17 34C26.4038 34 34 26.4011 34 17C34 7.59621 26.4011 0 17 0ZM6.44938 24.5006C5.3198 22.9161 4.55215 21.068 4.23074 19.1575L6.19504 18.8268C6.4673 20.4418 7.11609 22.0037 8.07168 23.3445L6.44938 24.5006ZM6.19504 15.1732L4.23074 14.8425C4.55215 12.932 5.3198 11.0839 6.44938 9.49941L8.07168 10.6555C7.11609 11.9963 6.4673 13.5582 6.19504 15.1732ZM14.8425 29.7693C12.932 29.4479 11.0839 28.6802 9.49941 27.5506L10.6555 25.9283C11.9963 26.8839 13.5582 27.5327 15.1732 27.805L14.8425 29.7693ZM10.6555 8.07168L9.49941 6.44938C11.0839 5.3198 12.932 4.55215 14.8425 4.23074L15.1732 6.19504C13.5582 6.4673 11.9963 7.11609 10.6555 8.07168ZM27.5506 9.49941C28.6802 11.0839 29.4479 12.9313 29.7693 14.8425L27.805 15.1732C27.5327 13.5582 26.8839 11.9963 25.929 10.6555L27.5506 9.49941ZM19.1575 29.7693L18.8268 27.805C20.4418 27.5327 22.0037 26.8839 23.3445 25.9283L24.5006 27.5506C22.9161 28.6802 21.068 29.4479 19.1575 29.7693ZM23.3445 8.07168C22.0037 7.11609 20.4418 6.4673 18.8268 6.19504L19.1575 4.23074C21.068 4.55215 22.9161 5.3198 24.5006 6.44938L23.3445 8.07168ZM27.5506 24.5006L25.929 23.3445C26.8839 22.0037 27.5327 20.4418 27.805 18.8268L29.7693 19.1575C29.4479 21.0687 28.6802 22.9161 27.5506 24.5006Z", fill: `url(#${gradientId})` }),
-        React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", opacity: "0.6", r: "5" }),
-        React__default["default"].createElement("defs", null,
-            React__default["default"].createElement("linearGradient", { gradientUnits: "userSpaceOnUse", id: gradientId, x1: "7.5", x2: "22", y1: "3.5", y2: "32.5" },
-                React__default["default"].createElement("stop", { stopColor: "#FF0198" }),
-                React__default["default"].createElement("stop", { offset: "1", stopColor: "#B90AE0" })))));
-};
-
-const IconConfirm = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M1.5 9.5C3.66667 11.6667 9 17 9 17L18.5 3", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.5" })));
-
-const IconDecline = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M17 3L10 10M3 17L10 10M10 10L3 3M10 10L17 17", strokeLinecap: "round", strokeWidth: "1.5" })));
-
-const IconIphoneBattery = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 25 12", width: "25", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("rect", { height: "10.3333", opacity: "0.35", rx: "2.16667", stroke: "white", width: "21", x: "0.833008", y: "0.50293" }),
-    React__default["default"].createElement("path", { d: "M23.333 3.66943V7.66943C24.1377 7.33066 24.661 6.54257 24.661 5.66943C24.661 4.7963 24.1377 4.00821 23.333 3.66943Z", fill: "white", opacity: "0.4" }),
-    React__default["default"].createElement("rect", { fill: "white", height: "7.33333", rx: "1.33333", width: "18", x: "2.33301", y: "2.00293" })));
-
-const IconIphoneWifi = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "11", viewBox: "0 0 16 11", width: "16", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { clipRule: "evenodd", d: "M7.66707 2.28448C9.8918 2.28457 12.0315 3.13869 13.6438 4.67028C13.7652 4.78852 13.9593 4.78703 14.0789 4.66693L15.2395 3.4966C15.3 3.43569 15.3338 3.35318 15.3333 3.26733C15.3328 3.18148 15.2981 3.09937 15.2368 3.03917C11.0049 -1.01306 4.32857 -1.01306 0.0966565 3.03917C0.0353544 3.09933 0.000572274 3.18141 6.99859e-06 3.26726C-0.000558277 3.35311 0.0331399 3.43565 0.0936446 3.4966L1.25459 4.66693C1.37409 4.78721 1.56831 4.78871 1.68965 4.67028C3.30221 3.13859 5.44212 2.28447 7.66707 2.28448ZM7.66707 6.09206C8.88942 6.09199 10.0681 6.54594 10.9742 7.36571C11.0968 7.48206 11.2898 7.47954 11.4093 7.36003L12.5685 6.1897C12.6296 6.12831 12.6635 6.04504 12.6626 5.9585C12.6617 5.87196 12.6261 5.78939 12.5639 5.72926C9.8047 3.16485 5.53178 3.16485 2.77262 5.72926C2.7103 5.78939 2.67474 5.87201 2.67392 5.95857C2.6731 6.04513 2.70709 6.1284 2.76827 6.1897L3.92721 7.36003C4.04667 7.47954 4.23972 7.48206 4.36227 7.36571C5.26774 6.54648 6.44553 6.09257 7.66707 6.09206ZM9.98929 8.6539C9.99106 8.74068 9.95692 8.82434 9.89492 8.88514L7.88962 10.9071C7.83084 10.9666 7.75069 11 7.66707 11C7.58345 11 7.5033 10.9666 7.44452 10.9071L5.43888 8.88514C5.37693 8.8243 5.34284 8.7406 5.34468 8.65383C5.34652 8.56705 5.38411 8.48487 5.44859 8.4267C6.72925 7.34443 8.60489 7.34443 9.88555 8.4267C9.94998 8.48492 9.98752 8.56712 9.98929 8.6539Z", fill: "white", fillRule: "evenodd" })));
-
-const IconIphoneCellular = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 17 12", width: "17", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { clipRule: "evenodd", d: "M16 0.335938H15C14.4477 0.335938 14 0.783653 14 1.33594V10.0026C14 10.5549 14.4477 11.0026 15 11.0026H16C16.5523 11.0026 17 10.5549 17 10.0026V1.33594C17 0.783653 16.5523 0.335938 16 0.335938ZM10.3333 2.66927H11.3333C11.8856 2.66927 12.3333 3.11699 12.3333 3.66927V10.0026C12.3333 10.5549 11.8856 11.0026 11.3333 11.0026H10.3333C9.78105 11.0026 9.33333 10.5549 9.33333 10.0026V3.66927C9.33333 3.11699 9.78105 2.66927 10.3333 2.66927ZM6.66667 5.0026H5.66667C5.11438 5.0026 4.66667 5.45032 4.66667 6.0026V10.0026C4.66667 10.5549 5.11438 11.0026 5.66667 11.0026H6.66667C7.21895 11.0026 7.66667 10.5549 7.66667 10.0026V6.0026C7.66667 5.45032 7.21895 5.0026 6.66667 5.0026ZM2 7.0026H1C0.447715 7.0026 0 7.45032 0 8.0026V10.0026C0 10.5549 0.447715 11.0026 1 11.0026H2C2.55228 11.0026 3 10.5549 3 10.0026V8.0026C3 7.45032 2.55228 7.0026 2 7.0026Z", fill: "white", fillRule: "evenodd" })));
-
-const IconRateStar = ({ className }) => (React__default["default"].createElement("svg", { className: className, viewBox: "0 0 52 50", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M26 1L33.725 16.7981L51 19.347L38.5 31.6372L41.45 49L26 40.7981L10.55 49L13.5 31.6372L1 19.347L18.275 16.7981L26 1Z", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
-
-const IconArrowSend = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "32", viewBox: "0 0 32 32", width: "32", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("g", { strokeWidth: "2" },
-        React__default["default"].createElement("circle", { cx: "16", cy: "16", r: "15" }),
-        React__default["default"].createElement("g", { strokeLinecap: "round" },
-            React__default["default"].createElement("path", { d: "m23 16-5.5-5.5" }),
-            React__default["default"].createElement("path", { d: "m23 16-5.5 5.5" }),
-            React__default["default"].createElement("path", { d: "m23 16h-14" })))));
-
-const b$n = block$1('StorySdkStatusBar');
+const b$o = block$1('StorySdkStatusBar');
 const INIT_VERTICAL_PADDING = 10;
 const INIT_SIDE_PADDING = 20;
 const StatusBar = ({ className }) => {
@@ -11075,20 +11100,20 @@ const StatusBar = ({ className }) => {
     }, []);
     const paddingSide = useAdaptiveValue(INIT_SIDE_PADDING);
     const paddingVertical = useAdaptiveValue(INIT_VERTICAL_PADDING);
-    return (React__default["default"].createElement("div", { className: `${b$n()} ${className || ''}`.trim(), style: {
+    return (React__default["default"].createElement("div", { className: `${b$o()} ${className || ''}`.trim(), style: {
             paddingTop: paddingVertical,
             paddingBottom: paddingVertical,
             paddingLeft: paddingSide,
             paddingRight: paddingSide
         } },
-        React__default["default"].createElement("span", { className: b$n('time') }, time),
-        React__default["default"].createElement("div", { className: b$n('iconWrapper') },
-            React__default["default"].createElement(IconIphoneCellular, { className: b$n('icon') }),
-            React__default["default"].createElement(IconIphoneWifi, { className: b$n('icon') }),
-            React__default["default"].createElement(IconIphoneBattery, { className: b$n('icon') }))));
+        React__default["default"].createElement("span", { className: b$o('time') }, time),
+        React__default["default"].createElement("div", { className: b$o('iconWrapper') },
+            React__default["default"].createElement(IconIphoneCellular, { className: b$o('icon') }),
+            React__default["default"].createElement(IconIphoneWifi, { className: b$o('icon') }),
+            React__default["default"].createElement(IconIphoneBattery, { className: b$o('icon') }))));
 };
 
-const b$m = block$1('StorySdkModal');
+const b$n = block$1('StorySdkModal');
 const CloseIcon = () => (React__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
     React__default["default"].createElement("path", { d: "M18.0002 6.00079L6.00024 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" }),
     React__default["default"].createElement("path", { d: "M6.00024 6.00079L18.0002 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" })));
@@ -11163,8 +11188,8 @@ const reducer = (state, action) => {
     throw Error('Unknown action.');
 };
 const StoryModal = (props) => {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
-    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+    const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, forbidClose, isLoading, isEditorMode, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
     const [quizState, dispatchQuizState] = React.useReducer(reducer, initQuizeState);
     const [currentStory, setCurrentStory] = React.useState(0);
     const [currentStoryId, setCurrentStoryId] = React.useState('');
@@ -11175,32 +11200,38 @@ const StoryModal = (props) => {
     const [width, height] = d$1();
     const [activeStoriesWithResult, setActiveStoriesWithResult] = React.useState([]);
     React.useEffect(() => {
-        setActiveStoriesWithResult(stories
-            .filter((story) => {
-            var _a, _b, _c;
-            if (((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
-                return true;
-            }
-            return (_c = story.layerData) === null || _c === void 0 ? void 0 : _c.isDefaultLayer;
-        })
-            .sort((storyA, storyB) => {
-            var _a, _b, _c, _d;
-            if (((_a = storyA.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
-                return 1;
-            }
-            if (((_c = storyB.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId) === ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId)) {
-                return -1;
-            }
-            return 0;
-        }));
-    }, [(_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId, stories]);
-    const isMobile = width < MOBILE_BREAKPOINT;
-    const currentGroupType = currentGroup.type || exports.GroupType.GROUP;
-    const isBackroundFilled = ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.background) === null || _c === void 0 ? void 0 : _c.isFilled) &&
+        if (stories && currentGroup) {
+            setActiveStoriesWithResult(stories
+                .filter((story) => {
+                var _a, _b, _c, _d;
+                if (((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
+                    return true;
+                }
+                if (isEditorMode) {
+                    return ((_c = story.layerData) === null || _c === void 0 ? void 0 : _c.isDefaultLayer) || story.id === startStoryId;
+                }
+                return (_d = story.layerData) === null || _d === void 0 ? void 0 : _d.isDefaultLayer;
+            })
+                .sort((storyA, storyB) => {
+                var _a, _b, _c, _d;
+                if (((_a = storyA.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
+                    return 1;
+                }
+                if (((_c = storyB.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId) === ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId)) {
+                    return -1;
+                }
+                return 0;
+            }));
+        }
+    }, [currentGroup, stories]);
+    const isMobile = React.useMemo(() => width < MOBILE_BREAKPOINT, [width]);
+    const currentGroupType = (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.type) || exports.GroupType.GROUP;
+    const isBackroundFilled = ((_b = (_a = activeStoriesWithResult[currentStory]) === null || _a === void 0 ? void 0 : _a.background) === null || _b === void 0 ? void 0 : _b.isFilled) &&
         currentGroupType === exports.GroupType.GROUP;
-    const isLarge = (((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.storiesSize) === exports.StorySize.LARGE &&
-        currentGroupType === exports.GroupType.ONBOARDING) ||
-        (currentGroupType === exports.GroupType.GROUP && isShowMockup && !isMobile && isBackroundFilled);
+    const isLarge = (((_c = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _c === void 0 ? void 0 : _c.storiesSize) === exports.StorySize.LARGE &&
+        !isMobile &&
+        (currentGroupType === exports.GroupType.ONBOARDING || currentGroupType === exports.GroupType.TEMPLATE)) ||
+        (currentGroupType === exports.GroupType.GROUP && !isMobile && isShowMockup && isBackroundFilled);
     const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
     const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
     const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
@@ -11267,7 +11298,7 @@ const StoryModal = (props) => {
         }
         if (isShowing && activeStoriesWithResult.length) {
             setCurrentStoryId(activeStoriesWithResult[currentStoryIndex].id);
-            if (onOpenStory) {
+            if (onOpenStory && currentGroup) {
                 onOpenStory(currentGroup.id, activeStoriesWithResult[currentStoryIndex].id);
             }
         }
@@ -11281,11 +11312,11 @@ const StoryModal = (props) => {
     ]);
     const handleClose = React.useCallback(() => {
         onClose();
-        if (onCloseStory) {
+        if (onCloseStory && currentGroup) {
             onCloseStory(currentGroup.id, currentStoryId);
         }
     }, [
-        currentGroup.id,
+        currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.id,
         currentStory,
         onClose,
         onCloseStory,
@@ -11294,7 +11325,7 @@ const StoryModal = (props) => {
     ]);
     const resultStories = React.useMemo(() => {
         var _a;
-        if ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) {
+        if (((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) && stories) {
             return stories
                 .filter((story) => { var _a, _b; return ((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId); })
                 .map((story) => {
@@ -11307,10 +11338,10 @@ const StoryModal = (props) => {
             });
         }
         return [];
-    }, [(_e = currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreResultLayersGroupId, stories]);
+    }, [(_d = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId, stories]);
     const getResultStoryId = React.useCallback(() => {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
-        if (!resultStories.length || !((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
+        if (!resultStories.length || !((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
             return '';
         }
         const nextLayersGroupId = (_b = activeStoriesWithResult[currentStory + 1]) === null || _b === void 0 ? void 0 : _b.layerData.layersGroupId;
@@ -11353,22 +11384,22 @@ const StoryModal = (props) => {
     }, [
         resultStories,
         activeStoriesWithResult,
-        (_f = currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreResultLayersGroupId,
-        (_g = currentGroup.settings) === null || _g === void 0 ? void 0 : _g.scoreType,
+        (_e = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _e === void 0 ? void 0 : _e.scoreResultLayersGroupId,
+        (_f = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _f === void 0 ? void 0 : _f.scoreType,
         currentStory,
         quizState
     ]);
     const handleFinishStoryQuiz = React.useCallback(() => {
         var _a, _b, _c, _d;
-        const isNotResultStory = ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) !==
+        const isNotResultStory = ((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) !==
             ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId);
-        if (onFinishQuiz && ((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId) && isNotResultStory) {
+        if (onFinishQuiz && ((_d = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId) && isNotResultStory) {
             onFinishQuiz(currentGroup.id, currentStoryId);
         }
     }, [
         activeStoriesWithResult,
-        currentGroup.id,
-        (_h = currentGroup.settings) === null || _h === void 0 ? void 0 : _h.scoreResultLayersGroupId,
+        currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.id,
+        (_g = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _g === void 0 ? void 0 : _g.scoreResultLayersGroupId,
         currentStory,
         currentStoryId,
         onFinishQuiz
@@ -11386,22 +11417,22 @@ const StoryModal = (props) => {
             }
             else {
                 onNextGroup();
-                if (onCloseStory) {
+                if (onCloseStory && currentGroup) {
                     onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
                 }
             }
         }
         else {
             handleFinishStoryQuiz();
-            if (onCloseStory) {
+            if (onCloseStory && currentGroup) {
                 onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
-            if (onOpenStory) {
+            if (onOpenStory && currentGroup) {
                 setTimeout(() => {
                     onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
                 }, 0);
             }
-            if (onNextStory) {
+            if (onNextStory && currentGroup) {
                 onNextStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             if (resultStoryId) {
@@ -11423,7 +11454,7 @@ const StoryModal = (props) => {
         handleClose,
         onNextGroup,
         onCloseStory,
-        currentGroup.id,
+        currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.id,
         onOpenStory,
         onNextStory
     ]);
@@ -11441,16 +11472,16 @@ const StoryModal = (props) => {
             isFirstGroup ? handleClose() : onPrevGroup();
         }
         else {
-            if (onCloseStory) {
+            if (onCloseStory && currentGroup) {
                 onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             handleFinishStoryQuiz();
-            if (onOpenStory) {
+            if (onOpenStory && currentGroup) {
                 setTimeout(() => {
                     onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
                 }, 0);
             }
-            if (onPrevStory) {
+            if (onPrevStory && currentGroup) {
                 onPrevStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
             }
             if (activeStoriesWithResult[currentStory - 1].layerData.layersGroupId ===
@@ -11474,7 +11505,7 @@ const StoryModal = (props) => {
         onCloseStory,
         onOpenStory,
         onPrevStory,
-        currentGroup.id
+        currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.id
     ]);
     const handleGoToStory = (storyId) => {
         const storyIndex = activeStoriesWithResult.findIndex((story) => story.id === storyId);
@@ -11482,7 +11513,7 @@ const StoryModal = (props) => {
             eventPublish('nextStory', {
                 stotyId: storyId
             });
-            if (onOpenStory) {
+            if (onOpenStory && currentGroup) {
                 setTimeout(() => {
                     onOpenStory(currentGroup.id, activeStoriesWithResult[storyIndex].id);
                 }, 0);
@@ -11496,37 +11527,39 @@ const StoryModal = (props) => {
         canvas: canvasRef.current
     }));
     const noTopShadow = currentGroupType === exports.GroupType.ONBOARDING &&
-        ((_j = currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProgressHidden) &&
-        ((_k = currentGroup.settings) === null || _k === void 0 ? void 0 : _k.isProhibitToClose);
+        ((_h = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _h === void 0 ? void 0 : _h.isProgressHidden) &&
+        ((_j = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _j === void 0 ? void 0 : _j.isProhibitToClose);
     const handleQuizAnswer = (params) => {
         var _a, _b, _c, _d;
-        if (params.type === 'add' && !isQuizStarted) {
+        if (params.type === 'add' && !isQuizStarted && currentGroup) {
             onStartQuiz && onStartQuiz(currentGroup.id);
             setIsQuizStarted(true);
         }
-        if (params.type === 'add' && !quizStartedStoryIds[currentStoryId]) {
+        if (params.type === 'add' && !quizStartedStoryIds[currentStoryId] && currentGroup) {
             onStartQuiz && onStartQuiz(currentGroup.id, currentStoryId);
             setQuizStartedStoryIds((prevState) => (Object.assign(Object.assign({}, prevState), { [currentStoryId]: true })));
         }
-        if (((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreType) === exports.ScoreType.LETTERS && params.type === 'add') {
+        if (((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreType) === exports.ScoreType.LETTERS && params.type === 'add') {
             dispatchQuizState({
                 type: 'add_letters',
                 payload: params.answer
             });
         }
-        else if (((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreType) === exports.ScoreType.NUMBERS && params.type === 'add') {
+        else if (((_b = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreType) === exports.ScoreType.NUMBERS && params.type === 'add') {
             dispatchQuizState({
                 type: 'add_points',
                 payload: +params.answer
             });
         }
-        else if (((_c = currentGroup.settings) === null || _c === void 0 ? void 0 : _c.scoreType) === exports.ScoreType.LETTERS && params.type === 'remove') {
+        else if (((_c = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _c === void 0 ? void 0 : _c.scoreType) === exports.ScoreType.LETTERS &&
+            params.type === 'remove') {
             dispatchQuizState({
                 type: 'remove_letters',
                 payload: params.answer
             });
         }
-        else if (((_d = currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreType) === exports.ScoreType.NUMBERS && params.type === 'remove') {
+        else if (((_d = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreType) === exports.ScoreType.NUMBERS &&
+            params.type === 'remove') {
             dispatchQuizState({
                 type: 'remove_points',
                 payload: +params.answer
@@ -11537,35 +11570,38 @@ const StoryModal = (props) => {
     const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
     return (React__default["default"].createElement(StoryContext.Provider, { value: {
             currentStoryId,
-            quizMode: (_l = currentGroup.settings) === null || _l === void 0 ? void 0 : _l.scoreType,
+            quizMode: (_k = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _k === void 0 ? void 0 : _k.scoreType,
             playStatusChange: setPlayStatus,
             handleQuizAnswer,
             getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
             setAnswerCache: isCacheDisabled ? undefined : setAnswerCache
         } },
-        React__default["default"].createElement("div", { className: b$m({ isShowing }), ref: storyModalRef, style: {
+        React__default["default"].createElement("div", { className: b$n({ isShowing }), ref: storyModalRef, style: {
                 top: window.pageYOffset || document.documentElement.scrollTop
             } },
-            React__default["default"].createElement("div", { className: b$m('body') },
-                activeStoriesWithResult.length > 1 && (React__default["default"].createElement("button", { className: b$m('arrowButton', { left: true }), onClick: handlePrev },
+            React__default["default"].createElement("div", { className: b$n('body') },
+                activeStoriesWithResult.length > 1 && !isLoading && (React__default["default"].createElement("button", { className: b$n('arrowButton', { left: true }), onClick: handlePrev },
                     React__default["default"].createElement(LeftArrowIcon, null))),
-                React__default["default"].createElement("div", { className: b$m('bodyContainer', {
-                        black: currentGroupType === exports.GroupType.GROUP && !isBackroundFilled && !isMobile
+                React__default["default"].createElement("div", { className: b$n('bodyContainer', {
+                        black: currentGroupType === exports.GroupType.GROUP &&
+                            !isBackroundFilled &&
+                            !isMobile &&
+                            isShowMockup
                     }), style: {
                         borderRadius: containerBorderRadius
                     } },
                     isShowStatusBarInContainer && (React__default["default"].createElement(React__default["default"].Fragment, null,
-                        React__default["default"].createElement("div", { className: b$m('statusBar'), style: {
+                        React__default["default"].createElement("div", { className: b$n('statusBar'), style: {
                                 paddingTop: statusBarTop,
                                 paddingLeft: statusBarTop,
                                 paddingRight: statusBarTop
                             } },
                             React__default["default"].createElement(StatusBar, null)),
-                        React__default["default"].createElement("div", { className: b$m('bottomMock'), style: {
+                        React__default["default"].createElement("div", { className: b$n('bottomMock'), style: {
                                 paddingBottom: largeElementsTop
                             } },
-                            React__default["default"].createElement("img", { alt: "", className: b$m('bottomMockImg'), src: img })))),
-                    React__default["default"].createElement("div", { className: b$m('swiper', {
+                            React__default["default"].createElement("img", { alt: "", className: b$n('bottomMockImg'), src: img })))),
+                    React__default["default"].createElement("div", { className: b$n('swiper', {
                             mockup: !isMobile && isShowMockup,
                             small: !isMobile && !isLarge && isShowMockup
                         }), style: {
@@ -11573,63 +11609,61 @@ const StoryModal = (props) => {
                             height: `calc(100% - ${isShowMockup && !isMobile ? heightGap : 0}px)`,
                             borderRadius: getBorderRadius()
                         } },
-                        React__default["default"].createElement("div", { className: b$m('swiperContent') }, activeStoriesWithResult.map((story, index) => {
-                            var _a;
-                            return (React__default["default"].createElement("div", { className: b$m('story', { current: index === currentStory }), key: story.id },
+                        React__default["default"].createElement(React__default["default"].Fragment, null, isLoading || !(currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.stories) ? (React__default["default"].createElement("div", { className: b$n('loader') },
+                            React__default["default"].createElement(IconLoader, { className: b$n('loaderIcon').toString() }))) : (React__default["default"].createElement(React__default["default"].Fragment, null,
+                            React__default["default"].createElement("div", { className: b$n('swiperContent') }, activeStoriesWithResult.map((story, index) => (React__default["default"].createElement("div", { className: b$n('story', { current: index === currentStory }), key: story.id },
                                 React__default["default"].createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === exports.GroupType.GROUP && isLarge
                                         ? groupInnerHeightGap
-                                        : 0, isLarge: ((_a = currentGroup.settings) === null || _a === void 0 ? void 0 : _a.storiesSize) === exports.StorySize.LARGE &&
-                                        currentGroupType === exports.GroupType.ONBOARDING, isLargeBackground: isShowMockup && currentGroupType === exports.GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize })));
-                        })),
-                        React__default["default"].createElement("div", { className: b$m('topContainer') },
-                            React__default["default"].createElement(React__default["default"].Fragment, null,
-                                isShowStatusBarInStory && React__default["default"].createElement(StatusBar, null),
-                                React__default["default"].createElement("div", { className: b$m('controls'), style: {
-                                        gap: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
-                                        paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
-                                        paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
-                                        paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
-                                    } },
-                                    !((_m = currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden) && (React__default["default"].createElement("div", { className: b$m('indicators', {
-                                            stopAnimation: playStatus === 'pause',
-                                            widePadding: isShowMockup && isLarge
-                                        }), style: {
-                                            top: isShowMockup && isLarge ? largeIndicatorTop : undefined
-                                        } }, activeStoriesWithResult
-                                        .filter((story) => { var _a; return (_a = story.layerData) === null || _a === void 0 ? void 0 : _a.isDefaultLayer; })
-                                        .map((story, index) => (React__default["default"].createElement("div", { className: b$m('indicator', {
-                                            filled: index < currentStory,
-                                            current: index === currentStory
-                                        }), key: story.id, onAnimationEnd: handleAnimationEnd }))))),
-                                    currentGroupType === exports.GroupType.GROUP && (React__default["default"].createElement("div", { className: b$m('group', {
-                                            noProgress: (_o = currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProgressHidden,
-                                            wideLeft: isShowMockup && isLarge
-                                        }), style: {
-                                            top: isShowMockup && isLarge ? largeElementsTop : undefined
+                                        : 0, isLarge: isLarge, isLargeBackground: isShowMockup && currentGroupType === exports.GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize }))))),
+                            React__default["default"].createElement("div", { className: b$n('topContainer') },
+                                React__default["default"].createElement(React__default["default"].Fragment, null,
+                                    isShowStatusBarInStory && React__default["default"].createElement(StatusBar, null),
+                                    React__default["default"].createElement("div", { className: b$n('controls'), style: {
+                                            gap: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
+                                            paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
+                                            paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
+                                            paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
                                         } },
-                                        React__default["default"].createElement("div", { className: b$m('groupImgWrapper') },
-                                            React__default["default"].createElement("img", { alt: "", className: b$m('groupImg'), src: currentGroup.imageUrl })),
-                                        React__default["default"].createElement("p", { className: b$m('groupTitle') }, currentGroup.title))),
-                                    !((_p = currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$m('close', {
-                                            noProgress: (_q = currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProgressHidden,
-                                            wideRight: isShowMockup && isLarge
-                                        }), style: {
-                                            top: isShowMockup && isLarge ? largeElementsTop : undefined
-                                        }, onClick: handleClose },
-                                        React__default["default"].createElement(CloseIcon, null))))))),
-                    isShowMockup && (React__default["default"].createElement("img", { className: b$m('mockup'), src: isLarge || currentGroupType === exports.GroupType.GROUP
+                                        !((_l = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _l === void 0 ? void 0 : _l.isProgressHidden) && (React__default["default"].createElement("div", { className: b$n('indicators', {
+                                                stopAnimation: playStatus === 'pause',
+                                                widePadding: isShowMockup && isLarge
+                                            }), style: {
+                                                top: isShowMockup && isLarge ? largeIndicatorTop : undefined
+                                            } }, activeStoriesWithResult
+                                            .filter((story) => { var _a; return (_a = story.layerData) === null || _a === void 0 ? void 0 : _a.isDefaultLayer; })
+                                            .map((story, index) => (React__default["default"].createElement("div", { className: b$n('indicator', {
+                                                filled: index < currentStory,
+                                                current: index === currentStory
+                                            }), key: story.id, onAnimationEnd: handleAnimationEnd }))))),
+                                        currentGroupType === exports.GroupType.GROUP && (React__default["default"].createElement("div", { className: b$n('group', {
+                                                noProgress: (_m = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden,
+                                                wideLeft: isShowMockup && isLarge
+                                            }), style: {
+                                                top: isShowMockup && isLarge ? largeElementsTop : undefined
+                                            } },
+                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl) && (React__default["default"].createElement("div", { className: b$n('groupImgWrapper') },
+                                                React__default["default"].createElement("img", { alt: "", className: b$n('groupImg'), src: currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl }))),
+                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title) && (React__default["default"].createElement("p", { className: b$n('groupTitle') }, currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title)))),
+                                        !((_o = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) && !forbidClose && (React__default["default"].createElement("button", { className: b$n('close', {
+                                                noProgress: (_p = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
+                                                wideRight: isShowMockup && isLarge
+                                            }), style: {
+                                                top: isShowMockup && isLarge ? largeElementsTop : undefined
+                                            }, onClick: handleClose },
+                                            React__default["default"].createElement(CloseIcon, null)))))))))),
+                    isShowMockup && (React__default["default"].createElement("img", { className: b$n('mockup'), src: isLarge || currentGroupType === exports.GroupType.GROUP
                             ? img$2
                             : img$1 }))),
-                activeStoriesWithResult.length > 1 && (React__default["default"].createElement("button", { className: b$m('arrowButton', { right: true }), onClick: handleNext },
+                activeStoriesWithResult.length > 1 && !isLoading && (React__default["default"].createElement("button", { className: b$n('arrowButton', { right: true }), onClick: handleNext },
                     React__default["default"].createElement(RightArrowIcon, null)))),
-            isForceCloseAvailable && ((_r = currentGroup.settings) === null || _r === void 0 ? void 0 : _r.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$m('close', { general: true }), onClick: handleClose },
+            isForceCloseAvailable && ((_q = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$n('close', { general: true }), onClick: handleClose },
                 React__default["default"].createElement(CloseIcon, null)))),
         React__default["default"].createElement("canvas", { ref: canvasRef, style: {
                 display: 'none'
             } })));
 };
 
-const b$l = block('ChooseAnswerWidget');
+const b$m = block('ChooseAnswerWidget');
 const INIT_ELEMENT_STYLES$a = {
     widget: {
         borderRadius: 10
@@ -11688,35 +11722,35 @@ const ChooseAnswerWidget = React__default["default"].memo((props) => {
     }, [onAnswer, storyContextVal, id, handleSendScore]);
     const renderAnswer = React.useCallback((answer) => {
         if (userAnswer) {
-            return (React__default["default"].createElement("div", { className: b$l('answer', {
+            return (React__default["default"].createElement("div", { className: b$m('answer', {
                     correct: answer.id === params.correct && params.markCorrectAnswer,
                     incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                     choosen: userAnswer === answer.id && params.markCorrectAnswer,
                     filled: userAnswer === answer.id && !params.markCorrectAnswer
                 }), key: `answer-${answer.id}`, style: sizes.answer },
-                React__default["default"].createElement("div", { className: b$l('answerCircle', {
+                React__default["default"].createElement("div", { className: b$m('answerCircle', {
                         correct: answer.id === params.correct && params.markCorrectAnswer,
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                         choosen: userAnswer === answer.id && params.markCorrectAnswer,
                         filled: userAnswer === answer.id && !params.markCorrectAnswer
-                    }), style: sizes.answerId }, params.markCorrectAnswer ? (React__default["default"].createElement(React__default["default"].Fragment, null, answer.id === params.correct ? (React__default["default"].createElement(IconConfirm, { className: b$l('answerIcon', {
+                    }), style: sizes.answerId }, params.markCorrectAnswer ? (React__default["default"].createElement(React__default["default"].Fragment, null, answer.id === params.correct ? (React__default["default"].createElement(IconConfirm, { className: b$m('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
-                    }) })) : (React__default["default"].createElement(IconDecline, { className: b$l('answerIcon', {
+                    }) })) : (React__default["default"].createElement(IconDecline, { className: b$m('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
                     }) })))) : (React__default["default"].createElement(React__default["default"].Fragment, null, `${answer.id}`))),
-                React__default["default"].createElement("div", { className: b$l('answerTitle', {
+                React__default["default"].createElement("div", { className: b$m('answerTitle', {
                         choosen: userAnswer === answer.id,
                         correct: answer.id === params.correct && params.markCorrectAnswer,
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer
                     }), style: sizes.answerTitle }, answer.title)));
         }
-        return (React__default["default"].createElement("div", { className: b$l('answer', { clickable: !userAnswer && !isReadOnly }), key: answer.id, role: "button", style: sizes.answer, tabIndex: 0, onClick: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined },
-            React__default["default"].createElement("div", { className: b$l('answerId'), style: sizes.answerId }, `${answer.id}`),
-            React__default["default"].createElement("div", { className: b$l('answerTitle'), style: sizes.answerTitle }, answer.title)));
+        return (React__default["default"].createElement("div", { className: b$m('answer', { clickable: !userAnswer && !isReadOnly }), key: answer.id, role: "button", style: sizes.answer, tabIndex: 0, onClick: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined },
+            React__default["default"].createElement("div", { className: b$m('answerId'), style: sizes.answerId }, `${answer.id}`),
+            React__default["default"].createElement("div", { className: b$m('answerTitle'), style: sizes.answerTitle }, answer.title)));
     }, [
         userAnswer,
         isReadOnly,
@@ -11732,49 +11766,59 @@ const ChooseAnswerWidget = React__default["default"].memo((props) => {
             jsConfetti.current.addConfetti();
         }
     }, [userAnswer, params.correct, jsConfetti, params.markCorrectAnswer]);
-    return (React__default["default"].createElement("div", { className: b$l({
+    return (React__default["default"].createElement("div", { className: b$m({
             color: params.color,
             shake: userAnswer && params.markCorrectAnswer && userAnswer !== params.correct,
             celebrate: userAnswer && params.markCorrectAnswer && userAnswer === params.correct
         }), style: sizes.widget },
-        !params.isTitleHidden && (React__default["default"].createElement("div", { className: b$l('header'), style: sizes.header }, params.text)),
-        React__default["default"].createElement("div", { className: b$l('answers'), style: sizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
+        !params.isTitleHidden && (React__default["default"].createElement("div", { className: b$m('header'), style: sizes.header }, params.text)),
+        React__default["default"].createElement("div", { className: b$m('answers'), style: sizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
 });
 
-const b$k = block('ClickMeWidget');
+const b$l = block('ClickMeWidget');
+const DELAY_MS = 200;
 const ClickMeWidget = React__default["default"].memo((props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url, storyId, actionType } = props.params;
     const { isReadOnly, onClick, onGoToStory } = props;
+    const [isClicked, setIsClicked] = React.useState(false);
     const handleWidgetClick = React.useCallback(() => {
+        setIsClicked(true);
+        setTimeout(() => {
+            setIsClicked(false);
+        }, DELAY_MS);
         if (onClick) {
             onClick();
         }
         if (actionType === 'link' && url) {
-            const tab = window.open(url, '_blank');
-            if (tab) {
-                tab.focus();
-            }
+            setTimeout(() => {
+                const tab = window.open(url, '_blank');
+                if (tab) {
+                    tab.focus();
+                }
+            }, DELAY_MS);
         }
         else if (actionType === 'story' && onGoToStory && storyId) {
-            onGoToStory(storyId);
+            setTimeout(() => {
+                onGoToStory(storyId);
+            }, DELAY_MS);
         }
     }, [actionType, onClick, onGoToStory, storyId, url]);
-    return (React__default["default"].createElement("div", { className: b$k({ disabled: isReadOnly }), role: "button", style: {
+    return (React__default["default"].createElement("div", { className: b$l({ disabled: isReadOnly, clicked: isClicked }), role: "button", style: {
             borderRadius,
             borderStyle: 'solid',
             borderWidth: `${hasBorder ? borderWidth : 0}px`,
             borderColor: renderBackgroundStyles(borderColor)
         }, tabIndex: 0, onClick: !isReadOnly ? handleWidgetClick : undefined, onKeyDown: !isReadOnly ? handleWidgetClick : undefined },
-        React__default["default"].createElement("div", { className: b$k('container', { gradient: color.type === 'gradient' }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
+        React__default["default"].createElement("div", { className: b$l('container', { gradient: color.type === 'gradient' }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
                 fontSize }, renderTextBackgroundStyles({ color })) },
-            hasIcon ? (React__default["default"].createElement(MaterialIcon, { background: color, className: b$k('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
-            React__default["default"].createElement("span", { className: b$k('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
-        React__default["default"].createElement("div", { className: b$k('background'), style: {
+            hasIcon ? (React__default["default"].createElement(MaterialIcon, { background: color, className: b$l('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
+            React__default["default"].createElement("span", { className: b$l('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
+        React__default["default"].createElement("div", { className: b$l('background'), style: {
                 background: renderBackgroundStyles(backgroundColor)
             } })));
 });
 
-const b$j = block('EllipseWidget');
+const b$k = block('EllipseWidget');
 const EllipseWidget = React__default["default"].memo((props) => {
     const { fillColor, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
@@ -11786,8 +11830,8 @@ const EllipseWidget = React__default["default"].memo((props) => {
     const backgroundStyles = {
         background: renderBackgroundStyles(fillColor)
     };
-    return (React__default["default"].createElement("div", { className: b$j(), style: styles },
-        React__default["default"].createElement("div", { className: b$j('background'), style: backgroundStyles })));
+    return (React__default["default"].createElement("div", { className: b$k(), style: styles },
+        React__default["default"].createElement("div", { className: b$k('background'), style: backgroundStyles })));
 });
 
 var compressed = true;
@@ -61608,8 +61652,8 @@ var reactIs_production_min = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var b$i="function"===typeof Symbol&&Symbol.for,c=b$i?Symbol.for("react.element"):60103,d=b$i?Symbol.for("react.portal"):60106,e=b$i?Symbol.for("react.fragment"):60107,f=b$i?Symbol.for("react.strict_mode"):60108,g$1=b$i?Symbol.for("react.profiler"):60114,h=b$i?Symbol.for("react.provider"):60109,k=b$i?Symbol.for("react.context"):60110,l=b$i?Symbol.for("react.async_mode"):60111,m=b$i?Symbol.for("react.concurrent_mode"):60111,n=b$i?Symbol.for("react.forward_ref"):60112,p=b$i?Symbol.for("react.suspense"):60113,q=b$i?
-Symbol.for("react.suspense_list"):60120,r$1=b$i?Symbol.for("react.memo"):60115,t=b$i?Symbol.for("react.lazy"):60116,v=b$i?Symbol.for("react.block"):60121,w=b$i?Symbol.for("react.fundamental"):60117,x=b$i?Symbol.for("react.responder"):60118,y=b$i?Symbol.for("react.scope"):60119;
+var b$j="function"===typeof Symbol&&Symbol.for,c=b$j?Symbol.for("react.element"):60103,d=b$j?Symbol.for("react.portal"):60106,e=b$j?Symbol.for("react.fragment"):60107,f=b$j?Symbol.for("react.strict_mode"):60108,g$1=b$j?Symbol.for("react.profiler"):60114,h=b$j?Symbol.for("react.provider"):60109,k=b$j?Symbol.for("react.context"):60110,l=b$j?Symbol.for("react.async_mode"):60111,m=b$j?Symbol.for("react.concurrent_mode"):60111,n=b$j?Symbol.for("react.forward_ref"):60112,p=b$j?Symbol.for("react.suspense"):60113,q=b$j?
+Symbol.for("react.suspense_list"):60120,r$1=b$j?Symbol.for("react.memo"):60115,t=b$j?Symbol.for("react.lazy"):60116,v=b$j?Symbol.for("react.block"):60121,w=b$j?Symbol.for("react.fundamental"):60117,x=b$j?Symbol.for("react.responder"):60118,y=b$j?Symbol.for("react.scope"):60119;
 function z(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g$1:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k:case n:case t:case r$1:case h:return a;default:return u}}case d:return u}}}function A(a){return z(a)===m}reactIs_production_min.AsyncMode=l;reactIs_production_min.ConcurrentMode=m;reactIs_production_min.ContextConsumer=k;reactIs_production_min.ContextProvider=h;reactIs_production_min.Element=c;reactIs_production_min.ForwardRef=n;reactIs_production_min.Fragment=e;reactIs_production_min.Lazy=t;reactIs_production_min.Memo=r$1;reactIs_production_min.Portal=d;
 reactIs_production_min.Profiler=g$1;reactIs_production_min.StrictMode=f;reactIs_production_min.Suspense=p;reactIs_production_min.isAsyncMode=function(a){return A(a)||z(a)===l};reactIs_production_min.isConcurrentMode=A;reactIs_production_min.isContextConsumer=function(a){return z(a)===k};reactIs_production_min.isContextProvider=function(a){return z(a)===h};reactIs_production_min.isElement=function(a){return "object"===typeof a&&null!==a&&a.$$typeof===c};reactIs_production_min.isForwardRef=function(a){return z(a)===n};reactIs_production_min.isFragment=function(a){return z(a)===e};reactIs_production_min.isLazy=function(a){return z(a)===t};
 reactIs_production_min.isMemo=function(a){return z(a)===r$1};reactIs_production_min.isPortal=function(a){return z(a)===d};reactIs_production_min.isProfiler=function(a){return z(a)===g$1};reactIs_production_min.isStrictMode=function(a){return z(a)===f};reactIs_production_min.isSuspense=function(a){return z(a)===p};
@@ -64756,7 +64800,7 @@ Emoji.defaultProps = _objectSpread({}, EmojiDefaultProps, {
   data: data
 });
 
-const b$h = block('EmojiReactionWidget');
+const b$i = block('EmojiReactionWidget');
 const INIT_ELEMENT_STYLES$9 = {
     widget: {
         borderRadius: 50,
@@ -64803,25 +64847,25 @@ const EmojiReactionWidget = React__default["default"].memo((props) => {
         setBigSize(initEmojiSize);
         setDelay(50);
     }, [id, initEmojiSize, onAnswer, storyContextVal]);
-    return (React__default["default"].createElement("div", { className: b$h({ color: params.color }), style: sizes.widget }, params.emoji.map((emojiItem, index) => (React__default["default"].createElement("button", { className: b$h('item', { disabled: isReadOnly || isToched || clickedIndex !== null }), key: `${emojiItem.unicode}-${index}`, style: sizes.item, onClick: (e) => {
+    return (React__default["default"].createElement("div", { className: b$i({ color: params.color }), style: sizes.widget }, params.emoji.map((emojiItem, index) => (React__default["default"].createElement("button", { className: b$i('item', { disabled: isReadOnly || isToched || clickedIndex !== null }), key: `${emojiItem.unicode}-${index}`, style: sizes.item, onClick: (e) => {
             e.preventDefault();
             if (!isToched && !isReadOnly && clickedIndex === null) {
                 handleReactionClick(index, emojiItem.unicode);
             }
         } },
-        React__default["default"].createElement("div", { className: b$h('subItem', { clicked: index === clickedIndex }) },
+        React__default["default"].createElement("div", { className: b$i('subItem', { clicked: index === clickedIndex }) },
             React__default["default"].createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: bigSize })),
         React__default["default"].createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: sizes.emoji.width }))))));
 });
 
-const b$g = block('GiphyWidget');
+const b$h = block('GiphyWidget');
 const GiphyWidget = React__default["default"].memo((props) => {
     const { params } = props;
-    return (React__default["default"].createElement("div", { className: b$g(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
-        React__default["default"].createElement("img", { alt: "", className: b$g('img'), src: params.gif })));
+    return (React__default["default"].createElement("div", { className: b$h(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
+        React__default["default"].createElement("img", { alt: "", className: b$h('img'), src: params.gif })));
 });
 
-const b$f = block('QuestionWidget');
+const b$g = block('QuestionWidget');
 const INIT_ELEMENT_STYLES$8 = {
     text: {
         fontSize: 14,
@@ -64892,10 +64936,10 @@ const QuestionWidget = React__default["default"].memo((props) => {
         return percent;
     }, []);
     const textStyles = getTextStyles(params.fontColor);
-    return (React__default["default"].createElement("div", { className: b$f() },
-        !params.isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$f('question', { gradient: ((_b = params.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.style, fontWeight: (_d = params.fontParams) === null || _d === void 0 ? void 0 : _d.weight, fontFamily: params.fontFamily }), textStyles) }, params.question)),
-        React__default["default"].createElement("div", { className: b$f('buttons'), style: { borderRadius: sizes.button.borderRadius } },
-            React__default["default"].createElement("button", { className: b$f('item', {
+    return (React__default["default"].createElement("div", { className: b$g() },
+        !params.isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$g('question', { gradient: ((_b = params.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.style, fontWeight: (_d = params.fontParams) === null || _d === void 0 ? void 0 : _d.weight, fontFamily: params.fontFamily }), textStyles) }, params.question)),
+        React__default["default"].createElement("div", { className: b$g('buttons'), style: { borderRadius: sizes.button.borderRadius } },
+            React__default["default"].createElement("button", { className: b$g('item', {
                     answered: answer === 'confirm',
                     confirm: true,
                     answerConfirm: answer && percents.confirm !== 100,
@@ -64906,12 +64950,12 @@ const QuestionWidget = React__default["default"].memo((props) => {
                     height: sizes.button.height,
                     fontSize: sizes.button.fontSize
                 }, type: "button", onClick: () => !isReadOnly && handleChange('confirm') },
-                React__default["default"].createElement("div", { className: b$f('itemTextContainer') },
-                    React__default["default"].createElement("span", { className: cn(b$f('itemTextConfirm').toString(), b$f('itemText', { answered: answer !== null }).toString()) }, params.confirm),
-                    answer && React__default["default"].createElement("span", { className: b$f('itemTextPercent') },
+                React__default["default"].createElement("div", { className: b$g('itemTextContainer') },
+                    React__default["default"].createElement("span", { className: cn(b$g('itemTextConfirm').toString(), b$g('itemText', { answered: answer !== null }).toString()) }, params.confirm),
+                    answer && React__default["default"].createElement("span", { className: b$g('itemTextPercent') },
                         percents.confirm,
                         "%"))),
-            React__default["default"].createElement("button", { className: b$f('item', {
+            React__default["default"].createElement("button", { className: b$g('item', {
                     answered: answer === 'decline',
                     decline: true,
                     answerDecline: answer && percents.decline !== 100,
@@ -64922,14 +64966,14 @@ const QuestionWidget = React__default["default"].memo((props) => {
                     height: sizes.button.height,
                     fontSize: sizes.button.fontSize
                 }, type: "button", onClick: () => !isReadOnly && handleChange('decline') },
-                React__default["default"].createElement("div", { className: b$f('itemTextContainer') },
-                    React__default["default"].createElement("span", { className: cn(b$f('itemTextDecline').toString(), b$f('itemText', { answered: answer !== null }).toString()) }, params.decline),
-                    answer && React__default["default"].createElement("span", { className: b$f('itemTextPercent') },
+                React__default["default"].createElement("div", { className: b$g('itemTextContainer') },
+                    React__default["default"].createElement("span", { className: cn(b$g('itemTextDecline').toString(), b$g('itemText', { answered: answer !== null }).toString()) }, params.decline),
+                    answer && React__default["default"].createElement("span", { className: b$g('itemTextPercent') },
                         percents.decline,
                         "%"))))));
 });
 
-const b$e = block('RectangleWidget');
+const b$f = block('RectangleWidget');
 const RectangleWidget = React__default["default"].memo((props) => {
     const { fillColor, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
@@ -64943,11 +64987,11 @@ const RectangleWidget = React__default["default"].memo((props) => {
         background: renderBackgroundStyles(fillColor),
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
-    return (React__default["default"].createElement("div", { className: b$e(), style: styles },
-        React__default["default"].createElement("div", { className: b$e('background'), style: backgroundStyles })));
+    return (React__default["default"].createElement("div", { className: b$f(), style: styles },
+        React__default["default"].createElement("div", { className: b$f('background'), style: backgroundStyles }, fillColor.type === 'video' && (React__default["default"].createElement("video", { autoPlay: !fillColor.stopAutoplay, className: b$f('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: fillColor.value })))));
 });
 
-const b$d = block('SliderCustom');
+const b$e = block('SliderCustom');
 const SliderCustom = React__default["default"].memo(({ emoji, changeStatus, value, initSize = 34, disabled, height, borderRadius, onChange, onAfterChange, onBeforeChange }) => {
     const containerRef = React.useRef(null);
     const thumbRef = React.useRef(null);
@@ -65010,23 +65054,23 @@ const SliderCustom = React__default["default"].memo(({ emoji, changeStatus, valu
             onBeforeChange();
         }
     }, [disabled, handleDrag, handleDragEnd, onBeforeChange]);
-    return (React__default["default"].createElement("div", { className: b$d(), ref: containerRef, style: { height } },
-        React__default["default"].createElement("div", { className: b$d('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
+    return (React__default["default"].createElement("div", { className: b$e(), ref: containerRef, style: { height } },
+        React__default["default"].createElement("div", { className: b$e('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
             }, onKeyUp: (e) => {
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
             }, onMouseDown: handleMouseDown, onTouchStart: handleMouseDown },
-            changeStatus === 'moving' || changeStatus === 'moved' ? (React__default["default"].createElement("div", { className: b$d('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
+            changeStatus === 'moving' || changeStatus === 'moved' ? (React__default["default"].createElement("div", { className: b$e('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
                 React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
             React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })),
-        React__default["default"].createElement("div", { className: b$d('track'), style: { height, borderRadius } },
-            React__default["default"].createElement("span", { className: b$d('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
-            React__default["default"].createElement("span", { className: b$d('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
+        React__default["default"].createElement("div", { className: b$e('track'), style: { height, borderRadius } },
+            React__default["default"].createElement("span", { className: b$e('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
+            React__default["default"].createElement("span", { className: b$e('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
 });
 
-const b$c = block('SliderWidget');
+const b$d = block('SliderWidget');
 const INIT_ELEMENT_STYLES$7 = {
     widget: {
         borderRadius: 10,
@@ -65095,15 +65139,15 @@ const SliderWidget = React__default["default"].memo((props) => {
     }, [storyContextVal, storyId, changeStatus, value, time]);
     const textStyles = getTextStyles(params.fontColor);
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$7;
-    return (React__default["default"].createElement("div", { className: b$c({ color }), style: sizes.widget },
-        React__default["default"].createElement("div", { className: cn(b$c('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
-        React__default["default"].createElement("div", { className: b$c('sliderWrapper'), style: {
+    return (React__default["default"].createElement("div", { className: b$d({ color }), style: sizes.widget },
+        React__default["default"].createElement("div", { className: cn(b$d('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
+        React__default["default"].createElement("div", { className: b$d('sliderWrapper'), style: {
                 height: sizes.slider.height
             } },
             React__default["default"].createElement(SliderCustom, { borderRadius: sizes.slider.borderRadius, changeStatus: changeStatus, disabled: changeStatus === 'moved' || isReadMode, emoji: emoji.name, height: sizes.slider.height, initSize: sizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
 });
 
-const b$b = block('SwipeUpWidget');
+const b$c = block('SwipeUpWidget');
 const SwipeUpWidget = React__default["default"].memo((props) => {
     const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
     const { isReadOnly, onSwipe } = props;
@@ -65137,13 +65181,13 @@ const SwipeUpWidget = React__default["default"].memo((props) => {
             tab.focus();
         }
     }, [onSwipe, url]);
-    return (React__default["default"].createElement("div", { className: b$b({ gradient: color.type === 'gradient' }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
-        React__default["default"].createElement("div", { className: b$b('icon') },
+    return (React__default["default"].createElement("div", { className: b$c({ gradient: color.type === 'gradient' }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
+        React__default["default"].createElement("div", { className: b$c('icon') },
             React__default["default"].createElement(MaterialIcon, { background: color, color: renderBackgroundStyles(color), name: icon.name, size: iconSize })),
-        React__default["default"].createElement("span", { className: b$b('text') }, text)));
+        React__default["default"].createElement("span", { className: b$c('text') }, text)));
 });
 
-const b$a = block('TalkAboutWidget');
+const b$b = block('TalkAboutWidget');
 const INIT_ELEMENT_STYLES$6 = {
     widget: {
         borderRadius: 10
@@ -65225,25 +65269,25 @@ const TalkAboutWidget = React__default["default"].memo((props) => {
     }, [handleClickOutside, isSent]);
     const textStyles = getTextStyles(params.fontColor);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement("div", { className: b$a('container'), ref: ref },
-            React__default["default"].createElement("picture", { className: b$a('imageWrapper'), style: sizes.imageWrapper }, params.image ? (React__default["default"].createElement("img", { alt: "", className: b$a('image'), src: params.image })) : (React__default["default"].createElement(IconLogoCircle, { className: b$a('image').toString() }))),
-            React__default["default"].createElement("div", { className: b$a('empty'), style: sizes.empty }),
-            React__default["default"].createElement("div", { className: b$a({ color: params.color }), style: sizes.widget },
-                React__default["default"].createElement("div", { className: b$a('contentContainer', { sendOpen: text.length > 0 }), style: sizes.content },
-                    !params.isTitleHidden && (React__default["default"].createElement("div", { className: (cn(b$a('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString()),
+        React__default["default"].createElement("div", { className: b$b('container'), ref: ref },
+            React__default["default"].createElement("picture", { className: b$b('imageWrapper'), style: sizes.imageWrapper }, params.image ? (React__default["default"].createElement("img", { alt: "", className: b$b('image'), src: params.image })) : (React__default["default"].createElement(IconLogoCircle, { className: b$b('image').toString() }))),
+            React__default["default"].createElement("div", { className: b$b('empty'), style: sizes.empty }),
+            React__default["default"].createElement("div", { className: b$b({ color: params.color }), style: sizes.widget },
+                React__default["default"].createElement("div", { className: b$b('contentContainer', { sendOpen: text.length > 0 }), style: sizes.content },
+                    !params.isTitleHidden && (React__default["default"].createElement("div", { className: (cn(b$b('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString()),
                             'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, params.text)),
-                    React__default["default"].createElement("input", { className: b$a('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
-                text && (React__default["default"].createElement("button", { className: b$a('send', { disabled: isSent || isReadOnly }), style: sizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
-                    React__default["default"].createElement("span", { className: b$a('sendText', { green: isSent }), style: sizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
+                    React__default["default"].createElement("input", { className: b$b('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
+                text && (React__default["default"].createElement("button", { className: b$b('send', { disabled: isSent || isReadOnly }), style: sizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
+                    React__default["default"].createElement("span", { className: b$b('sendText', { green: isSent }), style: sizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
 });
 
-const b$9 = block('TextWidget');
+const b$a = block('TextWidget');
 const TextWidget = React__default["default"].memo((props) => {
     const { params } = props;
-    return (React__default["default"].createElement("div", { className: b$9() },
-        React__default["default"].createElement("div", { className: b$9('container', { gradient: params.color.type === 'gradient' }), style: Object.assign({ opacity: params.widgetOpacity / 100, fontStyle: params.fontParams.style, fontWeight: params.fontParams.weight, fontFamily: params.fontFamily, fontSize: `${params.fontSize}px`, textAlign: params.align }, renderTextBackgroundStyles({ color: params.color })) },
-            React__default["default"].createElement("span", { className: b$9('span') }, params.text)),
-        params.withFill ? (React__default["default"].createElement("div", { className: b$9('background'), style: {
+    return (React__default["default"].createElement("div", { className: b$a() },
+        React__default["default"].createElement("div", { className: b$a('container', { gradient: params.color.type === 'gradient' }), style: Object.assign({ opacity: params.widgetOpacity / 100, fontStyle: params.fontParams.style, fontWeight: params.fontParams.weight, fontFamily: params.fontFamily, fontSize: `${params.fontSize}px`, textAlign: params.align }, renderTextBackgroundStyles({ color: params.color })) },
+            React__default["default"].createElement("span", { className: b$a('span') }, params.text)),
+        params.withFill ? (React__default["default"].createElement("div", { className: b$a('background'), style: {
                 background: renderBackgroundStyles(params.backgroundColor)
             } })) : null));
 });
@@ -65251,7 +65295,7 @@ const TextWidget = React__default["default"].memo((props) => {
 const ONE_SECOND_IN_MILLISECONDS = 1000;
 const ONE_MINUTE_IN_SECONDS = 60;
 
-const b$8 = block('TimerWidget');
+const b$9 = block('TimerWidget');
 const calculateTime = (time) => {
     const days = Math.floor(time / (ONE_SECOND_IN_MILLISECONDS * ONE_MINUTE_IN_SECONDS * 60 * 24));
     const hours = Math.floor((time / (ONE_SECOND_IN_MILLISECONDS * ONE_MINUTE_IN_SECONDS * 60)) % 24);
@@ -65317,29 +65361,29 @@ const TimerWidget = React__default["default"].memo((props) => {
             fontSize: calculate(INIT_ELEMENT_STYLES$5.caption.fontSize)
         }
     }), [calculate]);
-    return (React__default["default"].createElement("div", { className: b$8({ color: params.color }), style: elementSizes.widget },
-        React__default["default"].createElement("div", { className: cn(b$8('text'), 'StorySdk-widgetTitle'), style: elementSizes.text }, params.text),
-        React__default["default"].createElement("ul", { className: b$8('dial') },
-            React__default["default"].createElement("li", { className: b$8('col') },
-                React__default["default"].createElement("div", { className: b$8('digitRow') },
-                    React__default["default"].createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.days[0]),
-                    React__default["default"].createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.days[1])),
-                React__default["default"].createElement("div", { className: b$8('caption'), style: elementSizes.caption }, "Day")),
-            React__default["default"].createElement("span", { className: b$8('divider') }, ":"),
-            React__default["default"].createElement("li", { className: b$8('col') },
-                React__default["default"].createElement("div", { className: b$8('digitRow') },
-                    React__default["default"].createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.hours[0]),
-                    React__default["default"].createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.hours[1])),
-                React__default["default"].createElement("div", { className: b$8('caption'), style: elementSizes.caption }, "Hours")),
-            React__default["default"].createElement("span", { className: b$8('divider') }, ":"),
-            React__default["default"].createElement("li", { className: b$8('col') },
-                React__default["default"].createElement("div", { className: b$8('digitRow') },
-                    React__default["default"].createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.minutes[0]),
-                    React__default["default"].createElement("div", { className: b$8('digit'), style: elementSizes.digit }, time.minutes[1])),
-                React__default["default"].createElement("div", { className: b$8('caption'), style: elementSizes.caption }, "Minutes")))));
+    return (React__default["default"].createElement("div", { className: b$9({ color: params.color }), style: elementSizes.widget },
+        React__default["default"].createElement("div", { className: cn(b$9('text'), 'StorySdk-widgetTitle'), style: elementSizes.text }, params.text),
+        React__default["default"].createElement("ul", { className: b$9('dial') },
+            React__default["default"].createElement("li", { className: b$9('col') },
+                React__default["default"].createElement("div", { className: b$9('digitRow') },
+                    React__default["default"].createElement("div", { className: b$9('digit'), style: elementSizes.digit }, time.days[0]),
+                    React__default["default"].createElement("div", { className: b$9('digit'), style: elementSizes.digit }, time.days[1])),
+                React__default["default"].createElement("div", { className: b$9('caption'), style: elementSizes.caption }, "Day")),
+            React__default["default"].createElement("span", { className: b$9('divider') }, ":"),
+            React__default["default"].createElement("li", { className: b$9('col') },
+                React__default["default"].createElement("div", { className: b$9('digitRow') },
+                    React__default["default"].createElement("div", { className: b$9('digit'), style: elementSizes.digit }, time.hours[0]),
+                    React__default["default"].createElement("div", { className: b$9('digit'), style: elementSizes.digit }, time.hours[1])),
+                React__default["default"].createElement("div", { className: b$9('caption'), style: elementSizes.caption }, "Hours")),
+            React__default["default"].createElement("span", { className: b$9('divider') }, ":"),
+            React__default["default"].createElement("li", { className: b$9('col') },
+                React__default["default"].createElement("div", { className: b$9('digitRow') },
+                    React__default["default"].createElement("div", { className: b$9('digit'), style: elementSizes.digit }, time.minutes[0]),
+                    React__default["default"].createElement("div", { className: b$9('digit'), style: elementSizes.digit }, time.minutes[1])),
+                React__default["default"].createElement("div", { className: b$9('caption'), style: elementSizes.caption }, "Minutes")))));
 });
 
-const b$7 = block('QuizMultipleAnswerWidget');
+const b$8 = block('QuizMultipleAnswerWidget');
 const INIT_ELEMENT_STYLES$4 = {
     title: {
         fontSize: 14,
@@ -65432,22 +65476,22 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
     }, [handleSendAnswer]);
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
-    return (React__default["default"].createElement("div", { className: b$7() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$7('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React__default["default"].createElement("div", { className: b$7('answers'), style: sizes.answers }, answers.map((answer) => {
+    return (React__default["default"].createElement("div", { className: b$8() },
+        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$8('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
+        React__default["default"].createElement("div", { className: b$8('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g, _h;
-            return (React__default["default"].createElement("button", { className: b$7('answer', {
+            return (React__default["default"].createElement("button", { className: b$8('answer', {
                     noGap: !answer.title.length,
                     selected: userAnswers.includes(answer.id)
                 }), disabled: isSent || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
                 answer.emoji && (React__default["default"].createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
-                React__default["default"].createElement("p", { className: cn(b$7('answerTitle', {
+                React__default["default"].createElement("p", { className: cn(b$8('answerTitle', {
                         gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === 'gradient'
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { lineHeight: `${sizes.sendBtn.lineHeight}px`, fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
-const b$6 = block('QuizOneAnswerWidget');
+const b$7 = block('QuizOneAnswerWidget');
 const INIT_ELEMENT_STYLES$3 = {
     title: {
         fontSize: 14,
@@ -65503,21 +65547,21 @@ const QuizOneAnswerWidget = React__default["default"].memo((props) => {
     }, [onAnswer, handleSendScore, storyContextVal, id, storyId, onGoToStory]);
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
-    return (React__default["default"].createElement("div", { className: b$6() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$6('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React__default["default"].createElement("div", { className: b$6('answers'), style: sizes.answers }, answers.map((answer) => {
+    return (React__default["default"].createElement("div", { className: b$7() },
+        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$7('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
+        React__default["default"].createElement("div", { className: b$7('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g, _h;
-            return (React__default["default"].createElement("button", { className: b$6('answer', {
+            return (React__default["default"].createElement("button", { className: b$7('answer', {
                     selected: userAnswer === answer.id
                 }), disabled: userAnswer !== null || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !userAnswer && !isReadOnly && handleAnswer(answer.id) },
                 answer.emoji && (React__default["default"].createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
-                React__default["default"].createElement("p", { className: cn(b$6('answerTitle', {
+                React__default["default"].createElement("p", { className: cn(b$7('answerTitle', {
                         gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === 'gradient'
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
-const b$5 = block('QuizOpenAnswerWidget');
+const b$6 = block('QuizOpenAnswerWidget');
 const INIT_ELEMENT_STYLES$2 = {
     title: {
         fontSize: 14,
@@ -65588,22 +65632,22 @@ const QuizOpenAnswerWidget = React__default["default"].memo((props) => {
     const ref = React.useRef(null);
     const inputRef = React.useRef(null);
     const textStyles = getTextStyles(params.fontColor);
-    return (React__default["default"].createElement("div", { className: b$5() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$5('title').toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_a = params.fontParams) === null || _a === void 0 ? void 0 : _a.style, fontWeight: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
-        React__default["default"].createElement("div", { className: b$5('inputWrapper'), style: {
+    return (React__default["default"].createElement("div", { className: b$6() },
+        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$6('title').toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_a = params.fontParams) === null || _a === void 0 ? void 0 : _a.style, fontWeight: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
+        React__default["default"].createElement("div", { className: b$6('inputWrapper'), style: {
                 paddingTop: sizes.inputWrapper.paddingVertical,
                 paddingBottom: sizes.inputWrapper.paddingVertical,
                 paddingLeft: sizes.inputWrapper.paddingHorizontal,
                 borderRadius: sizes.inputWrapper.borderRadius,
                 paddingRight: sizes.inputWrapper.paddingRight
             } },
-            React__default["default"].createElement("input", { className: b$5('input'), disabled: isSent || isReadOnly, placeholder: "Enter the text...", style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined }),
-            text.length > 0 && (React__default["default"].createElement("button", { className: b$5('sendButton'), disabled: isSent || isReadOnly, style: sizes.sendButton, onClick: !isReadOnly ? handleSendClick : undefined },
-                React__default["default"].createElement(IconArrowSend, { className: b$5('sendButtonIcon') }))))));
+            React__default["default"].createElement("input", { className: b$6('input'), disabled: isSent || isReadOnly, placeholder: "Enter the text...", style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined }),
+            text.length > 0 && (React__default["default"].createElement("button", { className: b$6('sendButton'), disabled: isSent || isReadOnly, style: sizes.sendButton, onClick: !isReadOnly ? handleSendClick : undefined },
+                React__default["default"].createElement(IconArrowSend, { className: b$6('sendButtonIcon') }))))));
 });
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
-const b$4 = block('QuizRateWidget');
+const b$5 = block('QuizRateWidget');
 const INIT_ELEMENT_STYLES$1 = {
     title: {
         fontSize: 14,
@@ -65634,21 +65678,21 @@ const QuizRateWidget = React__default["default"].memo((props) => {
         setIsSent(true);
     }, [onAnswer, onGoToStory, storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, storyId]);
     const textStyles = getTextStyles(params.fontColor);
-    return (React__default["default"].createElement("div", { className: b$4() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$4('title', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
-        React__default["default"].createElement("div", { className: b$4('starsContainer', {
+    return (React__default["default"].createElement("div", { className: b$5() },
+        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$5('title', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
+        React__default["default"].createElement("div", { className: b$5('starsContainer', {
                 disabled: isSent || isReadOnly
             }), style: {
                 gap: sizes.stars.gap
             } }, new Array(RATE_MAX).fill(0).map((_, index) => (React__default["default"].createElement(React__default["default"].Fragment, { key: `rate-star-${index}` },
-            React__default["default"].createElement("input", { className: b$4('input'), disabled: isSent, id: `rate-star-${index}`, type: "radio", value: RATE_MAX - index, onChange: (e) => {
+            React__default["default"].createElement("input", { className: b$5('input'), disabled: isSent, id: `rate-star-${index}`, type: "radio", value: RATE_MAX - index, onChange: (e) => {
                     !isReadOnly && handleAnswer(e.target.value);
                 } }),
-            React__default["default"].createElement("label", { className: b$4('starItem'), htmlFor: `rate-star-${index}` },
-                React__default["default"].createElement(IconRateStar, { className: b$4('star') }))))))));
+            React__default["default"].createElement("label", { className: b$5('starItem'), htmlFor: `rate-star-${index}` },
+                React__default["default"].createElement(IconRateStar, { className: b$5('star') }))))))));
 });
 
-const b$3 = block('QuizMultipleAnswerWithImageWidget');
+const b$4 = block('QuizMultipleAnswerWithImageWidget');
 const INIT_ELEMENT_STYLES = {
     title: {
         fontSize: 14,
@@ -65740,24 +65784,35 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
     }, [handleSendAnswer]);
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
-    return (React__default["default"].createElement("div", { className: b$3() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$3('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React__default["default"].createElement("div", { className: b$3('answers'), style: sizes.answers }, answers.map((answer) => {
+    return (React__default["default"].createElement("div", { className: b$4() },
+        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$4('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
+        React__default["default"].createElement("div", { className: b$4('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g;
-            return (React__default["default"].createElement("button", { className: b$3('answer', {
+            return (React__default["default"].createElement("button", { className: b$4('answer', {
                     selected: userAnswers.includes(answer.id)
                 }), disabled: isSent || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
-                React__default["default"].createElement("div", { className: b$3('answerImgContainer'), style: {
+                React__default["default"].createElement("div", { className: b$4('answerImgContainer'), style: {
                         backgroundImage: answer.image ? `url(${answer.image.url})` : ''
                     } }),
-                React__default["default"].createElement("p", { className: cn(b$3('answerTitle', {
+                React__default["default"].createElement("p", { className: cn(b$4('answerTitle', {
                         gradient: ((_b = (_a = params.answersFont) === null || _a === void 0 ? void 0 : _a.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient'
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { fontStyle: (_d = (_c = params.answersFont) === null || _c === void 0 ? void 0 : _c.fontParams) === null || _d === void 0 ? void 0 : _d.style, fontWeight: (_f = (_e = params.answersFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.weight, fontFamily: (_g = params.answersFont) === null || _g === void 0 ? void 0 : _g.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
+const b$3 = block('ImageWidget');
+const ImageWidget = React__default["default"].memo((props) => {
+    const { imageUrl, widgetOpacity, borderRadius } = props.params;
+    const styles = {
+        borderRadius: `${borderRadius}px`,
+        opacity: widgetOpacity / 100
+    };
+    return React__default["default"].createElement("img", { alt: "", className: b$3('image'), src: imageUrl, style: styles });
+});
+
 ({
     [exports.WidgetsTypes.CHOOSE_ANSWER]: ChooseAnswerWidget,
+    [exports.WidgetsTypes.IMAGE]: ImageWidget,
     [exports.WidgetsTypes.CLICK_ME]: ClickMeWidget,
     [exports.WidgetsTypes.ELLIPSE]: EllipseWidget,
     [exports.WidgetsTypes.EMOJI_REACTION]: EmojiReactionWidget,
@@ -65824,8 +65879,7 @@ class WidgetFactory extends React__default["default"].Component {
 
 const b$2 = block$1('StorySdkVideoBackground');
 const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, onLoadEnd }) => (React__default["default"].createElement("div", { className: b$2() },
-    React__default["default"].createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), loop: true, muted: true, preload: "metadata", onLoadStart: onLoadStart, onLoadedData: onLoadEnd },
-        React__default["default"].createElement("source", { src: src })),
+    React__default["default"].createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: src, onLoadStart: onLoadStart, onLoadedData: onLoadEnd }),
     React__default["default"].createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
 const b$1 = block$1('StorySdkContent');
@@ -65833,7 +65887,7 @@ const StoryContent = (props) => {
     const { story, jsConfetti, noTopShadow, storyCurrentSize, currentPaddingSize, isLarge, isLargeBackground, innerHeightGap, handleGoToStory } = props;
     const [isVideoLoading, setVideoLoading] = React.useState(false);
     const [width, height] = d$1();
-    const isMobile = width < MOBILE_BREAKPOINT;
+    const isMobile = React.useMemo(() => width < MOBILE_BREAKPOINT, [width]);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         React__default["default"].createElement("div", { className: b$1('background', { noTopShadow }), style: {
                 background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
@@ -65857,10 +65911,18 @@ const StoryContent = (props) => {
 };
 
 const CustomGroupControl = (props) => {
-    const { children, group, isFirstGroup, isLastGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing, isCacheDisabled } = props;
+    const { children, group, isFirstGroup, isLastGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, isEditorMode, handleCloseModal, handleNextGroup, handlePrevGroup, isShowing, isCacheDisabled } = props;
+    React.useEffect(() => {
+        if (isShowing) {
+            document.body.style.overflow = 'hidden';
+        }
+        else {
+            document.body.style.overflow = 'auto';
+        }
+    }, [isShowing]);
     return (React__default["default"].createElement(React__default["default"].Fragment, null,
         children,
-        isShowing && (React__default["default"].createElement(StoryModal, { currentGroup: group, isCacheDisabled: isCacheDisabled, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))));
+        isShowing && (React__default["default"].createElement(StoryModal, { currentGroup: group, isCacheDisabled: isCacheDisabled, isEditorMode: isEditorMode, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group === null || group === void 0 ? void 0 : group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))));
 };
 
 const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
@@ -66004,6 +66066,7 @@ exports.EmojiReactionWidget = EmojiReactionWidget;
 exports.GiphyWidget = GiphyWidget;
 exports.GroupItem = GroupItem;
 exports.GroupsList = GroupsList;
+exports.ImageWidget = ImageWidget;
 exports.MOBILE_BREAKPOINT = MOBILE_BREAKPOINT;
 exports.MaterialIcon = MaterialIcon;
 exports.PADDING_SIZE = PADDING_SIZE;

@@ -1,10 +1,12 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
 import { ClickMeWidgetParamsType, WidgetComponent } from '@types';
 import { MaterialIcon } from '@components';
 import './ClickMeWidget.scss';
 
 const b = block('ClickMeWidget');
+
+const DELAY_MS = 200;
 
 export const ClickMeWidget: WidgetComponent<{
   params: ClickMeWidgetParamsType;
@@ -34,24 +36,36 @@ export const ClickMeWidget: WidgetComponent<{
 
   const { isReadOnly, onClick, onGoToStory } = props;
 
+  const [isClicked, setIsClicked] = useState(false);
+
   const handleWidgetClick = useCallback(() => {
+    setIsClicked(true);
+
+    setTimeout(() => {
+      setIsClicked(false);
+    }, DELAY_MS);
+
     if (onClick) {
       onClick();
     }
 
     if (actionType === 'link' && url) {
-      const tab = window.open(url, '_blank');
-      if (tab) {
-        tab.focus();
-      }
+      setTimeout(() => {
+        const tab = window.open(url, '_blank');
+        if (tab) {
+          tab.focus();
+        }
+      }, DELAY_MS);
     } else if (actionType === 'story' && onGoToStory && storyId) {
-      onGoToStory(storyId);
+      setTimeout(() => {
+        onGoToStory(storyId);
+      }, DELAY_MS);
     }
   }, [actionType, onClick, onGoToStory, storyId, url]);
 
   return (
     <div
-      className={b({ disabled: isReadOnly })}
+      className={b({ disabled: isReadOnly, clicked: isClicked })}
       role="button"
       style={{
         borderRadius,

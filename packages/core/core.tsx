@@ -8,36 +8,51 @@ import '@storysdk/react/dist/bundle.css';
 export class Story {
   token: string;
 
-  groupImageWidth?: number;
-
-  groupImageHeight?: number;
-
-  groupTitleSize?: number;
-
-  groupClassName?: string;
-
-  groupsClassName?: string;
-
-  devMode?: boolean;
+  options?: {
+    groupImageWidth?: number;
+    groupImageHeight?: number;
+    groupTitleSize?: number;
+    groupClassName?: string;
+    groupsClassName?: string;
+    autoplay?: boolean;
+    groupId?: string;
+    startStoryId?: string;
+    forbidClose?: boolean;
+    devMode?: boolean;
+  };
 
   constructor(
     token: string,
-    groupImageWidth?: number,
-    groupImageHeight?: number,
-    groupTitleSize?: number,
-    groupClassName?: string,
-    groupsClassName?: string,
-    devMode?: boolean
+    options?: {
+      groupImageWidth?: number;
+      groupImageHeight?: number;
+      groupTitleSize?: number;
+      groupClassName?: string;
+      groupsClassName?: string;
+      autoplay?: boolean;
+      groupId?: string;
+      startStoryId?: string;
+      forbidClose?: boolean;
+      devMode?: boolean;
+    }
   ) {
     this.token = token;
-    this.groupImageWidth = groupImageWidth;
-    this.groupImageHeight = groupImageHeight;
-    this.groupTitleSize = groupTitleSize;
-    this.groupClassName = groupClassName;
-    this.groupsClassName = groupsClassName;
-    this.devMode = devMode;
+    this.options = {};
 
-    axios.defaults.baseURL = devMode
+    if (this.options) {
+      this.options.groupImageWidth = options?.groupImageWidth;
+      this.options.groupImageHeight = options?.groupImageHeight;
+      this.options.groupTitleSize = options?.groupTitleSize;
+      this.options.groupClassName = options?.groupClassName;
+      this.options.groupsClassName = options?.groupsClassName;
+      this.options.autoplay = options?.autoplay;
+      this.options.groupId = options?.groupId;
+      this.options.forbidClose = options?.forbidClose;
+      this.options.startStoryId = options?.startStoryId;
+      this.options.devMode = options?.devMode;
+    }
+
+    axios.defaults.baseURL = options?.devMode
       ? 'https://api.diffapp.link/sdk/v1'
       : 'https://api.storysdk.com/sdk/v1';
 
@@ -57,14 +72,7 @@ export class Story {
       return;
     }
 
-    const Groups = withGroupsData(
-      GroupsList,
-      this.groupImageWidth,
-      this.groupImageHeight,
-      this.groupTitleSize,
-      this.groupClassName,
-      this.groupsClassName
-    );
+    const Groups = withGroupsData(GroupsList, this.options);
 
     if (element) {
       ReactDOM.render(<Groups />, element);

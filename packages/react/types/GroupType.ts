@@ -3,7 +3,8 @@ import { StoryType } from '.';
 
 export enum GroupType {
   GROUP = 'group',
-  ONBOARDING = 'onboarding'
+  ONBOARDING = 'onboarding',
+  TEMPLATE = 'template'
 }
 
 export enum StorySize {

@@ -25,7 +25,20 @@ export const RectangleWidget: WidgetComponent<{ params: RectangleWidgetParamsTyp
 
     return (
       <div className={b()} style={styles}>
-        <div className={b('background')} style={backgroundStyles} />
+        <div className={b('background')} style={backgroundStyles}>
+          {fillColor.type === 'video' && (
+            <video
+              autoPlay={!fillColor.stopAutoplay}
+              className={b('video')}
+              disablePictureInPicture
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              src={fillColor.value}
+            />
+          )}
+        </div>
       </div>
     );
   }

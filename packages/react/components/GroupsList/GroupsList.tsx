@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import block from 'bem-cn';
 import Skeleton from 'react-loading-skeleton';
 import classNames from 'classnames';
@@ -10,7 +10,7 @@ import './GroupsList.scss';
 
 const b = block('GroupsSdkList');
 
-interface GroupsListProps {
+export interface GroupsListProps {
   groups: Group[];
   groupImageWidth?: number;
   groupImageHeight?: number;
@@ -19,6 +19,9 @@ interface GroupsListProps {
   groupClassName?: string;
   isShowMockup?: boolean;
   isLoading?: boolean;
+  autoplay?: boolean;
+  startStoryId?: string;
+  forbidClose?: boolean;
   groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
@@ -41,6 +44,9 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groupImageHeight,
     groupTitleSize,
     isShowMockup,
+    autoplay,
+    startStoryId,
+    forbidClose,
     onOpenGroup,
     onCloseGroup,
     onNextStory,
@@ -52,7 +58,13 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   } = props;
 
   const [currentGroup, setCurrentGroup] = useState(0);
-  const [modalShow, setModalShow] = useState(false);
+  const [modalShow, setModalShow] = useState(!!autoplay);
+
+  useEffect(() => {
+    if (autoplay && onOpenGroup && groups?.length) {
+      onOpenGroup(groups[0].id);
+    }
+  }, [autoplay, groups, onOpenGroup]);
 
   const handleSelectGroup = useCallback(
     (groupIndex: number) => {
@@ -95,16 +107,18 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   }, [currentGroup, groups, onCloseGroup, onOpenGroup]);
 
   const handleCloseModal = useCallback(() => {
-    if (onCloseGroup) {
+    if (onCloseGroup && groups?.[currentGroup]) {
       onCloseGroup(groups[currentGroup].id);
     }
 
-    setModalShow(false);
-  }, [currentGroup, groups, onCloseGroup]);
+    if (!forbidClose) {
+      setModalShow(false);
+    }
+  }, [currentGroup, forbidClose, groups, onCloseGroup]);
 
   return (
     <>
-      {isLoading ? (
+      {isLoading && !autoplay ? (
         <div className={b()}>
           <div className={b('carousel')}>
             <div className={b('loaderItem')}>
@@ -150,30 +164,33 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                     ))}
                 </div>
               </div>
-
-              <StoryModal
-                currentGroup={groups[currentGroup]}
-                isFirstGroup={currentGroup === 0}
-                isLastGroup={currentGroup === groups.length - 1}
-                isShowMockup={isShowMockup}
-                isShowing={modalShow}
-                stories={groups[currentGroup].stories}
-                onClose={handleCloseModal}
-                onCloseStory={onCloseStory}
-                onFinishQuiz={onFinishQuiz}
-                onNextGroup={handleNextGroup}
-                onNextStory={onNextStory}
-                onOpenStory={onOpenStory}
-                onPrevGroup={handlePrevGroup}
-                onPrevStory={onPrevStory}
-                onStartQuiz={onStartQuiz}
-              />
             </>
           ) : (
             <div className={b({ empty: true })}>
               <p className={b('emptyText')}>Stories will be here</p>
             </div>
           )}
+
+          <StoryModal
+            currentGroup={groups?.[currentGroup]}
+            forbidClose={forbidClose}
+            isFirstGroup={currentGroup === 0}
+            isLastGroup={currentGroup === groups?.length - 1}
+            isLoading={isLoading}
+            isShowMockup={isShowMockup}
+            isShowing={modalShow}
+            startStoryId={startStoryId}
+            stories={groups?.[currentGroup]?.stories}
+            onClose={handleCloseModal}
+            onCloseStory={onCloseStory}
+            onFinishQuiz={onFinishQuiz}
+            onNextGroup={handleNextGroup}
+            onNextStory={onNextStory}
+            onOpenStory={onOpenStory}
+            onPrevGroup={handlePrevGroup}
+            onPrevStory={onPrevStory}
+            onStartQuiz={onStartQuiz}
+          />
         </>
       )}
     </>

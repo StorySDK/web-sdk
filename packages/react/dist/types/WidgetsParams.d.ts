@@ -18,6 +18,11 @@ export declare type RectangleWidgetParamsType = {
     strokeOpacity: number;
     hasBorder: boolean;
 };
+export declare type ImageWidgetParamsType = {
+    borderRadius: number;
+    widgetOpacity: number;
+    imageUrl: string;
+};
 export declare type EllipseWidgetParamsType = {
     fillColor: BackgroundType;
     fillOpacity: number;
@@ -36,7 +41,7 @@ export declare type ClickMeWidgetParamsType = {
     color: BorderType;
     text: string;
     icon: MaterialIconValueType;
-    actionType: 'link' | 'story';
+    actionType: 'link' | 'story' | 'custom';
     borderRadius: number;
     backgroundColor: BackgroundType;
     hasBorder: boolean;
@@ -46,6 +51,9 @@ export declare type ClickMeWidgetParamsType = {
     borderOpacity: number;
     storyId?: string;
     url?: string;
+    customFields?: {
+        [key: string]: string;
+    };
 };
 export declare type ChooseAnswerWidgetParamsType = {
     text: string;

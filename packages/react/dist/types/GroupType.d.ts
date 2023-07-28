@@ -1,7 +1,8 @@
 import { StoryType } from '.';
 export declare enum GroupType {
     GROUP = "group",
-    ONBOARDING = "onboarding"
+    ONBOARDING = "onboarding",
+    TEMPLATE = "template"
 }
 export declare enum StorySize {
     SMALL = "SMALL",

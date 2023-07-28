@@ -23,15 +23,15 @@ export const StoryVideoBackground = ({
     <video
       autoPlay={autoplay}
       className={b('video', { loading: isLoading })}
+      disablePictureInPicture
       loop
       muted
+      playsInline
       preload="metadata"
+      src={src}
       onLoadStart={onLoadStart}
       onLoadedData={onLoadEnd}
-    >
-      <source src={src} />
-    </video>
-
+    />
     <p className={b('loadText', { show: isLoading })}>Background is loading...</p>
   </div>
 );

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Group } from '@storysdk/react';
+import { Group, GroupsListProps } from '@storysdk/react';
+import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
 import axios from 'axios';
@@ -10,26 +11,6 @@ import { loadFontsToPage } from '../utils/fontsInclude';
 import { getUniqUserId } from '../utils';
 import { useGroupCache, useStoryCache } from '../hooks';
 
-interface GroupsListProps {
-  groups: Group[];
-  groupImageWidth?: number;
-  groupImageHeight?: number;
-  groupTitleSize?: number;
-  groupClassName?: string;
-  groupsClassName?: string;
-  groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle' | string;
-  isLoading?: boolean;
-  isShowMockup?: boolean;
-  onOpenGroup?(id: string): void;
-  onCloseGroup?(id: string): void;
-  onStartQuiz?(groupId: string, storyId?: string): void;
-  onFinishQuiz?(groupId: string, storyId?: string): void;
-  onNextStory?(groupId: string, storyId: string): void;
-  onPrevStory?(groupId: string, storyId: string): void;
-  onOpenStory?(groupId: string, storyId: string): void;
-  onCloseStory?(groupId: string, storyId: string): void;
-}
-
 interface DurationProps {
   storyId?: string;
   groupId: string;
@@ -39,23 +20,33 @@ interface DurationProps {
 const withGroupsData =
   (
     GroupsList: React.FC<GroupsListProps>,
-    groupImageWidth?: number,
-    groupImageHeight?: number,
-    groupTitleSize?: number,
-    groupClassName?: string,
-    groupsClassName?: string
+    options?: {
+      groupImageWidth?: number;
+      groupImageHeight?: number;
+      groupTitleSize?: number;
+      groupClassName?: string;
+      groupsClassName?: string;
+      autoplay?: boolean;
+      groupId?: string;
+      startStoryId?: string;
+      forbidClose?: boolean;
+      devMode?: boolean;
+    }
   ) =>
   () => {
     const [data, setData] = useState<any[]>([]);
     const [groups, setGroups] = useState<Group[]>([]);
-    const [groupView, setGroupView] = useState('circle');
+    const [groupView, setGroupView] = useState<GroupsListProps['groupView']>('circle');
     const [isShowMockup, setIsShowMockup] = useState(false);
     const [appLocale, setAppLocale] = useState(null);
-    const [groupsWithStories, setGroupsWithStories] = useState([]);
+    const [groupsWithStories, setGroupsWithStories] = useState<Group[]>([]);
     const [loadStatus, setLoadStatus] = useState('pending');
     const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
     const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
     const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
+    const [width] = useWindowSize();
+
+    const isMobile = useMemo(() => width < 768, [width]);
 
     const [groupDuration, setGroupDuration] = useState<DurationProps>({
       groupId: '',
@@ -243,6 +234,10 @@ const withGroupsData =
                   .filter((item: any) => {
                     const isActive = item.active && item.type;
 
+                    if (options?.groupId) {
+                      return isActive && item.id === options.groupId;
+                    }
+
                     if (item.type === 'onboarding') {
                       return isActive && item.settings?.addToStories;
                     }
@@ -272,7 +267,7 @@ const withGroupsData =
     useEffect(() => {
       if (groups.length) {
         setLoadStatus('loading');
-        groups.forEach((groupItem: any, groupIndex: number) => {
+        groups.forEach((groupItem: Group, groupIndex: number) => {
           API.stories
             .getList({
               groupId: groupItem.id
@@ -290,7 +285,6 @@ const withGroupsData =
                       : true)
                 );
 
-                // @ts-ignore
                 setGroupsWithStories((prevState) =>
                   prevState.map((item: any) => {
                     if (item.id === groupItem.id) {
@@ -312,23 +306,26 @@ const withGroupsData =
 
     useEffect(() => {
       if (loadStatus === 'loaded' && groupsWithStories.length) {
-        const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language);
+        const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language, isMobile);
 
         setData(adaptedData);
       }
-    }, [loadStatus, groupsWithStories, uniqUserId, language]);
+    }, [loadStatus, groupsWithStories, uniqUserId, language, isMobile]);
 
     return (
       <GroupsList
-        groupClassName={groupClassName}
-        groupImageHeight={groupImageHeight}
-        groupImageWidth={groupImageWidth}
-        groupTitleSize={groupTitleSize}
+        autoplay={options?.autoplay}
+        forbidClose={options?.forbidClose}
+        groupClassName={options?.groupClassName}
+        groupImageHeight={options?.groupImageHeight}
+        groupImageWidth={options?.groupImageWidth}
+        groupTitleSize={options?.groupTitleSize}
         groupView={groupView}
         groups={data}
-        groupsClassName={groupsClassName}
+        groupsClassName={options?.groupsClassName}
         isLoading={loadStatus === 'loading'}
         isShowMockup={isShowMockup}
+        startStoryId={options?.startStoryId}
         onCloseGroup={handleCloseGroup}
         onCloseStory={handleCloseStory}
         onFinishQuiz={handleFinishQuiz}
