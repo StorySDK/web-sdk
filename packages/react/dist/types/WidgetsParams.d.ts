@@ -17,6 +17,9 @@ export declare type RectangleWidgetParamsType = {
     strokeColor: BorderType;
     strokeOpacity: number;
     hasBorder: boolean;
+    editor?: {
+        strokeThickness?: number;
+    };
 };
 export declare type ImageWidgetParamsType = {
     borderRadius: number;
@@ -32,6 +35,9 @@ export declare type EllipseWidgetParamsType = {
     strokeOpacity: number;
     widgetOpacity: number;
     hasBorder: false;
+    editor?: {
+        strokeThickness?: number;
+    };
 };
 export declare type ClickMeWidgetParamsType = {
     fontFamily: string;
@@ -55,6 +61,12 @@ export declare type ClickMeWidgetParamsType = {
     customFields?: {
         [key: string]: string;
     };
+    editor?: {
+        iconSize?: number;
+        fontSize?: number;
+        borderWidth?: number;
+        borderRadius?: number;
+    };
 };
 export declare type ChooseAnswerWidgetParamsType = {
     text: string;
@@ -76,6 +88,9 @@ export declare type GiphyWidgetParamsType = {
     gif: string;
     widgetOpacity: number;
     borderRadius: number;
+    editor?: {
+        borderRadius?: number;
+    };
 };
 export declare type QuestionWidgetParamsType = {
     question: string;
@@ -106,6 +121,10 @@ export declare type SwipeUpWidgetParamsType = {
     color: BorderType;
     url: string;
     icon: MaterialIconValueType;
+    editor?: {
+        iconSize?: number;
+        fontSize?: number;
+    };
 };
 export declare type TalkAboutWidgetParamsType = {
     text: string;
@@ -128,6 +147,9 @@ export declare type TextWidgetParamsType = {
     opacity: number;
     widgetOpacity: number;
     backgroundOpacity: number;
+    editor?: {
+        fontSize?: number;
+    };
 };
 export declare type TimerWidgetParamsType = {
     time: number;
