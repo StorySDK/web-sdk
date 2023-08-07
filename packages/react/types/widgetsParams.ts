@@ -22,6 +22,7 @@ export type RectangleWidgetParamsType = {
   hasBorder: boolean;
   editor?: {
     strokeThickness?: number;
+    fillBorderRadius?: number;
   };
 };
 

@@ -19,6 +19,7 @@ export declare type RectangleWidgetParamsType = {
     hasBorder: boolean;
     editor?: {
         strokeThickness?: number;
+        fillBorderRadius?: number;
     };
 };
 export declare type ImageWidgetParamsType = {
