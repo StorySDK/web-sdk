@@ -39,7 +39,7 @@ export type EllipseWidgetParamsType = {
   strokeColor: BorderType;
   strokeOpacity: number;
   widgetOpacity: number;
-  hasBorder: false;
+  hasBorder: boolean;
   editor?: {
     strokeThickness?: number;
   };
