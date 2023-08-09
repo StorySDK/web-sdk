@@ -186,6 +186,7 @@ export interface StoryType {
     layerData: LayerData;
     background: BackgroundType;
     positionIndex: number;
+    position: number;
 }
 export declare const ScoreWidgets: WidgetsTypes[];
 export {};

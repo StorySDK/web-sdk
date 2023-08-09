@@ -98,6 +98,7 @@ export const adaptGroupData = (
           group.settings?.storiesSize === 'LARGE' && isMobile
         ),
         layerData: story.layer_data,
-        positionIndex: index
+        positionIndex: index,
+        position: story.position
       }))
     }));

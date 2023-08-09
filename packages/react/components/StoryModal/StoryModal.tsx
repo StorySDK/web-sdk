@@ -215,35 +215,31 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   useEffect(() => {
     if (stories && currentGroup) {
-      setActiveStoriesWithResult(
-        stories
-          .filter((story) => {
-            if (
-              story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
-            ) {
-              return true;
-            }
+      const sortedStories = stories
+        .filter((story) => {
+          if (story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+            return true;
+          }
 
-            if (isEditorMode) {
-              return story.layerData?.isDefaultLayer || story.id === startStoryId;
-            }
+          if (isEditorMode) {
+            return story.layerData?.isDefaultLayer || story.id === startStoryId;
+          }
 
-            return story.layerData?.isDefaultLayer;
-          })
-          .sort((storyA, storyB) => {
-            if (
-              storyA.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
-            ) {
-              return 1;
-            }
-            if (
-              storyB.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
-            ) {
-              return -1;
-            }
-            return 0;
-          })
-      );
+          return story.layerData?.isDefaultLayer;
+        })
+        .sort((storyA, storyB) => (storyA.position < storyB.position ? -1 : 1))
+        .sort((storyA, storyB) => {
+          if (storyA.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+            return 1;
+          }
+          if (storyB.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId) {
+            return -1;
+          }
+
+          return 0;
+        });
+
+      setActiveStoriesWithResult(sortedStories);
     }
   }, [currentGroup, stories]);
 

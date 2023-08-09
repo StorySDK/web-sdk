@@ -17271,7 +17271,7 @@ const StoryModal = (props) => {
     const [activeStoriesWithResult, setActiveStoriesWithResult] = useState([]);
     useEffect(() => {
         if (stories && currentGroup) {
-            setActiveStoriesWithResult(stories
+            const sortedStories = stories
                 .filter((story) => {
                 var _a, _b, _c, _d;
                 if (((_a = story.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
@@ -17282,6 +17282,7 @@ const StoryModal = (props) => {
                 }
                 return (_d = story.layerData) === null || _d === void 0 ? void 0 : _d.isDefaultLayer;
             })
+                .sort((storyA, storyB) => (storyA.position < storyB.position ? -1 : 1))
                 .sort((storyA, storyB) => {
                 var _a, _b, _c, _d;
                 if (((_a = storyA.layerData) === null || _a === void 0 ? void 0 : _a.layersGroupId) === ((_b = currentGroup.settings) === null || _b === void 0 ? void 0 : _b.scoreResultLayersGroupId)) {
@@ -17291,7 +17292,8 @@ const StoryModal = (props) => {
                     return -1;
                 }
                 return 0;
-            }));
+            });
+            setActiveStoriesWithResult(sortedStories);
         }
     }, [currentGroup, stories]);
     const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
@@ -79107,7 +79109,8 @@ const adaptGroupData = (data, uniqUserId, language, isMobile) => data
             background: story.story_data.background,
             storyData: adaptWidgets(story.story_data.widgets, story.id, group.id, uniqUserId, language, ((_a = group.settings) === null || _a === void 0 ? void 0 : _a.storiesSize) === 'LARGE' && isMobile),
             layerData: story.layer_data,
-            positionIndex: index
+            positionIndex: index,
+            position: story.position
         });
     })
 }));
