@@ -29,7 +29,8 @@ import {
   QuizMultipleAnswerWithImageWidgetParamsType,
   QuizRateWidgetParamsType,
   QuizOpenAnswerWidgetParamsType,
-  ImageWidgetParamsType
+  ImageWidgetParamsType,
+  VideoWidgetParamsType
 } from './widgetsParams';
 
 type ColorValue = { type: 'color'; value: string; isFilled?: boolean };
@@ -40,6 +41,7 @@ type BackgrounValue = {
   isFilled?: boolean;
   fileId?: string;
   stopAutoplay?: boolean;
+  metadata?: VideoMetadataType;
 };
 
 export type BorderType = GradientValue | ColorValue;
@@ -49,9 +51,14 @@ export interface FontParamsType {
   weight: number;
 }
 
+export type VideoMetadataType = {
+  duration: number;
+};
+
 export enum WidgetsTypes {
   RECTANGLE = 'rectangle',
   IMAGE = 'image',
+  VIDEO = 'video',
   ELLIPSE = 'ellipse',
   TEXT = 'text',
   SWIPE_UP = 'swipe_up',
@@ -79,6 +86,11 @@ export interface RectangleState {
 export interface ImageState {
   type: WidgetsTypes.IMAGE;
   params: ImageWidgetParamsType;
+}
+
+export interface VideoState {
+  type: WidgetsTypes.VIDEO;
+  params: VideoWidgetParamsType;
 }
 
 export interface EllipseState {
@@ -227,6 +239,7 @@ export interface WidgetObjectType {
   content:
     | RectangleState
     | ImageState
+    | VideoState
     | EllipseState
     | TextState
     | SwipeUpState
@@ -250,6 +263,7 @@ export interface LayerData {
   layersGroupId: string;
   positionInGroup: number;
   isDefaultLayer: boolean;
+  duration?: number;
   score: {
     letter: string;
     points: number;

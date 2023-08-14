@@ -120,8 +120,10 @@ export const STORY_SIZE_LARGE = {
   height: 2338
 };
 
+export const DEFAULT_STORY_DURATION = 7;
 export const PADDING_SIZE = 20;
 export const MOBILE_BREAKPOINT = 768;
+
 const INIT_TOP_ELEMENTS = 20;
 const INIT_TOP_STATUS_BAR = 16;
 const INIT_TOP_INDICATOR = 10;
@@ -789,6 +791,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                                       current: index === currentStory
                                     })}
                                     key={story.id}
+                                    style={{
+                                      animationDuration: `${story.layerData?.duration}s`
+                                    }}
                                     onAnimationEnd={handleAnimationEnd}
                                   />
                                 ))}

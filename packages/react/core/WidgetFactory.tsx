@@ -17,7 +17,8 @@ import {
   SwipeUpWidget,
   TalkAboutWidget,
   TextWidget,
-  TimerWidget
+  TimerWidget,
+  VideoWidget
 } from '@widgets';
 import {
   ChooseAnswerWidgetElemetsType,
@@ -66,6 +67,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         return <EllipseWidget params={this.props.widget.content.params} />;
       case WidgetsTypes.IMAGE:
         return <ImageWidget params={this.props.widget.content.params} />;
+      case WidgetsTypes.VIDEO:
+        return <VideoWidget params={this.props.widget.content.params} />;
       case WidgetsTypes.EMOJI_REACTION:
         return (
           <EmojiReactionWidget

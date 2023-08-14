@@ -1,5 +1,5 @@
 import { MaterialIconValueType } from '../components/MaterialIcon/_types';
-import { BackgroundType, BorderType, FontParamsType } from '.';
+import { BackgroundType, BorderType, FontParamsType, VideoMetadataType } from '.';
 
 export type QuizAnswersScoreParams = {
   letter: string;
@@ -31,6 +31,14 @@ export type ImageWidgetParamsType = {
   widgetOpacity: number;
   imageUrl: string;
   fileId?: string;
+};
+
+export type VideoWidgetParamsType = {
+  widgetOpacity: number;
+  videoUrl: string;
+  fileId?: string;
+  stopAutoplay?: boolean;
+  metadata?: VideoMetadataType;
 };
 
 export type EllipseWidgetParamsType = {

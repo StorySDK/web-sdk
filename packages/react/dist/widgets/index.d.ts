@@ -16,6 +16,7 @@ import { QuizOpenAnswerWidget } from './QuizOpenAnswerWidget';
 import { QuizRateWidget } from './QuizRateWidget';
 import { QuizMultipleAnswerWithImageWidget } from './QuizMultipleAnswerWithImageWidget';
 import { ImageWidget } from './ImageWidget';
+import { VideoWidget } from './VideoWidget';
 declare const widgets: {
     choose_answer: import("@types").WidgetComponent<{
         id: string;
@@ -27,6 +28,9 @@ declare const widgets: {
     }>;
     image: import("@types").WidgetComponent<{
         params: import("@types").ImageWidgetParamsType;
+    }>;
+    video: import("@types").WidgetComponent<{
+        params: import("@types").VideoWidgetParamsType;
     }>;
     click_me: import("@types").WidgetComponent<{
         params: import("@types").ClickMeWidgetParamsType;
@@ -126,4 +130,4 @@ declare const widgets: {
     }>;
 };
 export default widgets;
-export { ChooseAnswerWidget, ImageWidget, ClickMeWidget, EllipseWidget, EmojiReactionWidget, GiphyWidget, QuestionWidget, RectangleWidget, SliderWidget, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, QuizMultipleAnswerWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, QuizMultipleAnswerWithImageWidget };
+export { ChooseAnswerWidget, ImageWidget, VideoWidget, ClickMeWidget, EllipseWidget, EmojiReactionWidget, GiphyWidget, QuestionWidget, RectangleWidget, SliderWidget, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, QuizMultipleAnswerWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, QuizMultipleAnswerWithImageWidget };

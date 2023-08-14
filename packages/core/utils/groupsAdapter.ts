@@ -14,6 +14,8 @@ const answerWidgets = [
   WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE
 ];
 
+export const DEFAULT_STORY_DURATION = 7;
+
 const clickWidgets = [WidgetsTypes.CLICK_ME, WidgetsTypes.SWIPE_UP];
 
 const actionToWidget = (
@@ -72,6 +74,37 @@ const adaptWidgets = (
     };
   });
 
+export const getStoryDuration = (story: any) => {
+  let duration = DEFAULT_STORY_DURATION;
+
+  if (
+    story.story_data.background.type === 'video' &&
+    story.story_data.background.metadata?.duration &&
+    story.story_data.background.metadata.duration > duration
+  ) {
+    duration = story.story_data.background.metadata.duration;
+  }
+
+  story.story_data.widgets.forEach((widget: any) => {
+    if (
+      widget.content.type === WidgetsTypes.RECTANGLE &&
+      widget.content.params.fillColor.type === 'video' &&
+      widget.content.params.fillColor.metadata?.duration &&
+      widget.content.params.fillColor.metadata.duration > duration
+    ) {
+      duration = widget.content.params.fillColor.metadata.duration;
+    } else if (
+      widget.content.type === WidgetsTypes.VIDEO &&
+      widget.content.params.metadata?.duration &&
+      widget.content.params.metadata.duration > duration
+    ) {
+      duration = widget.content.params.metadata.duration;
+    }
+  });
+
+  return duration;
+};
+
 export const adaptGroupData = (
   data: any,
   uniqUserId: string,
@@ -97,7 +130,7 @@ export const adaptGroupData = (
           language,
           group.settings?.storiesSize === 'LARGE' && isMobile
         ),
-        layerData: story.layer_data,
+        layerData: { ...story.layer_data, duration: getStoryDuration(story) },
         positionIndex: index,
         position: story.position
       }))
