@@ -1,15 +1,14 @@
-import React, { useState, useCallback, useMemo, useContext, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useContext, useEffect, useRef } from 'react';
 import {
   TalkAboutWidgetParamsType,
   WidgetComponent,
-  WidgetPositionType,
-  WidgetPositionLimitsType,
-  TalkAboutElementsType
+  TalkAboutElementsType,
+  BackgroundColorType
 } from '@types';
 import cn from 'classnames';
 import { StoryContext } from '@components';
 import { IconLogoCircle } from '@components/icons';
-import { block, calculateElementSize, getTextStyles } from '@utils';
+import { block, getTextStyles } from '@utils';
 import './TalkAboutWidget.scss';
 
 const b = block('TalkAboutWidget');
@@ -138,7 +137,11 @@ export const TalkAboutWidget: WidgetComponent<{
             {!params.isTitleHidden && (
               <div
                 className={
-                  (cn(b('text', { gradient: params.fontColor?.type === 'gradient' }).toString()),
+                  (cn(
+                    b('text', {
+                      gradient: params.fontColor?.type === BackgroundColorType.GRADIENT
+                    }).toString()
+                  ),
                   'StorySdk-widgetTitle')
                 }
                 style={{

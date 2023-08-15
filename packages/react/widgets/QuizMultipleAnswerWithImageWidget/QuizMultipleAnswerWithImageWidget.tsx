@@ -3,7 +3,8 @@ import {
   QuizMultipleAnswerWithImageWidgetParamsType,
   WidgetComponent,
   ScoreType,
-  QuizMultipleAnswerWidgetWithImageElementsType
+  QuizMultipleAnswerWidgetWithImageElementsType,
+  BackgroundColorType
 } from '@types';
 import { block, eventSubscribe, eventUnsubscribe, getTextStyles } from '@utils';
 import cn from 'classnames';
@@ -140,7 +141,9 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
       {!isTitleHidden && (
         <div
           className={cn(
-            b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' }).toString(),
+            b('title', {
+              gradient: params.titleFont?.fontColor?.type === BackgroundColorType.GRADIENT
+            }).toString(),
             'StorySdk-widgetTitle'
           )}
           style={{
@@ -174,7 +177,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
             <p
               className={cn(
                 b('answerTitle', {
-                  gradient: params.answersFont?.fontColor?.type === 'gradient'
+                  gradient: params.answersFont?.fontColor?.type === BackgroundColorType.GRADIENT
                 }).toString(),
                 'StorySdk-widgetAnswerTitle'
               )}

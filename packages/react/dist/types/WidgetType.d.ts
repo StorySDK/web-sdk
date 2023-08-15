@@ -4,13 +4,18 @@ export declare enum MediaType {
     IMAGE = "image",
     VIDEO = "video"
 }
+export declare enum BackgroundColorType {
+    GRADIENT = "gradient",
+    COLOR = "color"
+}
+export declare type BackgroundFillType = MediaType | BackgroundColorType;
 declare type ColorValue = {
-    type: 'color';
+    type: BackgroundColorType.COLOR;
     value: string;
     isFilled?: boolean;
 };
 declare type GradientValue = {
-    type: 'gradient';
+    type: BackgroundColorType.GRADIENT;
     value: string[];
     isFilled?: boolean;
 };

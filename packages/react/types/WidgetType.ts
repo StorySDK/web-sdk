@@ -38,8 +38,15 @@ export enum MediaType {
   VIDEO = 'video'
 }
 
-type ColorValue = { type: 'color'; value: string; isFilled?: boolean };
-type GradientValue = { type: 'gradient'; value: string[]; isFilled?: boolean };
+export enum BackgroundColorType {
+  GRADIENT = 'gradient',
+  COLOR = 'color'
+}
+
+export type BackgroundFillType = MediaType | BackgroundColorType;
+
+type ColorValue = { type: BackgroundColorType.COLOR; value: string; isFilled?: boolean };
+type GradientValue = { type: BackgroundColorType.GRADIENT; value: string[]; isFilled?: boolean };
 type BackgrounValue = {
   type: MediaType;
   value: string;

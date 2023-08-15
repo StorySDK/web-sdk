@@ -1,6 +1,6 @@
 import React from 'react';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
-import { TextWidgetParamsType, WidgetComponent } from '@types';
+import { BackgroundColorType, TextWidgetParamsType, WidgetComponent } from '@types';
 import './TextWidget.scss';
 
 const b = block('TextWidget');
@@ -16,7 +16,9 @@ export const TextWidget: WidgetComponent<{ params: TextWidgetParamsType }> = Rea
     return (
       <div className={b()}>
         <div
-          className={b('container', { gradient: params.color.type === 'gradient' })}
+          className={b('container', {
+            gradient: params.color.type === BackgroundColorType.GRADIENT
+          })}
           style={{
             opacity: params.widgetOpacity / 100,
             fontStyle: params.fontParams.style,

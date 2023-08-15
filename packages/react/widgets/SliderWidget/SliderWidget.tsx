@@ -1,5 +1,10 @@
 import React, { useState, useCallback, useContext, useEffect } from 'react';
-import { SliderWidgetElementsType, SliderWidgetParamsType, WidgetComponent } from '@types';
+import {
+  BackgroundColorType,
+  SliderWidgetElementsType,
+  SliderWidgetParamsType,
+  WidgetComponent
+} from '@types';
 import cn from 'classnames';
 import { block, getTextStyles } from '@utils';
 import { useInterval } from '@hooks';
@@ -107,7 +112,9 @@ export const SliderWidget: WidgetComponent<{
     <div className={b({ color })} style={sizes.widget}>
       <div
         className={cn(
-          b('text', { gradient: params.fontColor?.type === 'gradient' }).toString(),
+          b('text', {
+            gradient: params.fontColor?.type === BackgroundColorType.GRADIENT
+          }).toString(),
           'StorySdk-widgetTitle'
         )}
         style={{

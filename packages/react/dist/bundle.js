@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var React = require('react');
+var dist = require('dist');
 var crypto = require('crypto');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -15,6 +16,11 @@ exports.MediaType = void 0;
     MediaType["IMAGE"] = "image";
     MediaType["VIDEO"] = "video";
 })(exports.MediaType || (exports.MediaType = {}));
+exports.BackgroundColorType = void 0;
+(function (BackgroundColorType) {
+    BackgroundColorType["GRADIENT"] = "gradient";
+    BackgroundColorType["COLOR"] = "color";
+})(exports.BackgroundColorType || (exports.BackgroundColorType = {}));
 exports.WidgetsTypes = void 0;
 (function (WidgetsTypes) {
     WidgetsTypes["RECTANGLE"] = "rectangle";
@@ -1720,7 +1726,7 @@ const renderGradient = (colors, opacity) => {
 const renderBackgroundStyles = (background, opacity) => {
     let color = background.value;
     switch (background.type) {
-        case 'color':
+        case exports.BackgroundColorType.COLOR:
             if (color.includes('#') && opacity !== undefined) {
                 color = build(background.value, opacity / 100);
             }
@@ -1729,9 +1735,9 @@ const renderBackgroundStyles = (background, opacity) => {
                 return `rgba(${parsed.rgb[0]}, ${parsed.rgb[1]}, ${parsed.rgb[2]}, ${opacity / 100})`;
             }
             return color;
-        case 'gradient':
+        case exports.BackgroundColorType.GRADIENT:
             return `linear-gradient(180deg, ${background.value[0]} 0%, ${background.value[1]} 100%)`;
-        case 'image':
+        case dist.MediaType.IMAGE:
             return `center / cover url("${background.value}")`;
         default:
             return 'transparent';
@@ -1739,11 +1745,11 @@ const renderBackgroundStyles = (background, opacity) => {
 };
 const renderTextBackgroundStyles = ({ color, opacity }) => {
     switch (color.type) {
-        case 'color':
+        case exports.BackgroundColorType.COLOR:
             return {
                 color: color.value
             };
-        case 'gradient':
+        case exports.BackgroundColorType.GRADIENT:
             return {
                 background: renderGradient(color.value, opacity)
             };
@@ -11823,7 +11829,7 @@ const ClickMeWidget = React__default["default"].memo((props) => {
             borderWidth: `${hasBorder ? borderWidth : 0}px`,
             borderColor: renderBackgroundStyles(borderColor)
         }, tabIndex: 0, onClick: !isReadOnly ? handleWidgetClick : undefined, onKeyDown: !isReadOnly ? handleWidgetClick : undefined },
-        React__default["default"].createElement("div", { className: b$m('container', { gradient: color.type === 'gradient' }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
+        React__default["default"].createElement("div", { className: b$m('container', { gradient: color.type === exports.BackgroundColorType.GRADIENT }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
                 fontSize }, renderTextBackgroundStyles({ color })) },
             hasIcon ? (React__default["default"].createElement(MaterialIcon, { background: color, className: b$m('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
             React__default["default"].createElement("span", { className: b$m('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
@@ -64951,7 +64957,9 @@ const QuestionWidget = React__default["default"].memo((props) => {
     }, []);
     const textStyles = getTextStyles(params.fontColor);
     return (React__default["default"].createElement("div", { className: b$h() },
-        !params.isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$h('question', { gradient: ((_b = params.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.style, fontWeight: (_d = params.fontParams) === null || _d === void 0 ? void 0 : _d.weight, fontFamily: params.fontFamily }), textStyles) }, params.question)),
+        !params.isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$h('question', {
+                gradient: ((_b = params.fontColor) === null || _b === void 0 ? void 0 : _b.type) === exports.BackgroundColorType.GRADIENT
+            }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.style, fontWeight: (_d = params.fontParams) === null || _d === void 0 ? void 0 : _d.weight, fontFamily: params.fontFamily }), textStyles) }, params.question)),
         React__default["default"].createElement("div", { className: b$h('buttons'), style: { borderRadius: sizes.button.borderRadius } },
             React__default["default"].createElement("button", { className: b$h('item', {
                     answered: answer === 'confirm',
@@ -65154,7 +65162,9 @@ const SliderWidget = React__default["default"].memo((props) => {
     const textStyles = getTextStyles(params.fontColor);
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$7;
     return (React__default["default"].createElement("div", { className: b$e({ color }), style: sizes.widget },
-        React__default["default"].createElement("div", { className: cn(b$e('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
+        React__default["default"].createElement("div", { className: cn(b$e('text', {
+                gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === exports.BackgroundColorType.GRADIENT
+            }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
         React__default["default"].createElement("div", { className: b$e('sliderWrapper'), style: {
                 height: sizes.slider.height
             } },
@@ -65195,7 +65205,7 @@ const SwipeUpWidget = React__default["default"].memo((props) => {
             tab.focus();
         }
     }, [onSwipe, url]);
-    return (React__default["default"].createElement("div", { className: b$d({ gradient: color.type === 'gradient' }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
+    return (React__default["default"].createElement("div", { className: b$d({ gradient: color.type === exports.BackgroundColorType.GRADIENT }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
         React__default["default"].createElement("div", { className: b$d('icon') },
             React__default["default"].createElement(MaterialIcon, { background: color, color: renderBackgroundStyles(color), name: icon.name, size: iconSize })),
         React__default["default"].createElement("span", { className: b$d('text') }, text)));
@@ -65288,7 +65298,9 @@ const TalkAboutWidget = React__default["default"].memo((props) => {
             React__default["default"].createElement("div", { className: b$c('empty'), style: sizes.empty }),
             React__default["default"].createElement("div", { className: b$c({ color: params.color }), style: sizes.widget },
                 React__default["default"].createElement("div", { className: b$c('contentContainer', { sendOpen: text.length > 0 }), style: sizes.content },
-                    !params.isTitleHidden && (React__default["default"].createElement("div", { className: (cn(b$c('text', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString()),
+                    !params.isTitleHidden && (React__default["default"].createElement("div", { className: (cn(b$c('text', {
+                            gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === exports.BackgroundColorType.GRADIENT
+                        }).toString()),
                             'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, params.text)),
                     React__default["default"].createElement("input", { className: b$c('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
                 text && (React__default["default"].createElement("button", { className: b$c('send', { disabled: isSent || isReadOnly }), style: sizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
@@ -65299,7 +65311,9 @@ const b$b = block('TextWidget');
 const TextWidget = React__default["default"].memo((props) => {
     const { params } = props;
     return (React__default["default"].createElement("div", { className: b$b() },
-        React__default["default"].createElement("div", { className: b$b('container', { gradient: params.color.type === 'gradient' }), style: Object.assign({ opacity: params.widgetOpacity / 100, fontStyle: params.fontParams.style, fontWeight: params.fontParams.weight, fontFamily: params.fontFamily, fontSize: `${params.fontSize}px`, textAlign: params.align }, renderTextBackgroundStyles({ color: params.color })) },
+        React__default["default"].createElement("div", { className: b$b('container', {
+                gradient: params.color.type === exports.BackgroundColorType.GRADIENT
+            }), style: Object.assign({ opacity: params.widgetOpacity / 100, fontStyle: params.fontParams.style, fontWeight: params.fontParams.weight, fontFamily: params.fontFamily, fontSize: `${params.fontSize}px`, textAlign: params.align }, renderTextBackgroundStyles({ color: params.color })) },
             React__default["default"].createElement("span", { className: b$b('span') }, params.text)),
         params.withFill ? (React__default["default"].createElement("div", { className: b$b('background'), style: {
                 background: renderBackgroundStyles(params.backgroundColor)
@@ -65491,7 +65505,9 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
     return (React__default["default"].createElement("div", { className: b$9() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$9('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
+        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$9('title', {
+                gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === exports.BackgroundColorType.GRADIENT
+            }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
         React__default["default"].createElement("div", { className: b$9('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g, _h;
             return (React__default["default"].createElement("button", { className: b$9('answer', {
@@ -65500,7 +65516,7 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
                 }), disabled: isSent || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
                 answer.emoji && (React__default["default"].createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
                 React__default["default"].createElement("p", { className: cn(b$9('answerTitle', {
-                        gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === 'gradient'
+                        gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === exports.BackgroundColorType.GRADIENT
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { lineHeight: `${sizes.sendBtn.lineHeight}px`, fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
@@ -65562,7 +65578,9 @@ const QuizOneAnswerWidget = React__default["default"].memo((props) => {
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
     return (React__default["default"].createElement("div", { className: b$8() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$8('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
+        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$8('title', {
+                gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === exports.BackgroundColorType.GRADIENT
+            }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
         React__default["default"].createElement("div", { className: b$8('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g, _h;
             return (React__default["default"].createElement("button", { className: b$8('answer', {
@@ -65570,7 +65588,7 @@ const QuizOneAnswerWidget = React__default["default"].memo((props) => {
                 }), disabled: userAnswer !== null || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !userAnswer && !isReadOnly && handleAnswer(answer.id) },
                 answer.emoji && (React__default["default"].createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
                 React__default["default"].createElement("p", { className: cn(b$8('answerTitle', {
-                        gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === 'gradient'
+                        gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === exports.BackgroundColorType.GRADIENT
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
@@ -65693,7 +65711,9 @@ const QuizRateWidget = React__default["default"].memo((props) => {
     }, [onAnswer, onGoToStory, storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, storyId]);
     const textStyles = getTextStyles(params.fontColor);
     return (React__default["default"].createElement("div", { className: b$6() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$6('title', { gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
+        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$6('title', {
+                gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === exports.BackgroundColorType.GRADIENT
+            }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
         React__default["default"].createElement("div", { className: b$6('starsContainer', {
                 disabled: isSent || isReadOnly
             }), style: {
@@ -65799,7 +65819,9 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
     return (React__default["default"].createElement("div", { className: b$5() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$5('title', { gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === 'gradient' }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
+        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$5('title', {
+                gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === exports.BackgroundColorType.GRADIENT
+            }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
         React__default["default"].createElement("div", { className: b$5('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g;
             return (React__default["default"].createElement("button", { className: b$5('answer', {
@@ -65809,7 +65831,7 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
                         backgroundImage: answer.image ? `url(${answer.image.url})` : ''
                     } }),
                 React__default["default"].createElement("p", { className: cn(b$5('answerTitle', {
-                        gradient: ((_b = (_a = params.answersFont) === null || _a === void 0 ? void 0 : _a.fontColor) === null || _b === void 0 ? void 0 : _b.type) === 'gradient'
+                        gradient: ((_b = (_a = params.answersFont) === null || _a === void 0 ? void 0 : _a.fontColor) === null || _b === void 0 ? void 0 : _b.type) === exports.BackgroundColorType.GRADIENT
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { fontStyle: (_d = (_c = params.answersFont) === null || _c === void 0 ? void 0 : _c.fontParams) === null || _d === void 0 ? void 0 : _d.style, fontWeight: (_f = (_e = params.answersFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.weight, fontFamily: (_g = params.answersFont) === null || _g === void 0 ? void 0 : _g.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
@@ -66074,7 +66096,7 @@ const MaterialIcon = React.memo(({ name = 'ArrowCircleUpOutlineIcon', className,
     const Icon = React.useMemo(() => MATERIAL_ICONS[name], [name]);
     let gradient;
     const gradientId = React.useMemo(() => nanoid(), []);
-    if ((background === null || background === void 0 ? void 0 : background.type) === 'gradient') {
+    if ((background === null || background === void 0 ? void 0 : background.type) === exports.BackgroundColorType.GRADIENT) {
         gradient = (React__default["default"].createElement("linearGradient", { id: gradientId, x1: "0", x2: "0", y1: "0", y2: "1" },
             React__default["default"].createElement("stop", { offset: "0%", stopColor: background.value[0] }),
             React__default["default"].createElement("stop", { offset: "100%", stopColor: background.value[1] })));
