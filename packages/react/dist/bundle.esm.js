@@ -1,6 +1,11 @@
 import React, { useCallback, useState, useEffect, useRef, useMemo, useReducer, useContext, memo } from 'react';
 import crypto from 'crypto';
 
+var MediaType;
+(function (MediaType) {
+    MediaType["IMAGE"] = "image";
+    MediaType["VIDEO"] = "video";
+})(MediaType || (MediaType = {}));
 var WidgetsTypes;
 (function (WidgetsTypes) {
     WidgetsTypes["RECTANGLE"] = "rectangle";
@@ -66072,4 +66077,4 @@ const MaterialIcon = memo(({ name = 'ArrowCircleUpOutlineIcon', className, color
     return null;
 });
 
-export { ChooseAnswerWidget, ClickMeWidget, CustomGroupControl, DEFAULT_STORY_DURATION, EllipseWidget, EmojiReactionWidget, GiphyWidget, GroupItem, GroupType, GroupsList, ImageWidget, MOBILE_BREAKPOINT, MaterialIcon, PADDING_SIZE, QuestionWidget, QuizMultipleAnswerWidget, QuizMultipleAnswerWithImageWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, RectangleWidget, STORY_SIZE, STORY_SIZE_LARGE, ScoreType, ScoreWidgets, SliderWidget, StoryContent, StoryContext, StoryModal, StorySize, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, VideoWidget, WidgetsTypes };
+export { ChooseAnswerWidget, ClickMeWidget, CustomGroupControl, DEFAULT_STORY_DURATION, EllipseWidget, EmojiReactionWidget, GiphyWidget, GroupItem, GroupType, GroupsList, ImageWidget, MOBILE_BREAKPOINT, MaterialIcon, MediaType, PADDING_SIZE, QuestionWidget, QuizMultipleAnswerWidget, QuizMultipleAnswerWithImageWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, RectangleWidget, STORY_SIZE, STORY_SIZE_LARGE, ScoreType, ScoreWidgets, SliderWidget, StoryContent, StoryContext, StoryModal, StorySize, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, VideoWidget, WidgetsTypes };

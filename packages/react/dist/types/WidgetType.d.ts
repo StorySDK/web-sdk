@@ -1,5 +1,9 @@
 import { ChooseAnswerWidgetElemetsType, EmojiReactionWidgetElemetsType, QuestionWidgetElementsType, QuizMultipleAnswerWidgetElementsType, QuizMultipleAnswerWidgetWithImageElementsType, QuizOneAnswerWidgetElementsType, QuizOpenAnswerWidgetElementsType, QuizRateWidgetElementsType, SliderWidgetElementsType, TalkAboutElementsType } from './widgetElementsTypes';
 import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerWidgetParamsType, QuizOneAnswerWidgetParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageWidgetParamsType, QuizRateWidgetParamsType, QuizOpenAnswerWidgetParamsType, ImageWidgetParamsType, VideoWidgetParamsType } from './widgetsParams';
+export declare enum MediaType {
+    IMAGE = "image",
+    VIDEO = "video"
+}
 declare type ColorValue = {
     type: 'color';
     value: string;
@@ -11,7 +15,7 @@ declare type GradientValue = {
     isFilled?: boolean;
 };
 declare type BackgrounValue = {
-    type: 'image' | 'video';
+    type: MediaType;
     value: string;
     isFilled?: boolean;
     fileId?: string;

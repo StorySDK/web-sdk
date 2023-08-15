@@ -33,10 +33,15 @@ import {
   VideoWidgetParamsType
 } from './widgetsParams';
 
+export enum MediaType {
+  IMAGE = 'image',
+  VIDEO = 'video'
+}
+
 type ColorValue = { type: 'color'; value: string; isFilled?: boolean };
 type GradientValue = { type: 'gradient'; value: string[]; isFilled?: boolean };
 type BackgrounValue = {
-  type: 'image' | 'video';
+  type: MediaType;
   value: string;
   isFilled?: boolean;
   fileId?: string;

@@ -6080,6 +6080,11 @@ axios$2.exports.default = axios$1;
 
 var axios = axios$2.exports;
 
+var MediaType;
+(function (MediaType) {
+    MediaType["IMAGE"] = "image";
+    MediaType["VIDEO"] = "video";
+})(MediaType || (MediaType = {}));
 var WidgetsTypes;
 (function (WidgetsTypes) {
     WidgetsTypes["RECTANGLE"] = "rectangle";

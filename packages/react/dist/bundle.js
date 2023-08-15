@@ -10,6 +10,11 @@ function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'defau
 var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 var crypto__default = /*#__PURE__*/_interopDefaultLegacy(crypto);
 
+exports.MediaType = void 0;
+(function (MediaType) {
+    MediaType["IMAGE"] = "image";
+    MediaType["VIDEO"] = "video";
+})(exports.MediaType || (exports.MediaType = {}));
 exports.WidgetsTypes = void 0;
 (function (WidgetsTypes) {
     WidgetsTypes["RECTANGLE"] = "rectangle";
