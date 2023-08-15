@@ -13,7 +13,6 @@ var require$$0$1 = require('tty');
 var require$$1 = require('util');
 var require$$0 = require('os');
 var require$$8 = require('zlib');
-var dist = require('dist');
 var crypto = require('crypto');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -7826,7 +7825,7 @@ const renderBackgroundStyles = (background, opacity) => {
             return color;
         case BackgroundColorType.GRADIENT:
             return `linear-gradient(180deg, ${background.value[0]} 0%, ${background.value[1]} 100%)`;
-        case dist.MediaType.IMAGE:
+        case MediaType.IMAGE:
             return `center / cover url("${background.value}")`;
         default:
             return 'transparent';

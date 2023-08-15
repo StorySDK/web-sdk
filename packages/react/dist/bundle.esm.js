@@ -1,5 +1,4 @@
 import React, { useCallback, useState, useEffect, useRef, useMemo, useReducer, useContext, memo } from 'react';
-import { MediaType as MediaType$1 } from 'dist';
 import crypto from 'crypto';
 
 var MediaType;
@@ -1728,7 +1727,7 @@ const renderBackgroundStyles = (background, opacity) => {
             return color;
         case BackgroundColorType.GRADIENT:
             return `linear-gradient(180deg, ${background.value[0]} 0%, ${background.value[1]} 100%)`;
-        case MediaType$1.IMAGE:
+        case MediaType.IMAGE:
             return `center / cover url("${background.value}")`;
         default:
             return 'transparent';

@@ -8,8 +8,8 @@ import {
 } from '@types';
 import { block, eventSubscribe, eventUnsubscribe, getTextStyles } from '@utils';
 import cn from 'classnames';
-import './QuizMultipleAnswerWithImageWidget.scss';
 import { StoryContext } from '@components';
+import './QuizMultipleAnswerWithImageWidget.scss';
 
 const b = block('QuizMultipleAnswerWithImageWidget');
 

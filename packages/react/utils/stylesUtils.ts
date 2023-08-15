@@ -1,13 +1,13 @@
 import { setup } from 'bem-cn';
 import hexToRgba from 'hex-to-rgba';
 import parseColor from 'parse-color';
-import { MediaType } from 'dist';
 import {
   WidgetPositionType,
   WidgetPositionLimitsType,
   BackgroundType,
   BorderType,
-  BackgroundColorType
+  BackgroundColorType,
+  MediaType
 } from '../types';
 
 interface Stroke {

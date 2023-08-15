@@ -3,7 +3,6 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var React = require('react');
-var dist = require('dist');
 var crypto = require('crypto');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -1737,7 +1736,7 @@ const renderBackgroundStyles = (background, opacity) => {
             return color;
         case exports.BackgroundColorType.GRADIENT:
             return `linear-gradient(180deg, ${background.value[0]} 0%, ${background.value[1]} 100%)`;
-        case dist.MediaType.IMAGE:
+        case exports.MediaType.IMAGE:
             return `center / cover url("${background.value}")`;
         default:
             return 'transparent';
