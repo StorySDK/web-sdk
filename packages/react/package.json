@@ -30,7 +30,8 @@
     "luxon": "^3.2.1",
     "nanoid": "^3.1.30",
     "parse-color": "^1.0.0",
-    "react-loading-skeleton": "^3.0.2"
+    "react-loading-skeleton": "^3.0.2",
+    "rollup-plugin-copy": "^3.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",

@@ -6,6 +6,7 @@ import scss from 'rollup-plugin-scss';
 import json from '@rollup/plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 import image from '@rollup/plugin-image';
+import copy from 'rollup-plugin-copy';
 
 const PACKAGE_ROOT_PATH = process.cwd();
 const { LERNA_PACKAGE_NAME } = process.env;
@@ -33,6 +34,11 @@ export default [
       commonjs(),
       typescript({
         tsconfig: `${PACKAGE_ROOT_PATH}/tsconfig.json`
+      }),
+      copy({
+        targets: [
+            { src: "assets/fonts", dest: "dist" },
+        ],
       }),
       scss({
         outputStyle: 'compressed'

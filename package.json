@@ -26,5 +26,8 @@
     "rollup-plugin-typescript2": "^0.31.1",
     "sass": "^1.49.0",
     "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "rollup-plugin-copy": "^3.4.0"
   }
 }
