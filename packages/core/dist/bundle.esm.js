@@ -79206,9 +79206,21 @@ const createLinkElement = () => {
     return link;
 };
 const updateLinkHref = (link, fonts) => {
-    link.href = `https://fonts.googleapis.com/css2?family=${fonts
-        .map((font) => font.family.split(' ').join('+'))
-        .join('&family=')}`;
+    const fontsLink = fonts
+        .map((font, index) => {
+        let string = '';
+        if (index === 0) {
+            string += '?family=';
+        }
+        string += `${font.family}:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700`;
+        if (index !== fonts.length - 1) {
+            string += '&family=';
+        }
+        return string;
+    })
+        .join('');
+    const updateLink = `https://fonts.googleapis.com/css2${fontsLink}}`;
+    link.href = updateLink;
 };
 const loadFontsToPage = (fonts) => {
     const googleFontsLink = document.getElementById('storySdkGoogleFonts');
