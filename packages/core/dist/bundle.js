@@ -2,33 +2,32 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var React = require('react');
+var React__default = require('react');
 var ReactDOM = require('react-dom');
-var require$$1$1 = require('http');
-var require$$2 = require('https');
-var require$$0$2 = require('url');
-var require$$3 = require('stream');
-var require$$4 = require('assert');
-var require$$0$1 = require('tty');
-var require$$1 = require('util');
-var require$$0 = require('os');
-var require$$8 = require('zlib');
-var crypto = require('crypto');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
-var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
+function _interopNamespace(e) {
+  if (e && e.__esModule) return e;
+  var n = Object.create(null);
+  if (e) {
+    Object.keys(e).forEach(function (k) {
+      if (k !== 'default') {
+        var d = Object.getOwnPropertyDescriptor(e, k);
+        Object.defineProperty(n, k, d.get ? d : {
+          enumerable: true,
+          get: function () { return e[k]; }
+        });
+      }
+    });
+  }
+  n["default"] = e;
+  return Object.freeze(n);
+}
+
+var React__default__default = /*#__PURE__*/_interopDefaultLegacy(React__default);
+var React__default__namespace = /*#__PURE__*/_interopNamespace(React__default);
 var ReactDOM__default = /*#__PURE__*/_interopDefaultLegacy(ReactDOM);
-var require$$1__default$1 = /*#__PURE__*/_interopDefaultLegacy(require$$1$1);
-var require$$2__default = /*#__PURE__*/_interopDefaultLegacy(require$$2);
-var require$$0__default$2 = /*#__PURE__*/_interopDefaultLegacy(require$$0$2);
-var require$$3__default = /*#__PURE__*/_interopDefaultLegacy(require$$3);
-var require$$4__default = /*#__PURE__*/_interopDefaultLegacy(require$$4);
-var require$$0__default$1 = /*#__PURE__*/_interopDefaultLegacy(require$$0$1);
-var require$$1__default = /*#__PURE__*/_interopDefaultLegacy(require$$1);
-var require$$0__default = /*#__PURE__*/_interopDefaultLegacy(require$$0);
-var require$$8__default = /*#__PURE__*/_interopDefaultLegacy(require$$8);
-var crypto__default = /*#__PURE__*/_interopDefaultLegacy(crypto);
 
 var axios$2 = {exports: {}};
 
@@ -46,7 +45,7 @@ var bind$1 = bind$2;
 
 // utils is a library of generic helper functions non-specific to axios
 
-var toString$2 = Object.prototype.toString;
+var toString = Object.prototype.toString;
 
 /**
  * Determine if a value is an Array
@@ -54,8 +53,8 @@ var toString$2 = Object.prototype.toString;
  * @param {Object} val The value to test
  * @returns {boolean} True if value is an Array, otherwise false
  */
-function isArray$2(val) {
-  return toString$2.call(val) === '[object Array]';
+function isArray(val) {
+  return toString.call(val) === '[object Array]';
 }
 
 /**
@@ -74,7 +73,7 @@ function isUndefined$2(val) {
  * @param {Object} val The value to test
  * @returns {boolean} True if value is a Buffer, otherwise false
  */
-function isBuffer$2(val) {
+function isBuffer(val) {
   return val !== null && !isUndefined$2(val) && val.constructor !== null && !isUndefined$2(val.constructor)
     && typeof val.constructor.isBuffer === 'function' && val.constructor.isBuffer(val);
 }
@@ -86,7 +85,7 @@ function isBuffer$2(val) {
  * @returns {boolean} True if value is an ArrayBuffer, otherwise false
  */
 function isArrayBuffer(val) {
-  return toString$2.call(val) === '[object ArrayBuffer]';
+  return toString.call(val) === '[object ArrayBuffer]';
 }
 
 /**
@@ -152,7 +151,7 @@ function isObject(val) {
  * @return {boolean} True if value is a plain Object, otherwise false
  */
 function isPlainObject(val) {
-  if (toString$2.call(val) !== '[object Object]') {
+  if (toString.call(val) !== '[object Object]') {
     return false;
   }
 
@@ -167,7 +166,7 @@ function isPlainObject(val) {
  * @returns {boolean} True if value is a Date, otherwise false
  */
 function isDate$2(val) {
-  return toString$2.call(val) === '[object Date]';
+  return toString.call(val) === '[object Date]';
 }
 
 /**
@@ -177,7 +176,7 @@ function isDate$2(val) {
  * @returns {boolean} True if value is a File, otherwise false
  */
 function isFile(val) {
-  return toString$2.call(val) === '[object File]';
+  return toString.call(val) === '[object File]';
 }
 
 /**
@@ -187,7 +186,7 @@ function isFile(val) {
  * @returns {boolean} True if value is a Blob, otherwise false
  */
 function isBlob(val) {
-  return toString$2.call(val) === '[object Blob]';
+  return toString.call(val) === '[object Blob]';
 }
 
 /**
@@ -197,7 +196,7 @@ function isBlob(val) {
  * @returns {boolean} True if value is a Function, otherwise false
  */
 function isFunction(val) {
-  return toString$2.call(val) === '[object Function]';
+  return toString.call(val) === '[object Function]';
 }
 
 /**
@@ -281,7 +280,7 @@ function forEach(obj, fn) {
     obj = [obj];
   }
 
-  if (isArray$2(obj)) {
+  if (isArray(obj)) {
     // Iterate over array values
     for (var i = 0, l = obj.length; i < l; i++) {
       fn.call(null, obj[i], i, obj);
@@ -320,7 +319,7 @@ function merge(/* obj1, obj2, obj3, ... */) {
       result[key] = merge(result[key], val);
     } else if (isPlainObject(val)) {
       result[key] = merge({}, val);
-    } else if (isArray$2(val)) {
+    } else if (isArray(val)) {
       result[key] = val.slice();
     } else {
       result[key] = val;
@@ -365,10 +364,10 @@ function stripBOM(content) {
   return content;
 }
 
-var utils$e = {
-  isArray: isArray$2,
+var utils$d = {
+  isArray: isArray,
   isArrayBuffer: isArrayBuffer,
-  isBuffer: isBuffer$2,
+  isBuffer: isBuffer,
   isFormData: isFormData,
   isArrayBufferView: isArrayBufferView,
   isString: isString$2,
@@ -390,7 +389,7 @@ var utils$e = {
   stripBOM: stripBOM
 };
 
-var utils$d = utils$e;
+var utils$c = utils$d;
 
 function encode(val) {
   return encodeURIComponent(val).
@@ -409,7 +408,7 @@ function encode(val) {
  * @param {object} [params] The params to be appended
  * @returns {string} The formatted url
  */
-var buildURL$3 = function buildURL(url, params, paramsSerializer) {
+var buildURL$2 = function buildURL(url, params, paramsSerializer) {
   /*eslint no-param-reassign:0*/
   if (!params) {
     return url;
@@ -418,26 +417,26 @@ var buildURL$3 = function buildURL(url, params, paramsSerializer) {
   var serializedParams;
   if (paramsSerializer) {
     serializedParams = paramsSerializer(params);
-  } else if (utils$d.isURLSearchParams(params)) {
+  } else if (utils$c.isURLSearchParams(params)) {
     serializedParams = params.toString();
   } else {
     var parts = [];
 
-    utils$d.forEach(params, function serialize(val, key) {
+    utils$c.forEach(params, function serialize(val, key) {
       if (val === null || typeof val === 'undefined') {
         return;
       }
 
-      if (utils$d.isArray(val)) {
+      if (utils$c.isArray(val)) {
         key = key + '[]';
       } else {
         val = [val];
       }
 
-      utils$d.forEach(val, function parseValue(v) {
-        if (utils$d.isDate(v)) {
+      utils$c.forEach(val, function parseValue(v) {
+        if (utils$c.isDate(v)) {
           v = v.toISOString();
-        } else if (utils$d.isObject(v)) {
+        } else if (utils$c.isObject(v)) {
           v = JSON.stringify(v);
         }
         parts.push(encode(key) + '=' + encode(v));
@@ -459,7 +458,7 @@ var buildURL$3 = function buildURL(url, params, paramsSerializer) {
   return url;
 };
 
-var utils$c = utils$e;
+var utils$b = utils$d;
 
 function InterceptorManager$1() {
   this.handlers = [];
@@ -503,7 +502,7 @@ InterceptorManager$1.prototype.eject = function eject(id) {
  * @param {Function} fn The function to call for each interceptor
  */
 InterceptorManager$1.prototype.forEach = function forEach(fn) {
-  utils$c.forEach(this.handlers, function forEachHandler(h) {
+  utils$b.forEach(this.handlers, function forEachHandler(h) {
     if (h !== null) {
       fn(h);
     }
@@ -651,23 +650,23 @@ Item.prototype.run = function () {
 };
 var title = 'browser';
 var platform = 'browser';
-var browser$1 = true;
-var env$1 = {};
+var browser = true;
+var env = {};
 var argv = [];
 var version = ''; // empty string to avoid regexp issues
 var versions = {};
 var release = {};
 var config = {};
 
-function noop$1() {}
+function noop() {}
 
-var on = noop$1;
-var addListener = noop$1;
-var once = noop$1;
-var off = noop$1;
-var removeListener = noop$1;
-var removeAllListeners = noop$1;
-var emit = noop$1;
+var on = noop;
+var addListener = noop;
+var once = noop;
+var off = noop;
+var removeListener = noop;
+var removeAllListeners = noop;
+var emit = noop;
 
 function binding(name) {
     throw new Error('process.binding is not supported');
@@ -712,11 +711,11 @@ function uptime() {
   return dif / 1000;
 }
 
-var browser$1$1 = {
+var browser$1 = {
   nextTick: nextTick,
   title: title,
-  browser: browser$1,
-  env: env$1,
+  browser: browser,
+  env: env,
   argv: argv,
   version: version,
   versions: versions,
@@ -738,10 +737,10 @@ var browser$1$1 = {
   uptime: uptime
 };
 
-var utils$b = utils$e;
+var utils$a = utils$d;
 
 var normalizeHeaderName$1 = function normalizeHeaderName(headers, normalizedName) {
-  utils$b.forEach(headers, function processHeader(value, name) {
+  utils$a.forEach(headers, function processHeader(value, name) {
     if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
       headers[normalizedName] = value;
       delete headers[name];
@@ -759,7 +758,7 @@ var normalizeHeaderName$1 = function normalizeHeaderName(headers, normalizedName
  * @param {Object} [response] The response.
  * @returns {Error} The error.
  */
-var enhanceError$3 = function enhanceError(error, config, code, request, response) {
+var enhanceError$2 = function enhanceError(error, config, code, request, response) {
   error.config = config;
   if (code) {
     error.code = code;
@@ -791,7 +790,7 @@ var enhanceError$3 = function enhanceError(error, config, code, request, respons
   return error;
 };
 
-var enhanceError$2 = enhanceError$3;
+var enhanceError$1 = enhanceError$2;
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -803,12 +802,12 @@ var enhanceError$2 = enhanceError$3;
  * @param {Object} [response] The response.
  * @returns {Error} The created error.
  */
-var createError$3 = function createError(message, config, code, request, response) {
+var createError$2 = function createError(message, config, code, request, response) {
   var error = new Error(message);
-  return enhanceError$2(error, config, code, request, response);
+  return enhanceError$1(error, config, code, request, response);
 };
 
-var createError$2 = createError$3;
+var createError$1 = createError$2;
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -817,12 +816,12 @@ var createError$2 = createError$3;
  * @param {Function} reject A function that rejects the promise.
  * @param {object} response The response.
  */
-var settle$2 = function settle(resolve, reject, response) {
+var settle$1 = function settle(resolve, reject, response) {
   var validateStatus = response.config.validateStatus;
   if (!response.status || !validateStatus || validateStatus(response.status)) {
     resolve(response);
   } else {
-    reject(createError$2(
+    reject(createError$1(
       'Request failed with status code ' + response.status,
       response.config,
       null,
@@ -832,10 +831,10 @@ var settle$2 = function settle(resolve, reject, response) {
   }
 };
 
-var utils$a = utils$e;
+var utils$9 = utils$d;
 
 var cookies$1 = (
-  utils$a.isStandardBrowserEnv() ?
+  utils$9.isStandardBrowserEnv() ?
 
   // Standard browser envs support document.cookie
     (function standardBrowserEnv() {
@@ -844,15 +843,15 @@ var cookies$1 = (
           var cookie = [];
           cookie.push(name + '=' + encodeURIComponent(value));
 
-          if (utils$a.isNumber(expires)) {
+          if (utils$9.isNumber(expires)) {
             cookie.push('expires=' + new Date(expires).toGMTString());
           }
 
-          if (utils$a.isString(path)) {
+          if (utils$9.isString(path)) {
             cookie.push('path=' + path);
           }
 
-          if (utils$a.isString(domain)) {
+          if (utils$9.isString(domain)) {
             cookie.push('domain=' + domain);
           }
 
@@ -922,14 +921,14 @@ var combineURLs = combineURLs$1;
  * @param {string} requestedURL Absolute or relative URL to combine
  * @returns {string} The combined full path
  */
-var buildFullPath$2 = function buildFullPath(baseURL, requestedURL) {
+var buildFullPath$1 = function buildFullPath(baseURL, requestedURL) {
   if (baseURL && !isAbsoluteURL(requestedURL)) {
     return combineURLs(baseURL, requestedURL);
   }
   return requestedURL;
 };
 
-var utils$9 = utils$e;
+var utils$8 = utils$d;
 
 // Headers whose duplicates are ignored by node
 // c.f. https://nodejs.org/api/http.html#http_message_headers
@@ -961,10 +960,10 @@ var parseHeaders$1 = function parseHeaders(headers) {
 
   if (!headers) { return parsed; }
 
-  utils$9.forEach(headers.split('\n'), function parser(line) {
+  utils$8.forEach(headers.split('\n'), function parser(line) {
     i = line.indexOf(':');
-    key = utils$9.trim(line.substr(0, i)).toLowerCase();
-    val = utils$9.trim(line.substr(i + 1));
+    key = utils$8.trim(line.substr(0, i)).toLowerCase();
+    val = utils$8.trim(line.substr(i + 1));
 
     if (key) {
       if (parsed[key] && ignoreDuplicateOf.indexOf(key) >= 0) {
@@ -981,10 +980,10 @@ var parseHeaders$1 = function parseHeaders(headers) {
   return parsed;
 };
 
-var utils$8 = utils$e;
+var utils$7 = utils$d;
 
 var isURLSameOrigin$1 = (
-  utils$8.isStandardBrowserEnv() ?
+  utils$7.isStandardBrowserEnv() ?
 
   // Standard browser envs have full support of the APIs needed to test
   // whether the request URL is of the same origin as current location.
@@ -1034,7 +1033,7 @@ var isURLSameOrigin$1 = (
     * @returns {boolean} True if URL shares the same origin, otherwise false
     */
       return function isURLSameOrigin(requestURL) {
-        var parsed = (utils$8.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
+        var parsed = (utils$7.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
         return (parsed.protocol === originURL.protocol &&
             parsed.host === originURL.host);
       };
@@ -1054,28 +1053,28 @@ var isURLSameOrigin$1 = (
  * @class
  * @param {string=} message The message.
  */
-function Cancel$4(message) {
+function Cancel$3(message) {
   this.message = message;
 }
 
-Cancel$4.prototype.toString = function toString() {
+Cancel$3.prototype.toString = function toString() {
   return 'Cancel' + (this.message ? ': ' + this.message : '');
 };
 
-Cancel$4.prototype.__CANCEL__ = true;
+Cancel$3.prototype.__CANCEL__ = true;
 
-var Cancel_1 = Cancel$4;
+var Cancel_1 = Cancel$3;
 
-var utils$7 = utils$e;
-var settle$1 = settle$2;
+var utils$6 = utils$d;
+var settle = settle$1;
 var cookies = cookies$1;
-var buildURL$2 = buildURL$3;
-var buildFullPath$1 = buildFullPath$2;
+var buildURL$1 = buildURL$2;
+var buildFullPath = buildFullPath$1;
 var parseHeaders = parseHeaders$1;
 var isURLSameOrigin = isURLSameOrigin$1;
-var createError$1 = createError$3;
-var defaults$6 = defaults_1;
-var Cancel$3 = Cancel_1;
+var createError = createError$2;
+var defaults$5 = defaults_1;
+var Cancel$2 = Cancel_1;
 
 var xhr = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -1093,7 +1092,7 @@ var xhr = function xhrAdapter(config) {
       }
     }
 
-    if (utils$7.isFormData(requestData)) {
+    if (utils$6.isFormData(requestData)) {
       delete requestHeaders['Content-Type']; // Let the browser set it
     }
 
@@ -1106,8 +1105,8 @@ var xhr = function xhrAdapter(config) {
       requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
     }
 
-    var fullPath = buildFullPath$1(config.baseURL, config.url);
-    request.open(config.method.toUpperCase(), buildURL$2(fullPath, config.params, config.paramsSerializer), true);
+    var fullPath = buildFullPath(config.baseURL, config.url);
+    request.open(config.method.toUpperCase(), buildURL$1(fullPath, config.params, config.paramsSerializer), true);
 
     // Set the request timeout in MS
     request.timeout = config.timeout;
@@ -1129,7 +1128,7 @@ var xhr = function xhrAdapter(config) {
         request: request
       };
 
-      settle$1(function _resolve(value) {
+      settle(function _resolve(value) {
         resolve(value);
         done();
       }, function _reject(err) {
@@ -1170,7 +1169,7 @@ var xhr = function xhrAdapter(config) {
         return;
       }
 
-      reject(createError$1('Request aborted', config, 'ECONNABORTED', request));
+      reject(createError('Request aborted', config, 'ECONNABORTED', request));
 
       // Clean up request
       request = null;
@@ -1180,7 +1179,7 @@ var xhr = function xhrAdapter(config) {
     request.onerror = function handleError() {
       // Real errors are hidden from us by the browser
       // onerror should only fire if it's a network error
-      reject(createError$1('Network Error', config, null, request));
+      reject(createError('Network Error', config, null, request));
 
       // Clean up request
       request = null;
@@ -1189,11 +1188,11 @@ var xhr = function xhrAdapter(config) {
     // Handle timeout
     request.ontimeout = function handleTimeout() {
       var timeoutErrorMessage = config.timeout ? 'timeout of ' + config.timeout + 'ms exceeded' : 'timeout exceeded';
-      var transitional = config.transitional || defaults$6.transitional;
+      var transitional = config.transitional || defaults$5.transitional;
       if (config.timeoutErrorMessage) {
         timeoutErrorMessage = config.timeoutErrorMessage;
       }
-      reject(createError$1(
+      reject(createError(
         timeoutErrorMessage,
         config,
         transitional.clarifyTimeoutError ? 'ETIMEDOUT' : 'ECONNABORTED',
@@ -1206,7 +1205,7 @@ var xhr = function xhrAdapter(config) {
     // Add xsrf header
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
-    if (utils$7.isStandardBrowserEnv()) {
+    if (utils$6.isStandardBrowserEnv()) {
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ?
         cookies.read(config.xsrfCookieName) :
@@ -1219,7 +1218,7 @@ var xhr = function xhrAdapter(config) {
 
     // Add headers to the request
     if ('setRequestHeader' in request) {
-      utils$7.forEach(requestHeaders, function setRequestHeader(val, key) {
+      utils$6.forEach(requestHeaders, function setRequestHeader(val, key) {
         if (typeof requestData === 'undefined' && key.toLowerCase() === 'content-type') {
           // Remove Content-Type if data is undefined
           delete requestHeaders[key];
@@ -1231,7 +1230,7 @@ var xhr = function xhrAdapter(config) {
     }
 
     // Add withCredentials to request if needed
-    if (!utils$7.isUndefined(config.withCredentials)) {
+    if (!utils$6.isUndefined(config.withCredentials)) {
       request.withCredentials = !!config.withCredentials;
     }
 
@@ -1257,7 +1256,7 @@ var xhr = function xhrAdapter(config) {
         if (!request) {
           return;
         }
-        reject(!cancel || (cancel && cancel.type) ? new Cancel$3('canceled') : cancel);
+        reject(!cancel || (cancel && cancel.type) ? new Cancel$2('canceled') : cancel);
         request.abort();
         request = null;
       };
@@ -1277,4049 +1276,9 @@ var xhr = function xhrAdapter(config) {
   });
 };
 
-var lookup$1 = [];
-var revLookup$1 = [];
-var Arr$1 = typeof Uint8Array !== 'undefined' ? Uint8Array : Array;
-var inited$1 = false;
-function init$2 () {
-  inited$1 = true;
-  var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-  for (var i = 0, len = code.length; i < len; ++i) {
-    lookup$1[i] = code[i];
-    revLookup$1[code.charCodeAt(i)] = i;
-  }
-
-  revLookup$1['-'.charCodeAt(0)] = 62;
-  revLookup$1['_'.charCodeAt(0)] = 63;
-}
-
-function toByteArray$1 (b64) {
-  if (!inited$1) {
-    init$2();
-  }
-  var i, j, l, tmp, placeHolders, arr;
-  var len = b64.length;
-
-  if (len % 4 > 0) {
-    throw new Error('Invalid string. Length must be a multiple of 4')
-  }
-
-  // the number of equal signs (place holders)
-  // if there are two placeholders, than the two characters before it
-  // represent one byte
-  // if there is only one, then the three characters before it represent 2 bytes
-  // this is just a cheap hack to not do indexOf twice
-  placeHolders = b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0;
-
-  // base64 is 4/3 + up to two characters of the original data
-  arr = new Arr$1(len * 3 / 4 - placeHolders);
-
-  // if there are placeholders, only get up to the last complete 4 chars
-  l = placeHolders > 0 ? len - 4 : len;
-
-  var L = 0;
-
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
-    tmp = (revLookup$1[b64.charCodeAt(i)] << 18) | (revLookup$1[b64.charCodeAt(i + 1)] << 12) | (revLookup$1[b64.charCodeAt(i + 2)] << 6) | revLookup$1[b64.charCodeAt(i + 3)];
-    arr[L++] = (tmp >> 16) & 0xFF;
-    arr[L++] = (tmp >> 8) & 0xFF;
-    arr[L++] = tmp & 0xFF;
-  }
-
-  if (placeHolders === 2) {
-    tmp = (revLookup$1[b64.charCodeAt(i)] << 2) | (revLookup$1[b64.charCodeAt(i + 1)] >> 4);
-    arr[L++] = tmp & 0xFF;
-  } else if (placeHolders === 1) {
-    tmp = (revLookup$1[b64.charCodeAt(i)] << 10) | (revLookup$1[b64.charCodeAt(i + 1)] << 4) | (revLookup$1[b64.charCodeAt(i + 2)] >> 2);
-    arr[L++] = (tmp >> 8) & 0xFF;
-    arr[L++] = tmp & 0xFF;
-  }
-
-  return arr
-}
-
-function tripletToBase64$1 (num) {
-  return lookup$1[num >> 18 & 0x3F] + lookup$1[num >> 12 & 0x3F] + lookup$1[num >> 6 & 0x3F] + lookup$1[num & 0x3F]
-}
-
-function encodeChunk$1 (uint8, start, end) {
-  var tmp;
-  var output = [];
-  for (var i = start; i < end; i += 3) {
-    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2]);
-    output.push(tripletToBase64$1(tmp));
-  }
-  return output.join('')
-}
-
-function fromByteArray$1 (uint8) {
-  if (!inited$1) {
-    init$2();
-  }
-  var tmp;
-  var len = uint8.length;
-  var extraBytes = len % 3; // if we have 1 byte left, pad 2 bytes
-  var output = '';
-  var parts = [];
-  var maxChunkLength = 16383; // must be multiple of 3
-
-  // go through the array every three bytes, we'll deal with trailing stuff later
-  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(encodeChunk$1(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)));
-  }
-
-  // pad the end with zeros, but make sure to not forget the extra bytes
-  if (extraBytes === 1) {
-    tmp = uint8[len - 1];
-    output += lookup$1[tmp >> 2];
-    output += lookup$1[(tmp << 4) & 0x3F];
-    output += '==';
-  } else if (extraBytes === 2) {
-    tmp = (uint8[len - 2] << 8) + (uint8[len - 1]);
-    output += lookup$1[tmp >> 10];
-    output += lookup$1[(tmp >> 4) & 0x3F];
-    output += lookup$1[(tmp << 2) & 0x3F];
-    output += '=';
-  }
-
-  parts.push(output);
-
-  return parts.join('')
-}
-
-function read$1 (buffer, offset, isLE, mLen, nBytes) {
-  var e, m;
-  var eLen = nBytes * 8 - mLen - 1;
-  var eMax = (1 << eLen) - 1;
-  var eBias = eMax >> 1;
-  var nBits = -7;
-  var i = isLE ? (nBytes - 1) : 0;
-  var d = isLE ? -1 : 1;
-  var s = buffer[offset + i];
-
-  i += d;
-
-  e = s & ((1 << (-nBits)) - 1);
-  s >>= (-nBits);
-  nBits += eLen;
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1);
-  e >>= (-nBits);
-  nBits += mLen;
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias;
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen);
-    e = e - eBias;
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-function write$1 (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c;
-  var eLen = nBytes * 8 - mLen - 1;
-  var eMax = (1 << eLen) - 1;
-  var eBias = eMax >> 1;
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0);
-  var i = isLE ? 0 : (nBytes - 1);
-  var d = isLE ? 1 : -1;
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
-
-  value = Math.abs(value);
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0;
-    e = eMax;
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2);
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--;
-      c *= 2;
-    }
-    if (e + eBias >= 1) {
-      value += rt / c;
-    } else {
-      value += rt * Math.pow(2, 1 - eBias);
-    }
-    if (value * c >= 2) {
-      e++;
-      c /= 2;
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0;
-      e = eMax;
-    } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen);
-      e = e + eBias;
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
-      e = 0;
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m;
-  eLen += mLen;
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128;
-}
-
-var toString$1 = {}.toString;
-
-var isArray$1 = Array.isArray || function (arr) {
-  return toString$1.call(arr) == '[object Array]';
-};
-
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * @license  MIT
- */
-
-var INSPECT_MAX_BYTES$1 = 50;
-
-/**
- * If `Buffer.TYPED_ARRAY_SUPPORT`:
- *   === true    Use Uint8Array implementation (fastest)
- *   === false   Use Object implementation (most compatible, even IE6)
- *
- * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
- * Opera 11.6+, iOS 4.2+.
- *
- * Due to various browser bugs, sometimes the Object implementation will be used even
- * when the browser supports typed arrays.
- *
- * Note:
- *
- *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
- *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
- *
- *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
- *
- *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
- *     incorrect length in some situations.
-
- * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
- * get the Object implementation, which is slower but behaves correctly.
- */
-Buffer$1.TYPED_ARRAY_SUPPORT = global$2.TYPED_ARRAY_SUPPORT !== undefined
-  ? global$2.TYPED_ARRAY_SUPPORT
-  : true;
-
-function kMaxLength$1 () {
-  return Buffer$1.TYPED_ARRAY_SUPPORT
-    ? 0x7fffffff
-    : 0x3fffffff
-}
-
-function createBuffer$1 (that, length) {
-  if (kMaxLength$1() < length) {
-    throw new RangeError('Invalid typed array length')
-  }
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    // Return an augmented `Uint8Array` instance, for best performance
-    that = new Uint8Array(length);
-    that.__proto__ = Buffer$1.prototype;
-  } else {
-    // Fallback: Return an object instance of the Buffer class
-    if (that === null) {
-      that = new Buffer$1(length);
-    }
-    that.length = length;
-  }
-
-  return that
-}
-
-/**
- * The Buffer constructor returns instances of `Uint8Array` that have their
- * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
- * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
- * and the `Uint8Array` methods. Square bracket notation works as expected -- it
- * returns a single octet.
- *
- * The `Uint8Array` prototype remains unmodified.
- */
-
-function Buffer$1 (arg, encodingOrOffset, length) {
-  if (!Buffer$1.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer$1)) {
-    return new Buffer$1(arg, encodingOrOffset, length)
-  }
-
-  // Common case.
-  if (typeof arg === 'number') {
-    if (typeof encodingOrOffset === 'string') {
-      throw new Error(
-        'If encoding is specified then the first argument must be a string'
-      )
-    }
-    return allocUnsafe$1(this, arg)
-  }
-  return from$2(this, arg, encodingOrOffset, length)
-}
-
-Buffer$1.poolSize = 8192; // not used by this implementation
-
-// TODO: Legacy, not needed anymore. Remove in next major version.
-Buffer$1._augment = function (arr) {
-  arr.__proto__ = Buffer$1.prototype;
-  return arr
-};
-
-function from$2 (that, value, encodingOrOffset, length) {
-  if (typeof value === 'number') {
-    throw new TypeError('"value" argument must not be a number')
-  }
-
-  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
-    return fromArrayBuffer$1(that, value, encodingOrOffset, length)
-  }
-
-  if (typeof value === 'string') {
-    return fromString$1(that, value, encodingOrOffset)
-  }
-
-  return fromObject$1(that, value)
-}
-
-/**
- * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
- * if value is a number.
- * Buffer.from(str[, encoding])
- * Buffer.from(array)
- * Buffer.from(buffer)
- * Buffer.from(arrayBuffer[, byteOffset[, length]])
- **/
-Buffer$1.from = function (value, encodingOrOffset, length) {
-  return from$2(null, value, encodingOrOffset, length)
-};
-
-if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-  Buffer$1.prototype.__proto__ = Uint8Array.prototype;
-  Buffer$1.__proto__ = Uint8Array;
-}
-
-function assertSize$1 (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('"size" argument must be a number')
-  } else if (size < 0) {
-    throw new RangeError('"size" argument must not be negative')
-  }
-}
-
-function alloc$1 (that, size, fill, encoding) {
-  assertSize$1(size);
-  if (size <= 0) {
-    return createBuffer$1(that, size)
-  }
-  if (fill !== undefined) {
-    // Only pay attention to encoding if it's a string. This
-    // prevents accidentally sending in a number that would
-    // be interpretted as a start offset.
-    return typeof encoding === 'string'
-      ? createBuffer$1(that, size).fill(fill, encoding)
-      : createBuffer$1(that, size).fill(fill)
-  }
-  return createBuffer$1(that, size)
-}
-
-/**
- * Creates a new filled Buffer instance.
- * alloc(size[, fill[, encoding]])
- **/
-Buffer$1.alloc = function (size, fill, encoding) {
-  return alloc$1(null, size, fill, encoding)
-};
-
-function allocUnsafe$1 (that, size) {
-  assertSize$1(size);
-  that = createBuffer$1(that, size < 0 ? 0 : checked$1(size) | 0);
-  if (!Buffer$1.TYPED_ARRAY_SUPPORT) {
-    for (var i = 0; i < size; ++i) {
-      that[i] = 0;
-    }
-  }
-  return that
-}
-
-/**
- * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
- * */
-Buffer$1.allocUnsafe = function (size) {
-  return allocUnsafe$1(null, size)
-};
-/**
- * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
- */
-Buffer$1.allocUnsafeSlow = function (size) {
-  return allocUnsafe$1(null, size)
-};
-
-function fromString$1 (that, string, encoding) {
-  if (typeof encoding !== 'string' || encoding === '') {
-    encoding = 'utf8';
-  }
-
-  if (!Buffer$1.isEncoding(encoding)) {
-    throw new TypeError('"encoding" must be a valid string encoding')
-  }
-
-  var length = byteLength$1(string, encoding) | 0;
-  that = createBuffer$1(that, length);
-
-  var actual = that.write(string, encoding);
-
-  if (actual !== length) {
-    // Writing a hex string, for example, that contains invalid characters will
-    // cause everything after the first invalid character to be ignored. (e.g.
-    // 'abxxcd' will be treated as 'ab')
-    that = that.slice(0, actual);
-  }
-
-  return that
-}
-
-function fromArrayLike$1 (that, array) {
-  var length = array.length < 0 ? 0 : checked$1(array.length) | 0;
-  that = createBuffer$1(that, length);
-  for (var i = 0; i < length; i += 1) {
-    that[i] = array[i] & 255;
-  }
-  return that
-}
-
-function fromArrayBuffer$1 (that, array, byteOffset, length) {
-  array.byteLength; // this throws if `array` is not a valid ArrayBuffer
-
-  if (byteOffset < 0 || array.byteLength < byteOffset) {
-    throw new RangeError('\'offset\' is out of bounds')
-  }
-
-  if (array.byteLength < byteOffset + (length || 0)) {
-    throw new RangeError('\'length\' is out of bounds')
-  }
-
-  if (byteOffset === undefined && length === undefined) {
-    array = new Uint8Array(array);
-  } else if (length === undefined) {
-    array = new Uint8Array(array, byteOffset);
-  } else {
-    array = new Uint8Array(array, byteOffset, length);
-  }
-
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    // Return an augmented `Uint8Array` instance, for best performance
-    that = array;
-    that.__proto__ = Buffer$1.prototype;
-  } else {
-    // Fallback: Return an object instance of the Buffer class
-    that = fromArrayLike$1(that, array);
-  }
-  return that
-}
-
-function fromObject$1 (that, obj) {
-  if (internalIsBuffer$1(obj)) {
-    var len = checked$1(obj.length) | 0;
-    that = createBuffer$1(that, len);
-
-    if (that.length === 0) {
-      return that
-    }
-
-    obj.copy(that, 0, 0, len);
-    return that
-  }
-
-  if (obj) {
-    if ((typeof ArrayBuffer !== 'undefined' &&
-        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
-      if (typeof obj.length !== 'number' || isnan$1(obj.length)) {
-        return createBuffer$1(that, 0)
-      }
-      return fromArrayLike$1(that, obj)
-    }
-
-    if (obj.type === 'Buffer' && isArray$1(obj.data)) {
-      return fromArrayLike$1(that, obj.data)
-    }
-  }
-
-  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
-}
-
-function checked$1 (length) {
-  // Note: cannot use `length < kMaxLength()` here because that fails when
-  // length is NaN (which is otherwise coerced to zero.)
-  if (length >= kMaxLength$1()) {
-    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-                         'size: 0x' + kMaxLength$1().toString(16) + ' bytes')
-  }
-  return length | 0
-}
-Buffer$1.isBuffer = isBuffer$1;
-function internalIsBuffer$1 (b) {
-  return !!(b != null && b._isBuffer)
-}
-
-Buffer$1.compare = function compare (a, b) {
-  if (!internalIsBuffer$1(a) || !internalIsBuffer$1(b)) {
-    throw new TypeError('Arguments must be Buffers')
-  }
-
-  if (a === b) return 0
-
-  var x = a.length;
-  var y = b.length;
-
-  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-    if (a[i] !== b[i]) {
-      x = a[i];
-      y = b[i];
-      break
-    }
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-};
-
-Buffer$1.isEncoding = function isEncoding (encoding) {
-  switch (String(encoding).toLowerCase()) {
-    case 'hex':
-    case 'utf8':
-    case 'utf-8':
-    case 'ascii':
-    case 'latin1':
-    case 'binary':
-    case 'base64':
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return true
-    default:
-      return false
-  }
-};
-
-Buffer$1.concat = function concat (list, length) {
-  if (!isArray$1(list)) {
-    throw new TypeError('"list" argument must be an Array of Buffers')
-  }
-
-  if (list.length === 0) {
-    return Buffer$1.alloc(0)
-  }
-
-  var i;
-  if (length === undefined) {
-    length = 0;
-    for (i = 0; i < list.length; ++i) {
-      length += list[i].length;
-    }
-  }
-
-  var buffer = Buffer$1.allocUnsafe(length);
-  var pos = 0;
-  for (i = 0; i < list.length; ++i) {
-    var buf = list[i];
-    if (!internalIsBuffer$1(buf)) {
-      throw new TypeError('"list" argument must be an Array of Buffers')
-    }
-    buf.copy(buffer, pos);
-    pos += buf.length;
-  }
-  return buffer
-};
-
-function byteLength$1 (string, encoding) {
-  if (internalIsBuffer$1(string)) {
-    return string.length
-  }
-  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
-      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
-    return string.byteLength
-  }
-  if (typeof string !== 'string') {
-    string = '' + string;
-  }
-
-  var len = string.length;
-  if (len === 0) return 0
-
-  // Use a for loop to avoid recursion
-  var loweredCase = false;
-  for (;;) {
-    switch (encoding) {
-      case 'ascii':
-      case 'latin1':
-      case 'binary':
-        return len
-      case 'utf8':
-      case 'utf-8':
-      case undefined:
-        return utf8ToBytes$1(string).length
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return len * 2
-      case 'hex':
-        return len >>> 1
-      case 'base64':
-        return base64ToBytes$1(string).length
-      default:
-        if (loweredCase) return utf8ToBytes$1(string).length // assume utf8
-        encoding = ('' + encoding).toLowerCase();
-        loweredCase = true;
-    }
-  }
-}
-Buffer$1.byteLength = byteLength$1;
-
-function slowToString$1 (encoding, start, end) {
-  var loweredCase = false;
-
-  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
-  // property of a typed array.
-
-  // This behaves neither like String nor Uint8Array in that we set start/end
-  // to their upper/lower bounds if the value passed is out of range.
-  // undefined is handled specially as per ECMA-262 6th Edition,
-  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
-  if (start === undefined || start < 0) {
-    start = 0;
-  }
-  // Return early if start > this.length. Done here to prevent potential uint32
-  // coercion fail below.
-  if (start > this.length) {
-    return ''
-  }
-
-  if (end === undefined || end > this.length) {
-    end = this.length;
-  }
-
-  if (end <= 0) {
-    return ''
-  }
-
-  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
-  end >>>= 0;
-  start >>>= 0;
-
-  if (end <= start) {
-    return ''
-  }
-
-  if (!encoding) encoding = 'utf8';
-
-  while (true) {
-    switch (encoding) {
-      case 'hex':
-        return hexSlice$1(this, start, end)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Slice$1(this, start, end)
-
-      case 'ascii':
-        return asciiSlice$1(this, start, end)
-
-      case 'latin1':
-      case 'binary':
-        return latin1Slice$1(this, start, end)
-
-      case 'base64':
-        return base64Slice$1(this, start, end)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return utf16leSlice$1(this, start, end)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = (encoding + '').toLowerCase();
-        loweredCase = true;
-    }
-  }
-}
-
-// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
-// Buffer instances.
-Buffer$1.prototype._isBuffer = true;
-
-function swap$1 (b, n, m) {
-  var i = b[n];
-  b[n] = b[m];
-  b[m] = i;
-}
-
-Buffer$1.prototype.swap16 = function swap16 () {
-  var len = this.length;
-  if (len % 2 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 16-bits')
-  }
-  for (var i = 0; i < len; i += 2) {
-    swap$1(this, i, i + 1);
-  }
-  return this
-};
-
-Buffer$1.prototype.swap32 = function swap32 () {
-  var len = this.length;
-  if (len % 4 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 32-bits')
-  }
-  for (var i = 0; i < len; i += 4) {
-    swap$1(this, i, i + 3);
-    swap$1(this, i + 1, i + 2);
-  }
-  return this
-};
-
-Buffer$1.prototype.swap64 = function swap64 () {
-  var len = this.length;
-  if (len % 8 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 64-bits')
-  }
-  for (var i = 0; i < len; i += 8) {
-    swap$1(this, i, i + 7);
-    swap$1(this, i + 1, i + 6);
-    swap$1(this, i + 2, i + 5);
-    swap$1(this, i + 3, i + 4);
-  }
-  return this
-};
-
-Buffer$1.prototype.toString = function toString () {
-  var length = this.length | 0;
-  if (length === 0) return ''
-  if (arguments.length === 0) return utf8Slice$1(this, 0, length)
-  return slowToString$1.apply(this, arguments)
-};
-
-Buffer$1.prototype.equals = function equals (b) {
-  if (!internalIsBuffer$1(b)) throw new TypeError('Argument must be a Buffer')
-  if (this === b) return true
-  return Buffer$1.compare(this, b) === 0
-};
-
-Buffer$1.prototype.inspect = function inspect () {
-  var str = '';
-  var max = INSPECT_MAX_BYTES$1;
-  if (this.length > 0) {
-    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ');
-    if (this.length > max) str += ' ... ';
-  }
-  return '<Buffer ' + str + '>'
-};
-
-Buffer$1.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
-  if (!internalIsBuffer$1(target)) {
-    throw new TypeError('Argument must be a Buffer')
-  }
-
-  if (start === undefined) {
-    start = 0;
-  }
-  if (end === undefined) {
-    end = target ? target.length : 0;
-  }
-  if (thisStart === undefined) {
-    thisStart = 0;
-  }
-  if (thisEnd === undefined) {
-    thisEnd = this.length;
-  }
-
-  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
-    throw new RangeError('out of range index')
-  }
-
-  if (thisStart >= thisEnd && start >= end) {
-    return 0
-  }
-  if (thisStart >= thisEnd) {
-    return -1
-  }
-  if (start >= end) {
-    return 1
-  }
-
-  start >>>= 0;
-  end >>>= 0;
-  thisStart >>>= 0;
-  thisEnd >>>= 0;
-
-  if (this === target) return 0
-
-  var x = thisEnd - thisStart;
-  var y = end - start;
-  var len = Math.min(x, y);
-
-  var thisCopy = this.slice(thisStart, thisEnd);
-  var targetCopy = target.slice(start, end);
-
-  for (var i = 0; i < len; ++i) {
-    if (thisCopy[i] !== targetCopy[i]) {
-      x = thisCopy[i];
-      y = targetCopy[i];
-      break
-    }
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-};
-
-// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
-// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
-//
-// Arguments:
-// - buffer - a Buffer to search
-// - val - a string, Buffer, or number
-// - byteOffset - an index into `buffer`; will be clamped to an int32
-// - encoding - an optional encoding, relevant is val is a string
-// - dir - true for indexOf, false for lastIndexOf
-function bidirectionalIndexOf$1 (buffer, val, byteOffset, encoding, dir) {
-  // Empty buffer means no match
-  if (buffer.length === 0) return -1
-
-  // Normalize byteOffset
-  if (typeof byteOffset === 'string') {
-    encoding = byteOffset;
-    byteOffset = 0;
-  } else if (byteOffset > 0x7fffffff) {
-    byteOffset = 0x7fffffff;
-  } else if (byteOffset < -0x80000000) {
-    byteOffset = -0x80000000;
-  }
-  byteOffset = +byteOffset;  // Coerce to Number.
-  if (isNaN(byteOffset)) {
-    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
-    byteOffset = dir ? 0 : (buffer.length - 1);
-  }
-
-  // Normalize byteOffset: negative offsets start from the end of the buffer
-  if (byteOffset < 0) byteOffset = buffer.length + byteOffset;
-  if (byteOffset >= buffer.length) {
-    if (dir) return -1
-    else byteOffset = buffer.length - 1;
-  } else if (byteOffset < 0) {
-    if (dir) byteOffset = 0;
-    else return -1
-  }
-
-  // Normalize val
-  if (typeof val === 'string') {
-    val = Buffer$1.from(val, encoding);
-  }
-
-  // Finally, search either indexOf (if dir is true) or lastIndexOf
-  if (internalIsBuffer$1(val)) {
-    // Special case: looking for empty string/buffer always fails
-    if (val.length === 0) {
-      return -1
-    }
-    return arrayIndexOf$1(buffer, val, byteOffset, encoding, dir)
-  } else if (typeof val === 'number') {
-    val = val & 0xFF; // Search for a byte value [0-255]
-    if (Buffer$1.TYPED_ARRAY_SUPPORT &&
-        typeof Uint8Array.prototype.indexOf === 'function') {
-      if (dir) {
-        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
-      } else {
-        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
-      }
-    }
-    return arrayIndexOf$1(buffer, [ val ], byteOffset, encoding, dir)
-  }
-
-  throw new TypeError('val must be string, number or Buffer')
-}
-
-function arrayIndexOf$1 (arr, val, byteOffset, encoding, dir) {
-  var indexSize = 1;
-  var arrLength = arr.length;
-  var valLength = val.length;
-
-  if (encoding !== undefined) {
-    encoding = String(encoding).toLowerCase();
-    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
-        encoding === 'utf16le' || encoding === 'utf-16le') {
-      if (arr.length < 2 || val.length < 2) {
-        return -1
-      }
-      indexSize = 2;
-      arrLength /= 2;
-      valLength /= 2;
-      byteOffset /= 2;
-    }
-  }
-
-  function read (buf, i) {
-    if (indexSize === 1) {
-      return buf[i]
-    } else {
-      return buf.readUInt16BE(i * indexSize)
-    }
-  }
-
-  var i;
-  if (dir) {
-    var foundIndex = -1;
-    for (i = byteOffset; i < arrLength; i++) {
-      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
-        if (foundIndex === -1) foundIndex = i;
-        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
-      } else {
-        if (foundIndex !== -1) i -= i - foundIndex;
-        foundIndex = -1;
-      }
-    }
-  } else {
-    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength;
-    for (i = byteOffset; i >= 0; i--) {
-      var found = true;
-      for (var j = 0; j < valLength; j++) {
-        if (read(arr, i + j) !== read(val, j)) {
-          found = false;
-          break
-        }
-      }
-      if (found) return i
-    }
-  }
-
-  return -1
-}
-
-Buffer$1.prototype.includes = function includes (val, byteOffset, encoding) {
-  return this.indexOf(val, byteOffset, encoding) !== -1
-};
-
-Buffer$1.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf$1(this, val, byteOffset, encoding, true)
-};
-
-Buffer$1.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf$1(this, val, byteOffset, encoding, false)
-};
-
-function hexWrite$1 (buf, string, offset, length) {
-  offset = Number(offset) || 0;
-  var remaining = buf.length - offset;
-  if (!length) {
-    length = remaining;
-  } else {
-    length = Number(length);
-    if (length > remaining) {
-      length = remaining;
-    }
-  }
-
-  // must be an even number of digits
-  var strLen = string.length;
-  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
-
-  if (length > strLen / 2) {
-    length = strLen / 2;
-  }
-  for (var i = 0; i < length; ++i) {
-    var parsed = parseInt(string.substr(i * 2, 2), 16);
-    if (isNaN(parsed)) return i
-    buf[offset + i] = parsed;
-  }
-  return i
-}
-
-function utf8Write$1 (buf, string, offset, length) {
-  return blitBuffer$1(utf8ToBytes$1(string, buf.length - offset), buf, offset, length)
-}
-
-function asciiWrite$1 (buf, string, offset, length) {
-  return blitBuffer$1(asciiToBytes$1(string), buf, offset, length)
-}
-
-function latin1Write$1 (buf, string, offset, length) {
-  return asciiWrite$1(buf, string, offset, length)
-}
-
-function base64Write$1 (buf, string, offset, length) {
-  return blitBuffer$1(base64ToBytes$1(string), buf, offset, length)
-}
-
-function ucs2Write$1 (buf, string, offset, length) {
-  return blitBuffer$1(utf16leToBytes$1(string, buf.length - offset), buf, offset, length)
-}
-
-Buffer$1.prototype.write = function write (string, offset, length, encoding) {
-  // Buffer#write(string)
-  if (offset === undefined) {
-    encoding = 'utf8';
-    length = this.length;
-    offset = 0;
-  // Buffer#write(string, encoding)
-  } else if (length === undefined && typeof offset === 'string') {
-    encoding = offset;
-    length = this.length;
-    offset = 0;
-  // Buffer#write(string, offset[, length][, encoding])
-  } else if (isFinite(offset)) {
-    offset = offset | 0;
-    if (isFinite(length)) {
-      length = length | 0;
-      if (encoding === undefined) encoding = 'utf8';
-    } else {
-      encoding = length;
-      length = undefined;
-    }
-  // legacy write(string, encoding, offset, length) - remove in v0.13
-  } else {
-    throw new Error(
-      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
-    )
-  }
-
-  var remaining = this.length - offset;
-  if (length === undefined || length > remaining) length = remaining;
-
-  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
-    throw new RangeError('Attempt to write outside buffer bounds')
-  }
-
-  if (!encoding) encoding = 'utf8';
-
-  var loweredCase = false;
-  for (;;) {
-    switch (encoding) {
-      case 'hex':
-        return hexWrite$1(this, string, offset, length)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Write$1(this, string, offset, length)
-
-      case 'ascii':
-        return asciiWrite$1(this, string, offset, length)
-
-      case 'latin1':
-      case 'binary':
-        return latin1Write$1(this, string, offset, length)
-
-      case 'base64':
-        // Warning: maxLength not taken into account in base64Write
-        return base64Write$1(this, string, offset, length)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return ucs2Write$1(this, string, offset, length)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = ('' + encoding).toLowerCase();
-        loweredCase = true;
-    }
-  }
-};
-
-Buffer$1.prototype.toJSON = function toJSON () {
-  return {
-    type: 'Buffer',
-    data: Array.prototype.slice.call(this._arr || this, 0)
-  }
-};
-
-function base64Slice$1 (buf, start, end) {
-  if (start === 0 && end === buf.length) {
-    return fromByteArray$1(buf)
-  } else {
-    return fromByteArray$1(buf.slice(start, end))
-  }
-}
-
-function utf8Slice$1 (buf, start, end) {
-  end = Math.min(buf.length, end);
-  var res = [];
-
-  var i = start;
-  while (i < end) {
-    var firstByte = buf[i];
-    var codePoint = null;
-    var bytesPerSequence = (firstByte > 0xEF) ? 4
-      : (firstByte > 0xDF) ? 3
-      : (firstByte > 0xBF) ? 2
-      : 1;
-
-    if (i + bytesPerSequence <= end) {
-      var secondByte, thirdByte, fourthByte, tempCodePoint;
-
-      switch (bytesPerSequence) {
-        case 1:
-          if (firstByte < 0x80) {
-            codePoint = firstByte;
-          }
-          break
-        case 2:
-          secondByte = buf[i + 1];
-          if ((secondByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F);
-            if (tempCodePoint > 0x7F) {
-              codePoint = tempCodePoint;
-            }
-          }
-          break
-        case 3:
-          secondByte = buf[i + 1];
-          thirdByte = buf[i + 2];
-          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F);
-            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
-              codePoint = tempCodePoint;
-            }
-          }
-          break
-        case 4:
-          secondByte = buf[i + 1];
-          thirdByte = buf[i + 2];
-          fourthByte = buf[i + 3];
-          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F);
-            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
-              codePoint = tempCodePoint;
-            }
-          }
-      }
-    }
-
-    if (codePoint === null) {
-      // we did not generate a valid codePoint so insert a
-      // replacement char (U+FFFD) and advance only 1 byte
-      codePoint = 0xFFFD;
-      bytesPerSequence = 1;
-    } else if (codePoint > 0xFFFF) {
-      // encode to utf16 (surrogate pair dance)
-      codePoint -= 0x10000;
-      res.push(codePoint >>> 10 & 0x3FF | 0xD800);
-      codePoint = 0xDC00 | codePoint & 0x3FF;
-    }
-
-    res.push(codePoint);
-    i += bytesPerSequence;
-  }
-
-  return decodeCodePointsArray$1(res)
-}
-
-// Based on http://stackoverflow.com/a/22747272/680742, the browser with
-// the lowest limit is Chrome, with 0x10000 args.
-// We go 1 magnitude less, for safety
-var MAX_ARGUMENTS_LENGTH$1 = 0x1000;
-
-function decodeCodePointsArray$1 (codePoints) {
-  var len = codePoints.length;
-  if (len <= MAX_ARGUMENTS_LENGTH$1) {
-    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
-  }
-
-  // Decode in chunks to avoid "call stack size exceeded".
-  var res = '';
-  var i = 0;
-  while (i < len) {
-    res += String.fromCharCode.apply(
-      String,
-      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH$1)
-    );
-  }
-  return res
-}
-
-function asciiSlice$1 (buf, start, end) {
-  var ret = '';
-  end = Math.min(buf.length, end);
-
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i] & 0x7F);
-  }
-  return ret
-}
-
-function latin1Slice$1 (buf, start, end) {
-  var ret = '';
-  end = Math.min(buf.length, end);
-
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i]);
-  }
-  return ret
-}
-
-function hexSlice$1 (buf, start, end) {
-  var len = buf.length;
-
-  if (!start || start < 0) start = 0;
-  if (!end || end < 0 || end > len) end = len;
-
-  var out = '';
-  for (var i = start; i < end; ++i) {
-    out += toHex$1(buf[i]);
-  }
-  return out
-}
-
-function utf16leSlice$1 (buf, start, end) {
-  var bytes = buf.slice(start, end);
-  var res = '';
-  for (var i = 0; i < bytes.length; i += 2) {
-    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256);
-  }
-  return res
-}
-
-Buffer$1.prototype.slice = function slice (start, end) {
-  var len = this.length;
-  start = ~~start;
-  end = end === undefined ? len : ~~end;
-
-  if (start < 0) {
-    start += len;
-    if (start < 0) start = 0;
-  } else if (start > len) {
-    start = len;
-  }
-
-  if (end < 0) {
-    end += len;
-    if (end < 0) end = 0;
-  } else if (end > len) {
-    end = len;
-  }
-
-  if (end < start) end = start;
-
-  var newBuf;
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    newBuf = this.subarray(start, end);
-    newBuf.__proto__ = Buffer$1.prototype;
-  } else {
-    var sliceLen = end - start;
-    newBuf = new Buffer$1(sliceLen, undefined);
-    for (var i = 0; i < sliceLen; ++i) {
-      newBuf[i] = this[i + start];
-    }
-  }
-
-  return newBuf
-};
-
-/*
- * Need to make sure that buffer isn't trying to write out of bounds.
- */
-function checkOffset$1 (offset, ext, length) {
-  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
-  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
-}
-
-Buffer$1.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) checkOffset$1(offset, byteLength, this.length);
-
-  var val = this[offset];
-  var mul = 1;
-  var i = 0;
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul;
-  }
-
-  return val
-};
-
-Buffer$1.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) {
-    checkOffset$1(offset, byteLength, this.length);
-  }
-
-  var val = this[offset + --byteLength];
-  var mul = 1;
-  while (byteLength > 0 && (mul *= 0x100)) {
-    val += this[offset + --byteLength] * mul;
-  }
-
-  return val
-};
-
-Buffer$1.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 1, this.length);
-  return this[offset]
-};
-
-Buffer$1.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 2, this.length);
-  return this[offset] | (this[offset + 1] << 8)
-};
-
-Buffer$1.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 2, this.length);
-  return (this[offset] << 8) | this[offset + 1]
-};
-
-Buffer$1.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 4, this.length);
-
-  return ((this[offset]) |
-      (this[offset + 1] << 8) |
-      (this[offset + 2] << 16)) +
-      (this[offset + 3] * 0x1000000)
-};
-
-Buffer$1.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 4, this.length);
-
-  return (this[offset] * 0x1000000) +
-    ((this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    this[offset + 3])
-};
-
-Buffer$1.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) checkOffset$1(offset, byteLength, this.length);
-
-  var val = this[offset];
-  var mul = 1;
-  var i = 0;
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul;
-  }
-  mul *= 0x80;
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength);
-
-  return val
-};
-
-Buffer$1.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) checkOffset$1(offset, byteLength, this.length);
-
-  var i = byteLength;
-  var mul = 1;
-  var val = this[offset + --i];
-  while (i > 0 && (mul *= 0x100)) {
-    val += this[offset + --i] * mul;
-  }
-  mul *= 0x80;
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength);
-
-  return val
-};
-
-Buffer$1.prototype.readInt8 = function readInt8 (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 1, this.length);
-  if (!(this[offset] & 0x80)) return (this[offset])
-  return ((0xff - this[offset] + 1) * -1)
-};
-
-Buffer$1.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 2, this.length);
-  var val = this[offset] | (this[offset + 1] << 8);
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-};
-
-Buffer$1.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 2, this.length);
-  var val = this[offset + 1] | (this[offset] << 8);
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-};
-
-Buffer$1.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 4, this.length);
-
-  return (this[offset]) |
-    (this[offset + 1] << 8) |
-    (this[offset + 2] << 16) |
-    (this[offset + 3] << 24)
-};
-
-Buffer$1.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 4, this.length);
-
-  return (this[offset] << 24) |
-    (this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    (this[offset + 3])
-};
-
-Buffer$1.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 4, this.length);
-  return read$1(this, offset, true, 23, 4)
-};
-
-Buffer$1.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 4, this.length);
-  return read$1(this, offset, false, 23, 4)
-};
-
-Buffer$1.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 8, this.length);
-  return read$1(this, offset, true, 52, 8)
-};
-
-Buffer$1.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
-  if (!noAssert) checkOffset$1(offset, 8, this.length);
-  return read$1(this, offset, false, 52, 8)
-};
-
-function checkInt$1 (buf, value, offset, ext, max, min) {
-  if (!internalIsBuffer$1(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
-  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
-  if (offset + ext > buf.length) throw new RangeError('Index out of range')
-}
-
-Buffer$1.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) {
-    var maxBytes = Math.pow(2, 8 * byteLength) - 1;
-    checkInt$1(this, value, offset, byteLength, maxBytes, 0);
-  }
-
-  var mul = 1;
-  var i = 0;
-  this[offset] = value & 0xFF;
-  while (++i < byteLength && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer$1.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) {
-    var maxBytes = Math.pow(2, 8 * byteLength) - 1;
-    checkInt$1(this, value, offset, byteLength, maxBytes, 0);
-  }
-
-  var i = byteLength - 1;
-  var mul = 1;
-  this[offset + i] = value & 0xFF;
-  while (--i >= 0 && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer$1.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt$1(this, value, offset, 1, 0xff, 0);
-  if (!Buffer$1.TYPED_ARRAY_SUPPORT) value = Math.floor(value);
-  this[offset] = (value & 0xff);
-  return offset + 1
-};
-
-function objectWriteUInt16$1 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffff + value + 1;
-  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
-    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
-      (littleEndian ? i : 1 - i) * 8;
-  }
-}
-
-Buffer$1.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt$1(this, value, offset, 2, 0xffff, 0);
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff);
-    this[offset + 1] = (value >>> 8);
-  } else {
-    objectWriteUInt16$1(this, value, offset, true);
-  }
-  return offset + 2
-};
-
-Buffer$1.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt$1(this, value, offset, 2, 0xffff, 0);
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8);
-    this[offset + 1] = (value & 0xff);
-  } else {
-    objectWriteUInt16$1(this, value, offset, false);
-  }
-  return offset + 2
-};
-
-function objectWriteUInt32$1 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffffffff + value + 1;
-  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
-    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff;
-  }
-}
-
-Buffer$1.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt$1(this, value, offset, 4, 0xffffffff, 0);
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    this[offset + 3] = (value >>> 24);
-    this[offset + 2] = (value >>> 16);
-    this[offset + 1] = (value >>> 8);
-    this[offset] = (value & 0xff);
-  } else {
-    objectWriteUInt32$1(this, value, offset, true);
-  }
-  return offset + 4
-};
-
-Buffer$1.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt$1(this, value, offset, 4, 0xffffffff, 0);
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24);
-    this[offset + 1] = (value >>> 16);
-    this[offset + 2] = (value >>> 8);
-    this[offset + 3] = (value & 0xff);
-  } else {
-    objectWriteUInt32$1(this, value, offset, false);
-  }
-  return offset + 4
-};
-
-Buffer$1.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) {
-    var limit = Math.pow(2, 8 * byteLength - 1);
-
-    checkInt$1(this, value, offset, byteLength, limit - 1, -limit);
-  }
-
-  var i = 0;
-  var mul = 1;
-  var sub = 0;
-  this[offset] = value & 0xFF;
-  while (++i < byteLength && (mul *= 0x100)) {
-    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
-      sub = 1;
-    }
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer$1.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) {
-    var limit = Math.pow(2, 8 * byteLength - 1);
-
-    checkInt$1(this, value, offset, byteLength, limit - 1, -limit);
-  }
-
-  var i = byteLength - 1;
-  var mul = 1;
-  var sub = 0;
-  this[offset + i] = value & 0xFF;
-  while (--i >= 0 && (mul *= 0x100)) {
-    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
-      sub = 1;
-    }
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer$1.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt$1(this, value, offset, 1, 0x7f, -0x80);
-  if (!Buffer$1.TYPED_ARRAY_SUPPORT) value = Math.floor(value);
-  if (value < 0) value = 0xff + value + 1;
-  this[offset] = (value & 0xff);
-  return offset + 1
-};
-
-Buffer$1.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt$1(this, value, offset, 2, 0x7fff, -0x8000);
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff);
-    this[offset + 1] = (value >>> 8);
-  } else {
-    objectWriteUInt16$1(this, value, offset, true);
-  }
-  return offset + 2
-};
-
-Buffer$1.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt$1(this, value, offset, 2, 0x7fff, -0x8000);
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8);
-    this[offset + 1] = (value & 0xff);
-  } else {
-    objectWriteUInt16$1(this, value, offset, false);
-  }
-  return offset + 2
-};
-
-Buffer$1.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt$1(this, value, offset, 4, 0x7fffffff, -0x80000000);
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff);
-    this[offset + 1] = (value >>> 8);
-    this[offset + 2] = (value >>> 16);
-    this[offset + 3] = (value >>> 24);
-  } else {
-    objectWriteUInt32$1(this, value, offset, true);
-  }
-  return offset + 4
-};
-
-Buffer$1.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt$1(this, value, offset, 4, 0x7fffffff, -0x80000000);
-  if (value < 0) value = 0xffffffff + value + 1;
-  if (Buffer$1.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24);
-    this[offset + 1] = (value >>> 16);
-    this[offset + 2] = (value >>> 8);
-    this[offset + 3] = (value & 0xff);
-  } else {
-    objectWriteUInt32$1(this, value, offset, false);
-  }
-  return offset + 4
-};
-
-function checkIEEE754$1 (buf, value, offset, ext, max, min) {
-  if (offset + ext > buf.length) throw new RangeError('Index out of range')
-  if (offset < 0) throw new RangeError('Index out of range')
-}
-
-function writeFloat$1 (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754$1(buf, value, offset, 4);
-  }
-  write$1(buf, value, offset, littleEndian, 23, 4);
-  return offset + 4
-}
-
-Buffer$1.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
-  return writeFloat$1(this, value, offset, true, noAssert)
-};
-
-Buffer$1.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
-  return writeFloat$1(this, value, offset, false, noAssert)
-};
-
-function writeDouble$1 (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754$1(buf, value, offset, 8);
-  }
-  write$1(buf, value, offset, littleEndian, 52, 8);
-  return offset + 8
-}
-
-Buffer$1.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
-  return writeDouble$1(this, value, offset, true, noAssert)
-};
-
-Buffer$1.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
-  return writeDouble$1(this, value, offset, false, noAssert)
-};
-
-// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
-Buffer$1.prototype.copy = function copy (target, targetStart, start, end) {
-  if (!start) start = 0;
-  if (!end && end !== 0) end = this.length;
-  if (targetStart >= target.length) targetStart = target.length;
-  if (!targetStart) targetStart = 0;
-  if (end > 0 && end < start) end = start;
-
-  // Copy 0 bytes; we're done
-  if (end === start) return 0
-  if (target.length === 0 || this.length === 0) return 0
-
-  // Fatal error conditions
-  if (targetStart < 0) {
-    throw new RangeError('targetStart out of bounds')
-  }
-  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
-  if (end < 0) throw new RangeError('sourceEnd out of bounds')
-
-  // Are we oob?
-  if (end > this.length) end = this.length;
-  if (target.length - targetStart < end - start) {
-    end = target.length - targetStart + start;
-  }
-
-  var len = end - start;
-  var i;
-
-  if (this === target && start < targetStart && targetStart < end) {
-    // descending copy from end
-    for (i = len - 1; i >= 0; --i) {
-      target[i + targetStart] = this[i + start];
-    }
-  } else if (len < 1000 || !Buffer$1.TYPED_ARRAY_SUPPORT) {
-    // ascending copy from start
-    for (i = 0; i < len; ++i) {
-      target[i + targetStart] = this[i + start];
-    }
-  } else {
-    Uint8Array.prototype.set.call(
-      target,
-      this.subarray(start, start + len),
-      targetStart
-    );
-  }
-
-  return len
-};
-
-// Usage:
-//    buffer.fill(number[, offset[, end]])
-//    buffer.fill(buffer[, offset[, end]])
-//    buffer.fill(string[, offset[, end]][, encoding])
-Buffer$1.prototype.fill = function fill (val, start, end, encoding) {
-  // Handle string cases:
-  if (typeof val === 'string') {
-    if (typeof start === 'string') {
-      encoding = start;
-      start = 0;
-      end = this.length;
-    } else if (typeof end === 'string') {
-      encoding = end;
-      end = this.length;
-    }
-    if (val.length === 1) {
-      var code = val.charCodeAt(0);
-      if (code < 256) {
-        val = code;
-      }
-    }
-    if (encoding !== undefined && typeof encoding !== 'string') {
-      throw new TypeError('encoding must be a string')
-    }
-    if (typeof encoding === 'string' && !Buffer$1.isEncoding(encoding)) {
-      throw new TypeError('Unknown encoding: ' + encoding)
-    }
-  } else if (typeof val === 'number') {
-    val = val & 255;
-  }
-
-  // Invalid ranges are not set to a default, so can range check early.
-  if (start < 0 || this.length < start || this.length < end) {
-    throw new RangeError('Out of range index')
-  }
-
-  if (end <= start) {
-    return this
-  }
-
-  start = start >>> 0;
-  end = end === undefined ? this.length : end >>> 0;
-
-  if (!val) val = 0;
-
-  var i;
-  if (typeof val === 'number') {
-    for (i = start; i < end; ++i) {
-      this[i] = val;
-    }
-  } else {
-    var bytes = internalIsBuffer$1(val)
-      ? val
-      : utf8ToBytes$1(new Buffer$1(val, encoding).toString());
-    var len = bytes.length;
-    for (i = 0; i < end - start; ++i) {
-      this[i + start] = bytes[i % len];
-    }
-  }
-
-  return this
-};
-
-// HELPER FUNCTIONS
-// ================
-
-var INVALID_BASE64_RE$1 = /[^+\/0-9A-Za-z-_]/g;
-
-function base64clean$1 (str) {
-  // Node strips out invalid characters like \n and \t from the string, base64-js does not
-  str = stringtrim$1(str).replace(INVALID_BASE64_RE$1, '');
-  // Node converts strings with length < 2 to ''
-  if (str.length < 2) return ''
-  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
-  while (str.length % 4 !== 0) {
-    str = str + '=';
-  }
-  return str
-}
-
-function stringtrim$1 (str) {
-  if (str.trim) return str.trim()
-  return str.replace(/^\s+|\s+$/g, '')
-}
-
-function toHex$1 (n) {
-  if (n < 16) return '0' + n.toString(16)
-  return n.toString(16)
-}
-
-function utf8ToBytes$1 (string, units) {
-  units = units || Infinity;
-  var codePoint;
-  var length = string.length;
-  var leadSurrogate = null;
-  var bytes = [];
-
-  for (var i = 0; i < length; ++i) {
-    codePoint = string.charCodeAt(i);
-
-    // is surrogate component
-    if (codePoint > 0xD7FF && codePoint < 0xE000) {
-      // last char was a lead
-      if (!leadSurrogate) {
-        // no lead yet
-        if (codePoint > 0xDBFF) {
-          // unexpected trail
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-          continue
-        } else if (i + 1 === length) {
-          // unpaired lead
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-          continue
-        }
-
-        // valid lead
-        leadSurrogate = codePoint;
-
-        continue
-      }
-
-      // 2 leads in a row
-      if (codePoint < 0xDC00) {
-        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-        leadSurrogate = codePoint;
-        continue
-      }
-
-      // valid surrogate pair
-      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000;
-    } else if (leadSurrogate) {
-      // valid bmp char, but last char was a lead
-      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-    }
-
-    leadSurrogate = null;
-
-    // encode utf8
-    if (codePoint < 0x80) {
-      if ((units -= 1) < 0) break
-      bytes.push(codePoint);
-    } else if (codePoint < 0x800) {
-      if ((units -= 2) < 0) break
-      bytes.push(
-        codePoint >> 0x6 | 0xC0,
-        codePoint & 0x3F | 0x80
-      );
-    } else if (codePoint < 0x10000) {
-      if ((units -= 3) < 0) break
-      bytes.push(
-        codePoint >> 0xC | 0xE0,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      );
-    } else if (codePoint < 0x110000) {
-      if ((units -= 4) < 0) break
-      bytes.push(
-        codePoint >> 0x12 | 0xF0,
-        codePoint >> 0xC & 0x3F | 0x80,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      );
-    } else {
-      throw new Error('Invalid code point')
-    }
-  }
-
-  return bytes
-}
-
-function asciiToBytes$1 (str) {
-  var byteArray = [];
-  for (var i = 0; i < str.length; ++i) {
-    // Node's code seems to be doing this and not & 0x7F..
-    byteArray.push(str.charCodeAt(i) & 0xFF);
-  }
-  return byteArray
-}
-
-function utf16leToBytes$1 (str, units) {
-  var c, hi, lo;
-  var byteArray = [];
-  for (var i = 0; i < str.length; ++i) {
-    if ((units -= 2) < 0) break
-
-    c = str.charCodeAt(i);
-    hi = c >> 8;
-    lo = c % 256;
-    byteArray.push(lo);
-    byteArray.push(hi);
-  }
-
-  return byteArray
-}
-
-
-function base64ToBytes$1 (str) {
-  return toByteArray$1(base64clean$1(str))
-}
-
-function blitBuffer$1 (src, dst, offset, length) {
-  for (var i = 0; i < length; ++i) {
-    if ((i + offset >= dst.length) || (i >= src.length)) break
-    dst[i + offset] = src[i];
-  }
-  return i
-}
-
-function isnan$1 (val) {
-  return val !== val // eslint-disable-line no-self-compare
-}
-
-
-// the following is from is-buffer, also by Feross Aboukhadijeh and with same lisence
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-function isBuffer$1(obj) {
-  return obj != null && (!!obj._isBuffer || isFastBuffer$1(obj) || isSlowBuffer$1(obj))
-}
-
-function isFastBuffer$1 (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer$1 (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isFastBuffer$1(obj.slice(0, 0))
-}
-
-var followRedirects = {exports: {}};
-
-var src = {exports: {}};
-
-var browser = {exports: {}};
-
-/**
- * Helpers.
- */
-
-var s$2 = 1000;
-var m = s$2 * 60;
-var h = m * 60;
-var d$2 = h * 24;
-var w = d$2 * 7;
-var y = d$2 * 365.25;
-
-/**
- * Parse or format the given `val`.
- *
- * Options:
- *
- *  - `long` verbose formatting [false]
- *
- * @param {String|Number} val
- * @param {Object} [options]
- * @throws {Error} throw an error if val is not a non-empty string or a number
- * @return {String|Number}
- * @api public
- */
-
-var ms = function(val, options) {
-  options = options || {};
-  var type = typeof val;
-  if (type === 'string' && val.length > 0) {
-    return parse$2(val);
-  } else if (type === 'number' && isFinite(val)) {
-    return options.long ? fmtLong(val) : fmtShort(val);
-  }
-  throw new Error(
-    'val is not a non-empty string or a valid number. val=' +
-      JSON.stringify(val)
-  );
-};
-
-/**
- * Parse the given `str` and return milliseconds.
- *
- * @param {String} str
- * @return {Number}
- * @api private
- */
-
-function parse$2(str) {
-  str = String(str);
-  if (str.length > 100) {
-    return;
-  }
-  var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
-    str
-  );
-  if (!match) {
-    return;
-  }
-  var n = parseFloat(match[1]);
-  var type = (match[2] || 'ms').toLowerCase();
-  switch (type) {
-    case 'years':
-    case 'year':
-    case 'yrs':
-    case 'yr':
-    case 'y':
-      return n * y;
-    case 'weeks':
-    case 'week':
-    case 'w':
-      return n * w;
-    case 'days':
-    case 'day':
-    case 'd':
-      return n * d$2;
-    case 'hours':
-    case 'hour':
-    case 'hrs':
-    case 'hr':
-    case 'h':
-      return n * h;
-    case 'minutes':
-    case 'minute':
-    case 'mins':
-    case 'min':
-    case 'm':
-      return n * m;
-    case 'seconds':
-    case 'second':
-    case 'secs':
-    case 'sec':
-    case 's':
-      return n * s$2;
-    case 'milliseconds':
-    case 'millisecond':
-    case 'msecs':
-    case 'msec':
-    case 'ms':
-      return n;
-    default:
-      return undefined;
-  }
-}
-
-/**
- * Short format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function fmtShort(ms) {
-  var msAbs = Math.abs(ms);
-  if (msAbs >= d$2) {
-    return Math.round(ms / d$2) + 'd';
-  }
-  if (msAbs >= h) {
-    return Math.round(ms / h) + 'h';
-  }
-  if (msAbs >= m) {
-    return Math.round(ms / m) + 'm';
-  }
-  if (msAbs >= s$2) {
-    return Math.round(ms / s$2) + 's';
-  }
-  return ms + 'ms';
-}
-
-/**
- * Long format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function fmtLong(ms) {
-  var msAbs = Math.abs(ms);
-  if (msAbs >= d$2) {
-    return plural(ms, msAbs, d$2, 'day');
-  }
-  if (msAbs >= h) {
-    return plural(ms, msAbs, h, 'hour');
-  }
-  if (msAbs >= m) {
-    return plural(ms, msAbs, m, 'minute');
-  }
-  if (msAbs >= s$2) {
-    return plural(ms, msAbs, s$2, 'second');
-  }
-  return ms + ' ms';
-}
-
-/**
- * Pluralization helper.
- */
-
-function plural(ms, msAbs, n, name) {
-  var isPlural = msAbs >= n * 1.5;
-  return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
-}
-
-/**
- * This is the common logic for both the Node.js and web browser
- * implementations of `debug()`.
- */
-
-function setup(env) {
-	createDebug.debug = createDebug;
-	createDebug.default = createDebug;
-	createDebug.coerce = coerce;
-	createDebug.disable = disable;
-	createDebug.enable = enable;
-	createDebug.enabled = enabled;
-	createDebug.humanize = ms;
-	createDebug.destroy = destroy;
-
-	Object.keys(env).forEach(key => {
-		createDebug[key] = env[key];
-	});
-
-	/**
-	* The currently active debug mode names, and names to skip.
-	*/
-
-	createDebug.names = [];
-	createDebug.skips = [];
-
-	/**
-	* Map of special "%n" handling functions, for the debug "format" argument.
-	*
-	* Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
-	*/
-	createDebug.formatters = {};
-
-	/**
-	* Selects a color for a debug namespace
-	* @param {String} namespace The namespace string for the debug instance to be colored
-	* @return {Number|String} An ANSI color code for the given namespace
-	* @api private
-	*/
-	function selectColor(namespace) {
-		let hash = 0;
-
-		for (let i = 0; i < namespace.length; i++) {
-			hash = ((hash << 5) - hash) + namespace.charCodeAt(i);
-			hash |= 0; // Convert to 32bit integer
-		}
-
-		return createDebug.colors[Math.abs(hash) % createDebug.colors.length];
-	}
-	createDebug.selectColor = selectColor;
-
-	/**
-	* Create a debugger with the given `namespace`.
-	*
-	* @param {String} namespace
-	* @return {Function}
-	* @api public
-	*/
-	function createDebug(namespace) {
-		let prevTime;
-		let enableOverride = null;
-		let namespacesCache;
-		let enabledCache;
-
-		function debug(...args) {
-			// Disabled?
-			if (!debug.enabled) {
-				return;
-			}
-
-			const self = debug;
-
-			// Set `diff` timestamp
-			const curr = Number(new Date());
-			const ms = curr - (prevTime || curr);
-			self.diff = ms;
-			self.prev = prevTime;
-			self.curr = curr;
-			prevTime = curr;
-
-			args[0] = createDebug.coerce(args[0]);
-
-			if (typeof args[0] !== 'string') {
-				// Anything else let's inspect with %O
-				args.unshift('%O');
-			}
-
-			// Apply any `formatters` transformations
-			let index = 0;
-			args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
-				// If we encounter an escaped % then don't increase the array index
-				if (match === '%%') {
-					return '%';
-				}
-				index++;
-				const formatter = createDebug.formatters[format];
-				if (typeof formatter === 'function') {
-					const val = args[index];
-					match = formatter.call(self, val);
-
-					// Now we need to remove `args[index]` since it's inlined in the `format`
-					args.splice(index, 1);
-					index--;
-				}
-				return match;
-			});
-
-			// Apply env-specific formatting (colors, etc.)
-			createDebug.formatArgs.call(self, args);
-
-			const logFn = self.log || createDebug.log;
-			logFn.apply(self, args);
-		}
-
-		debug.namespace = namespace;
-		debug.useColors = createDebug.useColors();
-		debug.color = createDebug.selectColor(namespace);
-		debug.extend = extend;
-		debug.destroy = createDebug.destroy; // XXX Temporary. Will be removed in the next major release.
-
-		Object.defineProperty(debug, 'enabled', {
-			enumerable: true,
-			configurable: false,
-			get: () => {
-				if (enableOverride !== null) {
-					return enableOverride;
-				}
-				if (namespacesCache !== createDebug.namespaces) {
-					namespacesCache = createDebug.namespaces;
-					enabledCache = createDebug.enabled(namespace);
-				}
-
-				return enabledCache;
-			},
-			set: v => {
-				enableOverride = v;
-			}
-		});
-
-		// Env-specific initialization logic for debug instances
-		if (typeof createDebug.init === 'function') {
-			createDebug.init(debug);
-		}
-
-		return debug;
-	}
-
-	function extend(namespace, delimiter) {
-		const newDebug = createDebug(this.namespace + (typeof delimiter === 'undefined' ? ':' : delimiter) + namespace);
-		newDebug.log = this.log;
-		return newDebug;
-	}
-
-	/**
-	* Enables a debug mode by namespaces. This can include modes
-	* separated by a colon and wildcards.
-	*
-	* @param {String} namespaces
-	* @api public
-	*/
-	function enable(namespaces) {
-		createDebug.save(namespaces);
-		createDebug.namespaces = namespaces;
-
-		createDebug.names = [];
-		createDebug.skips = [];
-
-		let i;
-		const split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
-		const len = split.length;
-
-		for (i = 0; i < len; i++) {
-			if (!split[i]) {
-				// ignore empty strings
-				continue;
-			}
-
-			namespaces = split[i].replace(/\*/g, '.*?');
-
-			if (namespaces[0] === '-') {
-				createDebug.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
-			} else {
-				createDebug.names.push(new RegExp('^' + namespaces + '$'));
-			}
-		}
-	}
-
-	/**
-	* Disable debug output.
-	*
-	* @return {String} namespaces
-	* @api public
-	*/
-	function disable() {
-		const namespaces = [
-			...createDebug.names.map(toNamespace),
-			...createDebug.skips.map(toNamespace).map(namespace => '-' + namespace)
-		].join(',');
-		createDebug.enable('');
-		return namespaces;
-	}
-
-	/**
-	* Returns true if the given mode name is enabled, false otherwise.
-	*
-	* @param {String} name
-	* @return {Boolean}
-	* @api public
-	*/
-	function enabled(name) {
-		if (name[name.length - 1] === '*') {
-			return true;
-		}
-
-		let i;
-		let len;
-
-		for (i = 0, len = createDebug.skips.length; i < len; i++) {
-			if (createDebug.skips[i].test(name)) {
-				return false;
-			}
-		}
-
-		for (i = 0, len = createDebug.names.length; i < len; i++) {
-			if (createDebug.names[i].test(name)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	* Convert regexp to namespace
-	*
-	* @param {RegExp} regxep
-	* @return {String} namespace
-	* @api private
-	*/
-	function toNamespace(regexp) {
-		return regexp.toString()
-			.substring(2, regexp.toString().length - 2)
-			.replace(/\.\*\?$/, '*');
-	}
-
-	/**
-	* Coerce `val`.
-	*
-	* @param {Mixed} val
-	* @return {Mixed}
-	* @api private
-	*/
-	function coerce(val) {
-		if (val instanceof Error) {
-			return val.stack || val.message;
-		}
-		return val;
-	}
-
-	/**
-	* XXX DO NOT USE. This is a temporary stub function.
-	* XXX It WILL be removed in the next major release.
-	*/
-	function destroy() {
-		console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
-	}
-
-	createDebug.enable(createDebug.load());
-
-	return createDebug;
-}
-
-var common = setup;
-
-(function (module, exports) {
-/**
- * This is the web browser implementation of `debug()`.
- */
-
-exports.formatArgs = formatArgs;
-exports.save = save;
-exports.load = load;
-exports.useColors = useColors;
-exports.storage = localstorage();
-exports.destroy = (() => {
-	let warned = false;
-
-	return () => {
-		if (!warned) {
-			warned = true;
-			console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
-		}
-	};
-})();
-
-/**
- * Colors.
- */
-
-exports.colors = [
-	'#0000CC',
-	'#0000FF',
-	'#0033CC',
-	'#0033FF',
-	'#0066CC',
-	'#0066FF',
-	'#0099CC',
-	'#0099FF',
-	'#00CC00',
-	'#00CC33',
-	'#00CC66',
-	'#00CC99',
-	'#00CCCC',
-	'#00CCFF',
-	'#3300CC',
-	'#3300FF',
-	'#3333CC',
-	'#3333FF',
-	'#3366CC',
-	'#3366FF',
-	'#3399CC',
-	'#3399FF',
-	'#33CC00',
-	'#33CC33',
-	'#33CC66',
-	'#33CC99',
-	'#33CCCC',
-	'#33CCFF',
-	'#6600CC',
-	'#6600FF',
-	'#6633CC',
-	'#6633FF',
-	'#66CC00',
-	'#66CC33',
-	'#9900CC',
-	'#9900FF',
-	'#9933CC',
-	'#9933FF',
-	'#99CC00',
-	'#99CC33',
-	'#CC0000',
-	'#CC0033',
-	'#CC0066',
-	'#CC0099',
-	'#CC00CC',
-	'#CC00FF',
-	'#CC3300',
-	'#CC3333',
-	'#CC3366',
-	'#CC3399',
-	'#CC33CC',
-	'#CC33FF',
-	'#CC6600',
-	'#CC6633',
-	'#CC9900',
-	'#CC9933',
-	'#CCCC00',
-	'#CCCC33',
-	'#FF0000',
-	'#FF0033',
-	'#FF0066',
-	'#FF0099',
-	'#FF00CC',
-	'#FF00FF',
-	'#FF3300',
-	'#FF3333',
-	'#FF3366',
-	'#FF3399',
-	'#FF33CC',
-	'#FF33FF',
-	'#FF6600',
-	'#FF6633',
-	'#FF9900',
-	'#FF9933',
-	'#FFCC00',
-	'#FFCC33'
-];
-
-/**
- * Currently only WebKit-based Web Inspectors, Firefox >= v31,
- * and the Firebug extension (any Firefox version) are known
- * to support "%c" CSS customizations.
- *
- * TODO: add a `localStorage` variable to explicitly enable/disable colors
- */
-
-// eslint-disable-next-line complexity
-function useColors() {
-	// NB: In an Electron preload script, document will be defined but not fully
-	// initialized. Since we know we're in Chrome, we'll just detect this case
-	// explicitly
-	if (typeof window !== 'undefined' && window.process && (window.process.type === 'renderer' || window.process.__nwjs)) {
-		return true;
-	}
-
-	// Internet Explorer and Edge do not support colors.
-	if (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) {
-		return false;
-	}
-
-	// Is webkit? http://stackoverflow.com/a/16459606/376773
-	// document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-	return (typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
-		// Is firebug? http://stackoverflow.com/a/398120/376773
-		(typeof window !== 'undefined' && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
-		// Is firefox >= v31?
-		// https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
-		// Double check webkit in userAgent just in case we are in a worker
-		(typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
-}
-
-/**
- * Colorize log arguments if enabled.
- *
- * @api public
- */
-
-function formatArgs(args) {
-	args[0] = (this.useColors ? '%c' : '') +
-		this.namespace +
-		(this.useColors ? ' %c' : ' ') +
-		args[0] +
-		(this.useColors ? '%c ' : ' ') +
-		'+' + module.exports.humanize(this.diff);
-
-	if (!this.useColors) {
-		return;
-	}
-
-	const c = 'color: ' + this.color;
-	args.splice(1, 0, c, 'color: inherit');
-
-	// The final "%c" is somewhat tricky, because there could be other
-	// arguments passed either before or after the %c, so we need to
-	// figure out the correct index to insert the CSS into
-	let index = 0;
-	let lastC = 0;
-	args[0].replace(/%[a-zA-Z%]/g, match => {
-		if (match === '%%') {
-			return;
-		}
-		index++;
-		if (match === '%c') {
-			// We only are interested in the *last* %c
-			// (the user may have provided their own)
-			lastC = index;
-		}
-	});
-
-	args.splice(lastC, 0, c);
-}
-
-/**
- * Invokes `console.debug()` when available.
- * No-op when `console.debug` is not a "function".
- * If `console.debug` is not available, falls back
- * to `console.log`.
- *
- * @api public
- */
-exports.log = console.debug || console.log || (() => {});
-
-/**
- * Save `namespaces`.
- *
- * @param {String} namespaces
- * @api private
- */
-function save(namespaces) {
-	try {
-		if (namespaces) {
-			exports.storage.setItem('debug', namespaces);
-		} else {
-			exports.storage.removeItem('debug');
-		}
-	} catch (error) {
-		// Swallow
-		// XXX (@Qix-) should we be logging these?
-	}
-}
-
-/**
- * Load `namespaces`.
- *
- * @return {String} returns the previously persisted debug modes
- * @api private
- */
-function load() {
-	let r;
-	try {
-		r = exports.storage.getItem('debug');
-	} catch (error) {
-		// Swallow
-		// XXX (@Qix-) should we be logging these?
-	}
-
-	// If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-	if (!r && typeof browser$1$1 !== 'undefined' && 'env' in browser$1$1) {
-		r = browser$1$1.env.DEBUG;
-	}
-
-	return r;
-}
-
-/**
- * Localstorage attempts to return the localstorage.
- *
- * This is necessary because safari throws
- * when a user disables cookies/localstorage
- * and you attempt to access it.
- *
- * @return {LocalStorage}
- * @api private
- */
-
-function localstorage() {
-	try {
-		// TVMLKit (Apple TV JS Runtime) does not have a window object, just localStorage in the global context
-		// The Browser also has localStorage in the global context.
-		return localStorage;
-	} catch (error) {
-		// Swallow
-		// XXX (@Qix-) should we be logging these?
-	}
-}
-
-module.exports = common(exports);
-
-const {formatters} = module.exports;
-
-/**
- * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
- */
-
-formatters.j = function (v) {
-	try {
-		return JSON.stringify(v);
-	} catch (error) {
-		return '[UnexpectedJSONParseError]: ' + error.message;
-	}
-};
-}(browser, browser.exports));
-
-var node = {exports: {}};
-
-var hasFlag$1 = (flag, argv) => {
-	argv = argv || browser$1$1.argv;
-	const prefix = flag.startsWith('-') ? '' : (flag.length === 1 ? '-' : '--');
-	const pos = argv.indexOf(prefix + flag);
-	const terminatorPos = argv.indexOf('--');
-	return pos !== -1 && (terminatorPos === -1 ? true : pos < terminatorPos);
-};
-
-const os = require$$0__default["default"];
-const hasFlag = hasFlag$1;
-
-const env = browser$1$1.env;
-
-let forceColor;
-if (hasFlag('no-color') ||
-	hasFlag('no-colors') ||
-	hasFlag('color=false')) {
-	forceColor = false;
-} else if (hasFlag('color') ||
-	hasFlag('colors') ||
-	hasFlag('color=true') ||
-	hasFlag('color=always')) {
-	forceColor = true;
-}
-if ('FORCE_COLOR' in env) {
-	forceColor = env.FORCE_COLOR.length === 0 || parseInt(env.FORCE_COLOR, 10) !== 0;
-}
-
-function translateLevel(level) {
-	if (level === 0) {
-		return false;
-	}
-
-	return {
-		level,
-		hasBasic: true,
-		has256: level >= 2,
-		has16m: level >= 3
-	};
-}
-
-function supportsColor(stream) {
-	if (forceColor === false) {
-		return 0;
-	}
-
-	if (hasFlag('color=16m') ||
-		hasFlag('color=full') ||
-		hasFlag('color=truecolor')) {
-		return 3;
-	}
-
-	if (hasFlag('color=256')) {
-		return 2;
-	}
-
-	if (stream && !stream.isTTY && forceColor !== true) {
-		return 0;
-	}
-
-	const min = forceColor ? 1 : 0;
-
-	if (browser$1$1.platform === 'win32') {
-		// Node.js 7.5.0 is the first version of Node.js to include a patch to
-		// libuv that enables 256 color output on Windows. Anything earlier and it
-		// won't work. However, here we target Node.js 8 at minimum as it is an LTS
-		// release, and Node.js 7 is not. Windows 10 build 10586 is the first Windows
-		// release that supports 256 colors. Windows 10 build 14931 is the first release
-		// that supports 16m/TrueColor.
-		const osRelease = os.release().split('.');
-		if (
-			Number(browser$1$1.versions.node.split('.')[0]) >= 8 &&
-			Number(osRelease[0]) >= 10 &&
-			Number(osRelease[2]) >= 10586
-		) {
-			return Number(osRelease[2]) >= 14931 ? 3 : 2;
-		}
-
-		return 1;
-	}
-
-	if ('CI' in env) {
-		if (['TRAVIS', 'CIRCLECI', 'APPVEYOR', 'GITLAB_CI'].some(sign => sign in env) || env.CI_NAME === 'codeship') {
-			return 1;
-		}
-
-		return min;
-	}
-
-	if ('TEAMCITY_VERSION' in env) {
-		return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
-	}
-
-	if (env.COLORTERM === 'truecolor') {
-		return 3;
-	}
-
-	if ('TERM_PROGRAM' in env) {
-		const version = parseInt((env.TERM_PROGRAM_VERSION || '').split('.')[0], 10);
-
-		switch (env.TERM_PROGRAM) {
-			case 'iTerm.app':
-				return version >= 3 ? 3 : 2;
-			case 'Apple_Terminal':
-				return 2;
-			// No default
-		}
-	}
-
-	if (/-256(color)?$/i.test(env.TERM)) {
-		return 2;
-	}
-
-	if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM)) {
-		return 1;
-	}
-
-	if ('COLORTERM' in env) {
-		return 1;
-	}
-
-	if (env.TERM === 'dumb') {
-		return min;
-	}
-
-	return min;
-}
-
-function getSupportLevel(stream) {
-	const level = supportsColor(stream);
-	return translateLevel(level);
-}
-
-var supportsColor_1 = {
-	supportsColor: getSupportLevel,
-	stdout: getSupportLevel(browser$1$1.stdout),
-	stderr: getSupportLevel(browser$1$1.stderr)
-};
-
-(function (module, exports) {
-const tty = require$$0__default$1["default"];
-const util = require$$1__default["default"];
-
-/**
- * This is the Node.js implementation of `debug()`.
- */
-
-exports.init = init;
-exports.log = log;
-exports.formatArgs = formatArgs;
-exports.save = save;
-exports.load = load;
-exports.useColors = useColors;
-exports.destroy = util.deprecate(
-	() => {},
-	'Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.'
-);
-
-/**
- * Colors.
- */
-
-exports.colors = [6, 2, 3, 4, 5, 1];
-
-try {
-	// Optional dependency (as in, doesn't need to be installed, NOT like optionalDependencies in package.json)
-	// eslint-disable-next-line import/no-extraneous-dependencies
-	const supportsColor = supportsColor_1;
-
-	if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
-		exports.colors = [
-			20,
-			21,
-			26,
-			27,
-			32,
-			33,
-			38,
-			39,
-			40,
-			41,
-			42,
-			43,
-			44,
-			45,
-			56,
-			57,
-			62,
-			63,
-			68,
-			69,
-			74,
-			75,
-			76,
-			77,
-			78,
-			79,
-			80,
-			81,
-			92,
-			93,
-			98,
-			99,
-			112,
-			113,
-			128,
-			129,
-			134,
-			135,
-			148,
-			149,
-			160,
-			161,
-			162,
-			163,
-			164,
-			165,
-			166,
-			167,
-			168,
-			169,
-			170,
-			171,
-			172,
-			173,
-			178,
-			179,
-			184,
-			185,
-			196,
-			197,
-			198,
-			199,
-			200,
-			201,
-			202,
-			203,
-			204,
-			205,
-			206,
-			207,
-			208,
-			209,
-			214,
-			215,
-			220,
-			221
-		];
-	}
-} catch (error) {
-	// Swallow - we only care if `supports-color` is available; it doesn't have to be.
-}
-
-/**
- * Build up the default `inspectOpts` object from the environment variables.
- *
- *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
- */
-
-exports.inspectOpts = Object.keys(browser$1$1.env).filter(key => {
-	return /^debug_/i.test(key);
-}).reduce((obj, key) => {
-	// Camel-case
-	const prop = key
-		.substring(6)
-		.toLowerCase()
-		.replace(/_([a-z])/g, (_, k) => {
-			return k.toUpperCase();
-		});
-
-	// Coerce string value into JS value
-	let val = browser$1$1.env[key];
-	if (/^(yes|on|true|enabled)$/i.test(val)) {
-		val = true;
-	} else if (/^(no|off|false|disabled)$/i.test(val)) {
-		val = false;
-	} else if (val === 'null') {
-		val = null;
-	} else {
-		val = Number(val);
-	}
-
-	obj[prop] = val;
-	return obj;
-}, {});
-
-/**
- * Is stdout a TTY? Colored output is enabled when `true`.
- */
-
-function useColors() {
-	return 'colors' in exports.inspectOpts ?
-		Boolean(exports.inspectOpts.colors) :
-		tty.isatty(browser$1$1.stderr.fd);
-}
-
-/**
- * Adds ANSI color escape codes if enabled.
- *
- * @api public
- */
-
-function formatArgs(args) {
-	const {namespace: name, useColors} = this;
-
-	if (useColors) {
-		const c = this.color;
-		const colorCode = '\u001B[3' + (c < 8 ? c : '8;5;' + c);
-		const prefix = `  ${colorCode};1m${name} \u001B[0m`;
-
-		args[0] = prefix + args[0].split('\n').join('\n' + prefix);
-		args.push(colorCode + 'm+' + module.exports.humanize(this.diff) + '\u001B[0m');
-	} else {
-		args[0] = getDate() + name + ' ' + args[0];
-	}
-}
-
-function getDate() {
-	if (exports.inspectOpts.hideDate) {
-		return '';
-	}
-	return new Date().toISOString() + ' ';
-}
-
-/**
- * Invokes `util.format()` with the specified arguments and writes to stderr.
- */
-
-function log(...args) {
-	return browser$1$1.stderr.write(util.format(...args) + '\n');
-}
-
-/**
- * Save `namespaces`.
- *
- * @param {String} namespaces
- * @api private
- */
-function save(namespaces) {
-	if (namespaces) {
-		browser$1$1.env.DEBUG = namespaces;
-	} else {
-		// If you set a process.env field to null or undefined, it gets cast to the
-		// string 'null' or 'undefined'. Just delete instead.
-		delete browser$1$1.env.DEBUG;
-	}
-}
-
-/**
- * Load `namespaces`.
- *
- * @return {String} returns the previously persisted debug modes
- * @api private
- */
-
-function load() {
-	return browser$1$1.env.DEBUG;
-}
-
-/**
- * Init logic for `debug` instances.
- *
- * Create a new `inspectOpts` object in case `useColors` is set
- * differently for a particular `debug` instance.
- */
-
-function init(debug) {
-	debug.inspectOpts = {};
-
-	const keys = Object.keys(exports.inspectOpts);
-	for (let i = 0; i < keys.length; i++) {
-		debug.inspectOpts[keys[i]] = exports.inspectOpts[keys[i]];
-	}
-}
-
-module.exports = common(exports);
-
-const {formatters} = module.exports;
-
-/**
- * Map %o to `util.inspect()`, all on a single line.
- */
-
-formatters.o = function (v) {
-	this.inspectOpts.colors = this.useColors;
-	return util.inspect(v, this.inspectOpts)
-		.split('\n')
-		.map(str => str.trim())
-		.join(' ');
-};
-
-/**
- * Map %O to `util.inspect()`, allowing multiple lines if needed.
- */
-
-formatters.O = function (v) {
-	this.inspectOpts.colors = this.useColors;
-	return util.inspect(v, this.inspectOpts);
-};
-}(node, node.exports));
-
-if (typeof browser$1$1 === 'undefined' || browser$1$1.type === 'renderer' || browser$1$1.browser === true || browser$1$1.__nwjs) {
-	src.exports = browser.exports;
-} else {
-	src.exports = node.exports;
-}
-
-var debug$1;
-
-var debug_1 = function () {
-  if (!debug$1) {
-    try {
-      /* eslint global-require: off */
-      debug$1 = src.exports("follow-redirects");
-    }
-    catch (error) { /* */ }
-    if (typeof debug$1 !== "function") {
-      debug$1 = function () { /* */ };
-    }
-  }
-  debug$1.apply(null, arguments);
-};
-
-var url$1 = require$$0__default$2["default"];
-var URL = url$1.URL;
-var http$1 = require$$1__default$1["default"];
-var https$1 = require$$2__default["default"];
-var Writable = require$$3__default["default"].Writable;
-var assert = require$$4__default["default"];
-var debug = debug_1;
-
-// Create handlers that pass events from native requests
-var events = ["abort", "aborted", "connect", "error", "socket", "timeout"];
-var eventHandlers = Object.create(null);
-events.forEach(function (event) {
-  eventHandlers[event] = function (arg1, arg2, arg3) {
-    this._redirectable.emit(event, arg1, arg2, arg3);
-  };
-});
-
-// Error types with codes
-var RedirectionError = createErrorType(
-  "ERR_FR_REDIRECTION_FAILURE",
-  "Redirected request failed"
-);
-var TooManyRedirectsError = createErrorType(
-  "ERR_FR_TOO_MANY_REDIRECTS",
-  "Maximum number of redirects exceeded"
-);
-var MaxBodyLengthExceededError = createErrorType(
-  "ERR_FR_MAX_BODY_LENGTH_EXCEEDED",
-  "Request body larger than maxBodyLength limit"
-);
-var WriteAfterEndError = createErrorType(
-  "ERR_STREAM_WRITE_AFTER_END",
-  "write after end"
-);
-
-// An HTTP(S) request that can be redirected
-function RedirectableRequest(options, responseCallback) {
-  // Initialize the request
-  Writable.call(this);
-  this._sanitizeOptions(options);
-  this._options = options;
-  this._ended = false;
-  this._ending = false;
-  this._redirectCount = 0;
-  this._redirects = [];
-  this._requestBodyLength = 0;
-  this._requestBodyBuffers = [];
-
-  // Attach a callback if passed
-  if (responseCallback) {
-    this.on("response", responseCallback);
-  }
-
-  // React to responses of native requests
-  var self = this;
-  this._onNativeResponse = function (response) {
-    self._processResponse(response);
-  };
-
-  // Perform the first request
-  this._performRequest();
-}
-RedirectableRequest.prototype = Object.create(Writable.prototype);
-
-RedirectableRequest.prototype.abort = function () {
-  abortRequest(this._currentRequest);
-  this.emit("abort");
-};
-
-// Writes buffered data to the current native request
-RedirectableRequest.prototype.write = function (data, encoding, callback) {
-  // Writing is not allowed if end has been called
-  if (this._ending) {
-    throw new WriteAfterEndError();
-  }
-
-  // Validate input and shift parameters if necessary
-  if (!(typeof data === "string" || typeof data === "object" && ("length" in data))) {
-    throw new TypeError("data should be a string, Buffer or Uint8Array");
-  }
-  if (typeof encoding === "function") {
-    callback = encoding;
-    encoding = null;
-  }
-
-  // Ignore empty buffers, since writing them doesn't invoke the callback
-  // https://github.com/nodejs/node/issues/22066
-  if (data.length === 0) {
-    if (callback) {
-      callback();
-    }
-    return;
-  }
-  // Only write when we don't exceed the maximum body length
-  if (this._requestBodyLength + data.length <= this._options.maxBodyLength) {
-    this._requestBodyLength += data.length;
-    this._requestBodyBuffers.push({ data: data, encoding: encoding });
-    this._currentRequest.write(data, encoding, callback);
-  }
-  // Error when we exceed the maximum body length
-  else {
-    this.emit("error", new MaxBodyLengthExceededError());
-    this.abort();
-  }
-};
-
-// Ends the current native request
-RedirectableRequest.prototype.end = function (data, encoding, callback) {
-  // Shift parameters if necessary
-  if (typeof data === "function") {
-    callback = data;
-    data = encoding = null;
-  }
-  else if (typeof encoding === "function") {
-    callback = encoding;
-    encoding = null;
-  }
-
-  // Write data if needed and end
-  if (!data) {
-    this._ended = this._ending = true;
-    this._currentRequest.end(null, null, callback);
-  }
-  else {
-    var self = this;
-    var currentRequest = this._currentRequest;
-    this.write(data, encoding, function () {
-      self._ended = true;
-      currentRequest.end(null, null, callback);
-    });
-    this._ending = true;
-  }
-};
-
-// Sets a header value on the current native request
-RedirectableRequest.prototype.setHeader = function (name, value) {
-  this._options.headers[name] = value;
-  this._currentRequest.setHeader(name, value);
-};
-
-// Clears a header value on the current native request
-RedirectableRequest.prototype.removeHeader = function (name) {
-  delete this._options.headers[name];
-  this._currentRequest.removeHeader(name);
-};
-
-// Global timeout for all underlying requests
-RedirectableRequest.prototype.setTimeout = function (msecs, callback) {
-  var self = this;
-
-  // Destroys the socket on timeout
-  function destroyOnTimeout(socket) {
-    socket.setTimeout(msecs);
-    socket.removeListener("timeout", socket.destroy);
-    socket.addListener("timeout", socket.destroy);
-  }
-
-  // Sets up a timer to trigger a timeout event
-  function startTimer(socket) {
-    if (self._timeout) {
-      clearTimeout(self._timeout);
-    }
-    self._timeout = setTimeout(function () {
-      self.emit("timeout");
-      clearTimer();
-    }, msecs);
-    destroyOnTimeout(socket);
-  }
-
-  // Stops a timeout from triggering
-  function clearTimer() {
-    // Clear the timeout
-    if (self._timeout) {
-      clearTimeout(self._timeout);
-      self._timeout = null;
-    }
-
-    // Clean up all attached listeners
-    self.removeListener("abort", clearTimer);
-    self.removeListener("error", clearTimer);
-    self.removeListener("response", clearTimer);
-    if (callback) {
-      self.removeListener("timeout", callback);
-    }
-    if (!self.socket) {
-      self._currentRequest.removeListener("socket", startTimer);
-    }
-  }
-
-  // Attach callback if passed
-  if (callback) {
-    this.on("timeout", callback);
-  }
-
-  // Start the timer if or when the socket is opened
-  if (this.socket) {
-    startTimer(this.socket);
-  }
-  else {
-    this._currentRequest.once("socket", startTimer);
-  }
-
-  // Clean up on events
-  this.on("socket", destroyOnTimeout);
-  this.on("abort", clearTimer);
-  this.on("error", clearTimer);
-  this.on("response", clearTimer);
-
-  return this;
-};
-
-// Proxy all other public ClientRequest methods
-[
-  "flushHeaders", "getHeader",
-  "setNoDelay", "setSocketKeepAlive",
-].forEach(function (method) {
-  RedirectableRequest.prototype[method] = function (a, b) {
-    return this._currentRequest[method](a, b);
-  };
-});
-
-// Proxy all public ClientRequest properties
-["aborted", "connection", "socket"].forEach(function (property) {
-  Object.defineProperty(RedirectableRequest.prototype, property, {
-    get: function () { return this._currentRequest[property]; },
-  });
-});
-
-RedirectableRequest.prototype._sanitizeOptions = function (options) {
-  // Ensure headers are always present
-  if (!options.headers) {
-    options.headers = {};
-  }
-
-  // Since http.request treats host as an alias of hostname,
-  // but the url module interprets host as hostname plus port,
-  // eliminate the host property to avoid confusion.
-  if (options.host) {
-    // Use hostname if set, because it has precedence
-    if (!options.hostname) {
-      options.hostname = options.host;
-    }
-    delete options.host;
-  }
-
-  // Complete the URL object when necessary
-  if (!options.pathname && options.path) {
-    var searchPos = options.path.indexOf("?");
-    if (searchPos < 0) {
-      options.pathname = options.path;
-    }
-    else {
-      options.pathname = options.path.substring(0, searchPos);
-      options.search = options.path.substring(searchPos);
-    }
-  }
-};
-
-
-// Executes the next native request (initial or redirect)
-RedirectableRequest.prototype._performRequest = function () {
-  // Load the native protocol
-  var protocol = this._options.protocol;
-  var nativeProtocol = this._options.nativeProtocols[protocol];
-  if (!nativeProtocol) {
-    this.emit("error", new TypeError("Unsupported protocol " + protocol));
-    return;
-  }
-
-  // If specified, use the agent corresponding to the protocol
-  // (HTTP and HTTPS use different types of agents)
-  if (this._options.agents) {
-    var scheme = protocol.substr(0, protocol.length - 1);
-    this._options.agent = this._options.agents[scheme];
-  }
-
-  // Create the native request
-  var request = this._currentRequest =
-        nativeProtocol.request(this._options, this._onNativeResponse);
-  this._currentUrl = url$1.format(this._options);
-
-  // Set up event handlers
-  request._redirectable = this;
-  for (var e = 0; e < events.length; e++) {
-    request.on(events[e], eventHandlers[events[e]]);
-  }
-
-  // End a redirected request
-  // (The first request must be ended explicitly with RedirectableRequest#end)
-  if (this._isRedirect) {
-    // Write the request entity and end.
-    var i = 0;
-    var self = this;
-    var buffers = this._requestBodyBuffers;
-    (function writeNext(error) {
-      // Only write if this request has not been redirected yet
-      /* istanbul ignore else */
-      if (request === self._currentRequest) {
-        // Report any write errors
-        /* istanbul ignore if */
-        if (error) {
-          self.emit("error", error);
-        }
-        // Write the next buffer if there are still left
-        else if (i < buffers.length) {
-          var buffer = buffers[i++];
-          /* istanbul ignore else */
-          if (!request.finished) {
-            request.write(buffer.data, buffer.encoding, writeNext);
-          }
-        }
-        // End the request if `end` has been called on us
-        else if (self._ended) {
-          request.end();
-        }
-      }
-    }());
-  }
-};
-
-// Processes a response from the current native request
-RedirectableRequest.prototype._processResponse = function (response) {
-  // Store the redirected response
-  var statusCode = response.statusCode;
-  if (this._options.trackRedirects) {
-    this._redirects.push({
-      url: this._currentUrl,
-      headers: response.headers,
-      statusCode: statusCode,
-    });
-  }
-
-  // RFC7231§6.4: The 3xx (Redirection) class of status code indicates
-  // that further action needs to be taken by the user agent in order to
-  // fulfill the request. If a Location header field is provided,
-  // the user agent MAY automatically redirect its request to the URI
-  // referenced by the Location field value,
-  // even if the specific status code is not understood.
-  var location = response.headers.location;
-  if (location && this._options.followRedirects !== false &&
-      statusCode >= 300 && statusCode < 400) {
-    // Abort the current request
-    abortRequest(this._currentRequest);
-    // Discard the remainder of the response to avoid waiting for data
-    response.destroy();
-
-    // RFC7231§6.4: A client SHOULD detect and intervene
-    // in cyclical redirections (i.e., "infinite" redirection loops).
-    if (++this._redirectCount > this._options.maxRedirects) {
-      this.emit("error", new TooManyRedirectsError());
-      return;
-    }
-
-    // RFC7231§6.4: Automatic redirection needs to done with
-    // care for methods not known to be safe, […]
-    // RFC7231§6.4.2–3: For historical reasons, a user agent MAY change
-    // the request method from POST to GET for the subsequent request.
-    if ((statusCode === 301 || statusCode === 302) && this._options.method === "POST" ||
-        // RFC7231§6.4.4: The 303 (See Other) status code indicates that
-        // the server is redirecting the user agent to a different resource […]
-        // A user agent can perform a retrieval request targeting that URI
-        // (a GET or HEAD request if using HTTP) […]
-        (statusCode === 303) && !/^(?:GET|HEAD)$/.test(this._options.method)) {
-      this._options.method = "GET";
-      // Drop a possible entity and headers related to it
-      this._requestBodyBuffers = [];
-      removeMatchingHeaders(/^content-/i, this._options.headers);
-    }
-
-    // Drop the Host header, as the redirect might lead to a different host
-    var currentHostHeader = removeMatchingHeaders(/^host$/i, this._options.headers);
-
-    // If the redirect is relative, carry over the host of the last request
-    var currentUrlParts = url$1.parse(this._currentUrl);
-    var currentHost = currentHostHeader || currentUrlParts.host;
-    var currentUrl = /^\w+:/.test(location) ? this._currentUrl :
-      url$1.format(Object.assign(currentUrlParts, { host: currentHost }));
-
-    // Determine the URL of the redirection
-    var redirectUrl;
-    try {
-      redirectUrl = url$1.resolve(currentUrl, location);
-    }
-    catch (cause) {
-      this.emit("error", new RedirectionError(cause));
-      return;
-    }
-
-    // Create the redirected request
-    debug("redirecting to", redirectUrl);
-    this._isRedirect = true;
-    var redirectUrlParts = url$1.parse(redirectUrl);
-    Object.assign(this._options, redirectUrlParts);
-
-    // Drop the confidential headers when redirecting to another domain
-    if (!(redirectUrlParts.host === currentHost || isSubdomainOf(redirectUrlParts.host, currentHost))) {
-      removeMatchingHeaders(/^(?:authorization|cookie)$/i, this._options.headers);
-    }
-
-    // Evaluate the beforeRedirect callback
-    if (typeof this._options.beforeRedirect === "function") {
-      var responseDetails = { headers: response.headers };
-      try {
-        this._options.beforeRedirect.call(null, this._options, responseDetails);
-      }
-      catch (err) {
-        this.emit("error", err);
-        return;
-      }
-      this._sanitizeOptions(this._options);
-    }
-
-    // Perform the redirected request
-    try {
-      this._performRequest();
-    }
-    catch (cause) {
-      this.emit("error", new RedirectionError(cause));
-    }
-  }
-  else {
-    // The response is not a redirect; return it as-is
-    response.responseUrl = this._currentUrl;
-    response.redirects = this._redirects;
-    this.emit("response", response);
-
-    // Clean up
-    this._requestBodyBuffers = [];
-  }
-};
-
-// Wraps the key/value object of protocols with redirect functionality
-function wrap(protocols) {
-  // Default settings
-  var exports = {
-    maxRedirects: 21,
-    maxBodyLength: 10 * 1024 * 1024,
-  };
-
-  // Wrap each protocol
-  var nativeProtocols = {};
-  Object.keys(protocols).forEach(function (scheme) {
-    var protocol = scheme + ":";
-    var nativeProtocol = nativeProtocols[protocol] = protocols[scheme];
-    var wrappedProtocol = exports[scheme] = Object.create(nativeProtocol);
-
-    // Executes a request, following redirects
-    function request(input, options, callback) {
-      // Parse parameters
-      if (typeof input === "string") {
-        var urlStr = input;
-        try {
-          input = urlToOptions(new URL(urlStr));
-        }
-        catch (err) {
-          /* istanbul ignore next */
-          input = url$1.parse(urlStr);
-        }
-      }
-      else if (URL && (input instanceof URL)) {
-        input = urlToOptions(input);
-      }
-      else {
-        callback = options;
-        options = input;
-        input = { protocol: protocol };
-      }
-      if (typeof options === "function") {
-        callback = options;
-        options = null;
-      }
-
-      // Set defaults
-      options = Object.assign({
-        maxRedirects: exports.maxRedirects,
-        maxBodyLength: exports.maxBodyLength,
-      }, input, options);
-      options.nativeProtocols = nativeProtocols;
-
-      assert.equal(options.protocol, protocol, "protocol mismatch");
-      debug("options", options);
-      return new RedirectableRequest(options, callback);
-    }
-
-    // Executes a GET request, following redirects
-    function get(input, options, callback) {
-      var wrappedRequest = wrappedProtocol.request(input, options, callback);
-      wrappedRequest.end();
-      return wrappedRequest;
-    }
-
-    // Expose the properties on the wrapped protocol
-    Object.defineProperties(wrappedProtocol, {
-      request: { value: request, configurable: true, enumerable: true, writable: true },
-      get: { value: get, configurable: true, enumerable: true, writable: true },
-    });
-  });
-  return exports;
-}
-
-/* istanbul ignore next */
-function noop() { /* empty */ }
-
-// from https://github.com/nodejs/node/blob/master/lib/internal/url.js
-function urlToOptions(urlObject) {
-  var options = {
-    protocol: urlObject.protocol,
-    hostname: urlObject.hostname.startsWith("[") ?
-      /* istanbul ignore next */
-      urlObject.hostname.slice(1, -1) :
-      urlObject.hostname,
-    hash: urlObject.hash,
-    search: urlObject.search,
-    pathname: urlObject.pathname,
-    path: urlObject.pathname + urlObject.search,
-    href: urlObject.href,
-  };
-  if (urlObject.port !== "") {
-    options.port = Number(urlObject.port);
-  }
-  return options;
-}
-
-function removeMatchingHeaders(regex, headers) {
-  var lastValue;
-  for (var header in headers) {
-    if (regex.test(header)) {
-      lastValue = headers[header];
-      delete headers[header];
-    }
-  }
-  return (lastValue === null || typeof lastValue === "undefined") ?
-    undefined : String(lastValue).trim();
-}
-
-function createErrorType(code, defaultMessage) {
-  function CustomError(cause) {
-    Error.captureStackTrace(this, this.constructor);
-    if (!cause) {
-      this.message = defaultMessage;
-    }
-    else {
-      this.message = defaultMessage + ": " + cause.message;
-      this.cause = cause;
-    }
-  }
-  CustomError.prototype = new Error();
-  CustomError.prototype.constructor = CustomError;
-  CustomError.prototype.name = "Error [" + code + "]";
-  CustomError.prototype.code = code;
-  return CustomError;
-}
-
-function abortRequest(request) {
-  for (var e = 0; e < events.length; e++) {
-    request.removeListener(events[e], eventHandlers[events[e]]);
-  }
-  request.on("error", noop);
-  request.abort();
-}
-
-function isSubdomainOf(subdomain, domain) {
-  const dot = subdomain.length - domain.length - 1;
-  return dot > 0 && subdomain[dot] === "." && subdomain.endsWith(domain);
-}
-
-// Exports
-followRedirects.exports = wrap({ http: http$1, https: https$1 });
-followRedirects.exports.wrap = wrap;
-
-var data$1 = {
-  "version": "0.24.0"
-};
-
-var utils$6 = utils$e;
-var settle = settle$2;
-var buildFullPath = buildFullPath$2;
-var buildURL$1 = buildURL$3;
-var http = require$$1__default$1["default"];
-var https = require$$2__default["default"];
-var httpFollow = followRedirects.exports.http;
-var httpsFollow = followRedirects.exports.https;
-var url = require$$0__default$2["default"];
-var zlib = require$$8__default["default"];
-var VERSION$1 = data$1.version;
-var createError = createError$3;
-var enhanceError$1 = enhanceError$3;
-var defaults$5 = defaults_1;
-var Cancel$2 = Cancel_1;
-
-var isHttps = /https:?/;
-
-/**
- *
- * @param {http.ClientRequestArgs} options
- * @param {AxiosProxyConfig} proxy
- * @param {string} location
- */
-function setProxy(options, proxy, location) {
-  options.hostname = proxy.host;
-  options.host = proxy.host;
-  options.port = proxy.port;
-  options.path = location;
-
-  // Basic proxy authorization
-  if (proxy.auth) {
-    var base64 = Buffer$1.from(proxy.auth.username + ':' + proxy.auth.password, 'utf8').toString('base64');
-    options.headers['Proxy-Authorization'] = 'Basic ' + base64;
-  }
-
-  // If a proxy is used, any redirects must also pass through the proxy
-  options.beforeRedirect = function beforeRedirect(redirection) {
-    redirection.headers.host = redirection.host;
-    setProxy(redirection, proxy, redirection.href);
-  };
-}
-
-/*eslint consistent-return:0*/
-var http_1 = function httpAdapter(config) {
-  return new Promise(function dispatchHttpRequest(resolvePromise, rejectPromise) {
-    var onCanceled;
-    function done() {
-      if (config.cancelToken) {
-        config.cancelToken.unsubscribe(onCanceled);
-      }
-
-      if (config.signal) {
-        config.signal.removeEventListener('abort', onCanceled);
-      }
-    }
-    var resolve = function resolve(value) {
-      done();
-      resolvePromise(value);
-    };
-    var reject = function reject(value) {
-      done();
-      rejectPromise(value);
-    };
-    var data = config.data;
-    var headers = config.headers;
-    var headerNames = {};
-
-    Object.keys(headers).forEach(function storeLowerName(name) {
-      headerNames[name.toLowerCase()] = name;
-    });
-
-    // Set User-Agent (required by some servers)
-    // See https://github.com/axios/axios/issues/69
-    if ('user-agent' in headerNames) {
-      // User-Agent is specified; handle case where no UA header is desired
-      if (!headers[headerNames['user-agent']]) {
-        delete headers[headerNames['user-agent']];
-      }
-      // Otherwise, use specified value
-    } else {
-      // Only set header if it hasn't been set in config
-      headers['User-Agent'] = 'axios/' + VERSION$1;
-    }
-
-    if (data && !utils$6.isStream(data)) {
-      if (Buffer$1.isBuffer(data)) ; else if (utils$6.isArrayBuffer(data)) {
-        data = Buffer$1.from(new Uint8Array(data));
-      } else if (utils$6.isString(data)) {
-        data = Buffer$1.from(data, 'utf-8');
-      } else {
-        return reject(createError(
-          'Data after transformation must be a string, an ArrayBuffer, a Buffer, or a Stream',
-          config
-        ));
-      }
-
-      // Add Content-Length header if data exists
-      if (!headerNames['content-length']) {
-        headers['Content-Length'] = data.length;
-      }
-    }
-
-    // HTTP basic authentication
-    var auth = undefined;
-    if (config.auth) {
-      var username = config.auth.username || '';
-      var password = config.auth.password || '';
-      auth = username + ':' + password;
-    }
-
-    // Parse url
-    var fullPath = buildFullPath(config.baseURL, config.url);
-    var parsed = url.parse(fullPath);
-    var protocol = parsed.protocol || 'http:';
-
-    if (!auth && parsed.auth) {
-      var urlAuth = parsed.auth.split(':');
-      var urlUsername = urlAuth[0] || '';
-      var urlPassword = urlAuth[1] || '';
-      auth = urlUsername + ':' + urlPassword;
-    }
-
-    if (auth && headerNames.authorization) {
-      delete headers[headerNames.authorization];
-    }
-
-    var isHttpsRequest = isHttps.test(protocol);
-    var agent = isHttpsRequest ? config.httpsAgent : config.httpAgent;
-
-    var options = {
-      path: buildURL$1(parsed.path, config.params, config.paramsSerializer).replace(/^\?/, ''),
-      method: config.method.toUpperCase(),
-      headers: headers,
-      agent: agent,
-      agents: { http: config.httpAgent, https: config.httpsAgent },
-      auth: auth
-    };
-
-    if (config.socketPath) {
-      options.socketPath = config.socketPath;
-    } else {
-      options.hostname = parsed.hostname;
-      options.port = parsed.port;
-    }
-
-    var proxy = config.proxy;
-    if (!proxy && proxy !== false) {
-      var proxyEnv = protocol.slice(0, -1) + '_proxy';
-      var proxyUrl = browser$1$1.env[proxyEnv] || browser$1$1.env[proxyEnv.toUpperCase()];
-      if (proxyUrl) {
-        var parsedProxyUrl = url.parse(proxyUrl);
-        var noProxyEnv = browser$1$1.env.no_proxy || browser$1$1.env.NO_PROXY;
-        var shouldProxy = true;
-
-        if (noProxyEnv) {
-          var noProxy = noProxyEnv.split(',').map(function trim(s) {
-            return s.trim();
-          });
-
-          shouldProxy = !noProxy.some(function proxyMatch(proxyElement) {
-            if (!proxyElement) {
-              return false;
-            }
-            if (proxyElement === '*') {
-              return true;
-            }
-            if (proxyElement[0] === '.' &&
-                parsed.hostname.substr(parsed.hostname.length - proxyElement.length) === proxyElement) {
-              return true;
-            }
-
-            return parsed.hostname === proxyElement;
-          });
-        }
-
-        if (shouldProxy) {
-          proxy = {
-            host: parsedProxyUrl.hostname,
-            port: parsedProxyUrl.port,
-            protocol: parsedProxyUrl.protocol
-          };
-
-          if (parsedProxyUrl.auth) {
-            var proxyUrlAuth = parsedProxyUrl.auth.split(':');
-            proxy.auth = {
-              username: proxyUrlAuth[0],
-              password: proxyUrlAuth[1]
-            };
-          }
-        }
-      }
-    }
-
-    if (proxy) {
-      options.headers.host = parsed.hostname + (parsed.port ? ':' + parsed.port : '');
-      setProxy(options, proxy, protocol + '//' + parsed.hostname + (parsed.port ? ':' + parsed.port : '') + options.path);
-    }
-
-    var transport;
-    var isHttpsProxy = isHttpsRequest && (proxy ? isHttps.test(proxy.protocol) : true);
-    if (config.transport) {
-      transport = config.transport;
-    } else if (config.maxRedirects === 0) {
-      transport = isHttpsProxy ? https : http;
-    } else {
-      if (config.maxRedirects) {
-        options.maxRedirects = config.maxRedirects;
-      }
-      transport = isHttpsProxy ? httpsFollow : httpFollow;
-    }
-
-    if (config.maxBodyLength > -1) {
-      options.maxBodyLength = config.maxBodyLength;
-    }
-
-    if (config.insecureHTTPParser) {
-      options.insecureHTTPParser = config.insecureHTTPParser;
-    }
-
-    // Create the request
-    var req = transport.request(options, function handleResponse(res) {
-      if (req.aborted) return;
-
-      // uncompress the response body transparently if required
-      var stream = res;
-
-      // return the last request in case of redirects
-      var lastRequest = res.req || req;
-
-
-      // if no content, is HEAD request or decompress disabled we should not decompress
-      if (res.statusCode !== 204 && lastRequest.method !== 'HEAD' && config.decompress !== false) {
-        switch (res.headers['content-encoding']) {
-        /*eslint default-case:0*/
-        case 'gzip':
-        case 'compress':
-        case 'deflate':
-        // add the unzipper to the body stream processing pipeline
-          stream = stream.pipe(zlib.createUnzip());
-
-          // remove the content-encoding in order to not confuse downstream operations
-          delete res.headers['content-encoding'];
-          break;
-        }
-      }
-
-      var response = {
-        status: res.statusCode,
-        statusText: res.statusMessage,
-        headers: res.headers,
-        config: config,
-        request: lastRequest
-      };
-
-      if (config.responseType === 'stream') {
-        response.data = stream;
-        settle(resolve, reject, response);
-      } else {
-        var responseBuffer = [];
-        var totalResponseBytes = 0;
-        stream.on('data', function handleStreamData(chunk) {
-          responseBuffer.push(chunk);
-          totalResponseBytes += chunk.length;
-
-          // make sure the content length is not over the maxContentLength if specified
-          if (config.maxContentLength > -1 && totalResponseBytes > config.maxContentLength) {
-            stream.destroy();
-            reject(createError('maxContentLength size of ' + config.maxContentLength + ' exceeded',
-              config, null, lastRequest));
-          }
-        });
-
-        stream.on('error', function handleStreamError(err) {
-          if (req.aborted) return;
-          reject(enhanceError$1(err, config, null, lastRequest));
-        });
-
-        stream.on('end', function handleStreamEnd() {
-          var responseData = Buffer$1.concat(responseBuffer);
-          if (config.responseType !== 'arraybuffer') {
-            responseData = responseData.toString(config.responseEncoding);
-            if (!config.responseEncoding || config.responseEncoding === 'utf8') {
-              responseData = utils$6.stripBOM(responseData);
-            }
-          }
-
-          response.data = responseData;
-          settle(resolve, reject, response);
-        });
-      }
-    });
-
-    // Handle errors
-    req.on('error', function handleRequestError(err) {
-      if (req.aborted && err.code !== 'ERR_FR_TOO_MANY_REDIRECTS') return;
-      reject(enhanceError$1(err, config, null, req));
-    });
-
-    // Handle request timeout
-    if (config.timeout) {
-      // This is forcing a int timeout to avoid problems if the `req` interface doesn't handle other types.
-      var timeout = parseInt(config.timeout, 10);
-
-      if (isNaN(timeout)) {
-        reject(createError(
-          'error trying to parse `config.timeout` to int',
-          config,
-          'ERR_PARSE_TIMEOUT',
-          req
-        ));
-
-        return;
-      }
-
-      // Sometime, the response will be very slow, and does not respond, the connect event will be block by event loop system.
-      // And timer callback will be fired, and abort() will be invoked before connection, then get "socket hang up" and code ECONNRESET.
-      // At this time, if we have a large number of request, nodejs will hang up some socket on background. and the number will up and up.
-      // And then these socket which be hang up will devoring CPU little by little.
-      // ClientRequest.setTimeout will be fired on the specify milliseconds, and can make sure that abort() will be fired after connect.
-      req.setTimeout(timeout, function handleRequestTimeout() {
-        req.abort();
-        var transitional = config.transitional || defaults$5.transitional;
-        reject(createError(
-          'timeout of ' + timeout + 'ms exceeded',
-          config,
-          transitional.clarifyTimeoutError ? 'ETIMEDOUT' : 'ECONNABORTED',
-          req
-        ));
-      });
-    }
-
-    if (config.cancelToken || config.signal) {
-      // Handle cancellation
-      // eslint-disable-next-line func-names
-      onCanceled = function(cancel) {
-        if (req.aborted) return;
-
-        req.abort();
-        reject(!cancel || (cancel && cancel.type) ? new Cancel$2('canceled') : cancel);
-      };
-
-      config.cancelToken && config.cancelToken.subscribe(onCanceled);
-      if (config.signal) {
-        config.signal.aborted ? onCanceled() : config.signal.addEventListener('abort', onCanceled);
-      }
-    }
-
-
-    // Send the request
-    if (utils$6.isStream(data)) {
-      data.on('error', function handleStreamError(err) {
-        reject(enhanceError$1(err, config, null, req));
-      }).pipe(req);
-    } else {
-      req.end(data);
-    }
-  });
-};
-
-var utils$5 = utils$e;
+var utils$5 = utils$d;
 var normalizeHeaderName = normalizeHeaderName$1;
-var enhanceError = enhanceError$3;
+var enhanceError = enhanceError$2;
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -5336,9 +1295,9 @@ function getDefaultAdapter() {
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
     adapter = xhr;
-  } else if (typeof browser$1$1 !== 'undefined' && Object.prototype.toString.call(browser$1$1) === '[object process]') {
+  } else if (typeof browser$1 !== 'undefined' && Object.prototype.toString.call(browser$1) === '[object process]') {
     // For node use HTTP adapter
-    adapter = http_1;
+    adapter = xhr;
   }
   return adapter;
 }
@@ -5450,7 +1409,7 @@ utils$5.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method)
 
 var defaults_1 = defaults$4;
 
-var utils$4 = utils$e;
+var utils$4 = utils$d;
 var defaults$3 = defaults_1;
 
 /**
@@ -5475,7 +1434,7 @@ var isCancel$1 = function isCancel(value) {
   return !!(value && value.__CANCEL__);
 };
 
-var utils$3 = utils$e;
+var utils$3 = utils$d;
 var transformData = transformData$1;
 var isCancel = isCancel$1;
 var defaults$2 = defaults_1;
@@ -5561,7 +1520,7 @@ var dispatchRequest$1 = function dispatchRequest(config) {
   });
 };
 
-var utils$2 = utils$e;
+var utils$2 = utils$d;
 
 /**
  * Config-specific merge-function which creates a new config-object
@@ -5659,7 +1618,11 @@ var mergeConfig$2 = function mergeConfig(config1, config2) {
   return config;
 };
 
-var VERSION = data$1.version;
+var data$1 = {
+  "version": "0.24.0"
+};
+
+var VERSION$1 = data$1.version;
 
 var validators$1 = {};
 
@@ -5681,7 +1644,7 @@ var deprecatedWarnings = {};
  */
 validators$1.transitional = function transitional(validator, version, message) {
   function formatMessage(opt, desc) {
-    return '[Axios v' + VERSION + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
+    return '[Axios v' + VERSION$1 + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
   }
 
   // eslint-disable-next-line func-names
@@ -5740,8 +1703,8 @@ var validator$1 = {
   validators: validators$1
 };
 
-var utils$1 = utils$e;
-var buildURL = buildURL$3;
+var utils$1 = utils$d;
+var buildURL = buildURL$2;
 var InterceptorManager = InterceptorManager_1;
 var dispatchRequest = dispatchRequest$1;
 var mergeConfig$1 = mergeConfig$2;
@@ -6041,7 +2004,7 @@ var isAxiosError = function isAxiosError(payload) {
   return (typeof payload === 'object') && (payload.isAxiosError === true);
 };
 
-var utils = utils$e;
+var utils = utils$d;
 var bind = bind$2;
 var Axios = Axios_1;
 var mergeConfig = mergeConfig$2;
@@ -6245,7 +2208,7 @@ const GroupItem = (props) => {
     const BIG_SQUARE_IMAGE_WIDTH_INDEX = 0.9;
     const RECTANGLE_IMAGE_WIDTH_INDEX = 0.9;
     const RECTANGLE_IMAGE_HEIGHT_INDEX = 1.26;
-    const getContainerSize = React.useCallback(() => {
+    const getContainerSize = React__default.useCallback(() => {
         if (groupImageWidth) {
             switch (view) {
                 case 'bigSquare':
@@ -6258,7 +2221,7 @@ const GroupItem = (props) => {
         }
         return undefined;
     }, [groupImageWidth, view]);
-    const getImageSize = React.useCallback((imageSize, isHeight = false) => {
+    const getImageSize = React__default.useCallback((imageSize, isHeight = false) => {
         if (imageSize) {
             switch (view) {
                 case 'bigSquare':
@@ -6273,19 +2236,19 @@ const GroupItem = (props) => {
         }
         return undefined;
     }, [view]);
-    return (React__default["default"].createElement("button", { className: cn(b$r({ view, type }).toString(), groupClassName || ''), style: {
+    return (React__default__default["default"].createElement("button", { className: cn(b$r({ view, type }).toString(), groupClassName || ''), style: {
             width: getContainerSize(),
             minHeight: view === 'rectangle' && groupImageWidth
                 ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
                 : getContainerSize()
         }, onClick: () => onClick && onClick(index) },
-        React__default["default"].createElement("div", { className: b$r('imgContainer', { view, type }), style: { width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' } },
-            React__default["default"].createElement("img", { alt: "", className: b$r('img', { view }), src: imageUrl, style: {
+        React__default__default["default"].createElement("div", { className: b$r('imgContainer', { view, type }), style: { width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' } },
+            React__default__default["default"].createElement("img", { alt: "", className: b$r('img', { view }), src: imageUrl, style: {
                     width: getImageSize(groupImageWidth),
                     height: getImageSize(groupImageHeight, true)
                 } })),
-        React__default["default"].createElement("div", { className: b$r('titleContainer', { view }) },
-            React__default["default"].createElement("p", { className: b$r('title', { view }), style: {
+        React__default__default["default"].createElement("div", { className: b$r('titleContainer', { view }) },
+            React__default__default["default"].createElement("p", { className: b$r('title', { view }), style: {
                     fontSize: groupTitleSize || undefined
                 } }, title))));
 };
@@ -6293,7 +2256,7 @@ const GroupItem = (props) => {
 /**
  * @internal
  */
-const SkeletonThemeContext = React__default["default"].createContext({});
+const SkeletonThemeContext = React__default__default["default"].createContext({});
 
 /* eslint-disable react/no-array-index-key */
 const defaultEnableAnimation = true;
@@ -6322,7 +2285,7 @@ function styleOptionsToCssProperties({ baseColor, highlightColor, width, height,
 }
 function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, containerClassName, containerTestId, circle = false, style: styleProp, ...originalPropsStyleOptions }) {
     var _a, _b;
-    const contextStyleOptions = React__default["default"].useContext(SkeletonThemeContext);
+    const contextStyleOptions = React__default__default["default"].useContext(SkeletonThemeContext);
     const propsStyleOptions = { ...originalPropsStyleOptions };
     // DO NOT overwrite style options from the context if `propsStyleOptions`
     // has properties explicity set to undefined
@@ -6350,18 +2313,18 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
     // Without the <br />, the skeleton lines will all run together if
     // `width` is specified
     for (let i = 0; i < count; i++) {
-        const skeletonSpan = (React__default["default"].createElement("span", { className: className, style: style, key: i }, "\u200C"));
+        const skeletonSpan = (React__default__default["default"].createElement("span", { className: className, style: style, key: i }, "\u200C"));
         if (inline) {
             elements.push(skeletonSpan);
         }
         else {
-            elements.push(React__default["default"].createElement(React__default["default"].Fragment, { key: i },
+            elements.push(React__default__default["default"].createElement(React__default__default["default"].Fragment, { key: i },
                 skeletonSpan,
-                React__default["default"].createElement("br", null)));
+                React__default__default["default"].createElement("br", null)));
         }
     }
-    return (React__default["default"].createElement("span", { className: containerClassName, "data-testid": containerTestId, "aria-live": "polite", "aria-busy": (_b = styleOptions.enableAnimation) !== null && _b !== void 0 ? _b : defaultEnableAnimation }, Wrapper
-        ? elements.map((el, i) => React__default["default"].createElement(Wrapper, { key: i }, el))
+    return (React__default__default["default"].createElement("span", { className: containerClassName, "data-testid": containerTestId, "aria-live": "polite", "aria-busy": (_b = styleOptions.enableAnimation) !== null && _b !== void 0 ? _b : defaultEnableAnimation }, Wrapper
+        ? elements.map((el, i) => React__default__default["default"].createElement(Wrapper, { key: i }, el))
         : elements));
 }
 
@@ -6369,21 +2332,21 @@ const b$q = block$1('GroupsSdkList');
 const GroupsList = (props) => {
     var _a;
     const { groups, groupView, isLoading, groupClassName, groupsClassName, groupImageWidth, groupImageHeight, groupTitleSize, isShowMockup, autoplay, startStoryId, forbidClose, onOpenGroup, onCloseGroup, onNextStory, onPrevStory, onCloseStory, onOpenStory, onStartQuiz, onFinishQuiz } = props;
-    const [currentGroup, setCurrentGroup] = React.useState(0);
-    const [modalShow, setModalShow] = React.useState(!!autoplay);
-    React.useEffect(() => {
+    const [currentGroup, setCurrentGroup] = React__default.useState(0);
+    const [modalShow, setModalShow] = React__default.useState(!!autoplay);
+    React__default.useEffect(() => {
         if (autoplay && onOpenGroup && (groups === null || groups === void 0 ? void 0 : groups.length)) {
             onOpenGroup(groups[0].id);
         }
     }, [autoplay, groups, onOpenGroup]);
-    const handleSelectGroup = React.useCallback((groupIndex) => {
+    const handleSelectGroup = React__default.useCallback((groupIndex) => {
         setCurrentGroup(groupIndex);
         setModalShow(true);
         if (onOpenGroup) {
             onOpenGroup(groups[groupIndex].id);
         }
     }, [groups, onOpenGroup]);
-    const handlePrevGroup = React.useCallback(() => {
+    const handlePrevGroup = React__default.useCallback(() => {
         if (currentGroup > 0) {
             setCurrentGroup(currentGroup - 1);
             if (onOpenGroup && onCloseGroup) {
@@ -6394,7 +2357,7 @@ const GroupsList = (props) => {
             }
         }
     }, [currentGroup, groups, onCloseGroup, onOpenGroup]);
-    const handleNextGroup = React.useCallback(() => {
+    const handleNextGroup = React__default.useCallback(() => {
         if (currentGroup < groups.length) {
             setCurrentGroup(currentGroup + 1);
             if (onOpenGroup && onCloseGroup) {
@@ -6405,7 +2368,7 @@ const GroupsList = (props) => {
             }
         }
     }, [currentGroup, groups, onCloseGroup, onOpenGroup]);
-    const handleCloseModal = React.useCallback(() => {
+    const handleCloseModal = React__default.useCallback(() => {
         if (onCloseGroup && (groups === null || groups === void 0 ? void 0 : groups[currentGroup])) {
             onCloseGroup(groups[currentGroup].id);
         }
@@ -6413,36 +2376,131 @@ const GroupsList = (props) => {
             setModalShow(false);
         }
     }, [currentGroup, forbidClose, groups, onCloseGroup]);
-    return (React__default["default"].createElement(React__default["default"].Fragment, null, isLoading && !autoplay ? (React__default["default"].createElement("div", { className: b$q() },
-        React__default["default"].createElement("div", { className: b$q('carousel') },
-            React__default["default"].createElement("div", { className: b$q('loaderItem') },
-                React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
-                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React__default["default"].createElement("div", { className: b$q('loaderItem') },
-                React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
-                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React__default["default"].createElement("div", { className: b$q('loaderItem') },
-                React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
-                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React__default["default"].createElement("div", { className: b$q('loaderItem') },
-                React__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
-                React__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React__default["default"].createElement(React__default["default"].Fragment, null,
-        groups.length ? (React__default["default"].createElement(React__default["default"].Fragment, null,
-            React__default["default"].createElement("div", { className: cn(b$q(), groupsClassName) },
-                React__default["default"].createElement("div", { className: b$q('carousel') }, groups
+    return (React__default__default["default"].createElement(React__default__default["default"].Fragment, null, isLoading && !autoplay ? (React__default__default["default"].createElement("div", { className: b$q() },
+        React__default__default["default"].createElement("div", { className: b$q('carousel') },
+            React__default__default["default"].createElement("div", { className: b$q('loaderItem') },
+                React__default__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
+            React__default__default["default"].createElement("div", { className: b$q('loaderItem') },
+                React__default__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
+            React__default__default["default"].createElement("div", { className: b$q('loaderItem') },
+                React__default__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
+            React__default__default["default"].createElement("div", { className: b$q('loaderItem') },
+                React__default__default["default"].createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default__default["default"].createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React__default__default["default"].createElement(React__default__default["default"].Fragment, null,
+        groups.length ? (React__default__default["default"].createElement(React__default__default["default"].Fragment, null,
+            React__default__default["default"].createElement("div", { className: cn(b$q(), groupsClassName) },
+                React__default__default["default"].createElement("div", { className: b$q('carousel') }, groups
                     .filter((group) => group.stories.length)
-                    .map((group, index) => (React__default["default"].createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))))) : (React__default["default"].createElement("div", { className: b$q({ empty: true }) },
-            React__default["default"].createElement("p", { className: b$q('emptyText') }, "Stories will be here"))),
-        React__default["default"].createElement(StoryModal, { currentGroup: groups === null || groups === void 0 ? void 0 : groups[currentGroup], forbidClose: forbidClose, isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === (groups === null || groups === void 0 ? void 0 : groups.length) - 1, isLoading: isLoading, isShowMockup: isShowMockup, isShowing: modalShow, startStoryId: startStoryId, stories: (_a = groups === null || groups === void 0 ? void 0 : groups[currentGroup]) === null || _a === void 0 ? void 0 : _a.stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz })))));
+                    .map((group, index) => (React__default__default["default"].createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))))) : (React__default__default["default"].createElement("div", { className: b$q({ empty: true }) },
+            React__default__default["default"].createElement("p", { className: b$q('emptyText') }, "Stories will be here"))),
+        React__default__default["default"].createElement(StoryModal, { currentGroup: groups === null || groups === void 0 ? void 0 : groups[currentGroup], forbidClose: forbidClose, isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === (groups === null || groups === void 0 ? void 0 : groups.length) - 1, isLoading: isLoading, isShowMockup: isShowMockup, isShowing: modalShow, startStoryId: startStoryId, stories: (_a = groups === null || groups === void 0 ? void 0 : groups[currentGroup]) === null || _a === void 0 ? void 0 : _a.stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz })))));
 };
 
-var u$1 = e=>{var a=React.useRef(e);return React.useEffect(()=>{a.current=e;}),a};
+const useLatest$2 = current => {
+  const storedValue = React__default__namespace.useRef(current);
+  React__default__namespace.useEffect(() => {
+    storedValue.current = current;
+  });
+  return storedValue;
+};
 
-var o$1$1=function(n,o,c){function i(){l.current&&clearTimeout(l.current),l.current=void 0;}function a(){l.current=void 0;}void 0===o&&(o=100),void 0===c&&(c=0);var v=u$1(n),l=React.useRef(),m=[o,c,v];return React.useEffect(()=>i,m),React.useCallback((function(){var r=arguments,{current:t}=l;if(void 0===t&&c)return l.current=setTimeout(a,o),v.current.apply(null,r);t&&clearTimeout(t),l.current=setTimeout(()=>{l.current=void 0,v.current.apply(null,r);},o);}),m)},c$1=(r,t,e)=>{var u=React.useState(r);return [u[0],o$1$1(u[1],t,e)]};
+var useLatest$1$1 = useLatest$2;
 
-function t$1(t,n,a,u){var c=React.useRef(a),i=React.useRef(u);React.useEffect(()=>{c.current=a,i.current=u;}),React.useEffect(()=>{function r(){if(!a){for(var r=arguments.length,e=new Array(r),t=0;r>t;t++)e[t]=arguments[t];c.current.apply(this,e);}}var e=t&&"current"in t?t.current:t;if(e){var a=0;e.addEventListener(n,r);var u=i.current;return ()=>{a=1,e.removeEventListener(n,r),u&&u();}}},[t,n]);}
+const useDebounceCallback$1 = (callback, wait = 100, leading = false) => {
+  const storedCallback = useLatest$1$1(callback);
+  const timeout = React__default__namespace.useRef();
+  const deps = [wait, leading, storedCallback]; // Cleans up pending timeouts when the deps change
 
-var n$2={},i$1="undefined"==typeof window?null:window,o$2=()=>[document.documentElement.clientWidth,document.documentElement.clientHeight],d$1=function(d){void 0===d&&(d=n$2);var{wait:r,leading:c,initialWidth:m=0,initialHeight:u=0}=d,[a,l]=c$1("undefined"==typeof document?[m,u]:o$2,r,c),f=()=>l(o$2);return t$1(i$1,"resize",f),t$1(i$1,"orientationchange",f),a};
+  function _ref() {
+    timeout.current && clearTimeout(timeout.current);
+    timeout.current = void 0;
+  }
+
+  React__default__namespace.useEffect(() => _ref, deps);
+
+  function _ref2() {
+    timeout.current = void 0;
+  }
+
+  return React__default__namespace.useCallback(function () {
+    // eslint-disable-next-line prefer-rest-params
+    const args = arguments;
+    const {
+      current
+    } = timeout; // Calls on leading edge
+
+    if (current === void 0 && leading) {
+      timeout.current = setTimeout(_ref2, wait); // eslint-disable-next-line prefer-spread
+
+      return storedCallback.current.apply(null, args);
+    } // Clear the timeout every call and start waiting again
+
+
+    current && clearTimeout(current); // Waits for `wait` before invoking the callback
+
+    timeout.current = setTimeout(() => {
+      timeout.current = void 0;
+      storedCallback.current.apply(null, args);
+    }, wait);
+  }, deps);
+};
+const useDebounce$1 = (initialState, wait, leading) => {
+  const state = React__default__namespace.useState(initialState);
+  return [state[0], useDebounceCallback$1(state[1], wait, leading)];
+};
+
+function useEvent$1(target, type, listener, cleanup) {
+  const storedListener = React__default__namespace.useRef(listener);
+  const storedCleanup = React__default__namespace.useRef(cleanup);
+  React__default__namespace.useEffect(() => {
+    storedListener.current = listener;
+    storedCleanup.current = cleanup;
+  });
+  React__default__namespace.useEffect(() => {
+    const targetEl = target && 'current' in target ? target.current : target;
+    if (!targetEl) return;
+    let didUnsubscribe = 0;
+
+    function listener(...args) {
+      if (didUnsubscribe) return;
+      storedListener.current.apply(this, args);
+    }
+
+    targetEl.addEventListener(type, listener);
+    const cleanup = storedCleanup.current;
+    return () => {
+      didUnsubscribe = 1;
+      targetEl.removeEventListener(type, listener);
+      cleanup && cleanup();
+    }; // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target, type]);
+}
+
+const emptyObj$1 = {};
+const win$1 = typeof window === 'undefined' ? null : window;
+
+const getSize$1 = () => [document.documentElement.clientWidth, document.documentElement.clientHeight];
+
+const useWindowSize$1 = (options = emptyObj$1) => {
+  const {
+    wait,
+    leading,
+    initialWidth = 0,
+    initialHeight = 0
+  } = options;
+  const [size, setDebouncedSize] = useDebounce$1(
+  /* istanbul ignore next */
+  typeof document === 'undefined' ? [initialWidth, initialHeight] : getSize$1, wait, leading);
+
+  const setSize = () => setDebouncedSize(getSize$1);
+
+  useEvent$1(win$1, 'resize', setSize);
+  useEvent$1(win$1, 'orientationchange', setSize);
+  return size;
+};
 
 function _classCallCheck$1(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -7640,13 +3698,13 @@ for (var func in conversions) {
   })(func);
 
   var pair = /(\w+)2(\w+)/.exec(func),
-      from$1 = pair[1],
+      from = pair[1],
       to = pair[2];
 
   // export rgb2hsl and ["rgb"]["hsl"]
-  convert$2[from$1] = convert$2[from$1] || {};
+  convert$2[from] = convert$2[from] || {};
 
-  convert$2[from$1][to] = convert$2[func] = (function(func) { 
+  convert$2[from][to] = convert$2[func] = (function(func) { 
     return function(arg) {
       if (typeof arg == "number")
         arg = Array.prototype.slice.call(arguments);
@@ -7887,1999 +3945,20 @@ const getClientPosition = (e) => {
     };
 };
 
-var global$1 = (typeof global !== "undefined" ? global :
-  typeof self !== "undefined" ? self :
-  typeof window !== "undefined" ? window : {});
-
-var lookup = [];
-var revLookup = [];
-var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array;
-var inited = false;
-function init$1 () {
-  inited = true;
-  var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-  for (var i = 0, len = code.length; i < len; ++i) {
-    lookup[i] = code[i];
-    revLookup[code.charCodeAt(i)] = i;
-  }
-
-  revLookup['-'.charCodeAt(0)] = 62;
-  revLookup['_'.charCodeAt(0)] = 63;
-}
-
-function toByteArray (b64) {
-  if (!inited) {
-    init$1();
-  }
-  var i, j, l, tmp, placeHolders, arr;
-  var len = b64.length;
-
-  if (len % 4 > 0) {
-    throw new Error('Invalid string. Length must be a multiple of 4')
-  }
-
-  // the number of equal signs (place holders)
-  // if there are two placeholders, than the two characters before it
-  // represent one byte
-  // if there is only one, then the three characters before it represent 2 bytes
-  // this is just a cheap hack to not do indexOf twice
-  placeHolders = b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0;
-
-  // base64 is 4/3 + up to two characters of the original data
-  arr = new Arr(len * 3 / 4 - placeHolders);
-
-  // if there are placeholders, only get up to the last complete 4 chars
-  l = placeHolders > 0 ? len - 4 : len;
-
-  var L = 0;
-
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)];
-    arr[L++] = (tmp >> 16) & 0xFF;
-    arr[L++] = (tmp >> 8) & 0xFF;
-    arr[L++] = tmp & 0xFF;
-  }
-
-  if (placeHolders === 2) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4);
-    arr[L++] = tmp & 0xFF;
-  } else if (placeHolders === 1) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2);
-    arr[L++] = (tmp >> 8) & 0xFF;
-    arr[L++] = tmp & 0xFF;
-  }
-
-  return arr
-}
-
-function tripletToBase64 (num) {
-  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
-}
-
-function encodeChunk (uint8, start, end) {
-  var tmp;
-  var output = [];
-  for (var i = start; i < end; i += 3) {
-    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2]);
-    output.push(tripletToBase64(tmp));
-  }
-  return output.join('')
-}
-
-function fromByteArray (uint8) {
-  if (!inited) {
-    init$1();
-  }
-  var tmp;
-  var len = uint8.length;
-  var extraBytes = len % 3; // if we have 1 byte left, pad 2 bytes
-  var output = '';
-  var parts = [];
-  var maxChunkLength = 16383; // must be multiple of 3
-
-  // go through the array every three bytes, we'll deal with trailing stuff later
-  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)));
-  }
-
-  // pad the end with zeros, but make sure to not forget the extra bytes
-  if (extraBytes === 1) {
-    tmp = uint8[len - 1];
-    output += lookup[tmp >> 2];
-    output += lookup[(tmp << 4) & 0x3F];
-    output += '==';
-  } else if (extraBytes === 2) {
-    tmp = (uint8[len - 2] << 8) + (uint8[len - 1]);
-    output += lookup[tmp >> 10];
-    output += lookup[(tmp >> 4) & 0x3F];
-    output += lookup[(tmp << 2) & 0x3F];
-    output += '=';
-  }
-
-  parts.push(output);
-
-  return parts.join('')
-}
-
-function read (buffer, offset, isLE, mLen, nBytes) {
-  var e, m;
-  var eLen = nBytes * 8 - mLen - 1;
-  var eMax = (1 << eLen) - 1;
-  var eBias = eMax >> 1;
-  var nBits = -7;
-  var i = isLE ? (nBytes - 1) : 0;
-  var d = isLE ? -1 : 1;
-  var s = buffer[offset + i];
-
-  i += d;
-
-  e = s & ((1 << (-nBits)) - 1);
-  s >>= (-nBits);
-  nBits += eLen;
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1);
-  e >>= (-nBits);
-  nBits += mLen;
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias;
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen);
-    e = e - eBias;
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-function write (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c;
-  var eLen = nBytes * 8 - mLen - 1;
-  var eMax = (1 << eLen) - 1;
-  var eBias = eMax >> 1;
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0);
-  var i = isLE ? 0 : (nBytes - 1);
-  var d = isLE ? 1 : -1;
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
-
-  value = Math.abs(value);
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0;
-    e = eMax;
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2);
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--;
-      c *= 2;
-    }
-    if (e + eBias >= 1) {
-      value += rt / c;
-    } else {
-      value += rt * Math.pow(2, 1 - eBias);
-    }
-    if (value * c >= 2) {
-      e++;
-      c /= 2;
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0;
-      e = eMax;
-    } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen);
-      e = e + eBias;
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
-      e = 0;
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m;
-  eLen += mLen;
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128;
-}
-
-var toString = {}.toString;
-
-var isArray = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * @license  MIT
- */
-
-var INSPECT_MAX_BYTES = 50;
-
-/**
- * If `Buffer.TYPED_ARRAY_SUPPORT`:
- *   === true    Use Uint8Array implementation (fastest)
- *   === false   Use Object implementation (most compatible, even IE6)
- *
- * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
- * Opera 11.6+, iOS 4.2+.
- *
- * Due to various browser bugs, sometimes the Object implementation will be used even
- * when the browser supports typed arrays.
- *
- * Note:
- *
- *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
- *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
- *
- *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
- *
- *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
- *     incorrect length in some situations.
-
- * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
- * get the Object implementation, which is slower but behaves correctly.
- */
-Buffer.TYPED_ARRAY_SUPPORT = global$1.TYPED_ARRAY_SUPPORT !== undefined
-  ? global$1.TYPED_ARRAY_SUPPORT
-  : true;
-
-function kMaxLength () {
-  return Buffer.TYPED_ARRAY_SUPPORT
-    ? 0x7fffffff
-    : 0x3fffffff
-}
-
-function createBuffer (that, length) {
-  if (kMaxLength() < length) {
-    throw new RangeError('Invalid typed array length')
-  }
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    // Return an augmented `Uint8Array` instance, for best performance
-    that = new Uint8Array(length);
-    that.__proto__ = Buffer.prototype;
-  } else {
-    // Fallback: Return an object instance of the Buffer class
-    if (that === null) {
-      that = new Buffer(length);
-    }
-    that.length = length;
-  }
-
-  return that
-}
-
-/**
- * The Buffer constructor returns instances of `Uint8Array` that have their
- * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
- * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
- * and the `Uint8Array` methods. Square bracket notation works as expected -- it
- * returns a single octet.
- *
- * The `Uint8Array` prototype remains unmodified.
- */
-
-function Buffer (arg, encodingOrOffset, length) {
-  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
-    return new Buffer(arg, encodingOrOffset, length)
-  }
-
-  // Common case.
-  if (typeof arg === 'number') {
-    if (typeof encodingOrOffset === 'string') {
-      throw new Error(
-        'If encoding is specified then the first argument must be a string'
-      )
-    }
-    return allocUnsafe(this, arg)
-  }
-  return from(this, arg, encodingOrOffset, length)
-}
-
-Buffer.poolSize = 8192; // not used by this implementation
-
-// TODO: Legacy, not needed anymore. Remove in next major version.
-Buffer._augment = function (arr) {
-  arr.__proto__ = Buffer.prototype;
-  return arr
-};
-
-function from (that, value, encodingOrOffset, length) {
-  if (typeof value === 'number') {
-    throw new TypeError('"value" argument must not be a number')
-  }
-
-  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
-    return fromArrayBuffer(that, value, encodingOrOffset, length)
-  }
-
-  if (typeof value === 'string') {
-    return fromString(that, value, encodingOrOffset)
-  }
-
-  return fromObject(that, value)
-}
-
-/**
- * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
- * if value is a number.
- * Buffer.from(str[, encoding])
- * Buffer.from(array)
- * Buffer.from(buffer)
- * Buffer.from(arrayBuffer[, byteOffset[, length]])
- **/
-Buffer.from = function (value, encodingOrOffset, length) {
-  return from(null, value, encodingOrOffset, length)
-};
-
-if (Buffer.TYPED_ARRAY_SUPPORT) {
-  Buffer.prototype.__proto__ = Uint8Array.prototype;
-  Buffer.__proto__ = Uint8Array;
-}
-
-function assertSize (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('"size" argument must be a number')
-  } else if (size < 0) {
-    throw new RangeError('"size" argument must not be negative')
-  }
-}
-
-function alloc (that, size, fill, encoding) {
-  assertSize(size);
-  if (size <= 0) {
-    return createBuffer(that, size)
-  }
-  if (fill !== undefined) {
-    // Only pay attention to encoding if it's a string. This
-    // prevents accidentally sending in a number that would
-    // be interpretted as a start offset.
-    return typeof encoding === 'string'
-      ? createBuffer(that, size).fill(fill, encoding)
-      : createBuffer(that, size).fill(fill)
-  }
-  return createBuffer(that, size)
-}
-
-/**
- * Creates a new filled Buffer instance.
- * alloc(size[, fill[, encoding]])
- **/
-Buffer.alloc = function (size, fill, encoding) {
-  return alloc(null, size, fill, encoding)
-};
-
-function allocUnsafe (that, size) {
-  assertSize(size);
-  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0);
-  if (!Buffer.TYPED_ARRAY_SUPPORT) {
-    for (var i = 0; i < size; ++i) {
-      that[i] = 0;
-    }
-  }
-  return that
-}
-
-/**
- * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
- * */
-Buffer.allocUnsafe = function (size) {
-  return allocUnsafe(null, size)
-};
-/**
- * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
- */
-Buffer.allocUnsafeSlow = function (size) {
-  return allocUnsafe(null, size)
-};
-
-function fromString (that, string, encoding) {
-  if (typeof encoding !== 'string' || encoding === '') {
-    encoding = 'utf8';
-  }
-
-  if (!Buffer.isEncoding(encoding)) {
-    throw new TypeError('"encoding" must be a valid string encoding')
-  }
-
-  var length = byteLength(string, encoding) | 0;
-  that = createBuffer(that, length);
-
-  var actual = that.write(string, encoding);
-
-  if (actual !== length) {
-    // Writing a hex string, for example, that contains invalid characters will
-    // cause everything after the first invalid character to be ignored. (e.g.
-    // 'abxxcd' will be treated as 'ab')
-    that = that.slice(0, actual);
-  }
-
-  return that
-}
-
-function fromArrayLike (that, array) {
-  var length = array.length < 0 ? 0 : checked(array.length) | 0;
-  that = createBuffer(that, length);
-  for (var i = 0; i < length; i += 1) {
-    that[i] = array[i] & 255;
-  }
-  return that
-}
-
-function fromArrayBuffer (that, array, byteOffset, length) {
-  array.byteLength; // this throws if `array` is not a valid ArrayBuffer
-
-  if (byteOffset < 0 || array.byteLength < byteOffset) {
-    throw new RangeError('\'offset\' is out of bounds')
-  }
-
-  if (array.byteLength < byteOffset + (length || 0)) {
-    throw new RangeError('\'length\' is out of bounds')
-  }
-
-  if (byteOffset === undefined && length === undefined) {
-    array = new Uint8Array(array);
-  } else if (length === undefined) {
-    array = new Uint8Array(array, byteOffset);
-  } else {
-    array = new Uint8Array(array, byteOffset, length);
-  }
-
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    // Return an augmented `Uint8Array` instance, for best performance
-    that = array;
-    that.__proto__ = Buffer.prototype;
-  } else {
-    // Fallback: Return an object instance of the Buffer class
-    that = fromArrayLike(that, array);
-  }
-  return that
-}
-
-function fromObject (that, obj) {
-  if (internalIsBuffer(obj)) {
-    var len = checked(obj.length) | 0;
-    that = createBuffer(that, len);
-
-    if (that.length === 0) {
-      return that
-    }
-
-    obj.copy(that, 0, 0, len);
-    return that
-  }
-
-  if (obj) {
-    if ((typeof ArrayBuffer !== 'undefined' &&
-        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
-      if (typeof obj.length !== 'number' || isnan(obj.length)) {
-        return createBuffer(that, 0)
-      }
-      return fromArrayLike(that, obj)
-    }
-
-    if (obj.type === 'Buffer' && isArray(obj.data)) {
-      return fromArrayLike(that, obj.data)
-    }
-  }
-
-  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
-}
-
-function checked (length) {
-  // Note: cannot use `length < kMaxLength()` here because that fails when
-  // length is NaN (which is otherwise coerced to zero.)
-  if (length >= kMaxLength()) {
-    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
-  }
-  return length | 0
-}
-Buffer.isBuffer = isBuffer;
-function internalIsBuffer (b) {
-  return !!(b != null && b._isBuffer)
-}
-
-Buffer.compare = function compare (a, b) {
-  if (!internalIsBuffer(a) || !internalIsBuffer(b)) {
-    throw new TypeError('Arguments must be Buffers')
-  }
-
-  if (a === b) return 0
-
-  var x = a.length;
-  var y = b.length;
-
-  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-    if (a[i] !== b[i]) {
-      x = a[i];
-      y = b[i];
-      break
-    }
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-};
-
-Buffer.isEncoding = function isEncoding (encoding) {
-  switch (String(encoding).toLowerCase()) {
-    case 'hex':
-    case 'utf8':
-    case 'utf-8':
-    case 'ascii':
-    case 'latin1':
-    case 'binary':
-    case 'base64':
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return true
-    default:
-      return false
-  }
-};
-
-Buffer.concat = function concat (list, length) {
-  if (!isArray(list)) {
-    throw new TypeError('"list" argument must be an Array of Buffers')
-  }
-
-  if (list.length === 0) {
-    return Buffer.alloc(0)
-  }
-
-  var i;
-  if (length === undefined) {
-    length = 0;
-    for (i = 0; i < list.length; ++i) {
-      length += list[i].length;
-    }
-  }
-
-  var buffer = Buffer.allocUnsafe(length);
-  var pos = 0;
-  for (i = 0; i < list.length; ++i) {
-    var buf = list[i];
-    if (!internalIsBuffer(buf)) {
-      throw new TypeError('"list" argument must be an Array of Buffers')
-    }
-    buf.copy(buffer, pos);
-    pos += buf.length;
-  }
-  return buffer
-};
-
-function byteLength (string, encoding) {
-  if (internalIsBuffer(string)) {
-    return string.length
-  }
-  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
-      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
-    return string.byteLength
-  }
-  if (typeof string !== 'string') {
-    string = '' + string;
-  }
-
-  var len = string.length;
-  if (len === 0) return 0
-
-  // Use a for loop to avoid recursion
-  var loweredCase = false;
-  for (;;) {
-    switch (encoding) {
-      case 'ascii':
-      case 'latin1':
-      case 'binary':
-        return len
-      case 'utf8':
-      case 'utf-8':
-      case undefined:
-        return utf8ToBytes(string).length
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return len * 2
-      case 'hex':
-        return len >>> 1
-      case 'base64':
-        return base64ToBytes(string).length
-      default:
-        if (loweredCase) return utf8ToBytes(string).length // assume utf8
-        encoding = ('' + encoding).toLowerCase();
-        loweredCase = true;
-    }
-  }
-}
-Buffer.byteLength = byteLength;
-
-function slowToString (encoding, start, end) {
-  var loweredCase = false;
-
-  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
-  // property of a typed array.
-
-  // This behaves neither like String nor Uint8Array in that we set start/end
-  // to their upper/lower bounds if the value passed is out of range.
-  // undefined is handled specially as per ECMA-262 6th Edition,
-  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
-  if (start === undefined || start < 0) {
-    start = 0;
-  }
-  // Return early if start > this.length. Done here to prevent potential uint32
-  // coercion fail below.
-  if (start > this.length) {
-    return ''
-  }
-
-  if (end === undefined || end > this.length) {
-    end = this.length;
-  }
-
-  if (end <= 0) {
-    return ''
-  }
-
-  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
-  end >>>= 0;
-  start >>>= 0;
-
-  if (end <= start) {
-    return ''
-  }
-
-  if (!encoding) encoding = 'utf8';
-
-  while (true) {
-    switch (encoding) {
-      case 'hex':
-        return hexSlice(this, start, end)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Slice(this, start, end)
-
-      case 'ascii':
-        return asciiSlice(this, start, end)
-
-      case 'latin1':
-      case 'binary':
-        return latin1Slice(this, start, end)
-
-      case 'base64':
-        return base64Slice(this, start, end)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return utf16leSlice(this, start, end)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = (encoding + '').toLowerCase();
-        loweredCase = true;
-    }
-  }
-}
-
-// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
-// Buffer instances.
-Buffer.prototype._isBuffer = true;
-
-function swap (b, n, m) {
-  var i = b[n];
-  b[n] = b[m];
-  b[m] = i;
-}
-
-Buffer.prototype.swap16 = function swap16 () {
-  var len = this.length;
-  if (len % 2 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 16-bits')
-  }
-  for (var i = 0; i < len; i += 2) {
-    swap(this, i, i + 1);
-  }
-  return this
-};
-
-Buffer.prototype.swap32 = function swap32 () {
-  var len = this.length;
-  if (len % 4 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 32-bits')
-  }
-  for (var i = 0; i < len; i += 4) {
-    swap(this, i, i + 3);
-    swap(this, i + 1, i + 2);
-  }
-  return this
-};
-
-Buffer.prototype.swap64 = function swap64 () {
-  var len = this.length;
-  if (len % 8 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 64-bits')
-  }
-  for (var i = 0; i < len; i += 8) {
-    swap(this, i, i + 7);
-    swap(this, i + 1, i + 6);
-    swap(this, i + 2, i + 5);
-    swap(this, i + 3, i + 4);
-  }
-  return this
-};
-
-Buffer.prototype.toString = function toString () {
-  var length = this.length | 0;
-  if (length === 0) return ''
-  if (arguments.length === 0) return utf8Slice(this, 0, length)
-  return slowToString.apply(this, arguments)
-};
-
-Buffer.prototype.equals = function equals (b) {
-  if (!internalIsBuffer(b)) throw new TypeError('Argument must be a Buffer')
-  if (this === b) return true
-  return Buffer.compare(this, b) === 0
-};
-
-Buffer.prototype.inspect = function inspect () {
-  var str = '';
-  var max = INSPECT_MAX_BYTES;
-  if (this.length > 0) {
-    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ');
-    if (this.length > max) str += ' ... ';
-  }
-  return '<Buffer ' + str + '>'
-};
-
-Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
-  if (!internalIsBuffer(target)) {
-    throw new TypeError('Argument must be a Buffer')
-  }
-
-  if (start === undefined) {
-    start = 0;
-  }
-  if (end === undefined) {
-    end = target ? target.length : 0;
-  }
-  if (thisStart === undefined) {
-    thisStart = 0;
-  }
-  if (thisEnd === undefined) {
-    thisEnd = this.length;
-  }
-
-  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
-    throw new RangeError('out of range index')
-  }
-
-  if (thisStart >= thisEnd && start >= end) {
-    return 0
-  }
-  if (thisStart >= thisEnd) {
-    return -1
-  }
-  if (start >= end) {
-    return 1
-  }
-
-  start >>>= 0;
-  end >>>= 0;
-  thisStart >>>= 0;
-  thisEnd >>>= 0;
-
-  if (this === target) return 0
-
-  var x = thisEnd - thisStart;
-  var y = end - start;
-  var len = Math.min(x, y);
-
-  var thisCopy = this.slice(thisStart, thisEnd);
-  var targetCopy = target.slice(start, end);
-
-  for (var i = 0; i < len; ++i) {
-    if (thisCopy[i] !== targetCopy[i]) {
-      x = thisCopy[i];
-      y = targetCopy[i];
-      break
-    }
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-};
-
-// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
-// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
-//
-// Arguments:
-// - buffer - a Buffer to search
-// - val - a string, Buffer, or number
-// - byteOffset - an index into `buffer`; will be clamped to an int32
-// - encoding - an optional encoding, relevant is val is a string
-// - dir - true for indexOf, false for lastIndexOf
-function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
-  // Empty buffer means no match
-  if (buffer.length === 0) return -1
-
-  // Normalize byteOffset
-  if (typeof byteOffset === 'string') {
-    encoding = byteOffset;
-    byteOffset = 0;
-  } else if (byteOffset > 0x7fffffff) {
-    byteOffset = 0x7fffffff;
-  } else if (byteOffset < -0x80000000) {
-    byteOffset = -0x80000000;
-  }
-  byteOffset = +byteOffset;  // Coerce to Number.
-  if (isNaN(byteOffset)) {
-    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
-    byteOffset = dir ? 0 : (buffer.length - 1);
-  }
-
-  // Normalize byteOffset: negative offsets start from the end of the buffer
-  if (byteOffset < 0) byteOffset = buffer.length + byteOffset;
-  if (byteOffset >= buffer.length) {
-    if (dir) return -1
-    else byteOffset = buffer.length - 1;
-  } else if (byteOffset < 0) {
-    if (dir) byteOffset = 0;
-    else return -1
-  }
-
-  // Normalize val
-  if (typeof val === 'string') {
-    val = Buffer.from(val, encoding);
-  }
-
-  // Finally, search either indexOf (if dir is true) or lastIndexOf
-  if (internalIsBuffer(val)) {
-    // Special case: looking for empty string/buffer always fails
-    if (val.length === 0) {
-      return -1
-    }
-    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
-  } else if (typeof val === 'number') {
-    val = val & 0xFF; // Search for a byte value [0-255]
-    if (Buffer.TYPED_ARRAY_SUPPORT &&
-        typeof Uint8Array.prototype.indexOf === 'function') {
-      if (dir) {
-        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
-      } else {
-        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
-      }
-    }
-    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
-  }
-
-  throw new TypeError('val must be string, number or Buffer')
-}
-
-function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
-  var indexSize = 1;
-  var arrLength = arr.length;
-  var valLength = val.length;
-
-  if (encoding !== undefined) {
-    encoding = String(encoding).toLowerCase();
-    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
-        encoding === 'utf16le' || encoding === 'utf-16le') {
-      if (arr.length < 2 || val.length < 2) {
-        return -1
-      }
-      indexSize = 2;
-      arrLength /= 2;
-      valLength /= 2;
-      byteOffset /= 2;
-    }
-  }
-
-  function read (buf, i) {
-    if (indexSize === 1) {
-      return buf[i]
-    } else {
-      return buf.readUInt16BE(i * indexSize)
-    }
-  }
-
-  var i;
-  if (dir) {
-    var foundIndex = -1;
-    for (i = byteOffset; i < arrLength; i++) {
-      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
-        if (foundIndex === -1) foundIndex = i;
-        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
-      } else {
-        if (foundIndex !== -1) i -= i - foundIndex;
-        foundIndex = -1;
-      }
-    }
-  } else {
-    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength;
-    for (i = byteOffset; i >= 0; i--) {
-      var found = true;
-      for (var j = 0; j < valLength; j++) {
-        if (read(arr, i + j) !== read(val, j)) {
-          found = false;
-          break
-        }
-      }
-      if (found) return i
-    }
-  }
-
-  return -1
-}
-
-Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
-  return this.indexOf(val, byteOffset, encoding) !== -1
-};
-
-Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
-};
-
-Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
-};
-
-function hexWrite (buf, string, offset, length) {
-  offset = Number(offset) || 0;
-  var remaining = buf.length - offset;
-  if (!length) {
-    length = remaining;
-  } else {
-    length = Number(length);
-    if (length > remaining) {
-      length = remaining;
-    }
-  }
-
-  // must be an even number of digits
-  var strLen = string.length;
-  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
-
-  if (length > strLen / 2) {
-    length = strLen / 2;
-  }
-  for (var i = 0; i < length; ++i) {
-    var parsed = parseInt(string.substr(i * 2, 2), 16);
-    if (isNaN(parsed)) return i
-    buf[offset + i] = parsed;
-  }
-  return i
-}
-
-function utf8Write (buf, string, offset, length) {
-  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
-}
-
-function asciiWrite (buf, string, offset, length) {
-  return blitBuffer(asciiToBytes(string), buf, offset, length)
-}
-
-function latin1Write (buf, string, offset, length) {
-  return asciiWrite(buf, string, offset, length)
-}
-
-function base64Write (buf, string, offset, length) {
-  return blitBuffer(base64ToBytes(string), buf, offset, length)
-}
-
-function ucs2Write (buf, string, offset, length) {
-  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
-}
-
-Buffer.prototype.write = function write (string, offset, length, encoding) {
-  // Buffer#write(string)
-  if (offset === undefined) {
-    encoding = 'utf8';
-    length = this.length;
-    offset = 0;
-  // Buffer#write(string, encoding)
-  } else if (length === undefined && typeof offset === 'string') {
-    encoding = offset;
-    length = this.length;
-    offset = 0;
-  // Buffer#write(string, offset[, length][, encoding])
-  } else if (isFinite(offset)) {
-    offset = offset | 0;
-    if (isFinite(length)) {
-      length = length | 0;
-      if (encoding === undefined) encoding = 'utf8';
-    } else {
-      encoding = length;
-      length = undefined;
-    }
-  // legacy write(string, encoding, offset, length) - remove in v0.13
-  } else {
-    throw new Error(
-      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
-    )
-  }
-
-  var remaining = this.length - offset;
-  if (length === undefined || length > remaining) length = remaining;
-
-  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
-    throw new RangeError('Attempt to write outside buffer bounds')
-  }
-
-  if (!encoding) encoding = 'utf8';
-
-  var loweredCase = false;
-  for (;;) {
-    switch (encoding) {
-      case 'hex':
-        return hexWrite(this, string, offset, length)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Write(this, string, offset, length)
-
-      case 'ascii':
-        return asciiWrite(this, string, offset, length)
-
-      case 'latin1':
-      case 'binary':
-        return latin1Write(this, string, offset, length)
-
-      case 'base64':
-        // Warning: maxLength not taken into account in base64Write
-        return base64Write(this, string, offset, length)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return ucs2Write(this, string, offset, length)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = ('' + encoding).toLowerCase();
-        loweredCase = true;
-    }
-  }
-};
-
-Buffer.prototype.toJSON = function toJSON () {
-  return {
-    type: 'Buffer',
-    data: Array.prototype.slice.call(this._arr || this, 0)
-  }
-};
-
-function base64Slice (buf, start, end) {
-  if (start === 0 && end === buf.length) {
-    return fromByteArray(buf)
-  } else {
-    return fromByteArray(buf.slice(start, end))
-  }
-}
-
-function utf8Slice (buf, start, end) {
-  end = Math.min(buf.length, end);
-  var res = [];
-
-  var i = start;
-  while (i < end) {
-    var firstByte = buf[i];
-    var codePoint = null;
-    var bytesPerSequence = (firstByte > 0xEF) ? 4
-      : (firstByte > 0xDF) ? 3
-      : (firstByte > 0xBF) ? 2
-      : 1;
-
-    if (i + bytesPerSequence <= end) {
-      var secondByte, thirdByte, fourthByte, tempCodePoint;
-
-      switch (bytesPerSequence) {
-        case 1:
-          if (firstByte < 0x80) {
-            codePoint = firstByte;
-          }
-          break
-        case 2:
-          secondByte = buf[i + 1];
-          if ((secondByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F);
-            if (tempCodePoint > 0x7F) {
-              codePoint = tempCodePoint;
-            }
-          }
-          break
-        case 3:
-          secondByte = buf[i + 1];
-          thirdByte = buf[i + 2];
-          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F);
-            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
-              codePoint = tempCodePoint;
-            }
-          }
-          break
-        case 4:
-          secondByte = buf[i + 1];
-          thirdByte = buf[i + 2];
-          fourthByte = buf[i + 3];
-          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F);
-            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
-              codePoint = tempCodePoint;
-            }
-          }
-      }
-    }
-
-    if (codePoint === null) {
-      // we did not generate a valid codePoint so insert a
-      // replacement char (U+FFFD) and advance only 1 byte
-      codePoint = 0xFFFD;
-      bytesPerSequence = 1;
-    } else if (codePoint > 0xFFFF) {
-      // encode to utf16 (surrogate pair dance)
-      codePoint -= 0x10000;
-      res.push(codePoint >>> 10 & 0x3FF | 0xD800);
-      codePoint = 0xDC00 | codePoint & 0x3FF;
-    }
-
-    res.push(codePoint);
-    i += bytesPerSequence;
-  }
-
-  return decodeCodePointsArray(res)
-}
-
-// Based on http://stackoverflow.com/a/22747272/680742, the browser with
-// the lowest limit is Chrome, with 0x10000 args.
-// We go 1 magnitude less, for safety
-var MAX_ARGUMENTS_LENGTH = 0x1000;
-
-function decodeCodePointsArray (codePoints) {
-  var len = codePoints.length;
-  if (len <= MAX_ARGUMENTS_LENGTH) {
-    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
-  }
-
-  // Decode in chunks to avoid "call stack size exceeded".
-  var res = '';
-  var i = 0;
-  while (i < len) {
-    res += String.fromCharCode.apply(
-      String,
-      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
-    );
-  }
-  return res
-}
-
-function asciiSlice (buf, start, end) {
-  var ret = '';
-  end = Math.min(buf.length, end);
-
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i] & 0x7F);
-  }
-  return ret
-}
-
-function latin1Slice (buf, start, end) {
-  var ret = '';
-  end = Math.min(buf.length, end);
-
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i]);
-  }
-  return ret
-}
-
-function hexSlice (buf, start, end) {
-  var len = buf.length;
-
-  if (!start || start < 0) start = 0;
-  if (!end || end < 0 || end > len) end = len;
-
-  var out = '';
-  for (var i = start; i < end; ++i) {
-    out += toHex(buf[i]);
-  }
-  return out
-}
-
-function utf16leSlice (buf, start, end) {
-  var bytes = buf.slice(start, end);
-  var res = '';
-  for (var i = 0; i < bytes.length; i += 2) {
-    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256);
-  }
-  return res
-}
-
-Buffer.prototype.slice = function slice (start, end) {
-  var len = this.length;
-  start = ~~start;
-  end = end === undefined ? len : ~~end;
-
-  if (start < 0) {
-    start += len;
-    if (start < 0) start = 0;
-  } else if (start > len) {
-    start = len;
-  }
-
-  if (end < 0) {
-    end += len;
-    if (end < 0) end = 0;
-  } else if (end > len) {
-    end = len;
-  }
-
-  if (end < start) end = start;
-
-  var newBuf;
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    newBuf = this.subarray(start, end);
-    newBuf.__proto__ = Buffer.prototype;
-  } else {
-    var sliceLen = end - start;
-    newBuf = new Buffer(sliceLen, undefined);
-    for (var i = 0; i < sliceLen; ++i) {
-      newBuf[i] = this[i + start];
-    }
-  }
-
-  return newBuf
-};
-
-/*
- * Need to make sure that buffer isn't trying to write out of bounds.
- */
-function checkOffset (offset, ext, length) {
-  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
-  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
-}
-
-Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) checkOffset(offset, byteLength, this.length);
-
-  var val = this[offset];
-  var mul = 1;
-  var i = 0;
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul;
-  }
-
-  return val
-};
-
-Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) {
-    checkOffset(offset, byteLength, this.length);
-  }
-
-  var val = this[offset + --byteLength];
-  var mul = 1;
-  while (byteLength > 0 && (mul *= 0x100)) {
-    val += this[offset + --byteLength] * mul;
-  }
-
-  return val
-};
-
-Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 1, this.length);
-  return this[offset]
-};
-
-Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length);
-  return this[offset] | (this[offset + 1] << 8)
-};
-
-Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length);
-  return (this[offset] << 8) | this[offset + 1]
-};
-
-Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-
-  return ((this[offset]) |
-      (this[offset + 1] << 8) |
-      (this[offset + 2] << 16)) +
-      (this[offset + 3] * 0x1000000)
-};
-
-Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-
-  return (this[offset] * 0x1000000) +
-    ((this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    this[offset + 3])
-};
-
-Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) checkOffset(offset, byteLength, this.length);
-
-  var val = this[offset];
-  var mul = 1;
-  var i = 0;
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul;
-  }
-  mul *= 0x80;
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength);
-
-  return val
-};
-
-Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) checkOffset(offset, byteLength, this.length);
-
-  var i = byteLength;
-  var mul = 1;
-  var val = this[offset + --i];
-  while (i > 0 && (mul *= 0x100)) {
-    val += this[offset + --i] * mul;
-  }
-  mul *= 0x80;
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength);
-
-  return val
-};
-
-Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 1, this.length);
-  if (!(this[offset] & 0x80)) return (this[offset])
-  return ((0xff - this[offset] + 1) * -1)
-};
-
-Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length);
-  var val = this[offset] | (this[offset + 1] << 8);
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-};
-
-Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length);
-  var val = this[offset + 1] | (this[offset] << 8);
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-};
-
-Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-
-  return (this[offset]) |
-    (this[offset + 1] << 8) |
-    (this[offset + 2] << 16) |
-    (this[offset + 3] << 24)
-};
-
-Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-
-  return (this[offset] << 24) |
-    (this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    (this[offset + 3])
-};
-
-Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-  return read(this, offset, true, 23, 4)
-};
-
-Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-  return read(this, offset, false, 23, 4)
-};
-
-Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 8, this.length);
-  return read(this, offset, true, 52, 8)
-};
-
-Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 8, this.length);
-  return read(this, offset, false, 52, 8)
-};
-
-function checkInt (buf, value, offset, ext, max, min) {
-  if (!internalIsBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
-  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
-  if (offset + ext > buf.length) throw new RangeError('Index out of range')
-}
-
-Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) {
-    var maxBytes = Math.pow(2, 8 * byteLength) - 1;
-    checkInt(this, value, offset, byteLength, maxBytes, 0);
-  }
-
-  var mul = 1;
-  var i = 0;
-  this[offset] = value & 0xFF;
-  while (++i < byteLength && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) {
-    var maxBytes = Math.pow(2, 8 * byteLength) - 1;
-    checkInt(this, value, offset, byteLength, maxBytes, 0);
-  }
-
-  var i = byteLength - 1;
-  var mul = 1;
-  this[offset + i] = value & 0xFF;
-  while (--i >= 0 && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0);
-  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value);
-  this[offset] = (value & 0xff);
-  return offset + 1
-};
-
-function objectWriteUInt16 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffff + value + 1;
-  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
-    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
-      (littleEndian ? i : 1 - i) * 8;
-  }
-}
-
-Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff);
-    this[offset + 1] = (value >>> 8);
-  } else {
-    objectWriteUInt16(this, value, offset, true);
-  }
-  return offset + 2
-};
-
-Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8);
-    this[offset + 1] = (value & 0xff);
-  } else {
-    objectWriteUInt16(this, value, offset, false);
-  }
-  return offset + 2
-};
-
-function objectWriteUInt32 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffffffff + value + 1;
-  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
-    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff;
-  }
-}
-
-Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset + 3] = (value >>> 24);
-    this[offset + 2] = (value >>> 16);
-    this[offset + 1] = (value >>> 8);
-    this[offset] = (value & 0xff);
-  } else {
-    objectWriteUInt32(this, value, offset, true);
-  }
-  return offset + 4
-};
-
-Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24);
-    this[offset + 1] = (value >>> 16);
-    this[offset + 2] = (value >>> 8);
-    this[offset + 3] = (value & 0xff);
-  } else {
-    objectWriteUInt32(this, value, offset, false);
-  }
-  return offset + 4
-};
-
-Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) {
-    var limit = Math.pow(2, 8 * byteLength - 1);
-
-    checkInt(this, value, offset, byteLength, limit - 1, -limit);
-  }
-
-  var i = 0;
-  var mul = 1;
-  var sub = 0;
-  this[offset] = value & 0xFF;
-  while (++i < byteLength && (mul *= 0x100)) {
-    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
-      sub = 1;
-    }
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) {
-    var limit = Math.pow(2, 8 * byteLength - 1);
-
-    checkInt(this, value, offset, byteLength, limit - 1, -limit);
-  }
-
-  var i = byteLength - 1;
-  var mul = 1;
-  var sub = 0;
-  this[offset + i] = value & 0xFF;
-  while (--i >= 0 && (mul *= 0x100)) {
-    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
-      sub = 1;
-    }
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80);
-  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value);
-  if (value < 0) value = 0xff + value + 1;
-  this[offset] = (value & 0xff);
-  return offset + 1
-};
-
-Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff);
-    this[offset + 1] = (value >>> 8);
-  } else {
-    objectWriteUInt16(this, value, offset, true);
-  }
-  return offset + 2
-};
-
-Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8);
-    this[offset + 1] = (value & 0xff);
-  } else {
-    objectWriteUInt16(this, value, offset, false);
-  }
-  return offset + 2
-};
-
-Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff);
-    this[offset + 1] = (value >>> 8);
-    this[offset + 2] = (value >>> 16);
-    this[offset + 3] = (value >>> 24);
-  } else {
-    objectWriteUInt32(this, value, offset, true);
-  }
-  return offset + 4
-};
-
-Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000);
-  if (value < 0) value = 0xffffffff + value + 1;
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24);
-    this[offset + 1] = (value >>> 16);
-    this[offset + 2] = (value >>> 8);
-    this[offset + 3] = (value & 0xff);
-  } else {
-    objectWriteUInt32(this, value, offset, false);
-  }
-  return offset + 4
-};
-
-function checkIEEE754 (buf, value, offset, ext, max, min) {
-  if (offset + ext > buf.length) throw new RangeError('Index out of range')
-  if (offset < 0) throw new RangeError('Index out of range')
-}
-
-function writeFloat (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754(buf, value, offset, 4);
-  }
-  write(buf, value, offset, littleEndian, 23, 4);
-  return offset + 4
-}
-
-Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
-  return writeFloat(this, value, offset, true, noAssert)
-};
-
-Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
-  return writeFloat(this, value, offset, false, noAssert)
-};
-
-function writeDouble (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754(buf, value, offset, 8);
-  }
-  write(buf, value, offset, littleEndian, 52, 8);
-  return offset + 8
-}
-
-Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
-  return writeDouble(this, value, offset, true, noAssert)
-};
-
-Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
-  return writeDouble(this, value, offset, false, noAssert)
-};
-
-// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
-Buffer.prototype.copy = function copy (target, targetStart, start, end) {
-  if (!start) start = 0;
-  if (!end && end !== 0) end = this.length;
-  if (targetStart >= target.length) targetStart = target.length;
-  if (!targetStart) targetStart = 0;
-  if (end > 0 && end < start) end = start;
-
-  // Copy 0 bytes; we're done
-  if (end === start) return 0
-  if (target.length === 0 || this.length === 0) return 0
-
-  // Fatal error conditions
-  if (targetStart < 0) {
-    throw new RangeError('targetStart out of bounds')
-  }
-  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
-  if (end < 0) throw new RangeError('sourceEnd out of bounds')
-
-  // Are we oob?
-  if (end > this.length) end = this.length;
-  if (target.length - targetStart < end - start) {
-    end = target.length - targetStart + start;
-  }
-
-  var len = end - start;
-  var i;
-
-  if (this === target && start < targetStart && targetStart < end) {
-    // descending copy from end
-    for (i = len - 1; i >= 0; --i) {
-      target[i + targetStart] = this[i + start];
-    }
-  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
-    // ascending copy from start
-    for (i = 0; i < len; ++i) {
-      target[i + targetStart] = this[i + start];
-    }
-  } else {
-    Uint8Array.prototype.set.call(
-      target,
-      this.subarray(start, start + len),
-      targetStart
-    );
-  }
-
-  return len
-};
-
-// Usage:
-//    buffer.fill(number[, offset[, end]])
-//    buffer.fill(buffer[, offset[, end]])
-//    buffer.fill(string[, offset[, end]][, encoding])
-Buffer.prototype.fill = function fill (val, start, end, encoding) {
-  // Handle string cases:
-  if (typeof val === 'string') {
-    if (typeof start === 'string') {
-      encoding = start;
-      start = 0;
-      end = this.length;
-    } else if (typeof end === 'string') {
-      encoding = end;
-      end = this.length;
-    }
-    if (val.length === 1) {
-      var code = val.charCodeAt(0);
-      if (code < 256) {
-        val = code;
-      }
-    }
-    if (encoding !== undefined && typeof encoding !== 'string') {
-      throw new TypeError('encoding must be a string')
-    }
-    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
-      throw new TypeError('Unknown encoding: ' + encoding)
-    }
-  } else if (typeof val === 'number') {
-    val = val & 255;
-  }
-
-  // Invalid ranges are not set to a default, so can range check early.
-  if (start < 0 || this.length < start || this.length < end) {
-    throw new RangeError('Out of range index')
-  }
-
-  if (end <= start) {
-    return this
-  }
-
-  start = start >>> 0;
-  end = end === undefined ? this.length : end >>> 0;
-
-  if (!val) val = 0;
-
-  var i;
-  if (typeof val === 'number') {
-    for (i = start; i < end; ++i) {
-      this[i] = val;
-    }
-  } else {
-    var bytes = internalIsBuffer(val)
-      ? val
-      : utf8ToBytes(new Buffer(val, encoding).toString());
-    var len = bytes.length;
-    for (i = 0; i < end - start; ++i) {
-      this[i + start] = bytes[i % len];
-    }
-  }
-
-  return this
-};
-
-// HELPER FUNCTIONS
-// ================
-
-var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g;
-
-function base64clean (str) {
-  // Node strips out invalid characters like \n and \t from the string, base64-js does not
-  str = stringtrim(str).replace(INVALID_BASE64_RE, '');
-  // Node converts strings with length < 2 to ''
-  if (str.length < 2) return ''
-  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
-  while (str.length % 4 !== 0) {
-    str = str + '=';
-  }
-  return str
-}
-
-function stringtrim (str) {
-  if (str.trim) return str.trim()
-  return str.replace(/^\s+|\s+$/g, '')
-}
-
-function toHex (n) {
-  if (n < 16) return '0' + n.toString(16)
-  return n.toString(16)
-}
-
-function utf8ToBytes (string, units) {
-  units = units || Infinity;
-  var codePoint;
-  var length = string.length;
-  var leadSurrogate = null;
-  var bytes = [];
-
-  for (var i = 0; i < length; ++i) {
-    codePoint = string.charCodeAt(i);
-
-    // is surrogate component
-    if (codePoint > 0xD7FF && codePoint < 0xE000) {
-      // last char was a lead
-      if (!leadSurrogate) {
-        // no lead yet
-        if (codePoint > 0xDBFF) {
-          // unexpected trail
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-          continue
-        } else if (i + 1 === length) {
-          // unpaired lead
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-          continue
-        }
-
-        // valid lead
-        leadSurrogate = codePoint;
-
-        continue
-      }
-
-      // 2 leads in a row
-      if (codePoint < 0xDC00) {
-        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-        leadSurrogate = codePoint;
-        continue
-      }
-
-      // valid surrogate pair
-      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000;
-    } else if (leadSurrogate) {
-      // valid bmp char, but last char was a lead
-      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-    }
-
-    leadSurrogate = null;
-
-    // encode utf8
-    if (codePoint < 0x80) {
-      if ((units -= 1) < 0) break
-      bytes.push(codePoint);
-    } else if (codePoint < 0x800) {
-      if ((units -= 2) < 0) break
-      bytes.push(
-        codePoint >> 0x6 | 0xC0,
-        codePoint & 0x3F | 0x80
-      );
-    } else if (codePoint < 0x10000) {
-      if ((units -= 3) < 0) break
-      bytes.push(
-        codePoint >> 0xC | 0xE0,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      );
-    } else if (codePoint < 0x110000) {
-      if ((units -= 4) < 0) break
-      bytes.push(
-        codePoint >> 0x12 | 0xF0,
-        codePoint >> 0xC & 0x3F | 0x80,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      );
-    } else {
-      throw new Error('Invalid code point')
-    }
-  }
-
-  return bytes
-}
-
-function asciiToBytes (str) {
-  var byteArray = [];
-  for (var i = 0; i < str.length; ++i) {
-    // Node's code seems to be doing this and not & 0x7F..
-    byteArray.push(str.charCodeAt(i) & 0xFF);
-  }
-  return byteArray
-}
-
-function utf16leToBytes (str, units) {
-  var c, hi, lo;
-  var byteArray = [];
-  for (var i = 0; i < str.length; ++i) {
-    if ((units -= 2) < 0) break
-
-    c = str.charCodeAt(i);
-    hi = c >> 8;
-    lo = c % 256;
-    byteArray.push(lo);
-    byteArray.push(hi);
-  }
-
-  return byteArray
-}
-
-
-function base64ToBytes (str) {
-  return toByteArray(base64clean(str))
-}
-
-function blitBuffer (src, dst, offset, length) {
-  for (var i = 0; i < length; ++i) {
-    if ((i + offset >= dst.length) || (i >= src.length)) break
-    dst[i + offset] = src[i];
-  }
-  return i
-}
-
-function isnan (val) {
-  return val !== val // eslint-disable-line no-self-compare
-}
-
-
-// the following is from is-buffer, also by Feross Aboukhadijeh and with same lisence
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-function isBuffer(obj) {
-  return obj != null && (!!obj._isBuffer || isFastBuffer(obj) || isSlowBuffer(obj))
-}
-
-function isFastBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isFastBuffer(obj.slice(0, 0))
-}
-
-let urlAlphabet$1 =
-  'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
-
-const POOL_SIZE_MULTIPLIER$1 = 128;
-let pool$1, poolOffset$1;
-let fillPool$1 = bytes => {
-  if (!pool$1 || pool$1.length < bytes) {
-    pool$1 = Buffer.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER$1);
-    crypto__default["default"].randomFillSync(pool$1);
-    poolOffset$1 = 0;
-  } else if (poolOffset$1 + bytes > pool$1.length) {
-    crypto__default["default"].randomFillSync(pool$1);
-    poolOffset$1 = 0;
-  }
-  poolOffset$1 += bytes;
-};
 let nanoid$1 = (size = 21) => {
-  fillPool$1((size -= 0));
   let id = '';
-  for (let i = poolOffset$1 - size; i < poolOffset$1; i++) {
-    id += urlAlphabet$1[pool$1[i] & 63];
+  let bytes = crypto.getRandomValues(new Uint8Array(size));
+  while (size--) {
+    let byte = bytes[size] & 63;
+    if (byte < 36) {
+      id += byte.toString(36);
+    } else if (byte < 62) {
+      id += (byte - 26).toString(36).toUpperCase();
+    } else if (byte < 63) {
+      id += '_';
+    } else {
+      id += '-';
+    }
   }
   return id
 };
@@ -9894,65 +3973,65 @@ const getUniqUserId$1 = () => {
 };
 
 const IconLogoCircle = ({ className }) => {
-    const gradientId = React.useMemo(() => nanoid$1(), []);
-    return (React__default["default"].createElement("svg", { className: className, fill: "none", height: "34", viewBox: "0 0 34 34", width: "34", xmlns: "http://www.w3.org/2000/svg" },
-        React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", r: "17" }),
-        React__default["default"].createElement("path", { d: "M17 0C7.59621 0 0 7.59887 0 17C0 26.4038 7.59887 34 17 34C26.4038 34 34 26.4011 34 17C34 7.59621 26.4011 0 17 0ZM6.44938 24.5006C5.3198 22.9161 4.55215 21.068 4.23074 19.1575L6.19504 18.8268C6.4673 20.4418 7.11609 22.0037 8.07168 23.3445L6.44938 24.5006ZM6.19504 15.1732L4.23074 14.8425C4.55215 12.932 5.3198 11.0839 6.44938 9.49941L8.07168 10.6555C7.11609 11.9963 6.4673 13.5582 6.19504 15.1732ZM14.8425 29.7693C12.932 29.4479 11.0839 28.6802 9.49941 27.5506L10.6555 25.9283C11.9963 26.8839 13.5582 27.5327 15.1732 27.805L14.8425 29.7693ZM10.6555 8.07168L9.49941 6.44938C11.0839 5.3198 12.932 4.55215 14.8425 4.23074L15.1732 6.19504C13.5582 6.4673 11.9963 7.11609 10.6555 8.07168ZM27.5506 9.49941C28.6802 11.0839 29.4479 12.9313 29.7693 14.8425L27.805 15.1732C27.5327 13.5582 26.8839 11.9963 25.929 10.6555L27.5506 9.49941ZM19.1575 29.7693L18.8268 27.805C20.4418 27.5327 22.0037 26.8839 23.3445 25.9283L24.5006 27.5506C22.9161 28.6802 21.068 29.4479 19.1575 29.7693ZM23.3445 8.07168C22.0037 7.11609 20.4418 6.4673 18.8268 6.19504L19.1575 4.23074C21.068 4.55215 22.9161 5.3198 24.5006 6.44938L23.3445 8.07168ZM27.5506 24.5006L25.929 23.3445C26.8839 22.0037 27.5327 20.4418 27.805 18.8268L29.7693 19.1575C29.4479 21.0687 28.6802 22.9161 27.5506 24.5006Z", fill: `url(#${gradientId})` }),
-        React__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", opacity: "0.6", r: "5" }),
-        React__default["default"].createElement("defs", null,
-            React__default["default"].createElement("linearGradient", { gradientUnits: "userSpaceOnUse", id: gradientId, x1: "7.5", x2: "22", y1: "3.5", y2: "32.5" },
-                React__default["default"].createElement("stop", { stopColor: "#FF0198" }),
-                React__default["default"].createElement("stop", { offset: "1", stopColor: "#B90AE0" })))));
+    const gradientId = React__default.useMemo(() => nanoid$1(), []);
+    return (React__default__default["default"].createElement("svg", { className: className, fill: "none", height: "34", viewBox: "0 0 34 34", width: "34", xmlns: "http://www.w3.org/2000/svg" },
+        React__default__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", r: "17" }),
+        React__default__default["default"].createElement("path", { d: "M17 0C7.59621 0 0 7.59887 0 17C0 26.4038 7.59887 34 17 34C26.4038 34 34 26.4011 34 17C34 7.59621 26.4011 0 17 0ZM6.44938 24.5006C5.3198 22.9161 4.55215 21.068 4.23074 19.1575L6.19504 18.8268C6.4673 20.4418 7.11609 22.0037 8.07168 23.3445L6.44938 24.5006ZM6.19504 15.1732L4.23074 14.8425C4.55215 12.932 5.3198 11.0839 6.44938 9.49941L8.07168 10.6555C7.11609 11.9963 6.4673 13.5582 6.19504 15.1732ZM14.8425 29.7693C12.932 29.4479 11.0839 28.6802 9.49941 27.5506L10.6555 25.9283C11.9963 26.8839 13.5582 27.5327 15.1732 27.805L14.8425 29.7693ZM10.6555 8.07168L9.49941 6.44938C11.0839 5.3198 12.932 4.55215 14.8425 4.23074L15.1732 6.19504C13.5582 6.4673 11.9963 7.11609 10.6555 8.07168ZM27.5506 9.49941C28.6802 11.0839 29.4479 12.9313 29.7693 14.8425L27.805 15.1732C27.5327 13.5582 26.8839 11.9963 25.929 10.6555L27.5506 9.49941ZM19.1575 29.7693L18.8268 27.805C20.4418 27.5327 22.0037 26.8839 23.3445 25.9283L24.5006 27.5506C22.9161 28.6802 21.068 29.4479 19.1575 29.7693ZM23.3445 8.07168C22.0037 7.11609 20.4418 6.4673 18.8268 6.19504L19.1575 4.23074C21.068 4.55215 22.9161 5.3198 24.5006 6.44938L23.3445 8.07168ZM27.5506 24.5006L25.929 23.3445C26.8839 22.0037 27.5327 20.4418 27.805 18.8268L29.7693 19.1575C29.4479 21.0687 28.6802 22.9161 27.5506 24.5006Z", fill: `url(#${gradientId})` }),
+        React__default__default["default"].createElement("circle", { cx: "17", cy: "17", fill: "white", opacity: "0.6", r: "5" }),
+        React__default__default["default"].createElement("defs", null,
+            React__default__default["default"].createElement("linearGradient", { gradientUnits: "userSpaceOnUse", id: gradientId, x1: "7.5", x2: "22", y1: "3.5", y2: "32.5" },
+                React__default__default["default"].createElement("stop", { stopColor: "#FF0198" }),
+                React__default__default["default"].createElement("stop", { offset: "1", stopColor: "#B90AE0" })))));
 };
 
-const IconConfirm = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M1.5 9.5C3.66667 11.6667 9 17 9 17L18.5 3", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.5" })));
+const IconConfirm = ({ className }) => (React__default__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("path", { d: "M1.5 9.5C3.66667 11.6667 9 17 9 17L18.5 3", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.5" })));
 
-const IconDecline = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M17 3L10 10M3 17L10 10M10 10L3 3M10 10L17 17", strokeLinecap: "round", strokeWidth: "1.5" })));
+const IconDecline = ({ className }) => (React__default__default["default"].createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("path", { d: "M17 3L10 10M3 17L10 10M10 10L3 3M10 10L17 17", strokeLinecap: "round", strokeWidth: "1.5" })));
 
-const IconIphoneBattery = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 25 12", width: "25", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("rect", { height: "10.3333", opacity: "0.35", rx: "2.16667", stroke: "white", width: "21", x: "0.833008", y: "0.50293" }),
-    React__default["default"].createElement("path", { d: "M23.333 3.66943V7.66943C24.1377 7.33066 24.661 6.54257 24.661 5.66943C24.661 4.7963 24.1377 4.00821 23.333 3.66943Z", fill: "white", opacity: "0.4" }),
-    React__default["default"].createElement("rect", { fill: "white", height: "7.33333", rx: "1.33333", width: "18", x: "2.33301", y: "2.00293" })));
+const IconIphoneBattery = ({ className }) => (React__default__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 25 12", width: "25", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("rect", { height: "10.3333", opacity: "0.35", rx: "2.16667", stroke: "white", width: "21", x: "0.833008", y: "0.50293" }),
+    React__default__default["default"].createElement("path", { d: "M23.333 3.66943V7.66943C24.1377 7.33066 24.661 6.54257 24.661 5.66943C24.661 4.7963 24.1377 4.00821 23.333 3.66943Z", fill: "white", opacity: "0.4" }),
+    React__default__default["default"].createElement("rect", { fill: "white", height: "7.33333", rx: "1.33333", width: "18", x: "2.33301", y: "2.00293" })));
 
-const IconIphoneWifi = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "11", viewBox: "0 0 16 11", width: "16", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { clipRule: "evenodd", d: "M7.66707 2.28448C9.8918 2.28457 12.0315 3.13869 13.6438 4.67028C13.7652 4.78852 13.9593 4.78703 14.0789 4.66693L15.2395 3.4966C15.3 3.43569 15.3338 3.35318 15.3333 3.26733C15.3328 3.18148 15.2981 3.09937 15.2368 3.03917C11.0049 -1.01306 4.32857 -1.01306 0.0966565 3.03917C0.0353544 3.09933 0.000572274 3.18141 6.99859e-06 3.26726C-0.000558277 3.35311 0.0331399 3.43565 0.0936446 3.4966L1.25459 4.66693C1.37409 4.78721 1.56831 4.78871 1.68965 4.67028C3.30221 3.13859 5.44212 2.28447 7.66707 2.28448ZM7.66707 6.09206C8.88942 6.09199 10.0681 6.54594 10.9742 7.36571C11.0968 7.48206 11.2898 7.47954 11.4093 7.36003L12.5685 6.1897C12.6296 6.12831 12.6635 6.04504 12.6626 5.9585C12.6617 5.87196 12.6261 5.78939 12.5639 5.72926C9.8047 3.16485 5.53178 3.16485 2.77262 5.72926C2.7103 5.78939 2.67474 5.87201 2.67392 5.95857C2.6731 6.04513 2.70709 6.1284 2.76827 6.1897L3.92721 7.36003C4.04667 7.47954 4.23972 7.48206 4.36227 7.36571C5.26774 6.54648 6.44553 6.09257 7.66707 6.09206ZM9.98929 8.6539C9.99106 8.74068 9.95692 8.82434 9.89492 8.88514L7.88962 10.9071C7.83084 10.9666 7.75069 11 7.66707 11C7.58345 11 7.5033 10.9666 7.44452 10.9071L5.43888 8.88514C5.37693 8.8243 5.34284 8.7406 5.34468 8.65383C5.34652 8.56705 5.38411 8.48487 5.44859 8.4267C6.72925 7.34443 8.60489 7.34443 9.88555 8.4267C9.94998 8.48492 9.98752 8.56712 9.98929 8.6539Z", fill: "white", fillRule: "evenodd" })));
+const IconIphoneWifi = ({ className }) => (React__default__default["default"].createElement("svg", { className: className, fill: "none", height: "11", viewBox: "0 0 16 11", width: "16", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("path", { clipRule: "evenodd", d: "M7.66707 2.28448C9.8918 2.28457 12.0315 3.13869 13.6438 4.67028C13.7652 4.78852 13.9593 4.78703 14.0789 4.66693L15.2395 3.4966C15.3 3.43569 15.3338 3.35318 15.3333 3.26733C15.3328 3.18148 15.2981 3.09937 15.2368 3.03917C11.0049 -1.01306 4.32857 -1.01306 0.0966565 3.03917C0.0353544 3.09933 0.000572274 3.18141 6.99859e-06 3.26726C-0.000558277 3.35311 0.0331399 3.43565 0.0936446 3.4966L1.25459 4.66693C1.37409 4.78721 1.56831 4.78871 1.68965 4.67028C3.30221 3.13859 5.44212 2.28447 7.66707 2.28448ZM7.66707 6.09206C8.88942 6.09199 10.0681 6.54594 10.9742 7.36571C11.0968 7.48206 11.2898 7.47954 11.4093 7.36003L12.5685 6.1897C12.6296 6.12831 12.6635 6.04504 12.6626 5.9585C12.6617 5.87196 12.6261 5.78939 12.5639 5.72926C9.8047 3.16485 5.53178 3.16485 2.77262 5.72926C2.7103 5.78939 2.67474 5.87201 2.67392 5.95857C2.6731 6.04513 2.70709 6.1284 2.76827 6.1897L3.92721 7.36003C4.04667 7.47954 4.23972 7.48206 4.36227 7.36571C5.26774 6.54648 6.44553 6.09257 7.66707 6.09206ZM9.98929 8.6539C9.99106 8.74068 9.95692 8.82434 9.89492 8.88514L7.88962 10.9071C7.83084 10.9666 7.75069 11 7.66707 11C7.58345 11 7.5033 10.9666 7.44452 10.9071L5.43888 8.88514C5.37693 8.8243 5.34284 8.7406 5.34468 8.65383C5.34652 8.56705 5.38411 8.48487 5.44859 8.4267C6.72925 7.34443 8.60489 7.34443 9.88555 8.4267C9.94998 8.48492 9.98752 8.56712 9.98929 8.6539Z", fill: "white", fillRule: "evenodd" })));
 
-const IconIphoneCellular = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 17 12", width: "17", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { clipRule: "evenodd", d: "M16 0.335938H15C14.4477 0.335938 14 0.783653 14 1.33594V10.0026C14 10.5549 14.4477 11.0026 15 11.0026H16C16.5523 11.0026 17 10.5549 17 10.0026V1.33594C17 0.783653 16.5523 0.335938 16 0.335938ZM10.3333 2.66927H11.3333C11.8856 2.66927 12.3333 3.11699 12.3333 3.66927V10.0026C12.3333 10.5549 11.8856 11.0026 11.3333 11.0026H10.3333C9.78105 11.0026 9.33333 10.5549 9.33333 10.0026V3.66927C9.33333 3.11699 9.78105 2.66927 10.3333 2.66927ZM6.66667 5.0026H5.66667C5.11438 5.0026 4.66667 5.45032 4.66667 6.0026V10.0026C4.66667 10.5549 5.11438 11.0026 5.66667 11.0026H6.66667C7.21895 11.0026 7.66667 10.5549 7.66667 10.0026V6.0026C7.66667 5.45032 7.21895 5.0026 6.66667 5.0026ZM2 7.0026H1C0.447715 7.0026 0 7.45032 0 8.0026V10.0026C0 10.5549 0.447715 11.0026 1 11.0026H2C2.55228 11.0026 3 10.5549 3 10.0026V8.0026C3 7.45032 2.55228 7.0026 2 7.0026Z", fill: "white", fillRule: "evenodd" })));
+const IconIphoneCellular = ({ className }) => (React__default__default["default"].createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 17 12", width: "17", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("path", { clipRule: "evenodd", d: "M16 0.335938H15C14.4477 0.335938 14 0.783653 14 1.33594V10.0026C14 10.5549 14.4477 11.0026 15 11.0026H16C16.5523 11.0026 17 10.5549 17 10.0026V1.33594C17 0.783653 16.5523 0.335938 16 0.335938ZM10.3333 2.66927H11.3333C11.8856 2.66927 12.3333 3.11699 12.3333 3.66927V10.0026C12.3333 10.5549 11.8856 11.0026 11.3333 11.0026H10.3333C9.78105 11.0026 9.33333 10.5549 9.33333 10.0026V3.66927C9.33333 3.11699 9.78105 2.66927 10.3333 2.66927ZM6.66667 5.0026H5.66667C5.11438 5.0026 4.66667 5.45032 4.66667 6.0026V10.0026C4.66667 10.5549 5.11438 11.0026 5.66667 11.0026H6.66667C7.21895 11.0026 7.66667 10.5549 7.66667 10.0026V6.0026C7.66667 5.45032 7.21895 5.0026 6.66667 5.0026ZM2 7.0026H1C0.447715 7.0026 0 7.45032 0 8.0026V10.0026C0 10.5549 0.447715 11.0026 1 11.0026H2C2.55228 11.0026 3 10.5549 3 10.0026V8.0026C3 7.45032 2.55228 7.0026 2 7.0026Z", fill: "white", fillRule: "evenodd" })));
 
-const IconRateStar = ({ className }) => (React__default["default"].createElement("svg", { className: className, viewBox: "0 0 52 50", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M26 1L33.725 16.7981L51 19.347L38.5 31.6372L41.45 49L26 40.7981L10.55 49L13.5 31.6372L1 19.347L18.275 16.7981L26 1Z", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
+const IconRateStar = ({ className }) => (React__default__default["default"].createElement("svg", { className: className, viewBox: "0 0 52 50", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("path", { d: "M26 1L33.725 16.7981L51 19.347L38.5 31.6372L41.45 49L26 40.7981L10.55 49L13.5 31.6372L1 19.347L18.275 16.7981L26 1Z", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
 
-const IconArrowSend = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "32", viewBox: "0 0 32 32", width: "32", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("g", { strokeWidth: "2" },
-        React__default["default"].createElement("circle", { cx: "16", cy: "16", r: "15" }),
-        React__default["default"].createElement("g", { strokeLinecap: "round" },
-            React__default["default"].createElement("path", { d: "m23 16-5.5-5.5" }),
-            React__default["default"].createElement("path", { d: "m23 16-5.5 5.5" }),
-            React__default["default"].createElement("path", { d: "m23 16h-14" })))));
+const IconArrowSend = ({ className }) => (React__default__default["default"].createElement("svg", { className: className, fill: "none", height: "32", viewBox: "0 0 32 32", width: "32", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("g", { strokeWidth: "2" },
+        React__default__default["default"].createElement("circle", { cx: "16", cy: "16", r: "15" }),
+        React__default__default["default"].createElement("g", { strokeLinecap: "round" },
+            React__default__default["default"].createElement("path", { d: "m23 16-5.5-5.5" }),
+            React__default__default["default"].createElement("path", { d: "m23 16-5.5 5.5" }),
+            React__default__default["default"].createElement("path", { d: "m23 16h-14" })))));
 
-const IconLoader = ({ className }) => (React__default["default"].createElement("svg", { className: className, fill: "none", height: "69", viewBox: "0 0 68 69", width: "68", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("g", { filter: "url(#filter0_d_3254_16668)", opacity: "0.8" },
-        React__default["default"].createElement("path", { d: "M17.9999 61.7127C2.71925 52.8904 -2.53519 33.2806 6.28711 17.9999C6.80672 17.0999 7.95793 16.791 8.85845 17.3109C9.75897 17.8308 10.067 18.9823 9.54744 19.8823C1.76313 33.3651 6.39892 50.6678 19.8823 58.4524C33.3656 66.237 50.6681 61.6004 58.4524 48.1176C66.2367 34.6347 61.6009 17.3321 48.1176 9.54744C43.1491 6.67887 37.5114 5.39943 31.8147 5.84619C30.7781 5.92837 29.8731 5.15261 29.7909 4.11739C29.7092 3.08112 30.484 2.17421 31.5205 2.0934C37.9797 1.58589 44.3697 3.0365 49.9999 6.28711C65.2806 15.1094 70.535 34.7192 61.7127 49.9999C52.8904 65.2806 33.2806 70.535 17.9999 61.7127Z", fill: "white" })),
-    React__default["default"].createElement("defs", null,
-        React__default["default"].createElement("filter", { colorInterpolationFilters: "sRGB", filterUnits: "userSpaceOnUse", height: "67.9991", id: "filter0_d_3254_16668", width: "67.9872", x: "0.00634766", y: "0.994385" },
-            React__default["default"].createElement("feFlood", { floodOpacity: "0", result: "BackgroundImageFix" }),
-            React__default["default"].createElement("feColorMatrix", { in: "SourceAlpha", result: "hardAlpha", type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" }),
-            React__default["default"].createElement("feOffset", { dy: "1" }),
-            React__default["default"].createElement("feGaussianBlur", { stdDeviation: "1" }),
-            React__default["default"].createElement("feComposite", { in2: "hardAlpha", operator: "out" }),
-            React__default["default"].createElement("feColorMatrix", { type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0" }),
-            React__default["default"].createElement("feBlend", { in2: "BackgroundImageFix", mode: "normal", result: "effect1_dropShadow_3254_16668" }),
-            React__default["default"].createElement("feBlend", { in: "SourceGraphic", in2: "effect1_dropShadow_3254_16668", mode: "normal", result: "shape" })))));
+const IconLoader = ({ className }) => (React__default__default["default"].createElement("svg", { className: className, fill: "none", height: "69", viewBox: "0 0 68 69", width: "68", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("g", { filter: "url(#filter0_d_3254_16668)", opacity: "0.8" },
+        React__default__default["default"].createElement("path", { d: "M17.9999 61.7127C2.71925 52.8904 -2.53519 33.2806 6.28711 17.9999C6.80672 17.0999 7.95793 16.791 8.85845 17.3109C9.75897 17.8308 10.067 18.9823 9.54744 19.8823C1.76313 33.3651 6.39892 50.6678 19.8823 58.4524C33.3656 66.237 50.6681 61.6004 58.4524 48.1176C66.2367 34.6347 61.6009 17.3321 48.1176 9.54744C43.1491 6.67887 37.5114 5.39943 31.8147 5.84619C30.7781 5.92837 29.8731 5.15261 29.7909 4.11739C29.7092 3.08112 30.484 2.17421 31.5205 2.0934C37.9797 1.58589 44.3697 3.0365 49.9999 6.28711C65.2806 15.1094 70.535 34.7192 61.7127 49.9999C52.8904 65.2806 33.2806 70.535 17.9999 61.7127Z", fill: "white" })),
+    React__default__default["default"].createElement("defs", null,
+        React__default__default["default"].createElement("filter", { colorInterpolationFilters: "sRGB", filterUnits: "userSpaceOnUse", height: "67.9991", id: "filter0_d_3254_16668", width: "67.9872", x: "0.00634766", y: "0.994385" },
+            React__default__default["default"].createElement("feFlood", { floodOpacity: "0", result: "BackgroundImageFix" }),
+            React__default__default["default"].createElement("feColorMatrix", { in: "SourceAlpha", result: "hardAlpha", type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" }),
+            React__default__default["default"].createElement("feOffset", { dy: "1" }),
+            React__default__default["default"].createElement("feGaussianBlur", { stdDeviation: "1" }),
+            React__default__default["default"].createElement("feComposite", { in2: "hardAlpha", operator: "out" }),
+            React__default__default["default"].createElement("feColorMatrix", { type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0" }),
+            React__default__default["default"].createElement("feBlend", { in2: "BackgroundImageFix", mode: "normal", result: "effect1_dropShadow_3254_16668" }),
+            React__default__default["default"].createElement("feBlend", { in: "SourceGraphic", in2: "effect1_dropShadow_3254_16668", mode: "normal", result: "shape" })))));
 
 function useInterval(callback, delay) {
-    const savedCallback = React.useRef(callback);
-    React.useEffect(() => {
+    const savedCallback = React__default.useRef(callback);
+    React__default.useEffect(() => {
         savedCallback.current = callback;
     }, [callback]);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         let id;
         if (delay) {
             id = setInterval(() => savedCallback.current(), delay);
@@ -9963,17 +4042,17 @@ function useInterval(callback, delay) {
 
 const DEFAULT_WINDOW_HEIGHT = 696;
 const useAdaptiveValue = (initValue) => {
-    const [, height] = d$1();
+    const [, height] = useWindowSize$1();
     const index = initValue / DEFAULT_WINDOW_HEIGHT;
-    const [cardSize, setCardSize] = React.useState(height);
-    React.useEffect(() => {
+    const [cardSize, setCardSize] = React__default.useState(height);
+    React__default.useEffect(() => {
         setCardSize(index * height);
     }, [height, index]);
     return cardSize;
 };
 
 const useLocalStorage$1 = (key, initialValue) => {
-    const [storedValue, setStoredValue] = React.useState(() => {
+    const [storedValue, setStoredValue] = React__default.useState(() => {
         try {
             const item = window.localStorage.getItem(key);
             return item ? JSON.parse(item) : initialValue;
@@ -10077,176 +4156,176 @@ class ZoneIsAbstractError$1 extends LuxonError$1 {
  * @private
  */
 
-const n$1$1 = "numeric",
+const n$1 = "numeric",
   s$1 = "short",
   l$1 = "long";
 
 const DATE_SHORT$1 = {
-  year: n$1$1,
-  month: n$1$1,
-  day: n$1$1,
+  year: n$1,
+  month: n$1,
+  day: n$1,
 };
 
 const DATE_MED$1 = {
-  year: n$1$1,
+  year: n$1,
   month: s$1,
-  day: n$1$1,
+  day: n$1,
 };
 
 const DATE_MED_WITH_WEEKDAY$1 = {
-  year: n$1$1,
+  year: n$1,
   month: s$1,
-  day: n$1$1,
+  day: n$1,
   weekday: s$1,
 };
 
 const DATE_FULL$1 = {
-  year: n$1$1,
+  year: n$1,
   month: l$1,
-  day: n$1$1,
+  day: n$1,
 };
 
 const DATE_HUGE$1 = {
-  year: n$1$1,
+  year: n$1,
   month: l$1,
-  day: n$1$1,
+  day: n$1,
   weekday: l$1,
 };
 
 const TIME_SIMPLE$1 = {
-  hour: n$1$1,
-  minute: n$1$1,
+  hour: n$1,
+  minute: n$1,
 };
 
 const TIME_WITH_SECONDS$1 = {
-  hour: n$1$1,
-  minute: n$1$1,
-  second: n$1$1,
+  hour: n$1,
+  minute: n$1,
+  second: n$1,
 };
 
 const TIME_WITH_SHORT_OFFSET$1 = {
-  hour: n$1$1,
-  minute: n$1$1,
-  second: n$1$1,
+  hour: n$1,
+  minute: n$1,
+  second: n$1,
   timeZoneName: s$1,
 };
 
 const TIME_WITH_LONG_OFFSET$1 = {
-  hour: n$1$1,
-  minute: n$1$1,
-  second: n$1$1,
+  hour: n$1,
+  minute: n$1,
+  second: n$1,
   timeZoneName: l$1,
 };
 
 const TIME_24_SIMPLE$1 = {
-  hour: n$1$1,
-  minute: n$1$1,
+  hour: n$1,
+  minute: n$1,
   hourCycle: "h23",
 };
 
 const TIME_24_WITH_SECONDS$1 = {
-  hour: n$1$1,
-  minute: n$1$1,
-  second: n$1$1,
+  hour: n$1,
+  minute: n$1,
+  second: n$1,
   hourCycle: "h23",
 };
 
 const TIME_24_WITH_SHORT_OFFSET$1 = {
-  hour: n$1$1,
-  minute: n$1$1,
-  second: n$1$1,
+  hour: n$1,
+  minute: n$1,
+  second: n$1,
   hourCycle: "h23",
   timeZoneName: s$1,
 };
 
 const TIME_24_WITH_LONG_OFFSET$1 = {
-  hour: n$1$1,
-  minute: n$1$1,
-  second: n$1$1,
+  hour: n$1,
+  minute: n$1,
+  second: n$1,
   hourCycle: "h23",
   timeZoneName: l$1,
 };
 
 const DATETIME_SHORT$1 = {
-  year: n$1$1,
-  month: n$1$1,
-  day: n$1$1,
-  hour: n$1$1,
-  minute: n$1$1,
+  year: n$1,
+  month: n$1,
+  day: n$1,
+  hour: n$1,
+  minute: n$1,
 };
 
 const DATETIME_SHORT_WITH_SECONDS$1 = {
-  year: n$1$1,
-  month: n$1$1,
-  day: n$1$1,
-  hour: n$1$1,
-  minute: n$1$1,
-  second: n$1$1,
+  year: n$1,
+  month: n$1,
+  day: n$1,
+  hour: n$1,
+  minute: n$1,
+  second: n$1,
 };
 
 const DATETIME_MED$1 = {
-  year: n$1$1,
+  year: n$1,
   month: s$1,
-  day: n$1$1,
-  hour: n$1$1,
-  minute: n$1$1,
+  day: n$1,
+  hour: n$1,
+  minute: n$1,
 };
 
 const DATETIME_MED_WITH_SECONDS$1 = {
-  year: n$1$1,
+  year: n$1,
   month: s$1,
-  day: n$1$1,
-  hour: n$1$1,
-  minute: n$1$1,
-  second: n$1$1,
+  day: n$1,
+  hour: n$1,
+  minute: n$1,
+  second: n$1,
 };
 
 const DATETIME_MED_WITH_WEEKDAY$1 = {
-  year: n$1$1,
+  year: n$1,
   month: s$1,
-  day: n$1$1,
+  day: n$1,
   weekday: s$1,
-  hour: n$1$1,
-  minute: n$1$1,
+  hour: n$1,
+  minute: n$1,
 };
 
 const DATETIME_FULL$1 = {
-  year: n$1$1,
+  year: n$1,
   month: l$1,
-  day: n$1$1,
-  hour: n$1$1,
-  minute: n$1$1,
+  day: n$1,
+  hour: n$1,
+  minute: n$1,
   timeZoneName: s$1,
 };
 
 const DATETIME_FULL_WITH_SECONDS$1 = {
-  year: n$1$1,
+  year: n$1,
   month: l$1,
-  day: n$1$1,
-  hour: n$1$1,
-  minute: n$1$1,
-  second: n$1$1,
+  day: n$1,
+  hour: n$1,
+  minute: n$1,
+  second: n$1,
   timeZoneName: s$1,
 };
 
 const DATETIME_HUGE$1 = {
-  year: n$1$1,
+  year: n$1,
   month: l$1,
-  day: n$1$1,
+  day: n$1,
   weekday: l$1,
-  hour: n$1$1,
-  minute: n$1$1,
+  hour: n$1,
+  minute: n$1,
   timeZoneName: l$1,
 };
 
 const DATETIME_HUGE_WITH_SECONDS$1 = {
-  year: n$1$1,
+  year: n$1,
   month: l$1,
-  day: n$1$1,
+  day: n$1,
   weekday: l$1,
-  hour: n$1$1,
-  minute: n$1$1,
-  second: n$1$1,
+  hour: n$1,
+  minute: n$1,
+  second: n$1,
   timeZoneName: l$1,
 };
 
@@ -11810,7 +5889,7 @@ function stringifyTokens$1(splits, tokenToString) {
   return s;
 }
 
-const macroTokenToFormatOpts$1 = {
+const macroTokenToFormatOpts = {
   D: DATE_SHORT$1,
   DD: DATE_MED$1,
   DDD: DATE_FULL$1,
@@ -11877,7 +5956,7 @@ class Formatter$1 {
   }
 
   static macroTokenToFormatOpts(token) {
-    return macroTokenToFormatOpts$1[token];
+    return macroTokenToFormatOpts[token];
   }
 
   constructor(locale, formatOpts) {
@@ -14301,7 +8380,7 @@ function highOrderDiffs$1(cursor, later, units) {
   return [cursor, results, highWater, lowestOrder];
 }
 
-function diff$1 (earlier, later, units, opts) {
+function diff (earlier, later, units, opts) {
   let [cursor, results, highWater, lowestOrder] = highOrderDiffs$1(earlier, later, units);
 
   const remainingMillis = later - cursor;
@@ -15136,7 +9215,7 @@ function toTechFormat$1(dt, format, allowZ = true) {
     : null;
 }
 
-function toISODate$1(o, extended) {
+function toISODate(o, extended) {
   const longFormat = o.c.year > 9999 || o.c.year < 0;
   let c = "";
   if (longFormat && o.c.year >= 0) c += "+";
@@ -15154,7 +9233,7 @@ function toISODate$1(o, extended) {
   return c;
 }
 
-function toISOTime$1(
+function toISOTime(
   o,
   extended,
   suppressSeconds,
@@ -16554,9 +10633,9 @@ class DateTime$1 {
 
     const ext = format === "extended";
 
-    let c = toISODate$1(this, ext);
+    let c = toISODate(this, ext);
     c += "T";
-    c += toISOTime$1(this, ext, suppressSeconds, suppressMilliseconds, includeOffset, extendedZone);
+    c += toISOTime(this, ext, suppressSeconds, suppressMilliseconds, includeOffset, extendedZone);
     return c;
   }
 
@@ -16573,7 +10652,7 @@ class DateTime$1 {
       return null;
     }
 
-    return toISODate$1(this, format === "extended");
+    return toISODate(this, format === "extended");
   }
 
   /**
@@ -16615,7 +10694,7 @@ class DateTime$1 {
     let c = includePrefix ? "T" : "";
     return (
       c +
-      toISOTime$1(
+      toISOTime(
         this,
         format === "extended",
         suppressSeconds,
@@ -16657,7 +10736,7 @@ class DateTime$1 {
     if (!this.isValid) {
       return null;
     }
-    return toISODate$1(this, true);
+    return toISODate(this, true);
   }
 
   /**
@@ -16821,7 +10900,7 @@ class DateTime$1 {
       otherIsLater = otherDateTime.valueOf() > this.valueOf(),
       earlier = otherIsLater ? this : otherDateTime,
       later = otherIsLater ? otherDateTime : this,
-      diffed = diff$1(earlier, later, units, durOpts);
+      diffed = diff(earlier, later, units, durOpts);
 
     return otherIsLater ? diffed.negate() : diffed;
   }
@@ -17191,8 +11270,8 @@ const b$p = block$1('StorySdkStatusBar');
 const INIT_VERTICAL_PADDING = 10;
 const INIT_SIDE_PADDING = 20;
 const StatusBar = ({ className }) => {
-    const [time, setTime] = React.useState(DateTime$1.now().toFormat('HH:mm'));
-    React.useEffect(() => {
+    const [time, setTime] = React__default.useState(DateTime$1.now().toFormat('HH:mm'));
+    React__default.useEffect(() => {
         const interval = setInterval(() => {
             setTime(DateTime$1.now().toFormat('HH:mm'));
         }, 1000);
@@ -17200,30 +11279,30 @@ const StatusBar = ({ className }) => {
     }, []);
     const paddingSide = useAdaptiveValue(INIT_SIDE_PADDING);
     const paddingVertical = useAdaptiveValue(INIT_VERTICAL_PADDING);
-    return (React__default["default"].createElement("div", { className: `${b$p()} ${className || ''}`.trim(), style: {
+    return (React__default__default["default"].createElement("div", { className: `${b$p()} ${className || ''}`.trim(), style: {
             paddingTop: paddingVertical,
             paddingBottom: paddingVertical,
             paddingLeft: paddingSide,
             paddingRight: paddingSide
         } },
-        React__default["default"].createElement("span", { className: b$p('time') }, time),
-        React__default["default"].createElement("div", { className: b$p('iconWrapper') },
-            React__default["default"].createElement(IconIphoneCellular, { className: b$p('icon') }),
-            React__default["default"].createElement(IconIphoneWifi, { className: b$p('icon') }),
-            React__default["default"].createElement(IconIphoneBattery, { className: b$p('icon') }))));
+        React__default__default["default"].createElement("span", { className: b$p('time') }, time),
+        React__default__default["default"].createElement("div", { className: b$p('iconWrapper') },
+            React__default__default["default"].createElement(IconIphoneCellular, { className: b$p('icon') }),
+            React__default__default["default"].createElement(IconIphoneWifi, { className: b$p('icon') }),
+            React__default__default["default"].createElement(IconIphoneBattery, { className: b$p('icon') }))));
 };
 
 const b$o = block$1('StorySdkModal');
-const CloseIcon = () => (React__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M18.0002 6.00079L6.00024 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" }),
-    React__default["default"].createElement("path", { d: "M6.00024 6.00079L18.0002 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" })));
-const LeftArrowIcon = () => (React__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M19 12H5", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" }),
-    React__default["default"].createElement("path", { d: "M12 19L5 12L12 4.99997", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
-const RightArrowIcon = () => (React__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    React__default["default"].createElement("path", { d: "M5 12H19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" }),
-    React__default["default"].createElement("path", { d: "M12 4.99997L19 12L12 19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
-const StoryContext = React__default["default"].createContext({
+const CloseIcon = () => (React__default__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("path", { d: "M18.0002 6.00079L6.00024 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" }),
+    React__default__default["default"].createElement("path", { d: "M6.00024 6.00079L18.0002 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" })));
+const LeftArrowIcon = () => (React__default__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("path", { d: "M19 12H5", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" }),
+    React__default__default["default"].createElement("path", { d: "M12 19L5 12L12 4.99997", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
+const RightArrowIcon = () => (React__default__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    React__default__default["default"].createElement("path", { d: "M5 12H19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" }),
+    React__default__default["default"].createElement("path", { d: "M12 4.99997L19 12L12 19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
+const StoryContext = React__default__default["default"].createContext({
     currentStoryId: '',
     playStatusChange: () => { },
     confetti: null
@@ -17290,16 +11369,16 @@ const reducer = (state, action) => {
 const StoryModal = (props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     const { stories, isShowing, isLastGroup, isFirstGroup, startStoryId, isForceCloseAvailable, isShowMockup, isStatusBarActive, currentGroup, isCacheDisabled, forbidClose, isLoading, isEditorMode, onClose, onNextGroup, onPrevGroup, onNextStory, onPrevStory, onOpenStory, onCloseStory, onStartQuiz, onFinishQuiz } = props;
-    const [quizState, dispatchQuizState] = React.useReducer(reducer, initQuizeState);
-    const [currentStory, setCurrentStory] = React.useState(0);
-    const [currentStoryId, setCurrentStoryId] = React.useState('');
-    const [playStatus, setPlayStatus] = React.useState('wait');
-    const storyModalRef = React.useRef(null);
-    const [isQuizStarted, setIsQuizStarted] = React.useState(false);
-    const [quizStartedStoryIds, setQuizStartedStoryIds] = React.useState({});
-    const [width, height] = d$1();
-    const [activeStoriesWithResult, setActiveStoriesWithResult] = React.useState([]);
-    React.useEffect(() => {
+    const [quizState, dispatchQuizState] = React__default.useReducer(reducer, initQuizeState);
+    const [currentStory, setCurrentStory] = React__default.useState(0);
+    const [currentStoryId, setCurrentStoryId] = React__default.useState('');
+    const [playStatus, setPlayStatus] = React__default.useState('wait');
+    const storyModalRef = React__default.useRef(null);
+    const [isQuizStarted, setIsQuizStarted] = React__default.useState(false);
+    const [quizStartedStoryIds, setQuizStartedStoryIds] = React__default.useState({});
+    const [width, height] = useWindowSize$1();
+    const [activeStoriesWithResult, setActiveStoriesWithResult] = React__default.useState([]);
+    React__default.useEffect(() => {
         if (stories && currentGroup) {
             const sortedStories = stories
                 .filter((story) => {
@@ -17326,7 +11405,7 @@ const StoryModal = (props) => {
             setActiveStoriesWithResult(sortedStories);
         }
     }, [currentGroup, stories]);
-    const isMobile = React.useMemo(() => width < MOBILE_BREAKPOINT, [width]);
+    const isMobile = React__default.useMemo(() => width < MOBILE_BREAKPOINT, [width]);
     const currentGroupType = (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.type) || GroupType.GROUP;
     const isBackroundFilled = ((_b = (_a = activeStoriesWithResult[currentStory]) === null || _a === void 0 ? void 0 : _a.background) === null || _b === void 0 ? void 0 : _b.isFilled) &&
         currentGroupType === GroupType.GROUP;
@@ -17367,7 +11446,7 @@ const StoryModal = (props) => {
         }
         return isShowMockup && !isMobile ? borderRadius : undefined;
     };
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         const body = document.querySelector('body');
         if (storyModalRef.current && body) {
             if (width < 767) {
@@ -17378,7 +11457,7 @@ const StoryModal = (props) => {
             }
         }
     }, [width, height]);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         let currentStoryIndex = 0;
         if (startStoryId && activeStoriesWithResult.length) {
             const storyIndex = activeStoriesWithResult.findIndex((story) => story.id === startStoryId);
@@ -17412,7 +11491,7 @@ const StoryModal = (props) => {
         isShowing,
         startStoryId
     ]);
-    const handleClose = React.useCallback(() => {
+    const handleClose = React__default.useCallback(() => {
         onClose();
         if (onCloseStory && currentGroup) {
             onCloseStory(currentGroup.id, currentStoryId);
@@ -17425,7 +11504,7 @@ const StoryModal = (props) => {
         activeStoriesWithResult,
         currentStoryId
     ]);
-    const resultStories = React.useMemo(() => {
+    const resultStories = React__default.useMemo(() => {
         var _a;
         if (((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) && stories) {
             return stories
@@ -17441,7 +11520,7 @@ const StoryModal = (props) => {
         }
         return [];
     }, [(_d = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _d === void 0 ? void 0 : _d.scoreResultLayersGroupId, stories]);
-    const getResultStoryId = React.useCallback(() => {
+    const getResultStoryId = React__default.useCallback(() => {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
         if (!resultStories.length || !((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId)) {
             return '';
@@ -17491,7 +11570,7 @@ const StoryModal = (props) => {
         currentStory,
         quizState
     ]);
-    const handleFinishStoryQuiz = React.useCallback(() => {
+    const handleFinishStoryQuiz = React__default.useCallback(() => {
         var _a, _b, _c, _d;
         const isNotResultStory = ((_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _a === void 0 ? void 0 : _a.scoreResultLayersGroupId) !==
             ((_c = (_b = activeStoriesWithResult[currentStory]) === null || _b === void 0 ? void 0 : _b.layerData) === null || _c === void 0 ? void 0 : _c.layersGroupId);
@@ -17506,7 +11585,7 @@ const StoryModal = (props) => {
         currentStoryId,
         onFinishQuiz
     ]);
-    const handleNext = React.useCallback(() => {
+    const handleNext = React__default.useCallback(() => {
         eventPublish('nextStory', {
             stotyId: activeStoriesWithResult[currentStory].id
         });
@@ -17560,10 +11639,10 @@ const StoryModal = (props) => {
         onOpenStory,
         onNextStory
     ]);
-    const handleAnimationEnd = React.useCallback(() => {
+    const handleAnimationEnd = React__default.useCallback(() => {
         handleNext();
     }, [handleNext]);
-    const handlePrev = React.useCallback(() => {
+    const handlePrev = React__default.useCallback(() => {
         eventPublish('prevStory', {
             stotyId: activeStoriesWithResult[currentStory].id
         });
@@ -17624,8 +11703,8 @@ const StoryModal = (props) => {
             setCurrentStoryId(activeStoriesWithResult[storyIndex].id);
         }
     };
-    const canvasRef = React.useRef(null);
-    const jsConfetti = React.useRef(new JSConfetti({
+    const canvasRef = React__default.useRef(null);
+    const jsConfetti = React__default.useRef(new JSConfetti({
         canvas: canvasRef.current
     }));
     const noTopShadow = currentGroupType === GroupType.ONBOARDING &&
@@ -17670,7 +11749,7 @@ const StoryModal = (props) => {
     };
     const uniqUserId = getUniqUserId$1();
     const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
-    return (React__default["default"].createElement(StoryContext.Provider, { value: {
+    return (React__default__default["default"].createElement(StoryContext.Provider, { value: {
             currentStoryId,
             quizMode: (_k = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _k === void 0 ? void 0 : _k.scoreType,
             playStatusChange: setPlayStatus,
@@ -17678,13 +11757,13 @@ const StoryModal = (props) => {
             getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
             setAnswerCache: isCacheDisabled ? undefined : setAnswerCache
         } },
-        React__default["default"].createElement("div", { className: b$o({ isShowing }), ref: storyModalRef, style: {
+        React__default__default["default"].createElement("div", { className: b$o({ isShowing }), ref: storyModalRef, style: {
                 top: window.pageYOffset || document.documentElement.scrollTop
             } },
-            React__default["default"].createElement("div", { className: b$o('body') },
-                activeStoriesWithResult.length > 1 && !isLoading && (React__default["default"].createElement("button", { className: b$o('arrowButton', { left: true }), onClick: handlePrev },
-                    React__default["default"].createElement(LeftArrowIcon, null))),
-                React__default["default"].createElement("div", { className: b$o('bodyContainer', {
+            React__default__default["default"].createElement("div", { className: b$o('body') },
+                activeStoriesWithResult.length > 1 && !isLoading && (React__default__default["default"].createElement("button", { className: b$o('arrowButton', { left: true }), onClick: handlePrev },
+                    React__default__default["default"].createElement(LeftArrowIcon, null))),
+                React__default__default["default"].createElement("div", { className: b$o('bodyContainer', {
                         black: currentGroupType === GroupType.GROUP &&
                             !isBackroundFilled &&
                             !isMobile &&
@@ -17692,18 +11771,18 @@ const StoryModal = (props) => {
                     }), style: {
                         borderRadius: containerBorderRadius
                     } },
-                    isShowStatusBarInContainer && (React__default["default"].createElement(React__default["default"].Fragment, null,
-                        React__default["default"].createElement("div", { className: b$o('statusBar'), style: {
+                    isShowStatusBarInContainer && (React__default__default["default"].createElement(React__default__default["default"].Fragment, null,
+                        React__default__default["default"].createElement("div", { className: b$o('statusBar'), style: {
                                 paddingTop: statusBarTop,
                                 paddingLeft: statusBarTop,
                                 paddingRight: statusBarTop
                             } },
-                            React__default["default"].createElement(StatusBar, null)),
-                        React__default["default"].createElement("div", { className: b$o('bottomMock'), style: {
+                            React__default__default["default"].createElement(StatusBar, null)),
+                        React__default__default["default"].createElement("div", { className: b$o('bottomMock'), style: {
                                 paddingBottom: largeElementsTop
                             } },
-                            React__default["default"].createElement("img", { alt: "", className: b$o('bottomMockImg'), src: img })))),
-                    React__default["default"].createElement("div", { className: b$o('swiper', {
+                            React__default__default["default"].createElement("img", { alt: "", className: b$o('bottomMockImg'), src: img })))),
+                    React__default__default["default"].createElement("div", { className: b$o('swiper', {
                             mockup: !isMobile && isShowMockup,
                             small: !isMobile && !isLarge && isShowMockup
                         }), style: {
@@ -17711,22 +11790,22 @@ const StoryModal = (props) => {
                             height: `calc(100% - ${isShowMockup && !isMobile ? heightGap : 0}px)`,
                             borderRadius: getBorderRadius()
                         } },
-                        React__default["default"].createElement(React__default["default"].Fragment, null, isLoading || !(currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.stories) ? (React__default["default"].createElement("div", { className: b$o('loader') },
-                            React__default["default"].createElement(IconLoader, { className: b$o('loaderIcon').toString() }))) : (React__default["default"].createElement(React__default["default"].Fragment, null,
-                            React__default["default"].createElement("div", { className: b$o('swiperContent') }, activeStoriesWithResult.map((story, index) => (React__default["default"].createElement("div", { className: b$o('story', { current: index === currentStory }), key: story.id },
-                                React__default["default"].createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP && isLarge
+                        React__default__default["default"].createElement(React__default__default["default"].Fragment, null, isLoading || !(currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.stories) ? (React__default__default["default"].createElement("div", { className: b$o('loader') },
+                            React__default__default["default"].createElement(IconLoader, { className: b$o('loaderIcon').toString() }))) : (React__default__default["default"].createElement(React__default__default["default"].Fragment, null,
+                            React__default__default["default"].createElement("div", { className: b$o('swiperContent') }, activeStoriesWithResult.map((story, index) => (React__default__default["default"].createElement("div", { className: b$o('story', { current: index === currentStory }), key: story.id },
+                                React__default__default["default"].createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP && isLarge
                                         ? groupInnerHeightGap
                                         : 0, isLarge: isLarge, isLargeBackground: isShowMockup && currentGroupType === GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize }))))),
-                            React__default["default"].createElement("div", { className: b$o('topContainer') },
-                                React__default["default"].createElement(React__default["default"].Fragment, null,
-                                    isShowStatusBarInStory && React__default["default"].createElement(StatusBar, null),
-                                    React__default["default"].createElement("div", { className: b$o('controls'), style: {
+                            React__default__default["default"].createElement("div", { className: b$o('topContainer') },
+                                React__default__default["default"].createElement(React__default__default["default"].Fragment, null,
+                                    isShowStatusBarInStory && React__default__default["default"].createElement(StatusBar, null),
+                                    React__default__default["default"].createElement("div", { className: b$o('controls'), style: {
                                             gap: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
                                             paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
                                             paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
                                             paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
                                         } },
-                                        !((_l = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _l === void 0 ? void 0 : _l.isProgressHidden) && (React__default["default"].createElement("div", { className: b$o('indicators', {
+                                        !((_l = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _l === void 0 ? void 0 : _l.isProgressHidden) && (React__default__default["default"].createElement("div", { className: b$o('indicators', {
                                                 stopAnimation: playStatus === 'pause',
                                                 widePadding: isShowMockup && isLarge
                                             }), style: {
@@ -17735,37 +11814,37 @@ const StoryModal = (props) => {
                                             .filter((story) => { var _a; return (_a = story.layerData) === null || _a === void 0 ? void 0 : _a.isDefaultLayer; })
                                             .map((story, index) => {
                                             var _a;
-                                            return (React__default["default"].createElement("div", { className: b$o('indicator', {
+                                            return (React__default__default["default"].createElement("div", { className: b$o('indicator', {
                                                     filled: index < currentStory,
                                                     current: index === currentStory
                                                 }), key: story.id, style: {
                                                     animationDuration: `${(_a = story.layerData) === null || _a === void 0 ? void 0 : _a.duration}s`
                                                 }, onAnimationEnd: handleAnimationEnd }));
                                         }))),
-                                        currentGroupType === GroupType.GROUP && (React__default["default"].createElement("div", { className: b$o('group', {
+                                        currentGroupType === GroupType.GROUP && (React__default__default["default"].createElement("div", { className: b$o('group', {
                                                 noProgress: (_m = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden,
                                                 wideLeft: isShowMockup && isLarge
                                             }), style: {
                                                 top: isShowMockup && isLarge ? largeElementsTop : undefined
                                             } },
-                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl) && (React__default["default"].createElement("div", { className: b$o('groupImgWrapper') },
-                                                React__default["default"].createElement("img", { alt: "", className: b$o('groupImg'), src: currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl }))),
-                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title) && (React__default["default"].createElement("p", { className: b$o('groupTitle') }, currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title)))),
-                                        !((_o = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) && !forbidClose && (React__default["default"].createElement("button", { className: b$o('close', {
+                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl) && (React__default__default["default"].createElement("div", { className: b$o('groupImgWrapper') },
+                                                React__default__default["default"].createElement("img", { alt: "", className: b$o('groupImg'), src: currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl }))),
+                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title) && (React__default__default["default"].createElement("p", { className: b$o('groupTitle') }, currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title)))),
+                                        !((_o = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) && !forbidClose && (React__default__default["default"].createElement("button", { className: b$o('close', {
                                                 noProgress: (_p = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
                                                 wideRight: isShowMockup && isLarge
                                             }), style: {
                                                 top: isShowMockup && isLarge ? largeElementsTop : undefined
                                             }, onClick: handleClose },
-                                            React__default["default"].createElement(CloseIcon, null)))))))))),
-                    isShowMockup && (React__default["default"].createElement("img", { className: b$o('mockup'), src: isLarge || currentGroupType === GroupType.GROUP
+                                            React__default__default["default"].createElement(CloseIcon, null)))))))))),
+                    isShowMockup && (React__default__default["default"].createElement("img", { className: b$o('mockup'), src: isLarge || currentGroupType === GroupType.GROUP
                             ? img$2
                             : img$1 }))),
-                activeStoriesWithResult.length > 1 && !isLoading && (React__default["default"].createElement("button", { className: b$o('arrowButton', { right: true }), onClick: handleNext },
-                    React__default["default"].createElement(RightArrowIcon, null)))),
-            isForceCloseAvailable && ((_q = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProhibitToClose) && (React__default["default"].createElement("button", { className: b$o('close', { general: true }), onClick: handleClose },
-                React__default["default"].createElement(CloseIcon, null)))),
-        React__default["default"].createElement("canvas", { ref: canvasRef, style: {
+                activeStoriesWithResult.length > 1 && !isLoading && (React__default__default["default"].createElement("button", { className: b$o('arrowButton', { right: true }), onClick: handleNext },
+                    React__default__default["default"].createElement(RightArrowIcon, null)))),
+            isForceCloseAvailable && ((_q = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProhibitToClose) && (React__default__default["default"].createElement("button", { className: b$o('close', { general: true }), onClick: handleClose },
+                React__default__default["default"].createElement(CloseIcon, null)))),
+        React__default__default["default"].createElement("canvas", { ref: canvasRef, style: {
                 display: 'none'
             } })));
 };
@@ -17797,15 +11876,15 @@ const INIT_ELEMENT_STYLES$a = {
         fontSize: 10
     }
 };
-const ChooseAnswerWidget = React__default["default"].memo((props) => {
+const ChooseAnswerWidget = React__default__default["default"].memo((props) => {
     const { id, params, isReadOnly, jsConfetti, elementsSize, onAnswer } = props;
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$a;
-    const storyContextVal = React.useContext(StoryContext);
+    const storyContextVal = React__default.useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
-    const [userAnswer, setUserAnswer] = React.useState(answerFromCache);
-    const handleSendScore = React.useCallback((currentAnswer) => {
+    const [userAnswer, setUserAnswer] = React__default.useState(answerFromCache);
+    const handleSendScore = React__default.useCallback((currentAnswer) => {
         var _a;
         const answerScore = currentAnswer
             ? (_a = params.answers.find((answer) => answer.id === currentAnswer)) === null || _a === void 0 ? void 0 : _a.score
@@ -17817,7 +11896,7 @@ const ChooseAnswerWidget = React__default["default"].memo((props) => {
             });
         }
     }, [params.answers, storyContextVal]);
-    const handleMarkAnswer = React.useCallback((answerId) => {
+    const handleMarkAnswer = React__default.useCallback((answerId) => {
         if (onAnswer) {
             onAnswer(answerId);
         }
@@ -17827,37 +11906,37 @@ const ChooseAnswerWidget = React__default["default"].memo((props) => {
         setUserAnswer(answerId);
         handleSendScore(answerId);
     }, [onAnswer, storyContextVal, id, handleSendScore]);
-    const renderAnswer = React.useCallback((answer) => {
+    const renderAnswer = React__default.useCallback((answer) => {
         if (userAnswer) {
-            return (React__default["default"].createElement("div", { className: b$n('answer', {
+            return (React__default__default["default"].createElement("div", { className: b$n('answer', {
                     correct: answer.id === params.correct && params.markCorrectAnswer,
                     incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                     choosen: userAnswer === answer.id && params.markCorrectAnswer,
                     filled: userAnswer === answer.id && !params.markCorrectAnswer
                 }), key: `answer-${answer.id}`, style: sizes.answer },
-                React__default["default"].createElement("div", { className: b$n('answerCircle', {
+                React__default__default["default"].createElement("div", { className: b$n('answerCircle', {
                         correct: answer.id === params.correct && params.markCorrectAnswer,
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                         choosen: userAnswer === answer.id && params.markCorrectAnswer,
                         filled: userAnswer === answer.id && !params.markCorrectAnswer
-                    }), style: sizes.answerId }, params.markCorrectAnswer ? (React__default["default"].createElement(React__default["default"].Fragment, null, answer.id === params.correct ? (React__default["default"].createElement(IconConfirm, { className: b$n('answerIcon', {
+                    }), style: sizes.answerId }, params.markCorrectAnswer ? (React__default__default["default"].createElement(React__default__default["default"].Fragment, null, answer.id === params.correct ? (React__default__default["default"].createElement(IconConfirm, { className: b$n('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
-                    }) })) : (React__default["default"].createElement(IconDecline, { className: b$n('answerIcon', {
+                    }) })) : (React__default__default["default"].createElement(IconDecline, { className: b$n('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
-                    }) })))) : (React__default["default"].createElement(React__default["default"].Fragment, null, `${answer.id}`))),
-                React__default["default"].createElement("div", { className: b$n('answerTitle', {
+                    }) })))) : (React__default__default["default"].createElement(React__default__default["default"].Fragment, null, `${answer.id}`))),
+                React__default__default["default"].createElement("div", { className: b$n('answerTitle', {
                         choosen: userAnswer === answer.id,
                         correct: answer.id === params.correct && params.markCorrectAnswer,
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer
                     }), style: sizes.answerTitle }, answer.title)));
         }
-        return (React__default["default"].createElement("div", { className: b$n('answer', { clickable: !userAnswer && !isReadOnly }), key: answer.id, role: "button", style: sizes.answer, tabIndex: 0, onClick: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined },
-            React__default["default"].createElement("div", { className: b$n('answerId'), style: sizes.answerId }, `${answer.id}`),
-            React__default["default"].createElement("div", { className: b$n('answerTitle'), style: sizes.answerTitle }, answer.title)));
+        return (React__default__default["default"].createElement("div", { className: b$n('answer', { clickable: !userAnswer && !isReadOnly }), key: answer.id, role: "button", style: sizes.answer, tabIndex: 0, onClick: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined },
+            React__default__default["default"].createElement("div", { className: b$n('answerId'), style: sizes.answerId }, `${answer.id}`),
+            React__default__default["default"].createElement("div", { className: b$n('answerTitle'), style: sizes.answerTitle }, answer.title)));
     }, [
         userAnswer,
         isReadOnly,
@@ -17868,27 +11947,27 @@ const ChooseAnswerWidget = React__default["default"].memo((props) => {
         sizes.answerTitle,
         handleMarkAnswer
     ]);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         if (userAnswer && userAnswer === params.correct && params.markCorrectAnswer) {
             jsConfetti.current.addConfetti();
         }
     }, [userAnswer, params.correct, jsConfetti, params.markCorrectAnswer]);
-    return (React__default["default"].createElement("div", { className: b$n({
+    return (React__default__default["default"].createElement("div", { className: b$n({
             color: params.color,
             shake: userAnswer && params.markCorrectAnswer && userAnswer !== params.correct,
             celebrate: userAnswer && params.markCorrectAnswer && userAnswer === params.correct
         }), style: sizes.widget },
-        !params.isTitleHidden && (React__default["default"].createElement("div", { className: b$n('header'), style: sizes.header }, params.text)),
-        React__default["default"].createElement("div", { className: b$n('answers'), style: sizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
+        !params.isTitleHidden && (React__default__default["default"].createElement("div", { className: b$n('header'), style: sizes.header }, params.text)),
+        React__default__default["default"].createElement("div", { className: b$n('answers'), style: sizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
 });
 
 const b$m = block('ClickMeWidget');
 const DELAY_MS = 200;
-const ClickMeWidget = React__default["default"].memo((props) => {
+const ClickMeWidget = React__default__default["default"].memo((props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url, storyId, actionType } = props.params;
     const { isReadOnly, onClick, onGoToStory } = props;
-    const [isClicked, setIsClicked] = React.useState(false);
-    const handleWidgetClick = React.useCallback(() => {
+    const [isClicked, setIsClicked] = React__default.useState(false);
+    const handleWidgetClick = React__default.useCallback(() => {
         setIsClicked(true);
         setTimeout(() => {
             setIsClicked(false);
@@ -17910,23 +11989,23 @@ const ClickMeWidget = React__default["default"].memo((props) => {
             }, DELAY_MS);
         }
     }, [actionType, onClick, onGoToStory, storyId, url]);
-    return (React__default["default"].createElement("div", { className: b$m({ disabled: isReadOnly, clicked: isClicked }), role: "button", style: {
+    return (React__default__default["default"].createElement("div", { className: b$m({ disabled: isReadOnly, clicked: isClicked }), role: "button", style: {
             borderRadius,
             borderStyle: 'solid',
             borderWidth: `${hasBorder ? borderWidth : 0}px`,
             borderColor: renderBackgroundStyles(borderColor)
         }, tabIndex: 0, onClick: !isReadOnly ? handleWidgetClick : undefined, onKeyDown: !isReadOnly ? handleWidgetClick : undefined },
-        React__default["default"].createElement("div", { className: b$m('container', { gradient: color.type === BackgroundColorType.GRADIENT }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
+        React__default__default["default"].createElement("div", { className: b$m('container', { gradient: color.type === BackgroundColorType.GRADIENT }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
                 fontSize }, renderTextBackgroundStyles({ color })) },
-            hasIcon ? (React__default["default"].createElement(MaterialIcon, { background: color, className: b$m('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
-            React__default["default"].createElement("span", { className: b$m('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
-        React__default["default"].createElement("div", { className: b$m('background'), style: {
+            hasIcon ? (React__default__default["default"].createElement(MaterialIcon, { background: color, className: b$m('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
+            React__default__default["default"].createElement("span", { className: b$m('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
+        React__default__default["default"].createElement("div", { className: b$m('background'), style: {
                 background: renderBackgroundStyles(backgroundColor)
             } })));
 });
 
 const b$l = block('EllipseWidget');
-const EllipseWidget = React__default["default"].memo((props) => {
+const EllipseWidget = React__default__default["default"].memo((props) => {
     const { fillColor, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
         opacity: widgetOpacity / 100,
@@ -17937,8 +12016,8 @@ const EllipseWidget = React__default["default"].memo((props) => {
     const backgroundStyles = {
         background: renderBackgroundStyles(fillColor)
     };
-    return (React__default["default"].createElement("div", { className: b$l(), style: styles },
-        React__default["default"].createElement("div", { className: b$l('background'), style: backgroundStyles })));
+    return (React__default__default["default"].createElement("div", { className: b$l(), style: styles },
+        React__default__default["default"].createElement("div", { className: b$l('background'), style: backgroundStyles })));
 });
 
 var compressed = true;
@@ -66732,7 +60811,7 @@ function _classCallCheck(instance, Constructor) {
   }
 }
 
-function _defineProperties(target, props) {
+function _defineProperties$2(target, props) {
   for (var i = 0; i < props.length; i++) {
     var descriptor = props[i];
     descriptor.enumerable = descriptor.enumerable || false;
@@ -66742,9 +60821,9 @@ function _defineProperties(target, props) {
   }
 }
 
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
+function _createClass$2(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties$2(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties$2(Constructor, staticProps);
   Object.defineProperty(Constructor, "prototype", {
     writable: false
   });
@@ -67156,7 +61235,7 @@ function () {
     this.buildIndex();
   }
 
-  _createClass(NimbleEmojiIndex, [{
+  _createClass$2(NimbleEmojiIndex, [{
     key: "buildIndex",
     value: function buildIndex() {
       var _this = this;
@@ -67453,8 +61532,8 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-function _extends() {
-  _extends = Object.assign || function (target) {
+function _extends$1() {
+  _extends$1 = Object.assign || function (target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
 
@@ -67468,7 +61547,7 @@ function _extends() {
     return target;
   };
 
-  return _extends.apply(this, arguments);
+  return _extends$1.apply(this, arguments);
 }
 
 function _assertThisInitialized(self) {
@@ -67489,20 +61568,20 @@ function _possibleConstructorReturn(self, call) {
   return _assertThisInitialized(self);
 }
 
-function _getPrototypeOf(o) {
-  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+function _getPrototypeOf$1(o) {
+  _getPrototypeOf$1 = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
     return o.__proto__ || Object.getPrototypeOf(o);
   };
-  return _getPrototypeOf(o);
+  return _getPrototypeOf$1(o);
 }
 
-function _setPrototypeOf(o, p) {
-  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+function _setPrototypeOf$1(o, p) {
+  _setPrototypeOf$1 = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
     o.__proto__ = p;
     return o;
   };
 
-  return _setPrototypeOf(o, p);
+  return _setPrototypeOf$1(o, p);
 }
 
 function _inherits(subClass, superClass) {
@@ -67520,8 +61599,12 @@ function _inherits(subClass, superClass) {
   Object.defineProperty(subClass, "prototype", {
     writable: false
   });
-  if (superClass) _setPrototypeOf(subClass, superClass);
+  if (superClass) _setPrototypeOf$1(subClass, superClass);
 }
+
+var global$1 = (typeof global !== "undefined" ? global :
+  typeof self !== "undefined" ? self :
+  typeof window !== "undefined" ? window : {});
 if (typeof global$1.setTimeout === 'function') ;
 if (typeof global$1.clearTimeout === 'function') ;
 
@@ -68524,31 +62607,31 @@ var PropTypes = propTypes.exports;
 
 var categories = {
   activity: function activity() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M12 0C5.373 0 0 5.372 0 12c0 6.627 5.373 12 12 12 6.628 0 12-5.373 12-12 0-6.628-5.372-12-12-12m9.949 11H17.05c.224-2.527 1.232-4.773 1.968-6.113A9.966 9.966 0 0 1 21.949 11M13 11V2.051a9.945 9.945 0 0 1 4.432 1.564c-.858 1.491-2.156 4.22-2.392 7.385H13zm-2 0H8.961c-.238-3.165-1.536-5.894-2.393-7.385A9.95 9.95 0 0 1 11 2.051V11zm0 2v8.949a9.937 9.937 0 0 1-4.432-1.564c.857-1.492 2.155-4.221 2.393-7.385H11zm4.04 0c.236 3.164 1.534 5.893 2.392 7.385A9.92 9.92 0 0 1 13 21.949V13h2.04zM4.982 4.887C5.718 6.227 6.726 8.473 6.951 11h-4.9a9.977 9.977 0 0 1 2.931-6.113M2.051 13h4.9c-.226 2.527-1.233 4.771-1.969 6.113A9.972 9.972 0 0 1 2.051 13m16.967 6.113c-.735-1.342-1.744-3.586-1.968-6.113h4.899a9.961 9.961 0 0 1-2.931 6.113"
     }));
   },
   custom: function custom() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React__default["default"].createElement("g", {
+    }, React__default__default["default"].createElement("g", {
       transform: "translate(2.000000, 1.000000)"
-    }, React__default["default"].createElement("rect", {
+    }, React__default__default["default"].createElement("rect", {
       id: "Rectangle",
       x: "8",
       y: "0",
       width: "3",
       height: "21",
       rx: "1.5"
-    }), React__default["default"].createElement("rect", {
+    }), React__default__default["default"].createElement("rect", {
       id: "Rectangle",
       transform: "translate(9.843, 10.549) rotate(60) translate(-9.843, -10.549) ",
       x: "8.343",
@@ -68556,7 +62639,7 @@ var categories = {
       width: "3",
       height: "21",
       rx: "1.5"
-    }), React__default["default"].createElement("rect", {
+    }), React__default__default["default"].createElement("rect", {
       id: "Rectangle",
       transform: "translate(9.843, 10.549) rotate(-60) translate(-9.843, -10.549) ",
       x: "8.343",
@@ -68567,116 +62650,116 @@ var categories = {
     })));
   },
   flags: function flags() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M0 0l6.084 24H8L1.916 0zM21 5h-4l-1-4H4l3 12h3l1 4h13L21 5zM6.563 3h7.875l2 8H8.563l-2-8zm8.832 10l-2.856 1.904L12.063 13h3.332zM19 13l-1.5-6h1.938l2 8H16l3-2z"
     }));
   },
   foods: function foods() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M17 4.978c-1.838 0-2.876.396-3.68.934.513-1.172 1.768-2.934 4.68-2.934a1 1 0 0 0 0-2c-2.921 0-4.629 1.365-5.547 2.512-.064.078-.119.162-.18.244C11.73 1.838 10.798.023 9.207.023 8.579.022 7.85.306 7 .978 5.027 2.54 5.329 3.902 6.492 4.999 3.609 5.222 0 7.352 0 12.969c0 4.582 4.961 11.009 9 11.009 1.975 0 2.371-.486 3-1 .629.514 1.025 1 3 1 4.039 0 9-6.418 9-11 0-5.953-4.055-8-7-8M8.242 2.546c.641-.508.943-.523.965-.523.426.169.975 1.405 1.357 3.055-1.527-.629-2.741-1.352-2.98-1.846.059-.112.241-.356.658-.686M15 21.978c-1.08 0-1.21-.109-1.559-.402l-.176-.146c-.367-.302-.816-.452-1.266-.452s-.898.15-1.266.452l-.176.146c-.347.292-.477.402-1.557.402-2.813 0-7-5.389-7-9.009 0-5.823 4.488-5.991 5-5.991 1.939 0 2.484.471 3.387 1.251l.323.276a1.995 1.995 0 0 0 2.58 0l.323-.276c.902-.78 1.447-1.251 3.387-1.251.512 0 5 .168 5 6 0 3.617-4.187 9-7 9"
     }));
   },
   nature: function nature() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M15.5 8a1.5 1.5 0 1 0 .001 3.001A1.5 1.5 0 0 0 15.5 8M8.5 8a1.5 1.5 0 1 0 .001 3.001A1.5 1.5 0 0 0 8.5 8"
-    }), React__default["default"].createElement("path", {
+    }), React__default__default["default"].createElement("path", {
       d: "M18.933 0h-.027c-.97 0-2.138.787-3.018 1.497-1.274-.374-2.612-.51-3.887-.51-1.285 0-2.616.133-3.874.517C7.245.79 6.069 0 5.093 0h-.027C3.352 0 .07 2.67.002 7.026c-.039 2.479.276 4.238 1.04 5.013.254.258.882.677 1.295.882.191 3.177.922 5.238 2.536 6.38.897.637 2.187.949 3.2 1.102C8.04 20.6 8 20.795 8 21c0 1.773 2.35 3 4 3 1.648 0 4-1.227 4-3 0-.201-.038-.393-.072-.586 2.573-.385 5.435-1.877 5.925-7.587.396-.22.887-.568 1.104-.788.763-.774 1.079-2.534 1.04-5.013C23.929 2.67 20.646 0 18.933 0M3.223 9.135c-.237.281-.837 1.155-.884 1.238-.15-.41-.368-1.349-.337-3.291.051-3.281 2.478-4.972 3.091-5.031.256.015.731.27 1.265.646-1.11 1.171-2.275 2.915-2.352 5.125-.133.546-.398.858-.783 1.313M12 22c-.901 0-1.954-.693-2-1 0-.654.475-1.236 1-1.602V20a1 1 0 1 0 2 0v-.602c.524.365 1 .947 1 1.602-.046.307-1.099 1-2 1m3-3.48v.02a4.752 4.752 0 0 0-1.262-1.02c1.092-.516 2.239-1.334 2.239-2.217 0-1.842-1.781-2.195-3.977-2.195-2.196 0-3.978.354-3.978 2.195 0 .883 1.148 1.701 2.238 2.217A4.8 4.8 0 0 0 9 18.539v-.025c-1-.076-2.182-.281-2.973-.842-1.301-.92-1.838-3.045-1.853-6.478l.023-.041c.496-.826 1.49-1.45 1.804-3.102 0-2.047 1.357-3.631 2.362-4.522C9.37 3.178 10.555 3 11.948 3c1.447 0 2.685.192 3.733.57 1 .9 2.316 2.465 2.316 4.48.313 1.651 1.307 2.275 1.803 3.102.035.058.068.117.102.178-.059 5.967-1.949 7.01-4.902 7.19m6.628-8.202c-.037-.065-.074-.13-.113-.195a7.587 7.587 0 0 0-.739-.987c-.385-.455-.648-.768-.782-1.313-.076-2.209-1.241-3.954-2.353-5.124.531-.376 1.004-.63 1.261-.647.636.071 3.044 1.764 3.096 5.031.027 1.81-.347 3.218-.37 3.235"
     }));
   },
   objects: function objects() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M12 0a9 9 0 0 0-5 16.482V21s2.035 3 5 3 5-3 5-3v-4.518A9 9 0 0 0 12 0zm0 2c3.86 0 7 3.141 7 7s-3.14 7-7 7-7-3.141-7-7 3.14-7 7-7zM9 17.477c.94.332 1.946.523 3 .523s2.06-.19 3-.523v.834c-.91.436-1.925.689-3 .689a6.924 6.924 0 0 1-3-.69v-.833zm.236 3.07A8.854 8.854 0 0 0 12 21c.965 0 1.888-.167 2.758-.451C14.155 21.173 13.153 22 12 22c-1.102 0-2.117-.789-2.764-1.453z"
-    }), React__default["default"].createElement("path", {
+    }), React__default__default["default"].createElement("path", {
       d: "M14.745 12.449h-.004c-.852-.024-1.188-.858-1.577-1.824-.421-1.061-.703-1.561-1.182-1.566h-.009c-.481 0-.783.497-1.235 1.537-.436.982-.801 1.811-1.636 1.791l-.276-.043c-.565-.171-.853-.691-1.284-1.794-.125-.313-.202-.632-.27-.913-.051-.213-.127-.53-.195-.634C7.067 9.004 7.039 9 6.99 9A1 1 0 0 1 7 7h.01c1.662.017 2.015 1.373 2.198 2.134.486-.981 1.304-2.058 2.797-2.075 1.531.018 2.28 1.153 2.731 2.141l.002-.008C14.944 8.424 15.327 7 16.979 7h.032A1 1 0 1 1 17 9h-.011c-.149.076-.256.474-.319.709a6.484 6.484 0 0 1-.311.951c-.429.973-.79 1.789-1.614 1.789"
     }));
   },
   people: function people() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0m0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10"
-    }), React__default["default"].createElement("path", {
+    }), React__default__default["default"].createElement("path", {
       d: "M8 7a2 2 0 1 0-.001 3.999A2 2 0 0 0 8 7M16 7a2 2 0 1 0-.001 3.999A2 2 0 0 0 16 7M15.232 15c-.693 1.195-1.87 2-3.349 2-1.477 0-2.655-.805-3.347-2H15m3-2H6a6 6 0 1 0 12 0"
     }));
   },
   places: function places() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M6.5 12C5.122 12 4 13.121 4 14.5S5.122 17 6.5 17 9 15.879 9 14.5 7.878 12 6.5 12m0 3c-.275 0-.5-.225-.5-.5s.225-.5.5-.5.5.225.5.5-.225.5-.5.5M17.5 12c-1.378 0-2.5 1.121-2.5 2.5s1.122 2.5 2.5 2.5 2.5-1.121 2.5-2.5-1.122-2.5-2.5-2.5m0 3c-.275 0-.5-.225-.5-.5s.225-.5.5-.5.5.225.5.5-.225.5-.5.5"
-    }), React__default["default"].createElement("path", {
+    }), React__default__default["default"].createElement("path", {
       d: "M22.482 9.494l-1.039-.346L21.4 9h.6c.552 0 1-.439 1-.992 0-.006-.003-.008-.003-.008H23c0-1-.889-2-1.984-2h-.642l-.731-1.717C19.262 3.012 18.091 2 16.764 2H7.236C5.909 2 4.738 3.012 4.357 4.283L3.626 6h-.642C1.889 6 1 7 1 8h.003S1 8.002 1 8.008C1 8.561 1.448 9 2 9h.6l-.043.148-1.039.346a2.001 2.001 0 0 0-1.359 2.097l.751 7.508a1 1 0 0 0 .994.901H3v1c0 1.103.896 2 2 2h2c1.104 0 2-.897 2-2v-1h6v1c0 1.103.896 2 2 2h2c1.104 0 2-.897 2-2v-1h1.096a.999.999 0 0 0 .994-.901l.751-7.508a2.001 2.001 0 0 0-1.359-2.097M6.273 4.857C6.402 4.43 6.788 4 7.236 4h9.527c.448 0 .834.43.963.857L19.313 9H4.688l1.585-4.143zM7 21H5v-1h2v1zm12 0h-2v-1h2v1zm2.189-3H2.811l-.662-6.607L3 11h18l.852.393L21.189 18z"
     }));
   },
   recent: function recent() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M13 4h-2l-.001 7H9v2h2v2h2v-2h4v-2h-4z"
-    }), React__default["default"].createElement("path", {
+    }), React__default__default["default"].createElement("path", {
       d: "M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0m0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10"
     }));
   },
   symbols: function symbols() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M0 0h11v2H0zM4 11h3V6h4V4H0v2h4zM15.5 17c1.381 0 2.5-1.116 2.5-2.493s-1.119-2.493-2.5-2.493S13 13.13 13 14.507 14.119 17 15.5 17m0-2.986c.276 0 .5.222.5.493 0 .272-.224.493-.5.493s-.5-.221-.5-.493.224-.493.5-.493M21.5 19.014c-1.381 0-2.5 1.116-2.5 2.493S20.119 24 21.5 24s2.5-1.116 2.5-2.493-1.119-2.493-2.5-2.493m0 2.986a.497.497 0 0 1-.5-.493c0-.271.224-.493.5-.493s.5.222.5.493a.497.497 0 0 1-.5.493M22 13l-9 9 1.513 1.5 8.99-9.009zM17 11c2.209 0 4-1.119 4-2.5V2s.985-.161 1.498.949C23.01 4.055 23 6 23 6s1-1.119 1-3.135C24-.02 21 0 21 0h-2v6.347A5.853 5.853 0 0 0 17 6c-2.209 0-4 1.119-4 2.5s1.791 2.5 4 2.5M10.297 20.482l-1.475-1.585a47.54 47.54 0 0 1-1.442 1.129c-.307-.288-.989-1.016-2.045-2.183.902-.836 1.479-1.466 1.729-1.892s.376-.871.376-1.336c0-.592-.273-1.178-.818-1.759-.546-.581-1.329-.871-2.349-.871-1.008 0-1.79.293-2.344.879-.556.587-.832 1.181-.832 1.784 0 .813.419 1.748 1.256 2.805-.847.614-1.444 1.208-1.794 1.784a3.465 3.465 0 0 0-.523 1.833c0 .857.308 1.56.924 2.107.616.549 1.423.823 2.42.823 1.173 0 2.444-.379 3.813-1.137L8.235 24h2.819l-2.09-2.383 1.333-1.135zm-6.736-6.389a1.02 1.02 0 0 1 .73-.286c.31 0 .559.085.747.254a.849.849 0 0 1 .283.659c0 .518-.419 1.112-1.257 1.784-.536-.651-.805-1.231-.805-1.742a.901.901 0 0 1 .302-.669M3.74 22c-.427 0-.778-.116-1.057-.349-.279-.232-.418-.487-.418-.766 0-.594.509-1.288 1.527-2.083.968 1.134 1.717 1.946 2.248 2.438-.921.507-1.686.76-2.3.76"
     }));
   }
 };
 var search = {
   search: function search() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       width: "13",
       height: "13",
       viewBox: "0 0 20 20",
       opacity: "0.5"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"
     }));
   },
   "delete": function _delete() {
-    return React__default["default"].createElement("svg", {
+    return React__default__default["default"].createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       width: "13",
       height: "13",
       viewBox: "0 0 20 20",
       opacity: "0.5"
-    }, React__default["default"].createElement("path", {
+    }, React__default__default["default"].createElement("path", {
       d: "M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z"
     }));
   }
@@ -68763,7 +62846,7 @@ function (_React$PureComponent) {
 
     _classCallCheck(this, Anchors);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Anchors).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf$1(Anchors).call(this, props));
     var defaultCategory = props.categories.filter(function (category) {
       return category.first;
     })[0];
@@ -68774,7 +62857,7 @@ function (_React$PureComponent) {
     return _this;
   }
 
-  _createClass(Anchors, [{
+  _createClass$2(Anchors, [{
     key: "handleClick",
     value: function handleClick(e) {
       var index = e.currentTarget.getAttribute('data-index');
@@ -68794,7 +62877,7 @@ function (_React$PureComponent) {
           i18n = _this$props2.i18n,
           icons = _this$props2.icons,
           selected = this.state.selected;
-      return React__default["default"].createElement("nav", {
+      return React__default__default["default"].createElement("nav", {
         className: "emoji-mart-anchors",
         "aria-label": i18n.categorieslabel
       }, categories.map(function (category, i) {
@@ -68808,7 +62891,7 @@ function (_React$PureComponent) {
         }
 
         var iconId = id.startsWith('custom-') ? 'custom' : id;
-        return React__default["default"].createElement("button", {
+        return React__default__default["default"].createElement("button", {
           key: id,
           "aria-label": i18n.categories[iconId],
           title: i18n.categories[iconId],
@@ -68819,9 +62902,9 @@ function (_React$PureComponent) {
           style: {
             color: isSelected ? color : null
           }
-        }, React__default["default"].createElement("div", {
+        }, React__default__default["default"].createElement("div", {
           className: "emoji-mart-anchor-icon"
-        }, icons.categories[iconId]()), React__default["default"].createElement("span", {
+        }, icons.categories[iconId]()), React__default__default["default"].createElement("span", {
           className: "emoji-mart-anchor-bar",
           style: {
             backgroundColor: color
@@ -68832,7 +62915,7 @@ function (_React$PureComponent) {
   }]);
 
   return Anchors;
-}(React__default["default"].PureComponent);
+}(React__default__default["default"].PureComponent);
 Anchors.propTypes
 /* remove-proptypes */
 = {
@@ -69091,7 +63174,7 @@ var NimbleEmoji = function NimbleEmoji(props) {
     style = _convertStyleToCSS(style);
     return "<".concat(Tag.name, " style='").concat(style, "' aria-label='").concat(label, "' ").concat(title ? "title='".concat(title, "'") : '', " class='").concat(className, "'>").concat(children || '', "</").concat(Tag.name, ">");
   } else {
-    return React__default["default"].createElement(Tag.name, _extends({
+    return React__default__default["default"].createElement(Tag.name, _extends$1({
       onClick: function onClick(e) {
         return _handleClick(e, props);
       },
@@ -69104,7 +63187,7 @@ var NimbleEmoji = function NimbleEmoji(props) {
       "aria-label": label,
       title: title,
       className: className
-    }, Tag.props), React__default["default"].createElement("span", {
+    }, Tag.props), React__default__default["default"].createElement("span", {
       style: style
     }, children));
   }
@@ -69129,10 +63212,10 @@ function (_React$PureComponent) {
   function NotFound() {
     _classCallCheck(this, NotFound);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(NotFound).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf$1(NotFound).apply(this, arguments));
   }
 
-  _createClass(NotFound, [{
+  _createClass$2(NotFound, [{
     key: "render",
     value: function render() {
       var _this$props = this.props,
@@ -69141,7 +63224,7 @@ function (_React$PureComponent) {
           i18n = _this$props.i18n,
           notFound = _this$props.notFound,
           notFoundEmoji = _this$props.notFoundEmoji;
-      var component = notFound && notFound() || React__default["default"].createElement("div", {
+      var component = notFound && notFound() || React__default__default["default"].createElement("div", {
         className: "emoji-mart-no-results"
       }, NimbleEmoji(_objectSpread$5({
         data: data
@@ -69151,7 +63234,7 @@ function (_React$PureComponent) {
         onOver: null,
         onLeave: null,
         onClick: null
-      })), React__default["default"].createElement("div", {
+      })), React__default__default["default"].createElement("div", {
         className: "emoji-mart-no-results-label"
       }, i18n.notfound));
       return component;
@@ -69159,7 +63242,7 @@ function (_React$PureComponent) {
   }]);
 
   return NotFound;
-}(React__default["default"].PureComponent);
+}(React__default__default["default"].PureComponent);
 NotFound.propTypes
 /* remove-proptypes */
 = {
@@ -69181,14 +63264,14 @@ function (_React$Component) {
 
     _classCallCheck(this, Category);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Category).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf$1(Category).call(this, props));
     _this.data = props.data;
     _this.setContainerRef = _this.setContainerRef.bind(_assertThisInitialized(_this));
     _this.setLabelRef = _this.setLabelRef.bind(_assertThisInitialized(_this));
     return _this;
   }
 
-  _createClass(Category, [{
+  _createClass$2(Category, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       this.margin = 0;
@@ -69374,31 +63457,31 @@ function (_React$Component) {
       }
 
       var label = i18n.categories[id] || name;
-      return React__default["default"].createElement("section", {
+      return React__default__default["default"].createElement("section", {
         ref: this.setContainerRef,
         className: "emoji-mart-category",
         "aria-label": label,
         style: containerStyles
-      }, React__default["default"].createElement("div", {
+      }, React__default__default["default"].createElement("div", {
         style: labelStyles,
         "data-name": name,
         className: "emoji-mart-category-label"
-      }, React__default["default"].createElement("span", {
+      }, React__default__default["default"].createElement("span", {
         style: labelSpanStyles,
         ref: this.setLabelRef,
         "aria-hidden": true
         /* already labeled by the section aria-label */
 
-      }, label)), React__default["default"].createElement("ul", {
+      }, label)), React__default__default["default"].createElement("ul", {
         className: "emoji-mart-category-list"
       }, emojis && emojis.map(function (emoji) {
-        return React__default["default"].createElement("li", {
+        return React__default__default["default"].createElement("li", {
           key: emoji.short_names && emoji.short_names.join('_') || emoji
         }, NimbleEmoji(_objectSpread$4({
           emoji: emoji,
           data: _this3.data
         }, emojiProps)));
-      })), emojis && !emojis.length && React__default["default"].createElement(NotFound, {
+      })), emojis && !emojis.length && React__default__default["default"].createElement(NotFound, {
         i18n: i18n,
         notFound: notFound,
         notFoundEmoji: notFoundEmoji,
@@ -69409,7 +63492,7 @@ function (_React$Component) {
   }]);
 
   return Category;
-}(React__default["default"].Component);
+}(React__default__default["default"].Component);
 Category.propTypes
 /* remove-proptypes */
 = {
@@ -69438,14 +63521,14 @@ function (_React$PureComponent) {
 
     _classCallCheck(this, Skins);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Skins).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf$1(Skins).call(this, props));
     _this.state = {
       opened: false
     };
     return _this;
   }
 
-  _createClass(Skins, [{
+  _createClass$2(Skins, [{
     key: "handleClick",
     value: function handleClick(e) {
       var skin = parseInt(e.currentTarget.getAttribute('data-skin'));
@@ -69473,7 +63556,7 @@ function (_React$PureComponent) {
   }]);
 
   return Skins;
-}(React__default["default"].PureComponent);
+}(React__default__default["default"].PureComponent);
 Skins.propTypes
 /* remove-proptypes */
 = {
@@ -69494,12 +63577,12 @@ function (_Skins) {
 
     _classCallCheck(this, SkinsEmoji);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(SkinsEmoji).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf$1(SkinsEmoji).call(this, props));
     _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
     return _this;
   }
 
-  _createClass(SkinsEmoji, [{
+  _createClass$2(SkinsEmoji, [{
     key: "render",
     value: function render() {
       var _this$props = this.props,
@@ -69513,10 +63596,10 @@ function (_Skins) {
 
       for (var skinTone = 1; skinTone <= 6; skinTone++) {
         var selected = skinTone === skin;
-        skinToneNodes.push(React__default["default"].createElement("span", {
+        skinToneNodes.push(React__default__default["default"].createElement("span", {
           key: "skin-tone-".concat(skinTone),
           className: "emoji-mart-skin-swatch custom".concat(selected ? ' selected' : '')
-        }, React__default["default"].createElement("span", {
+        }, React__default__default["default"].createElement("span", {
           onClick: this.handleClick,
           "data-skin": skinTone,
           className: "emoji-mart-skin-tone-".concat(skinTone)
@@ -69532,9 +63615,9 @@ function (_Skins) {
         }))));
       }
 
-      return React__default["default"].createElement("div", {
+      return React__default__default["default"].createElement("div", {
         className: "emoji-mart-skin-swatches custom".concat(opened ? ' opened' : '')
-      }, React__default["default"].createElement("div", {
+      }, React__default__default["default"].createElement("div", {
         className: "emoji-mart-skin-text".concat(opened ? ' opened' : '')
       }, i18n.skintext), skinToneNodes);
     }
@@ -69567,13 +63650,13 @@ function (_Skins) {
 
     _classCallCheck(this, SkinsDot);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(SkinsDot).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf$1(SkinsDot).call(this, props));
     _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
     _this.handleKeyDown = _this.handleKeyDown.bind(_assertThisInitialized(_this));
     return _this;
   }
 
-  _createClass(SkinsDot, [{
+  _createClass$2(SkinsDot, [{
     key: "handleKeyDown",
     value: function handleKeyDown(event) {
       // if either enter or space is pressed, then execute
@@ -69594,14 +63677,14 @@ function (_Skins) {
       for (var skinTone = 1; skinTone <= 6; skinTone++) {
         var selected = skinTone === skin;
         var visible = opened || selected;
-        skinToneNodes.push(React__default["default"].createElement("span", _extends({
+        skinToneNodes.push(React__default__default["default"].createElement("span", _extends$1({
           key: "skin-tone-".concat(skinTone),
           className: "emoji-mart-skin-swatch".concat(selected ? ' selected' : ''),
           "aria-label": i18n.skintones[skinTone],
           "aria-hidden": !visible
         }, opened ? {
           role: 'menuitem'
-        } : {}), React__default["default"].createElement("span", _extends({
+        } : {}), React__default__default["default"].createElement("span", _extends$1({
           onClick: this.handleClick,
           onKeyDown: this.handleKeyDown,
           role: "button"
@@ -69619,10 +63702,10 @@ function (_Skins) {
         }))));
       }
 
-      return React__default["default"].createElement("section", {
+      return React__default__default["default"].createElement("section", {
         className: "emoji-mart-skin-swatches".concat(opened ? ' opened' : ''),
         "aria-label": i18n.skintext
-      }, React__default["default"].createElement("div", opened ? {
+      }, React__default__default["default"].createElement("div", opened ? {
         role: 'menubar'
       } : {}, skinToneNodes));
     }
@@ -69655,7 +63738,7 @@ function (_React$PureComponent) {
 
     _classCallCheck(this, Preview);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Preview).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf$1(Preview).call(this, props));
     _this.data = props.data;
     _this.state = {
       emoji: null
@@ -69663,7 +63746,7 @@ function (_React$PureComponent) {
     return _this;
   }
 
-  _createClass(Preview, [{
+  _createClass$2(Preview, [{
     key: "render",
     value: function render() {
       var emoji = this.state.emoji,
@@ -69690,59 +63773,59 @@ function (_React$PureComponent) {
           knownEmoticons.push(emoticon.toLowerCase());
           listedEmoticons.push(emoticon);
         });
-        return React__default["default"].createElement("div", {
+        return React__default__default["default"].createElement("div", {
           className: "emoji-mart-preview"
-        }, React__default["default"].createElement("div", {
+        }, React__default__default["default"].createElement("div", {
           className: "emoji-mart-preview-emoji",
           "aria-hidden": "true"
         }, NimbleEmoji(_objectSpread$3({
           key: emoji.id,
           emoji: emoji,
           data: this.data
-        }, emojiProps))), React__default["default"].createElement("div", {
+        }, emojiProps))), React__default__default["default"].createElement("div", {
           className: "emoji-mart-preview-data",
           "aria-hidden": "true"
-        }, React__default["default"].createElement("div", {
+        }, React__default__default["default"].createElement("div", {
           className: "emoji-mart-preview-name"
-        }, emoji.name), React__default["default"].createElement("div", {
+        }, emoji.name), React__default__default["default"].createElement("div", {
           className: "emoji-mart-preview-shortnames"
         }, emojiData.short_names.map(function (short_name) {
-          return React__default["default"].createElement("span", {
+          return React__default__default["default"].createElement("span", {
             key: short_name,
             className: "emoji-mart-preview-shortname"
           }, ":", short_name, ":");
-        })), React__default["default"].createElement("div", {
+        })), React__default__default["default"].createElement("div", {
           className: "emoji-mart-preview-emoticons"
         }, listedEmoticons.map(function (emoticon) {
-          return React__default["default"].createElement("span", {
+          return React__default__default["default"].createElement("span", {
             key: emoticon,
             className: "emoji-mart-preview-emoticon"
           }, emoticon);
         }))));
       } else {
-        return React__default["default"].createElement("div", {
+        return React__default__default["default"].createElement("div", {
           className: "emoji-mart-preview"
-        }, React__default["default"].createElement("div", {
+        }, React__default__default["default"].createElement("div", {
           className: "emoji-mart-preview-emoji",
           "aria-hidden": "true"
         }, idleEmoji && idleEmoji.length && NimbleEmoji(_objectSpread$3({
           emoji: idleEmoji,
           data: this.data
-        }, emojiProps))), React__default["default"].createElement("div", {
+        }, emojiProps))), React__default__default["default"].createElement("div", {
           className: "emoji-mart-preview-data",
           "aria-hidden": "true"
-        }, React__default["default"].createElement("span", {
+        }, React__default__default["default"].createElement("span", {
           className: "emoji-mart-title-label"
-        }, title)), showSkinTones && React__default["default"].createElement("div", {
+        }, title)), showSkinTones && React__default__default["default"].createElement("div", {
           className: "emoji-mart-preview-skins".concat(skinsProps.skinEmoji ? ' custom' : '')
-        }, skinsProps.skinEmoji ? React__default["default"].createElement(SkinsEmoji, {
+        }, skinsProps.skinEmoji ? React__default__default["default"].createElement(SkinsEmoji, {
           skin: skinsProps.skin,
           emojiProps: emojiProps,
           data: this.data,
           skinEmoji: skinsProps.skinEmoji,
           i18n: i18n,
           onChange: skinsProps.onChange
-        }) : React__default["default"].createElement(SkinsDot, {
+        }) : React__default__default["default"].createElement(SkinsDot, {
           skin: skinsProps.skin,
           i18n: i18n,
           onChange: skinsProps.onChange
@@ -69752,7 +63835,7 @@ function (_React$PureComponent) {
   }]);
 
   return Preview;
-}(React__default["default"].PureComponent);
+}(React__default__default["default"].PureComponent);
 Preview.propTypes
 /* remove-proptypes */
 = {
@@ -69779,7 +63862,7 @@ function (_React$PureComponent) {
 
     _classCallCheck(this, Search);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Search).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf$1(Search).call(this, props));
     _this.state = {
       icon: search.search,
       isSearching: false,
@@ -69795,7 +63878,7 @@ function (_React$PureComponent) {
     return _this;
   }
 
-  _createClass(Search, [{
+  _createClass$2(Search, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       // in some cases (e.g. preact) the input may already be pre-populated
@@ -69860,20 +63943,20 @@ function (_React$PureComponent) {
           isSearching = _this$state.isSearching,
           id = _this$state.id;
       var inputId = "emoji-mart-search-".concat(id);
-      return React__default["default"].createElement("section", {
+      return React__default__default["default"].createElement("section", {
         className: "emoji-mart-search",
         "aria-label": i18n.search
-      }, React__default["default"].createElement("input", {
+      }, React__default__default["default"].createElement("input", {
         id: inputId,
         ref: this.setRef,
         type: "search",
         onChange: this.handleChange,
         placeholder: i18n.search,
         autoFocus: autoFocus
-      }), React__default["default"].createElement("label", {
+      }), React__default__default["default"].createElement("label", {
         className: "emoji-mart-sr-only",
         htmlFor: inputId
-      }, i18n.search), React__default["default"].createElement("button", {
+      }, i18n.search), React__default__default["default"].createElement("button", {
         className: "emoji-mart-search-icon",
         onClick: this.clear,
         onKeyUp: this.handleKeyUp,
@@ -69884,7 +63967,7 @@ function (_React$PureComponent) {
   }]);
 
   return Search;
-}(React__default["default"].PureComponent);
+}(React__default__default["default"].PureComponent);
 Search.propTypes
 /* remove-proptypes */
 = {
@@ -69944,7 +64027,7 @@ function (_React$PureComponent) {
 
     _classCallCheck(this, NimblePicker);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(NimblePicker).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf$1(NimblePicker).call(this, props));
     _this.CUSTOM = [];
     _this.RECENT_CATEGORY = {
       id: 'recent',
@@ -70082,7 +64165,7 @@ function (_React$PureComponent) {
     return _this;
   }
 
-  _createClass(NimblePicker, [{
+  _createClass$2(NimblePicker, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
@@ -70457,16 +64540,16 @@ function (_React$PureComponent) {
       var width = perLine * (emojiSize + 12) + 12 + 2 + measureScrollbar();
       var theme = this.getPreferredTheme();
       var skin = this.props.skin || this.state.skin || store.get('skin') || this.props.defaultSkin;
-      return React__default["default"].createElement("section", {
+      return React__default__default["default"].createElement("section", {
         style: _objectSpread$2({
           width: width
         }, style),
         className: "emoji-mart emoji-mart-".concat(theme),
         "aria-label": title,
         onKeyDown: this.handleKeyDown
-      }, React__default["default"].createElement("div", {
+      }, React__default__default["default"].createElement("div", {
         className: "emoji-mart-bar"
-      }, React__default["default"].createElement(Anchors, {
+      }, React__default__default["default"].createElement(Anchors, {
         ref: this.setAnchorsRef,
         data: this.data,
         i18n: this.i18n,
@@ -70474,7 +64557,7 @@ function (_React$PureComponent) {
         categories: this.categories,
         onAnchorClick: this.handleAnchorClick,
         icons: this.icons
-      })), React__default["default"].createElement(Search, {
+      })), React__default__default["default"].createElement(Search, {
         ref: this.setSearchRef,
         onSearch: this.handleSearch,
         data: this.data,
@@ -70484,12 +64567,12 @@ function (_React$PureComponent) {
         exclude: exclude,
         custom: this.CUSTOM,
         autoFocus: autoFocus
-      }), React__default["default"].createElement("div", {
+      }), React__default__default["default"].createElement("div", {
         ref: this.setScrollRef,
         className: "emoji-mart-scroll",
         onScroll: this.handleScroll
       }, this.getCategories().map(function (category, i) {
-        return React__default["default"].createElement(Category, {
+        return React__default__default["default"].createElement(Category, {
           ref: _this4.setCategoryRef.bind(_this4, "category-".concat(i)),
           key: category.name,
           id: category.id,
@@ -70521,9 +64604,9 @@ function (_React$PureComponent) {
           notFound: notFound,
           notFoundEmoji: notFoundEmoji
         });
-      })), (showPreview || showSkinTones) && React__default["default"].createElement("div", {
+      })), (showPreview || showSkinTones) && React__default__default["default"].createElement("div", {
         className: "emoji-mart-bar"
-      }, React__default["default"].createElement(Preview, {
+      }, React__default__default["default"].createElement(Preview, {
         ref: this.setPreviewRef,
         data: this.data,
         title: title,
@@ -70551,7 +64634,7 @@ function (_React$PureComponent) {
   }]);
 
   return NimblePicker;
-}(React__default["default"].PureComponent);
+}(React__default__default["default"].PureComponent);
 NimblePicker.propTypes
 /* remove-proptypes */
 = _objectSpread$2({}, PickerPropTypes, {
@@ -70571,18 +64654,18 @@ function (_React$PureComponent) {
   function Picker() {
     _classCallCheck(this, Picker);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Picker).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf$1(Picker).apply(this, arguments));
   }
 
-  _createClass(Picker, [{
+  _createClass$2(Picker, [{
     key: "render",
     value: function render() {
-      return React__default["default"].createElement(NimblePicker, _extends({}, this.props, this.state));
+      return React__default__default["default"].createElement(NimblePicker, _extends$1({}, this.props, this.state));
     }
   }]);
 
   return Picker;
-}(React__default["default"].PureComponent);
+}(React__default__default["default"].PureComponent);
 Picker.propTypes
 /* remove-proptypes */
 = PickerPropTypes;
@@ -70628,18 +64711,18 @@ const INIT_ELEMENT_STYLES$9 = {
         marginLeft: 11
     }
 };
-const EmojiReactionWidget = React__default["default"].memo((props) => {
+const EmojiReactionWidget = React__default__default["default"].memo((props) => {
     const { id, params, elementsSize, isReadOnly, onAnswer } = props;
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$9;
-    const storyContextVal = React.useContext(StoryContext);
-    const initEmojiSize = React.useMemo(() => sizes.emoji.width, [sizes]);
+    const storyContextVal = React__default.useContext(StoryContext);
+    const initEmojiSize = React__default.useMemo(() => sizes.emoji.width, [sizes]);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
-    const [clickedIndex, setClickedIndex] = React.useState(answerFromCache);
-    const [bigSize, setBigSize] = React.useState(initEmojiSize);
-    const [delay, setDelay] = React.useState(0);
-    const [isToched, setIsToched] = React.useState(false);
+    const [clickedIndex, setClickedIndex] = React__default.useState(answerFromCache);
+    const [bigSize, setBigSize] = React__default.useState(initEmojiSize);
+    const [delay, setDelay] = React__default.useState(0);
+    const [isToched, setIsToched] = React__default.useState(false);
     useInterval(() => {
         setBigSize(bigSize + 2);
         if (bigSize > getScalableValue(100)) {
@@ -70648,7 +64731,7 @@ const EmojiReactionWidget = React__default["default"].memo((props) => {
             setClickedIndex(null);
         }
     }, delay);
-    const handleReactionClick = React.useCallback((index, emoji) => {
+    const handleReactionClick = React__default.useCallback((index, emoji) => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(emoji);
         if (storyContextVal.setAnswerCache && id) {
             storyContextVal.setAnswerCache(id, index);
@@ -70658,22 +64741,22 @@ const EmojiReactionWidget = React__default["default"].memo((props) => {
         setBigSize(initEmojiSize);
         setDelay(50);
     }, [id, initEmojiSize, onAnswer, storyContextVal]);
-    return (React__default["default"].createElement("div", { className: b$j({ color: params.color }), style: sizes.widget }, params.emoji.map((emojiItem, index) => (React__default["default"].createElement("button", { className: b$j('item', { disabled: isReadOnly || isToched || clickedIndex !== null }), key: `${emojiItem.unicode}-${index}`, style: sizes.item, onClick: (e) => {
+    return (React__default__default["default"].createElement("div", { className: b$j({ color: params.color }), style: sizes.widget }, params.emoji.map((emojiItem, index) => (React__default__default["default"].createElement("button", { className: b$j('item', { disabled: isReadOnly || isToched || clickedIndex !== null }), key: `${emojiItem.unicode}-${index}`, style: sizes.item, onClick: (e) => {
             e.preventDefault();
             if (!isToched && !isReadOnly && clickedIndex === null) {
                 handleReactionClick(index, emojiItem.unicode);
             }
         } },
-        React__default["default"].createElement("div", { className: b$j('subItem', { clicked: index === clickedIndex }) },
-            React__default["default"].createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: bigSize })),
-        React__default["default"].createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: sizes.emoji.width }))))));
+        React__default__default["default"].createElement("div", { className: b$j('subItem', { clicked: index === clickedIndex }) },
+            React__default__default["default"].createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: bigSize })),
+        React__default__default["default"].createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: sizes.emoji.width }))))));
 });
 
 const b$i = block('GiphyWidget');
-const GiphyWidget = React__default["default"].memo((props) => {
+const GiphyWidget = React__default__default["default"].memo((props) => {
     const { params } = props;
-    return (React__default["default"].createElement("div", { className: b$i(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
-        React__default["default"].createElement("img", { alt: "", className: b$i('img'), src: params.gif })));
+    return (React__default__default["default"].createElement("div", { className: b$i(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
+        React__default__default["default"].createElement("img", { alt: "", className: b$i('img'), src: params.gif })));
 });
 
 const b$h = block('QuestionWidget');
@@ -70688,20 +64771,20 @@ const INIT_ELEMENT_STYLES$8 = {
         borderRadius: 10
     }
 };
-const QuestionWidget = React__default["default"].memo((props) => {
+const QuestionWidget = React__default__default["default"].memo((props) => {
     var _a, _b, _c, _d;
     const { id, params, elementsSize, isReadOnly, onAnswer } = props;
-    const storyContextVal = React.useContext(StoryContext);
+    const storyContextVal = React__default.useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
-    const [answer, setAnswer] = React.useState((answerFromCache === null || answerFromCache === void 0 ? void 0 : answerFromCache.answer) || null);
-    const [percents, setPercents] = React.useState((_a = answerFromCache === null || answerFromCache === void 0 ? void 0 : answerFromCache.percents) !== null && _a !== void 0 ? _a : {
+    const [answer, setAnswer] = React__default.useState((answerFromCache === null || answerFromCache === void 0 ? void 0 : answerFromCache.answer) || null);
+    const [percents, setPercents] = React__default.useState((_a = answerFromCache === null || answerFromCache === void 0 ? void 0 : answerFromCache.percents) !== null && _a !== void 0 ? _a : {
         confirm: 0,
         decline: 0
     });
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$8;
-    const handleChange = React.useCallback((option) => {
+    const handleChange = React__default.useCallback((option) => {
         if (!answer) {
             if (onAnswer) {
                 onAnswer(option).then((res) => {
@@ -70722,7 +64805,7 @@ const QuestionWidget = React__default["default"].memo((props) => {
             }
         }
     }, [answer, id, onAnswer, storyContextVal]);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         if (answer && !onAnswer) {
             const percentsFromApi = {
                 confirm: answer === 'confirm' ? 100 : 0,
@@ -70731,7 +64814,7 @@ const QuestionWidget = React__default["default"].memo((props) => {
             setPercents(percentsFromApi);
         }
     }, [answer, onAnswer]);
-    const calculateWidth = React.useCallback((percent) => {
+    const calculateWidth = React__default.useCallback((percent) => {
         if (percent === 0) {
             return 0;
         }
@@ -70747,12 +64830,12 @@ const QuestionWidget = React__default["default"].memo((props) => {
         return percent;
     }, []);
     const textStyles = getTextStyles(params.fontColor);
-    return (React__default["default"].createElement("div", { className: b$h() },
-        !params.isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$h('question', {
+    return (React__default__default["default"].createElement("div", { className: b$h() },
+        !params.isTitleHidden && (React__default__default["default"].createElement("div", { className: cn(b$h('question', {
                 gradient: ((_b = params.fontColor) === null || _b === void 0 ? void 0 : _b.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.style, fontWeight: (_d = params.fontParams) === null || _d === void 0 ? void 0 : _d.weight, fontFamily: params.fontFamily }), textStyles) }, params.question)),
-        React__default["default"].createElement("div", { className: b$h('buttons'), style: { borderRadius: sizes.button.borderRadius } },
-            React__default["default"].createElement("button", { className: b$h('item', {
+        React__default__default["default"].createElement("div", { className: b$h('buttons'), style: { borderRadius: sizes.button.borderRadius } },
+            React__default__default["default"].createElement("button", { className: b$h('item', {
                     answered: answer === 'confirm',
                     confirm: true,
                     answerConfirm: answer && percents.confirm !== 100,
@@ -70763,12 +64846,12 @@ const QuestionWidget = React__default["default"].memo((props) => {
                     height: sizes.button.height,
                     fontSize: sizes.button.fontSize
                 }, type: "button", onClick: () => !isReadOnly && handleChange('confirm') },
-                React__default["default"].createElement("div", { className: b$h('itemTextContainer') },
-                    React__default["default"].createElement("span", { className: cn(b$h('itemTextConfirm').toString(), b$h('itemText', { answered: answer !== null }).toString()) }, params.confirm),
-                    answer && React__default["default"].createElement("span", { className: b$h('itemTextPercent') },
+                React__default__default["default"].createElement("div", { className: b$h('itemTextContainer') },
+                    React__default__default["default"].createElement("span", { className: cn(b$h('itemTextConfirm').toString(), b$h('itemText', { answered: answer !== null }).toString()) }, params.confirm),
+                    answer && React__default__default["default"].createElement("span", { className: b$h('itemTextPercent') },
                         percents.confirm,
                         "%"))),
-            React__default["default"].createElement("button", { className: b$h('item', {
+            React__default__default["default"].createElement("button", { className: b$h('item', {
                     answered: answer === 'decline',
                     decline: true,
                     answerDecline: answer && percents.decline !== 100,
@@ -70779,15 +64862,15 @@ const QuestionWidget = React__default["default"].memo((props) => {
                     height: sizes.button.height,
                     fontSize: sizes.button.fontSize
                 }, type: "button", onClick: () => !isReadOnly && handleChange('decline') },
-                React__default["default"].createElement("div", { className: b$h('itemTextContainer') },
-                    React__default["default"].createElement("span", { className: cn(b$h('itemTextDecline').toString(), b$h('itemText', { answered: answer !== null }).toString()) }, params.decline),
-                    answer && React__default["default"].createElement("span", { className: b$h('itemTextPercent') },
+                React__default__default["default"].createElement("div", { className: b$h('itemTextContainer') },
+                    React__default__default["default"].createElement("span", { className: cn(b$h('itemTextDecline').toString(), b$h('itemText', { answered: answer !== null }).toString()) }, params.decline),
+                    answer && React__default__default["default"].createElement("span", { className: b$h('itemTextPercent') },
                         percents.decline,
                         "%"))))));
 });
 
 const b$g = block('RectangleWidget');
-const RectangleWidget = React__default["default"].memo((props) => {
+const RectangleWidget = React__default__default["default"].memo((props) => {
     const { fillColor, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
         borderStyle: 'solid',
@@ -70800,23 +64883,23 @@ const RectangleWidget = React__default["default"].memo((props) => {
         background: renderBackgroundStyles(fillColor),
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
-    return (React__default["default"].createElement("div", { className: b$g(), style: styles },
-        React__default["default"].createElement("div", { className: b$g('background'), style: backgroundStyles }, fillColor.type === 'video' && (React__default["default"].createElement("video", { autoPlay: !fillColor.stopAutoplay, className: b$g('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: fillColor.value })))));
+    return (React__default__default["default"].createElement("div", { className: b$g(), style: styles },
+        React__default__default["default"].createElement("div", { className: b$g('background'), style: backgroundStyles }, fillColor.type === 'video' && (React__default__default["default"].createElement("video", { autoPlay: !fillColor.stopAutoplay, className: b$g('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: fillColor.value })))));
 });
 
 const b$f = block('SliderCustom');
-const SliderCustom = React__default["default"].memo(({ emoji, changeStatus, value, initSize = 34, disabled, height, borderRadius, onChange, onAfterChange, onBeforeChange }) => {
-    const containerRef = React.useRef(null);
-    const thumbRef = React.useRef(null);
-    const [bigSize, setBigSize] = React.useState(initSize);
-    const containerPos = React.useRef({
+const SliderCustom = React__default__default["default"].memo(({ emoji, changeStatus, value, initSize = 34, disabled, height, borderRadius, onChange, onAfterChange, onBeforeChange }) => {
+    const containerRef = React__default.useRef(null);
+    const thumbRef = React__default.useRef(null);
+    const [bigSize, setBigSize] = React__default.useState(initSize);
+    const containerPos = React__default.useRef({
         start: 0,
         end: 0
     });
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         setBigSize(initSize + initSize * (value / 100));
     }, [value, initSize]);
-    const getPos = React.useCallback((e) => {
+    const getPos = React__default.useCallback((e) => {
         const clientPos = getClientPosition(e);
         const left = Math.round(clientPos.x - containerPos.current.start);
         if (left < 0) {
@@ -70827,7 +64910,7 @@ const SliderCustom = React__default["default"].memo(({ emoji, changeStatus, valu
         }
         return Math.round((left / containerPos.current.end) * 100);
     }, []);
-    const handleDrag = React.useCallback((e) => {
+    const handleDrag = React__default.useCallback((e) => {
         if (disabled)
             return;
         e.preventDefault();
@@ -70835,7 +64918,7 @@ const SliderCustom = React__default["default"].memo(({ emoji, changeStatus, valu
             onChange(getPos(e));
         }
     }, [disabled, getPos, onChange]);
-    const handleDragEnd = React.useCallback((e) => {
+    const handleDragEnd = React__default.useCallback((e) => {
         if (disabled)
             return;
         e.preventDefault();
@@ -70848,7 +64931,7 @@ const SliderCustom = React__default["default"].memo(({ emoji, changeStatus, valu
             onAfterChange();
         }
     }, [disabled, handleDrag, onAfterChange]);
-    const handleMouseDown = React.useCallback((e) => {
+    const handleMouseDown = React__default.useCallback((e) => {
         if (disabled)
             return;
         e.preventDefault();
@@ -70867,20 +64950,20 @@ const SliderCustom = React__default["default"].memo(({ emoji, changeStatus, valu
             onBeforeChange();
         }
     }, [disabled, handleDrag, handleDragEnd, onBeforeChange]);
-    return (React__default["default"].createElement("div", { className: b$f(), ref: containerRef, style: { height } },
-        React__default["default"].createElement("div", { className: b$f('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
+    return (React__default__default["default"].createElement("div", { className: b$f(), ref: containerRef, style: { height } },
+        React__default__default["default"].createElement("div", { className: b$f('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
             }, onKeyUp: (e) => {
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
             }, onMouseDown: handleMouseDown, onTouchStart: handleMouseDown },
-            changeStatus === 'moving' || changeStatus === 'moved' ? (React__default["default"].createElement("div", { className: b$f('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
-                React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
-            React__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })),
-        React__default["default"].createElement("div", { className: b$f('track'), style: { height, borderRadius } },
-            React__default["default"].createElement("span", { className: b$f('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
-            React__default["default"].createElement("span", { className: b$f('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
+            changeStatus === 'moving' || changeStatus === 'moved' ? (React__default__default["default"].createElement("div", { className: b$f('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
+                React__default__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
+            React__default__default["default"].createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })),
+        React__default__default["default"].createElement("div", { className: b$f('track'), style: { height, borderRadius } },
+            React__default__default["default"].createElement("span", { className: b$f('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
+            React__default__default["default"].createElement("span", { className: b$f('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
 });
 
 const b$e = block('SliderWidget');
@@ -70905,20 +64988,20 @@ const INIT_ELEMENT_STYLES$7 = {
         borderRadius: 6
     }
 };
-const SliderWidget = React__default["default"].memo((props) => {
+const SliderWidget = React__default__default["default"].memo((props) => {
     var _a, _b, _c;
     const { id, params, storyId, elementsSize, isReadOnly, onAnswer } = props;
     const { color, text, emoji, value } = params;
-    const storyContextVal = React.useContext(StoryContext);
+    const storyContextVal = React__default.useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : undefined;
     const defaultAnswer = answerFromCache || 0;
     const isReadMode = isReadOnly || answerFromCache !== undefined;
-    const [sliderValue, setSliderValue] = React.useState(isReadOnly ? value : defaultAnswer);
-    const [changeStatus, setChangeStatus] = React.useState(answerFromCache !== undefined ? 'moved' : 'wait');
+    const [sliderValue, setSliderValue] = React__default.useState(isReadOnly ? value : defaultAnswer);
+    const [changeStatus, setChangeStatus] = React__default.useState(answerFromCache !== undefined ? 'moved' : 'wait');
     const time = 500;
-    const [delay, setDelay] = React.useState(0);
+    const [delay, setDelay] = React__default.useState(0);
     useInterval(() => {
         if (sliderValue < value - 1 && changeStatus === 'init') {
             setSliderValue(sliderValue + 1);
@@ -70927,7 +65010,7 @@ const SliderWidget = React__default["default"].memo((props) => {
             setDelay(0);
         }
     }, delay);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         if (changeStatus === 'moved') {
             onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(sliderValue);
             if (storyContextVal.setAnswerCache && id) {
@@ -70935,16 +65018,16 @@ const SliderWidget = React__default["default"].memo((props) => {
             }
         }
     }, [changeStatus, onAnswer]);
-    const handleChange = React.useCallback((valueChanged) => {
+    const handleChange = React__default.useCallback((valueChanged) => {
         setSliderValue(valueChanged);
     }, []);
-    const handleBeforeChange = React.useCallback(() => {
+    const handleBeforeChange = React__default.useCallback(() => {
         setChangeStatus('moving');
     }, []);
-    const handleAfterChange = React.useCallback(() => {
+    const handleAfterChange = React__default.useCallback(() => {
         setChangeStatus('moved');
     }, []);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         if (storyContextVal.currentStoryId === storyId && changeStatus === 'wait') {
             setDelay(Math.round(time / value));
             setChangeStatus('init');
@@ -70952,29 +65035,29 @@ const SliderWidget = React__default["default"].memo((props) => {
     }, [storyContextVal, storyId, changeStatus, value, time]);
     const textStyles = getTextStyles(params.fontColor);
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$7;
-    return (React__default["default"].createElement("div", { className: b$e({ color }), style: sizes.widget },
-        React__default["default"].createElement("div", { className: cn(b$e('text', {
+    return (React__default__default["default"].createElement("div", { className: b$e({ color }), style: sizes.widget },
+        React__default__default["default"].createElement("div", { className: cn(b$e('text', {
                 gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
-        React__default["default"].createElement("div", { className: b$e('sliderWrapper'), style: {
+        React__default__default["default"].createElement("div", { className: b$e('sliderWrapper'), style: {
                 height: sizes.slider.height
             } },
-            React__default["default"].createElement(SliderCustom, { borderRadius: sizes.slider.borderRadius, changeStatus: changeStatus, disabled: changeStatus === 'moved' || isReadMode, emoji: emoji.name, height: sizes.slider.height, initSize: sizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
+            React__default__default["default"].createElement(SliderCustom, { borderRadius: sizes.slider.borderRadius, changeStatus: changeStatus, disabled: changeStatus === 'moved' || isReadMode, emoji: emoji.name, height: sizes.slider.height, initSize: sizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
 });
 
 const b$d = block('SwipeUpWidget');
-const SwipeUpWidget = React__default["default"].memo((props) => {
+const SwipeUpWidget = React__default__default["default"].memo((props) => {
     const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
     const { isReadOnly, onSwipe } = props;
-    const [touchStart, setTouchStart] = React.useState(0);
-    const [touchEnd, setTouchEnd] = React.useState(0);
-    const handleTouchStart = React.useCallback((e) => {
+    const [touchStart, setTouchStart] = React__default.useState(0);
+    const [touchEnd, setTouchEnd] = React__default.useState(0);
+    const handleTouchStart = React__default.useCallback((e) => {
         setTouchStart(e.targetTouches[0].clientY);
     }, []);
-    const handleTouchMove = React.useCallback((e) => {
+    const handleTouchMove = React__default.useCallback((e) => {
         setTouchEnd(e.targetTouches[0].clientY);
     }, []);
-    const handleTouchEnd = React.useCallback(() => {
+    const handleTouchEnd = React__default.useCallback(() => {
         if (touchStart - touchEnd > 200) {
             if (onSwipe) {
                 onSwipe();
@@ -70987,7 +65070,7 @@ const SwipeUpWidget = React__default["default"].memo((props) => {
             }
         }
     }, [onSwipe, touchEnd, touchStart, url]);
-    const handleClick = React.useCallback(() => {
+    const handleClick = React__default.useCallback(() => {
         if (onSwipe) {
             onSwipe();
         }
@@ -70996,10 +65079,10 @@ const SwipeUpWidget = React__default["default"].memo((props) => {
             tab.focus();
         }
     }, [onSwipe, url]);
-    return (React__default["default"].createElement("div", { className: b$d({ gradient: color.type === BackgroundColorType.GRADIENT }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
-        React__default["default"].createElement("div", { className: b$d('icon') },
-            React__default["default"].createElement(MaterialIcon, { background: color, color: renderBackgroundStyles(color), name: icon.name, size: iconSize })),
-        React__default["default"].createElement("span", { className: b$d('text') }, text)));
+    return (React__default__default["default"].createElement("div", { className: b$d({ gradient: color.type === BackgroundColorType.GRADIENT }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
+        React__default__default["default"].createElement("div", { className: b$d('icon') },
+            React__default__default["default"].createElement(MaterialIcon, { background: color, color: renderBackgroundStyles(color), name: icon.name, size: iconSize })),
+        React__default__default["default"].createElement("span", { className: b$d('text') }, text)));
 });
 
 const b$c = block('TalkAboutWidget');
@@ -71036,21 +65119,21 @@ const INIT_ELEMENT_STYLES$6 = {
         fontSize: 14
     }
 };
-const TalkAboutWidget = React__default["default"].memo((props) => {
+const TalkAboutWidget = React__default__default["default"].memo((props) => {
     var _a, _b, _c;
     const { id, params, elementsSize, isReadOnly } = props;
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$6;
-    const storyContextVal = React.useContext(StoryContext);
+    const storyContextVal = React__default.useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
-    const [text, setText] = React.useState(answerFromCache || '');
-    const [isSent, setIsSent] = React.useState(!!answerFromCache);
-    const handleTextChange = React.useCallback((e) => {
+    const [text, setText] = React__default.useState(answerFromCache || '');
+    const [isSent, setIsSent] = React__default.useState(!!answerFromCache);
+    const handleTextChange = React__default.useCallback((e) => {
         setText(e.target.value);
         storyContextVal.playStatusChange('pause');
     }, [storyContextVal]);
-    const handleSendClick = React.useCallback(() => {
+    const handleSendClick = React__default.useCallback(() => {
         var _a;
         if (text.length) {
             (_a = props.onAnswer) === null || _a === void 0 ? void 0 : _a.call(props, text);
@@ -71061,9 +65144,9 @@ const TalkAboutWidget = React__default["default"].memo((props) => {
             setIsSent(true);
         }
     }, [id, props, storyContextVal, text]);
-    const ref = React.useRef(null);
-    const inputRef = React.useRef(null);
-    const handleClickOutside = React.useCallback((event) => {
+    const ref = React__default.useRef(null);
+    const inputRef = React__default.useRef(null);
+    const handleClickOutside = React__default.useCallback((event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             storyContextVal.playStatusChange('play');
         }
@@ -71071,7 +65154,7 @@ const TalkAboutWidget = React__default["default"].memo((props) => {
             storyContextVal.playStatusChange('pause');
         }
     }, [isSent, storyContextVal]);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         if (!isSent) {
             document.addEventListener('click', handleClickOutside, true);
         }
@@ -71083,30 +65166,30 @@ const TalkAboutWidget = React__default["default"].memo((props) => {
         };
     }, [handleClickOutside, isSent]);
     const textStyles = getTextStyles(params.fontColor);
-    return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement("div", { className: b$c('container'), ref: ref },
-            React__default["default"].createElement("picture", { className: b$c('imageWrapper'), style: sizes.imageWrapper }, params.image ? (React__default["default"].createElement("img", { alt: "", className: b$c('image'), src: params.image })) : (React__default["default"].createElement(IconLogoCircle, { className: b$c('image').toString() }))),
-            React__default["default"].createElement("div", { className: b$c('empty'), style: sizes.empty }),
-            React__default["default"].createElement("div", { className: b$c({ color: params.color }), style: sizes.widget },
-                React__default["default"].createElement("div", { className: b$c('contentContainer', { sendOpen: text.length > 0 }), style: sizes.content },
-                    !params.isTitleHidden && (React__default["default"].createElement("div", { className: (cn(b$c('text', {
+    return (React__default__default["default"].createElement(React__default__default["default"].Fragment, null,
+        React__default__default["default"].createElement("div", { className: b$c('container'), ref: ref },
+            React__default__default["default"].createElement("picture", { className: b$c('imageWrapper'), style: sizes.imageWrapper }, params.image ? (React__default__default["default"].createElement("img", { alt: "", className: b$c('image'), src: params.image })) : (React__default__default["default"].createElement(IconLogoCircle, { className: b$c('image').toString() }))),
+            React__default__default["default"].createElement("div", { className: b$c('empty'), style: sizes.empty }),
+            React__default__default["default"].createElement("div", { className: b$c({ color: params.color }), style: sizes.widget },
+                React__default__default["default"].createElement("div", { className: b$c('contentContainer', { sendOpen: text.length > 0 }), style: sizes.content },
+                    !params.isTitleHidden && (React__default__default["default"].createElement("div", { className: (cn(b$c('text', {
                             gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === BackgroundColorType.GRADIENT
                         }).toString()),
                             'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, params.text)),
-                    React__default["default"].createElement("input", { className: b$c('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
-                text && (React__default["default"].createElement("button", { className: b$c('send', { disabled: isSent || isReadOnly }), style: sizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
-                    React__default["default"].createElement("span", { className: b$c('sendText', { green: isSent }), style: sizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
+                    React__default__default["default"].createElement("input", { className: b$c('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
+                text && (React__default__default["default"].createElement("button", { className: b$c('send', { disabled: isSent || isReadOnly }), style: sizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
+                    React__default__default["default"].createElement("span", { className: b$c('sendText', { green: isSent }), style: sizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
 });
 
 const b$b = block('TextWidget');
-const TextWidget = React__default["default"].memo((props) => {
+const TextWidget = React__default__default["default"].memo((props) => {
     const { params } = props;
-    return (React__default["default"].createElement("div", { className: b$b() },
-        React__default["default"].createElement("div", { className: b$b('container', {
+    return (React__default__default["default"].createElement("div", { className: b$b() },
+        React__default__default["default"].createElement("div", { className: b$b('container', {
                 gradient: params.color.type === BackgroundColorType.GRADIENT
             }), style: Object.assign({ opacity: params.widgetOpacity / 100, fontStyle: params.fontParams.style, fontWeight: params.fontParams.weight, fontFamily: params.fontFamily, fontSize: `${params.fontSize}px`, textAlign: params.align }, renderTextBackgroundStyles({ color: params.color })) },
-            React__default["default"].createElement("span", { className: b$b('span') }, params.text)),
-        params.withFill ? (React__default["default"].createElement("div", { className: b$b('background'), style: {
+            React__default__default["default"].createElement("span", { className: b$b('span') }, params.text)),
+        params.withFill ? (React__default__default["default"].createElement("div", { className: b$b('background'), style: {
                 background: renderBackgroundStyles(params.backgroundColor)
             } })) : null));
 });
@@ -71145,22 +65228,22 @@ const INIT_ELEMENT_STYLES$5 = {
         fontSize: 6
     }
 };
-const TimerWidget = React__default["default"].memo((props) => {
+const TimerWidget = React__default__default["default"].memo((props) => {
     const { params, position, positionLimits } = props;
-    const [time, setTime] = React.useState(calculateTime(params.time + 60000 - new Date().getTime()));
-    React.useEffect(() => {
+    const [time, setTime] = React__default.useState(calculateTime(params.time + 60000 - new Date().getTime()));
+    React__default.useEffect(() => {
         const timeout = setTimeout(() => {
             setTime(calculateTime(params.time - new Date().getTime()));
         }, 2000);
         return () => clearTimeout(timeout);
     }, [params.time]);
-    const calculate = React.useCallback((size) => {
+    const calculate = React__default.useCallback((size) => {
         if ((position === null || position === void 0 ? void 0 : position.width) && (positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth)) {
             return calculateElementSize(+(position === null || position === void 0 ? void 0 : position.width), size, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth);
         }
         return size;
     }, [position === null || position === void 0 ? void 0 : position.width, positionLimits === null || positionLimits === void 0 ? void 0 : positionLimits.minWidth]);
-    const elementSizes = React.useMemo(() => ({
+    const elementSizes = React__default.useMemo(() => ({
         text: {
             fontSize: calculate(INIT_ELEMENT_STYLES$5.text.fontSize),
             marginBottom: calculate(INIT_ELEMENT_STYLES$5.text.marginBottom)
@@ -71180,26 +65263,26 @@ const TimerWidget = React__default["default"].memo((props) => {
             fontSize: calculate(INIT_ELEMENT_STYLES$5.caption.fontSize)
         }
     }), [calculate]);
-    return (React__default["default"].createElement("div", { className: b$a({ color: params.color }), style: elementSizes.widget },
-        React__default["default"].createElement("div", { className: cn(b$a('text'), 'StorySdk-widgetTitle'), style: elementSizes.text }, params.text),
-        React__default["default"].createElement("ul", { className: b$a('dial') },
-            React__default["default"].createElement("li", { className: b$a('col') },
-                React__default["default"].createElement("div", { className: b$a('digitRow') },
-                    React__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.days[0]),
-                    React__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.days[1])),
-                React__default["default"].createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Day")),
-            React__default["default"].createElement("span", { className: b$a('divider') }, ":"),
-            React__default["default"].createElement("li", { className: b$a('col') },
-                React__default["default"].createElement("div", { className: b$a('digitRow') },
-                    React__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.hours[0]),
-                    React__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.hours[1])),
-                React__default["default"].createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Hours")),
-            React__default["default"].createElement("span", { className: b$a('divider') }, ":"),
-            React__default["default"].createElement("li", { className: b$a('col') },
-                React__default["default"].createElement("div", { className: b$a('digitRow') },
-                    React__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.minutes[0]),
-                    React__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.minutes[1])),
-                React__default["default"].createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Minutes")))));
+    return (React__default__default["default"].createElement("div", { className: b$a({ color: params.color }), style: elementSizes.widget },
+        React__default__default["default"].createElement("div", { className: cn(b$a('text'), 'StorySdk-widgetTitle'), style: elementSizes.text }, params.text),
+        React__default__default["default"].createElement("ul", { className: b$a('dial') },
+            React__default__default["default"].createElement("li", { className: b$a('col') },
+                React__default__default["default"].createElement("div", { className: b$a('digitRow') },
+                    React__default__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.days[0]),
+                    React__default__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.days[1])),
+                React__default__default["default"].createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Day")),
+            React__default__default["default"].createElement("span", { className: b$a('divider') }, ":"),
+            React__default__default["default"].createElement("li", { className: b$a('col') },
+                React__default__default["default"].createElement("div", { className: b$a('digitRow') },
+                    React__default__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.hours[0]),
+                    React__default__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.hours[1])),
+                React__default__default["default"].createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Hours")),
+            React__default__default["default"].createElement("span", { className: b$a('divider') }, ":"),
+            React__default__default["default"].createElement("li", { className: b$a('col') },
+                React__default__default["default"].createElement("div", { className: b$a('digitRow') },
+                    React__default__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.minutes[0]),
+                    React__default__default["default"].createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.minutes[1])),
+                React__default__default["default"].createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Minutes")))));
 });
 
 const b$9 = block('QuizMultipleAnswerWidget');
@@ -71230,18 +65313,18 @@ const INIT_ELEMENT_STYLES$4 = {
         lineHeight: 11
     }
 };
-const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
+const QuizMultipleAnswerWidget = React__default__default["default"].memo((props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const { title, answers, isTitleHidden } = props.params;
     const { id, params, elementsSize, isReadOnly, onAnswer } = props;
-    const storyContextVal = React.useContext(StoryContext);
+    const storyContextVal = React__default.useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
-    const [userAnswers, setUserAnswers] = React.useState(answerFromCache || []);
-    const [isSent, setIsSent] = React.useState(!!answerFromCache);
+    const [userAnswers, setUserAnswers] = React__default.useState(answerFromCache || []);
+    const [isSent, setIsSent] = React__default.useState(!!answerFromCache);
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$4;
-    const handleSendScore = React.useCallback((currentAnswers, type) => {
+    const handleSendScore = React__default.useCallback((currentAnswers, type) => {
         if (!storyContextVal.quizMode) {
             return;
         }
@@ -71264,7 +65347,7 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
             storyContextVal.handleQuizAnswer({ type, answer: answerScore });
         }
     }, [params.answers, storyContextVal]);
-    const handleAnswer = React.useCallback((answerId) => {
+    const handleAnswer = React__default.useCallback((answerId) => {
         if (userAnswers.includes(id)) {
             handleSendScore([answerId], 'remove');
             setUserAnswers((prevState) => prevState.filter((answer) => answer !== answerId));
@@ -71274,7 +65357,7 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
             setUserAnswers((prevState) => [...prevState, answerId]);
         }
     }, [handleSendScore, id, userAnswers]);
-    const handleSendAnswer = React.useCallback(() => {
+    const handleSendAnswer = React__default.useCallback(() => {
         if (!isReadOnly && userAnswers.length && !isSent) {
             userAnswers.forEach((answer) => {
                 onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(answer);
@@ -71285,7 +65368,7 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
             }
         }
     }, [isReadOnly, userAnswers, isSent, onAnswer, storyContextVal, id]);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         eventSubscribe('nextStory', handleSendAnswer);
         eventSubscribe('prevStory', handleSendAnswer);
         return () => {
@@ -71295,18 +65378,18 @@ const QuizMultipleAnswerWidget = React__default["default"].memo((props) => {
     }, [handleSendAnswer]);
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
-    return (React__default["default"].createElement("div", { className: b$9() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$9('title', {
+    return (React__default__default["default"].createElement("div", { className: b$9() },
+        !isTitleHidden && (React__default__default["default"].createElement("div", { className: cn(b$9('title', {
                 gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React__default["default"].createElement("div", { className: b$9('answers'), style: sizes.answers }, answers.map((answer) => {
+        React__default__default["default"].createElement("div", { className: b$9('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g, _h;
-            return (React__default["default"].createElement("button", { className: b$9('answer', {
+            return (React__default__default["default"].createElement("button", { className: b$9('answer', {
                     noGap: !answer.title.length,
                     selected: userAnswers.includes(answer.id)
                 }), disabled: isSent || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
-                answer.emoji && (React__default["default"].createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
-                React__default["default"].createElement("p", { className: cn(b$9('answerTitle', {
+                answer.emoji && (React__default__default["default"].createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
+                React__default__default["default"].createElement("p", { className: cn(b$9('answerTitle', {
                         gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === BackgroundColorType.GRADIENT
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { lineHeight: `${sizes.sendBtn.lineHeight}px`, fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
@@ -71333,17 +65416,17 @@ const INIT_ELEMENT_STYLES$3 = {
         fontSize: 11
     }
 };
-const QuizOneAnswerWidget = React__default["default"].memo((props) => {
+const QuizOneAnswerWidget = React__default__default["default"].memo((props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const { title, answers, storyId, isTitleHidden } = props.params;
     const { id, params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$3;
-    const storyContextVal = React.useContext(StoryContext);
+    const storyContextVal = React__default.useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
-    const [userAnswer, setUserAnswer] = React.useState(answerFromCache || null);
-    const handleSendScore = React.useCallback((currentAnswer) => {
+    const [userAnswer, setUserAnswer] = React__default.useState(answerFromCache || null);
+    const handleSendScore = React__default.useCallback((currentAnswer) => {
         var _a;
         const answerScore = currentAnswer
             ? (_a = params.answers.find((answer) => answer.id === currentAnswer)) === null || _a === void 0 ? void 0 : _a.score
@@ -71355,7 +65438,7 @@ const QuizOneAnswerWidget = React__default["default"].memo((props) => {
             });
         }
     }, [params.answers, storyContextVal]);
-    const handleAnswer = React.useCallback((answerId) => {
+    const handleAnswer = React__default.useCallback((answerId) => {
         setUserAnswer(answerId);
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(answerId);
         handleSendScore(answerId);
@@ -71368,17 +65451,17 @@ const QuizOneAnswerWidget = React__default["default"].memo((props) => {
     }, [onAnswer, handleSendScore, storyContextVal, id, storyId, onGoToStory]);
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
-    return (React__default["default"].createElement("div", { className: b$8() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$8('title', {
+    return (React__default__default["default"].createElement("div", { className: b$8() },
+        !isTitleHidden && (React__default__default["default"].createElement("div", { className: cn(b$8('title', {
                 gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React__default["default"].createElement("div", { className: b$8('answers'), style: sizes.answers }, answers.map((answer) => {
+        React__default__default["default"].createElement("div", { className: b$8('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g, _h;
-            return (React__default["default"].createElement("button", { className: b$8('answer', {
+            return (React__default__default["default"].createElement("button", { className: b$8('answer', {
                     selected: userAnswer === answer.id
                 }), disabled: userAnswer !== null || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !userAnswer && !isReadOnly && handleAnswer(answer.id) },
-                answer.emoji && (React__default["default"].createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
-                React__default["default"].createElement("p", { className: cn(b$8('answerTitle', {
+                answer.emoji && (React__default__default["default"].createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
+                React__default__default["default"].createElement("p", { className: cn(b$8('answerTitle', {
                         gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === BackgroundColorType.GRADIENT
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
@@ -71405,22 +65488,22 @@ const INIT_ELEMENT_STYLES$2 = {
         right: 4
     }
 };
-const QuizOpenAnswerWidget = React__default["default"].memo((props) => {
+const QuizOpenAnswerWidget = React__default__default["default"].memo((props) => {
     var _a, _b;
     const { title, isTitleHidden, storyId } = props.params;
     const { id, params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
-    const storyContextVal = React.useContext(StoryContext);
+    const storyContextVal = React__default.useContext(StoryContext);
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$2;
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
-    const [text, setText] = React.useState(answerFromCache !== null && answerFromCache !== void 0 ? answerFromCache : '');
-    const [isSent, setIsSent] = React.useState(!!answerFromCache);
-    const handleTextChange = React.useCallback((e) => {
+    const [text, setText] = React__default.useState(answerFromCache !== null && answerFromCache !== void 0 ? answerFromCache : '');
+    const [isSent, setIsSent] = React__default.useState(!!answerFromCache);
+    const handleTextChange = React__default.useCallback((e) => {
         setText(e.target.value);
         storyContextVal.playStatusChange('pause');
     }, [storyContextVal]);
-    const handleClickOutside = React.useCallback((event) => {
+    const handleClickOutside = React__default.useCallback((event) => {
         if (ref.current && !ref.current.contains(event.target)) {
             storyContextVal.playStatusChange('play');
         }
@@ -71428,7 +65511,7 @@ const QuizOpenAnswerWidget = React__default["default"].memo((props) => {
             storyContextVal.playStatusChange('pause');
         }
     }, [isSent, storyContextVal]);
-    const handleSendClick = React.useCallback(() => {
+    const handleSendClick = React__default.useCallback(() => {
         if (text.length) {
             onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(text);
             if (storyId) {
@@ -71441,7 +65524,7 @@ const QuizOpenAnswerWidget = React__default["default"].memo((props) => {
             setIsSent(true);
         }
     }, [id, onAnswer, onGoToStory, storyContextVal, storyId, text]);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         if (!isSent) {
             document.addEventListener('click', handleClickOutside, true);
         }
@@ -71452,21 +65535,21 @@ const QuizOpenAnswerWidget = React__default["default"].memo((props) => {
             document.removeEventListener('click', handleClickOutside, true);
         };
     }, [handleClickOutside, isSent]);
-    const ref = React.useRef(null);
-    const inputRef = React.useRef(null);
+    const ref = React__default.useRef(null);
+    const inputRef = React__default.useRef(null);
     const textStyles = getTextStyles(params.fontColor);
-    return (React__default["default"].createElement("div", { className: b$7() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$7('title').toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_a = params.fontParams) === null || _a === void 0 ? void 0 : _a.style, fontWeight: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
-        React__default["default"].createElement("div", { className: b$7('inputWrapper'), style: {
+    return (React__default__default["default"].createElement("div", { className: b$7() },
+        !isTitleHidden && (React__default__default["default"].createElement("div", { className: cn(b$7('title').toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_a = params.fontParams) === null || _a === void 0 ? void 0 : _a.style, fontWeight: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
+        React__default__default["default"].createElement("div", { className: b$7('inputWrapper'), style: {
                 paddingTop: sizes.inputWrapper.paddingVertical,
                 paddingBottom: sizes.inputWrapper.paddingVertical,
                 paddingLeft: sizes.inputWrapper.paddingHorizontal,
                 borderRadius: sizes.inputWrapper.borderRadius,
                 paddingRight: sizes.inputWrapper.paddingRight
             } },
-            React__default["default"].createElement("input", { className: b$7('input'), disabled: isSent || isReadOnly, placeholder: "Enter the text...", style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined }),
-            text.length > 0 && (React__default["default"].createElement("button", { className: b$7('sendButton'), disabled: isSent || isReadOnly, style: sizes.sendButton, onClick: !isReadOnly ? handleSendClick : undefined },
-                React__default["default"].createElement(IconArrowSend, { className: b$7('sendButtonIcon') }))))));
+            React__default__default["default"].createElement("input", { className: b$7('input'), disabled: isSent || isReadOnly, placeholder: "Enter the text...", style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined }),
+            text.length > 0 && (React__default__default["default"].createElement("button", { className: b$7('sendButton'), disabled: isSent || isReadOnly, style: sizes.sendButton, onClick: !isReadOnly ? handleSendClick : undefined },
+                React__default__default["default"].createElement(IconArrowSend, { className: b$7('sendButtonIcon') }))))));
 });
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -71481,13 +65564,13 @@ const INIT_ELEMENT_STYLES$1 = {
     }
 };
 const RATE_MAX = 5;
-const QuizRateWidget = React__default["default"].memo((props) => {
+const QuizRateWidget = React__default__default["default"].memo((props) => {
     var _a, _b, _c;
     const { title, isTitleHidden, storyId, storeLinks } = props.params;
     const { params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
-    const [isSent, setIsSent] = React.useState(false);
+    const [isSent, setIsSent] = React__default.useState(false);
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$1;
-    const handleAnswer = React.useCallback((rate) => {
+    const handleAnswer = React__default.useCallback((rate) => {
         onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(rate);
         if (storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web) {
             const tab = window.open(storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, '_blank');
@@ -71501,20 +65584,20 @@ const QuizRateWidget = React__default["default"].memo((props) => {
         setIsSent(true);
     }, [onAnswer, onGoToStory, storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, storyId]);
     const textStyles = getTextStyles(params.fontColor);
-    return (React__default["default"].createElement("div", { className: b$6() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$6('title', {
+    return (React__default__default["default"].createElement("div", { className: b$6() },
+        !isTitleHidden && (React__default__default["default"].createElement("div", { className: cn(b$6('title', {
                 gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
-        React__default["default"].createElement("div", { className: b$6('starsContainer', {
+        React__default__default["default"].createElement("div", { className: b$6('starsContainer', {
                 disabled: isSent || isReadOnly
             }), style: {
                 gap: sizes.stars.gap
-            } }, new Array(RATE_MAX).fill(0).map((_, index) => (React__default["default"].createElement(React__default["default"].Fragment, { key: `rate-star-${index}` },
-            React__default["default"].createElement("input", { className: b$6('input'), disabled: isSent, id: `rate-star-${index}`, type: "radio", value: RATE_MAX - index, onChange: (e) => {
+            } }, new Array(RATE_MAX).fill(0).map((_, index) => (React__default__default["default"].createElement(React__default__default["default"].Fragment, { key: `rate-star-${index}` },
+            React__default__default["default"].createElement("input", { className: b$6('input'), disabled: isSent, id: `rate-star-${index}`, type: "radio", value: RATE_MAX - index, onChange: (e) => {
                     !isReadOnly && handleAnswer(e.target.value);
                 } }),
-            React__default["default"].createElement("label", { className: b$6('starItem'), htmlFor: `rate-star-${index}` },
-                React__default["default"].createElement(IconRateStar, { className: b$6('star') }))))))));
+            React__default__default["default"].createElement("label", { className: b$6('starItem'), htmlFor: `rate-star-${index}` },
+                React__default__default["default"].createElement(IconRateStar, { className: b$6('star') }))))))));
 });
 
 const b$5 = block('QuizMultipleAnswerWithImageWidget');
@@ -71544,18 +65627,18 @@ const INIT_ELEMENT_STYLES = {
         marginTop: 5
     }
 };
-const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props) => {
+const QuizMultipleAnswerWithImageWidget = React__default__default["default"].memo((props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const { title, answers, isTitleHidden } = props.params;
     const { id, params, elementsSize, isReadOnly, onAnswer } = props;
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES;
-    const storyContextVal = React.useContext(StoryContext);
+    const storyContextVal = React__default.useContext(StoryContext);
     const answerFromCache = storyContextVal.getAnswerCache
         ? storyContextVal.getAnswerCache(id)
         : null;
-    const [userAnswers, setUserAnswers] = React.useState(answerFromCache || []);
-    const [isSent, setIsSent] = React.useState(!!answerFromCache);
-    const handleSendScore = React.useCallback((currentAnswers, type) => {
+    const [userAnswers, setUserAnswers] = React__default.useState(answerFromCache || []);
+    const [isSent, setIsSent] = React__default.useState(!!answerFromCache);
+    const handleSendScore = React__default.useCallback((currentAnswers, type) => {
         if (!storyContextVal.quizMode) {
             return;
         }
@@ -71578,7 +65661,7 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
             storyContextVal.handleQuizAnswer({ type, answer: answerScore });
         }
     }, [params.answers, storyContextVal]);
-    const handleAnswer = React.useCallback((answerId) => {
+    const handleAnswer = React__default.useCallback((answerId) => {
         if (userAnswers.includes(answerId)) {
             handleSendScore([answerId], 'remove');
             setUserAnswers((prevState) => prevState.filter((answer) => answer !== answerId));
@@ -71588,7 +65671,7 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
             setUserAnswers((prevState) => [...prevState, answerId]);
         }
     }, [handleSendScore, userAnswers]);
-    const handleSendAnswer = React.useCallback(() => {
+    const handleSendAnswer = React__default.useCallback(() => {
         if (!isReadOnly && userAnswers.length && !isSent) {
             userAnswers.forEach((answer) => {
                 onAnswer === null || onAnswer === void 0 ? void 0 : onAnswer(answer);
@@ -71599,7 +65682,7 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
             }
         }
     }, [id, isReadOnly, isSent, onAnswer, storyContextVal, userAnswers]);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         eventSubscribe('nextStory', handleSendAnswer);
         eventSubscribe('prevStory', handleSendAnswer);
         return () => {
@@ -71609,41 +65692,41 @@ const QuizMultipleAnswerWithImageWidget = React__default["default"].memo((props)
     }, [handleSendAnswer]);
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
-    return (React__default["default"].createElement("div", { className: b$5() },
-        !isTitleHidden && (React__default["default"].createElement("div", { className: cn(b$5('title', {
+    return (React__default__default["default"].createElement("div", { className: b$5() },
+        !isTitleHidden && (React__default__default["default"].createElement("div", { className: cn(b$5('title', {
                 gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React__default["default"].createElement("div", { className: b$5('answers'), style: sizes.answers }, answers.map((answer) => {
+        React__default__default["default"].createElement("div", { className: b$5('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g;
-            return (React__default["default"].createElement("button", { className: b$5('answer', {
+            return (React__default__default["default"].createElement("button", { className: b$5('answer', {
                     selected: userAnswers.includes(answer.id)
                 }), disabled: isSent || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
-                React__default["default"].createElement("div", { className: b$5('answerImgContainer'), style: {
+                React__default__default["default"].createElement("div", { className: b$5('answerImgContainer'), style: {
                         backgroundImage: answer.image ? `url(${answer.image.url})` : ''
                     } }),
-                React__default["default"].createElement("p", { className: cn(b$5('answerTitle', {
+                React__default__default["default"].createElement("p", { className: cn(b$5('answerTitle', {
                         gradient: ((_b = (_a = params.answersFont) === null || _a === void 0 ? void 0 : _a.fontColor) === null || _b === void 0 ? void 0 : _b.type) === BackgroundColorType.GRADIENT
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { fontStyle: (_d = (_c = params.answersFont) === null || _c === void 0 ? void 0 : _c.fontParams) === null || _d === void 0 ? void 0 : _d.style, fontWeight: (_f = (_e = params.answersFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.weight, fontFamily: (_g = params.answersFont) === null || _g === void 0 ? void 0 : _g.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
 const b$4 = block('ImageWidget');
-const ImageWidget = React__default["default"].memo((props) => {
+const ImageWidget = React__default__default["default"].memo((props) => {
     const { imageUrl, widgetOpacity, borderRadius } = props.params;
     const styles = {
         borderRadius: `${borderRadius}px`,
         opacity: widgetOpacity / 100
     };
-    return React__default["default"].createElement("img", { alt: "", className: b$4('image'), src: imageUrl, style: styles });
+    return React__default__default["default"].createElement("img", { alt: "", className: b$4('image'), src: imageUrl, style: styles });
 });
 
 const b$3 = block('VideoWidget');
-const VideoWidget = React__default["default"].memo((props) => {
+const VideoWidget = React__default__default["default"].memo((props) => {
     const { videoUrl, stopAutoplay, widgetOpacity } = props.params;
     const styles = {
         opacity: widgetOpacity / 100
     };
-    return (React__default["default"].createElement("video", { autoPlay: !stopAutoplay, className: b$3('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: videoUrl, style: styles }));
+    return (React__default__default["default"].createElement("video", { autoPlay: !stopAutoplay, className: b$3('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: videoUrl, style: styles }));
 });
 
 ({
@@ -71668,183 +65751,183 @@ const VideoWidget = React__default["default"].memo((props) => {
     [WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE]: QuizMultipleAnswerWithImageWidget
 });
 
-class WidgetFactory extends React__default["default"].Component {
+class WidgetFactory extends React__default__default["default"].Component {
     makeWidget() {
         switch (this.props.widget.content.type) {
             case WidgetsTypes.CHOOSE_ANSWER:
-                return (React__default["default"].createElement(ChooseAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, jsConfetti: this.props.jsConfetti, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
+                return (React__default__default["default"].createElement(ChooseAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, jsConfetti: this.props.jsConfetti, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.CLICK_ME:
-                return (React__default["default"].createElement(ClickMeWidget, { params: this.props.widget.content.params, onClick: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default__default["default"].createElement(ClickMeWidget, { params: this.props.widget.content.params, onClick: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.ELLIPSE:
-                return React__default["default"].createElement(EllipseWidget, { params: this.props.widget.content.params });
+                return React__default__default["default"].createElement(EllipseWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.IMAGE:
-                return React__default["default"].createElement(ImageWidget, { params: this.props.widget.content.params });
+                return React__default__default["default"].createElement(ImageWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.VIDEO:
-                return React__default["default"].createElement(VideoWidget, { params: this.props.widget.content.params });
+                return React__default__default["default"].createElement(VideoWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.EMOJI_REACTION:
-                return (React__default["default"].createElement(EmojiReactionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
+                return (React__default__default["default"].createElement(EmojiReactionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.GIPHY:
-                return React__default["default"].createElement(GiphyWidget, { params: this.props.widget.content.params });
+                return React__default__default["default"].createElement(GiphyWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.QUESTION:
-                return (React__default["default"].createElement(QuestionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
+                return (React__default__default["default"].createElement(QuestionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.RECTANGLE:
-                return React__default["default"].createElement(RectangleWidget, { params: this.props.widget.content.params });
+                return React__default__default["default"].createElement(RectangleWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.SLIDER:
-                return (React__default["default"].createElement(SliderWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, storyId: this.props.storyId, onAnswer: this.props.widget.action }));
+                return (React__default__default["default"].createElement(SliderWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, storyId: this.props.storyId, onAnswer: this.props.widget.action }));
             case WidgetsTypes.SWIPE_UP:
-                return (React__default["default"].createElement(SwipeUpWidget, { params: this.props.widget.content.params, onSwipe: this.props.widget.action }));
+                return (React__default__default["default"].createElement(SwipeUpWidget, { params: this.props.widget.content.params, onSwipe: this.props.widget.action }));
             case WidgetsTypes.TALK_ABOUT:
-                return (React__default["default"].createElement(TalkAboutWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
+                return (React__default__default["default"].createElement(TalkAboutWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.TEXT:
-                return React__default["default"].createElement(TextWidget, { params: this.props.widget.content.params });
+                return React__default__default["default"].createElement(TextWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.TIMER:
-                return (React__default["default"].createElement(TimerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+                return (React__default__default["default"].createElement(TimerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
             case WidgetsTypes.QUIZ_ONE_ANSWER:
-                return (React__default["default"].createElement(QuizOneAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default__default["default"].createElement(QuizOneAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_MULTIPLE_ANSWERS:
-                return (React__default["default"].createElement(QuizMultipleAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default__default["default"].createElement(QuizMultipleAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE:
-                return (React__default["default"].createElement(QuizMultipleAnswerWithImageWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default__default["default"].createElement(QuizMultipleAnswerWithImageWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_OPEN_ANSWER:
-                return (React__default["default"].createElement(QuizOpenAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default__default["default"].createElement(QuizOpenAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_RATE:
-                return (React__default["default"].createElement(QuizRateWidget, { elementsSize: this.props.widget.elementsSize, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default__default["default"].createElement(QuizRateWidget, { elementsSize: this.props.widget.elementsSize, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             default:
                 return undefined;
         }
     }
     render() {
-        return React__default["default"].createElement(React__default["default"].Fragment, null, this.makeWidget());
+        return React__default__default["default"].createElement(React__default__default["default"].Fragment, null, this.makeWidget());
     }
 }
 
 const b$2 = block$1('StorySdkVideoBackground');
-const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, onLoadEnd }) => (React__default["default"].createElement("div", { className: b$2() },
-    React__default["default"].createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: src, onLoadStart: onLoadStart, onLoadedData: onLoadEnd }),
-    React__default["default"].createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
+const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, onLoadEnd }) => (React__default__default["default"].createElement("div", { className: b$2() },
+    React__default__default["default"].createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: src, onLoadStart: onLoadStart, onLoadedData: onLoadEnd }),
+    React__default__default["default"].createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
 const b$1 = block$1('StorySdkContent');
 const StoryContent = (props) => {
     const { story, jsConfetti, noTopShadow, storyCurrentSize, currentPaddingSize, isLarge, isLargeBackground, innerHeightGap, handleGoToStory } = props;
-    const [isVideoLoading, setVideoLoading] = React.useState(false);
-    const [width, height] = d$1();
-    const isMobile = React.useMemo(() => width < MOBILE_BREAKPOINT, [width]);
-    return (React__default["default"].createElement(React__default["default"].Fragment, null,
-        React__default["default"].createElement("div", { className: b$1('background', { noTopShadow }), style: {
+    const [isVideoLoading, setVideoLoading] = React__default.useState(false);
+    const [width, height] = useWindowSize$1();
+    const isMobile = React__default.useMemo(() => width < MOBILE_BREAKPOINT, [width]);
+    return (React__default__default["default"].createElement(React__default__default["default"].Fragment, null,
+        React__default__default["default"].createElement("div", { className: b$1('background', { noTopShadow }), style: {
                 background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
                 height: isMobile
                     ? Math.round(storyCurrentSize.height * (width / storyCurrentSize.width))
                     : undefined
-            } }, story.background.type === 'video' && (React__default["default"].createElement(StoryVideoBackground, { autoplay: true, isLoading: isVideoLoading, src: story.background.value, onLoadEnd: () => {
+            } }, story.background.type === 'video' && (React__default__default["default"].createElement(StoryVideoBackground, { autoplay: true, isLoading: isVideoLoading, src: story.background.value, onLoadEnd: () => {
                 setVideoLoading(false);
             } }))),
-        React__default["default"].createElement("div", { className: b$1({ large: isLarge, center: isLargeBackground }), style: {
+        React__default__default["default"].createElement("div", { className: b$1({ large: isLarge, center: isLargeBackground }), style: {
                 height: isMobile
                     ? Math.round(storyCurrentSize.height * (width / storyCurrentSize.width))
                     : `calc(100% - ${innerHeightGap}px)`
             } },
-            React__default["default"].createElement("div", { className: b$1('scope', { large: isLarge }), style: {
+            React__default__default["default"].createElement("div", { className: b$1('scope', { large: isLarge }), style: {
                     transform: isMobile
                         ? `scale(${width / storyCurrentSize.width})`
                         : `scale(${(height - currentPaddingSize) / storyCurrentSize.height})`
-                } }, story.storyData.map((widget) => (React__default["default"].createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits) },
-                React__default["default"].createElement(WidgetFactory, { handleGoToStory: handleGoToStory, jsConfetti: jsConfetti, storyId: story.id, widget: widget }))))))));
+                } }, story.storyData.map((widget) => (React__default__default["default"].createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits) },
+                React__default__default["default"].createElement(WidgetFactory, { handleGoToStory: handleGoToStory, jsConfetti: jsConfetti, storyId: story.id, widget: widget }))))))));
 };
 
-const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("g", { "data-name": "Layer 2" },
-        React__default["default"].createElement("g", { "data-name": "arrow-circle-up" },
-            React__default["default"].createElement("rect", { height: "24", width: "24" }),
-            React__default["default"].createElement("path", { d: "M12.71 7.29a1 1 0 0 0-.32-.21A1 1 0 0 0 12 7h-.1a.82.82 0 0 0-.27.06.72.72 0 0 0-.19.11 1 1 0 0 0-.13.09l-3 2.86a1 1 0 0 0 1.38 1.45L11 10.34V16a1 1 0 0 0 2 0v-5.59l1.29 1.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z", fill: gradient ? `url(#${gradientId})` : color }),
-            React__default["default"].createElement("path", { d: "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z", fill: gradient ? `url(#${gradientId})` : color })))));
+const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("g", { "data-name": "Layer 2" },
+        React__default__default["default"].createElement("g", { "data-name": "arrow-circle-up" },
+            React__default__default["default"].createElement("rect", { height: "24", width: "24" }),
+            React__default__default["default"].createElement("path", { d: "M12.71 7.29a1 1 0 0 0-.32-.21A1 1 0 0 0 12 7h-.1a.82.82 0 0 0-.27.06.72.72 0 0 0-.19.11 1 1 0 0 0-.13.09l-3 2.86a1 1 0 0 0 1.38 1.45L11 10.34V16a1 1 0 0 0 2 0v-5.59l1.29 1.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z", fill: gradient ? `url(#${gradientId})` : color }),
+            React__default__default["default"].createElement("path", { d: "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z", fill: gradient ? `url(#${gradientId})` : color })))));
 
-const ArrowheadUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("g", { "data-name": "Layer 2" },
-        React__default["default"].createElement("g", { "data-name": "arrowhead-up" },
-            React__default["default"].createElement("rect", { height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
-            React__default["default"].createElement("path", { d: "M6.63 11.61L12 7.29l5.37 4.48A1 1 0 0 0 18 12a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41l-6-5a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.14z", fill: gradient ? `url(#${gradientId})` : color }),
-            React__default["default"].createElement("path", { d: "M12.64 12.23a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.15L12 14.29l5.37 4.48A1 1 0 0 0 18 19a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41z", fill: gradient ? `url(#${gradientId})` : color })))));
+const ArrowheadUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("g", { "data-name": "Layer 2" },
+        React__default__default["default"].createElement("g", { "data-name": "arrowhead-up" },
+            React__default__default["default"].createElement("rect", { height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
+            React__default__default["default"].createElement("path", { d: "M6.63 11.61L12 7.29l5.37 4.48A1 1 0 0 0 18 12a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41l-6-5a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.14z", fill: gradient ? `url(#${gradientId})` : color }),
+            React__default__default["default"].createElement("path", { d: "M12.64 12.23a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.15L12 14.29l5.37 4.48A1 1 0 0 0 18 19a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41z", fill: gradient ? `url(#${gradientId})` : color })))));
 
-const ArrowUpIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { className: "feather feather-arrow-up", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "19", y2: "5" }),
-    React__default["default"].createElement("polyline", { points: "5 12 12 5 19 12", stroke: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { className: "feather feather-arrow-up", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "19", y2: "5" }),
+    React__default__default["default"].createElement("polyline", { points: "5 12 12 5 19 12", stroke: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpCircleIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { className: "feather feather-arrow-up-circle", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("circle", { cx: "12", cy: "12", r: "10", stroke: gradient ? `url(#${gradientId})` : color }),
-    React__default["default"].createElement("polyline", { points: "16 12 12 8 8 12", stroke: gradient ? `url(#${gradientId})` : color }),
-    React__default["default"].createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "16", y2: "8" })));
+const ArrowUpCircleIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { className: "feather feather-arrow-up-circle", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("circle", { cx: "12", cy: "12", r: "10", stroke: gradient ? `url(#${gradientId})` : color }),
+    React__default__default["default"].createElement("polyline", { points: "16 12 12 8 8 12", stroke: gradient ? `url(#${gradientId})` : color }),
+    React__default__default["default"].createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "16", y2: "8" })));
 
-const ArrowUpCircleFillIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React__default["default"].createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm1 10h3l-4-4-4 4h3v4h2v-4z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpCircleFillIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default__default["default"].createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm1 10h3l-4-4-4 4h3v4h2v-4z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpCircleLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React__default["default"].createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 18c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8zm1-8v4h-2v-4H8l4-4 4 4h-3z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpCircleLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default__default["default"].createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 18c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8zm1-8v4h-2v-4H8l4-4 4 4h-3z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpFillIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React__default["default"].createElement("path", { d: "M13 12v8h-2v-8H4l8-8 8 8z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpFillIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default__default["default"].createElement("path", { d: "M13 12v8h-2v-8H4l8-8 8 8z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React__default["default"].createElement("path", { d: "M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default__default["default"].createElement("path", { d: "M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("g", { "data-name": "Layer 2" },
-        React__default["default"].createElement("g", { "data-name": "arrow-up" },
-            React__default["default"].createElement("rect", { height: "24", opacity: "0", transform: "rotate(90 12 12)", width: "24" }),
-            React__default["default"].createElement("path", { d: "M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1 2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1zM8 14h7.9L12 9.18z", fill: gradient ? `url(#${gradientId})` : color })))));
+const ArrowUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("g", { "data-name": "Layer 2" },
+        React__default__default["default"].createElement("g", { "data-name": "arrow-up" },
+            React__default__default["default"].createElement("rect", { height: "24", opacity: "0", transform: "rotate(90 12 12)", width: "24" }),
+            React__default__default["default"].createElement("path", { d: "M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1 2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1zM8 14h7.9L12 9.18z", fill: gradient ? `url(#${gradientId})` : color })))));
 
-const ArrowUpsFillIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React__default["default"].createElement("path", { d: "M12 8l6 6H6z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpsFillIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default__default["default"].createElement("path", { d: "M12 8l6 6H6z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpsLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React__default["default"].createElement("path", { d: "M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpsLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default__default["default"].createElement("path", { d: "M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const LinkIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React__default["default"].createElement("path", { d: "M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z", fill: gradient ? `url(#${gradientId})` : color })));
+const LinkIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default__default["default"].createElement("path", { d: "M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const LinksLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React__default["default"].createElement("path", { d: "M13.06 8.11l1.415 1.415a7 7 0 0 1 0 9.9l-.354.353a7 7 0 0 1-9.9-9.9l1.415 1.415a5 5 0 1 0 7.071 7.071l.354-.354a5 5 0 0 0 0-7.07l-1.415-1.415 1.415-1.414zm6.718 6.011l-1.414-1.414a5 5 0 1 0-7.071-7.071l-.354.354a5 5 0 0 0 0 7.07l1.415 1.415-1.415 1.414-1.414-1.414a7 7 0 0 1 0-9.9l.354-.353a7 7 0 0 1 9.9 9.9z", fill: gradient ? `url(#${gradientId})` : color })));
+const LinksLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default__default["default"].createElement("path", { d: "M13.06 8.11l1.415 1.415a7 7 0 0 1 0 9.9l-.354.353a7 7 0 0 1-9.9-9.9l1.415 1.415a5 5 0 1 0 7.071 7.071l.354-.354a5 5 0 0 0 0-7.07l-1.415-1.415 1.415-1.414zm6.718 6.011l-1.414-1.414a5 5 0 1 0-7.071-7.071l-.354.354a5 5 0 0 0 0 7.07l1.415 1.415-1.415 1.414-1.414-1.414a7 7 0 0 1 0-9.9l.354-.353a7 7 0 0 1 9.9 9.9z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ShareLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React__default["default"].createElement("path", { d: "M13.12 17.023l-4.199-2.29a4 4 0 1 1 0-5.465l4.2-2.29a4 4 0 1 1 .959 1.755l-4.2 2.29a4.008 4.008 0 0 1 0 1.954l4.199 2.29a4 4 0 1 1-.959 1.755zM6 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm11-6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", fill: gradient ? `url(#${gradientId})` : color })));
+const ShareLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default__default["default"].createElement("path", { d: "M13.12 17.023l-4.199-2.29a4 4 0 1 1 0-5.465l4.2-2.29a4 4 0 1 1 .959 1.755l-4.2 2.29a4.008 4.008 0 0 1 0 1.954l4.199 2.29a4 4 0 1 1-.959 1.755zM6 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm11-6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const UploadOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("g", { "data-name": "Layer 2" },
-        React__default["default"].createElement("g", { "data-name": "upload" },
-            React__default["default"].createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
-            React__default["default"].createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(180 12 5)", width: "16", x: "4", y: "4" }),
-            React__default["default"].createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 19 6)", width: "4", x: "17", y: "5" }),
-            React__default["default"].createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 5 6)", width: "4", x: "3", y: "5" }),
-            React__default["default"].createElement("path", { d: "M8 14a1 1 0 0 1-.8-.4 1 1 0 0 1 .2-1.4l4-3a1 1 0 0 1 1.18 0l4 2.82a1 1 0 0 1 .24 1.39 1 1 0 0 1-1.4.24L12 11.24 8.6 13.8a1 1 0 0 1-.6.2z", fill: gradient ? `url(#${gradientId})` : color }),
-            React__default["default"].createElement("path", { d: "M12 21a1 1 0 0 1-1-1v-8a1 1 0 0 1 2 0v8a1 1 0 0 1-1 1z", fill: gradient ? `url(#${gradientId})` : color })))));
+const UploadOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("g", { "data-name": "Layer 2" },
+        React__default__default["default"].createElement("g", { "data-name": "upload" },
+            React__default__default["default"].createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
+            React__default__default["default"].createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(180 12 5)", width: "16", x: "4", y: "4" }),
+            React__default__default["default"].createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 19 6)", width: "4", x: "17", y: "5" }),
+            React__default__default["default"].createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 5 6)", width: "4", x: "3", y: "5" }),
+            React__default__default["default"].createElement("path", { d: "M8 14a1 1 0 0 1-.8-.4 1 1 0 0 1 .2-1.4l4-3a1 1 0 0 1 1.18 0l4 2.82a1 1 0 0 1 .24 1.39 1 1 0 0 1-1.4.24L12 11.24 8.6 13.8a1 1 0 0 1-.6.2z", fill: gradient ? `url(#${gradientId})` : color }),
+            React__default__default["default"].createElement("path", { d: "M12 21a1 1 0 0 1-1-1v-8a1 1 0 0 1 2 0v8a1 1 0 0 1-1 1z", fill: gradient ? `url(#${gradientId})` : color })))));
 
-const IconChevronCircleUp = ({ className, color = '#fff', gradient, gradientId }) => (React__default["default"].createElement("svg", { className: cn(className, 'stroke-current'), fill: "none", height: 18, viewBox: "0 0 18 18", width: 18, xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React__default["default"].createElement("defs", null, gradient),
-    React__default["default"].createElement("circle", { cx: 9, cy: 9, r: 8.5, stroke: gradient ? `url(#${gradientId})` : color }),
-    React__default["default"].createElement("path", { d: "M12 10L9 7l-3 3", stroke: gradient ? `url(#${gradientId})` : color, strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.2 })));
+const IconChevronCircleUp = ({ className, color = '#fff', gradient, gradientId }) => (React__default__default["default"].createElement("svg", { className: cn(className, 'stroke-current'), fill: "none", height: 18, viewBox: "0 0 18 18", width: 18, xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default__default["default"].createElement("defs", null, gradient),
+    React__default__default["default"].createElement("circle", { cx: 9, cy: 9, r: 8.5, stroke: gradient ? `url(#${gradientId})` : color }),
+    React__default__default["default"].createElement("path", { d: "M12 10L9 7l-3 3", stroke: gradient ? `url(#${gradientId})` : color, strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.2 })));
 
 const MATERIAL_ICONS = {
     IconChevronCircleUp,
@@ -71868,284 +65951,583 @@ const MATERIAL_ICONS = {
 };
 
 const CLASS_NAME = 'MaterialSdkIcon';
-const MaterialIcon = React.memo(({ name = 'ArrowCircleUpOutlineIcon', className, color, background, size = 'auto' }) => {
-    const Icon = React.useMemo(() => MATERIAL_ICONS[name], [name]);
+const MaterialIcon = React__default.memo(({ name = 'ArrowCircleUpOutlineIcon', className, color, background, size = 'auto' }) => {
+    const Icon = React__default.useMemo(() => MATERIAL_ICONS[name], [name]);
     let gradient;
-    const gradientId = React.useMemo(() => nanoid$1(), []);
+    const gradientId = React__default.useMemo(() => nanoid$1(), []);
     if ((background === null || background === void 0 ? void 0 : background.type) === BackgroundColorType.GRADIENT) {
-        gradient = (React__default["default"].createElement("linearGradient", { id: gradientId, x1: "0", x2: "0", y1: "0", y2: "1" },
-            React__default["default"].createElement("stop", { offset: "0%", stopColor: background.value[0] }),
-            React__default["default"].createElement("stop", { offset: "100%", stopColor: background.value[1] })));
+        gradient = (React__default__default["default"].createElement("linearGradient", { id: gradientId, x1: "0", x2: "0", y1: "0", y2: "1" },
+            React__default__default["default"].createElement("stop", { offset: "0%", stopColor: background.value[0] }),
+            React__default__default["default"].createElement("stop", { offset: "100%", stopColor: background.value[1] })));
     }
     if (Icon) {
-        return (React__default["default"].createElement("span", { className: cn(`${CLASS_NAME}`, className), style: { width: size, height: size } },
-            React__default["default"].createElement(Icon, { color: color, gradient: gradient, gradientId: gradientId })));
+        return (React__default__default["default"].createElement("span", { className: cn(`${CLASS_NAME}`, className), style: { width: size, height: size } },
+            React__default__default["default"].createElement(Icon, { color: color, gradient: gradient, gradientId: gradientId })));
     }
     return null;
 });
 
-var u = e=>{var a=React.useRef(e);return React.useEffect(()=>{a.current=e;}),a};
-
-var o$1=function(n,o,c){function i(){l.current&&clearTimeout(l.current),l.current=void 0;}function a(){l.current=void 0;}void 0===o&&(o=100),void 0===c&&(c=0);var v=u(n),l=React.useRef(),m=[o,c,v];return React.useEffect(()=>i,m),React.useCallback((function(){var r=arguments,{current:t}=l;if(void 0===t&&c)return l.current=setTimeout(a,o),v.current.apply(null,r);t&&clearTimeout(t),l.current=setTimeout(()=>{l.current=void 0,v.current.apply(null,r);},o);}),m)},c=(r,t,e)=>{var u=React.useState(r);return [u[0],o$1(u[1],t,e)]};
-
-function i(t,n,a,u){var c=React.useRef(a),i=React.useRef(u);React.useEffect(()=>{c.current=a,i.current=u;}),React.useEffect(()=>{function r(){if(!a){for(var r=arguments.length,e=new Array(r),t=0;r>t;t++)e[t]=arguments[t];c.current.apply(this,e);}}var e=t&&"current"in t?t.current:t;if(e){var a=0;e.addEventListener(n,r);var u=i.current;return ()=>{a=1,e.removeEventListener(n,r),u&&u();}}},[t,n]);}
-
-var t={},n$1="undefined"==typeof window?null:window,o=n$1&&void 0!==n$1.visualViewport?n$1.visualViewport:null,d=()=>[document.documentElement.clientWidth,document.documentElement.clientHeight],r$1=function(r){void 0===r&&(r=t);var{wait:u,leading:l,initialWidth:a=0,initialHeight:c$1=0}=r,[m,f]=c("undefined"==typeof document?[a,c$1]:d,u,l),h=()=>f(d);return i(n$1,"resize",h),i(o,"resize",h),i(n$1,"orientationchange",h),m};
-
-let urlAlphabet =
-  'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
-
-const POOL_SIZE_MULTIPLIER = 128;
-let pool, poolOffset;
-let fillPool = bytes => {
-  if (!pool || pool.length < bytes) {
-    pool = Buffer$1.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER);
-    crypto__default["default"].randomFillSync(pool);
-    poolOffset = 0;
-  } else if (poolOffset + bytes > pool.length) {
-    crypto__default["default"].randomFillSync(pool);
-    poolOffset = 0;
-  }
-  poolOffset += bytes;
+const useLatest = current => {
+  const storedValue = React__default__namespace.useRef(current);
+  React__default__namespace.useEffect(() => {
+    storedValue.current = current;
+  });
+  return storedValue;
 };
+
+var useLatest$1 = useLatest;
+
+const useDebounceCallback = (callback, wait = 100, leading = false) => {
+  const storedCallback = useLatest$1(callback);
+  const timeout = React__default__namespace.useRef();
+  const deps = [wait, leading, storedCallback]; // Cleans up pending timeouts when the deps change
+
+  function _ref() {
+    timeout.current && clearTimeout(timeout.current);
+    timeout.current = void 0;
+  }
+
+  React__default__namespace.useEffect(() => _ref, deps);
+
+  function _ref2() {
+    timeout.current = void 0;
+  }
+
+  return React__default__namespace.useCallback(function () {
+    // eslint-disable-next-line prefer-rest-params
+    const args = arguments;
+    const {
+      current
+    } = timeout; // Calls on leading edge
+
+    if (current === void 0 && leading) {
+      timeout.current = setTimeout(_ref2, wait); // eslint-disable-next-line prefer-spread
+
+      return storedCallback.current.apply(null, args);
+    } // Clear the timeout every call and start waiting again
+
+
+    current && clearTimeout(current); // Waits for `wait` before invoking the callback
+
+    timeout.current = setTimeout(() => {
+      timeout.current = void 0;
+      storedCallback.current.apply(null, args);
+    }, wait);
+  }, deps);
+};
+const useDebounce = (initialState, wait, leading) => {
+  const state = React__default__namespace.useState(initialState);
+  return [state[0], useDebounceCallback(state[1], wait, leading)];
+};
+
+function useEvent(target, type, listener, cleanup) {
+  const storedListener = React__default__namespace.useRef(listener);
+  const storedCleanup = React__default__namespace.useRef(cleanup);
+  React__default__namespace.useEffect(() => {
+    storedListener.current = listener;
+    storedCleanup.current = cleanup;
+  });
+  React__default__namespace.useEffect(() => {
+    const targetEl = target && 'current' in target ? target.current : target;
+    if (!targetEl) return;
+    let didUnsubscribe = 0;
+
+    function listener(...args) {
+      if (didUnsubscribe) return;
+      storedListener.current.apply(this, args);
+    }
+
+    targetEl.addEventListener(type, listener);
+    const cleanup = storedCleanup.current;
+    return () => {
+      didUnsubscribe = 1;
+      targetEl.removeEventListener(type, listener);
+      cleanup && cleanup();
+    }; // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target, type]);
+}
+
+const emptyObj = {};
+const win = typeof window === 'undefined' ? null : window;
+const wv = win && typeof win.visualViewport !== 'undefined' ? win.visualViewport : null;
+
+const getSize = () => [document.documentElement.clientWidth, document.documentElement.clientHeight];
+
+const useWindowSize = function (options) {
+  if (options === void 0) {
+    options = emptyObj;
+  }
+
+  const {
+    wait,
+    leading,
+    initialWidth = 0,
+    initialHeight = 0
+  } = options;
+  const [size, setDebouncedSize] = useDebounce(
+  /* istanbul ignore next */
+  typeof document === 'undefined' ? [initialWidth, initialHeight] : getSize, wait, leading);
+
+  const setSize = () => setDebouncedSize(getSize);
+
+  useEvent(win, 'resize', setSize); // @ts-expect-error
+
+  useEvent(wv, 'resize', setSize);
+  useEvent(win, 'orientationchange', setSize);
+  return size;
+};
+
 let nanoid = (size = 21) => {
-  fillPool((size -= 0));
   let id = '';
-  for (let i = poolOffset - size; i < poolOffset; i++) {
-    id += urlAlphabet[pool[i] & 63];
+  let bytes = crypto.getRandomValues(new Uint8Array(size));
+  while (size--) {
+    let byte = bytes[size] & 63;
+    if (byte < 36) {
+      id += byte.toString(36);
+    } else if (byte < 62) {
+      id += (byte - 26).toString(36).toUpperCase();
+    } else if (byte < 63) {
+      id += '_';
+    } else {
+      id += '-';
+    }
   }
   return id
 };
+
+var luxon = {};
+
+Object.defineProperty(luxon, '__esModule', { value: true });
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+
+  _setPrototypeOf(subClass, superClass);
+}
+
+function _getPrototypeOf(o) {
+  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function _construct(Parent, args, Class) {
+  if (_isNativeReflectConstruct()) {
+    _construct = Reflect.construct;
+  } else {
+    _construct = function _construct(Parent, args, Class) {
+      var a = [null];
+      a.push.apply(a, args);
+      var Constructor = Function.bind.apply(Parent, a);
+      var instance = new Constructor();
+      if (Class) _setPrototypeOf(instance, Class.prototype);
+      return instance;
+    };
+  }
+
+  return _construct.apply(null, arguments);
+}
+
+function _isNativeFunction(fn) {
+  return Function.toString.call(fn).indexOf("[native code]") !== -1;
+}
+
+function _wrapNativeSuper(Class) {
+  var _cache = typeof Map === "function" ? new Map() : undefined;
+
+  _wrapNativeSuper = function _wrapNativeSuper(Class) {
+    if (Class === null || !_isNativeFunction(Class)) return Class;
+
+    if (typeof Class !== "function") {
+      throw new TypeError("Super expression must either be null or a function");
+    }
+
+    if (typeof _cache !== "undefined") {
+      if (_cache.has(Class)) return _cache.get(Class);
+
+      _cache.set(Class, Wrapper);
+    }
+
+    function Wrapper() {
+      return _construct(Class, arguments, _getPrototypeOf(this).constructor);
+    }
+
+    Wrapper.prototype = Object.create(Class.prototype, {
+      constructor: {
+        value: Wrapper,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+    return _setPrototypeOf(Wrapper, Class);
+  };
+
+  return _wrapNativeSuper(Class);
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
+function _createForOfIteratorHelperLoose(o, allowArrayLike) {
+  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+  if (it) return (it = it.call(o)).next.bind(it);
+
+  if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+    if (it) o = it;
+    var i = 0;
+    return function () {
+      if (i >= o.length) return {
+        done: true
+      };
+      return {
+        done: false,
+        value: o[i++]
+      };
+    };
+  }
+
+  throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
 
 // these aren't really private, but nor are they really useful to document
 
 /**
  * @private
  */
-class LuxonError extends Error {}
+var LuxonError = /*#__PURE__*/function (_Error) {
+  _inheritsLoose(LuxonError, _Error);
 
-/**
- * @private
- */
-class InvalidDateTimeError extends LuxonError {
-  constructor(reason) {
-    super(`Invalid DateTime: ${reason.toMessage()}`);
+  function LuxonError() {
+    return _Error.apply(this, arguments) || this;
   }
-}
 
+  return LuxonError;
+}( /*#__PURE__*/_wrapNativeSuper(Error));
 /**
  * @private
  */
-class InvalidIntervalError extends LuxonError {
-  constructor(reason) {
-    super(`Invalid Interval: ${reason.toMessage()}`);
+
+
+var InvalidDateTimeError = /*#__PURE__*/function (_LuxonError) {
+  _inheritsLoose(InvalidDateTimeError, _LuxonError);
+
+  function InvalidDateTimeError(reason) {
+    return _LuxonError.call(this, "Invalid DateTime: " + reason.toMessage()) || this;
   }
-}
 
+  return InvalidDateTimeError;
+}(LuxonError);
 /**
  * @private
  */
-class InvalidDurationError extends LuxonError {
-  constructor(reason) {
-    super(`Invalid Duration: ${reason.toMessage()}`);
+
+var InvalidIntervalError = /*#__PURE__*/function (_LuxonError2) {
+  _inheritsLoose(InvalidIntervalError, _LuxonError2);
+
+  function InvalidIntervalError(reason) {
+    return _LuxonError2.call(this, "Invalid Interval: " + reason.toMessage()) || this;
   }
-}
 
+  return InvalidIntervalError;
+}(LuxonError);
 /**
  * @private
  */
-class ConflictingSpecificationError extends LuxonError {}
 
-/**
- * @private
- */
-class InvalidUnitError extends LuxonError {
-  constructor(unit) {
-    super(`Invalid unit ${unit}`);
+var InvalidDurationError = /*#__PURE__*/function (_LuxonError3) {
+  _inheritsLoose(InvalidDurationError, _LuxonError3);
+
+  function InvalidDurationError(reason) {
+    return _LuxonError3.call(this, "Invalid Duration: " + reason.toMessage()) || this;
   }
-}
 
+  return InvalidDurationError;
+}(LuxonError);
 /**
  * @private
  */
-class InvalidArgumentError extends LuxonError {}
 
-/**
- * @private
- */
-class ZoneIsAbstractError extends LuxonError {
-  constructor() {
-    super("Zone is an abstract class");
+var ConflictingSpecificationError = /*#__PURE__*/function (_LuxonError4) {
+  _inheritsLoose(ConflictingSpecificationError, _LuxonError4);
+
+  function ConflictingSpecificationError() {
+    return _LuxonError4.apply(this, arguments) || this;
   }
-}
 
+  return ConflictingSpecificationError;
+}(LuxonError);
 /**
  * @private
  */
 
-const n = "numeric",
-  s = "short",
-  l = "long";
+var InvalidUnitError = /*#__PURE__*/function (_LuxonError5) {
+  _inheritsLoose(InvalidUnitError, _LuxonError5);
 
-const DATE_SHORT = {
+  function InvalidUnitError(unit) {
+    return _LuxonError5.call(this, "Invalid unit " + unit) || this;
+  }
+
+  return InvalidUnitError;
+}(LuxonError);
+/**
+ * @private
+ */
+
+var InvalidArgumentError = /*#__PURE__*/function (_LuxonError6) {
+  _inheritsLoose(InvalidArgumentError, _LuxonError6);
+
+  function InvalidArgumentError() {
+    return _LuxonError6.apply(this, arguments) || this;
+  }
+
+  return InvalidArgumentError;
+}(LuxonError);
+/**
+ * @private
+ */
+
+var ZoneIsAbstractError = /*#__PURE__*/function (_LuxonError7) {
+  _inheritsLoose(ZoneIsAbstractError, _LuxonError7);
+
+  function ZoneIsAbstractError() {
+    return _LuxonError7.call(this, "Zone is an abstract class") || this;
+  }
+
+  return ZoneIsAbstractError;
+}(LuxonError);
+
+/**
+ * @private
+ */
+var n = "numeric",
+    s = "short",
+    l = "long";
+var DATE_SHORT = {
   year: n,
   month: n,
-  day: n,
+  day: n
 };
-
-const DATE_MED = {
+var DATE_MED = {
+  year: n,
+  month: s,
+  day: n
+};
+var DATE_MED_WITH_WEEKDAY = {
   year: n,
   month: s,
   day: n,
+  weekday: s
 };
-
-const DATE_MED_WITH_WEEKDAY = {
+var DATE_FULL = {
+  year: n,
+  month: l,
+  day: n
+};
+var DATE_HUGE = {
+  year: n,
+  month: l,
+  day: n,
+  weekday: l
+};
+var TIME_SIMPLE = {
+  hour: n,
+  minute: n
+};
+var TIME_WITH_SECONDS = {
+  hour: n,
+  minute: n,
+  second: n
+};
+var TIME_WITH_SHORT_OFFSET = {
+  hour: n,
+  minute: n,
+  second: n,
+  timeZoneName: s
+};
+var TIME_WITH_LONG_OFFSET = {
+  hour: n,
+  minute: n,
+  second: n,
+  timeZoneName: l
+};
+var TIME_24_SIMPLE = {
+  hour: n,
+  minute: n,
+  hourCycle: "h23"
+};
+var TIME_24_WITH_SECONDS = {
+  hour: n,
+  minute: n,
+  second: n,
+  hourCycle: "h23"
+};
+var TIME_24_WITH_SHORT_OFFSET = {
+  hour: n,
+  minute: n,
+  second: n,
+  hourCycle: "h23",
+  timeZoneName: s
+};
+var TIME_24_WITH_LONG_OFFSET = {
+  hour: n,
+  minute: n,
+  second: n,
+  hourCycle: "h23",
+  timeZoneName: l
+};
+var DATETIME_SHORT = {
+  year: n,
+  month: n,
+  day: n,
+  hour: n,
+  minute: n
+};
+var DATETIME_SHORT_WITH_SECONDS = {
+  year: n,
+  month: n,
+  day: n,
+  hour: n,
+  minute: n,
+  second: n
+};
+var DATETIME_MED = {
+  year: n,
+  month: s,
+  day: n,
+  hour: n,
+  minute: n
+};
+var DATETIME_MED_WITH_SECONDS = {
+  year: n,
+  month: s,
+  day: n,
+  hour: n,
+  minute: n,
+  second: n
+};
+var DATETIME_MED_WITH_WEEKDAY = {
   year: n,
   month: s,
   day: n,
   weekday: s,
-};
-
-const DATE_FULL = {
-  year: n,
-  month: l,
-  day: n,
-};
-
-const DATE_HUGE = {
-  year: n,
-  month: l,
-  day: n,
-  weekday: l,
-};
-
-const TIME_SIMPLE = {
   hour: n,
-  minute: n,
+  minute: n
 };
-
-const TIME_WITH_SECONDS = {
-  hour: n,
-  minute: n,
-  second: n,
-};
-
-const TIME_WITH_SHORT_OFFSET = {
-  hour: n,
-  minute: n,
-  second: n,
-  timeZoneName: s,
-};
-
-const TIME_WITH_LONG_OFFSET = {
-  hour: n,
-  minute: n,
-  second: n,
-  timeZoneName: l,
-};
-
-const TIME_24_SIMPLE = {
-  hour: n,
-  minute: n,
-  hourCycle: "h23",
-};
-
-const TIME_24_WITH_SECONDS = {
-  hour: n,
-  minute: n,
-  second: n,
-  hourCycle: "h23",
-};
-
-const TIME_24_WITH_SHORT_OFFSET = {
-  hour: n,
-  minute: n,
-  second: n,
-  hourCycle: "h23",
-  timeZoneName: s,
-};
-
-const TIME_24_WITH_LONG_OFFSET = {
-  hour: n,
-  minute: n,
-  second: n,
-  hourCycle: "h23",
-  timeZoneName: l,
-};
-
-const DATETIME_SHORT = {
-  year: n,
-  month: n,
-  day: n,
-  hour: n,
-  minute: n,
-};
-
-const DATETIME_SHORT_WITH_SECONDS = {
-  year: n,
-  month: n,
-  day: n,
-  hour: n,
-  minute: n,
-  second: n,
-};
-
-const DATETIME_MED = {
-  year: n,
-  month: s,
-  day: n,
-  hour: n,
-  minute: n,
-};
-
-const DATETIME_MED_WITH_SECONDS = {
-  year: n,
-  month: s,
-  day: n,
-  hour: n,
-  minute: n,
-  second: n,
-};
-
-const DATETIME_MED_WITH_WEEKDAY = {
-  year: n,
-  month: s,
-  day: n,
-  weekday: s,
-  hour: n,
-  minute: n,
-};
-
-const DATETIME_FULL = {
+var DATETIME_FULL = {
   year: n,
   month: l,
   day: n,
   hour: n,
   minute: n,
-  timeZoneName: s,
+  timeZoneName: s
 };
-
-const DATETIME_FULL_WITH_SECONDS = {
+var DATETIME_FULL_WITH_SECONDS = {
   year: n,
   month: l,
   day: n,
   hour: n,
   minute: n,
   second: n,
-  timeZoneName: s,
+  timeZoneName: s
 };
-
-const DATETIME_HUGE = {
+var DATETIME_HUGE = {
   year: n,
   month: l,
   day: n,
   weekday: l,
   hour: n,
   minute: n,
-  timeZoneName: l,
+  timeZoneName: l
 };
-
-const DATETIME_HUGE_WITH_SECONDS = {
+var DATETIME_HUGE_WITH_SECONDS = {
   year: n,
   month: l,
   day: n,
@@ -72153,42 +66535,29 @@ const DATETIME_HUGE_WITH_SECONDS = {
   hour: n,
   minute: n,
   second: n,
-  timeZoneName: l,
+  timeZoneName: l
 };
-
-/*
-  This is just a junk drawer, containing anything used across multiple classes.
-  Because Luxon is small(ish), this should stay small and we won't worry about splitting
-  it up into, say, parsingUtil.js and basicUtil.js and so on. But they are divided up by feature area.
-*/
 
 /**
  * @private
  */
-
 // TYPES
 
 function isUndefined(o) {
   return typeof o === "undefined";
 }
-
 function isNumber(o) {
   return typeof o === "number";
 }
-
 function isInteger(o) {
   return typeof o === "number" && o % 1 === 0;
 }
-
 function isString(o) {
   return typeof o === "string";
 }
-
 function isDate(o) {
   return Object.prototype.toString.call(o) === "[object Date]";
-}
-
-// CAPABILITIES
+} // CAPABILITIES
 
 function hasRelative() {
   try {
@@ -72196,20 +66565,19 @@ function hasRelative() {
   } catch (e) {
     return false;
   }
-}
-
-// OBJECTS AND ARRAYS
+} // OBJECTS AND ARRAYS
 
 function maybeArray(thing) {
   return Array.isArray(thing) ? thing : [thing];
 }
-
 function bestBy(arr, by, compare) {
   if (arr.length === 0) {
     return undefined;
   }
-  return arr.reduce((best, next) => {
-    const pair = [by(next), next];
+
+  return arr.reduce(function (best, next) {
+    var pair = [by(next), next];
+
     if (!best) {
       return pair;
     } else if (compare(best[0], pair[0]) === best[0]) {
@@ -72219,40 +66587,39 @@ function bestBy(arr, by, compare) {
     }
   }, null)[1];
 }
-
 function pick(obj, keys) {
-  return keys.reduce((a, k) => {
+  return keys.reduce(function (a, k) {
     a[k] = obj[k];
     return a;
   }, {});
 }
-
 function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
-}
-
-// NUMBERS AND STRINGS
+} // NUMBERS AND STRINGS
 
 function integerBetween(thing, bottom, top) {
   return isInteger(thing) && thing >= bottom && thing <= top;
-}
+} // x % n but takes the sign of n instead of x
 
-// x % n but takes the sign of n instead of x
 function floorMod(x, n) {
   return x - n * Math.floor(x / n);
 }
+function padStart(input, n) {
+  if (n === void 0) {
+    n = 2;
+  }
 
-function padStart(input, n = 2) {
-  const isNeg = input < 0;
-  let padded;
+  var isNeg = input < 0;
+  var padded;
+
   if (isNeg) {
     padded = "-" + ("" + -input).padStart(n, "0");
   } else {
     padded = ("" + input).padStart(n, "0");
   }
+
   return padded;
 }
-
 function parseInteger(string) {
   if (isUndefined(string) || string === null || string === "") {
     return undefined;
@@ -72260,7 +66627,6 @@ function parseInteger(string) {
     return parseInt(string, 10);
   }
 }
-
 function parseFloating(string) {
   if (isUndefined(string) || string === null || string === "") {
     return undefined;
@@ -72268,286 +66634,238 @@ function parseFloating(string) {
     return parseFloat(string);
   }
 }
-
 function parseMillis(fraction) {
   // Return undefined (instead of 0) in these cases, where fraction is not set
   if (isUndefined(fraction) || fraction === null || fraction === "") {
     return undefined;
   } else {
-    const f = parseFloat("0." + fraction) * 1000;
+    var f = parseFloat("0." + fraction) * 1000;
     return Math.floor(f);
   }
 }
+function roundTo(number, digits, towardZero) {
+  if (towardZero === void 0) {
+    towardZero = false;
+  }
 
-function roundTo(number, digits, towardZero = false) {
-  const factor = 10 ** digits,
-    rounder = towardZero ? Math.trunc : Math.round;
+  var factor = Math.pow(10, digits),
+      rounder = towardZero ? Math.trunc : Math.round;
   return rounder(number * factor) / factor;
-}
-
-// DATE BASICS
+} // DATE BASICS
 
 function isLeapYear(year) {
   return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 }
-
 function daysInYear(year) {
   return isLeapYear(year) ? 366 : 365;
 }
-
 function daysInMonth(year, month) {
-  const modMonth = floorMod(month - 1, 12) + 1,
-    modYear = year + (month - modMonth) / 12;
+  var modMonth = floorMod(month - 1, 12) + 1,
+      modYear = year + (month - modMonth) / 12;
 
   if (modMonth === 2) {
     return isLeapYear(modYear) ? 29 : 28;
   } else {
     return [31, null, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][modMonth - 1];
   }
-}
+} // covert a calendar object to a local timestamp (epoch, but with the offset baked in)
 
-// covert a calendar object to a local timestamp (epoch, but with the offset baked in)
 function objToLocalTS(obj) {
-  let d = Date.UTC(
-    obj.year,
-    obj.month - 1,
-    obj.day,
-    obj.hour,
-    obj.minute,
-    obj.second,
-    obj.millisecond
-  );
+  var d = Date.UTC(obj.year, obj.month - 1, obj.day, obj.hour, obj.minute, obj.second, obj.millisecond); // for legacy reasons, years between 0 and 99 are interpreted as 19XX; revert that
 
-  // for legacy reasons, years between 0 and 99 are interpreted as 19XX; revert that
   if (obj.year < 100 && obj.year >= 0) {
     d = new Date(d);
     d.setUTCFullYear(d.getUTCFullYear() - 1900);
   }
+
   return +d;
 }
-
 function weeksInWeekYear(weekYear) {
-  const p1 =
-      (weekYear +
-        Math.floor(weekYear / 4) -
-        Math.floor(weekYear / 100) +
-        Math.floor(weekYear / 400)) %
-      7,
-    last = weekYear - 1,
-    p2 = (last + Math.floor(last / 4) - Math.floor(last / 100) + Math.floor(last / 400)) % 7;
+  var p1 = (weekYear + Math.floor(weekYear / 4) - Math.floor(weekYear / 100) + Math.floor(weekYear / 400)) % 7,
+      last = weekYear - 1,
+      p2 = (last + Math.floor(last / 4) - Math.floor(last / 100) + Math.floor(last / 400)) % 7;
   return p1 === 4 || p2 === 3 ? 53 : 52;
 }
-
 function untruncateYear(year) {
   if (year > 99) {
     return year;
   } else return year > 60 ? 1900 + year : 2000 + year;
-}
+} // PARSING
 
-// PARSING
+function parseZoneInfo(ts, offsetFormat, locale, timeZone) {
+  if (timeZone === void 0) {
+    timeZone = null;
+  }
 
-function parseZoneInfo(ts, offsetFormat, locale, timeZone = null) {
-  const date = new Date(ts),
-    intlOpts = {
-      hourCycle: "h23",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    };
+  var date = new Date(ts),
+      intlOpts = {
+    hourCycle: "h23",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  };
 
   if (timeZone) {
     intlOpts.timeZone = timeZone;
   }
 
-  const modified = { timeZoneName: offsetFormat, ...intlOpts };
+  var modified = _extends({
+    timeZoneName: offsetFormat
+  }, intlOpts);
 
-  const parsed = new Intl.DateTimeFormat(locale, modified)
-    .formatToParts(date)
-    .find((m) => m.type.toLowerCase() === "timezonename");
+  var parsed = new Intl.DateTimeFormat(locale, modified).formatToParts(date).find(function (m) {
+    return m.type.toLowerCase() === "timezonename";
+  });
   return parsed ? parsed.value : null;
-}
+} // signedOffset('-5', '30') -> -330
 
-// signedOffset('-5', '30') -> -330
 function signedOffset(offHourStr, offMinuteStr) {
-  let offHour = parseInt(offHourStr, 10);
+  var offHour = parseInt(offHourStr, 10); // don't || this because we want to preserve -0
 
-  // don't || this because we want to preserve -0
   if (Number.isNaN(offHour)) {
     offHour = 0;
   }
 
-  const offMin = parseInt(offMinuteStr, 10) || 0,
-    offMinSigned = offHour < 0 || Object.is(offHour, -0) ? -offMin : offMin;
+  var offMin = parseInt(offMinuteStr, 10) || 0,
+      offMinSigned = offHour < 0 || Object.is(offHour, -0) ? -offMin : offMin;
   return offHour * 60 + offMinSigned;
-}
-
-// COERCION
+} // COERCION
 
 function asNumber(value) {
-  const numericValue = Number(value);
-  if (typeof value === "boolean" || value === "" || Number.isNaN(numericValue))
-    throw new InvalidArgumentError(`Invalid unit value ${value}`);
+  var numericValue = Number(value);
+  if (typeof value === "boolean" || value === "" || Number.isNaN(numericValue)) throw new InvalidArgumentError("Invalid unit value " + value);
   return numericValue;
 }
-
 function normalizeObject(obj, normalizer) {
-  const normalized = {};
-  for (const u in obj) {
+  var normalized = {};
+
+  for (var u in obj) {
     if (hasOwnProperty(obj, u)) {
-      const v = obj[u];
+      var v = obj[u];
       if (v === undefined || v === null) continue;
       normalized[normalizer(u)] = asNumber(v);
     }
   }
+
   return normalized;
 }
-
 function formatOffset(offset, format) {
-  const hours = Math.trunc(Math.abs(offset / 60)),
-    minutes = Math.trunc(Math.abs(offset % 60)),
-    sign = offset >= 0 ? "+" : "-";
+  var hours = Math.trunc(Math.abs(offset / 60)),
+      minutes = Math.trunc(Math.abs(offset % 60)),
+      sign = offset >= 0 ? "+" : "-";
 
   switch (format) {
     case "short":
-      return `${sign}${padStart(hours, 2)}:${padStart(minutes, 2)}`;
+      return "" + sign + padStart(hours, 2) + ":" + padStart(minutes, 2);
+
     case "narrow":
-      return `${sign}${hours}${minutes > 0 ? `:${minutes}` : ""}`;
+      return "" + sign + hours + (minutes > 0 ? ":" + minutes : "");
+
     case "techie":
-      return `${sign}${padStart(hours, 2)}${padStart(minutes, 2)}`;
+      return "" + sign + padStart(hours, 2) + padStart(minutes, 2);
+
     default:
-      throw new RangeError(`Value format ${format} is out of range for property format`);
+      throw new RangeError("Value format " + format + " is out of range for property format");
   }
 }
-
 function timeObject(obj) {
   return pick(obj, ["hour", "minute", "second", "millisecond"]);
 }
-
-const ianaRegex = /[A-Za-z_+-]{1,256}(:?\/[A-Za-z0-9_+-]{1,256}(\/[A-Za-z0-9_+-]{1,256})?)?/;
+var ianaRegex = /[A-Za-z_+-]{1,256}(:?\/[A-Za-z0-9_+-]{1,256}(\/[A-Za-z0-9_+-]{1,256})?)?/;
 
 /**
  * @private
  */
 
-const monthsLong = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
 
-const monthsShort = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-const monthsNarrow = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
-
+var monthsLong = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var monthsNarrow = ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
 function months(length) {
   switch (length) {
     case "narrow":
-      return [...monthsNarrow];
+      return [].concat(monthsNarrow);
+
     case "short":
-      return [...monthsShort];
+      return [].concat(monthsShort);
+
     case "long":
-      return [...monthsLong];
+      return [].concat(monthsLong);
+
     case "numeric":
       return ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+
     case "2-digit":
       return ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+
     default:
       return null;
   }
 }
-
-const weekdaysLong = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
-
-const weekdaysShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-const weekdaysNarrow = ["M", "T", "W", "T", "F", "S", "S"];
-
+var weekdaysLong = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+var weekdaysShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+var weekdaysNarrow = ["M", "T", "W", "T", "F", "S", "S"];
 function weekdays(length) {
   switch (length) {
     case "narrow":
-      return [...weekdaysNarrow];
+      return [].concat(weekdaysNarrow);
+
     case "short":
-      return [...weekdaysShort];
+      return [].concat(weekdaysShort);
+
     case "long":
-      return [...weekdaysLong];
+      return [].concat(weekdaysLong);
+
     case "numeric":
       return ["1", "2", "3", "4", "5", "6", "7"];
+
     default:
       return null;
   }
 }
-
-const meridiems = ["AM", "PM"];
-
-const erasLong = ["Before Christ", "Anno Domini"];
-
-const erasShort = ["BC", "AD"];
-
-const erasNarrow = ["B", "A"];
-
+var meridiems = ["AM", "PM"];
+var erasLong = ["Before Christ", "Anno Domini"];
+var erasShort = ["BC", "AD"];
+var erasNarrow = ["B", "A"];
 function eras(length) {
   switch (length) {
     case "narrow":
-      return [...erasNarrow];
+      return [].concat(erasNarrow);
+
     case "short":
-      return [...erasShort];
+      return [].concat(erasShort);
+
     case "long":
-      return [...erasLong];
+      return [].concat(erasLong);
+
     default:
       return null;
   }
 }
-
 function meridiemForDateTime(dt) {
   return meridiems[dt.hour < 12 ? 0 : 1];
 }
-
 function weekdayForDateTime(dt, length) {
   return weekdays(length)[dt.weekday - 1];
 }
-
 function monthForDateTime(dt, length) {
   return months(length)[dt.month - 1];
 }
-
 function eraForDateTime(dt, length) {
   return eras(length)[dt.year < 0 ? 0 : 1];
 }
+function formatRelativeTime(unit, count, numeric, narrow) {
+  if (numeric === void 0) {
+    numeric = "always";
+  }
 
-function formatRelativeTime(unit, count, numeric = "always", narrow = false) {
-  const units = {
+  if (narrow === void 0) {
+    narrow = false;
+  }
+
+  var units = {
     years: ["year", "yr."],
     quarters: ["quarter", "qtr."],
     months: ["month", "mo."],
@@ -72555,50 +66873,51 @@ function formatRelativeTime(unit, count, numeric = "always", narrow = false) {
     days: ["day", "day", "days"],
     hours: ["hour", "hr."],
     minutes: ["minute", "min."],
-    seconds: ["second", "sec."],
+    seconds: ["second", "sec."]
   };
-
-  const lastable = ["hours", "minutes", "seconds"].indexOf(unit) === -1;
+  var lastable = ["hours", "minutes", "seconds"].indexOf(unit) === -1;
 
   if (numeric === "auto" && lastable) {
-    const isDay = unit === "days";
+    var isDay = unit === "days";
+
     switch (count) {
       case 1:
-        return isDay ? "tomorrow" : `next ${units[unit][0]}`;
+        return isDay ? "tomorrow" : "next " + units[unit][0];
+
       case -1:
-        return isDay ? "yesterday" : `last ${units[unit][0]}`;
+        return isDay ? "yesterday" : "last " + units[unit][0];
+
       case 0:
-        return isDay ? "today" : `this ${units[unit][0]}`;
+        return isDay ? "today" : "this " + units[unit][0];
+
     }
   }
 
-  const isInPast = Object.is(count, -0) || count < 0,
-    fmtValue = Math.abs(count),
-    singular = fmtValue === 1,
-    lilUnits = units[unit],
-    fmtUnit = narrow
-      ? singular
-        ? lilUnits[1]
-        : lilUnits[2] || lilUnits[1]
-      : singular
-      ? units[unit][0]
-      : unit;
-  return isInPast ? `${fmtValue} ${fmtUnit} ago` : `in ${fmtValue} ${fmtUnit}`;
+  var isInPast = Object.is(count, -0) || count < 0,
+      fmtValue = Math.abs(count),
+      singular = fmtValue === 1,
+      lilUnits = units[unit],
+      fmtUnit = narrow ? singular ? lilUnits[1] : lilUnits[2] || lilUnits[1] : singular ? units[unit][0] : unit;
+  return isInPast ? fmtValue + " " + fmtUnit + " ago" : "in " + fmtValue + " " + fmtUnit;
 }
 
 function stringifyTokens(splits, tokenToString) {
-  let s = "";
-  for (const token of splits) {
+  var s = "";
+
+  for (var _iterator = _createForOfIteratorHelperLoose(splits), _step; !(_step = _iterator()).done;) {
+    var token = _step.value;
+
     if (token.literal) {
       s += token.val;
     } else {
       s += tokenToString(token.val);
     }
   }
+
   return s;
 }
 
-const macroTokenToFormatOpts = {
+var _macroTokenToFormatOpts = {
   D: DATE_SHORT,
   DD: DATE_MED,
   DDD: DATE_FULL,
@@ -72618,29 +66937,38 @@ const macroTokenToFormatOpts = {
   F: DATETIME_SHORT_WITH_SECONDS,
   FF: DATETIME_MED_WITH_SECONDS,
   FFF: DATETIME_FULL_WITH_SECONDS,
-  FFFF: DATETIME_HUGE_WITH_SECONDS,
+  FFFF: DATETIME_HUGE_WITH_SECONDS
 };
-
 /**
  * @private
  */
 
-class Formatter {
-  static create(locale, opts = {}) {
-    return new Formatter(locale, opts);
-  }
+var Formatter = /*#__PURE__*/function () {
+  Formatter.create = function create(locale, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
 
-  static parseFormat(fmt) {
-    let current = null,
-      currentFull = "",
-      bracketed = false;
-    const splits = [];
-    for (let i = 0; i < fmt.length; i++) {
-      const c = fmt.charAt(i);
+    return new Formatter(locale, opts);
+  };
+
+  Formatter.parseFormat = function parseFormat(fmt) {
+    var current = null,
+        currentFull = "",
+        bracketed = false;
+    var splits = [];
+
+    for (var i = 0; i < fmt.length; i++) {
+      var c = fmt.charAt(i);
+
       if (c === "'") {
         if (currentFull.length > 0) {
-          splits.push({ literal: bracketed, val: currentFull });
+          splits.push({
+            literal: bracketed,
+            val: currentFull
+          });
         }
+
         current = null;
         currentFull = "";
         bracketed = !bracketed;
@@ -72650,374 +66978,495 @@ class Formatter {
         currentFull += c;
       } else {
         if (currentFull.length > 0) {
-          splits.push({ literal: false, val: currentFull });
+          splits.push({
+            literal: false,
+            val: currentFull
+          });
         }
+
         currentFull = c;
         current = c;
       }
     }
 
     if (currentFull.length > 0) {
-      splits.push({ literal: bracketed, val: currentFull });
+      splits.push({
+        literal: bracketed,
+        val: currentFull
+      });
     }
 
     return splits;
-  }
+  };
 
-  static macroTokenToFormatOpts(token) {
-    return macroTokenToFormatOpts[token];
-  }
+  Formatter.macroTokenToFormatOpts = function macroTokenToFormatOpts(token) {
+    return _macroTokenToFormatOpts[token];
+  };
 
-  constructor(locale, formatOpts) {
+  function Formatter(locale, formatOpts) {
     this.opts = formatOpts;
     this.loc = locale;
     this.systemLoc = null;
   }
 
-  formatWithSystemDefault(dt, opts) {
+  var _proto = Formatter.prototype;
+
+  _proto.formatWithSystemDefault = function formatWithSystemDefault(dt, opts) {
     if (this.systemLoc === null) {
       this.systemLoc = this.loc.redefaultToSystem();
     }
-    const df = this.systemLoc.dtFormatter(dt, { ...this.opts, ...opts });
-    return df.format();
-  }
 
-  formatDateTime(dt, opts = {}) {
-    const df = this.loc.dtFormatter(dt, { ...this.opts, ...opts });
+    var df = this.systemLoc.dtFormatter(dt, _extends({}, this.opts, opts));
     return df.format();
-  }
+  };
 
-  formatDateTimeParts(dt, opts = {}) {
-    const df = this.loc.dtFormatter(dt, { ...this.opts, ...opts });
+  _proto.formatDateTime = function formatDateTime(dt, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    var df = this.loc.dtFormatter(dt, _extends({}, this.opts, opts));
+    return df.format();
+  };
+
+  _proto.formatDateTimeParts = function formatDateTimeParts(dt, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    var df = this.loc.dtFormatter(dt, _extends({}, this.opts, opts));
     return df.formatToParts();
-  }
+  };
 
-  resolvedOptions(dt, opts = {}) {
-    const df = this.loc.dtFormatter(dt, { ...this.opts, ...opts });
+  _proto.resolvedOptions = function resolvedOptions(dt, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    var df = this.loc.dtFormatter(dt, _extends({}, this.opts, opts));
     return df.resolvedOptions();
-  }
+  };
 
-  num(n, p = 0) {
+  _proto.num = function num(n, p) {
+    if (p === void 0) {
+      p = 0;
+    }
+
     // we get some perf out of doing this here, annoyingly
     if (this.opts.forceSimple) {
       return padStart(n, p);
     }
 
-    const opts = { ...this.opts };
+    var opts = _extends({}, this.opts);
 
     if (p > 0) {
       opts.padTo = p;
     }
 
     return this.loc.numberFormatter(opts).format(n);
-  }
+  };
 
-  formatDateTimeFromString(dt, fmt) {
-    const knownEnglish = this.loc.listingMode() === "en",
-      useDateTimeFormatter = this.loc.outputCalendar && this.loc.outputCalendar !== "gregory",
-      string = (opts, extract) => this.loc.extract(dt, opts, extract),
-      formatOffset = (opts) => {
-        if (dt.isOffsetFixed && dt.offset === 0 && opts.allowZ) {
-          return "Z";
-        }
+  _proto.formatDateTimeFromString = function formatDateTimeFromString(dt, fmt) {
+    var _this = this;
 
-        return dt.isValid ? dt.zone.formatOffset(dt.ts, opts.format) : "";
-      },
-      meridiem = () =>
-        knownEnglish
-          ? meridiemForDateTime(dt)
-          : string({ hour: "numeric", hourCycle: "h12" }, "dayperiod"),
-      month = (length, standalone) =>
-        knownEnglish
-          ? monthForDateTime(dt, length)
-          : string(standalone ? { month: length } : { month: length, day: "numeric" }, "month"),
-      weekday = (length, standalone) =>
-        knownEnglish
-          ? weekdayForDateTime(dt, length)
-          : string(
-              standalone ? { weekday: length } : { weekday: length, month: "long", day: "numeric" },
-              "weekday"
-            ),
-      maybeMacro = (token) => {
-        const formatOpts = Formatter.macroTokenToFormatOpts(token);
-        if (formatOpts) {
-          return this.formatWithSystemDefault(dt, formatOpts);
-        } else {
-          return token;
-        }
-      },
-      era = (length) =>
-        knownEnglish ? eraForDateTime(dt, length) : string({ era: length }, "era"),
-      tokenToString = (token) => {
-        // Where possible: http://cldr.unicode.org/translation/date-time-1/date-time#TOC-Standalone-vs.-Format-Styles
-        switch (token) {
-          // ms
-          case "S":
-            return this.num(dt.millisecond);
-          case "u":
-          // falls through
-          case "SSS":
-            return this.num(dt.millisecond, 3);
-          // seconds
-          case "s":
-            return this.num(dt.second);
-          case "ss":
-            return this.num(dt.second, 2);
-          // fractional seconds
-          case "uu":
-            return this.num(Math.floor(dt.millisecond / 10), 2);
-          case "uuu":
-            return this.num(Math.floor(dt.millisecond / 100));
-          // minutes
-          case "m":
-            return this.num(dt.minute);
-          case "mm":
-            return this.num(dt.minute, 2);
-          // hours
-          case "h":
-            return this.num(dt.hour % 12 === 0 ? 12 : dt.hour % 12);
-          case "hh":
-            return this.num(dt.hour % 12 === 0 ? 12 : dt.hour % 12, 2);
-          case "H":
-            return this.num(dt.hour);
-          case "HH":
-            return this.num(dt.hour, 2);
-          // offset
-          case "Z":
-            // like +6
-            return formatOffset({ format: "narrow", allowZ: this.opts.allowZ });
-          case "ZZ":
-            // like +06:00
-            return formatOffset({ format: "short", allowZ: this.opts.allowZ });
-          case "ZZZ":
-            // like +0600
-            return formatOffset({ format: "techie", allowZ: this.opts.allowZ });
-          case "ZZZZ":
-            // like EST
-            return dt.zone.offsetName(dt.ts, { format: "short", locale: this.loc.locale });
-          case "ZZZZZ":
-            // like Eastern Standard Time
-            return dt.zone.offsetName(dt.ts, { format: "long", locale: this.loc.locale });
-          // zone
-          case "z":
-            // like America/New_York
-            return dt.zoneName;
-          // meridiems
-          case "a":
-            return meridiem();
-          // dates
-          case "d":
-            return useDateTimeFormatter ? string({ day: "numeric" }, "day") : this.num(dt.day);
-          case "dd":
-            return useDateTimeFormatter ? string({ day: "2-digit" }, "day") : this.num(dt.day, 2);
-          // weekdays - standalone
-          case "c":
-            // like 1
-            return this.num(dt.weekday);
-          case "ccc":
-            // like 'Tues'
-            return weekday("short", true);
-          case "cccc":
-            // like 'Tuesday'
-            return weekday("long", true);
-          case "ccccc":
-            // like 'T'
-            return weekday("narrow", true);
-          // weekdays - format
-          case "E":
-            // like 1
-            return this.num(dt.weekday);
-          case "EEE":
-            // like 'Tues'
-            return weekday("short", false);
-          case "EEEE":
-            // like 'Tuesday'
-            return weekday("long", false);
-          case "EEEEE":
-            // like 'T'
-            return weekday("narrow", false);
-          // months - standalone
-          case "L":
-            // like 1
-            return useDateTimeFormatter
-              ? string({ month: "numeric", day: "numeric" }, "month")
-              : this.num(dt.month);
-          case "LL":
-            // like 01, doesn't seem to work
-            return useDateTimeFormatter
-              ? string({ month: "2-digit", day: "numeric" }, "month")
-              : this.num(dt.month, 2);
-          case "LLL":
-            // like Jan
-            return month("short", true);
-          case "LLLL":
-            // like January
-            return month("long", true);
-          case "LLLLL":
-            // like J
-            return month("narrow", true);
-          // months - format
-          case "M":
-            // like 1
-            return useDateTimeFormatter
-              ? string({ month: "numeric" }, "month")
-              : this.num(dt.month);
-          case "MM":
-            // like 01
-            return useDateTimeFormatter
-              ? string({ month: "2-digit" }, "month")
-              : this.num(dt.month, 2);
-          case "MMM":
-            // like Jan
-            return month("short", false);
-          case "MMMM":
-            // like January
-            return month("long", false);
-          case "MMMMM":
-            // like J
-            return month("narrow", false);
-          // years
-          case "y":
-            // like 2014
-            return useDateTimeFormatter ? string({ year: "numeric" }, "year") : this.num(dt.year);
-          case "yy":
-            // like 14
-            return useDateTimeFormatter
-              ? string({ year: "2-digit" }, "year")
-              : this.num(dt.year.toString().slice(-2), 2);
-          case "yyyy":
-            // like 0012
-            return useDateTimeFormatter
-              ? string({ year: "numeric" }, "year")
-              : this.num(dt.year, 4);
-          case "yyyyyy":
-            // like 000012
-            return useDateTimeFormatter
-              ? string({ year: "numeric" }, "year")
-              : this.num(dt.year, 6);
-          // eras
-          case "G":
-            // like AD
-            return era("short");
-          case "GG":
-            // like Anno Domini
-            return era("long");
-          case "GGGGG":
-            return era("narrow");
-          case "kk":
-            return this.num(dt.weekYear.toString().slice(-2), 2);
-          case "kkkk":
-            return this.num(dt.weekYear, 4);
-          case "W":
-            return this.num(dt.weekNumber);
-          case "WW":
-            return this.num(dt.weekNumber, 2);
-          case "o":
-            return this.num(dt.ordinal);
-          case "ooo":
-            return this.num(dt.ordinal, 3);
-          case "q":
-            // like 1
-            return this.num(dt.quarter);
-          case "qq":
-            // like 01
-            return this.num(dt.quarter, 2);
-          case "X":
-            return this.num(Math.floor(dt.ts / 1000));
-          case "x":
-            return this.num(dt.ts);
-          default:
-            return maybeMacro(token);
-        }
-      };
+    var knownEnglish = this.loc.listingMode() === "en",
+        useDateTimeFormatter = this.loc.outputCalendar && this.loc.outputCalendar !== "gregory",
+        string = function string(opts, extract) {
+      return _this.loc.extract(dt, opts, extract);
+    },
+        formatOffset = function formatOffset(opts) {
+      if (dt.isOffsetFixed && dt.offset === 0 && opts.allowZ) {
+        return "Z";
+      }
+
+      return dt.isValid ? dt.zone.formatOffset(dt.ts, opts.format) : "";
+    },
+        meridiem = function meridiem() {
+      return knownEnglish ? meridiemForDateTime(dt) : string({
+        hour: "numeric",
+        hourCycle: "h12"
+      }, "dayperiod");
+    },
+        month = function month(length, standalone) {
+      return knownEnglish ? monthForDateTime(dt, length) : string(standalone ? {
+        month: length
+      } : {
+        month: length,
+        day: "numeric"
+      }, "month");
+    },
+        weekday = function weekday(length, standalone) {
+      return knownEnglish ? weekdayForDateTime(dt, length) : string(standalone ? {
+        weekday: length
+      } : {
+        weekday: length,
+        month: "long",
+        day: "numeric"
+      }, "weekday");
+    },
+        maybeMacro = function maybeMacro(token) {
+      var formatOpts = Formatter.macroTokenToFormatOpts(token);
+
+      if (formatOpts) {
+        return _this.formatWithSystemDefault(dt, formatOpts);
+      } else {
+        return token;
+      }
+    },
+        era = function era(length) {
+      return knownEnglish ? eraForDateTime(dt, length) : string({
+        era: length
+      }, "era");
+    },
+        tokenToString = function tokenToString(token) {
+      // Where possible: http://cldr.unicode.org/translation/date-time-1/date-time#TOC-Standalone-vs.-Format-Styles
+      switch (token) {
+        // ms
+        case "S":
+          return _this.num(dt.millisecond);
+
+        case "u": // falls through
+
+        case "SSS":
+          return _this.num(dt.millisecond, 3);
+        // seconds
+
+        case "s":
+          return _this.num(dt.second);
+
+        case "ss":
+          return _this.num(dt.second, 2);
+        // fractional seconds
+
+        case "uu":
+          return _this.num(Math.floor(dt.millisecond / 10), 2);
+
+        case "uuu":
+          return _this.num(Math.floor(dt.millisecond / 100));
+        // minutes
+
+        case "m":
+          return _this.num(dt.minute);
+
+        case "mm":
+          return _this.num(dt.minute, 2);
+        // hours
+
+        case "h":
+          return _this.num(dt.hour % 12 === 0 ? 12 : dt.hour % 12);
+
+        case "hh":
+          return _this.num(dt.hour % 12 === 0 ? 12 : dt.hour % 12, 2);
+
+        case "H":
+          return _this.num(dt.hour);
+
+        case "HH":
+          return _this.num(dt.hour, 2);
+        // offset
+
+        case "Z":
+          // like +6
+          return formatOffset({
+            format: "narrow",
+            allowZ: _this.opts.allowZ
+          });
+
+        case "ZZ":
+          // like +06:00
+          return formatOffset({
+            format: "short",
+            allowZ: _this.opts.allowZ
+          });
+
+        case "ZZZ":
+          // like +0600
+          return formatOffset({
+            format: "techie",
+            allowZ: _this.opts.allowZ
+          });
+
+        case "ZZZZ":
+          // like EST
+          return dt.zone.offsetName(dt.ts, {
+            format: "short",
+            locale: _this.loc.locale
+          });
+
+        case "ZZZZZ":
+          // like Eastern Standard Time
+          return dt.zone.offsetName(dt.ts, {
+            format: "long",
+            locale: _this.loc.locale
+          });
+        // zone
+
+        case "z":
+          // like America/New_York
+          return dt.zoneName;
+        // meridiems
+
+        case "a":
+          return meridiem();
+        // dates
+
+        case "d":
+          return useDateTimeFormatter ? string({
+            day: "numeric"
+          }, "day") : _this.num(dt.day);
+
+        case "dd":
+          return useDateTimeFormatter ? string({
+            day: "2-digit"
+          }, "day") : _this.num(dt.day, 2);
+        // weekdays - standalone
+
+        case "c":
+          // like 1
+          return _this.num(dt.weekday);
+
+        case "ccc":
+          // like 'Tues'
+          return weekday("short", true);
+
+        case "cccc":
+          // like 'Tuesday'
+          return weekday("long", true);
+
+        case "ccccc":
+          // like 'T'
+          return weekday("narrow", true);
+        // weekdays - format
+
+        case "E":
+          // like 1
+          return _this.num(dt.weekday);
+
+        case "EEE":
+          // like 'Tues'
+          return weekday("short", false);
+
+        case "EEEE":
+          // like 'Tuesday'
+          return weekday("long", false);
+
+        case "EEEEE":
+          // like 'T'
+          return weekday("narrow", false);
+        // months - standalone
+
+        case "L":
+          // like 1
+          return useDateTimeFormatter ? string({
+            month: "numeric",
+            day: "numeric"
+          }, "month") : _this.num(dt.month);
+
+        case "LL":
+          // like 01, doesn't seem to work
+          return useDateTimeFormatter ? string({
+            month: "2-digit",
+            day: "numeric"
+          }, "month") : _this.num(dt.month, 2);
+
+        case "LLL":
+          // like Jan
+          return month("short", true);
+
+        case "LLLL":
+          // like January
+          return month("long", true);
+
+        case "LLLLL":
+          // like J
+          return month("narrow", true);
+        // months - format
+
+        case "M":
+          // like 1
+          return useDateTimeFormatter ? string({
+            month: "numeric"
+          }, "month") : _this.num(dt.month);
+
+        case "MM":
+          // like 01
+          return useDateTimeFormatter ? string({
+            month: "2-digit"
+          }, "month") : _this.num(dt.month, 2);
+
+        case "MMM":
+          // like Jan
+          return month("short", false);
+
+        case "MMMM":
+          // like January
+          return month("long", false);
+
+        case "MMMMM":
+          // like J
+          return month("narrow", false);
+        // years
+
+        case "y":
+          // like 2014
+          return useDateTimeFormatter ? string({
+            year: "numeric"
+          }, "year") : _this.num(dt.year);
+
+        case "yy":
+          // like 14
+          return useDateTimeFormatter ? string({
+            year: "2-digit"
+          }, "year") : _this.num(dt.year.toString().slice(-2), 2);
+
+        case "yyyy":
+          // like 0012
+          return useDateTimeFormatter ? string({
+            year: "numeric"
+          }, "year") : _this.num(dt.year, 4);
+
+        case "yyyyyy":
+          // like 000012
+          return useDateTimeFormatter ? string({
+            year: "numeric"
+          }, "year") : _this.num(dt.year, 6);
+        // eras
+
+        case "G":
+          // like AD
+          return era("short");
+
+        case "GG":
+          // like Anno Domini
+          return era("long");
+
+        case "GGGGG":
+          return era("narrow");
+
+        case "kk":
+          return _this.num(dt.weekYear.toString().slice(-2), 2);
+
+        case "kkkk":
+          return _this.num(dt.weekYear, 4);
+
+        case "W":
+          return _this.num(dt.weekNumber);
+
+        case "WW":
+          return _this.num(dt.weekNumber, 2);
+
+        case "o":
+          return _this.num(dt.ordinal);
+
+        case "ooo":
+          return _this.num(dt.ordinal, 3);
+
+        case "q":
+          // like 1
+          return _this.num(dt.quarter);
+
+        case "qq":
+          // like 01
+          return _this.num(dt.quarter, 2);
+
+        case "X":
+          return _this.num(Math.floor(dt.ts / 1000));
+
+        case "x":
+          return _this.num(dt.ts);
+
+        default:
+          return maybeMacro(token);
+      }
+    };
 
     return stringifyTokens(Formatter.parseFormat(fmt), tokenToString);
-  }
+  };
 
-  formatDurationFromString(dur, fmt) {
-    const tokenToField = (token) => {
-        switch (token[0]) {
-          case "S":
-            return "millisecond";
-          case "s":
-            return "second";
-          case "m":
-            return "minute";
-          case "h":
-            return "hour";
-          case "d":
-            return "day";
-          case "M":
-            return "month";
-          case "y":
-            return "year";
-          default:
-            return null;
-        }
-      },
-      tokenToString = (lildur) => (token) => {
-        const mapped = tokenToField(token);
+  _proto.formatDurationFromString = function formatDurationFromString(dur, fmt) {
+    var _this2 = this;
+
+    var tokenToField = function tokenToField(token) {
+      switch (token[0]) {
+        case "S":
+          return "millisecond";
+
+        case "s":
+          return "second";
+
+        case "m":
+          return "minute";
+
+        case "h":
+          return "hour";
+
+        case "d":
+          return "day";
+
+        case "M":
+          return "month";
+
+        case "y":
+          return "year";
+
+        default:
+          return null;
+      }
+    },
+        tokenToString = function tokenToString(lildur) {
+      return function (token) {
+        var mapped = tokenToField(token);
+
         if (mapped) {
-          return this.num(lildur.get(mapped), token.length);
+          return _this2.num(lildur.get(mapped), token.length);
         } else {
           return token;
         }
-      },
-      tokens = Formatter.parseFormat(fmt),
-      realTokens = tokens.reduce(
-        (found, { literal, val }) => (literal ? found : found.concat(val)),
-        []
-      ),
-      collapsed = dur.shiftTo(...realTokens.map(tokenToField).filter((t) => t));
-    return stringifyTokens(tokens, tokenToString(collapsed));
-  }
-}
+      };
+    },
+        tokens = Formatter.parseFormat(fmt),
+        realTokens = tokens.reduce(function (found, _ref) {
+      var literal = _ref.literal,
+          val = _ref.val;
+      return literal ? found : found.concat(val);
+    }, []),
+        collapsed = dur.shiftTo.apply(dur, realTokens.map(tokenToField).filter(function (t) {
+      return t;
+    }));
 
-class Invalid {
-  constructor(reason, explanation) {
+    return stringifyTokens(tokens, tokenToString(collapsed));
+  };
+
+  return Formatter;
+}();
+
+var Invalid = /*#__PURE__*/function () {
+  function Invalid(reason, explanation) {
     this.reason = reason;
     this.explanation = explanation;
   }
 
-  toMessage() {
+  var _proto = Invalid.prototype;
+
+  _proto.toMessage = function toMessage() {
     if (this.explanation) {
-      return `${this.reason}: ${this.explanation}`;
+      return this.reason + ": " + this.explanation;
     } else {
       return this.reason;
     }
-  }
-}
+  };
+
+  return Invalid;
+}();
 
 /**
  * @interface
  */
-class Zone {
-  /**
-   * The type of zone
-   * @abstract
-   * @type {string}
-   */
-  get type() {
-    throw new ZoneIsAbstractError();
-  }
 
-  /**
-   * The name of this zone.
-   * @abstract
-   * @type {string}
-   */
-  get name() {
-    throw new ZoneIsAbstractError();
-  }
+var Zone = /*#__PURE__*/function () {
+  function Zone() {}
 
-  /**
-   * Returns whether the offset is known to be fixed for the whole year.
-   * @abstract
-   * @type {boolean}
-   */
-  get isUniversal() {
-    throw new ZoneIsAbstractError();
-  }
+  var _proto = Zone.prototype;
 
   /**
    * Returns the offset's common name (such as EST) at the specified timestamp
@@ -73028,10 +67477,9 @@ class Zone {
    * @param {string} opts.locale - What locale to return the offset name in.
    * @return {string}
    */
-  offsetName(ts, opts) {
+  _proto.offsetName = function offsetName(ts, opts) {
     throw new ZoneIsAbstractError();
   }
-
   /**
    * Returns the offset's value as a string
    * @abstract
@@ -73040,102 +67488,173 @@ class Zone {
    *                          Accepts 'narrow', 'short', or 'techie'. Returning '+6', '+06:00', or '+0600' respectively
    * @return {string}
    */
-  formatOffset(ts, format) {
+  ;
+
+  _proto.formatOffset = function formatOffset(ts, format) {
     throw new ZoneIsAbstractError();
   }
-
   /**
    * Return the offset in minutes for this zone at the specified timestamp.
    * @abstract
    * @param {number} ts - Epoch milliseconds for which to compute the offset
    * @return {number}
    */
-  offset(ts) {
+  ;
+
+  _proto.offset = function offset(ts) {
     throw new ZoneIsAbstractError();
   }
-
   /**
    * Return whether this Zone is equal to another zone
    * @abstract
    * @param {Zone} otherZone - the zone to compare
    * @return {boolean}
    */
-  equals(otherZone) {
+  ;
+
+  _proto.equals = function equals(otherZone) {
     throw new ZoneIsAbstractError();
   }
-
   /**
    * Return whether this Zone is valid.
    * @abstract
    * @type {boolean}
    */
-  get isValid() {
-    throw new ZoneIsAbstractError();
-  }
-}
+  ;
 
-let singleton$1 = null;
+  _createClass(Zone, [{
+    key: "type",
+    get:
+    /**
+     * The type of zone
+     * @abstract
+     * @type {string}
+     */
+    function get() {
+      throw new ZoneIsAbstractError();
+    }
+    /**
+     * The name of this zone.
+     * @abstract
+     * @type {string}
+     */
 
+  }, {
+    key: "name",
+    get: function get() {
+      throw new ZoneIsAbstractError();
+    }
+    /**
+     * Returns whether the offset is known to be fixed for the whole year.
+     * @abstract
+     * @type {boolean}
+     */
+
+  }, {
+    key: "isUniversal",
+    get: function get() {
+      throw new ZoneIsAbstractError();
+    }
+  }, {
+    key: "isValid",
+    get: function get() {
+      throw new ZoneIsAbstractError();
+    }
+  }]);
+
+  return Zone;
+}();
+
+var singleton$1 = null;
 /**
  * Represents the local zone for this JavaScript environment.
  * @implements {Zone}
  */
-class SystemZone extends Zone {
-  /**
-   * Get a singleton instance of the local zone
-   * @return {SystemZone}
-   */
-  static get instance() {
-    if (singleton$1 === null) {
-      singleton$1 = new SystemZone();
-    }
-    return singleton$1;
+
+var SystemZone = /*#__PURE__*/function (_Zone) {
+  _inheritsLoose(SystemZone, _Zone);
+
+  function SystemZone() {
+    return _Zone.apply(this, arguments) || this;
   }
 
-  /** @override **/
-  get type() {
-    return "system";
-  }
+  var _proto = SystemZone.prototype;
 
   /** @override **/
-  get name() {
-    return new Intl.DateTimeFormat().resolvedOptions().timeZone;
-  }
-
-  /** @override **/
-  get isUniversal() {
-    return false;
-  }
-
-  /** @override **/
-  offsetName(ts, { format, locale }) {
+  _proto.offsetName = function offsetName(ts, _ref) {
+    var format = _ref.format,
+        locale = _ref.locale;
     return parseZoneInfo(ts, format, locale);
   }
-
   /** @override **/
-  formatOffset(ts, format) {
+  ;
+
+  _proto.formatOffset = function formatOffset$1(ts, format) {
     return formatOffset(this.offset(ts), format);
   }
-
   /** @override **/
-  offset(ts) {
+  ;
+
+  _proto.offset = function offset(ts) {
     return -new Date(ts).getTimezoneOffset();
   }
-
   /** @override **/
-  equals(otherZone) {
+  ;
+
+  _proto.equals = function equals(otherZone) {
     return otherZone.type === "system";
   }
-
   /** @override **/
-  get isValid() {
-    return true;
-  }
-}
+  ;
 
-const matchingRegex = RegExp(`^${ianaRegex.source}$`);
+  _createClass(SystemZone, [{
+    key: "type",
+    get:
+    /** @override **/
+    function get() {
+      return "system";
+    }
+    /** @override **/
 
-let dtfCache = {};
+  }, {
+    key: "name",
+    get: function get() {
+      return new Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+    /** @override **/
+
+  }, {
+    key: "isUniversal",
+    get: function get() {
+      return false;
+    }
+  }, {
+    key: "isValid",
+    get: function get() {
+      return true;
+    }
+  }], [{
+    key: "instance",
+    get:
+    /**
+     * Get a singleton instance of the local zone
+     * @return {SystemZone}
+     */
+    function get() {
+      if (singleton$1 === null) {
+        singleton$1 = new SystemZone();
+      }
+
+      return singleton$1;
+    }
+  }]);
+
+  return SystemZone;
+}(Zone);
+
+var matchingRegex = RegExp("^" + ianaRegex.source + "$");
+var dtfCache = {};
+
 function makeDTF(zone) {
   if (!dtfCache[zone]) {
     dtfCache[zone] = new Intl.DateTimeFormat("en-US", {
@@ -73146,68 +67665,82 @@ function makeDTF(zone) {
       day: "2-digit",
       hour: "2-digit",
       minute: "2-digit",
-      second: "2-digit",
+      second: "2-digit"
     });
   }
+
   return dtfCache[zone];
 }
 
-const typeToPos = {
+var typeToPos = {
   year: 0,
   month: 1,
   day: 2,
   hour: 3,
   minute: 4,
-  second: 5,
+  second: 5
 };
 
 function hackyOffset(dtf, date) {
-  const formatted = dtf.format(date).replace(/\u200E/g, ""),
-    parsed = /(\d+)\/(\d+)\/(\d+),? (\d+):(\d+):(\d+)/.exec(formatted),
-    [, fMonth, fDay, fYear, fHour, fMinute, fSecond] = parsed;
+  var formatted = dtf.format(date).replace(/\u200E/g, ""),
+      parsed = /(\d+)\/(\d+)\/(\d+),? (\d+):(\d+):(\d+)/.exec(formatted),
+      fMonth = parsed[1],
+      fDay = parsed[2],
+      fYear = parsed[3],
+      fHour = parsed[4],
+      fMinute = parsed[5],
+      fSecond = parsed[6];
   return [fYear, fMonth, fDay, fHour, fMinute, fSecond];
 }
 
 function partsOffset(dtf, date) {
-  const formatted = dtf.formatToParts(date),
-    filled = [];
-  for (let i = 0; i < formatted.length; i++) {
-    const { type, value } = formatted[i],
-      pos = typeToPos[type];
+  var formatted = dtf.formatToParts(date),
+      filled = [];
+
+  for (var i = 0; i < formatted.length; i++) {
+    var _formatted$i = formatted[i],
+        type = _formatted$i.type,
+        value = _formatted$i.value,
+        pos = typeToPos[type];
 
     if (!isUndefined(pos)) {
       filled[pos] = parseInt(value, 10);
     }
   }
+
   return filled;
 }
 
-let ianaZoneCache = {};
+var ianaZoneCache = {};
 /**
  * A zone identified by an IANA identifier, like America/New_York
  * @implements {Zone}
  */
-class IANAZone extends Zone {
+
+var IANAZone = /*#__PURE__*/function (_Zone) {
+  _inheritsLoose(IANAZone, _Zone);
+
   /**
    * @param {string} name - Zone name
    * @return {IANAZone}
    */
-  static create(name) {
+  IANAZone.create = function create(name) {
     if (!ianaZoneCache[name]) {
       ianaZoneCache[name] = new IANAZone(name);
     }
+
     return ianaZoneCache[name];
   }
-
   /**
    * Reset local caches. Should only be necessary in testing scenarios.
    * @return {void}
    */
-  static resetCache() {
+  ;
+
+  IANAZone.resetCache = function resetCache() {
     ianaZoneCache = {};
     dtfCache = {};
   }
-
   /**
    * Returns whether the provided string is a valid specifier. This only checks the string's format, not that the specifier identifies a known zone; see isValidZone for that.
    * @param {string} s - The string to check validity on
@@ -73216,10 +67749,11 @@ class IANAZone extends Zone {
    * @example IANAZone.isValidSpecifier("Sport~~blorp") //=> false
    * @return {boolean}
    */
-  static isValidSpecifier(s) {
+  ;
+
+  IANAZone.isValidSpecifier = function isValidSpecifier(s) {
     return !!(s && s.match(matchingRegex));
   }
-
   /**
    * Returns whether the provided string identifies a real zone
    * @param {string} zone - The string to check
@@ -73228,119 +67762,139 @@ class IANAZone extends Zone {
    * @example IANAZone.isValidZone("Sport~~blorp") //=> false
    * @return {boolean}
    */
-  static isValidZone(zone) {
+  ;
+
+  IANAZone.isValidZone = function isValidZone(zone) {
     if (!zone) {
       return false;
     }
+
     try {
-      new Intl.DateTimeFormat("en-US", { timeZone: zone }).format();
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: zone
+      }).format();
       return true;
     } catch (e) {
       return false;
     }
-  }
+  };
 
-  constructor(name) {
-    super();
+  function IANAZone(name) {
+    var _this;
+
+    _this = _Zone.call(this) || this;
     /** @private **/
-    this.zoneName = name;
+
+    _this.zoneName = name;
     /** @private **/
-    this.valid = IANAZone.isValidZone(name);
+
+    _this.valid = IANAZone.isValidZone(name);
+    return _this;
   }
+  /** @override **/
+
+
+  var _proto = IANAZone.prototype;
 
   /** @override **/
-  get type() {
-    return "iana";
-  }
-
-  /** @override **/
-  get name() {
-    return this.zoneName;
-  }
-
-  /** @override **/
-  get isUniversal() {
-    return false;
-  }
-
-  /** @override **/
-  offsetName(ts, { format, locale }) {
+  _proto.offsetName = function offsetName(ts, _ref) {
+    var format = _ref.format,
+        locale = _ref.locale;
     return parseZoneInfo(ts, format, locale, this.name);
   }
-
   /** @override **/
-  formatOffset(ts, format) {
+  ;
+
+  _proto.formatOffset = function formatOffset$1(ts, format) {
     return formatOffset(this.offset(ts), format);
   }
-
   /** @override **/
-  offset(ts) {
-    const date = new Date(ts);
+  ;
 
+  _proto.offset = function offset(ts) {
+    var date = new Date(ts);
     if (isNaN(date)) return NaN;
 
-    const dtf = makeDTF(this.name),
-      [year, month, day, hour, minute, second] = dtf.formatToParts
-        ? partsOffset(dtf, date)
-        : hackyOffset(dtf, date);
+    var dtf = makeDTF(this.name),
+        _ref2 = dtf.formatToParts ? partsOffset(dtf, date) : hackyOffset(dtf, date),
+        year = _ref2[0],
+        month = _ref2[1],
+        day = _ref2[2],
+        hour = _ref2[3],
+        minute = _ref2[4],
+        second = _ref2[5]; // because we're using hour12 and https://bugs.chromium.org/p/chromium/issues/detail?id=1025564&can=2&q=%2224%3A00%22%20datetimeformat
 
-    // because we're using hour12 and https://bugs.chromium.org/p/chromium/issues/detail?id=1025564&can=2&q=%2224%3A00%22%20datetimeformat
-    const adjustedHour = hour === 24 ? 0 : hour;
 
-    const asUTC = objToLocalTS({
-      year,
-      month,
-      day,
+    var adjustedHour = hour === 24 ? 0 : hour;
+    var asUTC = objToLocalTS({
+      year: year,
+      month: month,
+      day: day,
       hour: adjustedHour,
-      minute,
-      second,
-      millisecond: 0,
+      minute: minute,
+      second: second,
+      millisecond: 0
     });
-
-    let asTS = +date;
-    const over = asTS % 1000;
+    var asTS = +date;
+    var over = asTS % 1000;
     asTS -= over >= 0 ? over : 1000 + over;
     return (asUTC - asTS) / (60 * 1000);
   }
-
   /** @override **/
-  equals(otherZone) {
+  ;
+
+  _proto.equals = function equals(otherZone) {
     return otherZone.type === "iana" && otherZone.name === this.name;
   }
-
   /** @override **/
-  get isValid() {
-    return this.valid;
-  }
-}
+  ;
 
-let singleton = null;
+  _createClass(IANAZone, [{
+    key: "type",
+    get: function get() {
+      return "iana";
+    }
+    /** @override **/
 
+  }, {
+    key: "name",
+    get: function get() {
+      return this.zoneName;
+    }
+    /** @override **/
+
+  }, {
+    key: "isUniversal",
+    get: function get() {
+      return false;
+    }
+  }, {
+    key: "isValid",
+    get: function get() {
+      return this.valid;
+    }
+  }]);
+
+  return IANAZone;
+}(Zone);
+
+var singleton = null;
 /**
  * A zone with a fixed offset (meaning no DST)
  * @implements {Zone}
  */
-class FixedOffsetZone extends Zone {
-  /**
-   * Get a singleton instance of UTC
-   * @return {FixedOffsetZone}
-   */
-  static get utcInstance() {
-    if (singleton === null) {
-      singleton = new FixedOffsetZone(0);
-    }
-    return singleton;
-  }
+
+var FixedOffsetZone = /*#__PURE__*/function (_Zone) {
+  _inheritsLoose(FixedOffsetZone, _Zone);
 
   /**
    * Get an instance with a specified offset
    * @param {number} offset - The offset in minutes
    * @return {FixedOffsetZone}
    */
-  static instance(offset) {
+  FixedOffsetZone.instance = function instance(offset) {
     return offset === 0 ? FixedOffsetZone.utcInstance : new FixedOffsetZone(offset);
   }
-
   /**
    * Get an instance of FixedOffsetZone from a UTC offset string, like "UTC+6"
    * @param {string} s - The offset string to parse
@@ -73349,130 +67903,189 @@ class FixedOffsetZone extends Zone {
    * @example FixedOffsetZone.parseSpecifier("UTC-6:00")
    * @return {FixedOffsetZone}
    */
-  static parseSpecifier(s) {
+  ;
+
+  FixedOffsetZone.parseSpecifier = function parseSpecifier(s) {
     if (s) {
-      const r = s.match(/^utc(?:([+-]\d{1,2})(?::(\d{2}))?)?$/i);
+      var r = s.match(/^utc(?:([+-]\d{1,2})(?::(\d{2}))?)?$/i);
+
       if (r) {
         return new FixedOffsetZone(signedOffset(r[1], r[2]));
       }
     }
+
     return null;
-  }
+  };
 
-  constructor(offset) {
-    super();
+  function FixedOffsetZone(offset) {
+    var _this;
+
+    _this = _Zone.call(this) || this;
     /** @private **/
-    this.fixed = offset;
+
+    _this.fixed = offset;
+    return _this;
   }
+  /** @override **/
+
+
+  var _proto = FixedOffsetZone.prototype;
 
   /** @override **/
-  get type() {
-    return "fixed";
-  }
-
-  /** @override **/
-  get name() {
-    return this.fixed === 0 ? "UTC" : `UTC${formatOffset(this.fixed, "narrow")}`;
-  }
-
-  /** @override **/
-  offsetName() {
+  _proto.offsetName = function offsetName() {
     return this.name;
   }
-
   /** @override **/
-  formatOffset(ts, format) {
+  ;
+
+  _proto.formatOffset = function formatOffset$1(ts, format) {
     return formatOffset(this.fixed, format);
   }
+  /** @override **/
+  ;
 
   /** @override **/
-  get isUniversal() {
-    return true;
-  }
-
-  /** @override **/
-  offset() {
+  _proto.offset = function offset() {
     return this.fixed;
   }
-
   /** @override **/
-  equals(otherZone) {
+  ;
+
+  _proto.equals = function equals(otherZone) {
     return otherZone.type === "fixed" && otherZone.fixed === this.fixed;
   }
-
   /** @override **/
-  get isValid() {
-    return true;
-  }
-}
+  ;
+
+  _createClass(FixedOffsetZone, [{
+    key: "type",
+    get: function get() {
+      return "fixed";
+    }
+    /** @override **/
+
+  }, {
+    key: "name",
+    get: function get() {
+      return this.fixed === 0 ? "UTC" : "UTC" + formatOffset(this.fixed, "narrow");
+    }
+  }, {
+    key: "isUniversal",
+    get: function get() {
+      return true;
+    }
+  }, {
+    key: "isValid",
+    get: function get() {
+      return true;
+    }
+  }], [{
+    key: "utcInstance",
+    get:
+    /**
+     * Get a singleton instance of UTC
+     * @return {FixedOffsetZone}
+     */
+    function get() {
+      if (singleton === null) {
+        singleton = new FixedOffsetZone(0);
+      }
+
+      return singleton;
+    }
+  }]);
+
+  return FixedOffsetZone;
+}(Zone);
 
 /**
  * A zone that failed to parse. You should never need to instantiate this.
  * @implements {Zone}
  */
-class InvalidZone extends Zone {
-  constructor(zoneName) {
-    super();
+
+var InvalidZone = /*#__PURE__*/function (_Zone) {
+  _inheritsLoose(InvalidZone, _Zone);
+
+  function InvalidZone(zoneName) {
+    var _this;
+
+    _this = _Zone.call(this) || this;
     /**  @private */
-    this.zoneName = zoneName;
+
+    _this.zoneName = zoneName;
+    return _this;
   }
+  /** @override **/
+
+
+  var _proto = InvalidZone.prototype;
 
   /** @override **/
-  get type() {
-    return "invalid";
-  }
-
-  /** @override **/
-  get name() {
-    return this.zoneName;
-  }
-
-  /** @override **/
-  get isUniversal() {
-    return false;
-  }
-
-  /** @override **/
-  offsetName() {
+  _proto.offsetName = function offsetName() {
     return null;
   }
-
   /** @override **/
-  formatOffset() {
+  ;
+
+  _proto.formatOffset = function formatOffset() {
     return "";
   }
-
   /** @override **/
-  offset() {
+  ;
+
+  _proto.offset = function offset() {
     return NaN;
   }
-
   /** @override **/
-  equals() {
+  ;
+
+  _proto.equals = function equals() {
     return false;
   }
-
   /** @override **/
-  get isValid() {
-    return false;
-  }
-}
+  ;
+
+  _createClass(InvalidZone, [{
+    key: "type",
+    get: function get() {
+      return "invalid";
+    }
+    /** @override **/
+
+  }, {
+    key: "name",
+    get: function get() {
+      return this.zoneName;
+    }
+    /** @override **/
+
+  }, {
+    key: "isUniversal",
+    get: function get() {
+      return false;
+    }
+  }, {
+    key: "isValid",
+    get: function get() {
+      return false;
+    }
+  }]);
+
+  return InvalidZone;
+}(Zone);
 
 /**
  * @private
  */
-
 function normalizeZone(input, defaultZone) {
+
   if (isUndefined(input) || input === null) {
     return defaultZone;
   } else if (input instanceof Zone) {
     return input;
   } else if (isString(input)) {
-    const lowered = input.toLowerCase();
-    if (lowered === "local" || lowered === "system") return defaultZone;
-    else if (lowered === "utc" || lowered === "gmt") return FixedOffsetZone.utcInstance;
-    else if (IANAZone.isValidSpecifier(lowered)) return IANAZone.create(input);
-    else return FixedOffsetZone.parseSpecifier(lowered) || new InvalidZone(input);
+    var lowered = input.toLowerCase();
+    if (lowered === "local" || lowered === "system") return defaultZone;else if (lowered === "utc" || lowered === "gmt") return FixedOffsetZone.utcInstance;else if (IANAZone.isValidSpecifier(lowered)) return IANAZone.create(input);else return FixedOffsetZone.parseSpecifier(lowered) || new InvalidZone(input);
   } else if (isNumber(input)) {
     return FixedOffsetZone.instance(input);
   } else if (typeof input === "object" && input.offset && typeof input.offset === "number") {
@@ -73484,176 +68097,231 @@ function normalizeZone(input, defaultZone) {
   }
 }
 
-let now = () => Date.now(),
-  defaultZone = "system",
-  defaultLocale = null,
-  defaultNumberingSystem = null,
-  defaultOutputCalendar = null,
-  throwOnInvalid;
-
+var now = function now() {
+  return Date.now();
+},
+    defaultZone = "system",
+    defaultLocale = null,
+    defaultNumberingSystem = null,
+    defaultOutputCalendar = null,
+    throwOnInvalid;
 /**
  * Settings contains static getters and setters that control Luxon's overall behavior. Luxon is a simple library with few options, but the ones it does have live here.
  */
-class Settings {
-  /**
-   * Get the callback for returning the current timestamp.
-   * @type {function}
-   */
-  static get now() {
-    return now;
-  }
 
-  /**
-   * Set the callback for returning the current timestamp.
-   * The function should return a number, which will be interpreted as an Epoch millisecond count
-   * @type {function}
-   * @example Settings.now = () => Date.now() + 3000 // pretend it is 3 seconds in the future
-   * @example Settings.now = () => 0 // always pretend it's Jan 1, 1970 at midnight in UTC time
-   */
-  static set now(n) {
-    now = n;
-  }
 
-  /**
-   * Set the default time zone to create DateTimes in. Does not affect existing instances.
-   * Use the value "system" to reset this value to the system's time zone.
-   * @type {string}
-   */
-  static set defaultZone(zone) {
-    defaultZone = zone;
-  }
-
-  /**
-   * Get the default time zone object currently used to create DateTimes. Does not affect existing instances.
-   * The default value is the system's time zone (the one set on the machine that runs this code).
-   * @type {Zone}
-   */
-  static get defaultZone() {
-    return normalizeZone(defaultZone, SystemZone.instance);
-  }
-
-  /**
-   * Get the default locale to create DateTimes with. Does not affect existing instances.
-   * @type {string}
-   */
-  static get defaultLocale() {
-    return defaultLocale;
-  }
-
-  /**
-   * Set the default locale to create DateTimes with. Does not affect existing instances.
-   * @type {string}
-   */
-  static set defaultLocale(locale) {
-    defaultLocale = locale;
-  }
-
-  /**
-   * Get the default numbering system to create DateTimes with. Does not affect existing instances.
-   * @type {string}
-   */
-  static get defaultNumberingSystem() {
-    return defaultNumberingSystem;
-  }
-
-  /**
-   * Set the default numbering system to create DateTimes with. Does not affect existing instances.
-   * @type {string}
-   */
-  static set defaultNumberingSystem(numberingSystem) {
-    defaultNumberingSystem = numberingSystem;
-  }
-
-  /**
-   * Get the default output calendar to create DateTimes with. Does not affect existing instances.
-   * @type {string}
-   */
-  static get defaultOutputCalendar() {
-    return defaultOutputCalendar;
-  }
-
-  /**
-   * Set the default output calendar to create DateTimes with. Does not affect existing instances.
-   * @type {string}
-   */
-  static set defaultOutputCalendar(outputCalendar) {
-    defaultOutputCalendar = outputCalendar;
-  }
-
-  /**
-   * Get whether Luxon will throw when it encounters invalid DateTimes, Durations, or Intervals
-   * @type {boolean}
-   */
-  static get throwOnInvalid() {
-    return throwOnInvalid;
-  }
-
-  /**
-   * Set whether Luxon will throw when it encounters invalid DateTimes, Durations, or Intervals
-   * @type {boolean}
-   */
-  static set throwOnInvalid(t) {
-    throwOnInvalid = t;
-  }
+var Settings = /*#__PURE__*/function () {
+  function Settings() {}
 
   /**
    * Reset Luxon's global caches. Should only be necessary in testing scenarios.
    * @return {void}
    */
-  static resetCaches() {
+  Settings.resetCaches = function resetCaches() {
     Locale.resetCache();
     IANAZone.resetCache();
+  };
+
+  _createClass(Settings, null, [{
+    key: "now",
+    get:
+    /**
+     * Get the callback for returning the current timestamp.
+     * @type {function}
+     */
+    function get() {
+      return now;
+    }
+    /**
+     * Set the callback for returning the current timestamp.
+     * The function should return a number, which will be interpreted as an Epoch millisecond count
+     * @type {function}
+     * @example Settings.now = () => Date.now() + 3000 // pretend it is 3 seconds in the future
+     * @example Settings.now = () => 0 // always pretend it's Jan 1, 1970 at midnight in UTC time
+     */
+    ,
+    set: function set(n) {
+      now = n;
+    }
+    /**
+     * Set the default time zone to create DateTimes in. Does not affect existing instances.
+     * Use the value "system" to reset this value to the system's time zone.
+     * @type {string}
+     */
+
+  }, {
+    key: "defaultZone",
+    get:
+    /**
+     * Get the default time zone object currently used to create DateTimes. Does not affect existing instances.
+     * The default value is the system's time zone (the one set on the machine that runs this code).
+     * @type {Zone}
+     */
+    function get() {
+      return normalizeZone(defaultZone, SystemZone.instance);
+    }
+    /**
+     * Get the default locale to create DateTimes with. Does not affect existing instances.
+     * @type {string}
+     */
+    ,
+    set: function set(zone) {
+      defaultZone = zone;
+    }
+  }, {
+    key: "defaultLocale",
+    get: function get() {
+      return defaultLocale;
+    }
+    /**
+     * Set the default locale to create DateTimes with. Does not affect existing instances.
+     * @type {string}
+     */
+    ,
+    set: function set(locale) {
+      defaultLocale = locale;
+    }
+    /**
+     * Get the default numbering system to create DateTimes with. Does not affect existing instances.
+     * @type {string}
+     */
+
+  }, {
+    key: "defaultNumberingSystem",
+    get: function get() {
+      return defaultNumberingSystem;
+    }
+    /**
+     * Set the default numbering system to create DateTimes with. Does not affect existing instances.
+     * @type {string}
+     */
+    ,
+    set: function set(numberingSystem) {
+      defaultNumberingSystem = numberingSystem;
+    }
+    /**
+     * Get the default output calendar to create DateTimes with. Does not affect existing instances.
+     * @type {string}
+     */
+
+  }, {
+    key: "defaultOutputCalendar",
+    get: function get() {
+      return defaultOutputCalendar;
+    }
+    /**
+     * Set the default output calendar to create DateTimes with. Does not affect existing instances.
+     * @type {string}
+     */
+    ,
+    set: function set(outputCalendar) {
+      defaultOutputCalendar = outputCalendar;
+    }
+    /**
+     * Get whether Luxon will throw when it encounters invalid DateTimes, Durations, or Intervals
+     * @type {boolean}
+     */
+
+  }, {
+    key: "throwOnInvalid",
+    get: function get() {
+      return throwOnInvalid;
+    }
+    /**
+     * Set whether Luxon will throw when it encounters invalid DateTimes, Durations, or Intervals
+     * @type {boolean}
+     */
+    ,
+    set: function set(t) {
+      throwOnInvalid = t;
+    }
+  }]);
+
+  return Settings;
+}();
+
+var _excluded = ["base"],
+    _excluded2 = ["padTo", "floor"];
+
+var intlLFCache = {};
+
+function getCachedLF(locString, opts) {
+  if (opts === void 0) {
+    opts = {};
   }
-}
 
-// todo - remap caching
+  var key = JSON.stringify([locString, opts]);
+  var dtf = intlLFCache[key];
 
-let intlLFCache = {};
-function getCachedLF(locString, opts = {}) {
-  const key = JSON.stringify([locString, opts]);
-  let dtf = intlLFCache[key];
   if (!dtf) {
     dtf = new Intl.ListFormat(locString, opts);
     intlLFCache[key] = dtf;
   }
+
   return dtf;
 }
 
-let intlDTCache = {};
-function getCachedDTF(locString, opts = {}) {
-  const key = JSON.stringify([locString, opts]);
-  let dtf = intlDTCache[key];
+var intlDTCache = {};
+
+function getCachedDTF(locString, opts) {
+  if (opts === void 0) {
+    opts = {};
+  }
+
+  var key = JSON.stringify([locString, opts]);
+  var dtf = intlDTCache[key];
+
   if (!dtf) {
     dtf = new Intl.DateTimeFormat(locString, opts);
     intlDTCache[key] = dtf;
   }
+
   return dtf;
 }
 
-let intlNumCache = {};
-function getCachedINF(locString, opts = {}) {
-  const key = JSON.stringify([locString, opts]);
-  let inf = intlNumCache[key];
+var intlNumCache = {};
+
+function getCachedINF(locString, opts) {
+  if (opts === void 0) {
+    opts = {};
+  }
+
+  var key = JSON.stringify([locString, opts]);
+  var inf = intlNumCache[key];
+
   if (!inf) {
     inf = new Intl.NumberFormat(locString, opts);
     intlNumCache[key] = inf;
   }
+
   return inf;
 }
 
-let intlRelCache = {};
-function getCachedRTF(locString, opts = {}) {
-  const { base, ...cacheKeyOpts } = opts; // exclude `base` from the options
-  const key = JSON.stringify([locString, cacheKeyOpts]);
-  let inf = intlRelCache[key];
+var intlRelCache = {};
+
+function getCachedRTF(locString, opts) {
+  if (opts === void 0) {
+    opts = {};
+  }
+
+  var _opts = opts;
+      _opts.base;
+      var cacheKeyOpts = _objectWithoutPropertiesLoose(_opts, _excluded); // exclude `base` from the options
+
+
+  var key = JSON.stringify([locString, cacheKeyOpts]);
+  var inf = intlRelCache[key];
+
   if (!inf) {
     inf = new Intl.RelativeTimeFormat(locString, opts);
     intlRelCache[key] = inf;
   }
+
   return inf;
 }
 
-let sysLocaleCache = null;
+var sysLocaleCache = null;
+
 function systemLocale() {
   if (sysLocaleCache) {
     return sysLocaleCache;
@@ -73667,25 +68335,27 @@ function parseLocaleString(localeStr) {
   // I really want to avoid writing a BCP 47 parser
   // see, e.g. https://github.com/wooorm/bcp-47
   // Instead, we'll do this:
-
   // a) if the string has no -u extensions, just leave it alone
   // b) if it does, use Intl to resolve everything
   // c) if Intl fails, try again without the -u
+  var uIndex = localeStr.indexOf("-u-");
 
-  const uIndex = localeStr.indexOf("-u-");
   if (uIndex === -1) {
     return [localeStr];
   } else {
-    let options;
-    const smaller = localeStr.substring(0, uIndex);
+    var options;
+    var smaller = localeStr.substring(0, uIndex);
+
     try {
       options = getCachedDTF(localeStr).resolvedOptions();
     } catch (e) {
       options = getCachedDTF(smaller).resolvedOptions();
     }
 
-    const { numberingSystem, calendar } = options;
-    // return the smaller one so that we can append the calendar and numbering overrides to it
+    var _options = options,
+        numberingSystem = _options.numberingSystem,
+        calendar = _options.calendar; // return the smaller one so that we can append the calendar and numbering overrides to it
+
     return [smaller, numberingSystem, calendar];
   }
 }
@@ -73695,12 +68365,13 @@ function intlConfigString(localeStr, numberingSystem, outputCalendar) {
     localeStr += "-u";
 
     if (outputCalendar) {
-      localeStr += `-ca-${outputCalendar}`;
+      localeStr += "-ca-" + outputCalendar;
     }
 
     if (numberingSystem) {
-      localeStr += `-nu-${numberingSystem}`;
+      localeStr += "-nu-" + numberingSystem;
     }
+
     return localeStr;
   } else {
     return localeStr;
@@ -73708,25 +68379,29 @@ function intlConfigString(localeStr, numberingSystem, outputCalendar) {
 }
 
 function mapMonths(f) {
-  const ms = [];
-  for (let i = 1; i <= 12; i++) {
-    const dt = DateTime.utc(2016, i, 1);
+  var ms = [];
+
+  for (var i = 1; i <= 12; i++) {
+    var dt = DateTime.utc(2016, i, 1);
     ms.push(f(dt));
   }
+
   return ms;
 }
 
 function mapWeekdays(f) {
-  const ms = [];
-  for (let i = 1; i <= 7; i++) {
-    const dt = DateTime.utc(2016, 11, 13 + i);
+  var ms = [];
+
+  for (var i = 1; i <= 7; i++) {
+    var dt = DateTime.utc(2016, 11, 13 + i);
     ms.push(f(dt));
   }
+
   return ms;
 }
 
 function listStuff(loc, length, defaultOK, englishFn, intlFn) {
-  const mode = loc.listingMode(defaultOK);
+  var mode = loc.listingMode(defaultOK);
 
   if (mode === "error") {
     return null;
@@ -73741,54 +68416,59 @@ function supportsFastNumbers(loc) {
   if (loc.numberingSystem && loc.numberingSystem !== "latn") {
     return false;
   } else {
-    return (
-      loc.numberingSystem === "latn" ||
-      !loc.locale ||
-      loc.locale.startsWith("en") ||
-      new Intl.DateTimeFormat(loc.intl).resolvedOptions().numberingSystem === "latn"
-    );
+    return loc.numberingSystem === "latn" || !loc.locale || loc.locale.startsWith("en") || new Intl.DateTimeFormat(loc.intl).resolvedOptions().numberingSystem === "latn";
   }
 }
-
 /**
  * @private
  */
 
-class PolyNumberFormatter {
-  constructor(intl, forceSimple, opts) {
+
+var PolyNumberFormatter = /*#__PURE__*/function () {
+  function PolyNumberFormatter(intl, forceSimple, opts) {
     this.padTo = opts.padTo || 0;
     this.floor = opts.floor || false;
 
-    const { padTo, floor, ...otherOpts } = opts;
+    opts.padTo;
+        opts.floor;
+        var otherOpts = _objectWithoutPropertiesLoose(opts, _excluded2);
 
     if (!forceSimple || Object.keys(otherOpts).length > 0) {
-      const intlOpts = { useGrouping: false, ...opts };
+      var intlOpts = _extends({
+        useGrouping: false
+      }, opts);
+
       if (opts.padTo > 0) intlOpts.minimumIntegerDigits = opts.padTo;
       this.inf = getCachedINF(intl, intlOpts);
     }
   }
 
-  format(i) {
+  var _proto = PolyNumberFormatter.prototype;
+
+  _proto.format = function format(i) {
     if (this.inf) {
-      const fixed = this.floor ? Math.floor(i) : i;
+      var fixed = this.floor ? Math.floor(i) : i;
       return this.inf.format(fixed);
     } else {
       // to match the browser's numberformatter defaults
-      const fixed = this.floor ? Math.floor(i) : roundTo(i, 3);
-      return padStart(fixed, this.padTo);
-    }
-  }
-}
+      var _fixed = this.floor ? Math.floor(i) : roundTo(i, 3);
 
+      return padStart(_fixed, this.padTo);
+    }
+  };
+
+  return PolyNumberFormatter;
+}();
 /**
  * @private
  */
 
-class PolyDateFormatter {
-  constructor(dt, intl, opts) {
-    this.opts = opts;
 
-    let z;
+var PolyDateFormatter = /*#__PURE__*/function () {
+  function PolyDateFormatter(dt, intl, opts) {
+    this.opts = opts;
+    var z;
+
     if (dt.zone.isUniversal) {
       // UTC-8 or Etc/UTC-8 are not part of tzdata, only Etc/GMT+8 and the like.
       // That is why fixed-offset TZ is set to that unless it is:
@@ -73796,8 +68476,9 @@ class PolyDateFormatter {
       // 2. Unsupported by the browser:
       //    - some do not support Etc/
       //    - < Etc/GMT-14, > Etc/GMT+12, and 30-minute or 45-minute offsets are not part of tzdata
-      const gmtOffset = -1 * (dt.offset / 60);
-      const offsetZ = gmtOffset >= 0 ? `Etc/GMT+${gmtOffset}` : `Etc/GMT${gmtOffset}`;
+      var gmtOffset = -1 * (dt.offset / 60);
+      var offsetZ = gmtOffset >= 0 ? "Etc/GMT+" + gmtOffset : "Etc/GMT" + gmtOffset;
+
       if (dt.offset !== 0 && IANAZone.create(offsetZ).valid) {
         z = offsetZ;
         this.dt = dt;
@@ -73810,6 +68491,7 @@ class PolyDateFormatter {
         // the time and tell the formatter to show it to us in UTC, so that the time is right
         // and the bad zone doesn't show up.
         z = "UTC";
+
         if (opts.timeZoneName) {
           this.dt = dt;
         } else {
@@ -73823,241 +68505,341 @@ class PolyDateFormatter {
       z = dt.zone.name;
     }
 
-    const intlOpts = { ...this.opts };
+    var intlOpts = _extends({}, this.opts);
+
     if (z) {
       intlOpts.timeZone = z;
     }
+
     this.dtf = getCachedDTF(intl, intlOpts);
   }
 
-  format() {
+  var _proto2 = PolyDateFormatter.prototype;
+
+  _proto2.format = function format() {
     return this.dtf.format(this.dt.toJSDate());
-  }
+  };
 
-  formatToParts() {
+  _proto2.formatToParts = function formatToParts() {
     return this.dtf.formatToParts(this.dt.toJSDate());
-  }
+  };
 
-  resolvedOptions() {
+  _proto2.resolvedOptions = function resolvedOptions() {
     return this.dtf.resolvedOptions();
-  }
-}
+  };
 
+  return PolyDateFormatter;
+}();
 /**
  * @private
  */
-class PolyRelFormatter {
-  constructor(intl, isEnglish, opts) {
-    this.opts = { style: "long", ...opts };
+
+
+var PolyRelFormatter = /*#__PURE__*/function () {
+  function PolyRelFormatter(intl, isEnglish, opts) {
+    this.opts = _extends({
+      style: "long"
+    }, opts);
+
     if (!isEnglish && hasRelative()) {
       this.rtf = getCachedRTF(intl, opts);
     }
   }
 
-  format(count, unit) {
+  var _proto3 = PolyRelFormatter.prototype;
+
+  _proto3.format = function format(count, unit) {
     if (this.rtf) {
       return this.rtf.format(count, unit);
     } else {
       return formatRelativeTime(unit, count, this.opts.numeric, this.opts.style !== "long");
     }
-  }
+  };
 
-  formatToParts(count, unit) {
+  _proto3.formatToParts = function formatToParts(count, unit) {
     if (this.rtf) {
       return this.rtf.formatToParts(count, unit);
     } else {
       return [];
     }
-  }
-}
+  };
 
+  return PolyRelFormatter;
+}();
 /**
  * @private
  */
 
-class Locale {
-  static fromOpts(opts) {
+
+var Locale = /*#__PURE__*/function () {
+  Locale.fromOpts = function fromOpts(opts) {
     return Locale.create(opts.locale, opts.numberingSystem, opts.outputCalendar, opts.defaultToEN);
-  }
+  };
 
-  static create(locale, numberingSystem, outputCalendar, defaultToEN = false) {
-    const specifiedLocale = locale || Settings.defaultLocale;
-    // the system locale is useful for human readable strings but annoying for parsing/formatting known formats
-    const localeR = specifiedLocale || (defaultToEN ? "en-US" : systemLocale());
-    const numberingSystemR = numberingSystem || Settings.defaultNumberingSystem;
-    const outputCalendarR = outputCalendar || Settings.defaultOutputCalendar;
+  Locale.create = function create(locale, numberingSystem, outputCalendar, defaultToEN) {
+    if (defaultToEN === void 0) {
+      defaultToEN = false;
+    }
+
+    var specifiedLocale = locale || Settings.defaultLocale; // the system locale is useful for human readable strings but annoying for parsing/formatting known formats
+
+    var localeR = specifiedLocale || (defaultToEN ? "en-US" : systemLocale());
+    var numberingSystemR = numberingSystem || Settings.defaultNumberingSystem;
+    var outputCalendarR = outputCalendar || Settings.defaultOutputCalendar;
     return new Locale(localeR, numberingSystemR, outputCalendarR, specifiedLocale);
-  }
+  };
 
-  static resetCache() {
+  Locale.resetCache = function resetCache() {
     sysLocaleCache = null;
     intlDTCache = {};
     intlNumCache = {};
     intlRelCache = {};
-  }
+  };
 
-  static fromObject({ locale, numberingSystem, outputCalendar } = {}) {
+  Locale.fromObject = function fromObject(_temp) {
+    var _ref = _temp === void 0 ? {} : _temp,
+        locale = _ref.locale,
+        numberingSystem = _ref.numberingSystem,
+        outputCalendar = _ref.outputCalendar;
+
     return Locale.create(locale, numberingSystem, outputCalendar);
-  }
+  };
 
-  constructor(locale, numbering, outputCalendar, specifiedLocale) {
-    const [parsedLocale, parsedNumberingSystem, parsedOutputCalendar] = parseLocaleString(locale);
+  function Locale(locale, numbering, outputCalendar, specifiedLocale) {
+    var _parseLocaleString = parseLocaleString(locale),
+        parsedLocale = _parseLocaleString[0],
+        parsedNumberingSystem = _parseLocaleString[1],
+        parsedOutputCalendar = _parseLocaleString[2];
 
     this.locale = parsedLocale;
     this.numberingSystem = numbering || parsedNumberingSystem || null;
     this.outputCalendar = outputCalendar || parsedOutputCalendar || null;
     this.intl = intlConfigString(this.locale, this.numberingSystem, this.outputCalendar);
-
-    this.weekdaysCache = { format: {}, standalone: {} };
-    this.monthsCache = { format: {}, standalone: {} };
+    this.weekdaysCache = {
+      format: {},
+      standalone: {}
+    };
+    this.monthsCache = {
+      format: {},
+      standalone: {}
+    };
     this.meridiemCache = null;
     this.eraCache = {};
-
     this.specifiedLocale = specifiedLocale;
     this.fastNumbersCached = null;
   }
 
-  get fastNumbers() {
-    if (this.fastNumbersCached == null) {
-      this.fastNumbersCached = supportsFastNumbers(this);
-    }
+  var _proto4 = Locale.prototype;
 
-    return this.fastNumbersCached;
-  }
-
-  listingMode() {
-    const isActuallyEn = this.isEnglish();
-    const hasNoWeirdness =
-      (this.numberingSystem === null || this.numberingSystem === "latn") &&
-      (this.outputCalendar === null || this.outputCalendar === "gregory");
+  _proto4.listingMode = function listingMode() {
+    var isActuallyEn = this.isEnglish();
+    var hasNoWeirdness = (this.numberingSystem === null || this.numberingSystem === "latn") && (this.outputCalendar === null || this.outputCalendar === "gregory");
     return isActuallyEn && hasNoWeirdness ? "en" : "intl";
-  }
+  };
 
-  clone(alts) {
+  _proto4.clone = function clone(alts) {
     if (!alts || Object.getOwnPropertyNames(alts).length === 0) {
       return this;
     } else {
-      return Locale.create(
-        alts.locale || this.specifiedLocale,
-        alts.numberingSystem || this.numberingSystem,
-        alts.outputCalendar || this.outputCalendar,
-        alts.defaultToEN || false
-      );
+      return Locale.create(alts.locale || this.specifiedLocale, alts.numberingSystem || this.numberingSystem, alts.outputCalendar || this.outputCalendar, alts.defaultToEN || false);
     }
-  }
+  };
 
-  redefaultToEN(alts = {}) {
-    return this.clone({ ...alts, defaultToEN: true });
-  }
+  _proto4.redefaultToEN = function redefaultToEN(alts) {
+    if (alts === void 0) {
+      alts = {};
+    }
 
-  redefaultToSystem(alts = {}) {
-    return this.clone({ ...alts, defaultToEN: false });
-  }
+    return this.clone(_extends({}, alts, {
+      defaultToEN: true
+    }));
+  };
 
-  months(length, format = false, defaultOK = true) {
-    return listStuff(this, length, defaultOK, months, () => {
-      const intl = format ? { month: length, day: "numeric" } : { month: length },
-        formatStr = format ? "format" : "standalone";
-      if (!this.monthsCache[formatStr][length]) {
-        this.monthsCache[formatStr][length] = mapMonths((dt) => this.extract(dt, intl, "month"));
+  _proto4.redefaultToSystem = function redefaultToSystem(alts) {
+    if (alts === void 0) {
+      alts = {};
+    }
+
+    return this.clone(_extends({}, alts, {
+      defaultToEN: false
+    }));
+  };
+
+  _proto4.months = function months$1(length, format, defaultOK) {
+    var _this = this;
+
+    if (format === void 0) {
+      format = false;
+    }
+
+    if (defaultOK === void 0) {
+      defaultOK = true;
+    }
+
+    return listStuff(this, length, defaultOK, months, function () {
+      var intl = format ? {
+        month: length,
+        day: "numeric"
+      } : {
+        month: length
+      },
+          formatStr = format ? "format" : "standalone";
+
+      if (!_this.monthsCache[formatStr][length]) {
+        _this.monthsCache[formatStr][length] = mapMonths(function (dt) {
+          return _this.extract(dt, intl, "month");
+        });
       }
-      return this.monthsCache[formatStr][length];
+
+      return _this.monthsCache[formatStr][length];
     });
-  }
+  };
 
-  weekdays(length, format = false, defaultOK = true) {
-    return listStuff(this, length, defaultOK, weekdays, () => {
-      const intl = format
-          ? { weekday: length, year: "numeric", month: "long", day: "numeric" }
-          : { weekday: length },
-        formatStr = format ? "format" : "standalone";
-      if (!this.weekdaysCache[formatStr][length]) {
-        this.weekdaysCache[formatStr][length] = mapWeekdays((dt) =>
-          this.extract(dt, intl, "weekday")
-        );
+  _proto4.weekdays = function weekdays$1(length, format, defaultOK) {
+    var _this2 = this;
+
+    if (format === void 0) {
+      format = false;
+    }
+
+    if (defaultOK === void 0) {
+      defaultOK = true;
+    }
+
+    return listStuff(this, length, defaultOK, weekdays, function () {
+      var intl = format ? {
+        weekday: length,
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      } : {
+        weekday: length
+      },
+          formatStr = format ? "format" : "standalone";
+
+      if (!_this2.weekdaysCache[formatStr][length]) {
+        _this2.weekdaysCache[formatStr][length] = mapWeekdays(function (dt) {
+          return _this2.extract(dt, intl, "weekday");
+        });
       }
-      return this.weekdaysCache[formatStr][length];
+
+      return _this2.weekdaysCache[formatStr][length];
     });
-  }
+  };
 
-  meridiems(defaultOK = true) {
-    return listStuff(
-      this,
-      undefined,
-      defaultOK,
-      () => meridiems,
-      () => {
-        // In theory there could be aribitrary day periods. We're gonna assume there are exactly two
-        // for AM and PM. This is probably wrong, but it's makes parsing way easier.
-        if (!this.meridiemCache) {
-          const intl = { hour: "numeric", hourCycle: "h12" };
-          this.meridiemCache = [DateTime.utc(2016, 11, 13, 9), DateTime.utc(2016, 11, 13, 19)].map(
-            (dt) => this.extract(dt, intl, "dayperiod")
-          );
-        }
+  _proto4.meridiems = function meridiems$1(defaultOK) {
+    var _this3 = this;
 
-        return this.meridiemCache;
+    if (defaultOK === void 0) {
+      defaultOK = true;
+    }
+
+    return listStuff(this, undefined, defaultOK, function () {
+      return meridiems;
+    }, function () {
+      // In theory there could be aribitrary day periods. We're gonna assume there are exactly two
+      // for AM and PM. This is probably wrong, but it's makes parsing way easier.
+      if (!_this3.meridiemCache) {
+        var intl = {
+          hour: "numeric",
+          hourCycle: "h12"
+        };
+        _this3.meridiemCache = [DateTime.utc(2016, 11, 13, 9), DateTime.utc(2016, 11, 13, 19)].map(function (dt) {
+          return _this3.extract(dt, intl, "dayperiod");
+        });
       }
-    );
-  }
 
-  eras(length, defaultOK = true) {
-    return listStuff(this, length, defaultOK, eras, () => {
-      const intl = { era: length };
+      return _this3.meridiemCache;
+    });
+  };
 
-      // This is problematic. Different calendars are going to define eras totally differently. What I need is the minimum set of dates
+  _proto4.eras = function eras$1(length, defaultOK) {
+    var _this4 = this;
+
+    if (defaultOK === void 0) {
+      defaultOK = true;
+    }
+
+    return listStuff(this, length, defaultOK, eras, function () {
+      var intl = {
+        era: length
+      }; // This is problematic. Different calendars are going to define eras totally differently. What I need is the minimum set of dates
       // to definitely enumerate them.
-      if (!this.eraCache[length]) {
-        this.eraCache[length] = [DateTime.utc(-40, 1, 1), DateTime.utc(2017, 1, 1)].map((dt) =>
-          this.extract(dt, intl, "era")
-        );
+
+      if (!_this4.eraCache[length]) {
+        _this4.eraCache[length] = [DateTime.utc(-40, 1, 1), DateTime.utc(2017, 1, 1)].map(function (dt) {
+          return _this4.extract(dt, intl, "era");
+        });
       }
 
-      return this.eraCache[length];
+      return _this4.eraCache[length];
     });
-  }
+  };
 
-  extract(dt, intlOpts, field) {
-    const df = this.dtFormatter(dt, intlOpts),
-      results = df.formatToParts(),
-      matching = results.find((m) => m.type.toLowerCase() === field);
+  _proto4.extract = function extract(dt, intlOpts, field) {
+    var df = this.dtFormatter(dt, intlOpts),
+        results = df.formatToParts(),
+        matching = results.find(function (m) {
+      return m.type.toLowerCase() === field;
+    });
     return matching ? matching.value : null;
-  }
+  };
 
-  numberFormatter(opts = {}) {
+  _proto4.numberFormatter = function numberFormatter(opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     // this forcesimple option is never used (the only caller short-circuits on it, but it seems safer to leave)
     // (in contrast, the rest of the condition is used heavily)
     return new PolyNumberFormatter(this.intl, opts.forceSimple || this.fastNumbers, opts);
-  }
+  };
 
-  dtFormatter(dt, intlOpts = {}) {
+  _proto4.dtFormatter = function dtFormatter(dt, intlOpts) {
+    if (intlOpts === void 0) {
+      intlOpts = {};
+    }
+
     return new PolyDateFormatter(dt, this.intl, intlOpts);
-  }
+  };
 
-  relFormatter(opts = {}) {
+  _proto4.relFormatter = function relFormatter(opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     return new PolyRelFormatter(this.intl, this.isEnglish(), opts);
-  }
+  };
 
-  listFormatter(opts = {}) {
+  _proto4.listFormatter = function listFormatter(opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     return getCachedLF(this.intl, opts);
-  }
+  };
 
-  isEnglish() {
-    return (
-      this.locale === "en" ||
-      this.locale.toLowerCase() === "en-us" ||
-      new Intl.DateTimeFormat(this.intl).resolvedOptions().locale.startsWith("en-us")
-    );
-  }
+  _proto4.isEnglish = function isEnglish() {
+    return this.locale === "en" || this.locale.toLowerCase() === "en-us" || new Intl.DateTimeFormat(this.intl).resolvedOptions().locale.startsWith("en-us");
+  };
 
-  equals(other) {
-    return (
-      this.locale === other.locale &&
-      this.numberingSystem === other.numberingSystem &&
-      this.outputCalendar === other.outputCalendar
-    );
-  }
-}
+  _proto4.equals = function equals(other) {
+    return this.locale === other.locale && this.numberingSystem === other.numberingSystem && this.outputCalendar === other.outputCalendar;
+  };
+
+  _createClass(Locale, [{
+    key: "fastNumbers",
+    get: function get() {
+      if (this.fastNumbersCached == null) {
+        this.fastNumbersCached = supportsFastNumbers(this);
+      }
+
+      return this.fastNumbersCached;
+    }
+  }]);
+
+  return Locale;
+}();
 
 /*
  * This file handles parsing for well-specified formats. Here's how it works:
@@ -74069,141 +68851,171 @@ class Locale {
  * Some extractions are super dumb and simpleParse and fromStrings help DRY them.
  */
 
-function combineRegexes(...regexes) {
-  const full = regexes.reduce((f, r) => f + r.source, "");
-  return RegExp(`^${full}$`);
+function combineRegexes() {
+  for (var _len = arguments.length, regexes = new Array(_len), _key = 0; _key < _len; _key++) {
+    regexes[_key] = arguments[_key];
+  }
+
+  var full = regexes.reduce(function (f, r) {
+    return f + r.source;
+  }, "");
+  return RegExp("^" + full + "$");
 }
 
-function combineExtractors(...extractors) {
-  return (m) =>
-    extractors
-      .reduce(
-        ([mergedVals, mergedZone, cursor], ex) => {
-          const [val, zone, next] = ex(m, cursor);
-          return [{ ...mergedVals, ...val }, mergedZone || zone, next];
-        },
-        [{}, null, 1]
-      )
-      .slice(0, 2);
+function combineExtractors() {
+  for (var _len2 = arguments.length, extractors = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    extractors[_key2] = arguments[_key2];
+  }
+
+  return function (m) {
+    return extractors.reduce(function (_ref, ex) {
+      var mergedVals = _ref[0],
+          mergedZone = _ref[1],
+          cursor = _ref[2];
+
+      var _ex = ex(m, cursor),
+          val = _ex[0],
+          zone = _ex[1],
+          next = _ex[2];
+
+      return [_extends({}, mergedVals, val), mergedZone || zone, next];
+    }, [{}, null, 1]).slice(0, 2);
+  };
 }
 
-function parse(s, ...patterns) {
+function parse(s) {
   if (s == null) {
     return [null, null];
   }
 
-  for (const [regex, extractor] of patterns) {
-    const m = regex.exec(s);
+  for (var _len3 = arguments.length, patterns = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+    patterns[_key3 - 1] = arguments[_key3];
+  }
+
+  for (var _i = 0, _patterns = patterns; _i < _patterns.length; _i++) {
+    var _patterns$_i = _patterns[_i],
+        regex = _patterns$_i[0],
+        extractor = _patterns$_i[1];
+    var m = regex.exec(s);
+
     if (m) {
       return extractor(m);
     }
   }
+
   return [null, null];
 }
 
-function simpleParse(...keys) {
-  return (match, cursor) => {
-    const ret = {};
-    let i;
+function simpleParse() {
+  for (var _len4 = arguments.length, keys = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+    keys[_key4] = arguments[_key4];
+  }
+
+  return function (match, cursor) {
+    var ret = {};
+    var i;
 
     for (i = 0; i < keys.length; i++) {
       ret[keys[i]] = parseInteger(match[cursor + i]);
     }
+
     return [ret, null, cursor + i];
   };
-}
+} // ISO and SQL parsing
 
-// ISO and SQL parsing
-const offsetRegex = /(?:(Z)|([+-]\d\d)(?::?(\d\d))?)/,
-  isoTimeBaseRegex = /(\d\d)(?::?(\d\d)(?::?(\d\d)(?:[.,](\d{1,30}))?)?)?/,
-  isoTimeRegex = RegExp(`${isoTimeBaseRegex.source}${offsetRegex.source}?`),
-  isoTimeExtensionRegex = RegExp(`(?:T${isoTimeRegex.source})?`),
-  isoYmdRegex = /([+-]\d{6}|\d{4})(?:-?(\d\d)(?:-?(\d\d))?)?/,
-  isoWeekRegex = /(\d{4})-?W(\d\d)(?:-?(\d))?/,
-  isoOrdinalRegex = /(\d{4})-?(\d{3})/,
-  extractISOWeekData = simpleParse("weekYear", "weekNumber", "weekDay"),
-  extractISOOrdinalData = simpleParse("year", "ordinal"),
-  sqlYmdRegex = /(\d{4})-(\d\d)-(\d\d)/, // dumbed-down version of the ISO one
-  sqlTimeRegex = RegExp(
-    `${isoTimeBaseRegex.source} ?(?:${offsetRegex.source}|(${ianaRegex.source}))?`
-  ),
-  sqlTimeExtensionRegex = RegExp(`(?: ${sqlTimeRegex.source})?`);
+
+var offsetRegex = /(?:(Z)|([+-]\d\d)(?::?(\d\d))?)/,
+    isoTimeBaseRegex = /(\d\d)(?::?(\d\d)(?::?(\d\d)(?:[.,](\d{1,30}))?)?)?/,
+    isoTimeRegex = RegExp("" + isoTimeBaseRegex.source + offsetRegex.source + "?"),
+    isoTimeExtensionRegex = RegExp("(?:T" + isoTimeRegex.source + ")?"),
+    isoYmdRegex = /([+-]\d{6}|\d{4})(?:-?(\d\d)(?:-?(\d\d))?)?/,
+    isoWeekRegex = /(\d{4})-?W(\d\d)(?:-?(\d))?/,
+    isoOrdinalRegex = /(\d{4})-?(\d{3})/,
+    extractISOWeekData = simpleParse("weekYear", "weekNumber", "weekDay"),
+    extractISOOrdinalData = simpleParse("year", "ordinal"),
+    sqlYmdRegex = /(\d{4})-(\d\d)-(\d\d)/,
+    // dumbed-down version of the ISO one
+sqlTimeRegex = RegExp(isoTimeBaseRegex.source + " ?(?:" + offsetRegex.source + "|(" + ianaRegex.source + "))?"),
+    sqlTimeExtensionRegex = RegExp("(?: " + sqlTimeRegex.source + ")?");
 
 function int(match, pos, fallback) {
-  const m = match[pos];
+  var m = match[pos];
   return isUndefined(m) ? fallback : parseInteger(m);
 }
 
 function extractISOYmd(match, cursor) {
-  const item = {
+  var item = {
     year: int(match, cursor),
     month: int(match, cursor + 1, 1),
-    day: int(match, cursor + 2, 1),
+    day: int(match, cursor + 2, 1)
   };
-
   return [item, null, cursor + 3];
 }
 
 function extractISOTime(match, cursor) {
-  const item = {
+  var item = {
     hours: int(match, cursor, 0),
     minutes: int(match, cursor + 1, 0),
     seconds: int(match, cursor + 2, 0),
-    milliseconds: parseMillis(match[cursor + 3]),
+    milliseconds: parseMillis(match[cursor + 3])
   };
-
   return [item, null, cursor + 4];
 }
 
 function extractISOOffset(match, cursor) {
-  const local = !match[cursor] && !match[cursor + 1],
-    fullOffset = signedOffset(match[cursor + 1], match[cursor + 2]),
-    zone = local ? null : FixedOffsetZone.instance(fullOffset);
+  var local = !match[cursor] && !match[cursor + 1],
+      fullOffset = signedOffset(match[cursor + 1], match[cursor + 2]),
+      zone = local ? null : FixedOffsetZone.instance(fullOffset);
   return [{}, zone, cursor + 3];
 }
 
 function extractIANAZone(match, cursor) {
-  const zone = match[cursor] ? IANAZone.create(match[cursor]) : null;
+  var zone = match[cursor] ? IANAZone.create(match[cursor]) : null;
   return [{}, zone, cursor + 1];
-}
+} // ISO time parsing
 
-// ISO time parsing
 
-const isoTimeOnly = RegExp(`^T?${isoTimeBaseRegex.source}$`);
+var isoTimeOnly = RegExp("^T?" + isoTimeBaseRegex.source + "$"); // ISO duration parsing
 
-// ISO duration parsing
-
-const isoDuration =
-  /^-?P(?:(?:(-?\d{1,9}(?:\.\d{1,9})?)Y)?(?:(-?\d{1,9}(?:\.\d{1,9})?)M)?(?:(-?\d{1,9}(?:\.\d{1,9})?)W)?(?:(-?\d{1,9}(?:\.\d{1,9})?)D)?(?:T(?:(-?\d{1,9}(?:\.\d{1,9})?)H)?(?:(-?\d{1,9}(?:\.\d{1,9})?)M)?(?:(-?\d{1,20})(?:[.,](-?\d{1,9}))?S)?)?)$/;
+var isoDuration = /^-?P(?:(?:(-?\d{1,9}(?:\.\d{1,9})?)Y)?(?:(-?\d{1,9}(?:\.\d{1,9})?)M)?(?:(-?\d{1,9}(?:\.\d{1,9})?)W)?(?:(-?\d{1,9}(?:\.\d{1,9})?)D)?(?:T(?:(-?\d{1,9}(?:\.\d{1,9})?)H)?(?:(-?\d{1,9}(?:\.\d{1,9})?)M)?(?:(-?\d{1,20})(?:[.,](-?\d{1,9}))?S)?)?)$/;
 
 function extractISODuration(match) {
-  const [s, yearStr, monthStr, weekStr, dayStr, hourStr, minuteStr, secondStr, millisecondsStr] =
-    match;
+  var s = match[0],
+      yearStr = match[1],
+      monthStr = match[2],
+      weekStr = match[3],
+      dayStr = match[4],
+      hourStr = match[5],
+      minuteStr = match[6],
+      secondStr = match[7],
+      millisecondsStr = match[8];
+  var hasNegativePrefix = s[0] === "-";
+  var negativeSeconds = secondStr && secondStr[0] === "-";
 
-  const hasNegativePrefix = s[0] === "-";
-  const negativeSeconds = secondStr && secondStr[0] === "-";
+  var maybeNegate = function maybeNegate(num, force) {
+    if (force === void 0) {
+      force = false;
+    }
 
-  const maybeNegate = (num, force = false) =>
-    num !== undefined && (force || (num && hasNegativePrefix)) ? -num : num;
+    return num !== undefined && (force || num && hasNegativePrefix) ? -num : num;
+  };
 
-  return [
-    {
-      years: maybeNegate(parseFloating(yearStr)),
-      months: maybeNegate(parseFloating(monthStr)),
-      weeks: maybeNegate(parseFloating(weekStr)),
-      days: maybeNegate(parseFloating(dayStr)),
-      hours: maybeNegate(parseFloating(hourStr)),
-      minutes: maybeNegate(parseFloating(minuteStr)),
-      seconds: maybeNegate(parseFloating(secondStr), secondStr === "-0"),
-      milliseconds: maybeNegate(parseMillis(millisecondsStr), negativeSeconds),
-    },
-  ];
-}
-
-// These are a little braindead. EDT *should* tell us that we're in, say, America/New_York
+  return [{
+    years: maybeNegate(parseFloating(yearStr)),
+    months: maybeNegate(parseFloating(monthStr)),
+    weeks: maybeNegate(parseFloating(weekStr)),
+    days: maybeNegate(parseFloating(dayStr)),
+    hours: maybeNegate(parseFloating(hourStr)),
+    minutes: maybeNegate(parseFloating(minuteStr)),
+    seconds: maybeNegate(parseFloating(secondStr), secondStr === "-0"),
+    milliseconds: maybeNegate(parseMillis(millisecondsStr), negativeSeconds)
+  }];
+} // These are a little braindead. EDT *should* tell us that we're in, say, America/New_York
 // and not just that we're in -240 *right now*. But since I don't think these are used that often
 // I'm just going to ignore that
-const obsOffsets = {
+
+
+var obsOffsets = {
   GMT: 0,
   EDT: -4 * 60,
   EST: -5 * 60,
@@ -74212,51 +69024,44 @@ const obsOffsets = {
   MDT: -6 * 60,
   MST: -7 * 60,
   PDT: -7 * 60,
-  PST: -8 * 60,
+  PST: -8 * 60
 };
 
 function fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr) {
-  const result = {
+  var result = {
     year: yearStr.length === 2 ? untruncateYear(parseInteger(yearStr)) : parseInteger(yearStr),
     month: monthsShort.indexOf(monthStr) + 1,
     day: parseInteger(dayStr),
     hour: parseInteger(hourStr),
-    minute: parseInteger(minuteStr),
+    minute: parseInteger(minuteStr)
   };
-
   if (secondStr) result.second = parseInteger(secondStr);
+
   if (weekdayStr) {
-    result.weekday =
-      weekdayStr.length > 3
-        ? weekdaysLong.indexOf(weekdayStr) + 1
-        : weekdaysShort.indexOf(weekdayStr) + 1;
+    result.weekday = weekdayStr.length > 3 ? weekdaysLong.indexOf(weekdayStr) + 1 : weekdaysShort.indexOf(weekdayStr) + 1;
   }
 
   return result;
-}
+} // RFC 2822/5322
 
-// RFC 2822/5322
-const rfc2822 =
-  /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|(?:([+-]\d\d)(\d\d)))$/;
+
+var rfc2822 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|(?:([+-]\d\d)(\d\d)))$/;
 
 function extractRFC2822(match) {
-  const [
-      ,
-      weekdayStr,
-      dayStr,
-      monthStr,
-      yearStr,
-      hourStr,
-      minuteStr,
-      secondStr,
-      obsOffset,
-      milOffset,
-      offHourStr,
-      offMinuteStr,
-    ] = match,
-    result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
+  var weekdayStr = match[1],
+      dayStr = match[2],
+      monthStr = match[3],
+      yearStr = match[4],
+      hourStr = match[5],
+      minuteStr = match[6],
+      secondStr = match[7],
+      obsOffset = match[8],
+      milOffset = match[9],
+      offHourStr = match[10],
+      offMinuteStr = match[11],
+      result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
+  var offset;
 
-  let offset;
   if (obsOffset) {
     offset = obsOffsets[obsOffset];
   } else if (milOffset) {
@@ -74270,256 +69075,210 @@ function extractRFC2822(match) {
 
 function preprocessRFC2822(s) {
   // Remove comments and folding whitespace and replace multiple-spaces with a single space
-  return s
-    .replace(/\([^)]*\)|[\n\t]/g, " ")
-    .replace(/(\s\s+)/g, " ")
-    .trim();
-}
+  return s.replace(/\([^)]*\)|[\n\t]/g, " ").replace(/(\s\s+)/g, " ").trim();
+} // http date
 
-// http date
 
-const rfc1123 =
-    /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), (\d\d) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}) (\d\d):(\d\d):(\d\d) GMT$/,
-  rfc850 =
-    /^(Monday|Tuesday|Wedsday|Thursday|Friday|Saturday|Sunday), (\d\d)-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-(\d\d) (\d\d):(\d\d):(\d\d) GMT$/,
-  ascii =
-    /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( \d|\d\d) (\d\d):(\d\d):(\d\d) (\d{4})$/;
+var rfc1123 = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), (\d\d) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}) (\d\d):(\d\d):(\d\d) GMT$/,
+    rfc850 = /^(Monday|Tuesday|Wedsday|Thursday|Friday|Saturday|Sunday), (\d\d)-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-(\d\d) (\d\d):(\d\d):(\d\d) GMT$/,
+    ascii = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( \d|\d\d) (\d\d):(\d\d):(\d\d) (\d{4})$/;
 
 function extractRFC1123Or850(match) {
-  const [, weekdayStr, dayStr, monthStr, yearStr, hourStr, minuteStr, secondStr] = match,
-    result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
+  var weekdayStr = match[1],
+      dayStr = match[2],
+      monthStr = match[3],
+      yearStr = match[4],
+      hourStr = match[5],
+      minuteStr = match[6],
+      secondStr = match[7],
+      result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
   return [result, FixedOffsetZone.utcInstance];
 }
 
 function extractASCII(match) {
-  const [, weekdayStr, monthStr, dayStr, hourStr, minuteStr, secondStr, yearStr] = match,
-    result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
+  var weekdayStr = match[1],
+      monthStr = match[2],
+      dayStr = match[3],
+      hourStr = match[4],
+      minuteStr = match[5],
+      secondStr = match[6],
+      yearStr = match[7],
+      result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
   return [result, FixedOffsetZone.utcInstance];
 }
 
-const isoYmdWithTimeExtensionRegex = combineRegexes(isoYmdRegex, isoTimeExtensionRegex);
-const isoWeekWithTimeExtensionRegex = combineRegexes(isoWeekRegex, isoTimeExtensionRegex);
-const isoOrdinalWithTimeExtensionRegex = combineRegexes(isoOrdinalRegex, isoTimeExtensionRegex);
-const isoTimeCombinedRegex = combineRegexes(isoTimeRegex);
-
-const extractISOYmdTimeAndOffset = combineExtractors(
-  extractISOYmd,
-  extractISOTime,
-  extractISOOffset
-);
-const extractISOWeekTimeAndOffset = combineExtractors(
-  extractISOWeekData,
-  extractISOTime,
-  extractISOOffset
-);
-const extractISOOrdinalDateAndTime = combineExtractors(
-  extractISOOrdinalData,
-  extractISOTime,
-  extractISOOffset
-);
-const extractISOTimeAndOffset = combineExtractors(extractISOTime, extractISOOffset);
-
+var isoYmdWithTimeExtensionRegex = combineRegexes(isoYmdRegex, isoTimeExtensionRegex);
+var isoWeekWithTimeExtensionRegex = combineRegexes(isoWeekRegex, isoTimeExtensionRegex);
+var isoOrdinalWithTimeExtensionRegex = combineRegexes(isoOrdinalRegex, isoTimeExtensionRegex);
+var isoTimeCombinedRegex = combineRegexes(isoTimeRegex);
+var extractISOYmdTimeAndOffset = combineExtractors(extractISOYmd, extractISOTime, extractISOOffset);
+var extractISOWeekTimeAndOffset = combineExtractors(extractISOWeekData, extractISOTime, extractISOOffset);
+var extractISOOrdinalDateAndTime = combineExtractors(extractISOOrdinalData, extractISOTime, extractISOOffset);
+var extractISOTimeAndOffset = combineExtractors(extractISOTime, extractISOOffset);
 /**
  * @private
  */
 
 function parseISODate(s) {
-  return parse(
-    s,
-    [isoYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset],
-    [isoWeekWithTimeExtensionRegex, extractISOWeekTimeAndOffset],
-    [isoOrdinalWithTimeExtensionRegex, extractISOOrdinalDateAndTime],
-    [isoTimeCombinedRegex, extractISOTimeAndOffset]
-  );
+  return parse(s, [isoYmdWithTimeExtensionRegex, extractISOYmdTimeAndOffset], [isoWeekWithTimeExtensionRegex, extractISOWeekTimeAndOffset], [isoOrdinalWithTimeExtensionRegex, extractISOOrdinalDateAndTime], [isoTimeCombinedRegex, extractISOTimeAndOffset]);
 }
-
 function parseRFC2822Date(s) {
   return parse(preprocessRFC2822(s), [rfc2822, extractRFC2822]);
 }
-
 function parseHTTPDate(s) {
-  return parse(
-    s,
-    [rfc1123, extractRFC1123Or850],
-    [rfc850, extractRFC1123Or850],
-    [ascii, extractASCII]
-  );
+  return parse(s, [rfc1123, extractRFC1123Or850], [rfc850, extractRFC1123Or850], [ascii, extractASCII]);
 }
-
 function parseISODuration(s) {
   return parse(s, [isoDuration, extractISODuration]);
 }
-
-const extractISOTimeOnly = combineExtractors(extractISOTime);
-
+var extractISOTimeOnly = combineExtractors(extractISOTime);
 function parseISOTimeOnly(s) {
   return parse(s, [isoTimeOnly, extractISOTimeOnly]);
 }
-
-const sqlYmdWithTimeExtensionRegex = combineRegexes(sqlYmdRegex, sqlTimeExtensionRegex);
-const sqlTimeCombinedRegex = combineRegexes(sqlTimeRegex);
-
-const extractISOYmdTimeOffsetAndIANAZone = combineExtractors(
-  extractISOYmd,
-  extractISOTime,
-  extractISOOffset,
-  extractIANAZone
-);
-const extractISOTimeOffsetAndIANAZone = combineExtractors(
-  extractISOTime,
-  extractISOOffset,
-  extractIANAZone
-);
-
+var sqlYmdWithTimeExtensionRegex = combineRegexes(sqlYmdRegex, sqlTimeExtensionRegex);
+var sqlTimeCombinedRegex = combineRegexes(sqlTimeRegex);
+var extractISOYmdTimeOffsetAndIANAZone = combineExtractors(extractISOYmd, extractISOTime, extractISOOffset, extractIANAZone);
+var extractISOTimeOffsetAndIANAZone = combineExtractors(extractISOTime, extractISOOffset, extractIANAZone);
 function parseSQL(s) {
-  return parse(
-    s,
-    [sqlYmdWithTimeExtensionRegex, extractISOYmdTimeOffsetAndIANAZone],
-    [sqlTimeCombinedRegex, extractISOTimeOffsetAndIANAZone]
-  );
+  return parse(s, [sqlYmdWithTimeExtensionRegex, extractISOYmdTimeOffsetAndIANAZone], [sqlTimeCombinedRegex, extractISOTimeOffsetAndIANAZone]);
 }
 
-const INVALID$2 = "Invalid Duration";
+var INVALID$2 = "Invalid Duration"; // unit conversion constants
 
-// unit conversion constants
-const lowOrderMatrix = {
-    weeks: {
-      days: 7,
-      hours: 7 * 24,
-      minutes: 7 * 24 * 60,
-      seconds: 7 * 24 * 60 * 60,
-      milliseconds: 7 * 24 * 60 * 60 * 1000,
-    },
-    days: {
-      hours: 24,
-      minutes: 24 * 60,
-      seconds: 24 * 60 * 60,
-      milliseconds: 24 * 60 * 60 * 1000,
-    },
-    hours: { minutes: 60, seconds: 60 * 60, milliseconds: 60 * 60 * 1000 },
-    minutes: { seconds: 60, milliseconds: 60 * 1000 },
-    seconds: { milliseconds: 1000 },
+var lowOrderMatrix = {
+  weeks: {
+    days: 7,
+    hours: 7 * 24,
+    minutes: 7 * 24 * 60,
+    seconds: 7 * 24 * 60 * 60,
+    milliseconds: 7 * 24 * 60 * 60 * 1000
   },
-  casualMatrix = {
-    years: {
-      quarters: 4,
-      months: 12,
-      weeks: 52,
-      days: 365,
-      hours: 365 * 24,
-      minutes: 365 * 24 * 60,
-      seconds: 365 * 24 * 60 * 60,
-      milliseconds: 365 * 24 * 60 * 60 * 1000,
-    },
-    quarters: {
-      months: 3,
-      weeks: 13,
-      days: 91,
-      hours: 91 * 24,
-      minutes: 91 * 24 * 60,
-      seconds: 91 * 24 * 60 * 60,
-      milliseconds: 91 * 24 * 60 * 60 * 1000,
-    },
-    months: {
-      weeks: 4,
-      days: 30,
-      hours: 30 * 24,
-      minutes: 30 * 24 * 60,
-      seconds: 30 * 24 * 60 * 60,
-      milliseconds: 30 * 24 * 60 * 60 * 1000,
-    },
-
-    ...lowOrderMatrix,
+  days: {
+    hours: 24,
+    minutes: 24 * 60,
+    seconds: 24 * 60 * 60,
+    milliseconds: 24 * 60 * 60 * 1000
   },
-  daysInYearAccurate = 146097.0 / 400,
-  daysInMonthAccurate = 146097.0 / 4800,
-  accurateMatrix = {
-    years: {
-      quarters: 4,
-      months: 12,
-      weeks: daysInYearAccurate / 7,
-      days: daysInYearAccurate,
-      hours: daysInYearAccurate * 24,
-      minutes: daysInYearAccurate * 24 * 60,
-      seconds: daysInYearAccurate * 24 * 60 * 60,
-      milliseconds: daysInYearAccurate * 24 * 60 * 60 * 1000,
-    },
-    quarters: {
-      months: 3,
-      weeks: daysInYearAccurate / 28,
-      days: daysInYearAccurate / 4,
-      hours: (daysInYearAccurate * 24) / 4,
-      minutes: (daysInYearAccurate * 24 * 60) / 4,
-      seconds: (daysInYearAccurate * 24 * 60 * 60) / 4,
-      milliseconds: (daysInYearAccurate * 24 * 60 * 60 * 1000) / 4,
-    },
-    months: {
-      weeks: daysInMonthAccurate / 7,
-      days: daysInMonthAccurate,
-      hours: daysInMonthAccurate * 24,
-      minutes: daysInMonthAccurate * 24 * 60,
-      seconds: daysInMonthAccurate * 24 * 60 * 60,
-      milliseconds: daysInMonthAccurate * 24 * 60 * 60 * 1000,
-    },
-    ...lowOrderMatrix,
-  };
+  hours: {
+    minutes: 60,
+    seconds: 60 * 60,
+    milliseconds: 60 * 60 * 1000
+  },
+  minutes: {
+    seconds: 60,
+    milliseconds: 60 * 1000
+  },
+  seconds: {
+    milliseconds: 1000
+  }
+},
+    casualMatrix = _extends({
+  years: {
+    quarters: 4,
+    months: 12,
+    weeks: 52,
+    days: 365,
+    hours: 365 * 24,
+    minutes: 365 * 24 * 60,
+    seconds: 365 * 24 * 60 * 60,
+    milliseconds: 365 * 24 * 60 * 60 * 1000
+  },
+  quarters: {
+    months: 3,
+    weeks: 13,
+    days: 91,
+    hours: 91 * 24,
+    minutes: 91 * 24 * 60,
+    seconds: 91 * 24 * 60 * 60,
+    milliseconds: 91 * 24 * 60 * 60 * 1000
+  },
+  months: {
+    weeks: 4,
+    days: 30,
+    hours: 30 * 24,
+    minutes: 30 * 24 * 60,
+    seconds: 30 * 24 * 60 * 60,
+    milliseconds: 30 * 24 * 60 * 60 * 1000
+  }
+}, lowOrderMatrix),
+    daysInYearAccurate = 146097.0 / 400,
+    daysInMonthAccurate = 146097.0 / 4800,
+    accurateMatrix = _extends({
+  years: {
+    quarters: 4,
+    months: 12,
+    weeks: daysInYearAccurate / 7,
+    days: daysInYearAccurate,
+    hours: daysInYearAccurate * 24,
+    minutes: daysInYearAccurate * 24 * 60,
+    seconds: daysInYearAccurate * 24 * 60 * 60,
+    milliseconds: daysInYearAccurate * 24 * 60 * 60 * 1000
+  },
+  quarters: {
+    months: 3,
+    weeks: daysInYearAccurate / 28,
+    days: daysInYearAccurate / 4,
+    hours: daysInYearAccurate * 24 / 4,
+    minutes: daysInYearAccurate * 24 * 60 / 4,
+    seconds: daysInYearAccurate * 24 * 60 * 60 / 4,
+    milliseconds: daysInYearAccurate * 24 * 60 * 60 * 1000 / 4
+  },
+  months: {
+    weeks: daysInMonthAccurate / 7,
+    days: daysInMonthAccurate,
+    hours: daysInMonthAccurate * 24,
+    minutes: daysInMonthAccurate * 24 * 60,
+    seconds: daysInMonthAccurate * 24 * 60 * 60,
+    milliseconds: daysInMonthAccurate * 24 * 60 * 60 * 1000
+  }
+}, lowOrderMatrix); // units ordered by size
 
-// units ordered by size
-const orderedUnits$1 = [
-  "years",
-  "quarters",
-  "months",
-  "weeks",
-  "days",
-  "hours",
-  "minutes",
-  "seconds",
-  "milliseconds",
-];
+var orderedUnits$1 = ["years", "quarters", "months", "weeks", "days", "hours", "minutes", "seconds", "milliseconds"];
+var reverseUnits = orderedUnits$1.slice(0).reverse(); // clone really means "create another instance just like this one, but with these changes"
 
-const reverseUnits = orderedUnits$1.slice(0).reverse();
+function clone$1(dur, alts, clear) {
+  if (clear === void 0) {
+    clear = false;
+  }
 
-// clone really means "create another instance just like this one, but with these changes"
-function clone$1(dur, alts, clear = false) {
   // deep merge for vals
-  const conf = {
-    values: clear ? alts.values : { ...dur.values, ...(alts.values || {}) },
+  var conf = {
+    values: clear ? alts.values : _extends({}, dur.values, alts.values || {}),
     loc: dur.loc.clone(alts.loc),
-    conversionAccuracy: alts.conversionAccuracy || dur.conversionAccuracy,
+    conversionAccuracy: alts.conversionAccuracy || dur.conversionAccuracy
   };
   return new Duration(conf);
 }
 
 function antiTrunc(n) {
   return n < 0 ? Math.floor(n) : Math.ceil(n);
-}
+} // NB: mutates parameters
 
-// NB: mutates parameters
+
 function convert(matrix, fromMap, fromUnit, toMap, toUnit) {
-  const conv = matrix[toUnit][fromUnit],
-    raw = fromMap[fromUnit] / conv,
-    sameSign = Math.sign(raw) === Math.sign(toMap[toUnit]),
-    // ok, so this is wild, but see the matrix in the tests
-    added =
-      !sameSign && toMap[toUnit] !== 0 && Math.abs(raw) <= 1 ? antiTrunc(raw) : Math.trunc(raw);
+  var conv = matrix[toUnit][fromUnit],
+      raw = fromMap[fromUnit] / conv,
+      sameSign = Math.sign(raw) === Math.sign(toMap[toUnit]),
+      // ok, so this is wild, but see the matrix in the tests
+  added = !sameSign && toMap[toUnit] !== 0 && Math.abs(raw) <= 1 ? antiTrunc(raw) : Math.trunc(raw);
   toMap[toUnit] += added;
   fromMap[fromUnit] -= added * conv;
-}
+} // NB: mutates parameters
 
-// NB: mutates parameters
+
 function normalizeValues(matrix, vals) {
-  reverseUnits.reduce((previous, current) => {
+  reverseUnits.reduce(function (previous, current) {
     if (!isUndefined(vals[current])) {
       if (previous) {
         convert(matrix, vals, previous, vals, current);
       }
+
       return current;
     } else {
       return previous;
     }
   }, null);
 }
-
 /**
  * A Duration object represents a period of time, like "2 months" or "1 day, 1 hour". Conceptually, it's just a map of units to their quantities, accompanied by some additional configuration and methods for creating, parsing, interrogating, transforming, and formatting them. They can be used on their own or in conjunction with other Luxon types; for example, you can use {@link DateTime#plus} to add a Duration object to a DateTime, producing another DateTime.
  *
@@ -74533,38 +69292,45 @@ function normalizeValues(matrix, vals) {
  *
  * There's are more methods documented below. In addition, for more information on subtler topics like internationalization and validity, see the external documentation.
  */
-class Duration {
+
+
+var Duration = /*#__PURE__*/function () {
   /**
    * @private
    */
-  constructor(config) {
-    const accurate = config.conversionAccuracy === "longterm" || false;
+  function Duration(config) {
+    var accurate = config.conversionAccuracy === "longterm" || false;
     /**
      * @access private
      */
+
     this.values = config.values;
     /**
      * @access private
      */
+
     this.loc = config.loc || Locale.create();
     /**
      * @access private
      */
+
     this.conversionAccuracy = accurate ? "longterm" : "casual";
     /**
      * @access private
      */
+
     this.invalid = config.invalid || null;
     /**
      * @access private
      */
+
     this.matrix = accurate ? accurateMatrix : casualMatrix;
     /**
      * @access private
      */
+
     this.isLuxonDuration = true;
   }
-
   /**
    * Create Duration from a number of milliseconds.
    * @param {number} count of milliseconds
@@ -74574,10 +69340,13 @@ class Duration {
    * @param {string} [opts.conversionAccuracy='casual'] - the conversion system to use
    * @return {Duration}
    */
-  static fromMillis(count, opts) {
-    return Duration.fromObject({ milliseconds: count }, opts);
-  }
 
+
+  Duration.fromMillis = function fromMillis(count, opts) {
+    return Duration.fromObject({
+      milliseconds: count
+    }, opts);
+  }
   /**
    * Create a Duration from a JavaScript object with keys like 'years' and 'hours'.
    * If this object is empty then a zero milliseconds duration is returned.
@@ -74597,22 +69366,23 @@ class Duration {
    * @param {string} [opts.conversionAccuracy='casual'] - the conversion system to use
    * @return {Duration}
    */
-  static fromObject(obj, opts = {}) {
+  ;
+
+  Duration.fromObject = function fromObject(obj, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     if (obj == null || typeof obj !== "object") {
-      throw new InvalidArgumentError(
-        `Duration.fromObject: argument expected to be an object, got ${
-          obj === null ? "null" : typeof obj
-        }`
-      );
+      throw new InvalidArgumentError("Duration.fromObject: argument expected to be an object, got " + (obj === null ? "null" : typeof obj));
     }
 
     return new Duration({
       values: normalizeObject(obj, Duration.normalizeUnit),
       loc: Locale.fromObject(opts),
-      conversionAccuracy: opts.conversionAccuracy,
+      conversionAccuracy: opts.conversionAccuracy
     });
   }
-
   /**
    * Create a Duration from DurationLike.
    *
@@ -74623,7 +69393,9 @@ class Duration {
    * - Duration instance
    * @return {Duration}
    */
-  static fromDurationLike(durationLike) {
+  ;
+
+  Duration.fromDurationLike = function fromDurationLike(durationLike) {
     if (isNumber(durationLike)) {
       return Duration.fromMillis(durationLike);
     } else if (Duration.isDuration(durationLike)) {
@@ -74631,12 +69403,9 @@ class Duration {
     } else if (typeof durationLike === "object") {
       return Duration.fromObject(durationLike);
     } else {
-      throw new InvalidArgumentError(
-        `Unknown duration argument ${durationLike} of type ${typeof durationLike}`
-      );
+      throw new InvalidArgumentError("Unknown duration argument " + durationLike + " of type " + typeof durationLike);
     }
   }
-
   /**
    * Create a Duration from an ISO 8601 duration string.
    * @param {string} text - text to parse
@@ -74650,15 +69419,18 @@ class Duration {
    * @example Duration.fromISO('P5Y3M').toObject() //=> { years: 5, months: 3 }
    * @return {Duration}
    */
-  static fromISO(text, opts) {
-    const [parsed] = parseISODuration(text);
+  ;
+
+  Duration.fromISO = function fromISO(text, opts) {
+    var _parseISODuration = parseISODuration(text),
+        parsed = _parseISODuration[0];
+
     if (parsed) {
       return Duration.fromObject(parsed, opts);
     } else {
-      return Duration.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
+      return Duration.invalid("unparsable", "the input \"" + text + "\" can't be parsed as ISO 8601");
     }
   }
-
   /**
    * Create a Duration from an ISO 8601 time string.
    * @param {string} text - text to parse
@@ -74674,40 +69446,52 @@ class Duration {
    * @example Duration.fromISOTime('T1100').toObject() //=> { hours: 11, minutes: 0, seconds: 0 }
    * @return {Duration}
    */
-  static fromISOTime(text, opts) {
-    const [parsed] = parseISOTimeOnly(text);
+  ;
+
+  Duration.fromISOTime = function fromISOTime(text, opts) {
+    var _parseISOTimeOnly = parseISOTimeOnly(text),
+        parsed = _parseISOTimeOnly[0];
+
     if (parsed) {
       return Duration.fromObject(parsed, opts);
     } else {
-      return Duration.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
+      return Duration.invalid("unparsable", "the input \"" + text + "\" can't be parsed as ISO 8601");
     }
   }
-
   /**
    * Create an invalid Duration.
    * @param {string} reason - simple string of why this datetime is invalid. Should not contain parameters or anything else data-dependent
    * @param {string} [explanation=null] - longer explanation, may include parameters and other useful debugging information
    * @return {Duration}
    */
-  static invalid(reason, explanation = null) {
+  ;
+
+  Duration.invalid = function invalid(reason, explanation) {
+    if (explanation === void 0) {
+      explanation = null;
+    }
+
     if (!reason) {
       throw new InvalidArgumentError("need to specify a reason the Duration is invalid");
     }
 
-    const invalid = reason instanceof Invalid ? reason : new Invalid(reason, explanation);
+    var invalid = reason instanceof Invalid ? reason : new Invalid(reason, explanation);
 
     if (Settings.throwOnInvalid) {
       throw new InvalidDurationError(invalid);
     } else {
-      return new Duration({ invalid });
+      return new Duration({
+        invalid: invalid
+      });
     }
   }
-
   /**
    * @private
    */
-  static normalizeUnit(unit) {
-    const normalized = {
+  ;
+
+  Duration.normalizeUnit = function normalizeUnit(unit) {
+    var normalized = {
       year: "years",
       years: "years",
       quarter: "quarters",
@@ -74725,39 +69509,28 @@ class Duration {
       second: "seconds",
       seconds: "seconds",
       millisecond: "milliseconds",
-      milliseconds: "milliseconds",
+      milliseconds: "milliseconds"
     }[unit ? unit.toLowerCase() : unit];
-
     if (!normalized) throw new InvalidUnitError(unit);
-
     return normalized;
   }
-
   /**
    * Check if an object is a Duration. Works across context boundaries
    * @param {object} o
    * @return {boolean}
    */
-  static isDuration(o) {
-    return (o && o.isLuxonDuration) || false;
-  }
+  ;
 
+  Duration.isDuration = function isDuration(o) {
+    return o && o.isLuxonDuration || false;
+  }
   /**
    * Get  the locale of a Duration, such 'en-GB'
    * @type {string}
    */
-  get locale() {
-    return this.isValid ? this.loc.locale : null;
-  }
+  ;
 
-  /**
-   * Get the numbering system of a Duration, such 'beng'. The numbering system is used when formatting the Duration
-   *
-   * @type {string}
-   */
-  get numberingSystem() {
-    return this.isValid ? this.loc.numberingSystem : null;
-  }
+  var _proto = Duration.prototype;
 
   /**
    * Returns a string representation of this Duration formatted according to the specified format string. You may use these tokens:
@@ -74779,17 +69552,18 @@ class Duration {
    * @example Duration.fromObject({ years: 1, days: 6, seconds: 2 }).toFormat("M S") //=> "12 518402000"
    * @return {string}
    */
-  toFormat(fmt, opts = {}) {
-    // reverse-compat since 1.2; we always round down now, never up, and we do it by default
-    const fmtOpts = {
-      ...opts,
-      floor: opts.round !== false && opts.floor !== false,
-    };
-    return this.isValid
-      ? Formatter.create(this.loc, fmtOpts).formatDurationFromString(this, fmt)
-      : INVALID$2;
-  }
+  _proto.toFormat = function toFormat(fmt, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
 
+    // reverse-compat since 1.2; we always round down now, never up, and we do it by default
+    var fmtOpts = _extends({}, opts, {
+      floor: opts.round !== false && opts.floor !== false
+    });
+
+    return this.isValid ? Formatter.create(this.loc, fmtOpts).formatDurationFromString(this, fmt) : INVALID$2;
+  }
   /**
    * Returns a string representation of a Duration with all units included
    * To modify its behavior use the `listStyle` and any Intl.NumberFormat option, though `unitDisplay` is especially relevant. See {@link Intl.NumberFormat}.
@@ -74802,34 +69576,47 @@ class Duration {
    * dur.toHuman({ unitDisplay: "short" }) //=> '1 day, 5 hr, 6 min'
    * ```
    */
-  toHuman(opts = {}) {
-    const l = orderedUnits$1
-      .map((unit) => {
-        const val = this.values[unit];
-        if (isUndefined(val)) {
-          return null;
-        }
-        return this.loc
-          .numberFormatter({ style: "unit", unitDisplay: "long", ...opts, unit: unit.slice(0, -1) })
-          .format(val);
-      })
-      .filter((n) => n);
+  ;
 
-    return this.loc
-      .listFormatter({ type: "conjunction", style: opts.listStyle || "narrow", ...opts })
-      .format(l);
+  _proto.toHuman = function toHuman(opts) {
+    var _this = this;
+
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    var l = orderedUnits$1.map(function (unit) {
+      var val = _this.values[unit];
+
+      if (isUndefined(val)) {
+        return null;
+      }
+
+      return _this.loc.numberFormatter(_extends({
+        style: "unit",
+        unitDisplay: "long"
+      }, opts, {
+        unit: unit.slice(0, -1)
+      })).format(val);
+    }).filter(function (n) {
+      return n;
+    });
+    return this.loc.listFormatter(_extends({
+      type: "conjunction",
+      style: opts.listStyle || "narrow"
+    }, opts)).format(l);
   }
-
   /**
    * Returns a JavaScript object with this Duration's values.
    * @example Duration.fromObject({ years: 1, days: 6, seconds: 2 }).toObject() //=> { years: 1, days: 6, seconds: 2 }
    * @return {Object}
    */
-  toObject() {
-    if (!this.isValid) return {};
-    return { ...this.values };
-  }
+  ;
 
+  _proto.toObject = function toObject() {
+    if (!this.isValid) return {};
+    return _extends({}, this.values);
+  }
   /**
    * Returns an ISO 8601-compliant string representation of this Duration.
    * @see https://en.wikipedia.org/wiki/ISO_8601#Durations
@@ -74840,27 +69627,25 @@ class Duration {
    * @example Duration.fromObject({ milliseconds: 6 }).toISO() //=> 'PT0.006S'
    * @return {string}
    */
-  toISO() {
+  ;
+
+  _proto.toISO = function toISO() {
     // we could use the formatter, but this is an easier way to get the minimum string
     if (!this.isValid) return null;
-
-    let s = "P";
+    var s = "P";
     if (this.years !== 0) s += this.years + "Y";
     if (this.months !== 0 || this.quarters !== 0) s += this.months + this.quarters * 3 + "M";
     if (this.weeks !== 0) s += this.weeks + "W";
     if (this.days !== 0) s += this.days + "D";
-    if (this.hours !== 0 || this.minutes !== 0 || this.seconds !== 0 || this.milliseconds !== 0)
-      s += "T";
+    if (this.hours !== 0 || this.minutes !== 0 || this.seconds !== 0 || this.milliseconds !== 0) s += "T";
     if (this.hours !== 0) s += this.hours + "H";
     if (this.minutes !== 0) s += this.minutes + "M";
-    if (this.seconds !== 0 || this.milliseconds !== 0)
-      // this will handle "floating point madness" by removing extra decimal places
+    if (this.seconds !== 0 || this.milliseconds !== 0) // this will handle "floating point madness" by removing extra decimal places
       // https://stackoverflow.com/questions/588004/is-floating-point-math-broken
       s += roundTo(this.seconds + this.milliseconds / 1000, 3) + "S";
     if (s === "P") s += "T0S";
     return s;
   }
-
   /**
    * Returns an ISO 8601-compliant string representation of this Duration, formatted as a time of day.
    * Note that this will return null if the duration is invalid, negative, or equal to or greater than 24 hours.
@@ -74877,32 +69662,34 @@ class Duration {
    * @example Duration.fromObject({ hours: 11 }).toISOTime({ format: 'basic' }) //=> '110000.000'
    * @return {string}
    */
-  toISOTime(opts = {}) {
+  ;
+
+  _proto.toISOTime = function toISOTime(opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     if (!this.isValid) return null;
-
-    const millis = this.toMillis();
+    var millis = this.toMillis();
     if (millis < 0 || millis >= 86400000) return null;
-
-    opts = {
+    opts = _extends({
       suppressMilliseconds: false,
       suppressSeconds: false,
       includePrefix: false,
-      format: "extended",
-      ...opts,
-    };
-
-    const value = this.shiftTo("hours", "minutes", "seconds", "milliseconds");
-
-    let fmt = opts.format === "basic" ? "hhmm" : "hh:mm";
+      format: "extended"
+    }, opts);
+    var value = this.shiftTo("hours", "minutes", "seconds", "milliseconds");
+    var fmt = opts.format === "basic" ? "hhmm" : "hh:mm";
 
     if (!opts.suppressSeconds || value.seconds !== 0 || value.milliseconds !== 0) {
       fmt += opts.format === "basic" ? "ss" : ":ss";
+
       if (!opts.suppressMilliseconds || value.milliseconds !== 0) {
         fmt += ".SSS";
       }
     }
 
-    let str = value.toFormat(fmt);
+    var str = value.toFormat(fmt);
 
     if (opts.includePrefix) {
       str = "T" + str;
@@ -74910,71 +69697,78 @@ class Duration {
 
     return str;
   }
-
   /**
    * Returns an ISO 8601 representation of this Duration appropriate for use in JSON.
    * @return {string}
    */
-  toJSON() {
+  ;
+
+  _proto.toJSON = function toJSON() {
     return this.toISO();
   }
-
   /**
    * Returns an ISO 8601 representation of this Duration appropriate for use in debugging.
    * @return {string}
    */
-  toString() {
+  ;
+
+  _proto.toString = function toString() {
     return this.toISO();
   }
-
   /**
    * Returns an milliseconds value of this Duration.
    * @return {number}
    */
-  toMillis() {
+  ;
+
+  _proto.toMillis = function toMillis() {
     return this.as("milliseconds");
   }
-
   /**
    * Returns an milliseconds value of this Duration. Alias of {@link toMillis}
    * @return {number}
    */
-  valueOf() {
+  ;
+
+  _proto.valueOf = function valueOf() {
     return this.toMillis();
   }
-
   /**
    * Make this Duration longer by the specified amount. Return a newly-constructed Duration.
    * @param {Duration|Object|number} duration - The amount to add. Either a Luxon Duration, a number of milliseconds, the object argument to Duration.fromObject()
    * @return {Duration}
    */
-  plus(duration) {
+  ;
+
+  _proto.plus = function plus(duration) {
     if (!this.isValid) return this;
+    var dur = Duration.fromDurationLike(duration),
+        result = {};
 
-    const dur = Duration.fromDurationLike(duration),
-      result = {};
+    for (var _iterator = _createForOfIteratorHelperLoose(orderedUnits$1), _step; !(_step = _iterator()).done;) {
+      var k = _step.value;
 
-    for (const k of orderedUnits$1) {
       if (hasOwnProperty(dur.values, k) || hasOwnProperty(this.values, k)) {
         result[k] = dur.get(k) + this.get(k);
       }
     }
 
-    return clone$1(this, { values: result }, true);
+    return clone$1(this, {
+      values: result
+    }, true);
   }
-
   /**
    * Make this Duration shorter by the specified amount. Return a newly-constructed Duration.
    * @param {Duration|Object|number} duration - The amount to subtract. Either a Luxon Duration, a number of milliseconds, the object argument to Duration.fromObject()
    * @return {Duration}
    */
-  minus(duration) {
-    if (!this.isValid) return this;
+  ;
 
-    const dur = Duration.fromDurationLike(duration);
+  _proto.minus = function minus(duration) {
+    if (!this.isValid) return this;
+    var dur = Duration.fromDurationLike(duration);
     return this.plus(dur.negate());
   }
-
   /**
    * Scale this Duration by the specified amount. Return a newly-constructed Duration.
    * @param {function} fn - The function to apply to each unit. Arity is 1 or 2: the value of the unit and, optionally, the unit name. Must return a number.
@@ -74982,15 +69776,21 @@ class Duration {
    * @example Duration.fromObject({ hours: 1, minutes: 30 }).mapUnits((x, u) => u === "hour" ? x * 2 : x) //=> { hours: 2, minutes: 30 }
    * @return {Duration}
    */
-  mapUnits(fn) {
+  ;
+
+  _proto.mapUnits = function mapUnits(fn) {
     if (!this.isValid) return this;
-    const result = {};
-    for (const k of Object.keys(this.values)) {
+    var result = {};
+
+    for (var _i = 0, _Object$keys = Object.keys(this.values); _i < _Object$keys.length; _i++) {
+      var k = _Object$keys[_i];
       result[k] = asNumber(fn(this.values[k], k));
     }
-    return clone$1(this, { values: result }, true);
-  }
 
+    return clone$1(this, {
+      values: result
+    }, true);
+  }
   /**
    * Get the value of unit.
    * @param {string} unit - a unit such as 'minute' or 'day'
@@ -74999,10 +69799,11 @@ class Duration {
    * @example Duration.fromObject({years: 2, days: 3}).get('days') //=> 3
    * @return {number}
    */
-  get(unit) {
+  ;
+
+  _proto.get = function get(unit) {
     return this[Duration.normalizeUnit(unit)];
   }
-
   /**
    * "Set" the values of specified units. Return a newly-constructed Duration.
    * @param {Object} values - a mapping of units to numbers
@@ -75010,21 +69811,37 @@ class Duration {
    * @example dur.set({ hours: 8, minutes: 30 })
    * @return {Duration}
    */
-  set(values) {
+  ;
+
+  _proto.set = function set(values) {
     if (!this.isValid) return this;
 
-    const mixed = { ...this.values, ...normalizeObject(values, Duration.normalizeUnit) };
-    return clone$1(this, { values: mixed });
-  }
+    var mixed = _extends({}, this.values, normalizeObject(values, Duration.normalizeUnit));
 
+    return clone$1(this, {
+      values: mixed
+    });
+  }
   /**
    * "Set" the locale and/or numberingSystem.  Returns a newly-constructed Duration.
    * @example dur.reconfigure({ locale: 'en-GB' })
    * @return {Duration}
    */
-  reconfigure({ locale, numberingSystem, conversionAccuracy } = {}) {
-    const loc = this.loc.clone({ locale, numberingSystem }),
-      opts = { loc };
+  ;
+
+  _proto.reconfigure = function reconfigure(_temp) {
+    var _ref = _temp === void 0 ? {} : _temp,
+        locale = _ref.locale,
+        numberingSystem = _ref.numberingSystem,
+        conversionAccuracy = _ref.conversionAccuracy;
+
+    var loc = this.loc.clone({
+      locale: locale,
+      numberingSystem: numberingSystem
+    }),
+        opts = {
+      loc: loc
+    };
 
     if (conversionAccuracy) {
       opts.conversionAccuracy = conversionAccuracy;
@@ -75032,7 +69849,6 @@ class Duration {
 
     return clone$1(this, opts);
   }
-
   /**
    * Return the length of the duration in the specified unit.
    * @param {string} unit - a unit such as 'minutes' or 'days'
@@ -75041,197 +69857,122 @@ class Duration {
    * @example Duration.fromObject({hours: 60}).as('days') //=> 2.5
    * @return {number}
    */
-  as(unit) {
+  ;
+
+  _proto.as = function as(unit) {
     return this.isValid ? this.shiftTo(unit).get(unit) : NaN;
   }
-
   /**
    * Reduce this Duration to its canonical representation in its current units.
    * @example Duration.fromObject({ years: 2, days: 5000 }).normalize().toObject() //=> { years: 15, days: 255 }
    * @example Duration.fromObject({ hours: 12, minutes: -45 }).normalize().toObject() //=> { hours: 11, minutes: 15 }
    * @return {Duration}
    */
-  normalize() {
-    if (!this.isValid) return this;
-    const vals = this.toObject();
-    normalizeValues(this.matrix, vals);
-    return clone$1(this, { values: vals }, true);
-  }
+  ;
 
+  _proto.normalize = function normalize() {
+    if (!this.isValid) return this;
+    var vals = this.toObject();
+    normalizeValues(this.matrix, vals);
+    return clone$1(this, {
+      values: vals
+    }, true);
+  }
   /**
    * Convert this Duration into its representation in a different set of units.
    * @example Duration.fromObject({ hours: 1, seconds: 30 }).shiftTo('minutes', 'milliseconds').toObject() //=> { minutes: 60, milliseconds: 30000 }
    * @return {Duration}
    */
-  shiftTo(...units) {
+  ;
+
+  _proto.shiftTo = function shiftTo() {
+    for (var _len = arguments.length, units = new Array(_len), _key = 0; _key < _len; _key++) {
+      units[_key] = arguments[_key];
+    }
+
     if (!this.isValid) return this;
 
     if (units.length === 0) {
       return this;
     }
 
-    units = units.map((u) => Duration.normalizeUnit(u));
+    units = units.map(function (u) {
+      return Duration.normalizeUnit(u);
+    });
+    var built = {},
+        accumulated = {},
+        vals = this.toObject();
+    var lastUnit;
 
-    const built = {},
-      accumulated = {},
-      vals = this.toObject();
-    let lastUnit;
+    for (var _iterator2 = _createForOfIteratorHelperLoose(orderedUnits$1), _step2; !(_step2 = _iterator2()).done;) {
+      var k = _step2.value;
 
-    for (const k of orderedUnits$1) {
       if (units.indexOf(k) >= 0) {
         lastUnit = k;
+        var own = 0; // anything we haven't boiled down yet should get boiled to this unit
 
-        let own = 0;
-
-        // anything we haven't boiled down yet should get boiled to this unit
-        for (const ak in accumulated) {
+        for (var ak in accumulated) {
           own += this.matrix[ak][k] * accumulated[ak];
           accumulated[ak] = 0;
-        }
+        } // plus anything that's already in this unit
 
-        // plus anything that's already in this unit
+
         if (isNumber(vals[k])) {
           own += vals[k];
         }
 
-        const i = Math.trunc(own);
+        var i = Math.trunc(own);
         built[k] = i;
-        accumulated[k] = (own * 1000 - i * 1000) / 1000;
+        accumulated[k] = (own * 1000 - i * 1000) / 1000; // plus anything further down the chain that should be rolled up in to this
 
-        // plus anything further down the chain that should be rolled up in to this
-        for (const down in vals) {
+        for (var down in vals) {
           if (orderedUnits$1.indexOf(down) > orderedUnits$1.indexOf(k)) {
             convert(this.matrix, vals, down, built, k);
           }
-        }
-        // otherwise, keep it in the wings to boil it later
+        } // otherwise, keep it in the wings to boil it later
+
       } else if (isNumber(vals[k])) {
         accumulated[k] = vals[k];
       }
-    }
-
-    // anything leftover becomes the decimal for the last unit
+    } // anything leftover becomes the decimal for the last unit
     // lastUnit must be defined since units is not empty
-    for (const key in accumulated) {
+
+
+    for (var key in accumulated) {
       if (accumulated[key] !== 0) {
-        built[lastUnit] +=
-          key === lastUnit ? accumulated[key] : accumulated[key] / this.matrix[lastUnit][key];
+        built[lastUnit] += key === lastUnit ? accumulated[key] : accumulated[key] / this.matrix[lastUnit][key];
       }
     }
 
-    return clone$1(this, { values: built }, true).normalize();
+    return clone$1(this, {
+      values: built
+    }, true).normalize();
   }
-
   /**
    * Return the negative of this Duration.
    * @example Duration.fromObject({ hours: 1, seconds: 30 }).negate().toObject() //=> { hours: -1, seconds: -30 }
    * @return {Duration}
    */
-  negate() {
+  ;
+
+  _proto.negate = function negate() {
     if (!this.isValid) return this;
-    const negated = {};
-    for (const k of Object.keys(this.values)) {
+    var negated = {};
+
+    for (var _i2 = 0, _Object$keys2 = Object.keys(this.values); _i2 < _Object$keys2.length; _i2++) {
+      var k = _Object$keys2[_i2];
       negated[k] = -this.values[k];
     }
-    return clone$1(this, { values: negated }, true);
-  }
 
+    return clone$1(this, {
+      values: negated
+    }, true);
+  }
   /**
    * Get the years.
    * @type {number}
    */
-  get years() {
-    return this.isValid ? this.values.years || 0 : NaN;
-  }
-
-  /**
-   * Get the quarters.
-   * @type {number}
-   */
-  get quarters() {
-    return this.isValid ? this.values.quarters || 0 : NaN;
-  }
-
-  /**
-   * Get the months.
-   * @type {number}
-   */
-  get months() {
-    return this.isValid ? this.values.months || 0 : NaN;
-  }
-
-  /**
-   * Get the weeks
-   * @type {number}
-   */
-  get weeks() {
-    return this.isValid ? this.values.weeks || 0 : NaN;
-  }
-
-  /**
-   * Get the days.
-   * @type {number}
-   */
-  get days() {
-    return this.isValid ? this.values.days || 0 : NaN;
-  }
-
-  /**
-   * Get the hours.
-   * @type {number}
-   */
-  get hours() {
-    return this.isValid ? this.values.hours || 0 : NaN;
-  }
-
-  /**
-   * Get the minutes.
-   * @type {number}
-   */
-  get minutes() {
-    return this.isValid ? this.values.minutes || 0 : NaN;
-  }
-
-  /**
-   * Get the seconds.
-   * @return {number}
-   */
-  get seconds() {
-    return this.isValid ? this.values.seconds || 0 : NaN;
-  }
-
-  /**
-   * Get the milliseconds.
-   * @return {number}
-   */
-  get milliseconds() {
-    return this.isValid ? this.values.milliseconds || 0 : NaN;
-  }
-
-  /**
-   * Returns whether the Duration is invalid. Invalid durations are returned by diff operations
-   * on invalid DateTimes or Intervals.
-   * @return {boolean}
-   */
-  get isValid() {
-    return this.invalid === null;
-  }
-
-  /**
-   * Returns an error code if this Duration became invalid, or null if the Duration is valid
-   * @return {string}
-   */
-  get invalidReason() {
-    return this.invalid ? this.invalid.reason : null;
-  }
-
-  /**
-   * Returns an explanation of why this Duration became invalid, or null if the Duration is valid
-   * @type {string}
-   */
-  get invalidExplanation() {
-    return this.invalid ? this.invalid.explanation : null;
-  }
+  ;
 
   /**
    * Equality check
@@ -75239,7 +69980,7 @@ class Duration {
    * @param {Duration} other
    * @return {boolean}
    */
-  equals(other) {
+  _proto.equals = function equals(other) {
     if (!this.isValid || !other.isValid) {
       return false;
     }
@@ -75254,33 +69995,167 @@ class Duration {
       return v1 === v2;
     }
 
-    for (const u of orderedUnits$1) {
+    for (var _iterator3 = _createForOfIteratorHelperLoose(orderedUnits$1), _step3; !(_step3 = _iterator3()).done;) {
+      var u = _step3.value;
+
       if (!eq(this.values[u], other.values[u])) {
         return false;
       }
     }
+
     return true;
-  }
-}
+  };
 
-const INVALID$1 = "Invalid Interval";
+  _createClass(Duration, [{
+    key: "locale",
+    get: function get() {
+      return this.isValid ? this.loc.locale : null;
+    }
+    /**
+     * Get the numbering system of a Duration, such 'beng'. The numbering system is used when formatting the Duration
+     *
+     * @type {string}
+     */
 
-// checks if the start is equal to or before the end
+  }, {
+    key: "numberingSystem",
+    get: function get() {
+      return this.isValid ? this.loc.numberingSystem : null;
+    }
+  }, {
+    key: "years",
+    get: function get() {
+      return this.isValid ? this.values.years || 0 : NaN;
+    }
+    /**
+     * Get the quarters.
+     * @type {number}
+     */
+
+  }, {
+    key: "quarters",
+    get: function get() {
+      return this.isValid ? this.values.quarters || 0 : NaN;
+    }
+    /**
+     * Get the months.
+     * @type {number}
+     */
+
+  }, {
+    key: "months",
+    get: function get() {
+      return this.isValid ? this.values.months || 0 : NaN;
+    }
+    /**
+     * Get the weeks
+     * @type {number}
+     */
+
+  }, {
+    key: "weeks",
+    get: function get() {
+      return this.isValid ? this.values.weeks || 0 : NaN;
+    }
+    /**
+     * Get the days.
+     * @type {number}
+     */
+
+  }, {
+    key: "days",
+    get: function get() {
+      return this.isValid ? this.values.days || 0 : NaN;
+    }
+    /**
+     * Get the hours.
+     * @type {number}
+     */
+
+  }, {
+    key: "hours",
+    get: function get() {
+      return this.isValid ? this.values.hours || 0 : NaN;
+    }
+    /**
+     * Get the minutes.
+     * @type {number}
+     */
+
+  }, {
+    key: "minutes",
+    get: function get() {
+      return this.isValid ? this.values.minutes || 0 : NaN;
+    }
+    /**
+     * Get the seconds.
+     * @return {number}
+     */
+
+  }, {
+    key: "seconds",
+    get: function get() {
+      return this.isValid ? this.values.seconds || 0 : NaN;
+    }
+    /**
+     * Get the milliseconds.
+     * @return {number}
+     */
+
+  }, {
+    key: "milliseconds",
+    get: function get() {
+      return this.isValid ? this.values.milliseconds || 0 : NaN;
+    }
+    /**
+     * Returns whether the Duration is invalid. Invalid durations are returned by diff operations
+     * on invalid DateTimes or Intervals.
+     * @return {boolean}
+     */
+
+  }, {
+    key: "isValid",
+    get: function get() {
+      return this.invalid === null;
+    }
+    /**
+     * Returns an error code if this Duration became invalid, or null if the Duration is valid
+     * @return {string}
+     */
+
+  }, {
+    key: "invalidReason",
+    get: function get() {
+      return this.invalid ? this.invalid.reason : null;
+    }
+    /**
+     * Returns an explanation of why this Duration became invalid, or null if the Duration is valid
+     * @type {string}
+     */
+
+  }, {
+    key: "invalidExplanation",
+    get: function get() {
+      return this.invalid ? this.invalid.explanation : null;
+    }
+  }]);
+
+  return Duration;
+}();
+
+var INVALID$1 = "Invalid Interval"; // checks if the start is equal to or before the end
+
 function validateStartEnd(start, end) {
   if (!start || !start.isValid) {
     return Interval.invalid("missing or invalid start");
   } else if (!end || !end.isValid) {
     return Interval.invalid("missing or invalid end");
   } else if (end < start) {
-    return Interval.invalid(
-      "end before start",
-      `The end of an interval must be after its start, but you had start=${start.toISO()} and end=${end.toISO()}`
-    );
+    return Interval.invalid("end before start", "The end of an interval must be after its start, but you had start=" + start.toISO() + " and end=" + end.toISO());
   } else {
     return null;
   }
 }
-
 /**
  * An Interval object represents a half-open interval of time, where each endpoint is a {@link DateTime}. Conceptually, it's a container for those two endpoints, accompanied by methods for creating, parsing, interrogating, comparing, transforming, and formatting them.
  *
@@ -75293,11 +70168,13 @@ function validateStartEnd(start, end) {
  * * **Comparison** To compare this Interval to another one, use {@link Interval#equals}, {@link Interval#overlaps}, {@link Interval#abutsStart}, {@link Interval#abutsEnd}, {@link Interval#engulfs}
  * * **Output** To convert the Interval into other representations, see {@link Interval#toString}, {@link Interval#toISO}, {@link Interval#toISODate}, {@link Interval#toISOTime}, {@link Interval#toFormat}, and {@link Interval#toDuration}.
  */
-class Interval {
+
+
+var Interval = /*#__PURE__*/function () {
   /**
    * @private
    */
-  constructor(config) {
+  function Interval(config) {
     /**
      * @access private
      */
@@ -75305,83 +70182,94 @@ class Interval {
     /**
      * @access private
      */
+
     this.e = config.end;
     /**
      * @access private
      */
+
     this.invalid = config.invalid || null;
     /**
      * @access private
      */
+
     this.isLuxonInterval = true;
   }
-
   /**
    * Create an invalid Interval.
    * @param {string} reason - simple string of why this Interval is invalid. Should not contain parameters or anything else data-dependent
    * @param {string} [explanation=null] - longer explanation, may include parameters and other useful debugging information
    * @return {Interval}
    */
-  static invalid(reason, explanation = null) {
+
+
+  Interval.invalid = function invalid(reason, explanation) {
+    if (explanation === void 0) {
+      explanation = null;
+    }
+
     if (!reason) {
       throw new InvalidArgumentError("need to specify a reason the Interval is invalid");
     }
 
-    const invalid = reason instanceof Invalid ? reason : new Invalid(reason, explanation);
+    var invalid = reason instanceof Invalid ? reason : new Invalid(reason, explanation);
 
     if (Settings.throwOnInvalid) {
       throw new InvalidIntervalError(invalid);
     } else {
-      return new Interval({ invalid });
+      return new Interval({
+        invalid: invalid
+      });
     }
   }
-
   /**
    * Create an Interval from a start DateTime and an end DateTime. Inclusive of the start but not the end.
    * @param {DateTime|Date|Object} start
    * @param {DateTime|Date|Object} end
    * @return {Interval}
    */
-  static fromDateTimes(start, end) {
-    const builtStart = friendlyDateTime(start),
-      builtEnd = friendlyDateTime(end);
+  ;
 
-    const validateError = validateStartEnd(builtStart, builtEnd);
+  Interval.fromDateTimes = function fromDateTimes(start, end) {
+    var builtStart = friendlyDateTime(start),
+        builtEnd = friendlyDateTime(end);
+    var validateError = validateStartEnd(builtStart, builtEnd);
 
     if (validateError == null) {
       return new Interval({
         start: builtStart,
-        end: builtEnd,
+        end: builtEnd
       });
     } else {
       return validateError;
     }
   }
-
   /**
    * Create an Interval from a start DateTime and a Duration to extend to.
    * @param {DateTime|Date|Object} start
    * @param {Duration|Object|number} duration - the length of the Interval.
    * @return {Interval}
    */
-  static after(start, duration) {
-    const dur = Duration.fromDurationLike(duration),
-      dt = friendlyDateTime(start);
+  ;
+
+  Interval.after = function after(start, duration) {
+    var dur = Duration.fromDurationLike(duration),
+        dt = friendlyDateTime(start);
     return Interval.fromDateTimes(dt, dt.plus(dur));
   }
-
   /**
    * Create an Interval from an end DateTime and a Duration to extend backwards to.
    * @param {DateTime|Date|Object} end
    * @param {Duration|Object|number} duration - the length of the Interval.
    * @return {Interval}
    */
-  static before(end, duration) {
-    const dur = Duration.fromDurationLike(duration),
-      dt = friendlyDateTime(end);
+  ;
+
+  Interval.before = function before(end, duration) {
+    var dur = Duration.fromDurationLike(duration),
+        dt = friendlyDateTime(end);
     return Interval.fromDateTimes(dt.minus(dur), dt);
   }
-
   /**
    * Create an Interval from an ISO 8601 string.
    * Accepts `<start>/<end>`, `<start>/<duration>`, and `<duration>/<end>` formats.
@@ -75390,10 +70278,16 @@ class Interval {
    * @see https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
    * @return {Interval}
    */
-  static fromISO(text, opts) {
-    const [s, e] = (text || "").split("/", 2);
+  ;
+
+  Interval.fromISO = function fromISO(text, opts) {
+    var _split = (text || "").split("/", 2),
+        s = _split[0],
+        e = _split[1];
+
     if (s && e) {
-      let start, startIsValid;
+      var start, startIsValid;
+
       try {
         start = DateTime.fromISO(s, opts);
         startIsValid = start.isValid;
@@ -75401,7 +70295,8 @@ class Interval {
         startIsValid = false;
       }
 
-      let end, endIsValid;
+      var end, endIsValid;
+
       try {
         end = DateTime.fromISO(e, opts);
         endIsValid = end.isValid;
@@ -75414,78 +70309,52 @@ class Interval {
       }
 
       if (startIsValid) {
-        const dur = Duration.fromISO(e, opts);
+        var dur = Duration.fromISO(e, opts);
+
         if (dur.isValid) {
           return Interval.after(start, dur);
         }
       } else if (endIsValid) {
-        const dur = Duration.fromISO(s, opts);
-        if (dur.isValid) {
-          return Interval.before(end, dur);
+        var _dur = Duration.fromISO(s, opts);
+
+        if (_dur.isValid) {
+          return Interval.before(end, _dur);
         }
       }
     }
-    return Interval.invalid("unparsable", `the input "${text}" can't be parsed as ISO 8601`);
-  }
 
+    return Interval.invalid("unparsable", "the input \"" + text + "\" can't be parsed as ISO 8601");
+  }
   /**
    * Check if an object is an Interval. Works across context boundaries
    * @param {object} o
    * @return {boolean}
    */
-  static isInterval(o) {
-    return (o && o.isLuxonInterval) || false;
-  }
+  ;
 
+  Interval.isInterval = function isInterval(o) {
+    return o && o.isLuxonInterval || false;
+  }
   /**
    * Returns the start of the Interval
    * @type {DateTime}
    */
-  get start() {
-    return this.isValid ? this.s : null;
-  }
+  ;
 
-  /**
-   * Returns the end of the Interval
-   * @type {DateTime}
-   */
-  get end() {
-    return this.isValid ? this.e : null;
-  }
-
-  /**
-   * Returns whether this Interval's end is at least its start, meaning that the Interval isn't 'backwards'.
-   * @type {boolean}
-   */
-  get isValid() {
-    return this.invalidReason === null;
-  }
-
-  /**
-   * Returns an error code if this Interval is invalid, or null if the Interval is valid
-   * @type {string}
-   */
-  get invalidReason() {
-    return this.invalid ? this.invalid.reason : null;
-  }
-
-  /**
-   * Returns an explanation of why this Interval became invalid, or null if the Interval is valid
-   * @type {string}
-   */
-  get invalidExplanation() {
-    return this.invalid ? this.invalid.explanation : null;
-  }
+  var _proto = Interval.prototype;
 
   /**
    * Returns the length of the Interval in the specified unit.
    * @param {string} unit - the unit (such as 'hours' or 'days') to return the length in.
    * @return {number}
    */
-  length(unit = "milliseconds") {
-    return this.isValid ? this.toDuration(...[unit]).get(unit) : NaN;
-  }
+  _proto.length = function length(unit) {
+    if (unit === void 0) {
+      unit = "milliseconds";
+    }
 
+    return this.isValid ? this.toDuration.apply(this, [unit]).get(unit) : NaN;
+  }
   /**
    * Returns the count of minutes, hours, days, months, or years included in the Interval, even in part.
    * Unlike {@link Interval#length} this counts sections of the calendar, not periods of time, e.g. specifying 'day'
@@ -75493,60 +70362,70 @@ class Interval {
    * @param {string} [unit='milliseconds'] - the unit of time to count.
    * @return {number}
    */
-  count(unit = "milliseconds") {
+  ;
+
+  _proto.count = function count(unit) {
+    if (unit === void 0) {
+      unit = "milliseconds";
+    }
+
     if (!this.isValid) return NaN;
-    const start = this.start.startOf(unit),
-      end = this.end.startOf(unit);
+    var start = this.start.startOf(unit),
+        end = this.end.startOf(unit);
     return Math.floor(end.diff(start, unit).get(unit)) + 1;
   }
-
   /**
    * Returns whether this Interval's start and end are both in the same unit of time
    * @param {string} unit - the unit of time to check sameness on
    * @return {boolean}
    */
-  hasSame(unit) {
+  ;
+
+  _proto.hasSame = function hasSame(unit) {
     return this.isValid ? this.isEmpty() || this.e.minus(1).hasSame(this.s, unit) : false;
   }
-
   /**
    * Return whether this Interval has the same start and end DateTimes.
    * @return {boolean}
    */
-  isEmpty() {
+  ;
+
+  _proto.isEmpty = function isEmpty() {
     return this.s.valueOf() === this.e.valueOf();
   }
-
   /**
    * Return whether this Interval's start is after the specified DateTime.
    * @param {DateTime} dateTime
    * @return {boolean}
    */
-  isAfter(dateTime) {
+  ;
+
+  _proto.isAfter = function isAfter(dateTime) {
     if (!this.isValid) return false;
     return this.s > dateTime;
   }
-
   /**
    * Return whether this Interval's end is before the specified DateTime.
    * @param {DateTime} dateTime
    * @return {boolean}
    */
-  isBefore(dateTime) {
+  ;
+
+  _proto.isBefore = function isBefore(dateTime) {
     if (!this.isValid) return false;
     return this.e <= dateTime;
   }
-
   /**
    * Return whether this Interval contains the specified DateTime.
    * @param {DateTime} dateTime
    * @return {boolean}
    */
-  contains(dateTime) {
+  ;
+
+  _proto.contains = function contains(dateTime) {
     if (!this.isValid) return false;
     return this.s <= dateTime && this.e > dateTime;
   }
-
   /**
    * "Sets" the start and/or end dates. Returns a newly-constructed Interval.
    * @param {Object} values - the values to set
@@ -75554,29 +70433,42 @@ class Interval {
    * @param {DateTime} values.end - the ending DateTime
    * @return {Interval}
    */
-  set({ start, end } = {}) {
+  ;
+
+  _proto.set = function set(_temp) {
+    var _ref = _temp === void 0 ? {} : _temp,
+        start = _ref.start,
+        end = _ref.end;
+
     if (!this.isValid) return this;
     return Interval.fromDateTimes(start || this.s, end || this.e);
   }
-
   /**
    * Split this Interval at each of the specified DateTimes
    * @param {...DateTime} dateTimes - the unit of time to count.
    * @return {Array}
    */
-  splitAt(...dateTimes) {
+  ;
+
+  _proto.splitAt = function splitAt() {
+    var _this = this;
+
     if (!this.isValid) return [];
-    const sorted = dateTimes
-        .map(friendlyDateTime)
-        .filter((d) => this.contains(d))
-        .sort(),
-      results = [];
-    let { s } = this,
-      i = 0;
+
+    for (var _len = arguments.length, dateTimes = new Array(_len), _key = 0; _key < _len; _key++) {
+      dateTimes[_key] = arguments[_key];
+    }
+
+    var sorted = dateTimes.map(friendlyDateTime).filter(function (d) {
+      return _this.contains(d);
+    }).sort(),
+        results = [];
+    var s = this.s,
+        i = 0;
 
     while (s < this.e) {
-      const added = sorted[i] || this.e,
-        next = +added > +this.e ? this.e : added;
+      var added = sorted[i] || this.e,
+          next = +added > +this.e ? this.e : added;
       results.push(Interval.fromDateTimes(s, next));
       s = next;
       i += 1;
@@ -75584,27 +70476,30 @@ class Interval {
 
     return results;
   }
-
   /**
    * Split this Interval into smaller Intervals, each of the specified length.
    * Left over time is grouped into a smaller interval
    * @param {Duration|Object|number} duration - The length of each resulting interval.
    * @return {Array}
    */
-  splitBy(duration) {
-    const dur = Duration.fromDurationLike(duration);
+  ;
+
+  _proto.splitBy = function splitBy(duration) {
+    var dur = Duration.fromDurationLike(duration);
 
     if (!this.isValid || !dur.isValid || dur.as("milliseconds") === 0) {
       return [];
     }
 
-    let { s } = this,
-      idx = 1,
-      next;
+    var s = this.s,
+        idx = 1,
+        next;
+    var results = [];
 
-    const results = [];
     while (s < this.e) {
-      const added = this.start.plus(dur.mapUnits((x) => x * idx));
+      var added = this.start.plus(dur.mapUnits(function (x) {
+        return x * idx;
+      }));
       next = +added > +this.e ? this.e : added;
       results.push(Interval.fromDateTimes(s, next));
       s = next;
@@ -75613,69 +70508,74 @@ class Interval {
 
     return results;
   }
-
   /**
    * Split this Interval into the specified number of smaller intervals.
    * @param {number} numberOfParts - The number of Intervals to divide the Interval into.
    * @return {Array}
    */
-  divideEqually(numberOfParts) {
+  ;
+
+  _proto.divideEqually = function divideEqually(numberOfParts) {
     if (!this.isValid) return [];
     return this.splitBy(this.length() / numberOfParts).slice(0, numberOfParts);
   }
-
   /**
    * Return whether this Interval overlaps with the specified Interval
    * @param {Interval} other
    * @return {boolean}
    */
-  overlaps(other) {
+  ;
+
+  _proto.overlaps = function overlaps(other) {
     return this.e > other.s && this.s < other.e;
   }
-
   /**
    * Return whether this Interval's end is adjacent to the specified Interval's start.
    * @param {Interval} other
    * @return {boolean}
    */
-  abutsStart(other) {
+  ;
+
+  _proto.abutsStart = function abutsStart(other) {
     if (!this.isValid) return false;
     return +this.e === +other.s;
   }
-
   /**
    * Return whether this Interval's start is adjacent to the specified Interval's end.
    * @param {Interval} other
    * @return {boolean}
    */
-  abutsEnd(other) {
+  ;
+
+  _proto.abutsEnd = function abutsEnd(other) {
     if (!this.isValid) return false;
     return +other.e === +this.s;
   }
-
   /**
    * Return whether this Interval engulfs the start and end of the specified Interval.
    * @param {Interval} other
    * @return {boolean}
    */
-  engulfs(other) {
+  ;
+
+  _proto.engulfs = function engulfs(other) {
     if (!this.isValid) return false;
     return this.s <= other.s && this.e >= other.e;
   }
-
   /**
    * Return whether this Interval has the same start and end as the specified Interval.
    * @param {Interval} other
    * @return {boolean}
    */
-  equals(other) {
+  ;
+
+  _proto.equals = function equals(other) {
     if (!this.isValid || !other.isValid) {
       return false;
     }
 
     return this.s.equals(other.s) && this.e.equals(other.e);
   }
-
   /**
    * Return an Interval representing the intersection of this Interval and the specified Interval.
    * Specifically, the resulting Interval has the maximum start time and the minimum end time of the two Intervals.
@@ -75683,10 +70583,12 @@ class Interval {
    * @param {Interval} other
    * @return {Interval}
    */
-  intersection(other) {
+  ;
+
+  _proto.intersection = function intersection(other) {
     if (!this.isValid) return this;
-    const s = this.s > other.s ? this.s : other.s,
-      e = this.e < other.e ? this.e : other.e;
+    var s = this.s > other.s ? this.s : other.s,
+        e = this.e < other.e ? this.e : other.e;
 
     if (s >= e) {
       return null;
@@ -75694,64 +70596,82 @@ class Interval {
       return Interval.fromDateTimes(s, e);
     }
   }
-
   /**
    * Return an Interval representing the union of this Interval and the specified Interval.
    * Specifically, the resulting Interval has the minimum start time and the maximum end time of the two Intervals.
    * @param {Interval} other
    * @return {Interval}
    */
-  union(other) {
+  ;
+
+  _proto.union = function union(other) {
     if (!this.isValid) return this;
-    const s = this.s < other.s ? this.s : other.s,
-      e = this.e > other.e ? this.e : other.e;
+    var s = this.s < other.s ? this.s : other.s,
+        e = this.e > other.e ? this.e : other.e;
     return Interval.fromDateTimes(s, e);
   }
-
   /**
    * Merge an array of Intervals into a equivalent minimal set of Intervals.
    * Combines overlapping and adjacent Intervals.
    * @param {Array} intervals
    * @return {Array}
    */
-  static merge(intervals) {
-    const [found, final] = intervals
-      .sort((a, b) => a.s - b.s)
-      .reduce(
-        ([sofar, current], item) => {
-          if (!current) {
-            return [sofar, item];
-          } else if (current.overlaps(item) || current.abutsStart(item)) {
-            return [sofar, current.union(item)];
-          } else {
-            return [sofar.concat([current]), item];
-          }
-        },
-        [[], null]
-      );
+  ;
+
+  Interval.merge = function merge(intervals) {
+    var _intervals$sort$reduc = intervals.sort(function (a, b) {
+      return a.s - b.s;
+    }).reduce(function (_ref2, item) {
+      var sofar = _ref2[0],
+          current = _ref2[1];
+
+      if (!current) {
+        return [sofar, item];
+      } else if (current.overlaps(item) || current.abutsStart(item)) {
+        return [sofar, current.union(item)];
+      } else {
+        return [sofar.concat([current]), item];
+      }
+    }, [[], null]),
+        found = _intervals$sort$reduc[0],
+        final = _intervals$sort$reduc[1];
+
     if (final) {
       found.push(final);
     }
+
     return found;
   }
-
   /**
    * Return an array of Intervals representing the spans of time that only appear in one of the specified Intervals.
    * @param {Array} intervals
    * @return {Array}
    */
-  static xor(intervals) {
-    let start = null,
-      currentCount = 0;
-    const results = [],
-      ends = intervals.map((i) => [
-        { time: i.s, type: "s" },
-        { time: i.e, type: "e" },
-      ]),
-      flattened = Array.prototype.concat(...ends),
-      arr = flattened.sort((a, b) => a.time - b.time);
+  ;
 
-    for (const i of arr) {
+  Interval.xor = function xor(intervals) {
+    var _Array$prototype;
+
+    var start = null,
+        currentCount = 0;
+
+    var results = [],
+        ends = intervals.map(function (i) {
+      return [{
+        time: i.s,
+        type: "s"
+      }, {
+        time: i.e,
+        type: "e"
+      }];
+    }),
+        flattened = (_Array$prototype = Array.prototype).concat.apply(_Array$prototype, ends),
+        arr = flattened.sort(function (a, b) {
+      return a.time - b.time;
+    });
+
+    for (var _iterator = _createForOfIteratorHelperLoose(arr), _step; !(_step = _iterator()).done;) {
+      var i = _step.value;
       currentCount += i.type === "s" ? 1 : -1;
 
       if (currentCount === 1) {
@@ -75767,49 +70687,60 @@ class Interval {
 
     return Interval.merge(results);
   }
-
   /**
    * Return an Interval representing the span of time in this Interval that doesn't overlap with any of the specified Intervals.
    * @param {...Interval} intervals
    * @return {Array}
    */
-  difference(...intervals) {
-    return Interval.xor([this].concat(intervals))
-      .map((i) => this.intersection(i))
-      .filter((i) => i && !i.isEmpty());
-  }
+  ;
 
+  _proto.difference = function difference() {
+    var _this2 = this;
+
+    for (var _len2 = arguments.length, intervals = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      intervals[_key2] = arguments[_key2];
+    }
+
+    return Interval.xor([this].concat(intervals)).map(function (i) {
+      return _this2.intersection(i);
+    }).filter(function (i) {
+      return i && !i.isEmpty();
+    });
+  }
   /**
    * Returns a string representation of this Interval appropriate for debugging.
    * @return {string}
    */
-  toString() {
-    if (!this.isValid) return INVALID$1;
-    return `[${this.s.toISO()} – ${this.e.toISO()})`;
-  }
+  ;
 
+  _proto.toString = function toString() {
+    if (!this.isValid) return INVALID$1;
+    return "[" + this.s.toISO() + " \u2013 " + this.e.toISO() + ")";
+  }
   /**
    * Returns an ISO 8601-compliant string representation of this Interval.
    * @see https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
    * @param {Object} opts - The same options as {@link DateTime#toISO}
    * @return {string}
    */
-  toISO(opts) {
-    if (!this.isValid) return INVALID$1;
-    return `${this.s.toISO(opts)}/${this.e.toISO(opts)}`;
-  }
+  ;
 
+  _proto.toISO = function toISO(opts) {
+    if (!this.isValid) return INVALID$1;
+    return this.s.toISO(opts) + "/" + this.e.toISO(opts);
+  }
   /**
    * Returns an ISO 8601-compliant string representation of date of this Interval.
    * The time components are ignored.
    * @see https://en.wikipedia.org/wiki/ISO_8601#Time_intervals
    * @return {string}
    */
-  toISODate() {
-    if (!this.isValid) return INVALID$1;
-    return `${this.s.toISODate()}/${this.e.toISODate()}`;
-  }
+  ;
 
+  _proto.toISODate = function toISODate() {
+    if (!this.isValid) return INVALID$1;
+    return this.s.toISODate() + "/" + this.e.toISODate();
+  }
   /**
    * Returns an ISO 8601-compliant string representation of time of this Interval.
    * The date components are ignored.
@@ -75817,11 +70748,12 @@ class Interval {
    * @param {Object} opts - The same options as {@link DateTime#toISO}
    * @return {string}
    */
-  toISOTime(opts) {
-    if (!this.isValid) return INVALID$1;
-    return `${this.s.toISOTime(opts)}/${this.e.toISOTime(opts)}`;
-  }
+  ;
 
+  _proto.toISOTime = function toISOTime(opts) {
+    if (!this.isValid) return INVALID$1;
+    return this.s.toISOTime(opts) + "/" + this.e.toISOTime(opts);
+  }
   /**
    * Returns a string representation of this Interval formatted according to the specified format string.
    * @param {string} dateFormat - the format string. This string formats the start and end time. See {@link DateTime#toFormat} for details.
@@ -75829,11 +70761,16 @@ class Interval {
    * @param {string} [opts.separator =  ' – '] - a separator to place between the start and end representations
    * @return {string}
    */
-  toFormat(dateFormat, { separator = " – " } = {}) {
-    if (!this.isValid) return INVALID$1;
-    return `${this.s.toFormat(dateFormat)}${separator}${this.e.toFormat(dateFormat)}`;
-  }
+  ;
 
+  _proto.toFormat = function toFormat(dateFormat, _temp2) {
+    var _ref3 = _temp2 === void 0 ? {} : _temp2,
+        _ref3$separator = _ref3.separator,
+        separator = _ref3$separator === void 0 ? " – " : _ref3$separator;
+
+    if (!this.isValid) return INVALID$1;
+    return "" + this.s.toFormat(dateFormat) + separator + this.e.toFormat(dateFormat);
+  }
   /**
    * Return a Duration representing the time spanned by this interval.
    * @param {string|string[]} [unit=['milliseconds']] - the unit or units (such as 'hours' or 'days') to include in the duration.
@@ -75846,13 +70783,15 @@ class Interval {
    * @example Interval.fromDateTimes(dt1, dt2).toDuration('seconds').toObject() //=> { seconds: 88489.257 }
    * @return {Duration}
    */
-  toDuration(unit, opts) {
+  ;
+
+  _proto.toDuration = function toDuration(unit, opts) {
     if (!this.isValid) {
       return Duration.invalid(this.invalidReason);
     }
+
     return this.e.diff(this.s, unit, opts);
   }
-
   /**
    * Run mapFn on the interval start and end, returning a new Interval from the resulting DateTimes
    * @param {function} mapFn
@@ -75860,35 +70799,96 @@ class Interval {
    * @example Interval.fromDateTimes(dt1, dt2).mapEndpoints(endpoint => endpoint.toUTC())
    * @example Interval.fromDateTimes(dt1, dt2).mapEndpoints(endpoint => endpoint.plus({ hours: 2 }))
    */
-  mapEndpoints(mapFn) {
+  ;
+
+  _proto.mapEndpoints = function mapEndpoints(mapFn) {
     return Interval.fromDateTimes(mapFn(this.s), mapFn(this.e));
-  }
-}
+  };
+
+  _createClass(Interval, [{
+    key: "start",
+    get: function get() {
+      return this.isValid ? this.s : null;
+    }
+    /**
+     * Returns the end of the Interval
+     * @type {DateTime}
+     */
+
+  }, {
+    key: "end",
+    get: function get() {
+      return this.isValid ? this.e : null;
+    }
+    /**
+     * Returns whether this Interval's end is at least its start, meaning that the Interval isn't 'backwards'.
+     * @type {boolean}
+     */
+
+  }, {
+    key: "isValid",
+    get: function get() {
+      return this.invalidReason === null;
+    }
+    /**
+     * Returns an error code if this Interval is invalid, or null if the Interval is valid
+     * @type {string}
+     */
+
+  }, {
+    key: "invalidReason",
+    get: function get() {
+      return this.invalid ? this.invalid.reason : null;
+    }
+    /**
+     * Returns an explanation of why this Interval became invalid, or null if the Interval is valid
+     * @type {string}
+     */
+
+  }, {
+    key: "invalidExplanation",
+    get: function get() {
+      return this.invalid ? this.invalid.explanation : null;
+    }
+  }]);
+
+  return Interval;
+}();
 
 /**
  * The Info class contains static methods for retrieving general time and date related data. For example, it has methods for finding out if a time zone has a DST, for listing the months in any supported locale, and for discovering which of Luxon features are available in the current environment.
  */
-class Info {
+
+var Info = /*#__PURE__*/function () {
+  function Info() {}
+
   /**
    * Return whether the specified zone contains a DST.
    * @param {string|Zone} [zone='local'] - Zone to check. Defaults to the environment's local zone.
    * @return {boolean}
    */
-  static hasDST(zone = Settings.defaultZone) {
-    const proto = DateTime.now().setZone(zone).set({ month: 12 });
+  Info.hasDST = function hasDST(zone) {
+    if (zone === void 0) {
+      zone = Settings.defaultZone;
+    }
 
-    return !zone.isUniversal && proto.offset !== proto.set({ month: 6 }).offset;
+    var proto = DateTime.now().setZone(zone).set({
+      month: 12
+    });
+    return !zone.isUniversal && proto.offset !== proto.set({
+      month: 6
+    }).offset;
   }
-
   /**
    * Return whether the specified zone is a valid IANA specifier.
    * @param {string} zone - Zone to check
    * @return {boolean}
    */
-  static isValidIANAZone(zone) {
+  ;
+
+  Info.isValidIANAZone = function isValidIANAZone(zone) {
     return IANAZone.isValidSpecifier(zone) && IANAZone.isValidZone(zone);
   }
-
   /**
    * Converts the input into a {@link Zone} instance.
    *
@@ -75903,10 +70903,11 @@ class Info {
    * @param {string|Zone|number} [input] - the value to be converted
    * @return {Zone}
    */
-  static normalizeZone(input) {
+  ;
+
+  Info.normalizeZone = function normalizeZone$1(input) {
     return normalizeZone(input, Settings.defaultZone);
   }
-
   /**
    * Return an array of standalone month names.
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
@@ -75924,13 +70925,25 @@ class Info {
    * @example Info.months('long', { outputCalendar: 'islamic' })[0] //=> 'Rabiʻ I'
    * @return {Array}
    */
-  static months(
-    length = "long",
-    { locale = null, numberingSystem = null, locObj = null, outputCalendar = "gregory" } = {}
-  ) {
+  ;
+
+  Info.months = function months(length, _temp) {
+    if (length === void 0) {
+      length = "long";
+    }
+
+    var _ref = _temp === void 0 ? {} : _temp,
+        _ref$locale = _ref.locale,
+        locale = _ref$locale === void 0 ? null : _ref$locale,
+        _ref$numberingSystem = _ref.numberingSystem,
+        numberingSystem = _ref$numberingSystem === void 0 ? null : _ref$numberingSystem,
+        _ref$locObj = _ref.locObj,
+        locObj = _ref$locObj === void 0 ? null : _ref$locObj,
+        _ref$outputCalendar = _ref.outputCalendar,
+        outputCalendar = _ref$outputCalendar === void 0 ? "gregory" : _ref$outputCalendar;
+
     return (locObj || Locale.create(locale, numberingSystem, outputCalendar)).months(length);
   }
-
   /**
    * Return an array of format month names.
    * Format months differ from standalone months in that they're meant to appear next to the day of the month. In some languages, that
@@ -75944,13 +70957,25 @@ class Info {
    * @param {string} [opts.outputCalendar='gregory'] - the calendar
    * @return {Array}
    */
-  static monthsFormat(
-    length = "long",
-    { locale = null, numberingSystem = null, locObj = null, outputCalendar = "gregory" } = {}
-  ) {
+  ;
+
+  Info.monthsFormat = function monthsFormat(length, _temp2) {
+    if (length === void 0) {
+      length = "long";
+    }
+
+    var _ref2 = _temp2 === void 0 ? {} : _temp2,
+        _ref2$locale = _ref2.locale,
+        locale = _ref2$locale === void 0 ? null : _ref2$locale,
+        _ref2$numberingSystem = _ref2.numberingSystem,
+        numberingSystem = _ref2$numberingSystem === void 0 ? null : _ref2$numberingSystem,
+        _ref2$locObj = _ref2.locObj,
+        locObj = _ref2$locObj === void 0 ? null : _ref2$locObj,
+        _ref2$outputCalendar = _ref2.outputCalendar,
+        outputCalendar = _ref2$outputCalendar === void 0 ? "gregory" : _ref2$outputCalendar;
+
     return (locObj || Locale.create(locale, numberingSystem, outputCalendar)).months(length, true);
   }
-
   /**
    * Return an array of standalone week names.
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
@@ -75965,10 +70990,23 @@ class Info {
    * @example Info.weekdays('short', { locale: 'ar' })[0] //=> 'الاثنين'
    * @return {Array}
    */
-  static weekdays(length = "long", { locale = null, numberingSystem = null, locObj = null } = {}) {
+  ;
+
+  Info.weekdays = function weekdays(length, _temp3) {
+    if (length === void 0) {
+      length = "long";
+    }
+
+    var _ref3 = _temp3 === void 0 ? {} : _temp3,
+        _ref3$locale = _ref3.locale,
+        locale = _ref3$locale === void 0 ? null : _ref3$locale,
+        _ref3$numberingSystem = _ref3.numberingSystem,
+        numberingSystem = _ref3$numberingSystem === void 0 ? null : _ref3$numberingSystem,
+        _ref3$locObj = _ref3.locObj,
+        locObj = _ref3$locObj === void 0 ? null : _ref3$locObj;
+
     return (locObj || Locale.create(locale, numberingSystem, null)).weekdays(length);
   }
-
   /**
    * Return an array of format week names.
    * Format weekdays differ from standalone weekdays in that they're meant to appear next to more date information. In some languages, that
@@ -75981,13 +71019,23 @@ class Info {
    * @param {string} [opts.locObj=null] - an existing locale object to use
    * @return {Array}
    */
-  static weekdaysFormat(
-    length = "long",
-    { locale = null, numberingSystem = null, locObj = null } = {}
-  ) {
+  ;
+
+  Info.weekdaysFormat = function weekdaysFormat(length, _temp4) {
+    if (length === void 0) {
+      length = "long";
+    }
+
+    var _ref4 = _temp4 === void 0 ? {} : _temp4,
+        _ref4$locale = _ref4.locale,
+        locale = _ref4$locale === void 0 ? null : _ref4$locale,
+        _ref4$numberingSystem = _ref4.numberingSystem,
+        numberingSystem = _ref4$numberingSystem === void 0 ? null : _ref4$numberingSystem,
+        _ref4$locObj = _ref4.locObj,
+        locObj = _ref4$locObj === void 0 ? null : _ref4$locObj;
+
     return (locObj || Locale.create(locale, numberingSystem, null)).weekdays(length, true);
   }
-
   /**
    * Return an array of meridiems.
    * @param {Object} opts - options
@@ -75996,10 +71044,15 @@ class Info {
    * @example Info.meridiems({ locale: 'my' }) //=> [ 'နံနက်', 'ညနေ' ]
    * @return {Array}
    */
-  static meridiems({ locale = null } = {}) {
+  ;
+
+  Info.meridiems = function meridiems(_temp5) {
+    var _ref5 = _temp5 === void 0 ? {} : _temp5,
+        _ref5$locale = _ref5.locale,
+        locale = _ref5$locale === void 0 ? null : _ref5$locale;
+
     return Locale.create(locale).meridiems();
   }
-
   /**
    * Return an array of eras, such as ['BC', 'AD']. The locale can be specified, but the calendar system is always Gregorian.
    * @param {string} [length='short'] - the length of the era representation, such as "short" or "long".
@@ -76010,10 +71063,19 @@ class Info {
    * @example Info.eras('long', { locale: 'fr' }) //=> [ 'avant Jésus-Christ', 'après Jésus-Christ' ]
    * @return {Array}
    */
-  static eras(length = "short", { locale = null } = {}) {
+  ;
+
+  Info.eras = function eras(length, _temp6) {
+    if (length === void 0) {
+      length = "short";
+    }
+
+    var _ref6 = _temp6 === void 0 ? {} : _temp6,
+        _ref6$locale = _ref6.locale,
+        locale = _ref6$locale === void 0 ? null : _ref6$locale;
+
     return Locale.create(locale, null, "gregory").eras(length);
   }
-
   /**
    * Return the set of available features in this environment.
    * Some features of Luxon are not available in all environments. For example, on older browsers, relative time formatting support is not available. Use this function to figure out if that's the case.
@@ -76022,44 +71084,58 @@ class Info {
    * @example Info.features() //=> { relative: false }
    * @return {Object}
    */
-  static features() {
-    return { relative: hasRelative() };
-  }
-}
+  ;
+
+  Info.features = function features() {
+    return {
+      relative: hasRelative()
+    };
+  };
+
+  return Info;
+}();
 
 function dayDiff(earlier, later) {
-  const utcDayStart = (dt) => dt.toUTC(0, { keepLocalTime: true }).startOf("day").valueOf(),
-    ms = utcDayStart(later) - utcDayStart(earlier);
+  var utcDayStart = function utcDayStart(dt) {
+    return dt.toUTC(0, {
+      keepLocalTime: true
+    }).startOf("day").valueOf();
+  },
+      ms = utcDayStart(later) - utcDayStart(earlier);
+
   return Math.floor(Duration.fromMillis(ms).as("days"));
 }
 
 function highOrderDiffs(cursor, later, units) {
-  const differs = [
-    ["years", (a, b) => b.year - a.year],
-    ["quarters", (a, b) => b.quarter - a.quarter],
-    ["months", (a, b) => b.month - a.month + (b.year - a.year) * 12],
-    [
-      "weeks",
-      (a, b) => {
-        const days = dayDiff(a, b);
-        return (days - (days % 7)) / 7;
-      },
-    ],
-    ["days", dayDiff],
-  ];
+  var differs = [["years", function (a, b) {
+    return b.year - a.year;
+  }], ["quarters", function (a, b) {
+    return b.quarter - a.quarter;
+  }], ["months", function (a, b) {
+    return b.month - a.month + (b.year - a.year) * 12;
+  }], ["weeks", function (a, b) {
+    var days = dayDiff(a, b);
+    return (days - days % 7) / 7;
+  }], ["days", dayDiff]];
+  var results = {};
+  var lowestOrder, highWater;
 
-  const results = {};
-  let lowestOrder, highWater;
+  for (var _i = 0, _differs = differs; _i < _differs.length; _i++) {
+    var _differs$_i = _differs[_i],
+        unit = _differs$_i[0],
+        differ = _differs$_i[1];
 
-  for (const [unit, differ] of differs) {
     if (units.indexOf(unit) >= 0) {
-      lowestOrder = unit;
+      var _cursor$plus;
 
-      let delta = differ(cursor, later);
-      highWater = cursor.plus({ [unit]: delta });
+      lowestOrder = unit;
+      var delta = differ(cursor, later);
+      highWater = cursor.plus((_cursor$plus = {}, _cursor$plus[unit] = delta, _cursor$plus));
 
       if (highWater > later) {
-        cursor = cursor.plus({ [unit]: delta - 1 });
+        var _cursor$plus2;
+
+        cursor = cursor.plus((_cursor$plus2 = {}, _cursor$plus2[unit] = delta - 1, _cursor$plus2));
         delta -= 1;
       } else {
         cursor = highWater;
@@ -76072,18 +71148,23 @@ function highOrderDiffs(cursor, later, units) {
   return [cursor, results, highWater, lowestOrder];
 }
 
-function diff (earlier, later, units, opts) {
-  let [cursor, results, highWater, lowestOrder] = highOrderDiffs(earlier, later, units);
+function _diff (earlier, later, units, opts) {
+  var _highOrderDiffs = highOrderDiffs(earlier, later, units),
+      cursor = _highOrderDiffs[0],
+      results = _highOrderDiffs[1],
+      highWater = _highOrderDiffs[2],
+      lowestOrder = _highOrderDiffs[3];
 
-  const remainingMillis = later - cursor;
-
-  const lowerOrderUnits = units.filter(
-    (u) => ["hours", "minutes", "seconds", "milliseconds"].indexOf(u) >= 0
-  );
+  var remainingMillis = later - cursor;
+  var lowerOrderUnits = units.filter(function (u) {
+    return ["hours", "minutes", "seconds", "milliseconds"].indexOf(u) >= 0;
+  });
 
   if (lowerOrderUnits.length === 0) {
     if (highWater < later) {
-      highWater = cursor.plus({ [lowestOrder]: 1 });
+      var _cursor$plus3;
+
+      highWater = cursor.plus((_cursor$plus3 = {}, _cursor$plus3[lowestOrder] = 1, _cursor$plus3));
     }
 
     if (highWater !== cursor) {
@@ -76091,18 +71172,18 @@ function diff (earlier, later, units, opts) {
     }
   }
 
-  const duration = Duration.fromObject(results, opts);
+  var duration = Duration.fromObject(results, opts);
 
   if (lowerOrderUnits.length > 0) {
-    return Duration.fromMillis(remainingMillis, opts)
-      .shiftTo(...lowerOrderUnits)
-      .plus(duration);
+    var _Duration$fromMillis;
+
+    return (_Duration$fromMillis = Duration.fromMillis(remainingMillis, opts)).shiftTo.apply(_Duration$fromMillis, lowerOrderUnits).plus(duration);
   } else {
     return duration;
   }
 }
 
-const numberingSystems = {
+var numberingSystems = {
   arab: "[\u0660-\u0669]",
   arabext: "[\u06F0-\u06F9]",
   bali: "[\u1B50-\u1B59]",
@@ -76123,10 +71204,9 @@ const numberingSystems = {
   telu: "[\u0C66-\u0C6F]",
   thai: "[\u0E50-\u0E59]",
   tibt: "[\u0F20-\u0F29]",
-  latn: "\\d",
+  latn: "\\d"
 };
-
-const numberingSystemsUTF16 = {
+var numberingSystemsUTF16 = {
   arab: [1632, 1641],
   arabext: [1776, 1785],
   bali: [6992, 7001],
@@ -76145,48 +71225,69 @@ const numberingSystemsUTF16 = {
   tamldec: [3046, 3055],
   telu: [3174, 3183],
   thai: [3664, 3673],
-  tibt: [3872, 3881],
+  tibt: [3872, 3881]
 };
-
-const hanidecChars = numberingSystems.hanidec.replace(/[\[|\]]/g, "").split("");
-
+var hanidecChars = numberingSystems.hanidec.replace(/[\[|\]]/g, "").split("");
 function parseDigits(str) {
-  let value = parseInt(str, 10);
+  var value = parseInt(str, 10);
+
   if (isNaN(value)) {
     value = "";
-    for (let i = 0; i < str.length; i++) {
-      const code = str.charCodeAt(i);
+
+    for (var i = 0; i < str.length; i++) {
+      var code = str.charCodeAt(i);
 
       if (str[i].search(numberingSystems.hanidec) !== -1) {
         value += hanidecChars.indexOf(str[i]);
       } else {
-        for (const key in numberingSystemsUTF16) {
-          const [min, max] = numberingSystemsUTF16[key];
+        for (var key in numberingSystemsUTF16) {
+          var _numberingSystemsUTF = numberingSystemsUTF16[key],
+              min = _numberingSystemsUTF[0],
+              max = _numberingSystemsUTF[1];
+
           if (code >= min && code <= max) {
             value += code - min;
           }
         }
       }
     }
+
     return parseInt(value, 10);
   } else {
     return value;
   }
 }
+function digitRegex(_ref, append) {
+  var numberingSystem = _ref.numberingSystem;
 
-function digitRegex({ numberingSystem }, append = "") {
-  return new RegExp(`${numberingSystems[numberingSystem || "latn"]}${append}`);
+  if (append === void 0) {
+    append = "";
+  }
+
+  return new RegExp("" + numberingSystems[numberingSystem || "latn"] + append);
 }
 
-const MISSING_FTP = "missing Intl.DateTimeFormat.formatToParts support";
+var MISSING_FTP = "missing Intl.DateTimeFormat.formatToParts support";
 
-function intUnit(regex, post = (i) => i) {
-  return { regex, deser: ([s]) => post(parseDigits(s)) };
+function intUnit(regex, post) {
+  if (post === void 0) {
+    post = function post(i) {
+      return i;
+    };
+  }
+
+  return {
+    regex: regex,
+    deser: function deser(_ref) {
+      var s = _ref[0];
+      return post(parseDigits(s));
+    }
+  };
 }
 
-const NBSP = String.fromCharCode(160);
-const spaceOrNBSP = `( |${NBSP})`;
-const spaceOrNBSPRegExp = new RegExp(spaceOrNBSP, "g");
+var NBSP = String.fromCharCode(160);
+var spaceOrNBSP = "( |" + NBSP + ")";
+var spaceOrNBSPRegExp = new RegExp(spaceOrNBSP, "g");
 
 function fixListRegex(s) {
   // make dots optional and also make them literal
@@ -76195,10 +71296,9 @@ function fixListRegex(s) {
 }
 
 function stripInsensitivities(s) {
-  return s
-    .replace(/\./g, "") // ignore dots that were made optional
-    .replace(spaceOrNBSPRegExp, " ") // interchange space and nbsp
-    .toLowerCase();
+  return s.replace(/\./g, "") // ignore dots that were made optional
+  .replace(spaceOrNBSPRegExp, " ") // interchange space and nbsp
+  .toLowerCase();
 }
 
 function oneOf(strings, startIndex) {
@@ -76207,18 +71307,36 @@ function oneOf(strings, startIndex) {
   } else {
     return {
       regex: RegExp(strings.map(fixListRegex).join("|")),
-      deser: ([s]) =>
-        strings.findIndex((i) => stripInsensitivities(s) === stripInsensitivities(i)) + startIndex,
+      deser: function deser(_ref2) {
+        var s = _ref2[0];
+        return strings.findIndex(function (i) {
+          return stripInsensitivities(s) === stripInsensitivities(i);
+        }) + startIndex;
+      }
     };
   }
 }
 
 function offset(regex, groups) {
-  return { regex, deser: ([, h, m]) => signedOffset(h, m), groups };
+  return {
+    regex: regex,
+    deser: function deser(_ref3) {
+      var h = _ref3[1],
+          m = _ref3[2];
+      return signedOffset(h, m);
+    },
+    groups: groups
+  };
 }
 
 function simple(regex) {
-  return { regex, deser: ([s]) => s };
+  return {
+    regex: regex,
+    deser: function deser(_ref4) {
+      var s = _ref4[0];
+      return s;
+    }
+  };
 }
 
 function escapeToken(value) {
@@ -76226,194 +71344,250 @@ function escapeToken(value) {
 }
 
 function unitForToken(token, loc) {
-  const one = digitRegex(loc),
-    two = digitRegex(loc, "{2}"),
-    three = digitRegex(loc, "{3}"),
-    four = digitRegex(loc, "{4}"),
-    six = digitRegex(loc, "{6}"),
-    oneOrTwo = digitRegex(loc, "{1,2}"),
-    oneToThree = digitRegex(loc, "{1,3}"),
-    oneToSix = digitRegex(loc, "{1,6}"),
-    oneToNine = digitRegex(loc, "{1,9}"),
-    twoToFour = digitRegex(loc, "{2,4}"),
-    fourToSix = digitRegex(loc, "{4,6}"),
-    literal = (t) => ({ regex: RegExp(escapeToken(t.val)), deser: ([s]) => s, literal: true }),
-    unitate = (t) => {
-      if (token.literal) {
-        return literal(t);
-      }
-      switch (t.val) {
-        // era
-        case "G":
-          return oneOf(loc.eras("short", false), 0);
-        case "GG":
-          return oneOf(loc.eras("long", false), 0);
-        // years
-        case "y":
-          return intUnit(oneToSix);
-        case "yy":
-          return intUnit(twoToFour, untruncateYear);
-        case "yyyy":
-          return intUnit(four);
-        case "yyyyy":
-          return intUnit(fourToSix);
-        case "yyyyyy":
-          return intUnit(six);
-        // months
-        case "M":
-          return intUnit(oneOrTwo);
-        case "MM":
-          return intUnit(two);
-        case "MMM":
-          return oneOf(loc.months("short", true, false), 1);
-        case "MMMM":
-          return oneOf(loc.months("long", true, false), 1);
-        case "L":
-          return intUnit(oneOrTwo);
-        case "LL":
-          return intUnit(two);
-        case "LLL":
-          return oneOf(loc.months("short", false, false), 1);
-        case "LLLL":
-          return oneOf(loc.months("long", false, false), 1);
-        // dates
-        case "d":
-          return intUnit(oneOrTwo);
-        case "dd":
-          return intUnit(two);
-        // ordinals
-        case "o":
-          return intUnit(oneToThree);
-        case "ooo":
-          return intUnit(three);
-        // time
-        case "HH":
-          return intUnit(two);
-        case "H":
-          return intUnit(oneOrTwo);
-        case "hh":
-          return intUnit(two);
-        case "h":
-          return intUnit(oneOrTwo);
-        case "mm":
-          return intUnit(two);
-        case "m":
-          return intUnit(oneOrTwo);
-        case "q":
-          return intUnit(oneOrTwo);
-        case "qq":
-          return intUnit(two);
-        case "s":
-          return intUnit(oneOrTwo);
-        case "ss":
-          return intUnit(two);
-        case "S":
-          return intUnit(oneToThree);
-        case "SSS":
-          return intUnit(three);
-        case "u":
-          return simple(oneToNine);
-        case "uu":
-          return simple(oneOrTwo);
-        case "uuu":
-          return intUnit(one);
-        // meridiem
-        case "a":
-          return oneOf(loc.meridiems(), 0);
-        // weekYear (k)
-        case "kkkk":
-          return intUnit(four);
-        case "kk":
-          return intUnit(twoToFour, untruncateYear);
-        // weekNumber (W)
-        case "W":
-          return intUnit(oneOrTwo);
-        case "WW":
-          return intUnit(two);
-        // weekdays
-        case "E":
-        case "c":
-          return intUnit(one);
-        case "EEE":
-          return oneOf(loc.weekdays("short", false, false), 1);
-        case "EEEE":
-          return oneOf(loc.weekdays("long", false, false), 1);
-        case "ccc":
-          return oneOf(loc.weekdays("short", true, false), 1);
-        case "cccc":
-          return oneOf(loc.weekdays("long", true, false), 1);
-        // offset/zone
-        case "Z":
-        case "ZZ":
-          return offset(new RegExp(`([+-]${oneOrTwo.source})(?::(${two.source}))?`), 2);
-        case "ZZZ":
-          return offset(new RegExp(`([+-]${oneOrTwo.source})(${two.source})?`), 2);
-        // we don't support ZZZZ (PST) or ZZZZZ (Pacific Standard Time) in parsing
-        // because we don't have any way to figure out what they are
-        case "z":
-          return simple(/[a-z_+-/]{1,256}?/i);
-        default:
-          return literal(t);
-      }
+  var one = digitRegex(loc),
+      two = digitRegex(loc, "{2}"),
+      three = digitRegex(loc, "{3}"),
+      four = digitRegex(loc, "{4}"),
+      six = digitRegex(loc, "{6}"),
+      oneOrTwo = digitRegex(loc, "{1,2}"),
+      oneToThree = digitRegex(loc, "{1,3}"),
+      oneToSix = digitRegex(loc, "{1,6}"),
+      oneToNine = digitRegex(loc, "{1,9}"),
+      twoToFour = digitRegex(loc, "{2,4}"),
+      fourToSix = digitRegex(loc, "{4,6}"),
+      literal = function literal(t) {
+    return {
+      regex: RegExp(escapeToken(t.val)),
+      deser: function deser(_ref5) {
+        var s = _ref5[0];
+        return s;
+      },
+      literal: true
     };
+  },
+      unitate = function unitate(t) {
+    if (token.literal) {
+      return literal(t);
+    }
 
-  const unit = unitate(token) || {
-    invalidReason: MISSING_FTP,
+    switch (t.val) {
+      // era
+      case "G":
+        return oneOf(loc.eras("short", false), 0);
+
+      case "GG":
+        return oneOf(loc.eras("long", false), 0);
+      // years
+
+      case "y":
+        return intUnit(oneToSix);
+
+      case "yy":
+        return intUnit(twoToFour, untruncateYear);
+
+      case "yyyy":
+        return intUnit(four);
+
+      case "yyyyy":
+        return intUnit(fourToSix);
+
+      case "yyyyyy":
+        return intUnit(six);
+      // months
+
+      case "M":
+        return intUnit(oneOrTwo);
+
+      case "MM":
+        return intUnit(two);
+
+      case "MMM":
+        return oneOf(loc.months("short", true, false), 1);
+
+      case "MMMM":
+        return oneOf(loc.months("long", true, false), 1);
+
+      case "L":
+        return intUnit(oneOrTwo);
+
+      case "LL":
+        return intUnit(two);
+
+      case "LLL":
+        return oneOf(loc.months("short", false, false), 1);
+
+      case "LLLL":
+        return oneOf(loc.months("long", false, false), 1);
+      // dates
+
+      case "d":
+        return intUnit(oneOrTwo);
+
+      case "dd":
+        return intUnit(two);
+      // ordinals
+
+      case "o":
+        return intUnit(oneToThree);
+
+      case "ooo":
+        return intUnit(three);
+      // time
+
+      case "HH":
+        return intUnit(two);
+
+      case "H":
+        return intUnit(oneOrTwo);
+
+      case "hh":
+        return intUnit(two);
+
+      case "h":
+        return intUnit(oneOrTwo);
+
+      case "mm":
+        return intUnit(two);
+
+      case "m":
+        return intUnit(oneOrTwo);
+
+      case "q":
+        return intUnit(oneOrTwo);
+
+      case "qq":
+        return intUnit(two);
+
+      case "s":
+        return intUnit(oneOrTwo);
+
+      case "ss":
+        return intUnit(two);
+
+      case "S":
+        return intUnit(oneToThree);
+
+      case "SSS":
+        return intUnit(three);
+
+      case "u":
+        return simple(oneToNine);
+
+      case "uu":
+        return simple(oneOrTwo);
+
+      case "uuu":
+        return intUnit(one);
+      // meridiem
+
+      case "a":
+        return oneOf(loc.meridiems(), 0);
+      // weekYear (k)
+
+      case "kkkk":
+        return intUnit(four);
+
+      case "kk":
+        return intUnit(twoToFour, untruncateYear);
+      // weekNumber (W)
+
+      case "W":
+        return intUnit(oneOrTwo);
+
+      case "WW":
+        return intUnit(two);
+      // weekdays
+
+      case "E":
+      case "c":
+        return intUnit(one);
+
+      case "EEE":
+        return oneOf(loc.weekdays("short", false, false), 1);
+
+      case "EEEE":
+        return oneOf(loc.weekdays("long", false, false), 1);
+
+      case "ccc":
+        return oneOf(loc.weekdays("short", true, false), 1);
+
+      case "cccc":
+        return oneOf(loc.weekdays("long", true, false), 1);
+      // offset/zone
+
+      case "Z":
+      case "ZZ":
+        return offset(new RegExp("([+-]" + oneOrTwo.source + ")(?::(" + two.source + "))?"), 2);
+
+      case "ZZZ":
+        return offset(new RegExp("([+-]" + oneOrTwo.source + ")(" + two.source + ")?"), 2);
+      // we don't support ZZZZ (PST) or ZZZZZ (Pacific Standard Time) in parsing
+      // because we don't have any way to figure out what they are
+
+      case "z":
+        return simple(/[a-z_+-/]{1,256}?/i);
+
+      default:
+        return literal(t);
+    }
   };
 
+  var unit = unitate(token) || {
+    invalidReason: MISSING_FTP
+  };
   unit.token = token;
-
   return unit;
 }
 
-const partTypeStyleToTokenVal = {
+var partTypeStyleToTokenVal = {
   year: {
     "2-digit": "yy",
-    numeric: "yyyyy",
+    numeric: "yyyyy"
   },
   month: {
     numeric: "M",
     "2-digit": "MM",
     short: "MMM",
-    long: "MMMM",
+    long: "MMMM"
   },
   day: {
     numeric: "d",
-    "2-digit": "dd",
+    "2-digit": "dd"
   },
   weekday: {
     short: "EEE",
-    long: "EEEE",
+    long: "EEEE"
   },
   dayperiod: "a",
   dayPeriod: "a",
   hour: {
     numeric: "h",
-    "2-digit": "hh",
+    "2-digit": "hh"
   },
   minute: {
     numeric: "m",
-    "2-digit": "mm",
+    "2-digit": "mm"
   },
   second: {
     numeric: "s",
-    "2-digit": "ss",
-  },
+    "2-digit": "ss"
+  }
 };
 
 function tokenForPart(part, locale, formatOpts) {
-  const { type, value } = part;
+  var type = part.type,
+      value = part.value;
 
   if (type === "literal") {
     return {
       literal: true,
-      val: value,
+      val: value
     };
   }
 
-  const style = formatOpts[type];
+  var style = formatOpts[type];
+  var val = partTypeStyleToTokenVal[type];
 
-  let val = partTypeStyleToTokenVal[type];
   if (typeof val === "object") {
     val = val[style];
   }
@@ -76421,7 +71595,7 @@ function tokenForPart(part, locale, formatOpts) {
   if (val) {
     return {
       literal: false,
-      val,
+      val: val
     };
   }
 
@@ -76429,26 +71603,34 @@ function tokenForPart(part, locale, formatOpts) {
 }
 
 function buildRegex(units) {
-  const re = units.map((u) => u.regex).reduce((f, r) => `${f}(${r.source})`, "");
-  return [`^${re}$`, units];
+  var re = units.map(function (u) {
+    return u.regex;
+  }).reduce(function (f, r) {
+    return f + "(" + r.source + ")";
+  }, "");
+  return ["^" + re + "$", units];
 }
 
 function match(input, regex, handlers) {
-  const matches = input.match(regex);
+  var matches = input.match(regex);
 
   if (matches) {
-    const all = {};
-    let matchIndex = 1;
-    for (const i in handlers) {
+    var all = {};
+    var matchIndex = 1;
+
+    for (var i in handlers) {
       if (hasOwnProperty(handlers, i)) {
-        const h = handlers[i],
-          groups = h.groups ? h.groups + 1 : 1;
+        var h = handlers[i],
+            groups = h.groups ? h.groups + 1 : 1;
+
         if (!h.literal && h.token) {
           all[h.token.val[0]] = h.deser(matches.slice(matchIndex, matchIndex + groups));
         }
+
         matchIndex += groups;
       }
     }
+
     return [matches, all];
   } else {
     return [matches, {}];
@@ -76456,42 +71638,55 @@ function match(input, regex, handlers) {
 }
 
 function dateTimeFromMatches(matches) {
-  const toField = (token) => {
+  var toField = function toField(token) {
     switch (token) {
       case "S":
         return "millisecond";
+
       case "s":
         return "second";
+
       case "m":
         return "minute";
+
       case "h":
       case "H":
         return "hour";
+
       case "d":
         return "day";
+
       case "o":
         return "ordinal";
+
       case "L":
       case "M":
         return "month";
+
       case "y":
         return "year";
+
       case "E":
       case "c":
         return "weekday";
+
       case "W":
         return "weekNumber";
+
       case "k":
         return "weekYear";
+
       case "q":
         return "quarter";
+
       default:
         return null;
     }
   };
 
-  let zone = null;
-  let specificOffset;
+  var zone = null;
+  var specificOffset;
+
   if (!isUndefined(matches.z)) {
     zone = IANAZone.create(matches.z);
   }
@@ -76500,6 +71695,7 @@ function dateTimeFromMatches(matches) {
     if (!zone) {
       zone = new FixedOffsetZone(matches.Z);
     }
+
     specificOffset = matches.Z;
   }
 
@@ -76523,19 +71719,19 @@ function dateTimeFromMatches(matches) {
     matches.S = parseMillis(matches.u);
   }
 
-  const vals = Object.keys(matches).reduce((r, k) => {
-    const f = toField(k);
+  var vals = Object.keys(matches).reduce(function (r, k) {
+    var f = toField(k);
+
     if (f) {
       r[f] = matches[k];
     }
 
     return r;
   }, {});
-
   return [vals, zone, specificOffset];
 }
 
-let dummyDateTimeCache = null;
+var dummyDateTimeCache = null;
 
 function getDummyDateTime() {
   if (!dummyDateTimeCache) {
@@ -76550,16 +71746,17 @@ function maybeExpandMacroToken(token, locale) {
     return token;
   }
 
-  const formatOpts = Formatter.macroTokenToFormatOpts(token.val);
+  var formatOpts = Formatter.macroTokenToFormatOpts(token.val);
 
   if (!formatOpts) {
     return token;
   }
 
-  const formatter = Formatter.create(locale, formatOpts);
-  const parts = formatter.formatDateTimeParts(getDummyDateTime());
-
-  const tokens = parts.map((p) => tokenForPart(p, locale, formatOpts));
+  var formatter = Formatter.create(locale, formatOpts);
+  var parts = formatter.formatDateTimeParts(getDummyDateTime());
+  var tokens = parts.map(function (p) {
+    return tokenForPart(p, locale, formatOpts);
+  });
 
   if (tokens.includes(undefined)) {
     return token;
@@ -76569,53 +71766,80 @@ function maybeExpandMacroToken(token, locale) {
 }
 
 function expandMacroTokens(tokens, locale) {
-  return Array.prototype.concat(...tokens.map((t) => maybeExpandMacroToken(t, locale)));
-}
+  var _Array$prototype;
 
+  return (_Array$prototype = Array.prototype).concat.apply(_Array$prototype, tokens.map(function (t) {
+    return maybeExpandMacroToken(t, locale);
+  }));
+}
 /**
  * @private
  */
 
+
 function explainFromTokens(locale, input, format) {
-  const tokens = expandMacroTokens(Formatter.parseFormat(format), locale),
-    units = tokens.map((t) => unitForToken(t, locale)),
-    disqualifyingUnit = units.find((t) => t.invalidReason);
+  var tokens = expandMacroTokens(Formatter.parseFormat(format), locale),
+      units = tokens.map(function (t) {
+    return unitForToken(t, locale);
+  }),
+      disqualifyingUnit = units.find(function (t) {
+    return t.invalidReason;
+  });
 
   if (disqualifyingUnit) {
-    return { input, tokens, invalidReason: disqualifyingUnit.invalidReason };
+    return {
+      input: input,
+      tokens: tokens,
+      invalidReason: disqualifyingUnit.invalidReason
+    };
   } else {
-    const [regexString, handlers] = buildRegex(units),
-      regex = RegExp(regexString, "i"),
-      [rawMatches, matches] = match(input, regex, handlers),
-      [result, zone, specificOffset] = matches
-        ? dateTimeFromMatches(matches)
-        : [null, null, undefined];
+    var _buildRegex = buildRegex(units),
+        regexString = _buildRegex[0],
+        handlers = _buildRegex[1],
+        regex = RegExp(regexString, "i"),
+        _match = match(input, regex, handlers),
+        rawMatches = _match[0],
+        matches = _match[1],
+        _ref6 = matches ? dateTimeFromMatches(matches) : [null, null, undefined],
+        result = _ref6[0],
+        zone = _ref6[1],
+        specificOffset = _ref6[2];
+
     if (hasOwnProperty(matches, "a") && hasOwnProperty(matches, "H")) {
-      throw new ConflictingSpecificationError(
-        "Can't include meridiem when specifying 24-hour format"
-      );
+      throw new ConflictingSpecificationError("Can't include meridiem when specifying 24-hour format");
     }
-    return { input, tokens, regex, rawMatches, matches, result, zone, specificOffset };
+
+    return {
+      input: input,
+      tokens: tokens,
+      regex: regex,
+      rawMatches: rawMatches,
+      matches: matches,
+      result: result,
+      zone: zone,
+      specificOffset: specificOffset
+    };
   }
 }
-
 function parseFromTokens(locale, input, format) {
-  const { result, zone, specificOffset, invalidReason } = explainFromTokens(locale, input, format);
+  var _explainFromTokens = explainFromTokens(locale, input, format),
+      result = _explainFromTokens.result,
+      zone = _explainFromTokens.zone,
+      specificOffset = _explainFromTokens.specificOffset,
+      invalidReason = _explainFromTokens.invalidReason;
+
   return [result, zone, specificOffset, invalidReason];
 }
 
-const nonLeapLadder = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334],
-  leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
+var nonLeapLadder = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334],
+    leapLadder = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
 
 function unitOutOfRange(unit, value) {
-  return new Invalid(
-    "unit out of range",
-    `you specified ${value} (of type ${typeof value}) as a ${unit}, which is invalid`
-  );
+  return new Invalid("unit out of range", "you specified " + value + " (of type " + typeof value + ") as a " + unit + ", which is invalid");
 }
 
 function dayOfWeek(year, month, day) {
-  const js = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+  var js = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
   return js === 0 ? 7 : js;
 }
 
@@ -76624,23 +71848,29 @@ function computeOrdinal(year, month, day) {
 }
 
 function uncomputeOrdinal(year, ordinal) {
-  const table = isLeapYear(year) ? leapLadder : nonLeapLadder,
-    month0 = table.findIndex((i) => i < ordinal),
-    day = ordinal - table[month0];
-  return { month: month0 + 1, day };
+  var table = isLeapYear(year) ? leapLadder : nonLeapLadder,
+      month0 = table.findIndex(function (i) {
+    return i < ordinal;
+  }),
+      day = ordinal - table[month0];
+  return {
+    month: month0 + 1,
+    day: day
+  };
 }
-
 /**
  * @private
  */
 
-function gregorianToWeek(gregObj) {
-  const { year, month, day } = gregObj,
-    ordinal = computeOrdinal(year, month, day),
-    weekday = dayOfWeek(year, month, day);
 
-  let weekNumber = Math.floor((ordinal - weekday + 10) / 7),
-    weekYear;
+function gregorianToWeek(gregObj) {
+  var year = gregObj.year,
+      month = gregObj.month,
+      day = gregObj.day,
+      ordinal = computeOrdinal(year, month, day),
+      weekday = dayOfWeek(year, month, day);
+  var weekNumber = Math.floor((ordinal - weekday + 10) / 7),
+      weekYear;
 
   if (weekNumber < 1) {
     weekYear = year - 1;
@@ -76652,16 +71882,20 @@ function gregorianToWeek(gregObj) {
     weekYear = year;
   }
 
-  return { weekYear, weekNumber, weekday, ...timeObject(gregObj) };
+  return _extends({
+    weekYear: weekYear,
+    weekNumber: weekNumber,
+    weekday: weekday
+  }, timeObject(gregObj));
 }
-
 function weekToGregorian(weekData) {
-  const { weekYear, weekNumber, weekday } = weekData,
-    weekdayOfJan4 = dayOfWeek(weekYear, 1, 4),
-    yearInDays = daysInYear(weekYear);
-
-  let ordinal = weekNumber * 7 + weekday - weekdayOfJan4 - 3,
-    year;
+  var weekYear = weekData.weekYear,
+      weekNumber = weekData.weekNumber,
+      weekday = weekData.weekday,
+      weekdayOfJan4 = dayOfWeek(weekYear, 1, 4),
+      yearInDays = daysInYear(weekYear);
+  var ordinal = weekNumber * 7 + weekday - weekdayOfJan4 - 3,
+      year;
 
   if (ordinal < 1) {
     year = weekYear - 1;
@@ -76673,26 +71907,44 @@ function weekToGregorian(weekData) {
     year = weekYear;
   }
 
-  const { month, day } = uncomputeOrdinal(year, ordinal);
-  return { year, month, day, ...timeObject(weekData) };
-}
+  var _uncomputeOrdinal = uncomputeOrdinal(year, ordinal),
+      month = _uncomputeOrdinal.month,
+      day = _uncomputeOrdinal.day;
 
+  return _extends({
+    year: year,
+    month: month,
+    day: day
+  }, timeObject(weekData));
+}
 function gregorianToOrdinal(gregData) {
-  const { year, month, day } = gregData;
-  const ordinal = computeOrdinal(year, month, day);
-  return { year, ordinal, ...timeObject(gregData) };
+  var year = gregData.year,
+      month = gregData.month,
+      day = gregData.day;
+  var ordinal = computeOrdinal(year, month, day);
+  return _extends({
+    year: year,
+    ordinal: ordinal
+  }, timeObject(gregData));
 }
-
 function ordinalToGregorian(ordinalData) {
-  const { year, ordinal } = ordinalData;
-  const { month, day } = uncomputeOrdinal(year, ordinal);
-  return { year, month, day, ...timeObject(ordinalData) };
-}
+  var year = ordinalData.year,
+      ordinal = ordinalData.ordinal;
 
+  var _uncomputeOrdinal2 = uncomputeOrdinal(year, ordinal),
+      month = _uncomputeOrdinal2.month,
+      day = _uncomputeOrdinal2.day;
+
+  return _extends({
+    year: year,
+    month: month,
+    day: day
+  }, timeObject(ordinalData));
+}
 function hasInvalidWeekData(obj) {
-  const validYear = isInteger(obj.weekYear),
-    validWeek = integerBetween(obj.weekNumber, 1, weeksInWeekYear(obj.weekYear)),
-    validWeekday = integerBetween(obj.weekday, 1, 7);
+  var validYear = isInteger(obj.weekYear),
+      validWeek = integerBetween(obj.weekNumber, 1, weeksInWeekYear(obj.weekYear)),
+      validWeekday = integerBetween(obj.weekday, 1, 7);
 
   if (!validYear) {
     return unitOutOfRange("weekYear", obj.weekYear);
@@ -76702,10 +71954,9 @@ function hasInvalidWeekData(obj) {
     return unitOutOfRange("weekday", obj.weekday);
   } else return false;
 }
-
 function hasInvalidOrdinalData(obj) {
-  const validYear = isInteger(obj.year),
-    validOrdinal = integerBetween(obj.ordinal, 1, daysInYear(obj.year));
+  var validYear = isInteger(obj.year),
+      validOrdinal = integerBetween(obj.ordinal, 1, daysInYear(obj.year));
 
   if (!validYear) {
     return unitOutOfRange("year", obj.year);
@@ -76713,11 +71964,10 @@ function hasInvalidOrdinalData(obj) {
     return unitOutOfRange("ordinal", obj.ordinal);
   } else return false;
 }
-
 function hasInvalidGregorianData(obj) {
-  const validYear = isInteger(obj.year),
-    validMonth = integerBetween(obj.month, 1, 12),
-    validDay = integerBetween(obj.day, 1, daysInMonth(obj.year, obj.month));
+  var validYear = isInteger(obj.year),
+      validMonth = integerBetween(obj.month, 1, 12),
+      validDay = integerBetween(obj.day, 1, daysInMonth(obj.year, obj.month));
 
   if (!validYear) {
     return unitOutOfRange("year", obj.year);
@@ -76727,15 +71977,15 @@ function hasInvalidGregorianData(obj) {
     return unitOutOfRange("day", obj.day);
   } else return false;
 }
-
 function hasInvalidTimeData(obj) {
-  const { hour, minute, second, millisecond } = obj;
-  const validHour =
-      integerBetween(hour, 0, 23) ||
-      (hour === 24 && minute === 0 && second === 0 && millisecond === 0),
-    validMinute = integerBetween(minute, 0, 59),
-    validSecond = integerBetween(second, 0, 59),
-    validMillisecond = integerBetween(millisecond, 0, 999);
+  var hour = obj.hour,
+      minute = obj.minute,
+      second = obj.second,
+      millisecond = obj.millisecond;
+  var validHour = integerBetween(hour, 0, 23) || hour === 24 && minute === 0 && second === 0 && millisecond === 0,
+      validMinute = integerBetween(minute, 0, 59),
+      validSecond = integerBetween(second, 0, 59),
+      validMillisecond = integerBetween(millisecond, 0, 999);
 
   if (!validHour) {
     return unitOutOfRange("hour", hour);
@@ -76748,68 +71998,67 @@ function hasInvalidTimeData(obj) {
   } else return false;
 }
 
-const INVALID = "Invalid DateTime";
-const MAX_DATE = 8.64e15;
+var INVALID = "Invalid DateTime";
+var MAX_DATE = 8.64e15;
 
 function unsupportedZone(zone) {
-  return new Invalid("unsupported zone", `the zone "${zone.name}" is not supported`);
-}
+  return new Invalid("unsupported zone", "the zone \"" + zone.name + "\" is not supported");
+} // we cache week data on the DT object and this intermediates the cache
 
-// we cache week data on the DT object and this intermediates the cache
+
 function possiblyCachedWeekData(dt) {
   if (dt.weekData === null) {
     dt.weekData = gregorianToWeek(dt.c);
   }
-  return dt.weekData;
-}
 
-// clone really means, "make a new object with these modifications". all "setters" really use this
+  return dt.weekData;
+} // clone really means, "make a new object with these modifications". all "setters" really use this
 // to create a new object while only changing some of the properties
+
+
 function clone(inst, alts) {
-  const current = {
+  var current = {
     ts: inst.ts,
     zone: inst.zone,
     c: inst.c,
     o: inst.o,
     loc: inst.loc,
-    invalid: inst.invalid,
+    invalid: inst.invalid
   };
-  return new DateTime({ ...current, ...alts, old: current });
-}
-
-// find the right offset a given local time. The o input is our guess, which determines which
+  return new DateTime(_extends({}, current, alts, {
+    old: current
+  }));
+} // find the right offset a given local time. The o input is our guess, which determines which
 // offset we'll pick in ambiguous cases (e.g. there are two 3 AMs b/c Fallback DST)
+
+
 function fixOffset(localTS, o, tz) {
   // Our UTC time is just a guess because our offset is just a guess
-  let utcGuess = localTS - o * 60 * 1000;
+  var utcGuess = localTS - o * 60 * 1000; // Test whether the zone matches the offset for this ts
 
-  // Test whether the zone matches the offset for this ts
-  const o2 = tz.offset(utcGuess);
+  var o2 = tz.offset(utcGuess); // If so, offset didn't change and we're done
 
-  // If so, offset didn't change and we're done
   if (o === o2) {
     return [utcGuess, o];
-  }
+  } // If not, change the ts by the difference in the offset
 
-  // If not, change the ts by the difference in the offset
-  utcGuess -= (o2 - o) * 60 * 1000;
 
-  // If that gives us the local time we want, we're done
-  const o3 = tz.offset(utcGuess);
+  utcGuess -= (o2 - o) * 60 * 1000; // If that gives us the local time we want, we're done
+
+  var o3 = tz.offset(utcGuess);
+
   if (o2 === o3) {
     return [utcGuess, o2];
-  }
+  } // If it's different, we're in a hole time. The offset has changed, but the we don't adjust the time
 
-  // If it's different, we're in a hole time. The offset has changed, but the we don't adjust the time
+
   return [localTS - Math.min(o2, o3) * 60 * 1000, Math.max(o2, o3)];
-}
+} // convert an epoch timestamp into a calendar object with the given offset
 
-// convert an epoch timestamp into a calendar object with the given offset
+
 function tsToObj(ts, offset) {
   ts += offset * 60 * 1000;
-
-  const d = new Date(ts);
-
+  var d = new Date(ts);
   return {
     year: d.getUTCFullYear(),
     month: d.getUTCMonth() + 1,
@@ -76817,86 +72066,88 @@ function tsToObj(ts, offset) {
     hour: d.getUTCHours(),
     minute: d.getUTCMinutes(),
     second: d.getUTCSeconds(),
-    millisecond: d.getUTCMilliseconds(),
+    millisecond: d.getUTCMilliseconds()
   };
-}
+} // convert a calendar object to a epoch timestamp
 
-// convert a calendar object to a epoch timestamp
+
 function objToTS(obj, offset, zone) {
   return fixOffset(objToLocalTS(obj), offset, zone);
-}
+} // create a new DT instance by adding a duration, adjusting for DSTs
 
-// create a new DT instance by adding a duration, adjusting for DSTs
+
 function adjustTime(inst, dur) {
-  const oPre = inst.o,
-    year = inst.c.year + Math.trunc(dur.years),
-    month = inst.c.month + Math.trunc(dur.months) + Math.trunc(dur.quarters) * 3,
-    c = {
-      ...inst.c,
-      year,
-      month,
-      day:
-        Math.min(inst.c.day, daysInMonth(year, month)) +
-        Math.trunc(dur.days) +
-        Math.trunc(dur.weeks) * 7,
-    },
-    millisToAdd = Duration.fromObject({
-      years: dur.years - Math.trunc(dur.years),
-      quarters: dur.quarters - Math.trunc(dur.quarters),
-      months: dur.months - Math.trunc(dur.months),
-      weeks: dur.weeks - Math.trunc(dur.weeks),
-      days: dur.days - Math.trunc(dur.days),
-      hours: dur.hours,
-      minutes: dur.minutes,
-      seconds: dur.seconds,
-      milliseconds: dur.milliseconds,
-    }).as("milliseconds"),
-    localTS = objToLocalTS(c);
+  var oPre = inst.o,
+      year = inst.c.year + Math.trunc(dur.years),
+      month = inst.c.month + Math.trunc(dur.months) + Math.trunc(dur.quarters) * 3,
+      c = _extends({}, inst.c, {
+    year: year,
+    month: month,
+    day: Math.min(inst.c.day, daysInMonth(year, month)) + Math.trunc(dur.days) + Math.trunc(dur.weeks) * 7
+  }),
+      millisToAdd = Duration.fromObject({
+    years: dur.years - Math.trunc(dur.years),
+    quarters: dur.quarters - Math.trunc(dur.quarters),
+    months: dur.months - Math.trunc(dur.months),
+    weeks: dur.weeks - Math.trunc(dur.weeks),
+    days: dur.days - Math.trunc(dur.days),
+    hours: dur.hours,
+    minutes: dur.minutes,
+    seconds: dur.seconds,
+    milliseconds: dur.milliseconds
+  }).as("milliseconds"),
+      localTS = objToLocalTS(c);
 
-  let [ts, o] = fixOffset(localTS, oPre, inst.zone);
+  var _fixOffset = fixOffset(localTS, oPre, inst.zone),
+      ts = _fixOffset[0],
+      o = _fixOffset[1];
 
   if (millisToAdd !== 0) {
-    ts += millisToAdd;
-    // that could have changed the offset by going over a DST, but we want to keep the ts the same
+    ts += millisToAdd; // that could have changed the offset by going over a DST, but we want to keep the ts the same
+
     o = inst.zone.offset(ts);
   }
 
-  return { ts, o };
-}
-
-// helper useful in turning the results of parsing into real dates
+  return {
+    ts: ts,
+    o: o
+  };
+} // helper useful in turning the results of parsing into real dates
 // by handling the zone options
+
+
 function parseDataToDateTime(parsed, parsedZone, opts, format, text, specificOffset) {
-  const { setZone, zone } = opts;
+  var setZone = opts.setZone,
+      zone = opts.zone;
+
   if (parsed && Object.keys(parsed).length !== 0) {
-    const interpretationZone = parsedZone || zone,
-      inst = DateTime.fromObject(parsed, {
-        ...opts,
-        zone: interpretationZone,
-        specificOffset,
-      });
+    var interpretationZone = parsedZone || zone,
+        inst = DateTime.fromObject(parsed, _extends({}, opts, {
+      zone: interpretationZone,
+      specificOffset: specificOffset
+    }));
     return setZone ? inst : inst.setZone(zone);
   } else {
-    return DateTime.invalid(
-      new Invalid("unparsable", `the input "${text}" can't be parsed as ${format}`)
-    );
+    return DateTime.invalid(new Invalid("unparsable", "the input \"" + text + "\" can't be parsed as " + format));
   }
-}
-
-// if you want to output a technical format (e.g. RFC 2822), this helper
+} // if you want to output a technical format (e.g. RFC 2822), this helper
 // helps handle the details
-function toTechFormat(dt, format, allowZ = true) {
-  return dt.isValid
-    ? Formatter.create(Locale.create("en-US"), {
-        allowZ,
-        forceSimple: true,
-      }).formatDateTimeFromString(dt, format)
-    : null;
+
+
+function toTechFormat(dt, format, allowZ) {
+  if (allowZ === void 0) {
+    allowZ = true;
+  }
+
+  return dt.isValid ? Formatter.create(Locale.create("en-US"), {
+    allowZ: allowZ,
+    forceSimple: true
+  }).formatDateTimeFromString(dt, format) : null;
 }
 
-function toISODate(o, extended) {
-  const longFormat = o.c.year > 9999 || o.c.year < 0;
-  let c = "";
+function _toISODate(o, extended) {
+  var longFormat = o.c.year > 9999 || o.c.year < 0;
+  var c = "";
   if (longFormat && o.c.year >= 0) c += "+";
   c += padStart(o.c.year, longFormat ? 6 : 4);
 
@@ -76909,14 +72160,17 @@ function toISODate(o, extended) {
     c += padStart(o.c.month);
     c += padStart(o.c.day);
   }
+
   return c;
 }
 
-function toISOTime(o, extended, suppressSeconds, suppressMilliseconds, includeOffset) {
-  let c = padStart(o.c.hour);
+function _toISOTime(o, extended, suppressSeconds, suppressMilliseconds, includeOffset) {
+  var c = padStart(o.c.hour);
+
   if (extended) {
     c += ":";
     c += padStart(o.c.minute);
+
     if (o.c.second !== 0 || !suppressSeconds) {
       c += ":";
     }
@@ -76948,50 +72202,41 @@ function toISOTime(o, extended, suppressSeconds, suppressMilliseconds, includeOf
       c += padStart(Math.trunc(o.o % 60));
     }
   }
+
   return c;
-}
+} // defaults for unspecified units in the supported calendars
 
-// defaults for unspecified units in the supported calendars
-const defaultUnitValues = {
-    month: 1,
-    day: 1,
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-  },
-  defaultWeekUnitValues = {
-    weekNumber: 1,
-    weekday: 1,
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-  },
-  defaultOrdinalUnitValues = {
-    ordinal: 1,
-    hour: 0,
-    minute: 0,
-    second: 0,
-    millisecond: 0,
-  };
 
-// Units in the supported calendars, sorted by bigness
-const orderedUnits = ["year", "month", "day", "hour", "minute", "second", "millisecond"],
-  orderedWeekUnits = [
-    "weekYear",
-    "weekNumber",
-    "weekday",
-    "hour",
-    "minute",
-    "second",
-    "millisecond",
-  ],
-  orderedOrdinalUnits = ["year", "ordinal", "hour", "minute", "second", "millisecond"];
+var defaultUnitValues = {
+  month: 1,
+  day: 1,
+  hour: 0,
+  minute: 0,
+  second: 0,
+  millisecond: 0
+},
+    defaultWeekUnitValues = {
+  weekNumber: 1,
+  weekday: 1,
+  hour: 0,
+  minute: 0,
+  second: 0,
+  millisecond: 0
+},
+    defaultOrdinalUnitValues = {
+  ordinal: 1,
+  hour: 0,
+  minute: 0,
+  second: 0,
+  millisecond: 0
+}; // Units in the supported calendars, sorted by bigness
 
-// standardize case and plurality in units
+var orderedUnits = ["year", "month", "day", "hour", "minute", "second", "millisecond"],
+    orderedWeekUnits = ["weekYear", "weekNumber", "weekday", "hour", "minute", "second", "millisecond"],
+    orderedOrdinalUnits = ["year", "ordinal", "hour", "minute", "second", "millisecond"]; // standardize case and plurality in units
+
 function normalizeUnit(unit) {
-  const normalized = {
+  var normalized = {
     year: "year",
     years: "year",
     month: "month",
@@ -77015,92 +72260,103 @@ function normalizeUnit(unit) {
     weeknumbers: "weekNumber",
     weekyear: "weekYear",
     weekyears: "weekYear",
-    ordinal: "ordinal",
+    ordinal: "ordinal"
   }[unit.toLowerCase()];
-
   if (!normalized) throw new InvalidUnitError(unit);
-
   return normalized;
-}
-
+} // this is a dumbed down version of fromObject() that runs about 60% faster
+// but doesn't do any validation, makes a bunch of assumptions about what units
+// are present, and so on.
 // this is a dumbed down version of fromObject() that runs about 60% faster
 // but doesn't do any validation, makes a bunch of assumptions about what units
 // are present, and so on.
 
-// this is a dumbed down version of fromObject() that runs about 60% faster
-// but doesn't do any validation, makes a bunch of assumptions about what units
-// are present, and so on.
+
 function quickDT(obj, opts) {
-  const zone = normalizeZone(opts.zone, Settings.defaultZone),
-    loc = Locale.fromObject(opts),
-    tsNow = Settings.now();
+  var zone = normalizeZone(opts.zone, Settings.defaultZone),
+      loc = Locale.fromObject(opts),
+      tsNow = Settings.now();
+  var ts, o; // assume we have the higher-order units
 
-  let ts, o;
-
-  // assume we have the higher-order units
   if (!isUndefined(obj.year)) {
-    for (const u of orderedUnits) {
+    for (var _iterator = _createForOfIteratorHelperLoose(orderedUnits), _step; !(_step = _iterator()).done;) {
+      var u = _step.value;
+
       if (isUndefined(obj[u])) {
         obj[u] = defaultUnitValues[u];
       }
     }
 
-    const invalid = hasInvalidGregorianData(obj) || hasInvalidTimeData(obj);
+    var invalid = hasInvalidGregorianData(obj) || hasInvalidTimeData(obj);
+
     if (invalid) {
       return DateTime.invalid(invalid);
     }
 
-    const offsetProvis = zone.offset(tsNow);
-    [ts, o] = objToTS(obj, offsetProvis, zone);
+    var offsetProvis = zone.offset(tsNow);
+
+    var _objToTS = objToTS(obj, offsetProvis, zone);
+
+    ts = _objToTS[0];
+    o = _objToTS[1];
   } else {
     ts = tsNow;
   }
 
-  return new DateTime({ ts, zone, loc, o });
+  return new DateTime({
+    ts: ts,
+    zone: zone,
+    loc: loc,
+    o: o
+  });
 }
 
 function diffRelative(start, end, opts) {
-  const round = isUndefined(opts.round) ? true : opts.round,
-    format = (c, unit) => {
-      c = roundTo(c, round || opts.calendary ? 0 : 2, true);
-      const formatter = end.loc.clone(opts).relFormatter(opts);
-      return formatter.format(c, unit);
-    },
-    differ = (unit) => {
-      if (opts.calendary) {
-        if (!end.hasSame(start, unit)) {
-          return end.startOf(unit).diff(start.startOf(unit), unit).get(unit);
-        } else return 0;
-      } else {
-        return end.diff(start, unit).get(unit);
-      }
-    };
+  var round = isUndefined(opts.round) ? true : opts.round,
+      format = function format(c, unit) {
+    c = roundTo(c, round || opts.calendary ? 0 : 2, true);
+    var formatter = end.loc.clone(opts).relFormatter(opts);
+    return formatter.format(c, unit);
+  },
+      differ = function differ(unit) {
+    if (opts.calendary) {
+      if (!end.hasSame(start, unit)) {
+        return end.startOf(unit).diff(start.startOf(unit), unit).get(unit);
+      } else return 0;
+    } else {
+      return end.diff(start, unit).get(unit);
+    }
+  };
 
   if (opts.unit) {
     return format(differ(opts.unit), opts.unit);
   }
 
-  for (const unit of opts.units) {
-    const count = differ(unit);
+  for (var _iterator2 = _createForOfIteratorHelperLoose(opts.units), _step2; !(_step2 = _iterator2()).done;) {
+    var unit = _step2.value;
+    var count = differ(unit);
+
     if (Math.abs(count) >= 1) {
       return format(count, unit);
     }
   }
+
   return format(start > end ? -0 : 0, opts.units[opts.units.length - 1]);
 }
 
 function lastOpts(argList) {
-  let opts = {},
-    args;
+  var opts = {},
+      args;
+
   if (argList.length > 0 && typeof argList[argList.length - 1] === "object") {
     opts = argList[argList.length - 1];
     args = Array.from(argList).slice(0, argList.length - 1);
   } else {
     args = Array.from(argList);
   }
+
   return [opts, args];
 }
-
 /**
  * A DateTime is an immutable data structure representing a specific date and time and accompanying methods. It contains class and instance methods for creating, parsing, interrogating, transforming, and formatting them.
  *
@@ -77121,69 +72377,75 @@ function lastOpts(argList) {
  *
  * There's plenty others documented below. In addition, for more information on subtler topics like internationalization, time zones, alternative calendars, validity, and so on, see the external documentation.
  */
-class DateTime {
+
+
+var DateTime = /*#__PURE__*/function () {
   /**
    * @access private
    */
-  constructor(config) {
-    const zone = config.zone || Settings.defaultZone;
-
-    let invalid =
-      config.invalid ||
-      (Number.isNaN(config.ts) ? new Invalid("invalid input") : null) ||
-      (!zone.isValid ? unsupportedZone(zone) : null);
+  function DateTime(config) {
+    var zone = config.zone || Settings.defaultZone;
+    var invalid = config.invalid || (Number.isNaN(config.ts) ? new Invalid("invalid input") : null) || (!zone.isValid ? unsupportedZone(zone) : null);
     /**
      * @access private
      */
-    this.ts = isUndefined(config.ts) ? Settings.now() : config.ts;
 
-    let c = null,
-      o = null;
+    this.ts = isUndefined(config.ts) ? Settings.now() : config.ts;
+    var c = null,
+        o = null;
+
     if (!invalid) {
-      const unchanged = config.old && config.old.ts === this.ts && config.old.zone.equals(zone);
+      var unchanged = config.old && config.old.ts === this.ts && config.old.zone.equals(zone);
 
       if (unchanged) {
-        [c, o] = [config.old.c, config.old.o];
+        var _ref = [config.old.c, config.old.o];
+        c = _ref[0];
+        o = _ref[1];
       } else {
-        const ot = zone.offset(this.ts);
+        var ot = zone.offset(this.ts);
         c = tsToObj(this.ts, ot);
         invalid = Number.isNaN(c.year) ? new Invalid("invalid input") : null;
         c = invalid ? null : c;
         o = invalid ? null : ot;
       }
     }
-
     /**
      * @access private
      */
+
+
     this._zone = zone;
     /**
      * @access private
      */
+
     this.loc = config.loc || Locale.create();
     /**
      * @access private
      */
+
     this.invalid = invalid;
     /**
      * @access private
      */
+
     this.weekData = null;
     /**
      * @access private
      */
+
     this.c = c;
     /**
      * @access private
      */
+
     this.o = o;
     /**
      * @access private
      */
-    this.isLuxonDateTime = true;
-  }
 
-  // CONSTRUCT
+    this.isLuxonDateTime = true;
+  } // CONSTRUCT
 
   /**
    * Create a DateTime for the current instant, in the system's time zone.
@@ -77192,10 +72454,11 @@ class DateTime {
    * @example DateTime.now().toISO() //~> now in the ISO format
    * @return {DateTime}
    */
-  static now() {
+
+
+  DateTime.now = function now() {
     return new DateTime({});
   }
-
   /**
    * Create a local DateTime
    * @param {number} [year] - The calendar year. If omitted (as in, call `local()` with no arguments), the current time will be used
@@ -77217,12 +72480,30 @@ class DateTime {
    * @example DateTime.local(2017, 3, 12, 5, 45, 10, 765)       //~> 2017-03-12T05:45:10.765
    * @return {DateTime}
    */
-  static local() {
-    const [opts, args] = lastOpts(arguments),
-      [year, month, day, hour, minute, second, millisecond] = args;
-    return quickDT({ year, month, day, hour, minute, second, millisecond }, opts);
-  }
+  ;
 
+  DateTime.local = function local() {
+    var _lastOpts = lastOpts(arguments),
+        opts = _lastOpts[0],
+        args = _lastOpts[1],
+        year = args[0],
+        month = args[1],
+        day = args[2],
+        hour = args[3],
+        minute = args[4],
+        second = args[5],
+        millisecond = args[6];
+
+    return quickDT({
+      year: year,
+      month: month,
+      day: day,
+      hour: hour,
+      minute: minute,
+      second: second,
+      millisecond: millisecond
+    }, opts);
+  }
   /**
    * Create a DateTime in UTC
    * @param {number} [year] - The calendar year. If omitted (as in, call `utc()` with no arguments), the current time will be used
@@ -77247,14 +72528,31 @@ class DateTime {
    * @example DateTime.utc(2017, 3, 12, 5, 45, 10, 765, { locale: "fr" }) //~> 2017-03-12T05:45:10.765Z with a French locale
    * @return {DateTime}
    */
-  static utc() {
-    const [opts, args] = lastOpts(arguments),
-      [year, month, day, hour, minute, second, millisecond] = args;
+  ;
+
+  DateTime.utc = function utc() {
+    var _lastOpts2 = lastOpts(arguments),
+        opts = _lastOpts2[0],
+        args = _lastOpts2[1],
+        year = args[0],
+        month = args[1],
+        day = args[2],
+        hour = args[3],
+        minute = args[4],
+        second = args[5],
+        millisecond = args[6];
 
     opts.zone = FixedOffsetZone.utcInstance;
-    return quickDT({ year, month, day, hour, minute, second, millisecond }, opts);
+    return quickDT({
+      year: year,
+      month: month,
+      day: day,
+      hour: hour,
+      minute: minute,
+      second: second,
+      millisecond: millisecond
+    }, opts);
   }
-
   /**
    * Create a DateTime from a JavaScript Date object. Uses the default zone.
    * @param {Date} date - a JavaScript Date object
@@ -77262,13 +72560,21 @@ class DateTime {
    * @param {string|Zone} [options.zone='local'] - the zone to place the DateTime into
    * @return {DateTime}
    */
-  static fromJSDate(date, options = {}) {
-    const ts = isDate(date) ? date.valueOf() : NaN;
+  ;
+
+  DateTime.fromJSDate = function fromJSDate(date, options) {
+    if (options === void 0) {
+      options = {};
+    }
+
+    var ts = isDate(date) ? date.valueOf() : NaN;
+
     if (Number.isNaN(ts)) {
       return DateTime.invalid("invalid input");
     }
 
-    const zoneToUse = normalizeZone(options.zone, Settings.defaultZone);
+    var zoneToUse = normalizeZone(options.zone, Settings.defaultZone);
+
     if (!zoneToUse.isValid) {
       return DateTime.invalid(unsupportedZone(zoneToUse));
     }
@@ -77276,10 +72582,9 @@ class DateTime {
     return new DateTime({
       ts: ts,
       zone: zoneToUse,
-      loc: Locale.fromObject(options),
+      loc: Locale.fromObject(options)
     });
   }
-
   /**
    * Create a DateTime from a number of milliseconds since the epoch (meaning since 1 January 1970 00:00:00 UTC). Uses the default zone.
    * @param {number} milliseconds - a number of milliseconds since 1970 UTC
@@ -77290,11 +72595,15 @@ class DateTime {
    * @param {string} options.numberingSystem - the numbering system to set on the resulting DateTime instance
    * @return {DateTime}
    */
-  static fromMillis(milliseconds, options = {}) {
+  ;
+
+  DateTime.fromMillis = function fromMillis(milliseconds, options) {
+    if (options === void 0) {
+      options = {};
+    }
+
     if (!isNumber(milliseconds)) {
-      throw new InvalidArgumentError(
-        `fromMillis requires a numerical input, but received a ${typeof milliseconds} with value ${milliseconds}`
-      );
+      throw new InvalidArgumentError("fromMillis requires a numerical input, but received a " + typeof milliseconds + " with value " + milliseconds);
     } else if (milliseconds < -MAX_DATE || milliseconds > MAX_DATE) {
       // this isn't perfect because because we can still end up out of range because of additional shifting, but it's a start
       return DateTime.invalid("Timestamp out of range");
@@ -77302,11 +72611,10 @@ class DateTime {
       return new DateTime({
         ts: milliseconds,
         zone: normalizeZone(options.zone, Settings.defaultZone),
-        loc: Locale.fromObject(options),
+        loc: Locale.fromObject(options)
       });
     }
   }
-
   /**
    * Create a DateTime from a number of seconds since the epoch (meaning since 1 January 1970 00:00:00 UTC). Uses the default zone.
    * @param {number} seconds - a number of seconds since 1970 UTC
@@ -77317,18 +72625,23 @@ class DateTime {
    * @param {string} options.numberingSystem - the numbering system to set on the resulting DateTime instance
    * @return {DateTime}
    */
-  static fromSeconds(seconds, options = {}) {
+  ;
+
+  DateTime.fromSeconds = function fromSeconds(seconds, options) {
+    if (options === void 0) {
+      options = {};
+    }
+
     if (!isNumber(seconds)) {
       throw new InvalidArgumentError("fromSeconds requires a numerical input");
     } else {
       return new DateTime({
         ts: seconds * 1000,
         zone: normalizeZone(options.zone, Settings.defaultZone),
-        loc: Locale.fromObject(options),
+        loc: Locale.fromObject(options)
       });
     }
   }
-
   /**
    * Create a DateTime from a JavaScript object with keys like 'year' and 'hour' with reasonable defaults.
    * @param {Object} obj - the object to create the DateTime from
@@ -77357,47 +72670,48 @@ class DateTime {
    * @example DateTime.fromObject({ weekYear: 2016, weekNumber: 2, weekday: 3 }).toISODate() //=> '2016-01-13'
    * @return {DateTime}
    */
-  static fromObject(obj, opts = {}) {
+  ;
+
+  DateTime.fromObject = function fromObject(obj, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     obj = obj || {};
-    const zoneToUse = normalizeZone(opts.zone, Settings.defaultZone);
+    var zoneToUse = normalizeZone(opts.zone, Settings.defaultZone);
+
     if (!zoneToUse.isValid) {
       return DateTime.invalid(unsupportedZone(zoneToUse));
     }
 
-    const tsNow = Settings.now(),
-      offsetProvis = !isUndefined(opts.specificOffset)
-        ? opts.specificOffset
-        : zoneToUse.offset(tsNow),
-      normalized = normalizeObject(obj, normalizeUnit),
-      containsOrdinal = !isUndefined(normalized.ordinal),
-      containsGregorYear = !isUndefined(normalized.year),
-      containsGregorMD = !isUndefined(normalized.month) || !isUndefined(normalized.day),
-      containsGregor = containsGregorYear || containsGregorMD,
-      definiteWeekDef = normalized.weekYear || normalized.weekNumber,
-      loc = Locale.fromObject(opts);
-
-    // cases:
+    var tsNow = Settings.now(),
+        offsetProvis = !isUndefined(opts.specificOffset) ? opts.specificOffset : zoneToUse.offset(tsNow),
+        normalized = normalizeObject(obj, normalizeUnit),
+        containsOrdinal = !isUndefined(normalized.ordinal),
+        containsGregorYear = !isUndefined(normalized.year),
+        containsGregorMD = !isUndefined(normalized.month) || !isUndefined(normalized.day),
+        containsGregor = containsGregorYear || containsGregorMD,
+        definiteWeekDef = normalized.weekYear || normalized.weekNumber,
+        loc = Locale.fromObject(opts); // cases:
     // just a weekday -> this week's instance of that weekday, no worries
     // (gregorian data or ordinal) + (weekYear or weekNumber) -> error
     // (gregorian month or day) + ordinal -> error
     // otherwise just use weeks or ordinals or gregorian, depending on what's specified
 
     if ((containsGregor || containsOrdinal) && definiteWeekDef) {
-      throw new ConflictingSpecificationError(
-        "Can't mix weekYear/weekNumber units with year/month/day or ordinals"
-      );
+      throw new ConflictingSpecificationError("Can't mix weekYear/weekNumber units with year/month/day or ordinals");
     }
 
     if (containsGregorMD && containsOrdinal) {
       throw new ConflictingSpecificationError("Can't mix ordinal dates with month/day");
     }
 
-    const useWeekData = definiteWeekDef || (normalized.weekday && !containsGregor);
+    var useWeekData = definiteWeekDef || normalized.weekday && !containsGregor; // configure ourselves to deal with gregorian dates or week stuff
 
-    // configure ourselves to deal with gregorian dates or week stuff
-    let units,
-      defaultValues,
-      objNow = tsToObj(tsNow, offsetProvis);
+    var units,
+        defaultValues,
+        objNow = tsToObj(tsNow, offsetProvis);
+
     if (useWeekData) {
       units = orderedWeekUnits;
       defaultValues = defaultWeekUnitValues;
@@ -77409,12 +72723,15 @@ class DateTime {
     } else {
       units = orderedUnits;
       defaultValues = defaultUnitValues;
-    }
+    } // set default values for missing stuff
 
-    // set default values for missing stuff
-    let foundFirst = false;
-    for (const u of units) {
-      const v = normalized[u];
+
+    var foundFirst = false;
+
+    for (var _iterator3 = _createForOfIteratorHelperLoose(units), _step3; !(_step3 = _iterator3()).done;) {
+      var u = _step3.value;
+      var v = normalized[u];
+
       if (!isUndefined(v)) {
         foundFirst = true;
       } else if (foundFirst) {
@@ -77422,45 +72739,35 @@ class DateTime {
       } else {
         normalized[u] = objNow[u];
       }
-    }
+    } // make sure the values we have are in range
 
-    // make sure the values we have are in range
-    const higherOrderInvalid = useWeekData
-        ? hasInvalidWeekData(normalized)
-        : containsOrdinal
-        ? hasInvalidOrdinalData(normalized)
-        : hasInvalidGregorianData(normalized),
-      invalid = higherOrderInvalid || hasInvalidTimeData(normalized);
+
+    var higherOrderInvalid = useWeekData ? hasInvalidWeekData(normalized) : containsOrdinal ? hasInvalidOrdinalData(normalized) : hasInvalidGregorianData(normalized),
+        invalid = higherOrderInvalid || hasInvalidTimeData(normalized);
 
     if (invalid) {
       return DateTime.invalid(invalid);
-    }
+    } // compute the actual time
 
-    // compute the actual time
-    const gregorian = useWeekData
-        ? weekToGregorian(normalized)
-        : containsOrdinal
-        ? ordinalToGregorian(normalized)
-        : normalized,
-      [tsFinal, offsetFinal] = objToTS(gregorian, offsetProvis, zoneToUse),
-      inst = new DateTime({
-        ts: tsFinal,
-        zone: zoneToUse,
-        o: offsetFinal,
-        loc,
-      });
 
-    // gregorian data + weekday serves only to validate
+    var gregorian = useWeekData ? weekToGregorian(normalized) : containsOrdinal ? ordinalToGregorian(normalized) : normalized,
+        _objToTS2 = objToTS(gregorian, offsetProvis, zoneToUse),
+        tsFinal = _objToTS2[0],
+        offsetFinal = _objToTS2[1],
+        inst = new DateTime({
+      ts: tsFinal,
+      zone: zoneToUse,
+      o: offsetFinal,
+      loc: loc
+    }); // gregorian data + weekday serves only to validate
+
+
     if (normalized.weekday && containsGregor && obj.weekday !== inst.weekday) {
-      return DateTime.invalid(
-        "mismatched weekday",
-        `you can't specify both a weekday of ${normalized.weekday} and a date of ${inst.toISO()}`
-      );
+      return DateTime.invalid("mismatched weekday", "you can't specify both a weekday of " + normalized.weekday + " and a date of " + inst.toISO());
     }
 
     return inst;
   }
-
   /**
    * Create a DateTime from an ISO 8601 string
    * @param {string} text - the ISO string
@@ -77477,11 +72784,19 @@ class DateTime {
    * @example DateTime.fromISO('2016-W05-4')
    * @return {DateTime}
    */
-  static fromISO(text, opts = {}) {
-    const [vals, parsedZone] = parseISODate(text);
+  ;
+
+  DateTime.fromISO = function fromISO(text, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    var _parseISODate = parseISODate(text),
+        vals = _parseISODate[0],
+        parsedZone = _parseISODate[1];
+
     return parseDataToDateTime(vals, parsedZone, opts, "ISO 8601", text);
   }
-
   /**
    * Create a DateTime from an RFC 2822 string
    * @param {string} text - the RFC 2822 string
@@ -77496,11 +72811,19 @@ class DateTime {
    * @example DateTime.fromRFC2822('25 Nov 2016 13:23 Z')
    * @return {DateTime}
    */
-  static fromRFC2822(text, opts = {}) {
-    const [vals, parsedZone] = parseRFC2822Date(text);
+  ;
+
+  DateTime.fromRFC2822 = function fromRFC2822(text, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    var _parseRFC2822Date = parseRFC2822Date(text),
+        vals = _parseRFC2822Date[0],
+        parsedZone = _parseRFC2822Date[1];
+
     return parseDataToDateTime(vals, parsedZone, opts, "RFC 2822", text);
   }
-
   /**
    * Create a DateTime from an HTTP header date
    * @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.3.1
@@ -77516,11 +72839,19 @@ class DateTime {
    * @example DateTime.fromHTTP('Sun Nov  6 08:49:37 1994')
    * @return {DateTime}
    */
-  static fromHTTP(text, opts = {}) {
-    const [vals, parsedZone] = parseHTTPDate(text);
+  ;
+
+  DateTime.fromHTTP = function fromHTTP(text, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    var _parseHTTPDate = parseHTTPDate(text),
+        vals = _parseHTTPDate[0],
+        parsedZone = _parseHTTPDate[1];
+
     return parseDataToDateTime(vals, parsedZone, opts, "HTTP", opts);
   }
-
   /**
    * Create a DateTime from an input string and format string.
    * Defaults to en-US if no locale has been specified, regardless of the system's locale. For a table of tokens and their interpretations, see [here](https://moment.github.io/luxon/#/parsing?id=table-of-tokens).
@@ -77534,32 +72865,51 @@ class DateTime {
    * @param {string} opts.outputCalendar - the output calendar to set on the resulting DateTime instance
    * @return {DateTime}
    */
-  static fromFormat(text, fmt, opts = {}) {
+  ;
+
+  DateTime.fromFormat = function fromFormat(text, fmt, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     if (isUndefined(text) || isUndefined(fmt)) {
       throw new InvalidArgumentError("fromFormat requires an input string and a format");
     }
 
-    const { locale = null, numberingSystem = null } = opts,
-      localeToUse = Locale.fromOpts({
-        locale,
-        numberingSystem,
-        defaultToEN: true,
-      }),
-      [vals, parsedZone, specificOffset, invalid] = parseFromTokens(localeToUse, text, fmt);
+    var _opts = opts,
+        _opts$locale = _opts.locale,
+        locale = _opts$locale === void 0 ? null : _opts$locale,
+        _opts$numberingSystem = _opts.numberingSystem,
+        numberingSystem = _opts$numberingSystem === void 0 ? null : _opts$numberingSystem,
+        localeToUse = Locale.fromOpts({
+      locale: locale,
+      numberingSystem: numberingSystem,
+      defaultToEN: true
+    }),
+        _parseFromTokens = parseFromTokens(localeToUse, text, fmt),
+        vals = _parseFromTokens[0],
+        parsedZone = _parseFromTokens[1],
+        specificOffset = _parseFromTokens[2],
+        invalid = _parseFromTokens[3];
+
     if (invalid) {
       return DateTime.invalid(invalid);
     } else {
-      return parseDataToDateTime(vals, parsedZone, opts, `format ${fmt}`, text, specificOffset);
+      return parseDataToDateTime(vals, parsedZone, opts, "format " + fmt, text, specificOffset);
     }
   }
-
   /**
    * @deprecated use fromFormat instead
    */
-  static fromString(text, fmt, opts = {}) {
+  ;
+
+  DateTime.fromString = function fromString(text, fmt, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     return DateTime.fromFormat(text, fmt, opts);
   }
-
   /**
    * Create a DateTime from a SQL date, time, or datetime
    * Defaults to en-US if no locale has been specified, regardless of the system's locale
@@ -77580,41 +72930,56 @@ class DateTime {
    * @example DateTime.fromSQL('09:12:34.342')
    * @return {DateTime}
    */
-  static fromSQL(text, opts = {}) {
-    const [vals, parsedZone] = parseSQL(text);
+  ;
+
+  DateTime.fromSQL = function fromSQL(text, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    var _parseSQL = parseSQL(text),
+        vals = _parseSQL[0],
+        parsedZone = _parseSQL[1];
+
     return parseDataToDateTime(vals, parsedZone, opts, "SQL", text);
   }
-
   /**
    * Create an invalid DateTime.
    * @param {string} reason - simple string of why this DateTime is invalid. Should not contain parameters or anything else data-dependent
    * @param {string} [explanation=null] - longer explanation, may include parameters and other useful debugging information
    * @return {DateTime}
    */
-  static invalid(reason, explanation = null) {
+  ;
+
+  DateTime.invalid = function invalid(reason, explanation) {
+    if (explanation === void 0) {
+      explanation = null;
+    }
+
     if (!reason) {
       throw new InvalidArgumentError("need to specify a reason the DateTime is invalid");
     }
 
-    const invalid = reason instanceof Invalid ? reason : new Invalid(reason, explanation);
+    var invalid = reason instanceof Invalid ? reason : new Invalid(reason, explanation);
 
     if (Settings.throwOnInvalid) {
       throw new InvalidDateTimeError(invalid);
     } else {
-      return new DateTime({ invalid });
+      return new DateTime({
+        invalid: invalid
+      });
     }
   }
-
   /**
    * Check if an object is a DateTime. Works across context boundaries
    * @param {object} o
    * @return {boolean}
    */
-  static isDateTime(o) {
-    return (o && o.isLuxonDateTime) || false;
-  }
+  ;
 
-  // INFO
+  DateTime.isDateTime = function isDateTime(o) {
+    return o && o.isLuxonDateTime || false;
+  } // INFO
 
   /**
    * Get the value of unit.
@@ -77623,335 +72988,20 @@ class DateTime {
    * @example DateTime.local(2017, 7, 4).get('day'); //=> 4
    * @return {number}
    */
-  get(unit) {
+  ;
+
+  var _proto = DateTime.prototype;
+
+  _proto.get = function get(unit) {
     return this[unit];
   }
-
   /**
    * Returns whether the DateTime is valid. Invalid DateTimes occur when:
    * * The DateTime was created from invalid calendar information, such as the 13th month or February 30
    * * The DateTime was created by an operation on another invalid date
    * @type {boolean}
    */
-  get isValid() {
-    return this.invalid === null;
-  }
-
-  /**
-   * Returns an error code if this DateTime is invalid, or null if the DateTime is valid
-   * @type {string}
-   */
-  get invalidReason() {
-    return this.invalid ? this.invalid.reason : null;
-  }
-
-  /**
-   * Returns an explanation of why this DateTime became invalid, or null if the DateTime is valid
-   * @type {string}
-   */
-  get invalidExplanation() {
-    return this.invalid ? this.invalid.explanation : null;
-  }
-
-  /**
-   * Get the locale of a DateTime, such 'en-GB'. The locale is used when formatting the DateTime
-   *
-   * @type {string}
-   */
-  get locale() {
-    return this.isValid ? this.loc.locale : null;
-  }
-
-  /**
-   * Get the numbering system of a DateTime, such 'beng'. The numbering system is used when formatting the DateTime
-   *
-   * @type {string}
-   */
-  get numberingSystem() {
-    return this.isValid ? this.loc.numberingSystem : null;
-  }
-
-  /**
-   * Get the output calendar of a DateTime, such 'islamic'. The output calendar is used when formatting the DateTime
-   *
-   * @type {string}
-   */
-  get outputCalendar() {
-    return this.isValid ? this.loc.outputCalendar : null;
-  }
-
-  /**
-   * Get the time zone associated with this DateTime.
-   * @type {Zone}
-   */
-  get zone() {
-    return this._zone;
-  }
-
-  /**
-   * Get the name of the time zone.
-   * @type {string}
-   */
-  get zoneName() {
-    return this.isValid ? this.zone.name : null;
-  }
-
-  /**
-   * Get the year
-   * @example DateTime.local(2017, 5, 25).year //=> 2017
-   * @type {number}
-   */
-  get year() {
-    return this.isValid ? this.c.year : NaN;
-  }
-
-  /**
-   * Get the quarter
-   * @example DateTime.local(2017, 5, 25).quarter //=> 2
-   * @type {number}
-   */
-  get quarter() {
-    return this.isValid ? Math.ceil(this.c.month / 3) : NaN;
-  }
-
-  /**
-   * Get the month (1-12).
-   * @example DateTime.local(2017, 5, 25).month //=> 5
-   * @type {number}
-   */
-  get month() {
-    return this.isValid ? this.c.month : NaN;
-  }
-
-  /**
-   * Get the day of the month (1-30ish).
-   * @example DateTime.local(2017, 5, 25).day //=> 25
-   * @type {number}
-   */
-  get day() {
-    return this.isValid ? this.c.day : NaN;
-  }
-
-  /**
-   * Get the hour of the day (0-23).
-   * @example DateTime.local(2017, 5, 25, 9).hour //=> 9
-   * @type {number}
-   */
-  get hour() {
-    return this.isValid ? this.c.hour : NaN;
-  }
-
-  /**
-   * Get the minute of the hour (0-59).
-   * @example DateTime.local(2017, 5, 25, 9, 30).minute //=> 30
-   * @type {number}
-   */
-  get minute() {
-    return this.isValid ? this.c.minute : NaN;
-  }
-
-  /**
-   * Get the second of the minute (0-59).
-   * @example DateTime.local(2017, 5, 25, 9, 30, 52).second //=> 52
-   * @type {number}
-   */
-  get second() {
-    return this.isValid ? this.c.second : NaN;
-  }
-
-  /**
-   * Get the millisecond of the second (0-999).
-   * @example DateTime.local(2017, 5, 25, 9, 30, 52, 654).millisecond //=> 654
-   * @type {number}
-   */
-  get millisecond() {
-    return this.isValid ? this.c.millisecond : NaN;
-  }
-
-  /**
-   * Get the week year
-   * @see https://en.wikipedia.org/wiki/ISO_week_date
-   * @example DateTime.local(2014, 12, 31).weekYear //=> 2015
-   * @type {number}
-   */
-  get weekYear() {
-    return this.isValid ? possiblyCachedWeekData(this).weekYear : NaN;
-  }
-
-  /**
-   * Get the week number of the week year (1-52ish).
-   * @see https://en.wikipedia.org/wiki/ISO_week_date
-   * @example DateTime.local(2017, 5, 25).weekNumber //=> 21
-   * @type {number}
-   */
-  get weekNumber() {
-    return this.isValid ? possiblyCachedWeekData(this).weekNumber : NaN;
-  }
-
-  /**
-   * Get the day of the week.
-   * 1 is Monday and 7 is Sunday
-   * @see https://en.wikipedia.org/wiki/ISO_week_date
-   * @example DateTime.local(2014, 11, 31).weekday //=> 4
-   * @type {number}
-   */
-  get weekday() {
-    return this.isValid ? possiblyCachedWeekData(this).weekday : NaN;
-  }
-
-  /**
-   * Get the ordinal (meaning the day of the year)
-   * @example DateTime.local(2017, 5, 25).ordinal //=> 145
-   * @type {number|DateTime}
-   */
-  get ordinal() {
-    return this.isValid ? gregorianToOrdinal(this.c).ordinal : NaN;
-  }
-
-  /**
-   * Get the human readable short month name, such as 'Oct'.
-   * Defaults to the system's locale if no locale has been specified
-   * @example DateTime.local(2017, 10, 30).monthShort //=> Oct
-   * @type {string}
-   */
-  get monthShort() {
-    return this.isValid ? Info.months("short", { locObj: this.loc })[this.month - 1] : null;
-  }
-
-  /**
-   * Get the human readable long month name, such as 'October'.
-   * Defaults to the system's locale if no locale has been specified
-   * @example DateTime.local(2017, 10, 30).monthLong //=> October
-   * @type {string}
-   */
-  get monthLong() {
-    return this.isValid ? Info.months("long", { locObj: this.loc })[this.month - 1] : null;
-  }
-
-  /**
-   * Get the human readable short weekday, such as 'Mon'.
-   * Defaults to the system's locale if no locale has been specified
-   * @example DateTime.local(2017, 10, 30).weekdayShort //=> Mon
-   * @type {string}
-   */
-  get weekdayShort() {
-    return this.isValid ? Info.weekdays("short", { locObj: this.loc })[this.weekday - 1] : null;
-  }
-
-  /**
-   * Get the human readable long weekday, such as 'Monday'.
-   * Defaults to the system's locale if no locale has been specified
-   * @example DateTime.local(2017, 10, 30).weekdayLong //=> Monday
-   * @type {string}
-   */
-  get weekdayLong() {
-    return this.isValid ? Info.weekdays("long", { locObj: this.loc })[this.weekday - 1] : null;
-  }
-
-  /**
-   * Get the UTC offset of this DateTime in minutes
-   * @example DateTime.now().offset //=> -240
-   * @example DateTime.utc().offset //=> 0
-   * @type {number}
-   */
-  get offset() {
-    return this.isValid ? +this.o : NaN;
-  }
-
-  /**
-   * Get the short human name for the zone's current offset, for example "EST" or "EDT".
-   * Defaults to the system's locale if no locale has been specified
-   * @type {string}
-   */
-  get offsetNameShort() {
-    if (this.isValid) {
-      return this.zone.offsetName(this.ts, {
-        format: "short",
-        locale: this.locale,
-      });
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * Get the long human name for the zone's current offset, for example "Eastern Standard Time" or "Eastern Daylight Time".
-   * Defaults to the system's locale if no locale has been specified
-   * @type {string}
-   */
-  get offsetNameLong() {
-    if (this.isValid) {
-      return this.zone.offsetName(this.ts, {
-        format: "long",
-        locale: this.locale,
-      });
-    } else {
-      return null;
-    }
-  }
-
-  /**
-   * Get whether this zone's offset ever changes, as in a DST.
-   * @type {boolean}
-   */
-  get isOffsetFixed() {
-    return this.isValid ? this.zone.isUniversal : null;
-  }
-
-  /**
-   * Get whether the DateTime is in a DST.
-   * @type {boolean}
-   */
-  get isInDST() {
-    if (this.isOffsetFixed) {
-      return false;
-    } else {
-      return (
-        this.offset > this.set({ month: 1 }).offset || this.offset > this.set({ month: 5 }).offset
-      );
-    }
-  }
-
-  /**
-   * Returns true if this DateTime is in a leap year, false otherwise
-   * @example DateTime.local(2016).isInLeapYear //=> true
-   * @example DateTime.local(2013).isInLeapYear //=> false
-   * @type {boolean}
-   */
-  get isInLeapYear() {
-    return isLeapYear(this.year);
-  }
-
-  /**
-   * Returns the number of days in this DateTime's month
-   * @example DateTime.local(2016, 2).daysInMonth //=> 29
-   * @example DateTime.local(2016, 3).daysInMonth //=> 31
-   * @type {number}
-   */
-  get daysInMonth() {
-    return daysInMonth(this.year, this.month);
-  }
-
-  /**
-   * Returns the number of days in this DateTime's year
-   * @example DateTime.local(2016).daysInYear //=> 366
-   * @example DateTime.local(2013).daysInYear //=> 365
-   * @type {number}
-   */
-  get daysInYear() {
-    return this.isValid ? daysInYear(this.year) : NaN;
-  }
-
-  /**
-   * Returns the number of weeks in this DateTime's year
-   * @see https://en.wikipedia.org/wiki/ISO_week_date
-   * @example DateTime.local(2004).weeksInWeekYear //=> 53
-   * @example DateTime.local(2013).weeksInWeekYear //=> 52
-   * @type {number}
-   */
-  get weeksInWeekYear() {
-    return this.isValid ? weeksInWeekYear(this.weekYear) : NaN;
-  }
+  ;
 
   /**
    * Returns the resolved Intl options for this DateTime.
@@ -77959,15 +73009,22 @@ class DateTime {
    * @param {Object} opts - the same options as toLocaleString
    * @return {Object}
    */
-  resolvedLocaleOptions(opts = {}) {
-    const { locale, numberingSystem, calendar } = Formatter.create(
-      this.loc.clone(opts),
-      opts
-    ).resolvedOptions(this);
-    return { locale, numberingSystem, outputCalendar: calendar };
-  }
+  _proto.resolvedLocaleOptions = function resolvedLocaleOptions(opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
 
-  // TRANSFORM
+    var _Formatter$create$res = Formatter.create(this.loc.clone(opts), opts).resolvedOptions(this),
+        locale = _Formatter$create$res.locale,
+        numberingSystem = _Formatter$create$res.numberingSystem,
+        calendar = _Formatter$create$res.calendar;
+
+    return {
+      locale: locale,
+      numberingSystem: numberingSystem,
+      outputCalendar: calendar
+    };
+  } // TRANSFORM
 
   /**
    * "Set" the DateTime's zone to UTC. Returns a newly-constructed DateTime.
@@ -77977,20 +73034,30 @@ class DateTime {
    * @param {Object} [opts={}] - options to pass to `setZone()`
    * @return {DateTime}
    */
-  toUTC(offset = 0, opts = {}) {
+  ;
+
+  _proto.toUTC = function toUTC(offset, opts) {
+    if (offset === void 0) {
+      offset = 0;
+    }
+
+    if (opts === void 0) {
+      opts = {};
+    }
+
     return this.setZone(FixedOffsetZone.instance(offset), opts);
   }
-
   /**
    * "Set" the DateTime's zone to the host's local zone. Returns a newly-constructed DateTime.
    *
    * Equivalent to `setZone('local')`
    * @return {DateTime}
    */
-  toLocal() {
+  ;
+
+  _proto.toLocal = function toLocal() {
     return this.setZone(Settings.defaultZone);
   }
-
   /**
    * "Set" the DateTime's zone to specified zone. Returns a newly-constructed DateTime.
    *
@@ -78000,44 +73067,75 @@ class DateTime {
    * @param {boolean} [opts.keepLocalTime=false] - If true, adjust the underlying time so that the local time stays the same, but in the target zone. You should rarely need this.
    * @return {DateTime}
    */
-  setZone(zone, { keepLocalTime = false, keepCalendarTime = false } = {}) {
+  ;
+
+  _proto.setZone = function setZone(zone, _temp) {
+    var _ref2 = _temp === void 0 ? {} : _temp,
+        _ref2$keepLocalTime = _ref2.keepLocalTime,
+        keepLocalTime = _ref2$keepLocalTime === void 0 ? false : _ref2$keepLocalTime,
+        _ref2$keepCalendarTim = _ref2.keepCalendarTime,
+        keepCalendarTime = _ref2$keepCalendarTim === void 0 ? false : _ref2$keepCalendarTim;
+
     zone = normalizeZone(zone, Settings.defaultZone);
+
     if (zone.equals(this.zone)) {
       return this;
     } else if (!zone.isValid) {
       return DateTime.invalid(unsupportedZone(zone));
     } else {
-      let newTS = this.ts;
+      var newTS = this.ts;
+
       if (keepLocalTime || keepCalendarTime) {
-        const offsetGuess = zone.offset(this.ts);
-        const asObj = this.toObject();
-        [newTS] = objToTS(asObj, offsetGuess, zone);
+        var offsetGuess = zone.offset(this.ts);
+        var asObj = this.toObject();
+
+        var _objToTS3 = objToTS(asObj, offsetGuess, zone);
+
+        newTS = _objToTS3[0];
       }
-      return clone(this, { ts: newTS, zone });
+
+      return clone(this, {
+        ts: newTS,
+        zone: zone
+      });
     }
   }
-
   /**
    * "Set" the locale, numberingSystem, or outputCalendar. Returns a newly-constructed DateTime.
    * @param {Object} properties - the properties to set
    * @example DateTime.local(2017, 5, 25).reconfigure({ locale: 'en-GB' })
    * @return {DateTime}
    */
-  reconfigure({ locale, numberingSystem, outputCalendar } = {}) {
-    const loc = this.loc.clone({ locale, numberingSystem, outputCalendar });
-    return clone(this, { loc });
-  }
+  ;
 
+  _proto.reconfigure = function reconfigure(_temp2) {
+    var _ref3 = _temp2 === void 0 ? {} : _temp2,
+        locale = _ref3.locale,
+        numberingSystem = _ref3.numberingSystem,
+        outputCalendar = _ref3.outputCalendar;
+
+    var loc = this.loc.clone({
+      locale: locale,
+      numberingSystem: numberingSystem,
+      outputCalendar: outputCalendar
+    });
+    return clone(this, {
+      loc: loc
+    });
+  }
   /**
    * "Set" the locale. Returns a newly-constructed DateTime.
    * Just a convenient alias for reconfigure({ locale })
    * @example DateTime.local(2017, 5, 25).setLocale('en-GB')
    * @return {DateTime}
    */
-  setLocale(locale) {
-    return this.reconfigure({ locale });
-  }
+  ;
 
+  _proto.setLocale = function setLocale(locale) {
+    return this.reconfigure({
+      locale: locale
+    });
+  }
   /**
    * "Set" the values of specified units. Returns a newly-constructed DateTime.
    * You can only set units with this method; for "setting" metadata, see {@link DateTime#reconfigure} and {@link DateTime#setZone}.
@@ -78048,49 +73146,50 @@ class DateTime {
    * @example dt.set({ year: 2005, ordinal: 234 })
    * @return {DateTime}
    */
-  set(values) {
-    if (!this.isValid) return this;
+  ;
 
-    const normalized = normalizeObject(values, normalizeUnit),
-      settingWeekStuff =
-        !isUndefined(normalized.weekYear) ||
-        !isUndefined(normalized.weekNumber) ||
-        !isUndefined(normalized.weekday),
-      containsOrdinal = !isUndefined(normalized.ordinal),
-      containsGregorYear = !isUndefined(normalized.year),
-      containsGregorMD = !isUndefined(normalized.month) || !isUndefined(normalized.day),
-      containsGregor = containsGregorYear || containsGregorMD,
-      definiteWeekDef = normalized.weekYear || normalized.weekNumber;
+  _proto.set = function set(values) {
+    if (!this.isValid) return this;
+    var normalized = normalizeObject(values, normalizeUnit),
+        settingWeekStuff = !isUndefined(normalized.weekYear) || !isUndefined(normalized.weekNumber) || !isUndefined(normalized.weekday),
+        containsOrdinal = !isUndefined(normalized.ordinal),
+        containsGregorYear = !isUndefined(normalized.year),
+        containsGregorMD = !isUndefined(normalized.month) || !isUndefined(normalized.day),
+        containsGregor = containsGregorYear || containsGregorMD,
+        definiteWeekDef = normalized.weekYear || normalized.weekNumber;
 
     if ((containsGregor || containsOrdinal) && definiteWeekDef) {
-      throw new ConflictingSpecificationError(
-        "Can't mix weekYear/weekNumber units with year/month/day or ordinals"
-      );
+      throw new ConflictingSpecificationError("Can't mix weekYear/weekNumber units with year/month/day or ordinals");
     }
 
     if (containsGregorMD && containsOrdinal) {
       throw new ConflictingSpecificationError("Can't mix ordinal dates with month/day");
     }
 
-    let mixed;
-    if (settingWeekStuff) {
-      mixed = weekToGregorian({ ...gregorianToWeek(this.c), ...normalized });
-    } else if (!isUndefined(normalized.ordinal)) {
-      mixed = ordinalToGregorian({ ...gregorianToOrdinal(this.c), ...normalized });
-    } else {
-      mixed = { ...this.toObject(), ...normalized };
+    var mixed;
 
-      // if we didn't set the day but we ended up on an overflow date,
+    if (settingWeekStuff) {
+      mixed = weekToGregorian(_extends({}, gregorianToWeek(this.c), normalized));
+    } else if (!isUndefined(normalized.ordinal)) {
+      mixed = ordinalToGregorian(_extends({}, gregorianToOrdinal(this.c), normalized));
+    } else {
+      mixed = _extends({}, this.toObject(), normalized); // if we didn't set the day but we ended up on an overflow date,
       // use the last day of the right month
+
       if (isUndefined(normalized.day)) {
         mixed.day = Math.min(daysInMonth(mixed.year, mixed.month), mixed.day);
       }
     }
 
-    const [ts, o] = objToTS(mixed, this.o, this.zone);
-    return clone(this, { ts, o });
-  }
+    var _objToTS4 = objToTS(mixed, this.o, this.zone),
+        ts = _objToTS4[0],
+        o = _objToTS4[1];
 
+    return clone(this, {
+      ts: ts,
+      o: o
+    });
+  }
   /**
    * Add a period of time to this DateTime and return the resulting DateTime
    *
@@ -78104,24 +73203,26 @@ class DateTime {
    * @example DateTime.now().plus(Duration.fromObject({ hours: 3, minutes: 13 })) //~> in 3 hr, 13 min
    * @return {DateTime}
    */
-  plus(duration) {
+  ;
+
+  _proto.plus = function plus(duration) {
     if (!this.isValid) return this;
-    const dur = Duration.fromDurationLike(duration);
+    var dur = Duration.fromDurationLike(duration);
     return clone(this, adjustTime(this, dur));
   }
-
   /**
    * Subtract a period of time to this DateTime and return the resulting DateTime
    * See {@link DateTime#plus}
    * @param {Duration|Object|number} duration - The amount to subtract. Either a Luxon Duration, a number of milliseconds, the object argument to Duration.fromObject()
    @return {DateTime}
    */
-  minus(duration) {
+  ;
+
+  _proto.minus = function minus(duration) {
     if (!this.isValid) return this;
-    const dur = Duration.fromDurationLike(duration).negate();
+    var dur = Duration.fromDurationLike(duration).negate();
     return clone(this, adjustTime(this, dur));
   }
-
   /**
    * "Set" this DateTime to the beginning of a unit of time.
    * @param {string} unit - The unit to go to the beginning of. Can be 'year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second', or 'millisecond'.
@@ -78132,28 +73233,36 @@ class DateTime {
    * @example DateTime.local(2014, 3, 3, 5, 30).startOf('hour').toISOTime(); //=> '05:00:00.000-05:00'
    * @return {DateTime}
    */
-  startOf(unit) {
+  ;
+
+  _proto.startOf = function startOf(unit) {
     if (!this.isValid) return this;
-    const o = {},
-      normalizedUnit = Duration.normalizeUnit(unit);
+    var o = {},
+        normalizedUnit = Duration.normalizeUnit(unit);
+
     switch (normalizedUnit) {
       case "years":
         o.month = 1;
       // falls through
+
       case "quarters":
       case "months":
         o.day = 1;
       // falls through
+
       case "weeks":
       case "days":
         o.hour = 0;
       // falls through
+
       case "hours":
         o.minute = 0;
       // falls through
+
       case "minutes":
         o.second = 0;
       // falls through
+
       case "seconds":
         o.millisecond = 0;
         break;
@@ -78165,13 +73274,12 @@ class DateTime {
     }
 
     if (normalizedUnit === "quarters") {
-      const q = Math.ceil(this.month / 3);
+      var q = Math.ceil(this.month / 3);
       o.month = (q - 1) * 3 + 1;
     }
 
     return this.set(o);
   }
-
   /**
    * "Set" this DateTime to the end (meaning the last millisecond) of a unit of time
    * @param {string} unit - The unit to go to the end of. Can be 'year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second', or 'millisecond'.
@@ -78182,15 +73290,13 @@ class DateTime {
    * @example DateTime.local(2014, 3, 3, 5, 30).endOf('hour').toISO(); //=> '2014-03-03T05:59:59.999-05:00'
    * @return {DateTime}
    */
-  endOf(unit) {
-    return this.isValid
-      ? this.plus({ [unit]: 1 })
-          .startOf(unit)
-          .minus(1)
-      : this;
-  }
+  ;
 
-  // OUTPUT
+  _proto.endOf = function endOf(unit) {
+    var _this$plus;
+
+    return this.isValid ? this.plus((_this$plus = {}, _this$plus[unit] = 1, _this$plus)).startOf(unit).minus(1) : this;
+  } // OUTPUT
 
   /**
    * Returns a string representation of this DateTime formatted according to the specified format string.
@@ -78204,12 +73310,15 @@ class DateTime {
    * @example DateTime.now().toFormat("HH 'hours and' mm 'minutes'") //=> '20 hours and 55 minutes'
    * @return {string}
    */
-  toFormat(fmt, opts = {}) {
-    return this.isValid
-      ? Formatter.create(this.loc.redefaultToEN(opts)).formatDateTimeFromString(this, fmt)
-      : INVALID;
-  }
+  ;
 
+  _proto.toFormat = function toFormat(fmt, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    return this.isValid ? Formatter.create(this.loc.redefaultToEN(opts)).formatDateTimeFromString(this, fmt) : INVALID;
+  }
   /**
    * Returns a localized string representing this date. Accepts the same options as the Intl.DateTimeFormat constructor and any presets defined by Luxon, such as `DateTime.DATE_FULL` or `DateTime.TIME_SIMPLE`.
    * The exact behavior of this method is browser-specific, but in general it will return an appropriate representation
@@ -78229,12 +73338,19 @@ class DateTime {
    * @example DateTime.now().toLocaleString({ hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); //=> '11:32'
    * @return {string}
    */
-  toLocaleString(formatOpts = DATE_SHORT, opts = {}) {
-    return this.isValid
-      ? Formatter.create(this.loc.clone(opts), formatOpts).formatDateTime(this)
-      : INVALID;
-  }
+  ;
 
+  _proto.toLocaleString = function toLocaleString(formatOpts, opts) {
+    if (formatOpts === void 0) {
+      formatOpts = DATE_SHORT;
+    }
+
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    return this.isValid ? Formatter.create(this.loc.clone(opts), formatOpts).formatDateTime(this) : INVALID;
+  }
   /**
    * Returns an array of format "parts", meaning individual tokens along with metadata. This is allows callers to post-process individual sections of the formatted output.
    * Defaults to the system's locale if no locale has been specified
@@ -78248,12 +73364,15 @@ class DateTime {
    *                                   //=>   { type: 'year', value: '1982' }
    *                                   //=> ]
    */
-  toLocaleParts(opts = {}) {
-    return this.isValid
-      ? Formatter.create(this.loc.clone(opts), opts).formatDateTimeParts(this)
-      : [];
-  }
+  ;
 
+  _proto.toLocaleParts = function toLocaleParts(opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    return this.isValid ? Formatter.create(this.loc.clone(opts), opts).formatDateTimeParts(this) : [];
+  }
   /**
    * Returns an ISO 8601-compliant string representation of this DateTime
    * @param {Object} opts - options
@@ -78267,24 +73386,31 @@ class DateTime {
    * @example DateTime.now().toISO({ format: 'basic' }) //=> '20170422T204705.335-0400'
    * @return {string}
    */
-  toISO({
-    format = "extended",
-    suppressSeconds = false,
-    suppressMilliseconds = false,
-    includeOffset = true,
-  } = {}) {
+  ;
+
+  _proto.toISO = function toISO(_temp3) {
+    var _ref4 = _temp3 === void 0 ? {} : _temp3,
+        _ref4$format = _ref4.format,
+        format = _ref4$format === void 0 ? "extended" : _ref4$format,
+        _ref4$suppressSeconds = _ref4.suppressSeconds,
+        suppressSeconds = _ref4$suppressSeconds === void 0 ? false : _ref4$suppressSeconds,
+        _ref4$suppressMillise = _ref4.suppressMilliseconds,
+        suppressMilliseconds = _ref4$suppressMillise === void 0 ? false : _ref4$suppressMillise,
+        _ref4$includeOffset = _ref4.includeOffset,
+        includeOffset = _ref4$includeOffset === void 0 ? true : _ref4$includeOffset;
+
     if (!this.isValid) {
       return null;
     }
 
-    const ext = format === "extended";
+    var ext = format === "extended";
 
-    let c = toISODate(this, ext);
+    var c = _toISODate(this, ext);
+
     c += "T";
-    c += toISOTime(this, ext, suppressSeconds, suppressMilliseconds, includeOffset);
+    c += _toISOTime(this, ext, suppressSeconds, suppressMilliseconds, includeOffset);
     return c;
   }
-
   /**
    * Returns an ISO 8601-compliant string representation of this DateTime's date component
    * @param {Object} opts - options
@@ -78293,23 +73419,29 @@ class DateTime {
    * @example DateTime.utc(1982, 5, 25).toISODate({ format: 'basic' }) //=> '19820525'
    * @return {string}
    */
-  toISODate({ format = "extended" } = {}) {
+  ;
+
+  _proto.toISODate = function toISODate(_temp4) {
+    var _ref5 = _temp4 === void 0 ? {} : _temp4,
+        _ref5$format = _ref5.format,
+        format = _ref5$format === void 0 ? "extended" : _ref5$format;
+
     if (!this.isValid) {
       return null;
     }
 
-    return toISODate(this, format === "extended");
+    return _toISODate(this, format === "extended");
   }
-
   /**
    * Returns an ISO 8601-compliant string representation of this DateTime's week date
    * @example DateTime.utc(1982, 5, 25).toISOWeekDate() //=> '1982-W21-2'
    * @return {string}
    */
-  toISOWeekDate() {
+  ;
+
+  _proto.toISOWeekDate = function toISOWeekDate() {
     return toTechFormat(this, "kkkk-'W'WW-c");
   }
-
   /**
    * Returns an ISO 8601-compliant string representation of this DateTime's time component
    * @param {Object} opts - options
@@ -78324,34 +73456,39 @@ class DateTime {
    * @example DateTime.utc().set({ hour: 7, minute: 34 }).toISOTime({ includePrefix: true }) //=> 'T07:34:19.361Z'
    * @return {string}
    */
-  toISOTime({
-    suppressMilliseconds = false,
-    suppressSeconds = false,
-    includeOffset = true,
-    includePrefix = false,
-    format = "extended",
-  } = {}) {
+  ;
+
+  _proto.toISOTime = function toISOTime(_temp5) {
+    var _ref6 = _temp5 === void 0 ? {} : _temp5,
+        _ref6$suppressMillise = _ref6.suppressMilliseconds,
+        suppressMilliseconds = _ref6$suppressMillise === void 0 ? false : _ref6$suppressMillise,
+        _ref6$suppressSeconds = _ref6.suppressSeconds,
+        suppressSeconds = _ref6$suppressSeconds === void 0 ? false : _ref6$suppressSeconds,
+        _ref6$includeOffset = _ref6.includeOffset,
+        includeOffset = _ref6$includeOffset === void 0 ? true : _ref6$includeOffset,
+        _ref6$includePrefix = _ref6.includePrefix,
+        includePrefix = _ref6$includePrefix === void 0 ? false : _ref6$includePrefix,
+        _ref6$format = _ref6.format,
+        format = _ref6$format === void 0 ? "extended" : _ref6$format;
+
     if (!this.isValid) {
       return null;
     }
 
-    let c = includePrefix ? "T" : "";
-    return (
-      c +
-      toISOTime(this, format === "extended", suppressSeconds, suppressMilliseconds, includeOffset)
-    );
+    var c = includePrefix ? "T" : "";
+    return c + _toISOTime(this, format === "extended", suppressSeconds, suppressMilliseconds, includeOffset);
   }
-
   /**
    * Returns an RFC 2822-compatible string representation of this DateTime
    * @example DateTime.utc(2014, 7, 13).toRFC2822() //=> 'Sun, 13 Jul 2014 00:00:00 +0000'
    * @example DateTime.local(2014, 7, 13).toRFC2822() //=> 'Sun, 13 Jul 2014 00:00:00 -0400'
    * @return {string}
    */
-  toRFC2822() {
+  ;
+
+  _proto.toRFC2822 = function toRFC2822() {
     return toTechFormat(this, "EEE, dd LLL yyyy HH:mm:ss ZZZ", false);
   }
-
   /**
    * Returns a string representation of this DateTime appropriate for use in HTTP headers. The output is always expressed in GMT.
    * Specifically, the string conforms to RFC 1123.
@@ -78360,22 +73497,25 @@ class DateTime {
    * @example DateTime.utc(2014, 7, 13, 19).toHTTP() //=> 'Sun, 13 Jul 2014 19:00:00 GMT'
    * @return {string}
    */
-  toHTTP() {
+  ;
+
+  _proto.toHTTP = function toHTTP() {
     return toTechFormat(this.toUTC(), "EEE, dd LLL yyyy HH:mm:ss 'GMT'");
   }
-
   /**
    * Returns a string representation of this DateTime appropriate for use in SQL Date
    * @example DateTime.utc(2014, 7, 13).toSQLDate() //=> '2014-07-13'
    * @return {string}
    */
-  toSQLDate() {
+  ;
+
+  _proto.toSQLDate = function toSQLDate() {
     if (!this.isValid) {
       return null;
     }
-    return toISODate(this, true);
-  }
 
+    return _toISODate(this, true);
+  }
   /**
    * Returns a string representation of this DateTime appropriate for use in SQL Time
    * @param {Object} opts - options
@@ -78387,11 +73527,20 @@ class DateTime {
    * @example DateTime.now().toSQL({ includeZone: false }) //=> '05:15:16.345 America/New_York'
    * @return {string}
    */
-  toSQLTime({ includeOffset = true, includeZone = false } = {}) {
-    let fmt = "HH:mm:ss.SSS";
+  ;
+
+  _proto.toSQLTime = function toSQLTime(_temp6) {
+    var _ref7 = _temp6 === void 0 ? {} : _temp6,
+        _ref7$includeOffset = _ref7.includeOffset,
+        includeOffset = _ref7$includeOffset === void 0 ? true : _ref7$includeOffset,
+        _ref7$includeZone = _ref7.includeZone,
+        includeZone = _ref7$includeZone === void 0 ? false : _ref7$includeZone;
+
+    var fmt = "HH:mm:ss.SSS";
 
     if (includeZone || includeOffset) {
       fmt += " ";
+
       if (includeZone) {
         fmt += "z";
       } else if (includeOffset) {
@@ -78401,7 +73550,6 @@ class DateTime {
 
     return toTechFormat(this, fmt, true);
   }
-
   /**
    * Returns a string representation of this DateTime appropriate for use in SQL DateTime
    * @param {Object} opts - options
@@ -78413,62 +73561,73 @@ class DateTime {
    * @example DateTime.local(2014, 7, 13).toSQL({ includeZone: true }) //=> '2014-07-13 00:00:00.000 America/New_York'
    * @return {string}
    */
-  toSQL(opts = {}) {
+  ;
+
+  _proto.toSQL = function toSQL(opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     if (!this.isValid) {
       return null;
     }
 
-    return `${this.toSQLDate()} ${this.toSQLTime(opts)}`;
+    return this.toSQLDate() + " " + this.toSQLTime(opts);
   }
-
   /**
    * Returns a string representation of this DateTime appropriate for debugging
    * @return {string}
    */
-  toString() {
+  ;
+
+  _proto.toString = function toString() {
     return this.isValid ? this.toISO() : INVALID;
   }
-
   /**
    * Returns the epoch milliseconds of this DateTime. Alias of {@link DateTime#toMillis}
    * @return {number}
    */
-  valueOf() {
+  ;
+
+  _proto.valueOf = function valueOf() {
     return this.toMillis();
   }
-
   /**
    * Returns the epoch milliseconds of this DateTime.
    * @return {number}
    */
-  toMillis() {
+  ;
+
+  _proto.toMillis = function toMillis() {
     return this.isValid ? this.ts : NaN;
   }
-
   /**
    * Returns the epoch seconds of this DateTime.
    * @return {number}
    */
-  toSeconds() {
+  ;
+
+  _proto.toSeconds = function toSeconds() {
     return this.isValid ? this.ts / 1000 : NaN;
   }
-
   /**
    * Returns an ISO 8601 representation of this DateTime appropriate for use in JSON.
    * @return {string}
    */
-  toJSON() {
+  ;
+
+  _proto.toJSON = function toJSON() {
     return this.toISO();
   }
-
   /**
    * Returns a BSON serializable equivalent to this DateTime.
    * @return {Date}
    */
-  toBSON() {
+  ;
+
+  _proto.toBSON = function toBSON() {
     return this.toJSDate();
   }
-
   /**
    * Returns a JavaScript object with this DateTime's year, month, day, and so on.
    * @param opts - options for generating the object
@@ -78476,28 +73635,34 @@ class DateTime {
    * @example DateTime.now().toObject() //=> { year: 2017, month: 4, day: 22, hour: 20, minute: 49, second: 42, millisecond: 268 }
    * @return {Object}
    */
-  toObject(opts = {}) {
+  ;
+
+  _proto.toObject = function toObject(opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     if (!this.isValid) return {};
 
-    const base = { ...this.c };
+    var base = _extends({}, this.c);
 
     if (opts.includeConfig) {
       base.outputCalendar = this.outputCalendar;
       base.numberingSystem = this.loc.numberingSystem;
       base.locale = this.loc.locale;
     }
+
     return base;
   }
-
   /**
    * Returns a JavaScript Date equivalent to this DateTime.
    * @return {Date}
    */
-  toJSDate() {
-    return new Date(this.isValid ? this.ts : NaN);
-  }
+  ;
 
-  // COMPARE
+  _proto.toJSDate = function toJSDate() {
+    return new Date(this.isValid ? this.ts : NaN);
+  } // COMPARE
 
   /**
    * Return the difference between two DateTimes as a Duration.
@@ -78514,22 +73679,34 @@ class DateTime {
    * i2.diff(i1, ['months', 'days', 'hours']).toObject() //=> { months: 16, days: 19, hours: 0.75 }
    * @return {Duration}
    */
-  diff(otherDateTime, unit = "milliseconds", opts = {}) {
+  ;
+
+  _proto.diff = function diff(otherDateTime, unit, opts) {
+    if (unit === void 0) {
+      unit = "milliseconds";
+    }
+
+    if (opts === void 0) {
+      opts = {};
+    }
+
     if (!this.isValid || !otherDateTime.isValid) {
       return Duration.invalid("created by diffing an invalid DateTime");
     }
 
-    const durOpts = { locale: this.locale, numberingSystem: this.numberingSystem, ...opts };
+    var durOpts = _extends({
+      locale: this.locale,
+      numberingSystem: this.numberingSystem
+    }, opts);
 
-    const units = maybeArray(unit).map(Duration.normalizeUnit),
-      otherIsLater = otherDateTime.valueOf() > this.valueOf(),
-      earlier = otherIsLater ? this : otherDateTime,
-      later = otherIsLater ? otherDateTime : this,
-      diffed = diff(earlier, later, units, durOpts);
+    var units = maybeArray(unit).map(Duration.normalizeUnit),
+        otherIsLater = otherDateTime.valueOf() > this.valueOf(),
+        earlier = otherIsLater ? this : otherDateTime,
+        later = otherIsLater ? otherDateTime : this,
+        diffed = _diff(earlier, later, units, durOpts);
 
     return otherIsLater ? diffed.negate() : diffed;
   }
-
   /**
    * Return the difference between this DateTime and right now.
    * See {@link DateTime#diff}
@@ -78538,19 +73715,29 @@ class DateTime {
    * @param {string} [opts.conversionAccuracy='casual'] - the conversion system to use
    * @return {Duration}
    */
-  diffNow(unit = "milliseconds", opts = {}) {
+  ;
+
+  _proto.diffNow = function diffNow(unit, opts) {
+    if (unit === void 0) {
+      unit = "milliseconds";
+    }
+
+    if (opts === void 0) {
+      opts = {};
+    }
+
     return this.diff(DateTime.now(), unit, opts);
   }
-
   /**
    * Return an Interval spanning between this DateTime and another DateTime
    * @param {DateTime} otherDateTime - the other end point of the Interval
    * @return {Interval}
    */
-  until(otherDateTime) {
+  ;
+
+  _proto.until = function until(otherDateTime) {
     return this.isValid ? Interval.fromDateTimes(this, otherDateTime) : this;
   }
-
   /**
    * Return whether this DateTime is in the same unit of time as another DateTime.
    * Higher-order units must also be identical for this function to return `true`.
@@ -78560,14 +73747,16 @@ class DateTime {
    * @example DateTime.now().hasSame(otherDT, 'day'); //~> true if otherDT is in the same current calendar day
    * @return {boolean}
    */
-  hasSame(otherDateTime, unit) {
-    if (!this.isValid) return false;
+  ;
 
-    const inputMs = otherDateTime.valueOf();
-    const adjustedToZone = this.setZone(otherDateTime.zone, { keepLocalTime: true });
+  _proto.hasSame = function hasSame(otherDateTime, unit) {
+    if (!this.isValid) return false;
+    var inputMs = otherDateTime.valueOf();
+    var adjustedToZone = this.setZone(otherDateTime.zone, {
+      keepLocalTime: true
+    });
     return adjustedToZone.startOf(unit) <= inputMs && inputMs <= adjustedToZone.endOf(unit);
   }
-
   /**
    * Equality check
    * Two DateTimes are equal iff they represent the same millisecond, have the same zone and location, and are both valid.
@@ -78575,16 +73764,11 @@ class DateTime {
    * @param {DateTime} other - the other DateTime
    * @return {boolean}
    */
-  equals(other) {
-    return (
-      this.isValid &&
-      other.isValid &&
-      this.valueOf() === other.valueOf() &&
-      this.zone.equals(other.zone) &&
-      this.loc.equals(other.loc)
-    );
-  }
+  ;
 
+  _proto.equals = function equals(other) {
+    return this.isValid && other.isValid && this.valueOf() === other.valueOf() && this.zone.equals(other.zone) && this.loc.equals(other.loc);
+  }
   /**
    * Returns a string representation of a this time relative to now, such as "in two days". Can only internationalize if your
    * platform supports Intl.RelativeTimeFormat. Rounds down by default.
@@ -78603,24 +73787,32 @@ class DateTime {
    * @example DateTime.now().minus({ days: 2 }).toRelative({ unit: "hours" }) //=> "48 hours ago"
    * @example DateTime.now().minus({ hours: 36 }).toRelative({ round: false }) //=> "1.5 days ago"
    */
-  toRelative(options = {}) {
+  ;
+
+  _proto.toRelative = function toRelative(options) {
+    if (options === void 0) {
+      options = {};
+    }
+
     if (!this.isValid) return null;
-    const base = options.base || DateTime.fromObject({}, { zone: this.zone }),
-      padding = options.padding ? (this < base ? -options.padding : options.padding) : 0;
-    let units = ["years", "months", "days", "hours", "minutes", "seconds"];
-    let unit = options.unit;
+    var base = options.base || DateTime.fromObject({}, {
+      zone: this.zone
+    }),
+        padding = options.padding ? this < base ? -options.padding : options.padding : 0;
+    var units = ["years", "months", "days", "hours", "minutes", "seconds"];
+    var unit = options.unit;
+
     if (Array.isArray(options.unit)) {
       units = options.unit;
       unit = undefined;
     }
-    return diffRelative(base, this.plus(padding), {
-      ...options,
-      numeric: "always",
-      units,
-      unit,
-    });
-  }
 
+    return diffRelative(base, this.plus(padding), _extends({}, options, {
+      numeric: "always",
+      units: units,
+      unit: unit
+    }));
+  }
   /**
    * Returns a string representation of this date relative to today, such as "yesterday" or "next month".
    * Only internationalizes on platforms that supports Intl.RelativeTimeFormat.
@@ -78634,42 +73826,62 @@ class DateTime {
    * @example DateTime.now().plus({ days: 1 }).toRelativeCalendar({ locale: "fr" }) //=> "demain"
    * @example DateTime.now().minus({ days: 2 }).toRelativeCalendar() //=> "2 days ago"
    */
-  toRelativeCalendar(options = {}) {
-    if (!this.isValid) return null;
+  ;
 
-    return diffRelative(options.base || DateTime.fromObject({}, { zone: this.zone }), this, {
-      ...options,
+  _proto.toRelativeCalendar = function toRelativeCalendar(options) {
+    if (options === void 0) {
+      options = {};
+    }
+
+    if (!this.isValid) return null;
+    return diffRelative(options.base || DateTime.fromObject({}, {
+      zone: this.zone
+    }), this, _extends({}, options, {
       numeric: "auto",
       units: ["years", "months", "days"],
-      calendary: true,
-    });
+      calendary: true
+    }));
   }
-
   /**
    * Return the min of several date times
    * @param {...DateTime} dateTimes - the DateTimes from which to choose the minimum
    * @return {DateTime} the min DateTime, or undefined if called with no argument
    */
-  static min(...dateTimes) {
+  ;
+
+  DateTime.min = function min() {
+    for (var _len = arguments.length, dateTimes = new Array(_len), _key = 0; _key < _len; _key++) {
+      dateTimes[_key] = arguments[_key];
+    }
+
     if (!dateTimes.every(DateTime.isDateTime)) {
       throw new InvalidArgumentError("min requires all arguments be DateTimes");
     }
-    return bestBy(dateTimes, (i) => i.valueOf(), Math.min);
-  }
 
+    return bestBy(dateTimes, function (i) {
+      return i.valueOf();
+    }, Math.min);
+  }
   /**
    * Return the max of several date times
    * @param {...DateTime} dateTimes - the DateTimes from which to choose the maximum
    * @return {DateTime} the max DateTime, or undefined if called with no argument
    */
-  static max(...dateTimes) {
+  ;
+
+  DateTime.max = function max() {
+    for (var _len2 = arguments.length, dateTimes = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      dateTimes[_key2] = arguments[_key2];
+    }
+
     if (!dateTimes.every(DateTime.isDateTime)) {
       throw new InvalidArgumentError("max requires all arguments be DateTimes");
     }
-    return bestBy(dateTimes, (i) => i.valueOf(), Math.max);
-  }
 
-  // MISC
+    return bestBy(dateTimes, function (i) {
+      return i.valueOf();
+    }, Math.max);
+  } // MISC
 
   /**
    * Explain how a string would be parsed by fromFormat()
@@ -78678,205 +73890,658 @@ class DateTime {
    * @param {Object} options - options taken by fromFormat()
    * @return {Object}
    */
-  static fromFormatExplain(text, fmt, options = {}) {
-    const { locale = null, numberingSystem = null } = options,
-      localeToUse = Locale.fromOpts({
-        locale,
-        numberingSystem,
-        defaultToEN: true,
-      });
+  ;
+
+  DateTime.fromFormatExplain = function fromFormatExplain(text, fmt, options) {
+    if (options === void 0) {
+      options = {};
+    }
+
+    var _options = options,
+        _options$locale = _options.locale,
+        locale = _options$locale === void 0 ? null : _options$locale,
+        _options$numberingSys = _options.numberingSystem,
+        numberingSystem = _options$numberingSys === void 0 ? null : _options$numberingSys,
+        localeToUse = Locale.fromOpts({
+      locale: locale,
+      numberingSystem: numberingSystem,
+      defaultToEN: true
+    });
     return explainFromTokens(localeToUse, text, fmt);
   }
-
   /**
    * @deprecated use fromFormatExplain instead
    */
-  static fromStringExplain(text, fmt, options = {}) {
-    return DateTime.fromFormatExplain(text, fmt, options);
-  }
+  ;
 
-  // FORMAT PRESETS
+  DateTime.fromStringExplain = function fromStringExplain(text, fmt, options) {
+    if (options === void 0) {
+      options = {};
+    }
+
+    return DateTime.fromFormatExplain(text, fmt, options);
+  } // FORMAT PRESETS
 
   /**
    * {@link DateTime#toLocaleString} format like 10/14/1983
    * @type {Object}
    */
-  static get DATE_SHORT() {
-    return DATE_SHORT;
-  }
+  ;
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'Oct 14, 1983'
-   * @type {Object}
-   */
-  static get DATE_MED() {
-    return DATE_MED;
-  }
+  _createClass(DateTime, [{
+    key: "isValid",
+    get: function get() {
+      return this.invalid === null;
+    }
+    /**
+     * Returns an error code if this DateTime is invalid, or null if the DateTime is valid
+     * @type {string}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'Fri, Oct 14, 1983'
-   * @type {Object}
-   */
-  static get DATE_MED_WITH_WEEKDAY() {
-    return DATE_MED_WITH_WEEKDAY;
-  }
+  }, {
+    key: "invalidReason",
+    get: function get() {
+      return this.invalid ? this.invalid.reason : null;
+    }
+    /**
+     * Returns an explanation of why this DateTime became invalid, or null if the DateTime is valid
+     * @type {string}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'October 14, 1983'
-   * @type {Object}
-   */
-  static get DATE_FULL() {
-    return DATE_FULL;
-  }
+  }, {
+    key: "invalidExplanation",
+    get: function get() {
+      return this.invalid ? this.invalid.explanation : null;
+    }
+    /**
+     * Get the locale of a DateTime, such 'en-GB'. The locale is used when formatting the DateTime
+     *
+     * @type {string}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'Tuesday, October 14, 1983'
-   * @type {Object}
-   */
-  static get DATE_HUGE() {
-    return DATE_HUGE;
-  }
+  }, {
+    key: "locale",
+    get: function get() {
+      return this.isValid ? this.loc.locale : null;
+    }
+    /**
+     * Get the numbering system of a DateTime, such 'beng'. The numbering system is used when formatting the DateTime
+     *
+     * @type {string}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like '09:30 AM'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get TIME_SIMPLE() {
-    return TIME_SIMPLE;
-  }
+  }, {
+    key: "numberingSystem",
+    get: function get() {
+      return this.isValid ? this.loc.numberingSystem : null;
+    }
+    /**
+     * Get the output calendar of a DateTime, such 'islamic'. The output calendar is used when formatting the DateTime
+     *
+     * @type {string}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like '09:30:23 AM'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get TIME_WITH_SECONDS() {
-    return TIME_WITH_SECONDS;
-  }
+  }, {
+    key: "outputCalendar",
+    get: function get() {
+      return this.isValid ? this.loc.outputCalendar : null;
+    }
+    /**
+     * Get the time zone associated with this DateTime.
+     * @type {Zone}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like '09:30:23 AM EDT'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get TIME_WITH_SHORT_OFFSET() {
-    return TIME_WITH_SHORT_OFFSET;
-  }
+  }, {
+    key: "zone",
+    get: function get() {
+      return this._zone;
+    }
+    /**
+     * Get the name of the time zone.
+     * @type {string}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like '09:30:23 AM Eastern Daylight Time'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get TIME_WITH_LONG_OFFSET() {
-    return TIME_WITH_LONG_OFFSET;
-  }
+  }, {
+    key: "zoneName",
+    get: function get() {
+      return this.isValid ? this.zone.name : null;
+    }
+    /**
+     * Get the year
+     * @example DateTime.local(2017, 5, 25).year //=> 2017
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like '09:30', always 24-hour.
-   * @type {Object}
-   */
-  static get TIME_24_SIMPLE() {
-    return TIME_24_SIMPLE;
-  }
+  }, {
+    key: "year",
+    get: function get() {
+      return this.isValid ? this.c.year : NaN;
+    }
+    /**
+     * Get the quarter
+     * @example DateTime.local(2017, 5, 25).quarter //=> 2
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like '09:30:23', always 24-hour.
-   * @type {Object}
-   */
-  static get TIME_24_WITH_SECONDS() {
-    return TIME_24_WITH_SECONDS;
-  }
+  }, {
+    key: "quarter",
+    get: function get() {
+      return this.isValid ? Math.ceil(this.c.month / 3) : NaN;
+    }
+    /**
+     * Get the month (1-12).
+     * @example DateTime.local(2017, 5, 25).month //=> 5
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like '09:30:23 EDT', always 24-hour.
-   * @type {Object}
-   */
-  static get TIME_24_WITH_SHORT_OFFSET() {
-    return TIME_24_WITH_SHORT_OFFSET;
-  }
+  }, {
+    key: "month",
+    get: function get() {
+      return this.isValid ? this.c.month : NaN;
+    }
+    /**
+     * Get the day of the month (1-30ish).
+     * @example DateTime.local(2017, 5, 25).day //=> 25
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like '09:30:23 Eastern Daylight Time', always 24-hour.
-   * @type {Object}
-   */
-  static get TIME_24_WITH_LONG_OFFSET() {
-    return TIME_24_WITH_LONG_OFFSET;
-  }
+  }, {
+    key: "day",
+    get: function get() {
+      return this.isValid ? this.c.day : NaN;
+    }
+    /**
+     * Get the hour of the day (0-23).
+     * @example DateTime.local(2017, 5, 25, 9).hour //=> 9
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like '10/14/1983, 9:30 AM'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get DATETIME_SHORT() {
-    return DATETIME_SHORT;
-  }
+  }, {
+    key: "hour",
+    get: function get() {
+      return this.isValid ? this.c.hour : NaN;
+    }
+    /**
+     * Get the minute of the hour (0-59).
+     * @example DateTime.local(2017, 5, 25, 9, 30).minute //=> 30
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like '10/14/1983, 9:30:33 AM'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get DATETIME_SHORT_WITH_SECONDS() {
-    return DATETIME_SHORT_WITH_SECONDS;
-  }
+  }, {
+    key: "minute",
+    get: function get() {
+      return this.isValid ? this.c.minute : NaN;
+    }
+    /**
+     * Get the second of the minute (0-59).
+     * @example DateTime.local(2017, 5, 25, 9, 30, 52).second //=> 52
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'Oct 14, 1983, 9:30 AM'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get DATETIME_MED() {
-    return DATETIME_MED;
-  }
+  }, {
+    key: "second",
+    get: function get() {
+      return this.isValid ? this.c.second : NaN;
+    }
+    /**
+     * Get the millisecond of the second (0-999).
+     * @example DateTime.local(2017, 5, 25, 9, 30, 52, 654).millisecond //=> 654
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'Oct 14, 1983, 9:30:33 AM'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get DATETIME_MED_WITH_SECONDS() {
-    return DATETIME_MED_WITH_SECONDS;
-  }
+  }, {
+    key: "millisecond",
+    get: function get() {
+      return this.isValid ? this.c.millisecond : NaN;
+    }
+    /**
+     * Get the week year
+     * @see https://en.wikipedia.org/wiki/ISO_week_date
+     * @example DateTime.local(2014, 12, 31).weekYear //=> 2015
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'Fri, 14 Oct 1983, 9:30 AM'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get DATETIME_MED_WITH_WEEKDAY() {
-    return DATETIME_MED_WITH_WEEKDAY;
-  }
+  }, {
+    key: "weekYear",
+    get: function get() {
+      return this.isValid ? possiblyCachedWeekData(this).weekYear : NaN;
+    }
+    /**
+     * Get the week number of the week year (1-52ish).
+     * @see https://en.wikipedia.org/wiki/ISO_week_date
+     * @example DateTime.local(2017, 5, 25).weekNumber //=> 21
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'October 14, 1983, 9:30 AM EDT'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get DATETIME_FULL() {
-    return DATETIME_FULL;
-  }
+  }, {
+    key: "weekNumber",
+    get: function get() {
+      return this.isValid ? possiblyCachedWeekData(this).weekNumber : NaN;
+    }
+    /**
+     * Get the day of the week.
+     * 1 is Monday and 7 is Sunday
+     * @see https://en.wikipedia.org/wiki/ISO_week_date
+     * @example DateTime.local(2014, 11, 31).weekday //=> 4
+     * @type {number}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'October 14, 1983, 9:30:33 AM EDT'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get DATETIME_FULL_WITH_SECONDS() {
-    return DATETIME_FULL_WITH_SECONDS;
-  }
+  }, {
+    key: "weekday",
+    get: function get() {
+      return this.isValid ? possiblyCachedWeekData(this).weekday : NaN;
+    }
+    /**
+     * Get the ordinal (meaning the day of the year)
+     * @example DateTime.local(2017, 5, 25).ordinal //=> 145
+     * @type {number|DateTime}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'Friday, October 14, 1983, 9:30 AM Eastern Daylight Time'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get DATETIME_HUGE() {
-    return DATETIME_HUGE;
-  }
+  }, {
+    key: "ordinal",
+    get: function get() {
+      return this.isValid ? gregorianToOrdinal(this.c).ordinal : NaN;
+    }
+    /**
+     * Get the human readable short month name, such as 'Oct'.
+     * Defaults to the system's locale if no locale has been specified
+     * @example DateTime.local(2017, 10, 30).monthShort //=> Oct
+     * @type {string}
+     */
 
-  /**
-   * {@link DateTime#toLocaleString} format like 'Friday, October 14, 1983, 9:30:33 AM Eastern Daylight Time'. Only 12-hour if the locale is.
-   * @type {Object}
-   */
-  static get DATETIME_HUGE_WITH_SECONDS() {
-    return DATETIME_HUGE_WITH_SECONDS;
-  }
-}
+  }, {
+    key: "monthShort",
+    get: function get() {
+      return this.isValid ? Info.months("short", {
+        locObj: this.loc
+      })[this.month - 1] : null;
+    }
+    /**
+     * Get the human readable long month name, such as 'October'.
+     * Defaults to the system's locale if no locale has been specified
+     * @example DateTime.local(2017, 10, 30).monthLong //=> October
+     * @type {string}
+     */
 
-/**
- * @private
- */
+  }, {
+    key: "monthLong",
+    get: function get() {
+      return this.isValid ? Info.months("long", {
+        locObj: this.loc
+      })[this.month - 1] : null;
+    }
+    /**
+     * Get the human readable short weekday, such as 'Mon'.
+     * Defaults to the system's locale if no locale has been specified
+     * @example DateTime.local(2017, 10, 30).weekdayShort //=> Mon
+     * @type {string}
+     */
+
+  }, {
+    key: "weekdayShort",
+    get: function get() {
+      return this.isValid ? Info.weekdays("short", {
+        locObj: this.loc
+      })[this.weekday - 1] : null;
+    }
+    /**
+     * Get the human readable long weekday, such as 'Monday'.
+     * Defaults to the system's locale if no locale has been specified
+     * @example DateTime.local(2017, 10, 30).weekdayLong //=> Monday
+     * @type {string}
+     */
+
+  }, {
+    key: "weekdayLong",
+    get: function get() {
+      return this.isValid ? Info.weekdays("long", {
+        locObj: this.loc
+      })[this.weekday - 1] : null;
+    }
+    /**
+     * Get the UTC offset of this DateTime in minutes
+     * @example DateTime.now().offset //=> -240
+     * @example DateTime.utc().offset //=> 0
+     * @type {number}
+     */
+
+  }, {
+    key: "offset",
+    get: function get() {
+      return this.isValid ? +this.o : NaN;
+    }
+    /**
+     * Get the short human name for the zone's current offset, for example "EST" or "EDT".
+     * Defaults to the system's locale if no locale has been specified
+     * @type {string}
+     */
+
+  }, {
+    key: "offsetNameShort",
+    get: function get() {
+      if (this.isValid) {
+        return this.zone.offsetName(this.ts, {
+          format: "short",
+          locale: this.locale
+        });
+      } else {
+        return null;
+      }
+    }
+    /**
+     * Get the long human name for the zone's current offset, for example "Eastern Standard Time" or "Eastern Daylight Time".
+     * Defaults to the system's locale if no locale has been specified
+     * @type {string}
+     */
+
+  }, {
+    key: "offsetNameLong",
+    get: function get() {
+      if (this.isValid) {
+        return this.zone.offsetName(this.ts, {
+          format: "long",
+          locale: this.locale
+        });
+      } else {
+        return null;
+      }
+    }
+    /**
+     * Get whether this zone's offset ever changes, as in a DST.
+     * @type {boolean}
+     */
+
+  }, {
+    key: "isOffsetFixed",
+    get: function get() {
+      return this.isValid ? this.zone.isUniversal : null;
+    }
+    /**
+     * Get whether the DateTime is in a DST.
+     * @type {boolean}
+     */
+
+  }, {
+    key: "isInDST",
+    get: function get() {
+      if (this.isOffsetFixed) {
+        return false;
+      } else {
+        return this.offset > this.set({
+          month: 1
+        }).offset || this.offset > this.set({
+          month: 5
+        }).offset;
+      }
+    }
+    /**
+     * Returns true if this DateTime is in a leap year, false otherwise
+     * @example DateTime.local(2016).isInLeapYear //=> true
+     * @example DateTime.local(2013).isInLeapYear //=> false
+     * @type {boolean}
+     */
+
+  }, {
+    key: "isInLeapYear",
+    get: function get() {
+      return isLeapYear(this.year);
+    }
+    /**
+     * Returns the number of days in this DateTime's month
+     * @example DateTime.local(2016, 2).daysInMonth //=> 29
+     * @example DateTime.local(2016, 3).daysInMonth //=> 31
+     * @type {number}
+     */
+
+  }, {
+    key: "daysInMonth",
+    get: function get() {
+      return daysInMonth(this.year, this.month);
+    }
+    /**
+     * Returns the number of days in this DateTime's year
+     * @example DateTime.local(2016).daysInYear //=> 366
+     * @example DateTime.local(2013).daysInYear //=> 365
+     * @type {number}
+     */
+
+  }, {
+    key: "daysInYear",
+    get: function get() {
+      return this.isValid ? daysInYear(this.year) : NaN;
+    }
+    /**
+     * Returns the number of weeks in this DateTime's year
+     * @see https://en.wikipedia.org/wiki/ISO_week_date
+     * @example DateTime.local(2004).weeksInWeekYear //=> 53
+     * @example DateTime.local(2013).weeksInWeekYear //=> 52
+     * @type {number}
+     */
+
+  }, {
+    key: "weeksInWeekYear",
+    get: function get() {
+      return this.isValid ? weeksInWeekYear(this.weekYear) : NaN;
+    }
+  }], [{
+    key: "DATE_SHORT",
+    get: function get() {
+      return DATE_SHORT;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'Oct 14, 1983'
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATE_MED",
+    get: function get() {
+      return DATE_MED;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'Fri, Oct 14, 1983'
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATE_MED_WITH_WEEKDAY",
+    get: function get() {
+      return DATE_MED_WITH_WEEKDAY;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'October 14, 1983'
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATE_FULL",
+    get: function get() {
+      return DATE_FULL;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'Tuesday, October 14, 1983'
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATE_HUGE",
+    get: function get() {
+      return DATE_HUGE;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like '09:30 AM'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "TIME_SIMPLE",
+    get: function get() {
+      return TIME_SIMPLE;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like '09:30:23 AM'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "TIME_WITH_SECONDS",
+    get: function get() {
+      return TIME_WITH_SECONDS;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like '09:30:23 AM EDT'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "TIME_WITH_SHORT_OFFSET",
+    get: function get() {
+      return TIME_WITH_SHORT_OFFSET;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like '09:30:23 AM Eastern Daylight Time'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "TIME_WITH_LONG_OFFSET",
+    get: function get() {
+      return TIME_WITH_LONG_OFFSET;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like '09:30', always 24-hour.
+     * @type {Object}
+     */
+
+  }, {
+    key: "TIME_24_SIMPLE",
+    get: function get() {
+      return TIME_24_SIMPLE;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like '09:30:23', always 24-hour.
+     * @type {Object}
+     */
+
+  }, {
+    key: "TIME_24_WITH_SECONDS",
+    get: function get() {
+      return TIME_24_WITH_SECONDS;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like '09:30:23 EDT', always 24-hour.
+     * @type {Object}
+     */
+
+  }, {
+    key: "TIME_24_WITH_SHORT_OFFSET",
+    get: function get() {
+      return TIME_24_WITH_SHORT_OFFSET;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like '09:30:23 Eastern Daylight Time', always 24-hour.
+     * @type {Object}
+     */
+
+  }, {
+    key: "TIME_24_WITH_LONG_OFFSET",
+    get: function get() {
+      return TIME_24_WITH_LONG_OFFSET;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like '10/14/1983, 9:30 AM'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATETIME_SHORT",
+    get: function get() {
+      return DATETIME_SHORT;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like '10/14/1983, 9:30:33 AM'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATETIME_SHORT_WITH_SECONDS",
+    get: function get() {
+      return DATETIME_SHORT_WITH_SECONDS;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'Oct 14, 1983, 9:30 AM'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATETIME_MED",
+    get: function get() {
+      return DATETIME_MED;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'Oct 14, 1983, 9:30:33 AM'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATETIME_MED_WITH_SECONDS",
+    get: function get() {
+      return DATETIME_MED_WITH_SECONDS;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'Fri, 14 Oct 1983, 9:30 AM'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATETIME_MED_WITH_WEEKDAY",
+    get: function get() {
+      return DATETIME_MED_WITH_WEEKDAY;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'October 14, 1983, 9:30 AM EDT'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATETIME_FULL",
+    get: function get() {
+      return DATETIME_FULL;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'October 14, 1983, 9:30:33 AM EDT'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATETIME_FULL_WITH_SECONDS",
+    get: function get() {
+      return DATETIME_FULL_WITH_SECONDS;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'Friday, October 14, 1983, 9:30 AM Eastern Daylight Time'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATETIME_HUGE",
+    get: function get() {
+      return DATETIME_HUGE;
+    }
+    /**
+     * {@link DateTime#toLocaleString} format like 'Friday, October 14, 1983, 9:30:33 AM Eastern Daylight Time'. Only 12-hour if the locale is.
+     * @type {Object}
+     */
+
+  }, {
+    key: "DATETIME_HUGE_WITH_SECONDS",
+    get: function get() {
+      return DATETIME_HUGE_WITH_SECONDS;
+    }
+  }]);
+
+  return DateTime;
+}();
 function friendlyDateTime(dateTimeish) {
   if (DateTime.isDateTime(dateTimeish)) {
     return dateTimeish;
@@ -78885,11 +74550,23 @@ function friendlyDateTime(dateTimeish) {
   } else if (dateTimeish && typeof dateTimeish === "object") {
     return DateTime.fromObject(dateTimeish);
   } else {
-    throw new InvalidArgumentError(
-      `Unknown datetime argument: ${dateTimeish}, of type ${typeof dateTimeish}`
-    );
+    throw new InvalidArgumentError("Unknown datetime argument: " + dateTimeish + ", of type " + typeof dateTimeish);
   }
 }
+
+var VERSION = "2.3.0";
+
+var DateTime_1 = luxon.DateTime = DateTime;
+luxon.Duration = Duration;
+luxon.FixedOffsetZone = FixedOffsetZone;
+luxon.IANAZone = IANAZone;
+luxon.Info = Info;
+luxon.Interval = Interval;
+luxon.InvalidZone = InvalidZone;
+luxon.Settings = Settings;
+luxon.SystemZone = SystemZone;
+luxon.VERSION = VERSION;
+luxon.Zone = Zone;
 
 const API = {
     app: {
@@ -79257,7 +74934,7 @@ const getUniqUserId = () => {
 };
 
 const useLocalStorage = (key, initialValue) => {
-    const [storedValue, setStoredValue] = React.useState(() => {
+    const [storedValue, setStoredValue] = React__default.useState(() => {
         try {
             const item = window.localStorage.getItem(key);
             return item ? JSON.parse(item) : initialValue;
@@ -79299,50 +74976,50 @@ const useGroupCache = (userId) => {
 };
 
 const withGroupsData = (GroupsList, options) => () => {
-    const [data, setData] = React.useState([]);
-    const [groups, setGroups] = React.useState([]);
-    const [groupView, setGroupView] = React.useState('circle');
-    const [isShowMockup, setIsShowMockup] = React.useState(false);
-    const [appLocale, setAppLocale] = React.useState(null);
-    const [groupsWithStories, setGroupsWithStories] = React.useState([]);
-    const [loadStatus, setLoadStatus] = React.useState('pending');
-    const uniqUserId = React.useMemo(() => getUniqUserId() || nanoid(), []);
+    const [data, setData] = React__default.useState([]);
+    const [groups, setGroups] = React__default.useState([]);
+    const [groupView, setGroupView] = React__default.useState('circle');
+    const [isShowMockup, setIsShowMockup] = React__default.useState(false);
+    const [appLocale, setAppLocale] = React__default.useState(null);
+    const [groupsWithStories, setGroupsWithStories] = React__default.useState([]);
+    const [loadStatus, setLoadStatus] = React__default.useState('pending');
+    const uniqUserId = React__default.useMemo(() => getUniqUserId() || nanoid(), []);
     const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
     const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
-    const [width] = r$1();
-    const isMobile = React.useMemo(() => width < 768, [width]);
-    const [groupDuration, setGroupDuration] = React.useState({
+    const [width] = useWindowSize();
+    const isMobile = React__default.useMemo(() => width < 768, [width]);
+    const [groupDuration, setGroupDuration] = React__default.useState({
         groupId: '',
         startTime: 0
     });
-    const [storyDuration, setStoryDuration] = React.useState({
+    const [storyDuration, setStoryDuration] = React__default.useState({
         storyId: '',
         groupId: '',
         startTime: 0
     });
-    const language = React.useMemo(() => {
+    const language = React__default.useMemo(() => {
         if (appLocale) {
             return getNavigatorLanguage(appLocale);
         }
         return 'en';
     }, [appLocale]);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         if (language) {
             axios.defaults.headers.common['Accept-Language'] = language;
         }
     }, [language]);
-    const handleOpenGroup = React.useCallback((groupId) => {
+    const handleOpenGroup = React__default.useCallback((groupId) => {
         setGroupDuration(() => ({
             groupId,
-            startTime: DateTime.now().toSeconds()
+            startTime: DateTime_1.now().toSeconds()
         }));
         return API.statistics.group.onOpen({ groupId, uniqUserId, language });
     }, [uniqUserId, language]);
-    const handleStartQuiz = React.useCallback((groupId, storyId) => {
-        const time = DateTime.now().toISO();
+    const handleStartQuiz = React__default.useCallback((groupId, storyId) => {
+        const time = DateTime_1.now().toISO();
         return API.statistics.quiz.onQuizStart({ groupId, storyId, uniqUserId, time, language });
     }, [uniqUserId, language]);
-    const handleFinishQuiz = React.useCallback((groupId, storyId) => {
+    const handleFinishQuiz = React__default.useCallback((groupId, storyId) => {
         if (!storyId) {
             const groupCache = getGroupCache(groupId);
             if (groupCache === null || groupCache === void 0 ? void 0 : groupCache.isFinished) {
@@ -79361,11 +75038,11 @@ const withGroupsData = (GroupsList, options) => () => {
                 isFinished: true
             });
         }
-        const time = DateTime.now().toISO();
+        const time = DateTime_1.now().toISO();
         return API.statistics.quiz.onQuizFinish({ groupId, storyId, uniqUserId, time, language });
     }, [uniqUserId, language]);
-    const handleCloseGroup = React.useCallback((groupId) => {
-        const duration = DateTime.now().toSeconds() - groupDuration.startTime;
+    const handleCloseGroup = React__default.useCallback((groupId) => {
+        const duration = DateTime_1.now().toSeconds() - groupDuration.startTime;
         API.statistics.group.sendDuration({
             groupId: groupDuration.groupId,
             uniqUserId,
@@ -79374,7 +75051,7 @@ const withGroupsData = (GroupsList, options) => () => {
         });
         return API.statistics.group.onClose({ groupId, uniqUserId, language });
     }, [groupDuration, uniqUserId, language]);
-    const handleOpenStory = React.useCallback((groupId, storyId) => {
+    const handleOpenStory = React__default.useCallback((groupId, storyId) => {
         var _a, _b, _c;
         const currentGroup = data === null || data === void 0 ? void 0 : data.find((group) => group.id === groupId);
         const currentStory = (_a = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.stories) === null || _a === void 0 ? void 0 : _a.find((story) => story.id === storyId);
@@ -79386,13 +75063,13 @@ const withGroupsData = (GroupsList, options) => () => {
         setStoryDuration(() => ({
             groupId,
             storyId,
-            startTime: DateTime.now().toSeconds()
+            startTime: DateTime_1.now().toSeconds()
         }));
         API.statistics.story.onOpen({ groupId, storyId, uniqUserId, language });
     }, [data, uniqUserId, language, handleFinishQuiz]);
-    const handleCloseStory = React.useCallback((groupId, storyId) => {
+    const handleCloseStory = React__default.useCallback((groupId, storyId) => {
         if (storyDuration.storyId === storyId && storyDuration.groupId === groupId) {
-            const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+            const duration = DateTime_1.now().toSeconds() - storyDuration.startTime;
             API.statistics.story.sendDuration({
                 storyId: storyDuration.storyId,
                 groupId: storyDuration.groupId,
@@ -79412,9 +75089,9 @@ const withGroupsData = (GroupsList, options) => () => {
         }
         API.statistics.story.onClose({ groupId, storyId, uniqUserId, language });
     }, [storyDuration, uniqUserId, language]);
-    const handleNextStory = React.useCallback((groupId, storyId) => API.statistics.story.onNext({ groupId, storyId, uniqUserId, language }), [uniqUserId, language]);
-    const handlePrevStory = React.useCallback((groupId, storyId) => API.statistics.story.onPrev({ groupId, storyId, uniqUserId, language }), [uniqUserId, language]);
-    React.useEffect(() => {
+    const handleNextStory = React__default.useCallback((groupId, storyId) => API.statistics.story.onNext({ groupId, storyId, uniqUserId, language }), [uniqUserId, language]);
+    const handlePrevStory = React__default.useCallback((groupId, storyId) => API.statistics.story.onPrev({ groupId, storyId, uniqUserId, language }), [uniqUserId, language]);
+    React__default.useEffect(() => {
         setLoadStatus('loading');
         API.app.getApp().then((appData) => {
             var _a, _b, _c, _d, _e;
@@ -79463,7 +75140,7 @@ const withGroupsData = (GroupsList, options) => () => {
             }
         });
     }, []);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         if (groups.length) {
             setLoadStatus('loading');
             groups.forEach((groupItem, groupIndex) => {
@@ -79474,11 +75151,11 @@ const withGroupsData = (GroupsList, options) => () => {
                     .then((storiesData) => {
                     if (!storiesData.data.error) {
                         const stories = storiesData.data.data.filter((storyItem) => storyItem.story_data.status === 'active' &&
-                            DateTime.fromISO(storyItem.story_data.start_time).toSeconds() <
-                                DateTime.now().toSeconds() &&
+                            DateTime_1.fromISO(storyItem.story_data.start_time).toSeconds() <
+                                DateTime_1.now().toSeconds() &&
                             (storyItem.story_data.end_time
-                                ? DateTime.fromISO(storyItem.story_data.end_time).toSeconds() >
-                                    DateTime.now().toSeconds()
+                                ? DateTime_1.fromISO(storyItem.story_data.end_time).toSeconds() >
+                                    DateTime_1.now().toSeconds()
                                 : true));
                         setGroupsWithStories((prevState) => prevState.map((item) => {
                             if (item.id === groupItem.id) {
@@ -79494,13 +75171,13 @@ const withGroupsData = (GroupsList, options) => () => {
             });
         }
     }, [groups]);
-    React.useEffect(() => {
+    React__default.useEffect(() => {
         if (loadStatus === 'loaded' && groupsWithStories.length) {
             const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language, isMobile);
             setData(adaptedData);
         }
     }, [loadStatus, groupsWithStories, uniqUserId, language, isMobile]);
-    return (React__default["default"].createElement(GroupsList, { autoplay: options === null || options === void 0 ? void 0 : options.autoplay, forbidClose: options === null || options === void 0 ? void 0 : options.forbidClose, groupClassName: options === null || options === void 0 ? void 0 : options.groupClassName, groupImageHeight: options === null || options === void 0 ? void 0 : options.groupImageHeight, groupImageWidth: options === null || options === void 0 ? void 0 : options.groupImageWidth, groupTitleSize: options === null || options === void 0 ? void 0 : options.groupTitleSize, groupView: groupView, groups: data, groupsClassName: options === null || options === void 0 ? void 0 : options.groupsClassName, isLoading: loadStatus === 'loading', isShowMockup: isShowMockup, startStoryId: options === null || options === void 0 ? void 0 : options.startStoryId, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onFinishQuiz: handleFinishQuiz, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory, onStartQuiz: handleStartQuiz }));
+    return (React__default__default["default"].createElement(GroupsList, { autoplay: options === null || options === void 0 ? void 0 : options.autoplay, forbidClose: options === null || options === void 0 ? void 0 : options.forbidClose, groupClassName: options === null || options === void 0 ? void 0 : options.groupClassName, groupImageHeight: options === null || options === void 0 ? void 0 : options.groupImageHeight, groupImageWidth: options === null || options === void 0 ? void 0 : options.groupImageWidth, groupTitleSize: options === null || options === void 0 ? void 0 : options.groupTitleSize, groupView: groupView, groups: data, groupsClassName: options === null || options === void 0 ? void 0 : options.groupsClassName, isLoading: loadStatus === 'loading', isShowMockup: isShowMockup, startStoryId: options === null || options === void 0 ? void 0 : options.startStoryId, onCloseGroup: handleCloseGroup, onCloseStory: handleCloseStory, onFinishQuiz: handleFinishQuiz, onNextStory: handleNextStory, onOpenGroup: handleOpenGroup, onOpenStory: handleOpenStory, onPrevStory: handlePrevStory, onStartQuiz: handleStartQuiz }));
 };
 
 class Story {
@@ -79529,7 +75206,7 @@ class Story {
     renderGroups(element) {
         if (!this.token) {
             if (element) {
-                ReactDOM__default["default"].render(React__default["default"].createElement("p", null, "StorySDK has not been initialized."), element);
+                ReactDOM__default["default"].render(React__default__default["default"].createElement("p", null, "StorySDK has not been initialized."), element);
             }
             else {
                 console.warn('StorySDK has not been initialized.');
@@ -79538,7 +75215,7 @@ class Story {
         }
         const Groups = withGroupsData(GroupsList, this.options);
         if (element) {
-            ReactDOM__default["default"].render(React__default["default"].createElement(Groups, null), element);
+            ReactDOM__default["default"].render(React__default__default["default"].createElement(Groups, null), element);
         }
     }
 }

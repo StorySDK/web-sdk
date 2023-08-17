@@ -8,6 +8,7 @@
   "main": "dist/bundle.js",
   "module": "dist/bundle.esm.js",
   "types": "dist/index.d.ts",
+  "browser": "dist/bundle.umd.js",
   "publishConfig": {
     "access": "public"
   },

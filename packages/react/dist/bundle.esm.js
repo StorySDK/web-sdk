@@ -1,5 +1,5 @@
-import React, { useCallback, useState, useEffect, useRef, useMemo, useReducer, useContext, memo } from 'react';
-import crypto from 'crypto';
+import * as React from 'react';
+import React__default, { useCallback, useState, useEffect, useMemo, useRef, useReducer, useContext, memo } from 'react';
 
 var MediaType;
 (function (MediaType) {
@@ -175,19 +175,19 @@ const GroupItem = (props) => {
         }
         return undefined;
     }, [view]);
-    return (React.createElement("button", { className: cn(b$r({ view, type }).toString(), groupClassName || ''), style: {
+    return (React__default.createElement("button", { className: cn(b$r({ view, type }).toString(), groupClassName || ''), style: {
             width: getContainerSize(),
             minHeight: view === 'rectangle' && groupImageWidth
                 ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
                 : getContainerSize()
         }, onClick: () => onClick && onClick(index) },
-        React.createElement("div", { className: b$r('imgContainer', { view, type }), style: { width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' } },
-            React.createElement("img", { alt: "", className: b$r('img', { view }), src: imageUrl, style: {
+        React__default.createElement("div", { className: b$r('imgContainer', { view, type }), style: { width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' } },
+            React__default.createElement("img", { alt: "", className: b$r('img', { view }), src: imageUrl, style: {
                     width: getImageSize(groupImageWidth),
                     height: getImageSize(groupImageHeight, true)
                 } })),
-        React.createElement("div", { className: b$r('titleContainer', { view }) },
-            React.createElement("p", { className: b$r('title', { view }), style: {
+        React__default.createElement("div", { className: b$r('titleContainer', { view }) },
+            React__default.createElement("p", { className: b$r('title', { view }), style: {
                     fontSize: groupTitleSize || undefined
                 } }, title))));
 };
@@ -195,7 +195,7 @@ const GroupItem = (props) => {
 /**
  * @internal
  */
-const SkeletonThemeContext = React.createContext({});
+const SkeletonThemeContext = React__default.createContext({});
 
 /* eslint-disable react/no-array-index-key */
 const defaultEnableAnimation = true;
@@ -224,7 +224,7 @@ function styleOptionsToCssProperties({ baseColor, highlightColor, width, height,
 }
 function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, containerClassName, containerTestId, circle = false, style: styleProp, ...originalPropsStyleOptions }) {
     var _a, _b;
-    const contextStyleOptions = React.useContext(SkeletonThemeContext);
+    const contextStyleOptions = React__default.useContext(SkeletonThemeContext);
     const propsStyleOptions = { ...originalPropsStyleOptions };
     // DO NOT overwrite style options from the context if `propsStyleOptions`
     // has properties explicity set to undefined
@@ -252,18 +252,18 @@ function Skeleton({ count = 1, wrapper: Wrapper, className: customClassName, con
     // Without the <br />, the skeleton lines will all run together if
     // `width` is specified
     for (let i = 0; i < count; i++) {
-        const skeletonSpan = (React.createElement("span", { className: className, style: style, key: i }, "\u200C"));
+        const skeletonSpan = (React__default.createElement("span", { className: className, style: style, key: i }, "\u200C"));
         if (inline) {
             elements.push(skeletonSpan);
         }
         else {
-            elements.push(React.createElement(React.Fragment, { key: i },
+            elements.push(React__default.createElement(React__default.Fragment, { key: i },
                 skeletonSpan,
-                React.createElement("br", null)));
+                React__default.createElement("br", null)));
         }
     }
-    return (React.createElement("span", { className: containerClassName, "data-testid": containerTestId, "aria-live": "polite", "aria-busy": (_b = styleOptions.enableAnimation) !== null && _b !== void 0 ? _b : defaultEnableAnimation }, Wrapper
-        ? elements.map((el, i) => React.createElement(Wrapper, { key: i }, el))
+    return (React__default.createElement("span", { className: containerClassName, "data-testid": containerTestId, "aria-live": "polite", "aria-busy": (_b = styleOptions.enableAnimation) !== null && _b !== void 0 ? _b : defaultEnableAnimation }, Wrapper
+        ? elements.map((el, i) => React__default.createElement(Wrapper, { key: i }, el))
         : elements));
 }
 
@@ -315,36 +315,131 @@ const GroupsList = (props) => {
             setModalShow(false);
         }
     }, [currentGroup, forbidClose, groups, onCloseGroup]);
-    return (React.createElement(React.Fragment, null, isLoading && !autoplay ? (React.createElement("div", { className: b$q() },
-        React.createElement("div", { className: b$q('carousel') },
-            React.createElement("div", { className: b$q('loaderItem') },
-                React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
-                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React.createElement("div", { className: b$q('loaderItem') },
-                React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
-                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React.createElement("div", { className: b$q('loaderItem') },
-                React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
-                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
-            React.createElement("div", { className: b$q('loaderItem') },
-                React.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
-                React.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React.createElement(React.Fragment, null,
-        groups.length ? (React.createElement(React.Fragment, null,
-            React.createElement("div", { className: cn(b$q(), groupsClassName) },
-                React.createElement("div", { className: b$q('carousel') }, groups
+    return (React__default.createElement(React__default.Fragment, null, isLoading && !autoplay ? (React__default.createElement("div", { className: b$q() },
+        React__default.createElement("div", { className: b$q('carousel') },
+            React__default.createElement("div", { className: b$q('loaderItem') },
+                React__default.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
+            React__default.createElement("div", { className: b$q('loaderItem') },
+                React__default.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
+            React__default.createElement("div", { className: b$q('loaderItem') },
+                React__default.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 })),
+            React__default.createElement("div", { className: b$q('loaderItem') },
+                React__default.createElement(Skeleton, { height: groupImageWidth || 64, width: groupImageWidth || 64 }),
+                React__default.createElement(Skeleton, { height: 16, style: { marginTop: 8 }, width: groupImageWidth || 64 }))))) : (React__default.createElement(React__default.Fragment, null,
+        groups.length ? (React__default.createElement(React__default.Fragment, null,
+            React__default.createElement("div", { className: cn(b$q(), groupsClassName) },
+                React__default.createElement("div", { className: b$q('carousel') }, groups
                     .filter((group) => group.stories.length)
-                    .map((group, index) => (React.createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))))) : (React.createElement("div", { className: b$q({ empty: true }) },
-            React.createElement("p", { className: b$q('emptyText') }, "Stories will be here"))),
-        React.createElement(StoryModal, { currentGroup: groups === null || groups === void 0 ? void 0 : groups[currentGroup], forbidClose: forbidClose, isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === (groups === null || groups === void 0 ? void 0 : groups.length) - 1, isLoading: isLoading, isShowMockup: isShowMockup, isShowing: modalShow, startStoryId: startStoryId, stories: (_a = groups === null || groups === void 0 ? void 0 : groups[currentGroup]) === null || _a === void 0 ? void 0 : _a.stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz })))));
+                    .map((group, index) => (React__default.createElement(GroupItem, { groupClassName: groupClassName, groupImageHeight: groupImageHeight, groupImageWidth: groupImageWidth, groupTitleSize: groupTitleSize, imageUrl: group.imageUrl, index: index, key: group.id, title: group.title, type: group.type, view: groupView, onClick: handleSelectGroup }))))))) : (React__default.createElement("div", { className: b$q({ empty: true }) },
+            React__default.createElement("p", { className: b$q('emptyText') }, "Stories will be here"))),
+        React__default.createElement(StoryModal, { currentGroup: groups === null || groups === void 0 ? void 0 : groups[currentGroup], forbidClose: forbidClose, isFirstGroup: currentGroup === 0, isLastGroup: currentGroup === (groups === null || groups === void 0 ? void 0 : groups.length) - 1, isLoading: isLoading, isShowMockup: isShowMockup, isShowing: modalShow, startStoryId: startStoryId, stories: (_a = groups === null || groups === void 0 ? void 0 : groups[currentGroup]) === null || _a === void 0 ? void 0 : _a.stories, onClose: handleCloseModal, onCloseStory: onCloseStory, onFinishQuiz: onFinishQuiz, onNextGroup: handleNextGroup, onNextStory: onNextStory, onOpenStory: onOpenStory, onPrevGroup: handlePrevGroup, onPrevStory: onPrevStory, onStartQuiz: onStartQuiz })))));
 };
 
-var u = e=>{var a=useRef(e);return useEffect(()=>{a.current=e;}),a};
+const useLatest = current => {
+  const storedValue = React.useRef(current);
+  React.useEffect(() => {
+    storedValue.current = current;
+  });
+  return storedValue;
+};
 
-var o$1=function(n,o,c){function i(){l.current&&clearTimeout(l.current),l.current=void 0;}function a(){l.current=void 0;}void 0===o&&(o=100),void 0===c&&(c=0);var v=u(n),l=useRef(),m=[o,c,v];return useEffect(()=>i,m),useCallback((function(){var r=arguments,{current:t}=l;if(void 0===t&&c)return l.current=setTimeout(a,o),v.current.apply(null,r);t&&clearTimeout(t),l.current=setTimeout(()=>{l.current=void 0,v.current.apply(null,r);},o);}),m)},c$1=(r,t,e)=>{var u=useState(r);return [u[0],o$1(u[1],t,e)]};
+var useLatest$1 = useLatest;
 
-function t$1(t,n,a,u){var c=useRef(a),i=useRef(u);useEffect(()=>{c.current=a,i.current=u;}),useEffect(()=>{function r(){if(!a){for(var r=arguments.length,e=new Array(r),t=0;r>t;t++)e[t]=arguments[t];c.current.apply(this,e);}}var e=t&&"current"in t?t.current:t;if(e){var a=0;e.addEventListener(n,r);var u=i.current;return ()=>{a=1,e.removeEventListener(n,r),u&&u();}}},[t,n]);}
+const useDebounceCallback = (callback, wait = 100, leading = false) => {
+  const storedCallback = useLatest$1(callback);
+  const timeout = React.useRef();
+  const deps = [wait, leading, storedCallback]; // Cleans up pending timeouts when the deps change
 
-var n$2={},i="undefined"==typeof window?null:window,o=()=>[document.documentElement.clientWidth,document.documentElement.clientHeight],d$1=function(d){void 0===d&&(d=n$2);var{wait:r,leading:c,initialWidth:m=0,initialHeight:u=0}=d,[a,l]=c$1("undefined"==typeof document?[m,u]:o,r,c),f=()=>l(o);return t$1(i,"resize",f),t$1(i,"orientationchange",f),a};
+  function _ref() {
+    timeout.current && clearTimeout(timeout.current);
+    timeout.current = void 0;
+  }
+
+  React.useEffect(() => _ref, deps);
+
+  function _ref2() {
+    timeout.current = void 0;
+  }
+
+  return React.useCallback(function () {
+    // eslint-disable-next-line prefer-rest-params
+    const args = arguments;
+    const {
+      current
+    } = timeout; // Calls on leading edge
+
+    if (current === void 0 && leading) {
+      timeout.current = setTimeout(_ref2, wait); // eslint-disable-next-line prefer-spread
+
+      return storedCallback.current.apply(null, args);
+    } // Clear the timeout every call and start waiting again
+
+
+    current && clearTimeout(current); // Waits for `wait` before invoking the callback
+
+    timeout.current = setTimeout(() => {
+      timeout.current = void 0;
+      storedCallback.current.apply(null, args);
+    }, wait);
+  }, deps);
+};
+const useDebounce = (initialState, wait, leading) => {
+  const state = React.useState(initialState);
+  return [state[0], useDebounceCallback(state[1], wait, leading)];
+};
+
+function useEvent(target, type, listener, cleanup) {
+  const storedListener = React.useRef(listener);
+  const storedCleanup = React.useRef(cleanup);
+  React.useEffect(() => {
+    storedListener.current = listener;
+    storedCleanup.current = cleanup;
+  });
+  React.useEffect(() => {
+    const targetEl = target && 'current' in target ? target.current : target;
+    if (!targetEl) return;
+    let didUnsubscribe = 0;
+
+    function listener(...args) {
+      if (didUnsubscribe) return;
+      storedListener.current.apply(this, args);
+    }
+
+    targetEl.addEventListener(type, listener);
+    const cleanup = storedCleanup.current;
+    return () => {
+      didUnsubscribe = 1;
+      targetEl.removeEventListener(type, listener);
+      cleanup && cleanup();
+    }; // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target, type]);
+}
+
+const emptyObj = {};
+const win = typeof window === 'undefined' ? null : window;
+
+const getSize = () => [document.documentElement.clientWidth, document.documentElement.clientHeight];
+
+const useWindowSize = (options = emptyObj) => {
+  const {
+    wait,
+    leading,
+    initialWidth = 0,
+    initialHeight = 0
+  } = options;
+  const [size, setDebouncedSize] = useDebounce(
+  /* istanbul ignore next */
+  typeof document === 'undefined' ? [initialWidth, initialHeight] : getSize, wait, leading);
+
+  const setSize = () => setDebouncedSize(getSize);
+
+  useEvent(win, 'resize', setSize);
+  useEvent(win, 'orientationchange', setSize);
+  return size;
+};
 
 function _classCallCheck$1(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -1542,13 +1637,13 @@ for (var func in conversions) {
   })(func);
 
   var pair = /(\w+)2(\w+)/.exec(func),
-      from$1 = pair[1],
+      from = pair[1],
       to = pair[2];
 
   // export rgb2hsl and ["rgb"]["hsl"]
-  convert$2[from$1] = convert$2[from$1] || {};
+  convert$2[from] = convert$2[from] || {};
 
-  convert$2[from$1][to] = convert$2[func] = (function(func) { 
+  convert$2[from][to] = convert$2[func] = (function(func) { 
     return function(arg) {
       if (typeof arg == "number")
         arg = Array.prototype.slice.call(arguments);
@@ -1789,1999 +1884,20 @@ const getClientPosition = (e) => {
     };
 };
 
-var global$1 = (typeof global !== "undefined" ? global :
-  typeof self !== "undefined" ? self :
-  typeof window !== "undefined" ? window : {});
-
-var lookup = [];
-var revLookup = [];
-var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array;
-var inited = false;
-function init$1 () {
-  inited = true;
-  var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-  for (var i = 0, len = code.length; i < len; ++i) {
-    lookup[i] = code[i];
-    revLookup[code.charCodeAt(i)] = i;
-  }
-
-  revLookup['-'.charCodeAt(0)] = 62;
-  revLookup['_'.charCodeAt(0)] = 63;
-}
-
-function toByteArray (b64) {
-  if (!inited) {
-    init$1();
-  }
-  var i, j, l, tmp, placeHolders, arr;
-  var len = b64.length;
-
-  if (len % 4 > 0) {
-    throw new Error('Invalid string. Length must be a multiple of 4')
-  }
-
-  // the number of equal signs (place holders)
-  // if there are two placeholders, than the two characters before it
-  // represent one byte
-  // if there is only one, then the three characters before it represent 2 bytes
-  // this is just a cheap hack to not do indexOf twice
-  placeHolders = b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0;
-
-  // base64 is 4/3 + up to two characters of the original data
-  arr = new Arr(len * 3 / 4 - placeHolders);
-
-  // if there are placeholders, only get up to the last complete 4 chars
-  l = placeHolders > 0 ? len - 4 : len;
-
-  var L = 0;
-
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)];
-    arr[L++] = (tmp >> 16) & 0xFF;
-    arr[L++] = (tmp >> 8) & 0xFF;
-    arr[L++] = tmp & 0xFF;
-  }
-
-  if (placeHolders === 2) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4);
-    arr[L++] = tmp & 0xFF;
-  } else if (placeHolders === 1) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2);
-    arr[L++] = (tmp >> 8) & 0xFF;
-    arr[L++] = tmp & 0xFF;
-  }
-
-  return arr
-}
-
-function tripletToBase64 (num) {
-  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
-}
-
-function encodeChunk (uint8, start, end) {
-  var tmp;
-  var output = [];
-  for (var i = start; i < end; i += 3) {
-    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2]);
-    output.push(tripletToBase64(tmp));
-  }
-  return output.join('')
-}
-
-function fromByteArray (uint8) {
-  if (!inited) {
-    init$1();
-  }
-  var tmp;
-  var len = uint8.length;
-  var extraBytes = len % 3; // if we have 1 byte left, pad 2 bytes
-  var output = '';
-  var parts = [];
-  var maxChunkLength = 16383; // must be multiple of 3
-
-  // go through the array every three bytes, we'll deal with trailing stuff later
-  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)));
-  }
-
-  // pad the end with zeros, but make sure to not forget the extra bytes
-  if (extraBytes === 1) {
-    tmp = uint8[len - 1];
-    output += lookup[tmp >> 2];
-    output += lookup[(tmp << 4) & 0x3F];
-    output += '==';
-  } else if (extraBytes === 2) {
-    tmp = (uint8[len - 2] << 8) + (uint8[len - 1]);
-    output += lookup[tmp >> 10];
-    output += lookup[(tmp >> 4) & 0x3F];
-    output += lookup[(tmp << 2) & 0x3F];
-    output += '=';
-  }
-
-  parts.push(output);
-
-  return parts.join('')
-}
-
-function read (buffer, offset, isLE, mLen, nBytes) {
-  var e, m;
-  var eLen = nBytes * 8 - mLen - 1;
-  var eMax = (1 << eLen) - 1;
-  var eBias = eMax >> 1;
-  var nBits = -7;
-  var i = isLE ? (nBytes - 1) : 0;
-  var d = isLE ? -1 : 1;
-  var s = buffer[offset + i];
-
-  i += d;
-
-  e = s & ((1 << (-nBits)) - 1);
-  s >>= (-nBits);
-  nBits += eLen;
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1);
-  e >>= (-nBits);
-  nBits += mLen;
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias;
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen);
-    e = e - eBias;
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-function write (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c;
-  var eLen = nBytes * 8 - mLen - 1;
-  var eMax = (1 << eLen) - 1;
-  var eBias = eMax >> 1;
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0);
-  var i = isLE ? 0 : (nBytes - 1);
-  var d = isLE ? 1 : -1;
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
-
-  value = Math.abs(value);
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0;
-    e = eMax;
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2);
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--;
-      c *= 2;
-    }
-    if (e + eBias >= 1) {
-      value += rt / c;
-    } else {
-      value += rt * Math.pow(2, 1 - eBias);
-    }
-    if (value * c >= 2) {
-      e++;
-      c /= 2;
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0;
-      e = eMax;
-    } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen);
-      e = e + eBias;
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
-      e = 0;
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m;
-  eLen += mLen;
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128;
-}
-
-var toString = {}.toString;
-
-var isArray = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * @license  MIT
- */
-
-var INSPECT_MAX_BYTES = 50;
-
-/**
- * If `Buffer.TYPED_ARRAY_SUPPORT`:
- *   === true    Use Uint8Array implementation (fastest)
- *   === false   Use Object implementation (most compatible, even IE6)
- *
- * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
- * Opera 11.6+, iOS 4.2+.
- *
- * Due to various browser bugs, sometimes the Object implementation will be used even
- * when the browser supports typed arrays.
- *
- * Note:
- *
- *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
- *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
- *
- *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
- *
- *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
- *     incorrect length in some situations.
-
- * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
- * get the Object implementation, which is slower but behaves correctly.
- */
-Buffer.TYPED_ARRAY_SUPPORT = global$1.TYPED_ARRAY_SUPPORT !== undefined
-  ? global$1.TYPED_ARRAY_SUPPORT
-  : true;
-
-function kMaxLength () {
-  return Buffer.TYPED_ARRAY_SUPPORT
-    ? 0x7fffffff
-    : 0x3fffffff
-}
-
-function createBuffer (that, length) {
-  if (kMaxLength() < length) {
-    throw new RangeError('Invalid typed array length')
-  }
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    // Return an augmented `Uint8Array` instance, for best performance
-    that = new Uint8Array(length);
-    that.__proto__ = Buffer.prototype;
-  } else {
-    // Fallback: Return an object instance of the Buffer class
-    if (that === null) {
-      that = new Buffer(length);
-    }
-    that.length = length;
-  }
-
-  return that
-}
-
-/**
- * The Buffer constructor returns instances of `Uint8Array` that have their
- * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
- * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
- * and the `Uint8Array` methods. Square bracket notation works as expected -- it
- * returns a single octet.
- *
- * The `Uint8Array` prototype remains unmodified.
- */
-
-function Buffer (arg, encodingOrOffset, length) {
-  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
-    return new Buffer(arg, encodingOrOffset, length)
-  }
-
-  // Common case.
-  if (typeof arg === 'number') {
-    if (typeof encodingOrOffset === 'string') {
-      throw new Error(
-        'If encoding is specified then the first argument must be a string'
-      )
-    }
-    return allocUnsafe(this, arg)
-  }
-  return from(this, arg, encodingOrOffset, length)
-}
-
-Buffer.poolSize = 8192; // not used by this implementation
-
-// TODO: Legacy, not needed anymore. Remove in next major version.
-Buffer._augment = function (arr) {
-  arr.__proto__ = Buffer.prototype;
-  return arr
-};
-
-function from (that, value, encodingOrOffset, length) {
-  if (typeof value === 'number') {
-    throw new TypeError('"value" argument must not be a number')
-  }
-
-  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
-    return fromArrayBuffer(that, value, encodingOrOffset, length)
-  }
-
-  if (typeof value === 'string') {
-    return fromString(that, value, encodingOrOffset)
-  }
-
-  return fromObject(that, value)
-}
-
-/**
- * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
- * if value is a number.
- * Buffer.from(str[, encoding])
- * Buffer.from(array)
- * Buffer.from(buffer)
- * Buffer.from(arrayBuffer[, byteOffset[, length]])
- **/
-Buffer.from = function (value, encodingOrOffset, length) {
-  return from(null, value, encodingOrOffset, length)
-};
-
-if (Buffer.TYPED_ARRAY_SUPPORT) {
-  Buffer.prototype.__proto__ = Uint8Array.prototype;
-  Buffer.__proto__ = Uint8Array;
-}
-
-function assertSize (size) {
-  if (typeof size !== 'number') {
-    throw new TypeError('"size" argument must be a number')
-  } else if (size < 0) {
-    throw new RangeError('"size" argument must not be negative')
-  }
-}
-
-function alloc (that, size, fill, encoding) {
-  assertSize(size);
-  if (size <= 0) {
-    return createBuffer(that, size)
-  }
-  if (fill !== undefined) {
-    // Only pay attention to encoding if it's a string. This
-    // prevents accidentally sending in a number that would
-    // be interpretted as a start offset.
-    return typeof encoding === 'string'
-      ? createBuffer(that, size).fill(fill, encoding)
-      : createBuffer(that, size).fill(fill)
-  }
-  return createBuffer(that, size)
-}
-
-/**
- * Creates a new filled Buffer instance.
- * alloc(size[, fill[, encoding]])
- **/
-Buffer.alloc = function (size, fill, encoding) {
-  return alloc(null, size, fill, encoding)
-};
-
-function allocUnsafe (that, size) {
-  assertSize(size);
-  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0);
-  if (!Buffer.TYPED_ARRAY_SUPPORT) {
-    for (var i = 0; i < size; ++i) {
-      that[i] = 0;
-    }
-  }
-  return that
-}
-
-/**
- * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
- * */
-Buffer.allocUnsafe = function (size) {
-  return allocUnsafe(null, size)
-};
-/**
- * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
- */
-Buffer.allocUnsafeSlow = function (size) {
-  return allocUnsafe(null, size)
-};
-
-function fromString (that, string, encoding) {
-  if (typeof encoding !== 'string' || encoding === '') {
-    encoding = 'utf8';
-  }
-
-  if (!Buffer.isEncoding(encoding)) {
-    throw new TypeError('"encoding" must be a valid string encoding')
-  }
-
-  var length = byteLength(string, encoding) | 0;
-  that = createBuffer(that, length);
-
-  var actual = that.write(string, encoding);
-
-  if (actual !== length) {
-    // Writing a hex string, for example, that contains invalid characters will
-    // cause everything after the first invalid character to be ignored. (e.g.
-    // 'abxxcd' will be treated as 'ab')
-    that = that.slice(0, actual);
-  }
-
-  return that
-}
-
-function fromArrayLike (that, array) {
-  var length = array.length < 0 ? 0 : checked(array.length) | 0;
-  that = createBuffer(that, length);
-  for (var i = 0; i < length; i += 1) {
-    that[i] = array[i] & 255;
-  }
-  return that
-}
-
-function fromArrayBuffer (that, array, byteOffset, length) {
-  array.byteLength; // this throws if `array` is not a valid ArrayBuffer
-
-  if (byteOffset < 0 || array.byteLength < byteOffset) {
-    throw new RangeError('\'offset\' is out of bounds')
-  }
-
-  if (array.byteLength < byteOffset + (length || 0)) {
-    throw new RangeError('\'length\' is out of bounds')
-  }
-
-  if (byteOffset === undefined && length === undefined) {
-    array = new Uint8Array(array);
-  } else if (length === undefined) {
-    array = new Uint8Array(array, byteOffset);
-  } else {
-    array = new Uint8Array(array, byteOffset, length);
-  }
-
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    // Return an augmented `Uint8Array` instance, for best performance
-    that = array;
-    that.__proto__ = Buffer.prototype;
-  } else {
-    // Fallback: Return an object instance of the Buffer class
-    that = fromArrayLike(that, array);
-  }
-  return that
-}
-
-function fromObject (that, obj) {
-  if (internalIsBuffer(obj)) {
-    var len = checked(obj.length) | 0;
-    that = createBuffer(that, len);
-
-    if (that.length === 0) {
-      return that
-    }
-
-    obj.copy(that, 0, 0, len);
-    return that
-  }
-
-  if (obj) {
-    if ((typeof ArrayBuffer !== 'undefined' &&
-        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
-      if (typeof obj.length !== 'number' || isnan(obj.length)) {
-        return createBuffer(that, 0)
-      }
-      return fromArrayLike(that, obj)
-    }
-
-    if (obj.type === 'Buffer' && isArray(obj.data)) {
-      return fromArrayLike(that, obj.data)
-    }
-  }
-
-  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
-}
-
-function checked (length) {
-  // Note: cannot use `length < kMaxLength()` here because that fails when
-  // length is NaN (which is otherwise coerced to zero.)
-  if (length >= kMaxLength()) {
-    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
-  }
-  return length | 0
-}
-Buffer.isBuffer = isBuffer;
-function internalIsBuffer (b) {
-  return !!(b != null && b._isBuffer)
-}
-
-Buffer.compare = function compare (a, b) {
-  if (!internalIsBuffer(a) || !internalIsBuffer(b)) {
-    throw new TypeError('Arguments must be Buffers')
-  }
-
-  if (a === b) return 0
-
-  var x = a.length;
-  var y = b.length;
-
-  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
-    if (a[i] !== b[i]) {
-      x = a[i];
-      y = b[i];
-      break
-    }
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-};
-
-Buffer.isEncoding = function isEncoding (encoding) {
-  switch (String(encoding).toLowerCase()) {
-    case 'hex':
-    case 'utf8':
-    case 'utf-8':
-    case 'ascii':
-    case 'latin1':
-    case 'binary':
-    case 'base64':
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return true
-    default:
-      return false
-  }
-};
-
-Buffer.concat = function concat (list, length) {
-  if (!isArray(list)) {
-    throw new TypeError('"list" argument must be an Array of Buffers')
-  }
-
-  if (list.length === 0) {
-    return Buffer.alloc(0)
-  }
-
-  var i;
-  if (length === undefined) {
-    length = 0;
-    for (i = 0; i < list.length; ++i) {
-      length += list[i].length;
-    }
-  }
-
-  var buffer = Buffer.allocUnsafe(length);
-  var pos = 0;
-  for (i = 0; i < list.length; ++i) {
-    var buf = list[i];
-    if (!internalIsBuffer(buf)) {
-      throw new TypeError('"list" argument must be an Array of Buffers')
-    }
-    buf.copy(buffer, pos);
-    pos += buf.length;
-  }
-  return buffer
-};
-
-function byteLength (string, encoding) {
-  if (internalIsBuffer(string)) {
-    return string.length
-  }
-  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
-      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
-    return string.byteLength
-  }
-  if (typeof string !== 'string') {
-    string = '' + string;
-  }
-
-  var len = string.length;
-  if (len === 0) return 0
-
-  // Use a for loop to avoid recursion
-  var loweredCase = false;
-  for (;;) {
-    switch (encoding) {
-      case 'ascii':
-      case 'latin1':
-      case 'binary':
-        return len
-      case 'utf8':
-      case 'utf-8':
-      case undefined:
-        return utf8ToBytes(string).length
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return len * 2
-      case 'hex':
-        return len >>> 1
-      case 'base64':
-        return base64ToBytes(string).length
-      default:
-        if (loweredCase) return utf8ToBytes(string).length // assume utf8
-        encoding = ('' + encoding).toLowerCase();
-        loweredCase = true;
-    }
-  }
-}
-Buffer.byteLength = byteLength;
-
-function slowToString (encoding, start, end) {
-  var loweredCase = false;
-
-  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
-  // property of a typed array.
-
-  // This behaves neither like String nor Uint8Array in that we set start/end
-  // to their upper/lower bounds if the value passed is out of range.
-  // undefined is handled specially as per ECMA-262 6th Edition,
-  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
-  if (start === undefined || start < 0) {
-    start = 0;
-  }
-  // Return early if start > this.length. Done here to prevent potential uint32
-  // coercion fail below.
-  if (start > this.length) {
-    return ''
-  }
-
-  if (end === undefined || end > this.length) {
-    end = this.length;
-  }
-
-  if (end <= 0) {
-    return ''
-  }
-
-  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
-  end >>>= 0;
-  start >>>= 0;
-
-  if (end <= start) {
-    return ''
-  }
-
-  if (!encoding) encoding = 'utf8';
-
-  while (true) {
-    switch (encoding) {
-      case 'hex':
-        return hexSlice(this, start, end)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Slice(this, start, end)
-
-      case 'ascii':
-        return asciiSlice(this, start, end)
-
-      case 'latin1':
-      case 'binary':
-        return latin1Slice(this, start, end)
-
-      case 'base64':
-        return base64Slice(this, start, end)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return utf16leSlice(this, start, end)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = (encoding + '').toLowerCase();
-        loweredCase = true;
-    }
-  }
-}
-
-// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
-// Buffer instances.
-Buffer.prototype._isBuffer = true;
-
-function swap (b, n, m) {
-  var i = b[n];
-  b[n] = b[m];
-  b[m] = i;
-}
-
-Buffer.prototype.swap16 = function swap16 () {
-  var len = this.length;
-  if (len % 2 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 16-bits')
-  }
-  for (var i = 0; i < len; i += 2) {
-    swap(this, i, i + 1);
-  }
-  return this
-};
-
-Buffer.prototype.swap32 = function swap32 () {
-  var len = this.length;
-  if (len % 4 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 32-bits')
-  }
-  for (var i = 0; i < len; i += 4) {
-    swap(this, i, i + 3);
-    swap(this, i + 1, i + 2);
-  }
-  return this
-};
-
-Buffer.prototype.swap64 = function swap64 () {
-  var len = this.length;
-  if (len % 8 !== 0) {
-    throw new RangeError('Buffer size must be a multiple of 64-bits')
-  }
-  for (var i = 0; i < len; i += 8) {
-    swap(this, i, i + 7);
-    swap(this, i + 1, i + 6);
-    swap(this, i + 2, i + 5);
-    swap(this, i + 3, i + 4);
-  }
-  return this
-};
-
-Buffer.prototype.toString = function toString () {
-  var length = this.length | 0;
-  if (length === 0) return ''
-  if (arguments.length === 0) return utf8Slice(this, 0, length)
-  return slowToString.apply(this, arguments)
-};
-
-Buffer.prototype.equals = function equals (b) {
-  if (!internalIsBuffer(b)) throw new TypeError('Argument must be a Buffer')
-  if (this === b) return true
-  return Buffer.compare(this, b) === 0
-};
-
-Buffer.prototype.inspect = function inspect () {
-  var str = '';
-  var max = INSPECT_MAX_BYTES;
-  if (this.length > 0) {
-    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ');
-    if (this.length > max) str += ' ... ';
-  }
-  return '<Buffer ' + str + '>'
-};
-
-Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
-  if (!internalIsBuffer(target)) {
-    throw new TypeError('Argument must be a Buffer')
-  }
-
-  if (start === undefined) {
-    start = 0;
-  }
-  if (end === undefined) {
-    end = target ? target.length : 0;
-  }
-  if (thisStart === undefined) {
-    thisStart = 0;
-  }
-  if (thisEnd === undefined) {
-    thisEnd = this.length;
-  }
-
-  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
-    throw new RangeError('out of range index')
-  }
-
-  if (thisStart >= thisEnd && start >= end) {
-    return 0
-  }
-  if (thisStart >= thisEnd) {
-    return -1
-  }
-  if (start >= end) {
-    return 1
-  }
-
-  start >>>= 0;
-  end >>>= 0;
-  thisStart >>>= 0;
-  thisEnd >>>= 0;
-
-  if (this === target) return 0
-
-  var x = thisEnd - thisStart;
-  var y = end - start;
-  var len = Math.min(x, y);
-
-  var thisCopy = this.slice(thisStart, thisEnd);
-  var targetCopy = target.slice(start, end);
-
-  for (var i = 0; i < len; ++i) {
-    if (thisCopy[i] !== targetCopy[i]) {
-      x = thisCopy[i];
-      y = targetCopy[i];
-      break
-    }
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-};
-
-// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
-// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
-//
-// Arguments:
-// - buffer - a Buffer to search
-// - val - a string, Buffer, or number
-// - byteOffset - an index into `buffer`; will be clamped to an int32
-// - encoding - an optional encoding, relevant is val is a string
-// - dir - true for indexOf, false for lastIndexOf
-function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
-  // Empty buffer means no match
-  if (buffer.length === 0) return -1
-
-  // Normalize byteOffset
-  if (typeof byteOffset === 'string') {
-    encoding = byteOffset;
-    byteOffset = 0;
-  } else if (byteOffset > 0x7fffffff) {
-    byteOffset = 0x7fffffff;
-  } else if (byteOffset < -0x80000000) {
-    byteOffset = -0x80000000;
-  }
-  byteOffset = +byteOffset;  // Coerce to Number.
-  if (isNaN(byteOffset)) {
-    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
-    byteOffset = dir ? 0 : (buffer.length - 1);
-  }
-
-  // Normalize byteOffset: negative offsets start from the end of the buffer
-  if (byteOffset < 0) byteOffset = buffer.length + byteOffset;
-  if (byteOffset >= buffer.length) {
-    if (dir) return -1
-    else byteOffset = buffer.length - 1;
-  } else if (byteOffset < 0) {
-    if (dir) byteOffset = 0;
-    else return -1
-  }
-
-  // Normalize val
-  if (typeof val === 'string') {
-    val = Buffer.from(val, encoding);
-  }
-
-  // Finally, search either indexOf (if dir is true) or lastIndexOf
-  if (internalIsBuffer(val)) {
-    // Special case: looking for empty string/buffer always fails
-    if (val.length === 0) {
-      return -1
-    }
-    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
-  } else if (typeof val === 'number') {
-    val = val & 0xFF; // Search for a byte value [0-255]
-    if (Buffer.TYPED_ARRAY_SUPPORT &&
-        typeof Uint8Array.prototype.indexOf === 'function') {
-      if (dir) {
-        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
-      } else {
-        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
-      }
-    }
-    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
-  }
-
-  throw new TypeError('val must be string, number or Buffer')
-}
-
-function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
-  var indexSize = 1;
-  var arrLength = arr.length;
-  var valLength = val.length;
-
-  if (encoding !== undefined) {
-    encoding = String(encoding).toLowerCase();
-    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
-        encoding === 'utf16le' || encoding === 'utf-16le') {
-      if (arr.length < 2 || val.length < 2) {
-        return -1
-      }
-      indexSize = 2;
-      arrLength /= 2;
-      valLength /= 2;
-      byteOffset /= 2;
-    }
-  }
-
-  function read (buf, i) {
-    if (indexSize === 1) {
-      return buf[i]
-    } else {
-      return buf.readUInt16BE(i * indexSize)
-    }
-  }
-
-  var i;
-  if (dir) {
-    var foundIndex = -1;
-    for (i = byteOffset; i < arrLength; i++) {
-      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
-        if (foundIndex === -1) foundIndex = i;
-        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
-      } else {
-        if (foundIndex !== -1) i -= i - foundIndex;
-        foundIndex = -1;
-      }
-    }
-  } else {
-    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength;
-    for (i = byteOffset; i >= 0; i--) {
-      var found = true;
-      for (var j = 0; j < valLength; j++) {
-        if (read(arr, i + j) !== read(val, j)) {
-          found = false;
-          break
-        }
-      }
-      if (found) return i
-    }
-  }
-
-  return -1
-}
-
-Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
-  return this.indexOf(val, byteOffset, encoding) !== -1
-};
-
-Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
-};
-
-Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
-  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
-};
-
-function hexWrite (buf, string, offset, length) {
-  offset = Number(offset) || 0;
-  var remaining = buf.length - offset;
-  if (!length) {
-    length = remaining;
-  } else {
-    length = Number(length);
-    if (length > remaining) {
-      length = remaining;
-    }
-  }
-
-  // must be an even number of digits
-  var strLen = string.length;
-  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
-
-  if (length > strLen / 2) {
-    length = strLen / 2;
-  }
-  for (var i = 0; i < length; ++i) {
-    var parsed = parseInt(string.substr(i * 2, 2), 16);
-    if (isNaN(parsed)) return i
-    buf[offset + i] = parsed;
-  }
-  return i
-}
-
-function utf8Write (buf, string, offset, length) {
-  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
-}
-
-function asciiWrite (buf, string, offset, length) {
-  return blitBuffer(asciiToBytes(string), buf, offset, length)
-}
-
-function latin1Write (buf, string, offset, length) {
-  return asciiWrite(buf, string, offset, length)
-}
-
-function base64Write (buf, string, offset, length) {
-  return blitBuffer(base64ToBytes(string), buf, offset, length)
-}
-
-function ucs2Write (buf, string, offset, length) {
-  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
-}
-
-Buffer.prototype.write = function write (string, offset, length, encoding) {
-  // Buffer#write(string)
-  if (offset === undefined) {
-    encoding = 'utf8';
-    length = this.length;
-    offset = 0;
-  // Buffer#write(string, encoding)
-  } else if (length === undefined && typeof offset === 'string') {
-    encoding = offset;
-    length = this.length;
-    offset = 0;
-  // Buffer#write(string, offset[, length][, encoding])
-  } else if (isFinite(offset)) {
-    offset = offset | 0;
-    if (isFinite(length)) {
-      length = length | 0;
-      if (encoding === undefined) encoding = 'utf8';
-    } else {
-      encoding = length;
-      length = undefined;
-    }
-  // legacy write(string, encoding, offset, length) - remove in v0.13
-  } else {
-    throw new Error(
-      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
-    )
-  }
-
-  var remaining = this.length - offset;
-  if (length === undefined || length > remaining) length = remaining;
-
-  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
-    throw new RangeError('Attempt to write outside buffer bounds')
-  }
-
-  if (!encoding) encoding = 'utf8';
-
-  var loweredCase = false;
-  for (;;) {
-    switch (encoding) {
-      case 'hex':
-        return hexWrite(this, string, offset, length)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Write(this, string, offset, length)
-
-      case 'ascii':
-        return asciiWrite(this, string, offset, length)
-
-      case 'latin1':
-      case 'binary':
-        return latin1Write(this, string, offset, length)
-
-      case 'base64':
-        // Warning: maxLength not taken into account in base64Write
-        return base64Write(this, string, offset, length)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return ucs2Write(this, string, offset, length)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = ('' + encoding).toLowerCase();
-        loweredCase = true;
-    }
-  }
-};
-
-Buffer.prototype.toJSON = function toJSON () {
-  return {
-    type: 'Buffer',
-    data: Array.prototype.slice.call(this._arr || this, 0)
-  }
-};
-
-function base64Slice (buf, start, end) {
-  if (start === 0 && end === buf.length) {
-    return fromByteArray(buf)
-  } else {
-    return fromByteArray(buf.slice(start, end))
-  }
-}
-
-function utf8Slice (buf, start, end) {
-  end = Math.min(buf.length, end);
-  var res = [];
-
-  var i = start;
-  while (i < end) {
-    var firstByte = buf[i];
-    var codePoint = null;
-    var bytesPerSequence = (firstByte > 0xEF) ? 4
-      : (firstByte > 0xDF) ? 3
-      : (firstByte > 0xBF) ? 2
-      : 1;
-
-    if (i + bytesPerSequence <= end) {
-      var secondByte, thirdByte, fourthByte, tempCodePoint;
-
-      switch (bytesPerSequence) {
-        case 1:
-          if (firstByte < 0x80) {
-            codePoint = firstByte;
-          }
-          break
-        case 2:
-          secondByte = buf[i + 1];
-          if ((secondByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F);
-            if (tempCodePoint > 0x7F) {
-              codePoint = tempCodePoint;
-            }
-          }
-          break
-        case 3:
-          secondByte = buf[i + 1];
-          thirdByte = buf[i + 2];
-          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F);
-            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
-              codePoint = tempCodePoint;
-            }
-          }
-          break
-        case 4:
-          secondByte = buf[i + 1];
-          thirdByte = buf[i + 2];
-          fourthByte = buf[i + 3];
-          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
-            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F);
-            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
-              codePoint = tempCodePoint;
-            }
-          }
-      }
-    }
-
-    if (codePoint === null) {
-      // we did not generate a valid codePoint so insert a
-      // replacement char (U+FFFD) and advance only 1 byte
-      codePoint = 0xFFFD;
-      bytesPerSequence = 1;
-    } else if (codePoint > 0xFFFF) {
-      // encode to utf16 (surrogate pair dance)
-      codePoint -= 0x10000;
-      res.push(codePoint >>> 10 & 0x3FF | 0xD800);
-      codePoint = 0xDC00 | codePoint & 0x3FF;
-    }
-
-    res.push(codePoint);
-    i += bytesPerSequence;
-  }
-
-  return decodeCodePointsArray(res)
-}
-
-// Based on http://stackoverflow.com/a/22747272/680742, the browser with
-// the lowest limit is Chrome, with 0x10000 args.
-// We go 1 magnitude less, for safety
-var MAX_ARGUMENTS_LENGTH = 0x1000;
-
-function decodeCodePointsArray (codePoints) {
-  var len = codePoints.length;
-  if (len <= MAX_ARGUMENTS_LENGTH) {
-    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
-  }
-
-  // Decode in chunks to avoid "call stack size exceeded".
-  var res = '';
-  var i = 0;
-  while (i < len) {
-    res += String.fromCharCode.apply(
-      String,
-      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
-    );
-  }
-  return res
-}
-
-function asciiSlice (buf, start, end) {
-  var ret = '';
-  end = Math.min(buf.length, end);
-
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i] & 0x7F);
-  }
-  return ret
-}
-
-function latin1Slice (buf, start, end) {
-  var ret = '';
-  end = Math.min(buf.length, end);
-
-  for (var i = start; i < end; ++i) {
-    ret += String.fromCharCode(buf[i]);
-  }
-  return ret
-}
-
-function hexSlice (buf, start, end) {
-  var len = buf.length;
-
-  if (!start || start < 0) start = 0;
-  if (!end || end < 0 || end > len) end = len;
-
-  var out = '';
-  for (var i = start; i < end; ++i) {
-    out += toHex(buf[i]);
-  }
-  return out
-}
-
-function utf16leSlice (buf, start, end) {
-  var bytes = buf.slice(start, end);
-  var res = '';
-  for (var i = 0; i < bytes.length; i += 2) {
-    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256);
-  }
-  return res
-}
-
-Buffer.prototype.slice = function slice (start, end) {
-  var len = this.length;
-  start = ~~start;
-  end = end === undefined ? len : ~~end;
-
-  if (start < 0) {
-    start += len;
-    if (start < 0) start = 0;
-  } else if (start > len) {
-    start = len;
-  }
-
-  if (end < 0) {
-    end += len;
-    if (end < 0) end = 0;
-  } else if (end > len) {
-    end = len;
-  }
-
-  if (end < start) end = start;
-
-  var newBuf;
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    newBuf = this.subarray(start, end);
-    newBuf.__proto__ = Buffer.prototype;
-  } else {
-    var sliceLen = end - start;
-    newBuf = new Buffer(sliceLen, undefined);
-    for (var i = 0; i < sliceLen; ++i) {
-      newBuf[i] = this[i + start];
-    }
-  }
-
-  return newBuf
-};
-
-/*
- * Need to make sure that buffer isn't trying to write out of bounds.
- */
-function checkOffset (offset, ext, length) {
-  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
-  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
-}
-
-Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) checkOffset(offset, byteLength, this.length);
-
-  var val = this[offset];
-  var mul = 1;
-  var i = 0;
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul;
-  }
-
-  return val
-};
-
-Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) {
-    checkOffset(offset, byteLength, this.length);
-  }
-
-  var val = this[offset + --byteLength];
-  var mul = 1;
-  while (byteLength > 0 && (mul *= 0x100)) {
-    val += this[offset + --byteLength] * mul;
-  }
-
-  return val
-};
-
-Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 1, this.length);
-  return this[offset]
-};
-
-Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length);
-  return this[offset] | (this[offset + 1] << 8)
-};
-
-Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length);
-  return (this[offset] << 8) | this[offset + 1]
-};
-
-Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-
-  return ((this[offset]) |
-      (this[offset + 1] << 8) |
-      (this[offset + 2] << 16)) +
-      (this[offset + 3] * 0x1000000)
-};
-
-Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-
-  return (this[offset] * 0x1000000) +
-    ((this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    this[offset + 3])
-};
-
-Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) checkOffset(offset, byteLength, this.length);
-
-  var val = this[offset];
-  var mul = 1;
-  var i = 0;
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul;
-  }
-  mul *= 0x80;
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength);
-
-  return val
-};
-
-Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) checkOffset(offset, byteLength, this.length);
-
-  var i = byteLength;
-  var mul = 1;
-  var val = this[offset + --i];
-  while (i > 0 && (mul *= 0x100)) {
-    val += this[offset + --i] * mul;
-  }
-  mul *= 0x80;
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength);
-
-  return val
-};
-
-Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 1, this.length);
-  if (!(this[offset] & 0x80)) return (this[offset])
-  return ((0xff - this[offset] + 1) * -1)
-};
-
-Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length);
-  var val = this[offset] | (this[offset + 1] << 8);
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-};
-
-Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length);
-  var val = this[offset + 1] | (this[offset] << 8);
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-};
-
-Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-
-  return (this[offset]) |
-    (this[offset + 1] << 8) |
-    (this[offset + 2] << 16) |
-    (this[offset + 3] << 24)
-};
-
-Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-
-  return (this[offset] << 24) |
-    (this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    (this[offset + 3])
-};
-
-Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-  return read(this, offset, true, 23, 4)
-};
-
-Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length);
-  return read(this, offset, false, 23, 4)
-};
-
-Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 8, this.length);
-  return read(this, offset, true, 52, 8)
-};
-
-Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 8, this.length);
-  return read(this, offset, false, 52, 8)
-};
-
-function checkInt (buf, value, offset, ext, max, min) {
-  if (!internalIsBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
-  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
-  if (offset + ext > buf.length) throw new RangeError('Index out of range')
-}
-
-Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) {
-    var maxBytes = Math.pow(2, 8 * byteLength) - 1;
-    checkInt(this, value, offset, byteLength, maxBytes, 0);
-  }
-
-  var mul = 1;
-  var i = 0;
-  this[offset] = value & 0xFF;
-  while (++i < byteLength && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  byteLength = byteLength | 0;
-  if (!noAssert) {
-    var maxBytes = Math.pow(2, 8 * byteLength) - 1;
-    checkInt(this, value, offset, byteLength, maxBytes, 0);
-  }
-
-  var i = byteLength - 1;
-  var mul = 1;
-  this[offset + i] = value & 0xFF;
-  while (--i >= 0 && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0);
-  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value);
-  this[offset] = (value & 0xff);
-  return offset + 1
-};
-
-function objectWriteUInt16 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffff + value + 1;
-  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
-    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
-      (littleEndian ? i : 1 - i) * 8;
-  }
-}
-
-Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff);
-    this[offset + 1] = (value >>> 8);
-  } else {
-    objectWriteUInt16(this, value, offset, true);
-  }
-  return offset + 2
-};
-
-Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8);
-    this[offset + 1] = (value & 0xff);
-  } else {
-    objectWriteUInt16(this, value, offset, false);
-  }
-  return offset + 2
-};
-
-function objectWriteUInt32 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffffffff + value + 1;
-  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
-    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff;
-  }
-}
-
-Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset + 3] = (value >>> 24);
-    this[offset + 2] = (value >>> 16);
-    this[offset + 1] = (value >>> 8);
-    this[offset] = (value & 0xff);
-  } else {
-    objectWriteUInt32(this, value, offset, true);
-  }
-  return offset + 4
-};
-
-Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24);
-    this[offset + 1] = (value >>> 16);
-    this[offset + 2] = (value >>> 8);
-    this[offset + 3] = (value & 0xff);
-  } else {
-    objectWriteUInt32(this, value, offset, false);
-  }
-  return offset + 4
-};
-
-Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) {
-    var limit = Math.pow(2, 8 * byteLength - 1);
-
-    checkInt(this, value, offset, byteLength, limit - 1, -limit);
-  }
-
-  var i = 0;
-  var mul = 1;
-  var sub = 0;
-  this[offset] = value & 0xFF;
-  while (++i < byteLength && (mul *= 0x100)) {
-    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
-      sub = 1;
-    }
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) {
-    var limit = Math.pow(2, 8 * byteLength - 1);
-
-    checkInt(this, value, offset, byteLength, limit - 1, -limit);
-  }
-
-  var i = byteLength - 1;
-  var mul = 1;
-  var sub = 0;
-  this[offset + i] = value & 0xFF;
-  while (--i >= 0 && (mul *= 0x100)) {
-    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
-      sub = 1;
-    }
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF;
-  }
-
-  return offset + byteLength
-};
-
-Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80);
-  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value);
-  if (value < 0) value = 0xff + value + 1;
-  this[offset] = (value & 0xff);
-  return offset + 1
-};
-
-Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff);
-    this[offset + 1] = (value >>> 8);
-  } else {
-    objectWriteUInt16(this, value, offset, true);
-  }
-  return offset + 2
-};
-
-Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8);
-    this[offset + 1] = (value & 0xff);
-  } else {
-    objectWriteUInt16(this, value, offset, false);
-  }
-  return offset + 2
-};
-
-Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000);
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value & 0xff);
-    this[offset + 1] = (value >>> 8);
-    this[offset + 2] = (value >>> 16);
-    this[offset + 3] = (value >>> 24);
-  } else {
-    objectWriteUInt32(this, value, offset, true);
-  }
-  return offset + 4
-};
-
-Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
-  value = +value;
-  offset = offset | 0;
-  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000);
-  if (value < 0) value = 0xffffffff + value + 1;
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24);
-    this[offset + 1] = (value >>> 16);
-    this[offset + 2] = (value >>> 8);
-    this[offset + 3] = (value & 0xff);
-  } else {
-    objectWriteUInt32(this, value, offset, false);
-  }
-  return offset + 4
-};
-
-function checkIEEE754 (buf, value, offset, ext, max, min) {
-  if (offset + ext > buf.length) throw new RangeError('Index out of range')
-  if (offset < 0) throw new RangeError('Index out of range')
-}
-
-function writeFloat (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754(buf, value, offset, 4);
-  }
-  write(buf, value, offset, littleEndian, 23, 4);
-  return offset + 4
-}
-
-Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
-  return writeFloat(this, value, offset, true, noAssert)
-};
-
-Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
-  return writeFloat(this, value, offset, false, noAssert)
-};
-
-function writeDouble (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754(buf, value, offset, 8);
-  }
-  write(buf, value, offset, littleEndian, 52, 8);
-  return offset + 8
-}
-
-Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
-  return writeDouble(this, value, offset, true, noAssert)
-};
-
-Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
-  return writeDouble(this, value, offset, false, noAssert)
-};
-
-// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
-Buffer.prototype.copy = function copy (target, targetStart, start, end) {
-  if (!start) start = 0;
-  if (!end && end !== 0) end = this.length;
-  if (targetStart >= target.length) targetStart = target.length;
-  if (!targetStart) targetStart = 0;
-  if (end > 0 && end < start) end = start;
-
-  // Copy 0 bytes; we're done
-  if (end === start) return 0
-  if (target.length === 0 || this.length === 0) return 0
-
-  // Fatal error conditions
-  if (targetStart < 0) {
-    throw new RangeError('targetStart out of bounds')
-  }
-  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
-  if (end < 0) throw new RangeError('sourceEnd out of bounds')
-
-  // Are we oob?
-  if (end > this.length) end = this.length;
-  if (target.length - targetStart < end - start) {
-    end = target.length - targetStart + start;
-  }
-
-  var len = end - start;
-  var i;
-
-  if (this === target && start < targetStart && targetStart < end) {
-    // descending copy from end
-    for (i = len - 1; i >= 0; --i) {
-      target[i + targetStart] = this[i + start];
-    }
-  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
-    // ascending copy from start
-    for (i = 0; i < len; ++i) {
-      target[i + targetStart] = this[i + start];
-    }
-  } else {
-    Uint8Array.prototype.set.call(
-      target,
-      this.subarray(start, start + len),
-      targetStart
-    );
-  }
-
-  return len
-};
-
-// Usage:
-//    buffer.fill(number[, offset[, end]])
-//    buffer.fill(buffer[, offset[, end]])
-//    buffer.fill(string[, offset[, end]][, encoding])
-Buffer.prototype.fill = function fill (val, start, end, encoding) {
-  // Handle string cases:
-  if (typeof val === 'string') {
-    if (typeof start === 'string') {
-      encoding = start;
-      start = 0;
-      end = this.length;
-    } else if (typeof end === 'string') {
-      encoding = end;
-      end = this.length;
-    }
-    if (val.length === 1) {
-      var code = val.charCodeAt(0);
-      if (code < 256) {
-        val = code;
-      }
-    }
-    if (encoding !== undefined && typeof encoding !== 'string') {
-      throw new TypeError('encoding must be a string')
-    }
-    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
-      throw new TypeError('Unknown encoding: ' + encoding)
-    }
-  } else if (typeof val === 'number') {
-    val = val & 255;
-  }
-
-  // Invalid ranges are not set to a default, so can range check early.
-  if (start < 0 || this.length < start || this.length < end) {
-    throw new RangeError('Out of range index')
-  }
-
-  if (end <= start) {
-    return this
-  }
-
-  start = start >>> 0;
-  end = end === undefined ? this.length : end >>> 0;
-
-  if (!val) val = 0;
-
-  var i;
-  if (typeof val === 'number') {
-    for (i = start; i < end; ++i) {
-      this[i] = val;
-    }
-  } else {
-    var bytes = internalIsBuffer(val)
-      ? val
-      : utf8ToBytes(new Buffer(val, encoding).toString());
-    var len = bytes.length;
-    for (i = 0; i < end - start; ++i) {
-      this[i + start] = bytes[i % len];
-    }
-  }
-
-  return this
-};
-
-// HELPER FUNCTIONS
-// ================
-
-var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g;
-
-function base64clean (str) {
-  // Node strips out invalid characters like \n and \t from the string, base64-js does not
-  str = stringtrim(str).replace(INVALID_BASE64_RE, '');
-  // Node converts strings with length < 2 to ''
-  if (str.length < 2) return ''
-  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
-  while (str.length % 4 !== 0) {
-    str = str + '=';
-  }
-  return str
-}
-
-function stringtrim (str) {
-  if (str.trim) return str.trim()
-  return str.replace(/^\s+|\s+$/g, '')
-}
-
-function toHex (n) {
-  if (n < 16) return '0' + n.toString(16)
-  return n.toString(16)
-}
-
-function utf8ToBytes (string, units) {
-  units = units || Infinity;
-  var codePoint;
-  var length = string.length;
-  var leadSurrogate = null;
-  var bytes = [];
-
-  for (var i = 0; i < length; ++i) {
-    codePoint = string.charCodeAt(i);
-
-    // is surrogate component
-    if (codePoint > 0xD7FF && codePoint < 0xE000) {
-      // last char was a lead
-      if (!leadSurrogate) {
-        // no lead yet
-        if (codePoint > 0xDBFF) {
-          // unexpected trail
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-          continue
-        } else if (i + 1 === length) {
-          // unpaired lead
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-          continue
-        }
-
-        // valid lead
-        leadSurrogate = codePoint;
-
-        continue
-      }
-
-      // 2 leads in a row
-      if (codePoint < 0xDC00) {
-        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-        leadSurrogate = codePoint;
-        continue
-      }
-
-      // valid surrogate pair
-      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000;
-    } else if (leadSurrogate) {
-      // valid bmp char, but last char was a lead
-      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD);
-    }
-
-    leadSurrogate = null;
-
-    // encode utf8
-    if (codePoint < 0x80) {
-      if ((units -= 1) < 0) break
-      bytes.push(codePoint);
-    } else if (codePoint < 0x800) {
-      if ((units -= 2) < 0) break
-      bytes.push(
-        codePoint >> 0x6 | 0xC0,
-        codePoint & 0x3F | 0x80
-      );
-    } else if (codePoint < 0x10000) {
-      if ((units -= 3) < 0) break
-      bytes.push(
-        codePoint >> 0xC | 0xE0,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      );
-    } else if (codePoint < 0x110000) {
-      if ((units -= 4) < 0) break
-      bytes.push(
-        codePoint >> 0x12 | 0xF0,
-        codePoint >> 0xC & 0x3F | 0x80,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      );
-    } else {
-      throw new Error('Invalid code point')
-    }
-  }
-
-  return bytes
-}
-
-function asciiToBytes (str) {
-  var byteArray = [];
-  for (var i = 0; i < str.length; ++i) {
-    // Node's code seems to be doing this and not & 0x7F..
-    byteArray.push(str.charCodeAt(i) & 0xFF);
-  }
-  return byteArray
-}
-
-function utf16leToBytes (str, units) {
-  var c, hi, lo;
-  var byteArray = [];
-  for (var i = 0; i < str.length; ++i) {
-    if ((units -= 2) < 0) break
-
-    c = str.charCodeAt(i);
-    hi = c >> 8;
-    lo = c % 256;
-    byteArray.push(lo);
-    byteArray.push(hi);
-  }
-
-  return byteArray
-}
-
-
-function base64ToBytes (str) {
-  return toByteArray(base64clean(str))
-}
-
-function blitBuffer (src, dst, offset, length) {
-  for (var i = 0; i < length; ++i) {
-    if ((i + offset >= dst.length) || (i >= src.length)) break
-    dst[i + offset] = src[i];
-  }
-  return i
-}
-
-function isnan (val) {
-  return val !== val // eslint-disable-line no-self-compare
-}
-
-
-// the following is from is-buffer, also by Feross Aboukhadijeh and with same lisence
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-function isBuffer(obj) {
-  return obj != null && (!!obj._isBuffer || isFastBuffer(obj) || isSlowBuffer(obj))
-}
-
-function isFastBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isFastBuffer(obj.slice(0, 0))
-}
-
-let urlAlphabet =
-  'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
-
-const POOL_SIZE_MULTIPLIER = 128;
-let pool, poolOffset;
-let fillPool = bytes => {
-  if (!pool || pool.length < bytes) {
-    pool = Buffer.allocUnsafe(bytes * POOL_SIZE_MULTIPLIER);
-    crypto.randomFillSync(pool);
-    poolOffset = 0;
-  } else if (poolOffset + bytes > pool.length) {
-    crypto.randomFillSync(pool);
-    poolOffset = 0;
-  }
-  poolOffset += bytes;
-};
 let nanoid = (size = 21) => {
-  fillPool((size -= 0));
   let id = '';
-  for (let i = poolOffset - size; i < poolOffset; i++) {
-    id += urlAlphabet[pool[i] & 63];
+  let bytes = crypto.getRandomValues(new Uint8Array(size));
+  while (size--) {
+    let byte = bytes[size] & 63;
+    if (byte < 36) {
+      id += byte.toString(36);
+    } else if (byte < 62) {
+      id += (byte - 26).toString(36).toUpperCase();
+    } else if (byte < 63) {
+      id += '_';
+    } else {
+      id += '-';
+    }
   }
   return id
 };
@@ -3797,57 +1913,57 @@ const getUniqUserId = () => {
 
 const IconLogoCircle = ({ className }) => {
     const gradientId = useMemo(() => nanoid(), []);
-    return (React.createElement("svg", { className: className, fill: "none", height: "34", viewBox: "0 0 34 34", width: "34", xmlns: "http://www.w3.org/2000/svg" },
-        React.createElement("circle", { cx: "17", cy: "17", fill: "white", r: "17" }),
-        React.createElement("path", { d: "M17 0C7.59621 0 0 7.59887 0 17C0 26.4038 7.59887 34 17 34C26.4038 34 34 26.4011 34 17C34 7.59621 26.4011 0 17 0ZM6.44938 24.5006C5.3198 22.9161 4.55215 21.068 4.23074 19.1575L6.19504 18.8268C6.4673 20.4418 7.11609 22.0037 8.07168 23.3445L6.44938 24.5006ZM6.19504 15.1732L4.23074 14.8425C4.55215 12.932 5.3198 11.0839 6.44938 9.49941L8.07168 10.6555C7.11609 11.9963 6.4673 13.5582 6.19504 15.1732ZM14.8425 29.7693C12.932 29.4479 11.0839 28.6802 9.49941 27.5506L10.6555 25.9283C11.9963 26.8839 13.5582 27.5327 15.1732 27.805L14.8425 29.7693ZM10.6555 8.07168L9.49941 6.44938C11.0839 5.3198 12.932 4.55215 14.8425 4.23074L15.1732 6.19504C13.5582 6.4673 11.9963 7.11609 10.6555 8.07168ZM27.5506 9.49941C28.6802 11.0839 29.4479 12.9313 29.7693 14.8425L27.805 15.1732C27.5327 13.5582 26.8839 11.9963 25.929 10.6555L27.5506 9.49941ZM19.1575 29.7693L18.8268 27.805C20.4418 27.5327 22.0037 26.8839 23.3445 25.9283L24.5006 27.5506C22.9161 28.6802 21.068 29.4479 19.1575 29.7693ZM23.3445 8.07168C22.0037 7.11609 20.4418 6.4673 18.8268 6.19504L19.1575 4.23074C21.068 4.55215 22.9161 5.3198 24.5006 6.44938L23.3445 8.07168ZM27.5506 24.5006L25.929 23.3445C26.8839 22.0037 27.5327 20.4418 27.805 18.8268L29.7693 19.1575C29.4479 21.0687 28.6802 22.9161 27.5506 24.5006Z", fill: `url(#${gradientId})` }),
-        React.createElement("circle", { cx: "17", cy: "17", fill: "white", opacity: "0.6", r: "5" }),
-        React.createElement("defs", null,
-            React.createElement("linearGradient", { gradientUnits: "userSpaceOnUse", id: gradientId, x1: "7.5", x2: "22", y1: "3.5", y2: "32.5" },
-                React.createElement("stop", { stopColor: "#FF0198" }),
-                React.createElement("stop", { offset: "1", stopColor: "#B90AE0" })))));
+    return (React__default.createElement("svg", { className: className, fill: "none", height: "34", viewBox: "0 0 34 34", width: "34", xmlns: "http://www.w3.org/2000/svg" },
+        React__default.createElement("circle", { cx: "17", cy: "17", fill: "white", r: "17" }),
+        React__default.createElement("path", { d: "M17 0C7.59621 0 0 7.59887 0 17C0 26.4038 7.59887 34 17 34C26.4038 34 34 26.4011 34 17C34 7.59621 26.4011 0 17 0ZM6.44938 24.5006C5.3198 22.9161 4.55215 21.068 4.23074 19.1575L6.19504 18.8268C6.4673 20.4418 7.11609 22.0037 8.07168 23.3445L6.44938 24.5006ZM6.19504 15.1732L4.23074 14.8425C4.55215 12.932 5.3198 11.0839 6.44938 9.49941L8.07168 10.6555C7.11609 11.9963 6.4673 13.5582 6.19504 15.1732ZM14.8425 29.7693C12.932 29.4479 11.0839 28.6802 9.49941 27.5506L10.6555 25.9283C11.9963 26.8839 13.5582 27.5327 15.1732 27.805L14.8425 29.7693ZM10.6555 8.07168L9.49941 6.44938C11.0839 5.3198 12.932 4.55215 14.8425 4.23074L15.1732 6.19504C13.5582 6.4673 11.9963 7.11609 10.6555 8.07168ZM27.5506 9.49941C28.6802 11.0839 29.4479 12.9313 29.7693 14.8425L27.805 15.1732C27.5327 13.5582 26.8839 11.9963 25.929 10.6555L27.5506 9.49941ZM19.1575 29.7693L18.8268 27.805C20.4418 27.5327 22.0037 26.8839 23.3445 25.9283L24.5006 27.5506C22.9161 28.6802 21.068 29.4479 19.1575 29.7693ZM23.3445 8.07168C22.0037 7.11609 20.4418 6.4673 18.8268 6.19504L19.1575 4.23074C21.068 4.55215 22.9161 5.3198 24.5006 6.44938L23.3445 8.07168ZM27.5506 24.5006L25.929 23.3445C26.8839 22.0037 27.5327 20.4418 27.805 18.8268L29.7693 19.1575C29.4479 21.0687 28.6802 22.9161 27.5506 24.5006Z", fill: `url(#${gradientId})` }),
+        React__default.createElement("circle", { cx: "17", cy: "17", fill: "white", opacity: "0.6", r: "5" }),
+        React__default.createElement("defs", null,
+            React__default.createElement("linearGradient", { gradientUnits: "userSpaceOnUse", id: gradientId, x1: "7.5", x2: "22", y1: "3.5", y2: "32.5" },
+                React__default.createElement("stop", { stopColor: "#FF0198" }),
+                React__default.createElement("stop", { offset: "1", stopColor: "#B90AE0" })))));
 };
 
-const IconConfirm = ({ className }) => (React.createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("path", { d: "M1.5 9.5C3.66667 11.6667 9 17 9 17L18.5 3", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.5" })));
+const IconConfirm = ({ className }) => (React__default.createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("path", { d: "M1.5 9.5C3.66667 11.6667 9 17 9 17L18.5 3", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.5" })));
 
-const IconDecline = ({ className }) => (React.createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("path", { d: "M17 3L10 10M3 17L10 10M10 10L3 3M10 10L17 17", strokeLinecap: "round", strokeWidth: "1.5" })));
+const IconDecline = ({ className }) => (React__default.createElement("svg", { className: className, fill: "none", height: "20", stroke: "black", viewBox: "0 0 20 20", width: "20", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("path", { d: "M17 3L10 10M3 17L10 10M10 10L3 3M10 10L17 17", strokeLinecap: "round", strokeWidth: "1.5" })));
 
-const IconIphoneBattery = ({ className }) => (React.createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 25 12", width: "25", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("rect", { height: "10.3333", opacity: "0.35", rx: "2.16667", stroke: "white", width: "21", x: "0.833008", y: "0.50293" }),
-    React.createElement("path", { d: "M23.333 3.66943V7.66943C24.1377 7.33066 24.661 6.54257 24.661 5.66943C24.661 4.7963 24.1377 4.00821 23.333 3.66943Z", fill: "white", opacity: "0.4" }),
-    React.createElement("rect", { fill: "white", height: "7.33333", rx: "1.33333", width: "18", x: "2.33301", y: "2.00293" })));
+const IconIphoneBattery = ({ className }) => (React__default.createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 25 12", width: "25", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("rect", { height: "10.3333", opacity: "0.35", rx: "2.16667", stroke: "white", width: "21", x: "0.833008", y: "0.50293" }),
+    React__default.createElement("path", { d: "M23.333 3.66943V7.66943C24.1377 7.33066 24.661 6.54257 24.661 5.66943C24.661 4.7963 24.1377 4.00821 23.333 3.66943Z", fill: "white", opacity: "0.4" }),
+    React__default.createElement("rect", { fill: "white", height: "7.33333", rx: "1.33333", width: "18", x: "2.33301", y: "2.00293" })));
 
-const IconIphoneWifi = ({ className }) => (React.createElement("svg", { className: className, fill: "none", height: "11", viewBox: "0 0 16 11", width: "16", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("path", { clipRule: "evenodd", d: "M7.66707 2.28448C9.8918 2.28457 12.0315 3.13869 13.6438 4.67028C13.7652 4.78852 13.9593 4.78703 14.0789 4.66693L15.2395 3.4966C15.3 3.43569 15.3338 3.35318 15.3333 3.26733C15.3328 3.18148 15.2981 3.09937 15.2368 3.03917C11.0049 -1.01306 4.32857 -1.01306 0.0966565 3.03917C0.0353544 3.09933 0.000572274 3.18141 6.99859e-06 3.26726C-0.000558277 3.35311 0.0331399 3.43565 0.0936446 3.4966L1.25459 4.66693C1.37409 4.78721 1.56831 4.78871 1.68965 4.67028C3.30221 3.13859 5.44212 2.28447 7.66707 2.28448ZM7.66707 6.09206C8.88942 6.09199 10.0681 6.54594 10.9742 7.36571C11.0968 7.48206 11.2898 7.47954 11.4093 7.36003L12.5685 6.1897C12.6296 6.12831 12.6635 6.04504 12.6626 5.9585C12.6617 5.87196 12.6261 5.78939 12.5639 5.72926C9.8047 3.16485 5.53178 3.16485 2.77262 5.72926C2.7103 5.78939 2.67474 5.87201 2.67392 5.95857C2.6731 6.04513 2.70709 6.1284 2.76827 6.1897L3.92721 7.36003C4.04667 7.47954 4.23972 7.48206 4.36227 7.36571C5.26774 6.54648 6.44553 6.09257 7.66707 6.09206ZM9.98929 8.6539C9.99106 8.74068 9.95692 8.82434 9.89492 8.88514L7.88962 10.9071C7.83084 10.9666 7.75069 11 7.66707 11C7.58345 11 7.5033 10.9666 7.44452 10.9071L5.43888 8.88514C5.37693 8.8243 5.34284 8.7406 5.34468 8.65383C5.34652 8.56705 5.38411 8.48487 5.44859 8.4267C6.72925 7.34443 8.60489 7.34443 9.88555 8.4267C9.94998 8.48492 9.98752 8.56712 9.98929 8.6539Z", fill: "white", fillRule: "evenodd" })));
+const IconIphoneWifi = ({ className }) => (React__default.createElement("svg", { className: className, fill: "none", height: "11", viewBox: "0 0 16 11", width: "16", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("path", { clipRule: "evenodd", d: "M7.66707 2.28448C9.8918 2.28457 12.0315 3.13869 13.6438 4.67028C13.7652 4.78852 13.9593 4.78703 14.0789 4.66693L15.2395 3.4966C15.3 3.43569 15.3338 3.35318 15.3333 3.26733C15.3328 3.18148 15.2981 3.09937 15.2368 3.03917C11.0049 -1.01306 4.32857 -1.01306 0.0966565 3.03917C0.0353544 3.09933 0.000572274 3.18141 6.99859e-06 3.26726C-0.000558277 3.35311 0.0331399 3.43565 0.0936446 3.4966L1.25459 4.66693C1.37409 4.78721 1.56831 4.78871 1.68965 4.67028C3.30221 3.13859 5.44212 2.28447 7.66707 2.28448ZM7.66707 6.09206C8.88942 6.09199 10.0681 6.54594 10.9742 7.36571C11.0968 7.48206 11.2898 7.47954 11.4093 7.36003L12.5685 6.1897C12.6296 6.12831 12.6635 6.04504 12.6626 5.9585C12.6617 5.87196 12.6261 5.78939 12.5639 5.72926C9.8047 3.16485 5.53178 3.16485 2.77262 5.72926C2.7103 5.78939 2.67474 5.87201 2.67392 5.95857C2.6731 6.04513 2.70709 6.1284 2.76827 6.1897L3.92721 7.36003C4.04667 7.47954 4.23972 7.48206 4.36227 7.36571C5.26774 6.54648 6.44553 6.09257 7.66707 6.09206ZM9.98929 8.6539C9.99106 8.74068 9.95692 8.82434 9.89492 8.88514L7.88962 10.9071C7.83084 10.9666 7.75069 11 7.66707 11C7.58345 11 7.5033 10.9666 7.44452 10.9071L5.43888 8.88514C5.37693 8.8243 5.34284 8.7406 5.34468 8.65383C5.34652 8.56705 5.38411 8.48487 5.44859 8.4267C6.72925 7.34443 8.60489 7.34443 9.88555 8.4267C9.94998 8.48492 9.98752 8.56712 9.98929 8.6539Z", fill: "white", fillRule: "evenodd" })));
 
-const IconIphoneCellular = ({ className }) => (React.createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 17 12", width: "17", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("path", { clipRule: "evenodd", d: "M16 0.335938H15C14.4477 0.335938 14 0.783653 14 1.33594V10.0026C14 10.5549 14.4477 11.0026 15 11.0026H16C16.5523 11.0026 17 10.5549 17 10.0026V1.33594C17 0.783653 16.5523 0.335938 16 0.335938ZM10.3333 2.66927H11.3333C11.8856 2.66927 12.3333 3.11699 12.3333 3.66927V10.0026C12.3333 10.5549 11.8856 11.0026 11.3333 11.0026H10.3333C9.78105 11.0026 9.33333 10.5549 9.33333 10.0026V3.66927C9.33333 3.11699 9.78105 2.66927 10.3333 2.66927ZM6.66667 5.0026H5.66667C5.11438 5.0026 4.66667 5.45032 4.66667 6.0026V10.0026C4.66667 10.5549 5.11438 11.0026 5.66667 11.0026H6.66667C7.21895 11.0026 7.66667 10.5549 7.66667 10.0026V6.0026C7.66667 5.45032 7.21895 5.0026 6.66667 5.0026ZM2 7.0026H1C0.447715 7.0026 0 7.45032 0 8.0026V10.0026C0 10.5549 0.447715 11.0026 1 11.0026H2C2.55228 11.0026 3 10.5549 3 10.0026V8.0026C3 7.45032 2.55228 7.0026 2 7.0026Z", fill: "white", fillRule: "evenodd" })));
+const IconIphoneCellular = ({ className }) => (React__default.createElement("svg", { className: className, fill: "none", height: "12", viewBox: "0 0 17 12", width: "17", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("path", { clipRule: "evenodd", d: "M16 0.335938H15C14.4477 0.335938 14 0.783653 14 1.33594V10.0026C14 10.5549 14.4477 11.0026 15 11.0026H16C16.5523 11.0026 17 10.5549 17 10.0026V1.33594C17 0.783653 16.5523 0.335938 16 0.335938ZM10.3333 2.66927H11.3333C11.8856 2.66927 12.3333 3.11699 12.3333 3.66927V10.0026C12.3333 10.5549 11.8856 11.0026 11.3333 11.0026H10.3333C9.78105 11.0026 9.33333 10.5549 9.33333 10.0026V3.66927C9.33333 3.11699 9.78105 2.66927 10.3333 2.66927ZM6.66667 5.0026H5.66667C5.11438 5.0026 4.66667 5.45032 4.66667 6.0026V10.0026C4.66667 10.5549 5.11438 11.0026 5.66667 11.0026H6.66667C7.21895 11.0026 7.66667 10.5549 7.66667 10.0026V6.0026C7.66667 5.45032 7.21895 5.0026 6.66667 5.0026ZM2 7.0026H1C0.447715 7.0026 0 7.45032 0 8.0026V10.0026C0 10.5549 0.447715 11.0026 1 11.0026H2C2.55228 11.0026 3 10.5549 3 10.0026V8.0026C3 7.45032 2.55228 7.0026 2 7.0026Z", fill: "white", fillRule: "evenodd" })));
 
-const IconRateStar = ({ className }) => (React.createElement("svg", { className: className, viewBox: "0 0 52 50", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("path", { d: "M26 1L33.725 16.7981L51 19.347L38.5 31.6372L41.45 49L26 40.7981L10.55 49L13.5 31.6372L1 19.347L18.275 16.7981L26 1Z", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
+const IconRateStar = ({ className }) => (React__default.createElement("svg", { className: className, viewBox: "0 0 52 50", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("path", { d: "M26 1L33.725 16.7981L51 19.347L38.5 31.6372L41.45 49L26 40.7981L10.55 49L13.5 31.6372L1 19.347L18.275 16.7981L26 1Z", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
 
-const IconArrowSend = ({ className }) => (React.createElement("svg", { className: className, fill: "none", height: "32", viewBox: "0 0 32 32", width: "32", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("g", { strokeWidth: "2" },
-        React.createElement("circle", { cx: "16", cy: "16", r: "15" }),
-        React.createElement("g", { strokeLinecap: "round" },
-            React.createElement("path", { d: "m23 16-5.5-5.5" }),
-            React.createElement("path", { d: "m23 16-5.5 5.5" }),
-            React.createElement("path", { d: "m23 16h-14" })))));
+const IconArrowSend = ({ className }) => (React__default.createElement("svg", { className: className, fill: "none", height: "32", viewBox: "0 0 32 32", width: "32", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("g", { strokeWidth: "2" },
+        React__default.createElement("circle", { cx: "16", cy: "16", r: "15" }),
+        React__default.createElement("g", { strokeLinecap: "round" },
+            React__default.createElement("path", { d: "m23 16-5.5-5.5" }),
+            React__default.createElement("path", { d: "m23 16-5.5 5.5" }),
+            React__default.createElement("path", { d: "m23 16h-14" })))));
 
-const IconLoader = ({ className }) => (React.createElement("svg", { className: className, fill: "none", height: "69", viewBox: "0 0 68 69", width: "68", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("g", { filter: "url(#filter0_d_3254_16668)", opacity: "0.8" },
-        React.createElement("path", { d: "M17.9999 61.7127C2.71925 52.8904 -2.53519 33.2806 6.28711 17.9999C6.80672 17.0999 7.95793 16.791 8.85845 17.3109C9.75897 17.8308 10.067 18.9823 9.54744 19.8823C1.76313 33.3651 6.39892 50.6678 19.8823 58.4524C33.3656 66.237 50.6681 61.6004 58.4524 48.1176C66.2367 34.6347 61.6009 17.3321 48.1176 9.54744C43.1491 6.67887 37.5114 5.39943 31.8147 5.84619C30.7781 5.92837 29.8731 5.15261 29.7909 4.11739C29.7092 3.08112 30.484 2.17421 31.5205 2.0934C37.9797 1.58589 44.3697 3.0365 49.9999 6.28711C65.2806 15.1094 70.535 34.7192 61.7127 49.9999C52.8904 65.2806 33.2806 70.535 17.9999 61.7127Z", fill: "white" })),
-    React.createElement("defs", null,
-        React.createElement("filter", { colorInterpolationFilters: "sRGB", filterUnits: "userSpaceOnUse", height: "67.9991", id: "filter0_d_3254_16668", width: "67.9872", x: "0.00634766", y: "0.994385" },
-            React.createElement("feFlood", { floodOpacity: "0", result: "BackgroundImageFix" }),
-            React.createElement("feColorMatrix", { in: "SourceAlpha", result: "hardAlpha", type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" }),
-            React.createElement("feOffset", { dy: "1" }),
-            React.createElement("feGaussianBlur", { stdDeviation: "1" }),
-            React.createElement("feComposite", { in2: "hardAlpha", operator: "out" }),
-            React.createElement("feColorMatrix", { type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0" }),
-            React.createElement("feBlend", { in2: "BackgroundImageFix", mode: "normal", result: "effect1_dropShadow_3254_16668" }),
-            React.createElement("feBlend", { in: "SourceGraphic", in2: "effect1_dropShadow_3254_16668", mode: "normal", result: "shape" })))));
+const IconLoader = ({ className }) => (React__default.createElement("svg", { className: className, fill: "none", height: "69", viewBox: "0 0 68 69", width: "68", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("g", { filter: "url(#filter0_d_3254_16668)", opacity: "0.8" },
+        React__default.createElement("path", { d: "M17.9999 61.7127C2.71925 52.8904 -2.53519 33.2806 6.28711 17.9999C6.80672 17.0999 7.95793 16.791 8.85845 17.3109C9.75897 17.8308 10.067 18.9823 9.54744 19.8823C1.76313 33.3651 6.39892 50.6678 19.8823 58.4524C33.3656 66.237 50.6681 61.6004 58.4524 48.1176C66.2367 34.6347 61.6009 17.3321 48.1176 9.54744C43.1491 6.67887 37.5114 5.39943 31.8147 5.84619C30.7781 5.92837 29.8731 5.15261 29.7909 4.11739C29.7092 3.08112 30.484 2.17421 31.5205 2.0934C37.9797 1.58589 44.3697 3.0365 49.9999 6.28711C65.2806 15.1094 70.535 34.7192 61.7127 49.9999C52.8904 65.2806 33.2806 70.535 17.9999 61.7127Z", fill: "white" })),
+    React__default.createElement("defs", null,
+        React__default.createElement("filter", { colorInterpolationFilters: "sRGB", filterUnits: "userSpaceOnUse", height: "67.9991", id: "filter0_d_3254_16668", width: "67.9872", x: "0.00634766", y: "0.994385" },
+            React__default.createElement("feFlood", { floodOpacity: "0", result: "BackgroundImageFix" }),
+            React__default.createElement("feColorMatrix", { in: "SourceAlpha", result: "hardAlpha", type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" }),
+            React__default.createElement("feOffset", { dy: "1" }),
+            React__default.createElement("feGaussianBlur", { stdDeviation: "1" }),
+            React__default.createElement("feComposite", { in2: "hardAlpha", operator: "out" }),
+            React__default.createElement("feColorMatrix", { type: "matrix", values: "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0" }),
+            React__default.createElement("feBlend", { in2: "BackgroundImageFix", mode: "normal", result: "effect1_dropShadow_3254_16668" }),
+            React__default.createElement("feBlend", { in: "SourceGraphic", in2: "effect1_dropShadow_3254_16668", mode: "normal", result: "shape" })))));
 
 function useInterval(callback, delay) {
     const savedCallback = useRef(callback);
@@ -3865,7 +1981,7 @@ function useInterval(callback, delay) {
 
 const DEFAULT_WINDOW_HEIGHT = 696;
 const useAdaptiveValue = (initValue) => {
-    const [, height] = d$1();
+    const [, height] = useWindowSize();
     const index = initValue / DEFAULT_WINDOW_HEIGHT;
     const [cardSize, setCardSize] = useState(height);
     useEffect(() => {
@@ -11102,30 +9218,30 @@ const StatusBar = ({ className }) => {
     }, []);
     const paddingSide = useAdaptiveValue(INIT_SIDE_PADDING);
     const paddingVertical = useAdaptiveValue(INIT_VERTICAL_PADDING);
-    return (React.createElement("div", { className: `${b$p()} ${className || ''}`.trim(), style: {
+    return (React__default.createElement("div", { className: `${b$p()} ${className || ''}`.trim(), style: {
             paddingTop: paddingVertical,
             paddingBottom: paddingVertical,
             paddingLeft: paddingSide,
             paddingRight: paddingSide
         } },
-        React.createElement("span", { className: b$p('time') }, time),
-        React.createElement("div", { className: b$p('iconWrapper') },
-            React.createElement(IconIphoneCellular, { className: b$p('icon') }),
-            React.createElement(IconIphoneWifi, { className: b$p('icon') }),
-            React.createElement(IconIphoneBattery, { className: b$p('icon') }))));
+        React__default.createElement("span", { className: b$p('time') }, time),
+        React__default.createElement("div", { className: b$p('iconWrapper') },
+            React__default.createElement(IconIphoneCellular, { className: b$p('icon') }),
+            React__default.createElement(IconIphoneWifi, { className: b$p('icon') }),
+            React__default.createElement(IconIphoneBattery, { className: b$p('icon') }))));
 };
 
 const b$o = block$1('StorySdkModal');
-const CloseIcon = () => (React.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("path", { d: "M18.0002 6.00079L6.00024 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" }),
-    React.createElement("path", { d: "M6.00024 6.00079L18.0002 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" })));
-const LeftArrowIcon = () => (React.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("path", { d: "M19 12H5", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" }),
-    React.createElement("path", { d: "M12 19L5 12L12 4.99997", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
-const RightArrowIcon = () => (React.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    React.createElement("path", { d: "M5 12H19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" }),
-    React.createElement("path", { d: "M12 4.99997L19 12L12 19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
-const StoryContext = React.createContext({
+const CloseIcon = () => (React__default.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("path", { d: "M18.0002 6.00079L6.00024 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" }),
+    React__default.createElement("path", { d: "M6.00024 6.00079L18.0002 18.0008", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "1.72796" })));
+const LeftArrowIcon = () => (React__default.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("path", { d: "M19 12H5", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" }),
+    React__default.createElement("path", { d: "M12 19L5 12L12 4.99997", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
+const RightArrowIcon = () => (React__default.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    React__default.createElement("path", { d: "M5 12H19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" }),
+    React__default.createElement("path", { d: "M12 4.99997L19 12L12 19", stroke: "#FAFAFA", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" })));
+const StoryContext = React__default.createContext({
     currentStoryId: '',
     playStatusChange: () => { },
     confetti: null
@@ -11200,7 +9316,7 @@ const StoryModal = (props) => {
     const storyModalRef = useRef(null);
     const [isQuizStarted, setIsQuizStarted] = useState(false);
     const [quizStartedStoryIds, setQuizStartedStoryIds] = useState({});
-    const [width, height] = d$1();
+    const [width, height] = useWindowSize();
     const [activeStoriesWithResult, setActiveStoriesWithResult] = useState([]);
     useEffect(() => {
         if (stories && currentGroup) {
@@ -11573,7 +9689,7 @@ const StoryModal = (props) => {
     };
     const uniqUserId = getUniqUserId();
     const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
-    return (React.createElement(StoryContext.Provider, { value: {
+    return (React__default.createElement(StoryContext.Provider, { value: {
             currentStoryId,
             quizMode: (_k = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _k === void 0 ? void 0 : _k.scoreType,
             playStatusChange: setPlayStatus,
@@ -11581,13 +9697,13 @@ const StoryModal = (props) => {
             getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
             setAnswerCache: isCacheDisabled ? undefined : setAnswerCache
         } },
-        React.createElement("div", { className: b$o({ isShowing }), ref: storyModalRef, style: {
+        React__default.createElement("div", { className: b$o({ isShowing }), ref: storyModalRef, style: {
                 top: window.pageYOffset || document.documentElement.scrollTop
             } },
-            React.createElement("div", { className: b$o('body') },
-                activeStoriesWithResult.length > 1 && !isLoading && (React.createElement("button", { className: b$o('arrowButton', { left: true }), onClick: handlePrev },
-                    React.createElement(LeftArrowIcon, null))),
-                React.createElement("div", { className: b$o('bodyContainer', {
+            React__default.createElement("div", { className: b$o('body') },
+                activeStoriesWithResult.length > 1 && !isLoading && (React__default.createElement("button", { className: b$o('arrowButton', { left: true }), onClick: handlePrev },
+                    React__default.createElement(LeftArrowIcon, null))),
+                React__default.createElement("div", { className: b$o('bodyContainer', {
                         black: currentGroupType === GroupType.GROUP &&
                             !isBackroundFilled &&
                             !isMobile &&
@@ -11595,18 +9711,18 @@ const StoryModal = (props) => {
                     }), style: {
                         borderRadius: containerBorderRadius
                     } },
-                    isShowStatusBarInContainer && (React.createElement(React.Fragment, null,
-                        React.createElement("div", { className: b$o('statusBar'), style: {
+                    isShowStatusBarInContainer && (React__default.createElement(React__default.Fragment, null,
+                        React__default.createElement("div", { className: b$o('statusBar'), style: {
                                 paddingTop: statusBarTop,
                                 paddingLeft: statusBarTop,
                                 paddingRight: statusBarTop
                             } },
-                            React.createElement(StatusBar, null)),
-                        React.createElement("div", { className: b$o('bottomMock'), style: {
+                            React__default.createElement(StatusBar, null)),
+                        React__default.createElement("div", { className: b$o('bottomMock'), style: {
                                 paddingBottom: largeElementsTop
                             } },
-                            React.createElement("img", { alt: "", className: b$o('bottomMockImg'), src: img })))),
-                    React.createElement("div", { className: b$o('swiper', {
+                            React__default.createElement("img", { alt: "", className: b$o('bottomMockImg'), src: img })))),
+                    React__default.createElement("div", { className: b$o('swiper', {
                             mockup: !isMobile && isShowMockup,
                             small: !isMobile && !isLarge && isShowMockup
                         }), style: {
@@ -11614,22 +9730,22 @@ const StoryModal = (props) => {
                             height: `calc(100% - ${isShowMockup && !isMobile ? heightGap : 0}px)`,
                             borderRadius: getBorderRadius()
                         } },
-                        React.createElement(React.Fragment, null, isLoading || !(currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.stories) ? (React.createElement("div", { className: b$o('loader') },
-                            React.createElement(IconLoader, { className: b$o('loaderIcon').toString() }))) : (React.createElement(React.Fragment, null,
-                            React.createElement("div", { className: b$o('swiperContent') }, activeStoriesWithResult.map((story, index) => (React.createElement("div", { className: b$o('story', { current: index === currentStory }), key: story.id },
-                                React.createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP && isLarge
+                        React__default.createElement(React__default.Fragment, null, isLoading || !(currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.stories) ? (React__default.createElement("div", { className: b$o('loader') },
+                            React__default.createElement(IconLoader, { className: b$o('loaderIcon').toString() }))) : (React__default.createElement(React__default.Fragment, null,
+                            React__default.createElement("div", { className: b$o('swiperContent') }, activeStoriesWithResult.map((story, index) => (React__default.createElement("div", { className: b$o('story', { current: index === currentStory }), key: story.id },
+                                React__default.createElement(StoryContent, { currentPaddingSize: currentPaddingSize, handleGoToStory: handleGoToStory, innerHeightGap: isShowMockup && currentGroupType === GroupType.GROUP && isLarge
                                         ? groupInnerHeightGap
                                         : 0, isLarge: isLarge, isLargeBackground: isShowMockup && currentGroupType === GroupType.GROUP, jsConfetti: jsConfetti, noTopShadow: noTopShadow, story: story, storyCurrentSize: currentStorySize }))))),
-                            React.createElement("div", { className: b$o('topContainer') },
-                                React.createElement(React.Fragment, null,
-                                    isShowStatusBarInStory && React.createElement(StatusBar, null),
-                                    React.createElement("div", { className: b$o('controls'), style: {
+                            React__default.createElement("div", { className: b$o('topContainer') },
+                                React__default.createElement(React__default.Fragment, null,
+                                    isShowStatusBarInStory && React__default.createElement(StatusBar, null),
+                                    React__default.createElement("div", { className: b$o('controls'), style: {
                                             gap: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
                                             paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
                                             paddingLeft: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
                                             paddingRight: !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
                                         } },
-                                        !((_l = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _l === void 0 ? void 0 : _l.isProgressHidden) && (React.createElement("div", { className: b$o('indicators', {
+                                        !((_l = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _l === void 0 ? void 0 : _l.isProgressHidden) && (React__default.createElement("div", { className: b$o('indicators', {
                                                 stopAnimation: playStatus === 'pause',
                                                 widePadding: isShowMockup && isLarge
                                             }), style: {
@@ -11638,37 +9754,37 @@ const StoryModal = (props) => {
                                             .filter((story) => { var _a; return (_a = story.layerData) === null || _a === void 0 ? void 0 : _a.isDefaultLayer; })
                                             .map((story, index) => {
                                             var _a;
-                                            return (React.createElement("div", { className: b$o('indicator', {
+                                            return (React__default.createElement("div", { className: b$o('indicator', {
                                                     filled: index < currentStory,
                                                     current: index === currentStory
                                                 }), key: story.id, style: {
                                                     animationDuration: `${(_a = story.layerData) === null || _a === void 0 ? void 0 : _a.duration}s`
                                                 }, onAnimationEnd: handleAnimationEnd }));
                                         }))),
-                                        currentGroupType === GroupType.GROUP && (React.createElement("div", { className: b$o('group', {
+                                        currentGroupType === GroupType.GROUP && (React__default.createElement("div", { className: b$o('group', {
                                                 noProgress: (_m = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _m === void 0 ? void 0 : _m.isProgressHidden,
                                                 wideLeft: isShowMockup && isLarge
                                             }), style: {
                                                 top: isShowMockup && isLarge ? largeElementsTop : undefined
                                             } },
-                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl) && (React.createElement("div", { className: b$o('groupImgWrapper') },
-                                                React.createElement("img", { alt: "", className: b$o('groupImg'), src: currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl }))),
-                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title) && (React.createElement("p", { className: b$o('groupTitle') }, currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title)))),
-                                        !((_o = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) && !forbidClose && (React.createElement("button", { className: b$o('close', {
+                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl) && (React__default.createElement("div", { className: b$o('groupImgWrapper') },
+                                                React__default.createElement("img", { alt: "", className: b$o('groupImg'), src: currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.imageUrl }))),
+                                            (currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title) && (React__default.createElement("p", { className: b$o('groupTitle') }, currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.title)))),
+                                        !((_o = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _o === void 0 ? void 0 : _o.isProhibitToClose) && !forbidClose && (React__default.createElement("button", { className: b$o('close', {
                                                 noProgress: (_p = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _p === void 0 ? void 0 : _p.isProgressHidden,
                                                 wideRight: isShowMockup && isLarge
                                             }), style: {
                                                 top: isShowMockup && isLarge ? largeElementsTop : undefined
                                             }, onClick: handleClose },
-                                            React.createElement(CloseIcon, null)))))))))),
-                    isShowMockup && (React.createElement("img", { className: b$o('mockup'), src: isLarge || currentGroupType === GroupType.GROUP
+                                            React__default.createElement(CloseIcon, null)))))))))),
+                    isShowMockup && (React__default.createElement("img", { className: b$o('mockup'), src: isLarge || currentGroupType === GroupType.GROUP
                             ? img$2
                             : img$1 }))),
-                activeStoriesWithResult.length > 1 && !isLoading && (React.createElement("button", { className: b$o('arrowButton', { right: true }), onClick: handleNext },
-                    React.createElement(RightArrowIcon, null)))),
-            isForceCloseAvailable && ((_q = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProhibitToClose) && (React.createElement("button", { className: b$o('close', { general: true }), onClick: handleClose },
-                React.createElement(CloseIcon, null)))),
-        React.createElement("canvas", { ref: canvasRef, style: {
+                activeStoriesWithResult.length > 1 && !isLoading && (React__default.createElement("button", { className: b$o('arrowButton', { right: true }), onClick: handleNext },
+                    React__default.createElement(RightArrowIcon, null)))),
+            isForceCloseAvailable && ((_q = currentGroup === null || currentGroup === void 0 ? void 0 : currentGroup.settings) === null || _q === void 0 ? void 0 : _q.isProhibitToClose) && (React__default.createElement("button", { className: b$o('close', { general: true }), onClick: handleClose },
+                React__default.createElement(CloseIcon, null)))),
+        React__default.createElement("canvas", { ref: canvasRef, style: {
                 display: 'none'
             } })));
 };
@@ -11700,7 +9816,7 @@ const INIT_ELEMENT_STYLES$a = {
         fontSize: 10
     }
 };
-const ChooseAnswerWidget = React.memo((props) => {
+const ChooseAnswerWidget = React__default.memo((props) => {
     const { id, params, isReadOnly, jsConfetti, elementsSize, onAnswer } = props;
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$a;
     const storyContextVal = useContext(StoryContext);
@@ -11732,35 +9848,35 @@ const ChooseAnswerWidget = React.memo((props) => {
     }, [onAnswer, storyContextVal, id, handleSendScore]);
     const renderAnswer = useCallback((answer) => {
         if (userAnswer) {
-            return (React.createElement("div", { className: b$n('answer', {
+            return (React__default.createElement("div", { className: b$n('answer', {
                     correct: answer.id === params.correct && params.markCorrectAnswer,
                     incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                     choosen: userAnswer === answer.id && params.markCorrectAnswer,
                     filled: userAnswer === answer.id && !params.markCorrectAnswer
                 }), key: `answer-${answer.id}`, style: sizes.answer },
-                React.createElement("div", { className: b$n('answerCircle', {
+                React__default.createElement("div", { className: b$n('answerCircle', {
                         correct: answer.id === params.correct && params.markCorrectAnswer,
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                         choosen: userAnswer === answer.id && params.markCorrectAnswer,
                         filled: userAnswer === answer.id && !params.markCorrectAnswer
-                    }), style: sizes.answerId }, params.markCorrectAnswer ? (React.createElement(React.Fragment, null, answer.id === params.correct ? (React.createElement(IconConfirm, { className: b$n('answerIcon', {
+                    }), style: sizes.answerId }, params.markCorrectAnswer ? (React__default.createElement(React__default.Fragment, null, answer.id === params.correct ? (React__default.createElement(IconConfirm, { className: b$n('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
-                    }) })) : (React.createElement(IconDecline, { className: b$n('answerIcon', {
+                    }) })) : (React__default.createElement(IconDecline, { className: b$n('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
                         choosen: userAnswer === answer.id
-                    }) })))) : (React.createElement(React.Fragment, null, `${answer.id}`))),
-                React.createElement("div", { className: b$n('answerTitle', {
+                    }) })))) : (React__default.createElement(React__default.Fragment, null, `${answer.id}`))),
+                React__default.createElement("div", { className: b$n('answerTitle', {
                         choosen: userAnswer === answer.id,
                         correct: answer.id === params.correct && params.markCorrectAnswer,
                         incorrect: answer.id !== params.correct && params.markCorrectAnswer
                     }), style: sizes.answerTitle }, answer.title)));
         }
-        return (React.createElement("div", { className: b$n('answer', { clickable: !userAnswer && !isReadOnly }), key: answer.id, role: "button", style: sizes.answer, tabIndex: 0, onClick: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined },
-            React.createElement("div", { className: b$n('answerId'), style: sizes.answerId }, `${answer.id}`),
-            React.createElement("div", { className: b$n('answerTitle'), style: sizes.answerTitle }, answer.title)));
+        return (React__default.createElement("div", { className: b$n('answer', { clickable: !userAnswer && !isReadOnly }), key: answer.id, role: "button", style: sizes.answer, tabIndex: 0, onClick: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined, onKeyDown: !userAnswer && !isReadOnly ? () => handleMarkAnswer(answer.id) : undefined },
+            React__default.createElement("div", { className: b$n('answerId'), style: sizes.answerId }, `${answer.id}`),
+            React__default.createElement("div", { className: b$n('answerTitle'), style: sizes.answerTitle }, answer.title)));
     }, [
         userAnswer,
         isReadOnly,
@@ -11776,18 +9892,18 @@ const ChooseAnswerWidget = React.memo((props) => {
             jsConfetti.current.addConfetti();
         }
     }, [userAnswer, params.correct, jsConfetti, params.markCorrectAnswer]);
-    return (React.createElement("div", { className: b$n({
+    return (React__default.createElement("div", { className: b$n({
             color: params.color,
             shake: userAnswer && params.markCorrectAnswer && userAnswer !== params.correct,
             celebrate: userAnswer && params.markCorrectAnswer && userAnswer === params.correct
         }), style: sizes.widget },
-        !params.isTitleHidden && (React.createElement("div", { className: b$n('header'), style: sizes.header }, params.text)),
-        React.createElement("div", { className: b$n('answers'), style: sizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
+        !params.isTitleHidden && (React__default.createElement("div", { className: b$n('header'), style: sizes.header }, params.text)),
+        React__default.createElement("div", { className: b$n('answers'), style: sizes.answers }, params.answers.map((answer) => renderAnswer(answer)))));
 });
 
 const b$m = block('ClickMeWidget');
 const DELAY_MS = 200;
-const ClickMeWidget = React.memo((props) => {
+const ClickMeWidget = React__default.memo((props) => {
     const { fontFamily, fontParams, opacity, fontSize, iconSize, color, text, icon, borderRadius, backgroundColor, borderWidth, borderColor, hasBorder, hasIcon, url, storyId, actionType } = props.params;
     const { isReadOnly, onClick, onGoToStory } = props;
     const [isClicked, setIsClicked] = useState(false);
@@ -11813,23 +9929,23 @@ const ClickMeWidget = React.memo((props) => {
             }, DELAY_MS);
         }
     }, [actionType, onClick, onGoToStory, storyId, url]);
-    return (React.createElement("div", { className: b$m({ disabled: isReadOnly, clicked: isClicked }), role: "button", style: {
+    return (React__default.createElement("div", { className: b$m({ disabled: isReadOnly, clicked: isClicked }), role: "button", style: {
             borderRadius,
             borderStyle: 'solid',
             borderWidth: `${hasBorder ? borderWidth : 0}px`,
             borderColor: renderBackgroundStyles(borderColor)
         }, tabIndex: 0, onClick: !isReadOnly ? handleWidgetClick : undefined, onKeyDown: !isReadOnly ? handleWidgetClick : undefined },
-        React.createElement("div", { className: b$m('container', { gradient: color.type === BackgroundColorType.GRADIENT }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
+        React__default.createElement("div", { className: b$m('container', { gradient: color.type === BackgroundColorType.GRADIENT }), style: Object.assign({ fontStyle: fontParams.style, fontWeight: fontParams.weight, fontFamily,
                 fontSize }, renderTextBackgroundStyles({ color })) },
-            hasIcon ? (React.createElement(MaterialIcon, { background: color, className: b$m('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
-            React.createElement("span", { className: b$m('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
-        React.createElement("div", { className: b$m('background'), style: {
+            hasIcon ? (React__default.createElement(MaterialIcon, { background: color, className: b$m('icon').toString(), color: renderBackgroundStyles(color), name: icon.name, size: iconSize })) : null,
+            React__default.createElement("span", { className: b$m('text'), style: { opacity: opacity ? +opacity / 100 : 1 } }, text)),
+        React__default.createElement("div", { className: b$m('background'), style: {
                 background: renderBackgroundStyles(backgroundColor)
             } })));
 });
 
 const b$l = block('EllipseWidget');
-const EllipseWidget = React.memo((props) => {
+const EllipseWidget = React__default.memo((props) => {
     const { fillColor, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
         opacity: widgetOpacity / 100,
@@ -11840,8 +9956,8 @@ const EllipseWidget = React.memo((props) => {
     const backgroundStyles = {
         background: renderBackgroundStyles(fillColor)
     };
-    return (React.createElement("div", { className: b$l(), style: styles },
-        React.createElement("div", { className: b$l('background'), style: backgroundStyles })));
+    return (React__default.createElement("div", { className: b$l(), style: styles },
+        React__default.createElement("div", { className: b$l('background'), style: backgroundStyles })));
 });
 
 var compressed = true;
@@ -61426,6 +59542,10 @@ function _inherits(subClass, superClass) {
   if (superClass) _setPrototypeOf(subClass, superClass);
 }
 
+var global$1 = (typeof global !== "undefined" ? global :
+  typeof self !== "undefined" ? self :
+  typeof window !== "undefined" ? window : {});
+
 // shim for using process in browser
 // based off https://github.com/defunctzombie/node-process/blob/master/browser.js
 
@@ -62723,31 +60843,31 @@ var PropTypes = propTypes.exports;
 
 var categories = {
   activity: function activity() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M12 0C5.373 0 0 5.372 0 12c0 6.627 5.373 12 12 12 6.628 0 12-5.373 12-12 0-6.628-5.372-12-12-12m9.949 11H17.05c.224-2.527 1.232-4.773 1.968-6.113A9.966 9.966 0 0 1 21.949 11M13 11V2.051a9.945 9.945 0 0 1 4.432 1.564c-.858 1.491-2.156 4.22-2.392 7.385H13zm-2 0H8.961c-.238-3.165-1.536-5.894-2.393-7.385A9.95 9.95 0 0 1 11 2.051V11zm0 2v8.949a9.937 9.937 0 0 1-4.432-1.564c.857-1.492 2.155-4.221 2.393-7.385H11zm4.04 0c.236 3.164 1.534 5.893 2.392 7.385A9.92 9.92 0 0 1 13 21.949V13h2.04zM4.982 4.887C5.718 6.227 6.726 8.473 6.951 11h-4.9a9.977 9.977 0 0 1 2.931-6.113M2.051 13h4.9c-.226 2.527-1.233 4.771-1.969 6.113A9.972 9.972 0 0 1 2.051 13m16.967 6.113c-.735-1.342-1.744-3.586-1.968-6.113h4.899a9.961 9.961 0 0 1-2.931 6.113"
     }));
   },
   custom: function custom() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React.createElement("g", {
+    }, React__default.createElement("g", {
       transform: "translate(2.000000, 1.000000)"
-    }, React.createElement("rect", {
+    }, React__default.createElement("rect", {
       id: "Rectangle",
       x: "8",
       y: "0",
       width: "3",
       height: "21",
       rx: "1.5"
-    }), React.createElement("rect", {
+    }), React__default.createElement("rect", {
       id: "Rectangle",
       transform: "translate(9.843, 10.549) rotate(60) translate(-9.843, -10.549) ",
       x: "8.343",
@@ -62755,7 +60875,7 @@ var categories = {
       width: "3",
       height: "21",
       rx: "1.5"
-    }), React.createElement("rect", {
+    }), React__default.createElement("rect", {
       id: "Rectangle",
       transform: "translate(9.843, 10.549) rotate(-60) translate(-9.843, -10.549) ",
       x: "8.343",
@@ -62766,116 +60886,116 @@ var categories = {
     })));
   },
   flags: function flags() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M0 0l6.084 24H8L1.916 0zM21 5h-4l-1-4H4l3 12h3l1 4h13L21 5zM6.563 3h7.875l2 8H8.563l-2-8zm8.832 10l-2.856 1.904L12.063 13h3.332zM19 13l-1.5-6h1.938l2 8H16l3-2z"
     }));
   },
   foods: function foods() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M17 4.978c-1.838 0-2.876.396-3.68.934.513-1.172 1.768-2.934 4.68-2.934a1 1 0 0 0 0-2c-2.921 0-4.629 1.365-5.547 2.512-.064.078-.119.162-.18.244C11.73 1.838 10.798.023 9.207.023 8.579.022 7.85.306 7 .978 5.027 2.54 5.329 3.902 6.492 4.999 3.609 5.222 0 7.352 0 12.969c0 4.582 4.961 11.009 9 11.009 1.975 0 2.371-.486 3-1 .629.514 1.025 1 3 1 4.039 0 9-6.418 9-11 0-5.953-4.055-8-7-8M8.242 2.546c.641-.508.943-.523.965-.523.426.169.975 1.405 1.357 3.055-1.527-.629-2.741-1.352-2.98-1.846.059-.112.241-.356.658-.686M15 21.978c-1.08 0-1.21-.109-1.559-.402l-.176-.146c-.367-.302-.816-.452-1.266-.452s-.898.15-1.266.452l-.176.146c-.347.292-.477.402-1.557.402-2.813 0-7-5.389-7-9.009 0-5.823 4.488-5.991 5-5.991 1.939 0 2.484.471 3.387 1.251l.323.276a1.995 1.995 0 0 0 2.58 0l.323-.276c.902-.78 1.447-1.251 3.387-1.251.512 0 5 .168 5 6 0 3.617-4.187 9-7 9"
     }));
   },
   nature: function nature() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M15.5 8a1.5 1.5 0 1 0 .001 3.001A1.5 1.5 0 0 0 15.5 8M8.5 8a1.5 1.5 0 1 0 .001 3.001A1.5 1.5 0 0 0 8.5 8"
-    }), React.createElement("path", {
+    }), React__default.createElement("path", {
       d: "M18.933 0h-.027c-.97 0-2.138.787-3.018 1.497-1.274-.374-2.612-.51-3.887-.51-1.285 0-2.616.133-3.874.517C7.245.79 6.069 0 5.093 0h-.027C3.352 0 .07 2.67.002 7.026c-.039 2.479.276 4.238 1.04 5.013.254.258.882.677 1.295.882.191 3.177.922 5.238 2.536 6.38.897.637 2.187.949 3.2 1.102C8.04 20.6 8 20.795 8 21c0 1.773 2.35 3 4 3 1.648 0 4-1.227 4-3 0-.201-.038-.393-.072-.586 2.573-.385 5.435-1.877 5.925-7.587.396-.22.887-.568 1.104-.788.763-.774 1.079-2.534 1.04-5.013C23.929 2.67 20.646 0 18.933 0M3.223 9.135c-.237.281-.837 1.155-.884 1.238-.15-.41-.368-1.349-.337-3.291.051-3.281 2.478-4.972 3.091-5.031.256.015.731.27 1.265.646-1.11 1.171-2.275 2.915-2.352 5.125-.133.546-.398.858-.783 1.313M12 22c-.901 0-1.954-.693-2-1 0-.654.475-1.236 1-1.602V20a1 1 0 1 0 2 0v-.602c.524.365 1 .947 1 1.602-.046.307-1.099 1-2 1m3-3.48v.02a4.752 4.752 0 0 0-1.262-1.02c1.092-.516 2.239-1.334 2.239-2.217 0-1.842-1.781-2.195-3.977-2.195-2.196 0-3.978.354-3.978 2.195 0 .883 1.148 1.701 2.238 2.217A4.8 4.8 0 0 0 9 18.539v-.025c-1-.076-2.182-.281-2.973-.842-1.301-.92-1.838-3.045-1.853-6.478l.023-.041c.496-.826 1.49-1.45 1.804-3.102 0-2.047 1.357-3.631 2.362-4.522C9.37 3.178 10.555 3 11.948 3c1.447 0 2.685.192 3.733.57 1 .9 2.316 2.465 2.316 4.48.313 1.651 1.307 2.275 1.803 3.102.035.058.068.117.102.178-.059 5.967-1.949 7.01-4.902 7.19m6.628-8.202c-.037-.065-.074-.13-.113-.195a7.587 7.587 0 0 0-.739-.987c-.385-.455-.648-.768-.782-1.313-.076-2.209-1.241-3.954-2.353-5.124.531-.376 1.004-.63 1.261-.647.636.071 3.044 1.764 3.096 5.031.027 1.81-.347 3.218-.37 3.235"
     }));
   },
   objects: function objects() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M12 0a9 9 0 0 0-5 16.482V21s2.035 3 5 3 5-3 5-3v-4.518A9 9 0 0 0 12 0zm0 2c3.86 0 7 3.141 7 7s-3.14 7-7 7-7-3.141-7-7 3.14-7 7-7zM9 17.477c.94.332 1.946.523 3 .523s2.06-.19 3-.523v.834c-.91.436-1.925.689-3 .689a6.924 6.924 0 0 1-3-.69v-.833zm.236 3.07A8.854 8.854 0 0 0 12 21c.965 0 1.888-.167 2.758-.451C14.155 21.173 13.153 22 12 22c-1.102 0-2.117-.789-2.764-1.453z"
-    }), React.createElement("path", {
+    }), React__default.createElement("path", {
       d: "M14.745 12.449h-.004c-.852-.024-1.188-.858-1.577-1.824-.421-1.061-.703-1.561-1.182-1.566h-.009c-.481 0-.783.497-1.235 1.537-.436.982-.801 1.811-1.636 1.791l-.276-.043c-.565-.171-.853-.691-1.284-1.794-.125-.313-.202-.632-.27-.913-.051-.213-.127-.53-.195-.634C7.067 9.004 7.039 9 6.99 9A1 1 0 0 1 7 7h.01c1.662.017 2.015 1.373 2.198 2.134.486-.981 1.304-2.058 2.797-2.075 1.531.018 2.28 1.153 2.731 2.141l.002-.008C14.944 8.424 15.327 7 16.979 7h.032A1 1 0 1 1 17 9h-.011c-.149.076-.256.474-.319.709a6.484 6.484 0 0 1-.311.951c-.429.973-.79 1.789-1.614 1.789"
     }));
   },
   people: function people() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0m0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10"
-    }), React.createElement("path", {
+    }), React__default.createElement("path", {
       d: "M8 7a2 2 0 1 0-.001 3.999A2 2 0 0 0 8 7M16 7a2 2 0 1 0-.001 3.999A2 2 0 0 0 16 7M15.232 15c-.693 1.195-1.87 2-3.349 2-1.477 0-2.655-.805-3.347-2H15m3-2H6a6 6 0 1 0 12 0"
     }));
   },
   places: function places() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M6.5 12C5.122 12 4 13.121 4 14.5S5.122 17 6.5 17 9 15.879 9 14.5 7.878 12 6.5 12m0 3c-.275 0-.5-.225-.5-.5s.225-.5.5-.5.5.225.5.5-.225.5-.5.5M17.5 12c-1.378 0-2.5 1.121-2.5 2.5s1.122 2.5 2.5 2.5 2.5-1.121 2.5-2.5-1.122-2.5-2.5-2.5m0 3c-.275 0-.5-.225-.5-.5s.225-.5.5-.5.5.225.5.5-.225.5-.5.5"
-    }), React.createElement("path", {
+    }), React__default.createElement("path", {
       d: "M22.482 9.494l-1.039-.346L21.4 9h.6c.552 0 1-.439 1-.992 0-.006-.003-.008-.003-.008H23c0-1-.889-2-1.984-2h-.642l-.731-1.717C19.262 3.012 18.091 2 16.764 2H7.236C5.909 2 4.738 3.012 4.357 4.283L3.626 6h-.642C1.889 6 1 7 1 8h.003S1 8.002 1 8.008C1 8.561 1.448 9 2 9h.6l-.043.148-1.039.346a2.001 2.001 0 0 0-1.359 2.097l.751 7.508a1 1 0 0 0 .994.901H3v1c0 1.103.896 2 2 2h2c1.104 0 2-.897 2-2v-1h6v1c0 1.103.896 2 2 2h2c1.104 0 2-.897 2-2v-1h1.096a.999.999 0 0 0 .994-.901l.751-7.508a2.001 2.001 0 0 0-1.359-2.097M6.273 4.857C6.402 4.43 6.788 4 7.236 4h9.527c.448 0 .834.43.963.857L19.313 9H4.688l1.585-4.143zM7 21H5v-1h2v1zm12 0h-2v-1h2v1zm2.189-3H2.811l-.662-6.607L3 11h18l.852.393L21.189 18z"
     }));
   },
   recent: function recent() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M13 4h-2l-.001 7H9v2h2v2h2v-2h4v-2h-4z"
-    }), React.createElement("path", {
+    }), React__default.createElement("path", {
       d: "M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0m0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10"
     }));
   },
   symbols: function symbols() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
       width: "24",
       height: "24"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M0 0h11v2H0zM4 11h3V6h4V4H0v2h4zM15.5 17c1.381 0 2.5-1.116 2.5-2.493s-1.119-2.493-2.5-2.493S13 13.13 13 14.507 14.119 17 15.5 17m0-2.986c.276 0 .5.222.5.493 0 .272-.224.493-.5.493s-.5-.221-.5-.493.224-.493.5-.493M21.5 19.014c-1.381 0-2.5 1.116-2.5 2.493S20.119 24 21.5 24s2.5-1.116 2.5-2.493-1.119-2.493-2.5-2.493m0 2.986a.497.497 0 0 1-.5-.493c0-.271.224-.493.5-.493s.5.222.5.493a.497.497 0 0 1-.5.493M22 13l-9 9 1.513 1.5 8.99-9.009zM17 11c2.209 0 4-1.119 4-2.5V2s.985-.161 1.498.949C23.01 4.055 23 6 23 6s1-1.119 1-3.135C24-.02 21 0 21 0h-2v6.347A5.853 5.853 0 0 0 17 6c-2.209 0-4 1.119-4 2.5s1.791 2.5 4 2.5M10.297 20.482l-1.475-1.585a47.54 47.54 0 0 1-1.442 1.129c-.307-.288-.989-1.016-2.045-2.183.902-.836 1.479-1.466 1.729-1.892s.376-.871.376-1.336c0-.592-.273-1.178-.818-1.759-.546-.581-1.329-.871-2.349-.871-1.008 0-1.79.293-2.344.879-.556.587-.832 1.181-.832 1.784 0 .813.419 1.748 1.256 2.805-.847.614-1.444 1.208-1.794 1.784a3.465 3.465 0 0 0-.523 1.833c0 .857.308 1.56.924 2.107.616.549 1.423.823 2.42.823 1.173 0 2.444-.379 3.813-1.137L8.235 24h2.819l-2.09-2.383 1.333-1.135zm-6.736-6.389a1.02 1.02 0 0 1 .73-.286c.31 0 .559.085.747.254a.849.849 0 0 1 .283.659c0 .518-.419 1.112-1.257 1.784-.536-.651-.805-1.231-.805-1.742a.901.901 0 0 1 .302-.669M3.74 22c-.427 0-.778-.116-1.057-.349-.279-.232-.418-.487-.418-.766 0-.594.509-1.288 1.527-2.083.968 1.134 1.717 1.946 2.248 2.438-.921.507-1.686.76-2.3.76"
     }));
   }
 };
 var search = {
   search: function search() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       width: "13",
       height: "13",
       viewBox: "0 0 20 20",
       opacity: "0.5"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M12.9 14.32a8 8 0 1 1 1.41-1.41l5.35 5.33-1.42 1.42-5.33-5.34zM8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"
     }));
   },
   "delete": function _delete() {
-    return React.createElement("svg", {
+    return React__default.createElement("svg", {
       xmlns: "http://www.w3.org/2000/svg",
       width: "13",
       height: "13",
       viewBox: "0 0 20 20",
       opacity: "0.5"
-    }, React.createElement("path", {
+    }, React__default.createElement("path", {
       d: "M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z"
     }));
   }
@@ -62993,7 +61113,7 @@ function (_React$PureComponent) {
           i18n = _this$props2.i18n,
           icons = _this$props2.icons,
           selected = this.state.selected;
-      return React.createElement("nav", {
+      return React__default.createElement("nav", {
         className: "emoji-mart-anchors",
         "aria-label": i18n.categorieslabel
       }, categories.map(function (category, i) {
@@ -63007,7 +61127,7 @@ function (_React$PureComponent) {
         }
 
         var iconId = id.startsWith('custom-') ? 'custom' : id;
-        return React.createElement("button", {
+        return React__default.createElement("button", {
           key: id,
           "aria-label": i18n.categories[iconId],
           title: i18n.categories[iconId],
@@ -63018,9 +61138,9 @@ function (_React$PureComponent) {
           style: {
             color: isSelected ? color : null
           }
-        }, React.createElement("div", {
+        }, React__default.createElement("div", {
           className: "emoji-mart-anchor-icon"
-        }, icons.categories[iconId]()), React.createElement("span", {
+        }, icons.categories[iconId]()), React__default.createElement("span", {
           className: "emoji-mart-anchor-bar",
           style: {
             backgroundColor: color
@@ -63031,7 +61151,7 @@ function (_React$PureComponent) {
   }]);
 
   return Anchors;
-}(React.PureComponent);
+}(React__default.PureComponent);
 Anchors.propTypes
 /* remove-proptypes */
 = {
@@ -63290,7 +61410,7 @@ var NimbleEmoji = function NimbleEmoji(props) {
     style = _convertStyleToCSS(style);
     return "<".concat(Tag.name, " style='").concat(style, "' aria-label='").concat(label, "' ").concat(title ? "title='".concat(title, "'") : '', " class='").concat(className, "'>").concat(children || '', "</").concat(Tag.name, ">");
   } else {
-    return React.createElement(Tag.name, _extends({
+    return React__default.createElement(Tag.name, _extends({
       onClick: function onClick(e) {
         return _handleClick(e, props);
       },
@@ -63303,7 +61423,7 @@ var NimbleEmoji = function NimbleEmoji(props) {
       "aria-label": label,
       title: title,
       className: className
-    }, Tag.props), React.createElement("span", {
+    }, Tag.props), React__default.createElement("span", {
       style: style
     }, children));
   }
@@ -63340,7 +61460,7 @@ function (_React$PureComponent) {
           i18n = _this$props.i18n,
           notFound = _this$props.notFound,
           notFoundEmoji = _this$props.notFoundEmoji;
-      var component = notFound && notFound() || React.createElement("div", {
+      var component = notFound && notFound() || React__default.createElement("div", {
         className: "emoji-mart-no-results"
       }, NimbleEmoji(_objectSpread$5({
         data: data
@@ -63350,7 +61470,7 @@ function (_React$PureComponent) {
         onOver: null,
         onLeave: null,
         onClick: null
-      })), React.createElement("div", {
+      })), React__default.createElement("div", {
         className: "emoji-mart-no-results-label"
       }, i18n.notfound));
       return component;
@@ -63358,7 +61478,7 @@ function (_React$PureComponent) {
   }]);
 
   return NotFound;
-}(React.PureComponent);
+}(React__default.PureComponent);
 NotFound.propTypes
 /* remove-proptypes */
 = {
@@ -63573,31 +61693,31 @@ function (_React$Component) {
       }
 
       var label = i18n.categories[id] || name;
-      return React.createElement("section", {
+      return React__default.createElement("section", {
         ref: this.setContainerRef,
         className: "emoji-mart-category",
         "aria-label": label,
         style: containerStyles
-      }, React.createElement("div", {
+      }, React__default.createElement("div", {
         style: labelStyles,
         "data-name": name,
         className: "emoji-mart-category-label"
-      }, React.createElement("span", {
+      }, React__default.createElement("span", {
         style: labelSpanStyles,
         ref: this.setLabelRef,
         "aria-hidden": true
         /* already labeled by the section aria-label */
 
-      }, label)), React.createElement("ul", {
+      }, label)), React__default.createElement("ul", {
         className: "emoji-mart-category-list"
       }, emojis && emojis.map(function (emoji) {
-        return React.createElement("li", {
+        return React__default.createElement("li", {
           key: emoji.short_names && emoji.short_names.join('_') || emoji
         }, NimbleEmoji(_objectSpread$4({
           emoji: emoji,
           data: _this3.data
         }, emojiProps)));
-      })), emojis && !emojis.length && React.createElement(NotFound, {
+      })), emojis && !emojis.length && React__default.createElement(NotFound, {
         i18n: i18n,
         notFound: notFound,
         notFoundEmoji: notFoundEmoji,
@@ -63608,7 +61728,7 @@ function (_React$Component) {
   }]);
 
   return Category;
-}(React.Component);
+}(React__default.Component);
 Category.propTypes
 /* remove-proptypes */
 = {
@@ -63672,7 +61792,7 @@ function (_React$PureComponent) {
   }]);
 
   return Skins;
-}(React.PureComponent);
+}(React__default.PureComponent);
 Skins.propTypes
 /* remove-proptypes */
 = {
@@ -63712,10 +61832,10 @@ function (_Skins) {
 
       for (var skinTone = 1; skinTone <= 6; skinTone++) {
         var selected = skinTone === skin;
-        skinToneNodes.push(React.createElement("span", {
+        skinToneNodes.push(React__default.createElement("span", {
           key: "skin-tone-".concat(skinTone),
           className: "emoji-mart-skin-swatch custom".concat(selected ? ' selected' : '')
-        }, React.createElement("span", {
+        }, React__default.createElement("span", {
           onClick: this.handleClick,
           "data-skin": skinTone,
           className: "emoji-mart-skin-tone-".concat(skinTone)
@@ -63731,9 +61851,9 @@ function (_Skins) {
         }))));
       }
 
-      return React.createElement("div", {
+      return React__default.createElement("div", {
         className: "emoji-mart-skin-swatches custom".concat(opened ? ' opened' : '')
-      }, React.createElement("div", {
+      }, React__default.createElement("div", {
         className: "emoji-mart-skin-text".concat(opened ? ' opened' : '')
       }, i18n.skintext), skinToneNodes);
     }
@@ -63793,14 +61913,14 @@ function (_Skins) {
       for (var skinTone = 1; skinTone <= 6; skinTone++) {
         var selected = skinTone === skin;
         var visible = opened || selected;
-        skinToneNodes.push(React.createElement("span", _extends({
+        skinToneNodes.push(React__default.createElement("span", _extends({
           key: "skin-tone-".concat(skinTone),
           className: "emoji-mart-skin-swatch".concat(selected ? ' selected' : ''),
           "aria-label": i18n.skintones[skinTone],
           "aria-hidden": !visible
         }, opened ? {
           role: 'menuitem'
-        } : {}), React.createElement("span", _extends({
+        } : {}), React__default.createElement("span", _extends({
           onClick: this.handleClick,
           onKeyDown: this.handleKeyDown,
           role: "button"
@@ -63818,10 +61938,10 @@ function (_Skins) {
         }))));
       }
 
-      return React.createElement("section", {
+      return React__default.createElement("section", {
         className: "emoji-mart-skin-swatches".concat(opened ? ' opened' : ''),
         "aria-label": i18n.skintext
-      }, React.createElement("div", opened ? {
+      }, React__default.createElement("div", opened ? {
         role: 'menubar'
       } : {}, skinToneNodes));
     }
@@ -63889,59 +62009,59 @@ function (_React$PureComponent) {
           knownEmoticons.push(emoticon.toLowerCase());
           listedEmoticons.push(emoticon);
         });
-        return React.createElement("div", {
+        return React__default.createElement("div", {
           className: "emoji-mart-preview"
-        }, React.createElement("div", {
+        }, React__default.createElement("div", {
           className: "emoji-mart-preview-emoji",
           "aria-hidden": "true"
         }, NimbleEmoji(_objectSpread$3({
           key: emoji.id,
           emoji: emoji,
           data: this.data
-        }, emojiProps))), React.createElement("div", {
+        }, emojiProps))), React__default.createElement("div", {
           className: "emoji-mart-preview-data",
           "aria-hidden": "true"
-        }, React.createElement("div", {
+        }, React__default.createElement("div", {
           className: "emoji-mart-preview-name"
-        }, emoji.name), React.createElement("div", {
+        }, emoji.name), React__default.createElement("div", {
           className: "emoji-mart-preview-shortnames"
         }, emojiData.short_names.map(function (short_name) {
-          return React.createElement("span", {
+          return React__default.createElement("span", {
             key: short_name,
             className: "emoji-mart-preview-shortname"
           }, ":", short_name, ":");
-        })), React.createElement("div", {
+        })), React__default.createElement("div", {
           className: "emoji-mart-preview-emoticons"
         }, listedEmoticons.map(function (emoticon) {
-          return React.createElement("span", {
+          return React__default.createElement("span", {
             key: emoticon,
             className: "emoji-mart-preview-emoticon"
           }, emoticon);
         }))));
       } else {
-        return React.createElement("div", {
+        return React__default.createElement("div", {
           className: "emoji-mart-preview"
-        }, React.createElement("div", {
+        }, React__default.createElement("div", {
           className: "emoji-mart-preview-emoji",
           "aria-hidden": "true"
         }, idleEmoji && idleEmoji.length && NimbleEmoji(_objectSpread$3({
           emoji: idleEmoji,
           data: this.data
-        }, emojiProps))), React.createElement("div", {
+        }, emojiProps))), React__default.createElement("div", {
           className: "emoji-mart-preview-data",
           "aria-hidden": "true"
-        }, React.createElement("span", {
+        }, React__default.createElement("span", {
           className: "emoji-mart-title-label"
-        }, title)), showSkinTones && React.createElement("div", {
+        }, title)), showSkinTones && React__default.createElement("div", {
           className: "emoji-mart-preview-skins".concat(skinsProps.skinEmoji ? ' custom' : '')
-        }, skinsProps.skinEmoji ? React.createElement(SkinsEmoji, {
+        }, skinsProps.skinEmoji ? React__default.createElement(SkinsEmoji, {
           skin: skinsProps.skin,
           emojiProps: emojiProps,
           data: this.data,
           skinEmoji: skinsProps.skinEmoji,
           i18n: i18n,
           onChange: skinsProps.onChange
-        }) : React.createElement(SkinsDot, {
+        }) : React__default.createElement(SkinsDot, {
           skin: skinsProps.skin,
           i18n: i18n,
           onChange: skinsProps.onChange
@@ -63951,7 +62071,7 @@ function (_React$PureComponent) {
   }]);
 
   return Preview;
-}(React.PureComponent);
+}(React__default.PureComponent);
 Preview.propTypes
 /* remove-proptypes */
 = {
@@ -64059,20 +62179,20 @@ function (_React$PureComponent) {
           isSearching = _this$state.isSearching,
           id = _this$state.id;
       var inputId = "emoji-mart-search-".concat(id);
-      return React.createElement("section", {
+      return React__default.createElement("section", {
         className: "emoji-mart-search",
         "aria-label": i18n.search
-      }, React.createElement("input", {
+      }, React__default.createElement("input", {
         id: inputId,
         ref: this.setRef,
         type: "search",
         onChange: this.handleChange,
         placeholder: i18n.search,
         autoFocus: autoFocus
-      }), React.createElement("label", {
+      }), React__default.createElement("label", {
         className: "emoji-mart-sr-only",
         htmlFor: inputId
-      }, i18n.search), React.createElement("button", {
+      }, i18n.search), React__default.createElement("button", {
         className: "emoji-mart-search-icon",
         onClick: this.clear,
         onKeyUp: this.handleKeyUp,
@@ -64083,7 +62203,7 @@ function (_React$PureComponent) {
   }]);
 
   return Search;
-}(React.PureComponent);
+}(React__default.PureComponent);
 Search.propTypes
 /* remove-proptypes */
 = {
@@ -64656,16 +62776,16 @@ function (_React$PureComponent) {
       var width = perLine * (emojiSize + 12) + 12 + 2 + measureScrollbar();
       var theme = this.getPreferredTheme();
       var skin = this.props.skin || this.state.skin || store.get('skin') || this.props.defaultSkin;
-      return React.createElement("section", {
+      return React__default.createElement("section", {
         style: _objectSpread$2({
           width: width
         }, style),
         className: "emoji-mart emoji-mart-".concat(theme),
         "aria-label": title,
         onKeyDown: this.handleKeyDown
-      }, React.createElement("div", {
+      }, React__default.createElement("div", {
         className: "emoji-mart-bar"
-      }, React.createElement(Anchors, {
+      }, React__default.createElement(Anchors, {
         ref: this.setAnchorsRef,
         data: this.data,
         i18n: this.i18n,
@@ -64673,7 +62793,7 @@ function (_React$PureComponent) {
         categories: this.categories,
         onAnchorClick: this.handleAnchorClick,
         icons: this.icons
-      })), React.createElement(Search, {
+      })), React__default.createElement(Search, {
         ref: this.setSearchRef,
         onSearch: this.handleSearch,
         data: this.data,
@@ -64683,12 +62803,12 @@ function (_React$PureComponent) {
         exclude: exclude,
         custom: this.CUSTOM,
         autoFocus: autoFocus
-      }), React.createElement("div", {
+      }), React__default.createElement("div", {
         ref: this.setScrollRef,
         className: "emoji-mart-scroll",
         onScroll: this.handleScroll
       }, this.getCategories().map(function (category, i) {
-        return React.createElement(Category, {
+        return React__default.createElement(Category, {
           ref: _this4.setCategoryRef.bind(_this4, "category-".concat(i)),
           key: category.name,
           id: category.id,
@@ -64720,9 +62840,9 @@ function (_React$PureComponent) {
           notFound: notFound,
           notFoundEmoji: notFoundEmoji
         });
-      })), (showPreview || showSkinTones) && React.createElement("div", {
+      })), (showPreview || showSkinTones) && React__default.createElement("div", {
         className: "emoji-mart-bar"
-      }, React.createElement(Preview, {
+      }, React__default.createElement(Preview, {
         ref: this.setPreviewRef,
         data: this.data,
         title: title,
@@ -64750,7 +62870,7 @@ function (_React$PureComponent) {
   }]);
 
   return NimblePicker;
-}(React.PureComponent);
+}(React__default.PureComponent);
 NimblePicker.propTypes
 /* remove-proptypes */
 = _objectSpread$2({}, PickerPropTypes, {
@@ -64776,12 +62896,12 @@ function (_React$PureComponent) {
   _createClass(Picker, [{
     key: "render",
     value: function render() {
-      return React.createElement(NimblePicker, _extends({}, this.props, this.state));
+      return React__default.createElement(NimblePicker, _extends({}, this.props, this.state));
     }
   }]);
 
   return Picker;
-}(React.PureComponent);
+}(React__default.PureComponent);
 Picker.propTypes
 /* remove-proptypes */
 = PickerPropTypes;
@@ -64827,7 +62947,7 @@ const INIT_ELEMENT_STYLES$9 = {
         marginLeft: 11
     }
 };
-const EmojiReactionWidget = React.memo((props) => {
+const EmojiReactionWidget = React__default.memo((props) => {
     const { id, params, elementsSize, isReadOnly, onAnswer } = props;
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$9;
     const storyContextVal = useContext(StoryContext);
@@ -64857,22 +62977,22 @@ const EmojiReactionWidget = React.memo((props) => {
         setBigSize(initEmojiSize);
         setDelay(50);
     }, [id, initEmojiSize, onAnswer, storyContextVal]);
-    return (React.createElement("div", { className: b$j({ color: params.color }), style: sizes.widget }, params.emoji.map((emojiItem, index) => (React.createElement("button", { className: b$j('item', { disabled: isReadOnly || isToched || clickedIndex !== null }), key: `${emojiItem.unicode}-${index}`, style: sizes.item, onClick: (e) => {
+    return (React__default.createElement("div", { className: b$j({ color: params.color }), style: sizes.widget }, params.emoji.map((emojiItem, index) => (React__default.createElement("button", { className: b$j('item', { disabled: isReadOnly || isToched || clickedIndex !== null }), key: `${emojiItem.unicode}-${index}`, style: sizes.item, onClick: (e) => {
             e.preventDefault();
             if (!isToched && !isReadOnly && clickedIndex === null) {
                 handleReactionClick(index, emojiItem.unicode);
             }
         } },
-        React.createElement("div", { className: b$j('subItem', { clicked: index === clickedIndex }) },
-            React.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: bigSize })),
-        React.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: sizes.emoji.width }))))));
+        React__default.createElement("div", { className: b$j('subItem', { clicked: index === clickedIndex }) },
+            React__default.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: bigSize })),
+        React__default.createElement(Emoji, { emoji: emojiItem.name, set: "apple", size: sizes.emoji.width }))))));
 });
 
 const b$i = block('GiphyWidget');
-const GiphyWidget = React.memo((props) => {
+const GiphyWidget = React__default.memo((props) => {
     const { params } = props;
-    return (React.createElement("div", { className: b$i(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
-        React.createElement("img", { alt: "", className: b$i('img'), src: params.gif })));
+    return (React__default.createElement("div", { className: b$i(), style: { opacity: params.widgetOpacity / 100, borderRadius: params.borderRadius } },
+        React__default.createElement("img", { alt: "", className: b$i('img'), src: params.gif })));
 });
 
 const b$h = block('QuestionWidget');
@@ -64887,7 +63007,7 @@ const INIT_ELEMENT_STYLES$8 = {
         borderRadius: 10
     }
 };
-const QuestionWidget = React.memo((props) => {
+const QuestionWidget = React__default.memo((props) => {
     var _a, _b, _c, _d;
     const { id, params, elementsSize, isReadOnly, onAnswer } = props;
     const storyContextVal = useContext(StoryContext);
@@ -64946,12 +63066,12 @@ const QuestionWidget = React.memo((props) => {
         return percent;
     }, []);
     const textStyles = getTextStyles(params.fontColor);
-    return (React.createElement("div", { className: b$h() },
-        !params.isTitleHidden && (React.createElement("div", { className: cn(b$h('question', {
+    return (React__default.createElement("div", { className: b$h() },
+        !params.isTitleHidden && (React__default.createElement("div", { className: cn(b$h('question', {
                 gradient: ((_b = params.fontColor) === null || _b === void 0 ? void 0 : _b.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.style, fontWeight: (_d = params.fontParams) === null || _d === void 0 ? void 0 : _d.weight, fontFamily: params.fontFamily }), textStyles) }, params.question)),
-        React.createElement("div", { className: b$h('buttons'), style: { borderRadius: sizes.button.borderRadius } },
-            React.createElement("button", { className: b$h('item', {
+        React__default.createElement("div", { className: b$h('buttons'), style: { borderRadius: sizes.button.borderRadius } },
+            React__default.createElement("button", { className: b$h('item', {
                     answered: answer === 'confirm',
                     confirm: true,
                     answerConfirm: answer && percents.confirm !== 100,
@@ -64962,12 +63082,12 @@ const QuestionWidget = React.memo((props) => {
                     height: sizes.button.height,
                     fontSize: sizes.button.fontSize
                 }, type: "button", onClick: () => !isReadOnly && handleChange('confirm') },
-                React.createElement("div", { className: b$h('itemTextContainer') },
-                    React.createElement("span", { className: cn(b$h('itemTextConfirm').toString(), b$h('itemText', { answered: answer !== null }).toString()) }, params.confirm),
-                    answer && React.createElement("span", { className: b$h('itemTextPercent') },
+                React__default.createElement("div", { className: b$h('itemTextContainer') },
+                    React__default.createElement("span", { className: cn(b$h('itemTextConfirm').toString(), b$h('itemText', { answered: answer !== null }).toString()) }, params.confirm),
+                    answer && React__default.createElement("span", { className: b$h('itemTextPercent') },
                         percents.confirm,
                         "%"))),
-            React.createElement("button", { className: b$h('item', {
+            React__default.createElement("button", { className: b$h('item', {
                     answered: answer === 'decline',
                     decline: true,
                     answerDecline: answer && percents.decline !== 100,
@@ -64978,15 +63098,15 @@ const QuestionWidget = React.memo((props) => {
                     height: sizes.button.height,
                     fontSize: sizes.button.fontSize
                 }, type: "button", onClick: () => !isReadOnly && handleChange('decline') },
-                React.createElement("div", { className: b$h('itemTextContainer') },
-                    React.createElement("span", { className: cn(b$h('itemTextDecline').toString(), b$h('itemText', { answered: answer !== null }).toString()) }, params.decline),
-                    answer && React.createElement("span", { className: b$h('itemTextPercent') },
+                React__default.createElement("div", { className: b$h('itemTextContainer') },
+                    React__default.createElement("span", { className: cn(b$h('itemTextDecline').toString(), b$h('itemText', { answered: answer !== null }).toString()) }, params.decline),
+                    answer && React__default.createElement("span", { className: b$h('itemTextPercent') },
                         percents.decline,
                         "%"))))));
 });
 
 const b$g = block('RectangleWidget');
-const RectangleWidget = React.memo((props) => {
+const RectangleWidget = React__default.memo((props) => {
     const { fillColor, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } = props.params;
     const styles = {
         borderStyle: 'solid',
@@ -64999,12 +63119,12 @@ const RectangleWidget = React.memo((props) => {
         background: renderBackgroundStyles(fillColor),
         borderRadius: `${fillBorderRadius - strokeThickness}px`
     };
-    return (React.createElement("div", { className: b$g(), style: styles },
-        React.createElement("div", { className: b$g('background'), style: backgroundStyles }, fillColor.type === 'video' && (React.createElement("video", { autoPlay: !fillColor.stopAutoplay, className: b$g('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: fillColor.value })))));
+    return (React__default.createElement("div", { className: b$g(), style: styles },
+        React__default.createElement("div", { className: b$g('background'), style: backgroundStyles }, fillColor.type === 'video' && (React__default.createElement("video", { autoPlay: !fillColor.stopAutoplay, className: b$g('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: fillColor.value })))));
 });
 
 const b$f = block('SliderCustom');
-const SliderCustom = React.memo(({ emoji, changeStatus, value, initSize = 34, disabled, height, borderRadius, onChange, onAfterChange, onBeforeChange }) => {
+const SliderCustom = React__default.memo(({ emoji, changeStatus, value, initSize = 34, disabled, height, borderRadius, onChange, onAfterChange, onBeforeChange }) => {
     const containerRef = useRef(null);
     const thumbRef = useRef(null);
     const [bigSize, setBigSize] = useState(initSize);
@@ -65066,20 +63186,20 @@ const SliderCustom = React.memo(({ emoji, changeStatus, value, initSize = 34, di
             onBeforeChange();
         }
     }, [disabled, handleDrag, handleDragEnd, onBeforeChange]);
-    return (React.createElement("div", { className: b$f(), ref: containerRef, style: { height } },
-        React.createElement("div", { className: b$f('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
+    return (React__default.createElement("div", { className: b$f(), ref: containerRef, style: { height } },
+        React__default.createElement("div", { className: b$f('thumb', { status: changeStatus }), ref: thumbRef, role: "button", style: { left: `${Math.round(value)}%` }, tabIndex: 0, onClick: (e) => {
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
             }, onKeyUp: (e) => {
                 e.stopPropagation();
                 e.nativeEvent.stopImmediatePropagation();
             }, onMouseDown: handleMouseDown, onTouchStart: handleMouseDown },
-            changeStatus === 'moving' || changeStatus === 'moved' ? (React.createElement("div", { className: b$f('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
-                React.createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
-            React.createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })),
-        React.createElement("div", { className: b$f('track'), style: { height, borderRadius } },
-            React.createElement("span", { className: b$f('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
-            React.createElement("span", { className: b$f('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
+            changeStatus === 'moving' || changeStatus === 'moved' ? (React__default.createElement("div", { className: b$f('up', { moved: changeStatus === 'moved' }), style: { top: `-${bigSize + getScalableValue(10)}px` } },
+                React__default.createElement(Emoji, { emoji: emoji, set: "apple", size: bigSize }))) : null,
+            React__default.createElement(Emoji, { emoji: emoji, set: "apple", size: initSize })),
+        React__default.createElement("div", { className: b$f('track'), style: { height, borderRadius } },
+            React__default.createElement("span", { className: b$f('trackPart', { unselected: true }), style: { width: `${Math.round(value)}%` } }),
+            React__default.createElement("span", { className: b$f('trackPart', { selected: true }), style: { width: `${Math.round(100 - value)}%` } }))));
 });
 
 const b$e = block('SliderWidget');
@@ -65104,7 +63224,7 @@ const INIT_ELEMENT_STYLES$7 = {
         borderRadius: 6
     }
 };
-const SliderWidget = React.memo((props) => {
+const SliderWidget = React__default.memo((props) => {
     var _a, _b, _c;
     const { id, params, storyId, elementsSize, isReadOnly, onAnswer } = props;
     const { color, text, emoji, value } = params;
@@ -65151,18 +63271,18 @@ const SliderWidget = React.memo((props) => {
     }, [storyContextVal, storyId, changeStatus, value, time]);
     const textStyles = getTextStyles(params.fontColor);
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$7;
-    return (React.createElement("div", { className: b$e({ color }), style: sizes.widget },
-        React.createElement("div", { className: cn(b$e('text', {
+    return (React__default.createElement("div", { className: b$e({ color }), style: sizes.widget },
+        React__default.createElement("div", { className: cn(b$e('text', {
                 gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, text),
-        React.createElement("div", { className: b$e('sliderWrapper'), style: {
+        React__default.createElement("div", { className: b$e('sliderWrapper'), style: {
                 height: sizes.slider.height
             } },
-            React.createElement(SliderCustom, { borderRadius: sizes.slider.borderRadius, changeStatus: changeStatus, disabled: changeStatus === 'moved' || isReadMode, emoji: emoji.name, height: sizes.slider.height, initSize: sizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
+            React__default.createElement(SliderCustom, { borderRadius: sizes.slider.borderRadius, changeStatus: changeStatus, disabled: changeStatus === 'moved' || isReadMode, emoji: emoji.name, height: sizes.slider.height, initSize: sizes.emoji.width, value: sliderValue, onAfterChange: handleAfterChange, onBeforeChange: handleBeforeChange, onChange: handleChange }))));
 });
 
 const b$d = block('SwipeUpWidget');
-const SwipeUpWidget = React.memo((props) => {
+const SwipeUpWidget = React__default.memo((props) => {
     const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
     const { isReadOnly, onSwipe } = props;
     const [touchStart, setTouchStart] = useState(0);
@@ -65195,10 +63315,10 @@ const SwipeUpWidget = React.memo((props) => {
             tab.focus();
         }
     }, [onSwipe, url]);
-    return (React.createElement("div", { className: b$d({ gradient: color.type === BackgroundColorType.GRADIENT }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
-        React.createElement("div", { className: b$d('icon') },
-            React.createElement(MaterialIcon, { background: color, color: renderBackgroundStyles(color), name: icon.name, size: iconSize })),
-        React.createElement("span", { className: b$d('text') }, text)));
+    return (React__default.createElement("div", { className: b$d({ gradient: color.type === BackgroundColorType.GRADIENT }), role: "button", style: Object.assign({ fontFamily, fontSize: `${fontSize}px`, fontStyle: fontParams.style, fontWeight: fontParams.weight }, renderTextBackgroundStyles({ color })), tabIndex: 0, onClick: !isReadOnly ? handleClick : undefined, onKeyDown: !isReadOnly ? handleClick : undefined, onTouchEnd: !isReadOnly ? handleTouchEnd : undefined, onTouchMove: !isReadOnly ? handleTouchMove : undefined, onTouchStart: !isReadOnly ? handleTouchStart : undefined },
+        React__default.createElement("div", { className: b$d('icon') },
+            React__default.createElement(MaterialIcon, { background: color, color: renderBackgroundStyles(color), name: icon.name, size: iconSize })),
+        React__default.createElement("span", { className: b$d('text') }, text)));
 });
 
 const b$c = block('TalkAboutWidget');
@@ -65235,7 +63355,7 @@ const INIT_ELEMENT_STYLES$6 = {
         fontSize: 14
     }
 };
-const TalkAboutWidget = React.memo((props) => {
+const TalkAboutWidget = React__default.memo((props) => {
     var _a, _b, _c;
     const { id, params, elementsSize, isReadOnly } = props;
     const sizes = elementsSize !== null && elementsSize !== void 0 ? elementsSize : INIT_ELEMENT_STYLES$6;
@@ -65282,30 +63402,30 @@ const TalkAboutWidget = React.memo((props) => {
         };
     }, [handleClickOutside, isSent]);
     const textStyles = getTextStyles(params.fontColor);
-    return (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: b$c('container'), ref: ref },
-            React.createElement("picture", { className: b$c('imageWrapper'), style: sizes.imageWrapper }, params.image ? (React.createElement("img", { alt: "", className: b$c('image'), src: params.image })) : (React.createElement(IconLogoCircle, { className: b$c('image').toString() }))),
-            React.createElement("div", { className: b$c('empty'), style: sizes.empty }),
-            React.createElement("div", { className: b$c({ color: params.color }), style: sizes.widget },
-                React.createElement("div", { className: b$c('contentContainer', { sendOpen: text.length > 0 }), style: sizes.content },
-                    !params.isTitleHidden && (React.createElement("div", { className: (cn(b$c('text', {
+    return (React__default.createElement(React__default.Fragment, null,
+        React__default.createElement("div", { className: b$c('container'), ref: ref },
+            React__default.createElement("picture", { className: b$c('imageWrapper'), style: sizes.imageWrapper }, params.image ? (React__default.createElement("img", { alt: "", className: b$c('image'), src: params.image })) : (React__default.createElement(IconLogoCircle, { className: b$c('image').toString() }))),
+            React__default.createElement("div", { className: b$c('empty'), style: sizes.empty }),
+            React__default.createElement("div", { className: b$c({ color: params.color }), style: sizes.widget },
+                React__default.createElement("div", { className: b$c('contentContainer', { sendOpen: text.length > 0 }), style: sizes.content },
+                    !params.isTitleHidden && (React__default.createElement("div", { className: (cn(b$c('text', {
                             gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === BackgroundColorType.GRADIENT
                         }).toString()),
                             'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.text), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, params.text)),
-                    React.createElement("input", { className: b$c('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
-                text && (React.createElement("button", { className: b$c('send', { disabled: isSent || isReadOnly }), style: sizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
-                    React.createElement("span", { className: b$c('sendText', { green: isSent }), style: sizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
+                    React__default.createElement("input", { className: b$c('input'), disabled: isSent || isReadOnly, placeholder: "Type something...", ref: inputRef, style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined })),
+                text && (React__default.createElement("button", { className: b$c('send', { disabled: isSent || isReadOnly }), style: sizes.send, onClick: !isSent && !isReadOnly ? handleSendClick : undefined },
+                    React__default.createElement("span", { className: b$c('sendText', { green: isSent }), style: sizes.sendText }, isSent ? 'Sent!' : 'Send')))))));
 });
 
 const b$b = block('TextWidget');
-const TextWidget = React.memo((props) => {
+const TextWidget = React__default.memo((props) => {
     const { params } = props;
-    return (React.createElement("div", { className: b$b() },
-        React.createElement("div", { className: b$b('container', {
+    return (React__default.createElement("div", { className: b$b() },
+        React__default.createElement("div", { className: b$b('container', {
                 gradient: params.color.type === BackgroundColorType.GRADIENT
             }), style: Object.assign({ opacity: params.widgetOpacity / 100, fontStyle: params.fontParams.style, fontWeight: params.fontParams.weight, fontFamily: params.fontFamily, fontSize: `${params.fontSize}px`, textAlign: params.align }, renderTextBackgroundStyles({ color: params.color })) },
-            React.createElement("span", { className: b$b('span') }, params.text)),
-        params.withFill ? (React.createElement("div", { className: b$b('background'), style: {
+            React__default.createElement("span", { className: b$b('span') }, params.text)),
+        params.withFill ? (React__default.createElement("div", { className: b$b('background'), style: {
                 background: renderBackgroundStyles(params.backgroundColor)
             } })) : null));
 });
@@ -65344,7 +63464,7 @@ const INIT_ELEMENT_STYLES$5 = {
         fontSize: 6
     }
 };
-const TimerWidget = React.memo((props) => {
+const TimerWidget = React__default.memo((props) => {
     const { params, position, positionLimits } = props;
     const [time, setTime] = useState(calculateTime(params.time + 60000 - new Date().getTime()));
     useEffect(() => {
@@ -65379,26 +63499,26 @@ const TimerWidget = React.memo((props) => {
             fontSize: calculate(INIT_ELEMENT_STYLES$5.caption.fontSize)
         }
     }), [calculate]);
-    return (React.createElement("div", { className: b$a({ color: params.color }), style: elementSizes.widget },
-        React.createElement("div", { className: cn(b$a('text'), 'StorySdk-widgetTitle'), style: elementSizes.text }, params.text),
-        React.createElement("ul", { className: b$a('dial') },
-            React.createElement("li", { className: b$a('col') },
-                React.createElement("div", { className: b$a('digitRow') },
-                    React.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.days[0]),
-                    React.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.days[1])),
-                React.createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Day")),
-            React.createElement("span", { className: b$a('divider') }, ":"),
-            React.createElement("li", { className: b$a('col') },
-                React.createElement("div", { className: b$a('digitRow') },
-                    React.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.hours[0]),
-                    React.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.hours[1])),
-                React.createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Hours")),
-            React.createElement("span", { className: b$a('divider') }, ":"),
-            React.createElement("li", { className: b$a('col') },
-                React.createElement("div", { className: b$a('digitRow') },
-                    React.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.minutes[0]),
-                    React.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.minutes[1])),
-                React.createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Minutes")))));
+    return (React__default.createElement("div", { className: b$a({ color: params.color }), style: elementSizes.widget },
+        React__default.createElement("div", { className: cn(b$a('text'), 'StorySdk-widgetTitle'), style: elementSizes.text }, params.text),
+        React__default.createElement("ul", { className: b$a('dial') },
+            React__default.createElement("li", { className: b$a('col') },
+                React__default.createElement("div", { className: b$a('digitRow') },
+                    React__default.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.days[0]),
+                    React__default.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.days[1])),
+                React__default.createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Day")),
+            React__default.createElement("span", { className: b$a('divider') }, ":"),
+            React__default.createElement("li", { className: b$a('col') },
+                React__default.createElement("div", { className: b$a('digitRow') },
+                    React__default.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.hours[0]),
+                    React__default.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.hours[1])),
+                React__default.createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Hours")),
+            React__default.createElement("span", { className: b$a('divider') }, ":"),
+            React__default.createElement("li", { className: b$a('col') },
+                React__default.createElement("div", { className: b$a('digitRow') },
+                    React__default.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.minutes[0]),
+                    React__default.createElement("div", { className: b$a('digit'), style: elementSizes.digit }, time.minutes[1])),
+                React__default.createElement("div", { className: b$a('caption'), style: elementSizes.caption }, "Minutes")))));
 });
 
 const b$9 = block('QuizMultipleAnswerWidget');
@@ -65429,7 +63549,7 @@ const INIT_ELEMENT_STYLES$4 = {
         lineHeight: 11
     }
 };
-const QuizMultipleAnswerWidget = React.memo((props) => {
+const QuizMultipleAnswerWidget = React__default.memo((props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const { title, answers, isTitleHidden } = props.params;
     const { id, params, elementsSize, isReadOnly, onAnswer } = props;
@@ -65494,18 +63614,18 @@ const QuizMultipleAnswerWidget = React.memo((props) => {
     }, [handleSendAnswer]);
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
-    return (React.createElement("div", { className: b$9() },
-        !isTitleHidden && (React.createElement("div", { className: cn(b$9('title', {
+    return (React__default.createElement("div", { className: b$9() },
+        !isTitleHidden && (React__default.createElement("div", { className: cn(b$9('title', {
                 gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React.createElement("div", { className: b$9('answers'), style: sizes.answers }, answers.map((answer) => {
+        React__default.createElement("div", { className: b$9('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g, _h;
-            return (React.createElement("button", { className: b$9('answer', {
+            return (React__default.createElement("button", { className: b$9('answer', {
                     noGap: !answer.title.length,
                     selected: userAnswers.includes(answer.id)
                 }), disabled: isSent || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
-                answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
-                React.createElement("p", { className: cn(b$9('answerTitle', {
+                answer.emoji && (React__default.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
+                React__default.createElement("p", { className: cn(b$9('answerTitle', {
                         gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === BackgroundColorType.GRADIENT
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { lineHeight: `${sizes.sendBtn.lineHeight}px`, fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
@@ -65532,7 +63652,7 @@ const INIT_ELEMENT_STYLES$3 = {
         fontSize: 11
     }
 };
-const QuizOneAnswerWidget = React.memo((props) => {
+const QuizOneAnswerWidget = React__default.memo((props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const { title, answers, storyId, isTitleHidden } = props.params;
     const { id, params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
@@ -65567,17 +63687,17 @@ const QuizOneAnswerWidget = React.memo((props) => {
     }, [onAnswer, handleSendScore, storyContextVal, id, storyId, onGoToStory]);
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
-    return (React.createElement("div", { className: b$8() },
-        !isTitleHidden && (React.createElement("div", { className: cn(b$8('title', {
+    return (React__default.createElement("div", { className: b$8() },
+        !isTitleHidden && (React__default.createElement("div", { className: cn(b$8('title', {
                 gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React.createElement("div", { className: b$8('answers'), style: sizes.answers }, answers.map((answer) => {
+        React__default.createElement("div", { className: b$8('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g, _h;
-            return (React.createElement("button", { className: b$8('answer', {
+            return (React__default.createElement("button", { className: b$8('answer', {
                     selected: userAnswer === answer.id
                 }), disabled: userAnswer !== null || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !userAnswer && !isReadOnly && handleAnswer(answer.id) },
-                answer.emoji && (React.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
-                React.createElement("p", { className: cn(b$8('answerTitle', {
+                answer.emoji && (React__default.createElement(Emoji, { emoji: (_a = answer.emoji) === null || _a === void 0 ? void 0 : _a.name, set: "apple", size: sizes.emoji.width })),
+                React__default.createElement("p", { className: cn(b$8('answerTitle', {
                         gradient: ((_c = (_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor) === null || _c === void 0 ? void 0 : _c.type) === BackgroundColorType.GRADIENT
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { fontStyle: (_e = (_d = params.answersFont) === null || _d === void 0 ? void 0 : _d.fontParams) === null || _e === void 0 ? void 0 : _e.style, fontWeight: (_g = (_f = params.answersFont) === null || _f === void 0 ? void 0 : _f.fontParams) === null || _g === void 0 ? void 0 : _g.weight, fontFamily: (_h = params.answersFont) === null || _h === void 0 ? void 0 : _h.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
@@ -65604,7 +63724,7 @@ const INIT_ELEMENT_STYLES$2 = {
         right: 4
     }
 };
-const QuizOpenAnswerWidget = React.memo((props) => {
+const QuizOpenAnswerWidget = React__default.memo((props) => {
     var _a, _b;
     const { title, isTitleHidden, storyId } = props.params;
     const { id, params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
@@ -65654,18 +63774,18 @@ const QuizOpenAnswerWidget = React.memo((props) => {
     const ref = useRef(null);
     const inputRef = useRef(null);
     const textStyles = getTextStyles(params.fontColor);
-    return (React.createElement("div", { className: b$7() },
-        !isTitleHidden && (React.createElement("div", { className: cn(b$7('title').toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_a = params.fontParams) === null || _a === void 0 ? void 0 : _a.style, fontWeight: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
-        React.createElement("div", { className: b$7('inputWrapper'), style: {
+    return (React__default.createElement("div", { className: b$7() },
+        !isTitleHidden && (React__default.createElement("div", { className: cn(b$7('title').toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_a = params.fontParams) === null || _a === void 0 ? void 0 : _a.style, fontWeight: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
+        React__default.createElement("div", { className: b$7('inputWrapper'), style: {
                 paddingTop: sizes.inputWrapper.paddingVertical,
                 paddingBottom: sizes.inputWrapper.paddingVertical,
                 paddingLeft: sizes.inputWrapper.paddingHorizontal,
                 borderRadius: sizes.inputWrapper.borderRadius,
                 paddingRight: sizes.inputWrapper.paddingRight
             } },
-            React.createElement("input", { className: b$7('input'), disabled: isSent || isReadOnly, placeholder: "Enter the text...", style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined }),
-            text.length > 0 && (React.createElement("button", { className: b$7('sendButton'), disabled: isSent || isReadOnly, style: sizes.sendButton, onClick: !isReadOnly ? handleSendClick : undefined },
-                React.createElement(IconArrowSend, { className: b$7('sendButtonIcon') }))))));
+            React__default.createElement("input", { className: b$7('input'), disabled: isSent || isReadOnly, placeholder: "Enter the text...", style: sizes.input, type: "text", value: text, onChange: !isReadOnly ? handleTextChange : undefined }),
+            text.length > 0 && (React__default.createElement("button", { className: b$7('sendButton'), disabled: isSent || isReadOnly, style: sizes.sendButton, onClick: !isReadOnly ? handleSendClick : undefined },
+                React__default.createElement(IconArrowSend, { className: b$7('sendButtonIcon') }))))));
 });
 
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -65680,7 +63800,7 @@ const INIT_ELEMENT_STYLES$1 = {
     }
 };
 const RATE_MAX = 5;
-const QuizRateWidget = React.memo((props) => {
+const QuizRateWidget = React__default.memo((props) => {
     var _a, _b, _c;
     const { title, isTitleHidden, storyId, storeLinks } = props.params;
     const { params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
@@ -65700,20 +63820,20 @@ const QuizRateWidget = React.memo((props) => {
         setIsSent(true);
     }, [onAnswer, onGoToStory, storeLinks === null || storeLinks === void 0 ? void 0 : storeLinks.web, storyId]);
     const textStyles = getTextStyles(params.fontColor);
-    return (React.createElement("div", { className: b$6() },
-        !isTitleHidden && (React.createElement("div", { className: cn(b$6('title', {
+    return (React__default.createElement("div", { className: b$6() },
+        !isTitleHidden && (React__default.createElement("div", { className: cn(b$6('title', {
                 gradient: ((_a = params.fontColor) === null || _a === void 0 ? void 0 : _a.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_b = params.fontParams) === null || _b === void 0 ? void 0 : _b.style, fontWeight: (_c = params.fontParams) === null || _c === void 0 ? void 0 : _c.weight, fontFamily: params.fontFamily }), textStyles) }, title)),
-        React.createElement("div", { className: b$6('starsContainer', {
+        React__default.createElement("div", { className: b$6('starsContainer', {
                 disabled: isSent || isReadOnly
             }), style: {
                 gap: sizes.stars.gap
-            } }, new Array(RATE_MAX).fill(0).map((_, index) => (React.createElement(React.Fragment, { key: `rate-star-${index}` },
-            React.createElement("input", { className: b$6('input'), disabled: isSent, id: `rate-star-${index}`, type: "radio", value: RATE_MAX - index, onChange: (e) => {
+            } }, new Array(RATE_MAX).fill(0).map((_, index) => (React__default.createElement(React__default.Fragment, { key: `rate-star-${index}` },
+            React__default.createElement("input", { className: b$6('input'), disabled: isSent, id: `rate-star-${index}`, type: "radio", value: RATE_MAX - index, onChange: (e) => {
                     !isReadOnly && handleAnswer(e.target.value);
                 } }),
-            React.createElement("label", { className: b$6('starItem'), htmlFor: `rate-star-${index}` },
-                React.createElement(IconRateStar, { className: b$6('star') }))))))));
+            React__default.createElement("label", { className: b$6('starItem'), htmlFor: `rate-star-${index}` },
+                React__default.createElement(IconRateStar, { className: b$6('star') }))))))));
 });
 
 const b$5 = block('QuizMultipleAnswerWithImageWidget');
@@ -65743,7 +63863,7 @@ const INIT_ELEMENT_STYLES = {
         marginTop: 5
     }
 };
-const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
+const QuizMultipleAnswerWithImageWidget = React__default.memo((props) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const { title, answers, isTitleHidden } = props.params;
     const { id, params, elementsSize, isReadOnly, onAnswer } = props;
@@ -65808,41 +63928,41 @@ const QuizMultipleAnswerWithImageWidget = React.memo((props) => {
     }, [handleSendAnswer]);
     const titleTextStyles = getTextStyles((_a = params.titleFont) === null || _a === void 0 ? void 0 : _a.fontColor);
     const answerTextStyles = getTextStyles((_b = params.answersFont) === null || _b === void 0 ? void 0 : _b.fontColor);
-    return (React.createElement("div", { className: b$5() },
-        !isTitleHidden && (React.createElement("div", { className: cn(b$5('title', {
+    return (React__default.createElement("div", { className: b$5() },
+        !isTitleHidden && (React__default.createElement("div", { className: cn(b$5('title', {
                 gradient: ((_d = (_c = params.titleFont) === null || _c === void 0 ? void 0 : _c.fontColor) === null || _d === void 0 ? void 0 : _d.type) === BackgroundColorType.GRADIENT
             }).toString(), 'StorySdk-widgetTitle'), style: Object.assign(Object.assign(Object.assign({}, sizes.title), { fontStyle: (_f = (_e = params.titleFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.style, fontWeight: (_h = (_g = params.titleFont) === null || _g === void 0 ? void 0 : _g.fontParams) === null || _h === void 0 ? void 0 : _h.weight, fontFamily: (_j = params.titleFont) === null || _j === void 0 ? void 0 : _j.fontFamily }), titleTextStyles) }, title)),
-        React.createElement("div", { className: b$5('answers'), style: sizes.answers }, answers.map((answer) => {
+        React__default.createElement("div", { className: b$5('answers'), style: sizes.answers }, answers.map((answer) => {
             var _a, _b, _c, _d, _e, _f, _g;
-            return (React.createElement("button", { className: b$5('answer', {
+            return (React__default.createElement("button", { className: b$5('answer', {
                     selected: userAnswers.includes(answer.id)
                 }), disabled: isSent || isReadOnly, key: answer.id, style: sizes.answer, onClick: () => !isReadOnly && handleAnswer(answer.id) },
-                React.createElement("div", { className: b$5('answerImgContainer'), style: {
+                React__default.createElement("div", { className: b$5('answerImgContainer'), style: {
                         backgroundImage: answer.image ? `url(${answer.image.url})` : ''
                     } }),
-                React.createElement("p", { className: cn(b$5('answerTitle', {
+                React__default.createElement("p", { className: cn(b$5('answerTitle', {
                         gradient: ((_b = (_a = params.answersFont) === null || _a === void 0 ? void 0 : _a.fontColor) === null || _b === void 0 ? void 0 : _b.type) === BackgroundColorType.GRADIENT
                     }).toString(), 'StorySdk-widgetAnswerTitle'), "data-id": answer.id, style: Object.assign(Object.assign(Object.assign({}, sizes.answerTitle), { fontStyle: (_d = (_c = params.answersFont) === null || _c === void 0 ? void 0 : _c.fontParams) === null || _d === void 0 ? void 0 : _d.style, fontWeight: (_f = (_e = params.answersFont) === null || _e === void 0 ? void 0 : _e.fontParams) === null || _f === void 0 ? void 0 : _f.weight, fontFamily: (_g = params.answersFont) === null || _g === void 0 ? void 0 : _g.fontFamily }), answerTextStyles) }, answer.title)));
         }))));
 });
 
 const b$4 = block('ImageWidget');
-const ImageWidget = React.memo((props) => {
+const ImageWidget = React__default.memo((props) => {
     const { imageUrl, widgetOpacity, borderRadius } = props.params;
     const styles = {
         borderRadius: `${borderRadius}px`,
         opacity: widgetOpacity / 100
     };
-    return React.createElement("img", { alt: "", className: b$4('image'), src: imageUrl, style: styles });
+    return React__default.createElement("img", { alt: "", className: b$4('image'), src: imageUrl, style: styles });
 });
 
 const b$3 = block('VideoWidget');
-const VideoWidget = React.memo((props) => {
+const VideoWidget = React__default.memo((props) => {
     const { videoUrl, stopAutoplay, widgetOpacity } = props.params;
     const styles = {
         opacity: widgetOpacity / 100
     };
-    return (React.createElement("video", { autoPlay: !stopAutoplay, className: b$3('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: videoUrl, style: styles }));
+    return (React__default.createElement("video", { autoPlay: !stopAutoplay, className: b$3('video'), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: videoUrl, style: styles }));
 });
 
 ({
@@ -65867,87 +63987,87 @@ const VideoWidget = React.memo((props) => {
     [WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE]: QuizMultipleAnswerWithImageWidget
 });
 
-class WidgetFactory extends React.Component {
+class WidgetFactory extends React__default.Component {
     makeWidget() {
         switch (this.props.widget.content.type) {
             case WidgetsTypes.CHOOSE_ANSWER:
-                return (React.createElement(ChooseAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, jsConfetti: this.props.jsConfetti, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
+                return (React__default.createElement(ChooseAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, jsConfetti: this.props.jsConfetti, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.CLICK_ME:
-                return (React.createElement(ClickMeWidget, { params: this.props.widget.content.params, onClick: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default.createElement(ClickMeWidget, { params: this.props.widget.content.params, onClick: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.ELLIPSE:
-                return React.createElement(EllipseWidget, { params: this.props.widget.content.params });
+                return React__default.createElement(EllipseWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.IMAGE:
-                return React.createElement(ImageWidget, { params: this.props.widget.content.params });
+                return React__default.createElement(ImageWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.VIDEO:
-                return React.createElement(VideoWidget, { params: this.props.widget.content.params });
+                return React__default.createElement(VideoWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.EMOJI_REACTION:
-                return (React.createElement(EmojiReactionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
+                return (React__default.createElement(EmojiReactionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.GIPHY:
-                return React.createElement(GiphyWidget, { params: this.props.widget.content.params });
+                return React__default.createElement(GiphyWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.QUESTION:
-                return (React.createElement(QuestionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
+                return (React__default.createElement(QuestionWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.RECTANGLE:
-                return React.createElement(RectangleWidget, { params: this.props.widget.content.params });
+                return React__default.createElement(RectangleWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.SLIDER:
-                return (React.createElement(SliderWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, storyId: this.props.storyId, onAnswer: this.props.widget.action }));
+                return (React__default.createElement(SliderWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, storyId: this.props.storyId, onAnswer: this.props.widget.action }));
             case WidgetsTypes.SWIPE_UP:
-                return (React.createElement(SwipeUpWidget, { params: this.props.widget.content.params, onSwipe: this.props.widget.action }));
+                return (React__default.createElement(SwipeUpWidget, { params: this.props.widget.content.params, onSwipe: this.props.widget.action }));
             case WidgetsTypes.TALK_ABOUT:
-                return (React.createElement(TalkAboutWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
+                return (React__default.createElement(TalkAboutWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action }));
             case WidgetsTypes.TEXT:
-                return React.createElement(TextWidget, { params: this.props.widget.content.params });
+                return React__default.createElement(TextWidget, { params: this.props.widget.content.params });
             case WidgetsTypes.TIMER:
-                return (React.createElement(TimerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
+                return (React__default.createElement(TimerWidget, { params: this.props.widget.content.params, position: this.props.widget.position, positionLimits: this.props.widget.positionLimits }));
             case WidgetsTypes.QUIZ_ONE_ANSWER:
-                return (React.createElement(QuizOneAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default.createElement(QuizOneAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_MULTIPLE_ANSWERS:
-                return (React.createElement(QuizMultipleAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default.createElement(QuizMultipleAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE:
-                return (React.createElement(QuizMultipleAnswerWithImageWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default.createElement(QuizMultipleAnswerWithImageWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_OPEN_ANSWER:
-                return (React.createElement(QuizOpenAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default.createElement(QuizOpenAnswerWidget, { elementsSize: this.props.widget.elementsSize, id: this.props.widget.id, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             case WidgetsTypes.QUIZ_RATE:
-                return (React.createElement(QuizRateWidget, { elementsSize: this.props.widget.elementsSize, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
+                return (React__default.createElement(QuizRateWidget, { elementsSize: this.props.widget.elementsSize, params: this.props.widget.content.params, onAnswer: this.props.widget.action, onGoToStory: this.props.handleGoToStory }));
             default:
                 return undefined;
         }
     }
     render() {
-        return React.createElement(React.Fragment, null, this.makeWidget());
+        return React__default.createElement(React__default.Fragment, null, this.makeWidget());
     }
 }
 
 const b$2 = block$1('StorySdkVideoBackground');
-const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, onLoadEnd }) => (React.createElement("div", { className: b$2() },
-    React.createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: src, onLoadStart: onLoadStart, onLoadedData: onLoadEnd }),
-    React.createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
+const StoryVideoBackground = ({ src, autoplay = false, isLoading, onLoadStart, onLoadEnd }) => (React__default.createElement("div", { className: b$2() },
+    React__default.createElement("video", { autoPlay: autoplay, className: b$2('video', { loading: isLoading }), disablePictureInPicture: true, loop: true, muted: true, playsInline: true, preload: "metadata", src: src, onLoadStart: onLoadStart, onLoadedData: onLoadEnd }),
+    React__default.createElement("p", { className: b$2('loadText', { show: isLoading }) }, "Background is loading...")));
 
 const b$1 = block$1('StorySdkContent');
 const StoryContent = (props) => {
     const { story, jsConfetti, noTopShadow, storyCurrentSize, currentPaddingSize, isLarge, isLargeBackground, innerHeightGap, handleGoToStory } = props;
     const [isVideoLoading, setVideoLoading] = useState(false);
-    const [width, height] = d$1();
+    const [width, height] = useWindowSize();
     const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
-    return (React.createElement(React.Fragment, null,
-        React.createElement("div", { className: b$1('background', { noTopShadow }), style: {
+    return (React__default.createElement(React__default.Fragment, null,
+        React__default.createElement("div", { className: b$1('background', { noTopShadow }), style: {
                 background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
                 height: isMobile
                     ? Math.round(storyCurrentSize.height * (width / storyCurrentSize.width))
                     : undefined
-            } }, story.background.type === 'video' && (React.createElement(StoryVideoBackground, { autoplay: true, isLoading: isVideoLoading, src: story.background.value, onLoadEnd: () => {
+            } }, story.background.type === 'video' && (React__default.createElement(StoryVideoBackground, { autoplay: true, isLoading: isVideoLoading, src: story.background.value, onLoadEnd: () => {
                 setVideoLoading(false);
             } }))),
-        React.createElement("div", { className: b$1({ large: isLarge, center: isLargeBackground }), style: {
+        React__default.createElement("div", { className: b$1({ large: isLarge, center: isLargeBackground }), style: {
                 height: isMobile
                     ? Math.round(storyCurrentSize.height * (width / storyCurrentSize.width))
                     : `calc(100% - ${innerHeightGap}px)`
             } },
-            React.createElement("div", { className: b$1('scope', { large: isLarge }), style: {
+            React__default.createElement("div", { className: b$1('scope', { large: isLarge }), style: {
                     transform: isMobile
                         ? `scale(${width / storyCurrentSize.width})`
                         : `scale(${(height - currentPaddingSize) / storyCurrentSize.height})`
-                } }, story.storyData.map((widget) => (React.createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits) },
-                React.createElement(WidgetFactory, { handleGoToStory: handleGoToStory, jsConfetti: jsConfetti, storyId: story.id, widget: widget }))))))));
+                } }, story.storyData.map((widget) => (React__default.createElement("div", { className: b$1('object'), id: `story-${story.id}-widget-${widget.id}`, key: widget.id, style: renderPosition(widget.position, widget.positionLimits) },
+                React__default.createElement(WidgetFactory, { handleGoToStory: handleGoToStory, jsConfetti: jsConfetti, storyId: story.id, widget: widget }))))))));
 };
 
 const CustomGroupControl = (props) => {
@@ -65960,105 +64080,105 @@ const CustomGroupControl = (props) => {
             document.body.style.overflow = 'auto';
         }
     }, [isShowing]);
-    return (React.createElement(React.Fragment, null,
+    return (React__default.createElement(React__default.Fragment, null,
         children,
-        isShowing && (React.createElement(StoryModal, { currentGroup: group, isCacheDisabled: isCacheDisabled, isEditorMode: isEditorMode, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group === null || group === void 0 ? void 0 : group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))));
+        isShowing && (React__default.createElement(StoryModal, { currentGroup: group, isCacheDisabled: isCacheDisabled, isEditorMode: isEditorMode, isFirstGroup: isFirstGroup, isForceCloseAvailable: isForceCloseAvailable, isLastGroup: isLastGroup, isShowMockup: isShowMockup, isShowing: isShowing, isStatusBarActive: isStatusBarActive, startStoryId: startStoryId, stories: group === null || group === void 0 ? void 0 : group.stories, onClose: handleCloseModal, onNextGroup: handleNextGroup, onPrevGroup: handlePrevGroup }))));
 };
 
-const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("g", { "data-name": "Layer 2" },
-        React.createElement("g", { "data-name": "arrow-circle-up" },
-            React.createElement("rect", { height: "24", width: "24" }),
-            React.createElement("path", { d: "M12.71 7.29a1 1 0 0 0-.32-.21A1 1 0 0 0 12 7h-.1a.82.82 0 0 0-.27.06.72.72 0 0 0-.19.11 1 1 0 0 0-.13.09l-3 2.86a1 1 0 0 0 1.38 1.45L11 10.34V16a1 1 0 0 0 2 0v-5.59l1.29 1.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z", fill: gradient ? `url(#${gradientId})` : color }),
-            React.createElement("path", { d: "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z", fill: gradient ? `url(#${gradientId})` : color })))));
+const ArrowCircleUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { fill: "none", height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("g", { "data-name": "Layer 2" },
+        React__default.createElement("g", { "data-name": "arrow-circle-up" },
+            React__default.createElement("rect", { height: "24", width: "24" }),
+            React__default.createElement("path", { d: "M12.71 7.29a1 1 0 0 0-.32-.21A1 1 0 0 0 12 7h-.1a.82.82 0 0 0-.27.06.72.72 0 0 0-.19.11 1 1 0 0 0-.13.09l-3 2.86a1 1 0 0 0 1.38 1.45L11 10.34V16a1 1 0 0 0 2 0v-5.59l1.29 1.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z", fill: gradient ? `url(#${gradientId})` : color }),
+            React__default.createElement("path", { d: "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z", fill: gradient ? `url(#${gradientId})` : color })))));
 
-const ArrowheadUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("g", { "data-name": "Layer 2" },
-        React.createElement("g", { "data-name": "arrowhead-up" },
-            React.createElement("rect", { height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
-            React.createElement("path", { d: "M6.63 11.61L12 7.29l5.37 4.48A1 1 0 0 0 18 12a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41l-6-5a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.14z", fill: gradient ? `url(#${gradientId})` : color }),
-            React.createElement("path", { d: "M12.64 12.23a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.15L12 14.29l5.37 4.48A1 1 0 0 0 18 19a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41z", fill: gradient ? `url(#${gradientId})` : color })))));
+const ArrowheadUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("g", { "data-name": "Layer 2" },
+        React__default.createElement("g", { "data-name": "arrowhead-up" },
+            React__default.createElement("rect", { height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
+            React__default.createElement("path", { d: "M6.63 11.61L12 7.29l5.37 4.48A1 1 0 0 0 18 12a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41l-6-5a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.14z", fill: gradient ? `url(#${gradientId})` : color }),
+            React__default.createElement("path", { d: "M12.64 12.23a1 1 0 0 0-1.27 0l-6 4.83a1 1 0 0 0-.15 1.41 1 1 0 0 0 1.41.15L12 14.29l5.37 4.48A1 1 0 0 0 18 19a1 1 0 0 0 .77-.36 1 1 0 0 0-.13-1.41z", fill: gradient ? `url(#${gradientId})` : color })))));
 
-const ArrowUpIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { className: "feather feather-arrow-up", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "19", y2: "5" }),
-    React.createElement("polyline", { points: "5 12 12 5 19 12", stroke: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { className: "feather feather-arrow-up", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "19", y2: "5" }),
+    React__default.createElement("polyline", { points: "5 12 12 5 19 12", stroke: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpCircleIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { className: "feather feather-arrow-up-circle", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("circle", { cx: "12", cy: "12", r: "10", stroke: gradient ? `url(#${gradientId})` : color }),
-    React.createElement("polyline", { points: "16 12 12 8 8 12", stroke: gradient ? `url(#${gradientId})` : color }),
-    React.createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "16", y2: "8" })));
+const ArrowUpCircleIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { className: "feather feather-arrow-up-circle", fill: "none", height: "24", stroke: "currentColor", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("circle", { cx: "12", cy: "12", r: "10", stroke: gradient ? `url(#${gradientId})` : color }),
+    React__default.createElement("polyline", { points: "16 12 12 8 8 12", stroke: gradient ? `url(#${gradientId})` : color }),
+    React__default.createElement("line", { stroke: gradient ? `url(#${gradientId})` : color, x1: "12", x2: "12", y1: "16", y2: "8" })));
 
-const ArrowUpCircleFillIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm1 10h3l-4-4-4 4h3v4h2v-4z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpCircleFillIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default.createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm1 10h3l-4-4-4 4h3v4h2v-4z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpCircleLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 18c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8zm1-8v4h-2v-4H8l4-4 4 4h-3z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpCircleLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default.createElement("path", { d: "M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 18c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8zm1-8v4h-2v-4H8l4-4 4 4h-3z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpFillIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M13 12v8h-2v-8H4l8-8 8 8z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpFillIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default.createElement("path", { d: "M13 12v8h-2v-8H4l8-8 8 8z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default.createElement("path", { d: "M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("g", { "data-name": "Layer 2" },
-        React.createElement("g", { "data-name": "arrow-up" },
-            React.createElement("rect", { height: "24", opacity: "0", transform: "rotate(90 12 12)", width: "24" }),
-            React.createElement("path", { d: "M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1 2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1zM8 14h7.9L12 9.18z", fill: gradient ? `url(#${gradientId})` : color })))));
+const ArrowUpOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("g", { "data-name": "Layer 2" },
+        React__default.createElement("g", { "data-name": "arrow-up" },
+            React__default.createElement("rect", { height: "24", opacity: "0", transform: "rotate(90 12 12)", width: "24" }),
+            React__default.createElement("path", { d: "M16.21 16H7.79a1.76 1.76 0 0 1-1.59-1 2.1 2.1 0 0 1 .26-2.21l4.21-5.1a1.76 1.76 0 0 1 2.66 0l4.21 5.1A2.1 2.1 0 0 1 17.8 15a1.76 1.76 0 0 1-1.59 1zM8 14h7.9L12 9.18z", fill: gradient ? `url(#${gradientId})` : color })))));
 
-const ArrowUpsFillIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M12 8l6 6H6z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpsFillIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default.createElement("path", { d: "M12 8l6 6H6z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ArrowUpsLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z", fill: gradient ? `url(#${gradientId})` : color })));
+const ArrowUpsLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default.createElement("path", { d: "M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const LinkIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z", fill: gradient ? `url(#${gradientId})` : color })));
+const LinkIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default.createElement("path", { d: "M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const LinksLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M13.06 8.11l1.415 1.415a7 7 0 0 1 0 9.9l-.354.353a7 7 0 0 1-9.9-9.9l1.415 1.415a5 5 0 1 0 7.071 7.071l.354-.354a5 5 0 0 0 0-7.07l-1.415-1.415 1.415-1.414zm6.718 6.011l-1.414-1.414a5 5 0 1 0-7.071-7.071l-.354.354a5 5 0 0 0 0 7.07l1.415 1.415-1.415 1.414-1.414-1.414a7 7 0 0 1 0-9.9l.354-.353a7 7 0 0 1 9.9 9.9z", fill: gradient ? `url(#${gradientId})` : color })));
+const LinksLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default.createElement("path", { d: "M13.06 8.11l1.415 1.415a7 7 0 0 1 0 9.9l-.354.353a7 7 0 0 1-9.9-9.9l1.415 1.415a5 5 0 1 0 7.071 7.071l.354-.354a5 5 0 0 0 0-7.07l-1.415-1.415 1.415-1.414zm6.718 6.011l-1.414-1.414a5 5 0 1 0-7.071-7.071l-.354.354a5 5 0 0 0 0 7.07l1.415 1.415-1.415 1.414-1.414-1.414a7 7 0 0 1 0-9.9l.354-.353a7 7 0 0 1 9.9 9.9z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const ShareLineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
-    React.createElement("path", { d: "M13.12 17.023l-4.199-2.29a4 4 0 1 1 0-5.465l4.2-2.29a4 4 0 1 1 .959 1.755l-4.2 2.29a4.008 4.008 0 0 1 0 1.954l4.199 2.29a4 4 0 1 1-.959 1.755zM6 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm11-6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", fill: gradient ? `url(#${gradientId})` : color })));
+const ShareLineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("path", { d: "M0 0h24v24H0z", fill: "none" }),
+    React__default.createElement("path", { d: "M13.12 17.023l-4.199-2.29a4 4 0 1 1 0-5.465l4.2-2.29a4 4 0 1 1 .959 1.755l-4.2 2.29a4.008 4.008 0 0 1 0 1.954l4.199 2.29a4 4 0 1 1-.959 1.755zM6 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm11-6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z", fill: gradient ? `url(#${gradientId})` : color })));
 
-const UploadOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("g", { "data-name": "Layer 2" },
-        React.createElement("g", { "data-name": "upload" },
-            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
-            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(180 12 5)", width: "16", x: "4", y: "4" }),
-            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 19 6)", width: "4", x: "17", y: "5" }),
-            React.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 5 6)", width: "4", x: "3", y: "5" }),
-            React.createElement("path", { d: "M8 14a1 1 0 0 1-.8-.4 1 1 0 0 1 .2-1.4l4-3a1 1 0 0 1 1.18 0l4 2.82a1 1 0 0 1 .24 1.39 1 1 0 0 1-1.4.24L12 11.24 8.6 13.8a1 1 0 0 1-.6.2z", fill: gradient ? `url(#${gradientId})` : color }),
-            React.createElement("path", { d: "M12 21a1 1 0 0 1-1-1v-8a1 1 0 0 1 2 0v8a1 1 0 0 1-1 1z", fill: gradient ? `url(#${gradientId})` : color })))));
+const UploadOutlineIcon = ({ color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { height: "24", viewBox: "0 0 24 24", width: "24", xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("g", { "data-name": "Layer 2" },
+        React__default.createElement("g", { "data-name": "upload" },
+            React__default.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "24", opacity: "0", transform: "rotate(180 12 12)", width: "24" }),
+            React__default.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(180 12 5)", width: "16", x: "4", y: "4" }),
+            React__default.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 19 6)", width: "4", x: "17", y: "5" }),
+            React__default.createElement("rect", { fill: gradient ? `url(#${gradientId})` : color, height: "2", rx: "1", ry: "1", transform: "rotate(90 5 6)", width: "4", x: "3", y: "5" }),
+            React__default.createElement("path", { d: "M8 14a1 1 0 0 1-.8-.4 1 1 0 0 1 .2-1.4l4-3a1 1 0 0 1 1.18 0l4 2.82a1 1 0 0 1 .24 1.39 1 1 0 0 1-1.4.24L12 11.24 8.6 13.8a1 1 0 0 1-.6.2z", fill: gradient ? `url(#${gradientId})` : color }),
+            React__default.createElement("path", { d: "M12 21a1 1 0 0 1-1-1v-8a1 1 0 0 1 2 0v8a1 1 0 0 1-1 1z", fill: gradient ? `url(#${gradientId})` : color })))));
 
-const IconChevronCircleUp = ({ className, color = '#fff', gradient, gradientId }) => (React.createElement("svg", { className: cn(className, 'stroke-current'), fill: "none", height: 18, viewBox: "0 0 18 18", width: 18, xmlns: "http://www.w3.org/2000/svg" },
-    gradient && React.createElement("defs", null, gradient),
-    React.createElement("circle", { cx: 9, cy: 9, r: 8.5, stroke: gradient ? `url(#${gradientId})` : color }),
-    React.createElement("path", { d: "M12 10L9 7l-3 3", stroke: gradient ? `url(#${gradientId})` : color, strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.2 })));
+const IconChevronCircleUp = ({ className, color = '#fff', gradient, gradientId }) => (React__default.createElement("svg", { className: cn(className, 'stroke-current'), fill: "none", height: 18, viewBox: "0 0 18 18", width: 18, xmlns: "http://www.w3.org/2000/svg" },
+    gradient && React__default.createElement("defs", null, gradient),
+    React__default.createElement("circle", { cx: 9, cy: 9, r: 8.5, stroke: gradient ? `url(#${gradientId})` : color }),
+    React__default.createElement("path", { d: "M12 10L9 7l-3 3", stroke: gradient ? `url(#${gradientId})` : color, strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.2 })));
 
 const MATERIAL_ICONS = {
     IconChevronCircleUp,
@@ -66087,13 +64207,13 @@ const MaterialIcon = memo(({ name = 'ArrowCircleUpOutlineIcon', className, color
     let gradient;
     const gradientId = useMemo(() => nanoid(), []);
     if ((background === null || background === void 0 ? void 0 : background.type) === BackgroundColorType.GRADIENT) {
-        gradient = (React.createElement("linearGradient", { id: gradientId, x1: "0", x2: "0", y1: "0", y2: "1" },
-            React.createElement("stop", { offset: "0%", stopColor: background.value[0] }),
-            React.createElement("stop", { offset: "100%", stopColor: background.value[1] })));
+        gradient = (React__default.createElement("linearGradient", { id: gradientId, x1: "0", x2: "0", y1: "0", y2: "1" },
+            React__default.createElement("stop", { offset: "0%", stopColor: background.value[0] }),
+            React__default.createElement("stop", { offset: "100%", stopColor: background.value[1] })));
     }
     if (Icon) {
-        return (React.createElement("span", { className: cn(`${CLASS_NAME}`, className), style: { width: size, height: size } },
-            React.createElement(Icon, { color: color, gradient: gradient, gradientId: gradientId })));
+        return (React__default.createElement("span", { className: cn(`${CLASS_NAME}`, className), style: { width: size, height: size } },
+            React__default.createElement(Icon, { color: color, gradient: gradient, gradientId: gradientId })));
     }
     return null;
 });

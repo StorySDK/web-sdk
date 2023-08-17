@@ -26,11 +26,19 @@ export default [
         file: pkg.module,
         format: 'esm',
         sourcemap: false
+      },
+      {
+        file: pkg.browser,
+        format: 'umd',
+        name: 'index',
+        sourcemap: false
       }
     ],
     plugins: [
       peerDepsExternal(),
-      resolve(),
+      resolve({
+        browser: true,
+      }),
       commonjs(),
       typescript({
         tsconfig: `${PACKAGE_ROOT_PATH}/tsconfig.json`
