@@ -1,7 +1,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('react-dom')) :
 	typeof define === 'function' && define.amd ? define(['exports', 'react', 'react-dom'], factory) :
-	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.index = {}, global.React, global.ReactDom));
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.index = {}, global.React, global.ReactDOM));
 })(this, (function (exports, React, ReactDOM) { 'use strict';
 
 	function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -75303,9 +75303,26 @@
 	        }
 	    }
 	}
+	const init = () => {
+	    const container = document.querySelector('[data-storysdk-token]');
+	    if (container) {
+	        const token = container.getAttribute('data-storysdk-token');
+	        if (token) {
+	            const story = new Story(token);
+	            story.renderGroups(container);
+	        }
+	        else {
+	            console.warn('StorySDK has not been initialized.');
+	        }
+	    }
+	    else {
+	        console.warn('StorySDK has not been initialized.');
+	    }
+	};
 
+	exports.Story = Story;
 	exports.adaptGroupData = adaptGroupData;
-	exports["default"] = Story;
+	exports["default"] = init;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 

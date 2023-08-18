@@ -27,3 +27,4 @@ export declare class Story {
     });
     renderGroups(element?: Element | HTMLDivElement | null): void;
 }
+export declare const init: () => void;

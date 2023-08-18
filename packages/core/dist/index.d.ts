@@ -1,3 +1,4 @@
-import { Story } from './core';
+import { Story, init } from './core';
 export { adaptGroupData } from './utils';
-export default Story;
+export { Story };
+export default init;

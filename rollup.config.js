@@ -31,7 +31,7 @@ export default [
         external: ['react', 'react-dom', '@react-hook/window-size', 'axios', 'emoji-mart', 'hex-to-rgba', 'js-confetti', 'luxon', 'nanoid', 'parse-color', 'react-loading-skeleton'],
         globals: {
           react: 'React',
-          'react-dom': 'ReactDom',
+          'react-dom': 'ReactDOM',
           axios: 'axios',
           'emoji-mart': 'EmojiMart',
           'hex-to-rgba': 'hexToRgba',
@@ -43,6 +43,25 @@ export default [
         },
         file: pkg.browser,
         format: 'umd',
+        name: 'index',
+        sourcemap: false
+      },
+      {
+        external: ['react', 'react-dom', '@react-hook/window-size', 'axios', 'emoji-mart', 'hex-to-rgba', 'js-confetti', 'luxon', 'nanoid', 'parse-color', 'react-loading-skeleton'],
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          axios: 'axios',
+          'emoji-mart': 'EmojiMart',
+          'hex-to-rgba': 'hexToRgba',
+          'js-confetti': 'JSConfetti',
+          luxon: 'luxon',
+          nanoid: 'nanoid',
+          'parse-color': 'parseColor',
+          'react-loading-skeleton': 'ReactLoadingSkeleton'
+        },
+        file: pkg.iife,
+        format: 'iife',
         name: 'index',
         sourcemap: false
       }

@@ -75277,5 +75277,21 @@ class Story {
         }
     }
 }
+const init = () => {
+    const container = document.querySelector('[data-storysdk-token]');
+    if (container) {
+        const token = container.getAttribute('data-storysdk-token');
+        if (token) {
+            const story = new Story(token);
+            story.renderGroups(container);
+        }
+        else {
+            console.warn('StorySDK has not been initialized.');
+        }
+    }
+    else {
+        console.warn('StorySDK has not been initialized.');
+    }
+};
 
-export { adaptGroupData, Story as default };
+export { Story, adaptGroupData, init as default };

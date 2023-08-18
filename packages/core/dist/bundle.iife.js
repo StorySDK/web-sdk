@@ -1,4 +1,4 @@
-(function (exports, React, ReactDOM) {
+var index = (function (exports, React, ReactDOM) {
 	'use strict';
 
 	function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -75300,9 +75300,26 @@
 	        }
 	    }
 	}
+	const init = () => {
+	    const container = document.querySelector('[data-storysdk-token]');
+	    if (container) {
+	        const token = container.getAttribute('data-storysdk-token');
+	        if (token) {
+	            const story = new Story(token);
+	            story.renderGroups(container);
+	        }
+	        else {
+	            console.warn('StorySDK has not been initialized.');
+	        }
+	    }
+	    else {
+	        console.warn('StorySDK has not been initialized.');
+	    }
+	};
 
+	exports.Story = Story;
 	exports.adaptGroupData = adaptGroupData;
-	exports["default"] = Story;
+	exports["default"] = init;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 

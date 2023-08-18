@@ -1,4 +1,4 @@
-(function (exports, React) {
+var index = (function (exports, React) {
   'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
