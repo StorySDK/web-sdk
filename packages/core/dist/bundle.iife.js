@@ -1,8 +1,5 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('react-dom')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'react', 'react-dom'], factory) :
-	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.index = {}, global.React, global.ReactDom));
-})(this, (function (exports, React, ReactDOM) { 'use strict';
+(function (exports, React, ReactDOM) {
+	'use strict';
 
 	function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -75309,4 +75306,6 @@
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+	return exports;
+
+})({}, React, ReactDOM);

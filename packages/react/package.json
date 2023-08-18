@@ -7,6 +7,8 @@
   "license": "ISC",
   "main": "dist/bundle.js",
   "module": "dist/bundle.esm.js",
+  "browser": "dist/bundle.umd.js",
+  "iife": "dist/bundle.iife.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
@@ -30,8 +32,7 @@
     "luxon": "^3.2.1",
     "nanoid": "^3.1.30",
     "parse-color": "^1.0.0",
-    "react-loading-skeleton": "^3.0.2",
-    "rollup-plugin-copy": "^3.4.0"
+    "react-loading-skeleton": "^3.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
@@ -68,7 +69,8 @@
     "rollup-plugin-ts": "^1.4.6",
     "rollup-plugin-typescript2": "^0.30.0",
     "sass": "^1.42.1",
-    "typescript": "^4.5.4"
+    "typescript": "^4.5.4",
+    "rollup-plugin-copy": "^3.4.0"
   },
   "gitHead": "86a2ccc8d21a9db1e10233ceeb2dabb25773b186"
 }

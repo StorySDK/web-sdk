@@ -9,6 +9,7 @@
   "module": "dist/bundle.esm.js",
   "types": "dist/index.d.ts",
   "browser": "dist/bundle.umd.js",
+  "iife": "dist/bundle.iife.js",
   "publishConfig": {
     "access": "public"
   },
