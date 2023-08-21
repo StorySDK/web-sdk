@@ -405,7 +405,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
         let mostFrequentSymbol = '';
         let maxCount = 0;
-        const letterCounts = {};
+        const letterCounts = {} as any;
 
         for (let i = 0; i < lettersArr.length; i++) {
           const letter = lettersArr[i];

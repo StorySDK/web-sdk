@@ -81,18 +81,19 @@ export class Story {
 }
 
 export const init = () => {
-  const container = document.querySelector('[data-storysdk-token]');
-
-  if (container) {
-    const token = container.getAttribute('data-storysdk-token');
-
-    if (token) {
-      const story = new Story(token);
-      story.renderGroups(container);
+  window.onload = () => {
+    const container = document.querySelector('[data-storysdk-token]');
+    if (container) {
+      const token = container.getAttribute('data-storysdk-token');
+      
+      if (token) {
+        const story = new Story(token);
+        story.renderGroups(container);
+      } else {
+        console.warn('StorySDK has not been initialized.');
+      }
     } else {
       console.warn('StorySDK has not been initialized.');
     }
-  } else {
-    console.warn('StorySDK has not been initialized.');
-  }
+  };
 };

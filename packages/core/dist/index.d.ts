@@ -1,4 +1,5 @@
-import { Story, init } from './core';
+import { Story } from './core';
 export { adaptGroupData } from './utils';
 export { Story };
-export default init;
+declare const _default: void;
+export default _default;

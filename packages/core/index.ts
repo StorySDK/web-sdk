@@ -4,4 +4,4 @@ export { adaptGroupData } from './utils';
 
 export { Story };
 
-export default init;
+export default (() => init())();

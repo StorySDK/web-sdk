@@ -7,9 +7,11 @@ import json from '@rollup/plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 import image from '@rollup/plugin-image';
 import copy from 'rollup-plugin-copy';
+import replace from '@rollup/plugin-replace';
+import terser from '@rollup/plugin-terser';
 
 const PACKAGE_ROOT_PATH = process.cwd();
-const { LERNA_PACKAGE_NAME } = process.env;
+const { LERNA_PACKAGE_NAME, NODE_ENV } = process.env;
 
 const pkg = LERNA_PACKAGE_NAME && require(`${PACKAGE_ROOT_PATH}/package.json`);
 
@@ -28,40 +30,8 @@ export default [
         sourcemap: false
       },
       {
-        external: ['react', 'react-dom', '@react-hook/window-size', 'axios', 'emoji-mart', 'hex-to-rgba', 'js-confetti', 'luxon', 'nanoid', 'parse-color', 'react-loading-skeleton'],
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-          axios: 'axios',
-          'emoji-mart': 'EmojiMart',
-          'hex-to-rgba': 'hexToRgba',
-          'js-confetti': 'JSConfetti',
-          luxon: 'luxon',
-          nanoid: 'nanoid',
-          'parse-color': 'parseColor',
-          'react-loading-skeleton': 'ReactLoadingSkeleton'
-        },
         file: pkg.browser,
         format: 'umd',
-        name: 'index',
-        sourcemap: false
-      },
-      {
-        external: ['react', 'react-dom', '@react-hook/window-size', 'axios', 'emoji-mart', 'hex-to-rgba', 'js-confetti', 'luxon', 'nanoid', 'parse-color', 'react-loading-skeleton'],
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-          axios: 'axios',
-          'emoji-mart': 'EmojiMart',
-          'hex-to-rgba': 'hexToRgba',
-          'js-confetti': 'JSConfetti',
-          luxon: 'luxon',
-          nanoid: 'nanoid',
-          'parse-color': 'parseColor',
-          'react-loading-skeleton': 'ReactLoadingSkeleton'
-        },
-        file: pkg.iife,
-        format: 'iife',
         name: 'index',
         sourcemap: false
       }
@@ -70,6 +40,7 @@ export default [
       peerDepsExternal(),
       resolve({
         browser: true,
+        dedupe: ['react', 'react-dom']
       }),
       commonjs(),
       typescript({
@@ -83,9 +54,13 @@ export default [
       scss({
         outputStyle: 'compressed'
       }),
+      replace({
+        'process.env.NODE_ENV': NODE_ENV,
+      }),
       json(),
       nodePolyfills(),
-      image()
+      image(),
+      terser()
     ]
   }
 ];

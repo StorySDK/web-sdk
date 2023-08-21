@@ -20,8 +20,10 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "peerDependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "@types/react": "^17.0.21",
+    "@types/react-dom": "^17.0.9"
   },
   "dependencies": {
     "@react-hook/window-size": "^3.0.7",
@@ -48,8 +50,6 @@
     "@types/luxon": "^3.2.0",
     "@types/node": "^12.20.25",
     "@types/parse-color": "^1.0.1",
-    "@types/react": "^17.0.21",
-    "@types/react-dom": "^17.0.9",
     "bem-cn": "^3.0.1",
     "classnames": "^2.3.1",
     "eslint": "^7.32.0",
