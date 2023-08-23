@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Group } from '../../types';
 import { StoryModal } from '..';
 
@@ -36,9 +36,9 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     handlePrevGroup,
   } = props;
 
-  useEffect(() => {
-    const initOverlow = document.body.style.overflow;
+  const initOverlow = useMemo(() => document.body.style.overflow, []);
 
+  useEffect(() => {
     if (isShowing) {
       document.body.style.overflow = 'hidden';
     } else {
