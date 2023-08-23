@@ -184,8 +184,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isLastGroup,
     isFirstGroup,
     startStoryId,
-    isForceCloseAvailable,
     isShowMockup,
+    isForceCloseAvailable,
     isStatusBarActive,
     currentGroup,
     isCacheDisabled,
@@ -254,6 +254,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
     (currentGroupType === GroupType.GROUP && !isMobile && isShowMockup && isBackroundFilled);
 
+  const initBodyOverflow = useMemo(() => document.body.style.overflow, []);
+
   const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
   const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
@@ -313,7 +315,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     setCurrentStory(currentStoryIndex);
 
     const body = document.querySelector('body');
-    const initOverlow = body?.style.overflow;
+  
 
     if (isShowing) {
       setPlayStatus('play');
@@ -325,7 +327,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       setPlayStatus('wait');
 
       if (body) {
-        body.style.overflow = initOverlow ?? 'auto';
+        body.style.overflow = initBodyOverflow ?? 'auto';
       }
     }
 
@@ -651,17 +653,17 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const uniqUserId = getUniqUserId();
   const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
 
-  const getHeightGap = () => {
-    if(isMobile) {
+  const heightModalGap = useMemo(() => {
+    if (isMobile) {
       return 0;
     }
 
-    if(isShowMockup) {
-      return heightGap;
-    } 
+    if (isShowMockup) {
+      return heightGap + PADDING_SIZE;
+    }
 
     return PADDING_SIZE;
-  }
+  },[isMobile, isShowMockup, heightGap]);
 
   return (
     <StoryContext.Provider
@@ -731,7 +733,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               })}
               style={{
                 width: !isMobile ? desktopWidth : '100%',
-                height: `calc(100vh - ${getHeightGap()}px)`,
+                height: `calc(100vh - ${heightModalGap}px)`,
                 borderRadius: getBorderRadius()
               }}
             >

@@ -42,7 +42,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     if (isShowing) {
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = initOverlow;
+      document.body.style.overflow = initOverlow ?? 'auto'
     }
   }, [isShowing]);
 
