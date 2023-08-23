@@ -210,9 +210,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const storyModalRef = useRef<HTMLDivElement>(null);
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const [quizStartedStoryIds, setQuizStartedStoryIds] = useState<{ [key: string]: boolean }>({});
-
   const [width, height] = useWindowSize();
-
   const [activeStoriesWithResult, setActiveStoriesWithResult] = useState<StoryType[]>([]);
 
   useEffect(() => {
@@ -315,6 +313,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     setCurrentStory(currentStoryIndex);
 
     const body = document.querySelector('body');
+    const initOverlow = body?.style.overflow;
 
     if (isShowing) {
       setPlayStatus('play');
@@ -326,7 +325,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       setPlayStatus('wait');
 
       if (body) {
-        body.style.overflow = 'auto';
+        body.style.overflow = initOverlow ?? 'auto';
       }
     }
 

@@ -7,15 +7,15 @@ interface GroupProps {
   isFirstGroup: boolean;
   isLastGroup: boolean;
   isForceCloseAvailable?: boolean;
-  handleCloseModal: () => void;
-  handleNextGroup: () => void;
-  handlePrevGroup: () => void;
   isShowing: boolean;
   isShowMockup?: boolean;
   isStatusBarActive?: boolean;
   startStoryId?: string;
   isCacheDisabled?: boolean;
   isEditorMode?: boolean;
+  handleCloseModal: () => void;
+  handleNextGroup: () => void;
+  handlePrevGroup: () => void;
 }
 
 export const CustomGroupControl: React.FC<GroupProps> = (props) => {
@@ -29,18 +29,20 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     isShowMockup,
     isStatusBarActive,
     isEditorMode,
+    isShowing,
+    isCacheDisabled,
     handleCloseModal,
     handleNextGroup,
     handlePrevGroup,
-    isShowing,
-    isCacheDisabled
   } = props;
 
   useEffect(() => {
+    const initOverlow = document.body.style.overflow;
+
     if (isShowing) {
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = initOverlow;
     }
   }, [isShowing]);
 

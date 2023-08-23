@@ -87,7 +87,29 @@ export const init = () => {
       const token = container.getAttribute('data-storysdk-token');
 
       if (token) {
-        const story = new Story(token);
+        const groupImageWidth = container.getAttribute('data-storysdk-group-image-width');
+        const groupImageHeight = container.getAttribute('data-storysdk-group-image-height');
+        const groupTitleSize = container.getAttribute('data-storysdk-group-title-size');
+        const groupClassName = container.getAttribute('data-storysdk-group-class-name');
+        const groupsClassName = container.getAttribute('data-storysdk-groups-class-name');
+        const autoplay = container.getAttribute('data-storysdk-autoplay');
+        const groupId = container.getAttribute('data-storysdk-group-id');
+        const startStoryId = container.getAttribute('data-storysdk-start-story-id');
+        const forbidClose = container.getAttribute('data-storysdk-forbid-close');
+        const devMode = container.getAttribute('data-storysdk-dev-mode');
+
+        const story = new Story(token, {
+          groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
+          groupImageHeight: groupImageHeight ? parseInt(groupImageHeight, 10) : undefined,
+          groupTitleSize: groupTitleSize ? parseInt(groupTitleSize, 10) : undefined,
+          groupClassName: groupClassName ?? undefined,
+          groupsClassName: groupsClassName ?? undefined,
+          autoplay: autoplay === 'true',
+          groupId: groupId ?? undefined,
+          startStoryId: startStoryId ?? undefined,
+          forbidClose: forbidClose === 'true',
+          devMode: devMode === 'true'
+        });
         story.renderGroups(container);
       } else {
         console.warn('StorySDK has not been initialized.');

@@ -5,15 +5,15 @@ interface GroupProps {
     isFirstGroup: boolean;
     isLastGroup: boolean;
     isForceCloseAvailable?: boolean;
-    handleCloseModal: () => void;
-    handleNextGroup: () => void;
-    handlePrevGroup: () => void;
     isShowing: boolean;
     isShowMockup?: boolean;
     isStatusBarActive?: boolean;
     startStoryId?: string;
     isCacheDisabled?: boolean;
     isEditorMode?: boolean;
+    handleCloseModal: () => void;
+    handleNextGroup: () => void;
+    handlePrevGroup: () => void;
 }
 export declare const CustomGroupControl: React.FC<GroupProps>;
 export {};

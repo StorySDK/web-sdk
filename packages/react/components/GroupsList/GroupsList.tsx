@@ -4,10 +4,12 @@ import Skeleton from 'react-loading-skeleton';
 import classNames from 'classnames';
 import { Group } from '../../types';
 import { GroupItem, StoryModal } from '..';
+import SimpleBar from 'simplebar-react';
+import ReactDOM from 'react-dom';
 
+import 'simplebar-react/dist/simplebar.min.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
-import ReactDOM from 'react-dom';
 
 const b = block('GroupsSdkList');
 
@@ -126,28 +128,28 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   const currentGroupMemo = useMemo(() => groups?.[currentGroup], [groups, currentGroup])
 
   useEffect(() => {
-    if(!isLoading || autoplay) {
-      ReactDOM.render(          
+    if (!isLoading || autoplay) {
+      ReactDOM.render(
         <StoryModal
-        currentGroup={currentGroupMemo}
-        forbidClose={forbidClose}
-        isFirstGroup={currentGroup === 0}
-        isLastGroup={currentGroup === groups?.length - 1}
-        isLoading={isLoading}
-        isShowMockup={isShowMockup}
-        isShowing={modalShow}
-        startStoryId={startStoryId}
-        stories={currentGroupMemo?.stories}
-        onClose={handleCloseModal}
-        onCloseStory={onCloseStory}
-        onFinishQuiz={onFinishQuiz}
-        onNextGroup={handleNextGroup}
-        onNextStory={onNextStory}
-        onOpenStory={onOpenStory}
-        onPrevGroup={handlePrevGroup}
-        onPrevStory={onPrevStory}
-        onStartQuiz={onStartQuiz}
-      />, rootElement);
+          currentGroup={currentGroupMemo}
+          forbidClose={forbidClose}
+          isFirstGroup={currentGroup === 0}
+          isLastGroup={currentGroup === groups?.length - 1}
+          isLoading={isLoading}
+          isShowMockup={isShowMockup}
+          isShowing={modalShow}
+          startStoryId={startStoryId}
+          stories={currentGroupMemo?.stories}
+          onClose={handleCloseModal}
+          onCloseStory={onCloseStory}
+          onFinishQuiz={onFinishQuiz}
+          onNextGroup={handleNextGroup}
+          onNextStory={onNextStory}
+          onOpenStory={onOpenStory}
+          onPrevGroup={handlePrevGroup}
+          onPrevStory={onPrevStory}
+          onStartQuiz={onStartQuiz}
+        />, rootElement);
     }
   }, [isLoading, autoplay, currentGroupMemo, modalShow]);
 
@@ -179,26 +181,29 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           {groups.length ? (
             <>
               <div className={classNames(b(), groupsClassName)}>
-                <div className={b('carousel')}>
-                  {groups
-                    .filter((group: any) => group.stories.length)
-                    .map((group, index) => (
-                      <GroupItem
-                        groupClassName={groupClassName}
-                        groupImageHeight={groupImageHeight}
-                        groupImageWidth={groupImageWidth}
-                        groupTitleSize={groupTitleSize}
-                        imageUrl={group.imageUrl}
-                        index={index}
-                        key={group.id}
-                        title={group.title}
-                        type={group.type}
-                        view={groupView}
-                        onClick={handleSelectGroup}
-                      />
-                    ))}
-                </div>
+                <SimpleBar>
+                  <div className={b('carousel')}>
+                    {groups
+                      .filter((group: any) => group.stories.length)
+                      .map((group, index) => (
+                        <GroupItem
+                          groupClassName={groupClassName}
+                          groupImageHeight={groupImageHeight}
+                          groupImageWidth={groupImageWidth}
+                          groupTitleSize={groupTitleSize}
+                          imageUrl={group.imageUrl}
+                          index={index}
+                          key={group.id}
+                          title={group.title}
+                          type={group.type}
+                          view={groupView}
+                          onClick={handleSelectGroup}
+                        />
+                      ))}
+                  </div>
+                </SimpleBar>
               </div>
+
             </>
           ) : (
             <div className={b({ empty: true })}>
