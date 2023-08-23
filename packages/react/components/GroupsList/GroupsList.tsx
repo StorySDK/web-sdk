@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import block from 'bem-cn';
 import Skeleton from 'react-loading-skeleton';
 import classNames from 'classnames';
@@ -7,6 +7,7 @@ import { GroupItem, StoryModal } from '..';
 
 import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
+import ReactDOM from 'react-dom';
 
 const b = block('GroupsSdkList');
 
@@ -116,6 +117,40 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     }
   }, [currentGroup, forbidClose, groups, onCloseGroup]);
 
+  const rootElement = useMemo(() => document.createElement('div'), []);
+
+  useEffect(() => {
+    document.body.appendChild(rootElement)
+  }, [rootElement])
+
+  const currentGroupMemo = useMemo(() => groups?.[currentGroup], [groups, currentGroup])
+
+  useEffect(() => {
+    if(!isLoading || autoplay) {
+      ReactDOM.render(          
+        <StoryModal
+        currentGroup={currentGroupMemo}
+        forbidClose={forbidClose}
+        isFirstGroup={currentGroup === 0}
+        isLastGroup={currentGroup === groups?.length - 1}
+        isLoading={isLoading}
+        isShowMockup={isShowMockup}
+        isShowing={modalShow}
+        startStoryId={startStoryId}
+        stories={currentGroupMemo?.stories}
+        onClose={handleCloseModal}
+        onCloseStory={onCloseStory}
+        onFinishQuiz={onFinishQuiz}
+        onNextGroup={handleNextGroup}
+        onNextStory={onNextStory}
+        onOpenStory={onOpenStory}
+        onPrevGroup={handlePrevGroup}
+        onPrevStory={onPrevStory}
+        onStartQuiz={onStartQuiz}
+      />, rootElement);
+    }
+  }, [isLoading, autoplay, currentGroupMemo, modalShow]);
+
   return (
     <>
       {isLoading && !autoplay ? (
@@ -170,27 +205,6 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
               <p className={b('emptyText')}>Stories will be here</p>
             </div>
           )}
-
-          <StoryModal
-            currentGroup={groups?.[currentGroup]}
-            forbidClose={forbidClose}
-            isFirstGroup={currentGroup === 0}
-            isLastGroup={currentGroup === groups?.length - 1}
-            isLoading={isLoading}
-            isShowMockup={isShowMockup}
-            isShowing={modalShow}
-            startStoryId={startStoryId}
-            stories={groups?.[currentGroup]?.stories}
-            onClose={handleCloseModal}
-            onCloseStory={onCloseStory}
-            onFinishQuiz={onFinishQuiz}
-            onNextGroup={handleNextGroup}
-            onNextStory={onNextStory}
-            onOpenStory={onOpenStory}
-            onPrevGroup={handlePrevGroup}
-            onPrevStory={onPrevStory}
-            onStartQuiz={onStartQuiz}
-          />
         </>
       )}
     </>

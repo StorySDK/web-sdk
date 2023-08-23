@@ -34,7 +34,7 @@ const withGroupsData =
     }
   ) =>
   () => {
-    const [data, setData] = useState<any[]>([]);
+    const [data, setData] = useState<any[] | null>(null);
     const [groups, setGroups] = useState<Group[]>([]);
     const [groupView, setGroupView] = useState<GroupsListProps['groupView']>('circle');
     const [isShowMockup, setIsShowMockup] = useState(false);
@@ -306,9 +306,12 @@ const withGroupsData =
 
     useEffect(() => {
       if (loadStatus === 'loaded' && groupsWithStories.length) {
-        const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language, isMobile);
-
-        setData(adaptedData);
+        if (groupsWithStories.length) {
+          const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language, isMobile);
+          setData(adaptedData);
+        } else {
+          setData([]);
+        }
       }
     }, [loadStatus, groupsWithStories, uniqUserId, language, isMobile]);
 
@@ -321,9 +324,9 @@ const withGroupsData =
         groupImageWidth={options?.groupImageWidth}
         groupTitleSize={options?.groupTitleSize}
         groupView={groupView}
-        groups={data}
+        groups={data ?? []}
         groupsClassName={options?.groupsClassName}
-        isLoading={loadStatus === 'loading'}
+        isLoading={data === null}
         isShowMockup={isShowMockup}
         startStoryId={options?.startStoryId}
         onCloseGroup={handleCloseGroup}

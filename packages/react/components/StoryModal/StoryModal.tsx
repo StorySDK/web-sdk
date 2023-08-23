@@ -652,6 +652,18 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const uniqUserId = getUniqUserId();
   const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
 
+  const getHeightGap = () => {
+    if(isMobile) {
+      return 0;
+    }
+
+    if(isShowMockup) {
+      return heightGap;
+    } 
+
+    return PADDING_SIZE;
+  }
+
   return (
     <StoryContext.Provider
       value={{
@@ -720,7 +732,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               })}
               style={{
                 width: !isMobile ? desktopWidth : '100%',
-                height: `calc(100% - ${isShowMockup && !isMobile ? heightGap : 0}px)`,
+                height: `calc(100vh - ${getHeightGap()}px)`,
                 borderRadius: getBorderRadius()
               }}
             >

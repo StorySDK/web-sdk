@@ -33,7 +33,11 @@ export default [
         file: pkg.browser,
         format: 'umd',
         name: 'index',
-        sourcemap: false
+        sourcemap: false,
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM'
+        }
       }
     ],
     plugins: [
