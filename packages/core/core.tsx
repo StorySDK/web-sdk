@@ -112,10 +112,10 @@ export const init = () => {
         });
         story.renderGroups(container);
       } else {
-        console.warn('StorySDK has not been initialized.');
+        console.warn('StorySDK: wrong app token');
       }
     } else {
-      console.warn('StorySDK has not been initialized.');
+      console.warn('StorySDK: container not found.');
     }
   };
 };

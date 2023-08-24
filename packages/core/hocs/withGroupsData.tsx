@@ -308,6 +308,7 @@ const withGroupsData =
       if (loadStatus === 'loaded' && groupsWithStories.length) {
         if (groupsWithStories.length) {
           const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language, isMobile);
+
           setData(adaptedData);
         } else {
           setData([]);

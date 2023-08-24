@@ -33,7 +33,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     isCacheDisabled,
     handleCloseModal,
     handleNextGroup,
-    handlePrevGroup,
+    handlePrevGroup
   } = props;
 
   const initOverlow = useMemo(() => document.body.style.overflow, []);
@@ -42,7 +42,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     if (isShowing) {
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = initOverlow ?? 'auto'
+      document.body.style.overflow = initOverlow ?? 'auto';
     }
   }, [isShowing]);
 

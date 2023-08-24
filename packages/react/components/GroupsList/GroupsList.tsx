@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import block from 'bem-cn';
 import Skeleton from 'react-loading-skeleton';
 import classNames from 'classnames';
-import { Group } from '../../types';
-import { GroupItem, StoryModal } from '..';
 import SimpleBar from 'simplebar-react';
 import ReactDOM from 'react-dom';
+import { Group } from '../../types';
+import { GroupItem, StoryModal } from '..';
 
 import 'simplebar-react/dist/simplebar.min.css';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -62,6 +62,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
 
   const [currentGroup, setCurrentGroup] = useState(0);
   const [modalShow, setModalShow] = useState(!!autoplay);
+
+  const scrollRef = useRef<any>(null);
 
   useEffect(() => {
     if (autoplay && onOpenGroup && groups?.length) {
@@ -122,10 +124,10 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   const rootElement = useMemo(() => document.createElement('div'), []);
 
   useEffect(() => {
-    document.body.appendChild(rootElement)
-  }, [rootElement])
+    document.body.appendChild(rootElement);
+  }, [rootElement]);
 
-  const currentGroupMemo = useMemo(() => groups?.[currentGroup], [groups, currentGroup])
+  const currentGroupMemo = useMemo(() => groups?.[currentGroup], [groups, currentGroup]);
 
   useEffect(() => {
     if (!isLoading || autoplay) {
@@ -149,69 +151,75 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           onPrevGroup={handlePrevGroup}
           onPrevStory={onPrevStory}
           onStartQuiz={onStartQuiz}
-        />, rootElement);
+        />,
+        rootElement
+      );
     }
   }, [isLoading, autoplay, currentGroupMemo, modalShow]);
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.recalculate();
+    }
+  }, [groups.length, isLoading, autoplay]);
+
   return (
     <>
-      {isLoading && !autoplay ? (
-        <div className={b()}>
-          <div className={b('carousel')}>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-          </div>
-        </div>
-      ) : (
-        <>
-          {groups.length ? (
-            <>
-              <div className={classNames(b(), groupsClassName)}>
-                <SimpleBar>
-                  <div className={b('carousel')}>
-                    {groups
-                      .filter((group: any) => group.stories.length)
-                      .map((group, index) => (
-                        <GroupItem
-                          groupClassName={groupClassName}
-                          groupImageHeight={groupImageHeight}
-                          groupImageWidth={groupImageWidth}
-                          groupTitleSize={groupTitleSize}
-                          imageUrl={group.imageUrl}
-                          index={index}
-                          key={group.id}
-                          title={group.title}
-                          type={group.type}
-                          view={groupView}
-                          onClick={handleSelectGroup}
-                        />
-                      ))}
-                  </div>
-                </SimpleBar>
+      <div className={classNames(b(), groupsClassName)}>
+        <SimpleBar
+          ref={scrollRef}
+          style={{
+            width: '100%'
+          }}
+        >
+          {isLoading && !autoplay ? (
+            <div className={b('carousel')}>
+              <div className={b('loaderItem')}>
+                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
               </div>
-
-            </>
-          ) : (
-            <div className={b({ empty: true })}>
-              <p className={b('emptyText')}>Stories will be here</p>
+              <div className={b('loaderItem')}>
+                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+              </div>
+              <div className={b('loaderItem')}>
+                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+              </div>
+              <div className={b('loaderItem')}>
+                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+              </div>
             </div>
+          ) : (
+            <>
+              {groups.length ? (
+                <div className={b('carousel')}>
+                  {groups
+                    .filter((group: any) => group.stories.length)
+                    .map((group, index) => (
+                      <GroupItem
+                        groupClassName={groupClassName}
+                        groupImageHeight={groupImageHeight}
+                        groupImageWidth={groupImageWidth}
+                        groupTitleSize={groupTitleSize}
+                        imageUrl={group.imageUrl}
+                        index={index}
+                        key={group.id}
+                        title={group.title}
+                        type={group.type}
+                        view={groupView}
+                        onClick={handleSelectGroup}
+                      />
+                    ))}
+                </div>
+              ) : (
+                <p className={b('emptyText')}>Stories will be here</p>
+              )}
+            </>
           )}
-        </>
-      )}
+        </SimpleBar>
+      </div>
     </>
   );
 };
