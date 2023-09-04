@@ -180,6 +180,12 @@ export interface WidgetPositionType {
         x: number;
         y: number;
     };
+    other?: {
+        [key: string]: {
+            x: number;
+            y: number;
+        };
+    };
 }
 export interface WidgetObjectType {
     id: string;
