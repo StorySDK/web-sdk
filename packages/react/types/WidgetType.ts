@@ -231,7 +231,7 @@ export interface WidgetPositionType {
     x: number;
     y: number;
   };
-  other?: {
+  resolutions?: {
     [key: string]: {
       x: number;
       y: number;
