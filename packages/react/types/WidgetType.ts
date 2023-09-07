@@ -226,16 +226,6 @@ export interface WidgetPositionType {
   rotate: number;
   realWidth: number;
   realHeight: number;
-  elementsSize?: { [key: string]: any };
-}
-
-export interface WidgetObjectType {
-  id: string;
-  position: WidgetPositionType;
-  positionByResolutions?: {
-    [key: string]: WidgetPositionType;
-  };
-  positionLimits: WidgetPositionLimitsType;
   elementsSize?:
     | ChooseAnswerWidgetElemetsType
     | EmojiReactionWidgetElemetsType
@@ -247,6 +237,15 @@ export interface WidgetObjectType {
     | QuizRateWidgetElementsType
     | SliderWidgetElementsType
     | TalkAboutElementsType;
+}
+
+export interface WidgetObjectType {
+  id: string;
+  position: WidgetPositionType;
+  positionByResolutions?: {
+    [key: string]: WidgetPositionType;
+  };
+  positionLimits: WidgetPositionLimitsType;
   content:
     | RectangleState
     | ImageState

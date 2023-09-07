@@ -48,7 +48,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.CHOOSE_ANSWER:
         return (
           <ChooseAnswerWidget
-            elementsSize={this.props.widget.elementsSize as ChooseAnswerWidgetElemetsType}
+            elementsSize={this.props.widget.position.elementsSize as ChooseAnswerWidgetElemetsType}
             id={this.props.widget.id}
             jsConfetti={this.props.jsConfetti}
             params={this.props.widget.content.params}
@@ -72,7 +72,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.EMOJI_REACTION:
         return (
           <EmojiReactionWidget
-            elementsSize={this.props.widget.elementsSize as EmojiReactionWidgetElemetsType}
+            elementsSize={this.props.widget.position.elementsSize as EmojiReactionWidgetElemetsType}
             id={this.props.widget.id}
             params={this.props.widget.content.params}
             onAnswer={this.props.widget.action}
@@ -83,7 +83,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.QUESTION:
         return (
           <QuestionWidget
-            elementsSize={this.props.widget.elementsSize as QuestionWidgetElementsType}
+            elementsSize={this.props.widget.position.elementsSize as QuestionWidgetElementsType}
             id={this.props.widget.id}
             params={this.props.widget.content.params}
             onAnswer={this.props.widget.action}
@@ -94,7 +94,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.SLIDER:
         return (
           <SliderWidget
-            elementsSize={this.props.widget.elementsSize as SliderWidgetElementsType}
+            elementsSize={this.props.widget.position.elementsSize as SliderWidgetElementsType}
             id={this.props.widget.id}
             params={this.props.widget.content.params}
             storyId={this.props.storyId}
@@ -111,7 +111,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.TALK_ABOUT:
         return (
           <TalkAboutWidget
-            elementsSize={this.props.widget.elementsSize as TalkAboutElementsType}
+            elementsSize={this.props.widget.position.elementsSize as TalkAboutElementsType}
             id={this.props.widget.id}
             params={this.props.widget.content.params}
             onAnswer={this.props.widget.action}
@@ -130,7 +130,9 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.QUIZ_ONE_ANSWER:
         return (
           <QuizOneAnswerWidget
-            elementsSize={this.props.widget.elementsSize as QuizOneAnswerWidgetElementsType}
+            elementsSize={
+              this.props.widget.position.elementsSize as QuizOneAnswerWidgetElementsType
+            }
             id={this.props.widget.id}
             params={this.props.widget.content.params}
             onAnswer={this.props.widget.action}
@@ -140,7 +142,9 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.QUIZ_MULTIPLE_ANSWERS:
         return (
           <QuizMultipleAnswerWidget
-            elementsSize={this.props.widget.elementsSize as QuizMultipleAnswerWidgetElementsType}
+            elementsSize={
+              this.props.widget.position.elementsSize as QuizMultipleAnswerWidgetElementsType
+            }
             id={this.props.widget.id}
             params={this.props.widget.content.params}
             onAnswer={this.props.widget.action}
@@ -151,7 +155,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         return (
           <QuizMultipleAnswerWithImageWidget
             elementsSize={
-              this.props.widget.elementsSize as QuizMultipleAnswerWidgetWithImageElementsType
+              this.props.widget.position
+                .elementsSize as QuizMultipleAnswerWidgetWithImageElementsType
             }
             id={this.props.widget.id}
             params={this.props.widget.content.params}
@@ -162,7 +167,9 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.QUIZ_OPEN_ANSWER:
         return (
           <QuizOpenAnswerWidget
-            elementsSize={this.props.widget.elementsSize as QuizOpenAnswerWidgetElementsType}
+            elementsSize={
+              this.props.widget.position.elementsSize as QuizOpenAnswerWidgetElementsType
+            }
             id={this.props.widget.id}
             params={this.props.widget.content.params}
             onAnswer={this.props.widget.action}
@@ -172,7 +179,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.QUIZ_RATE:
         return (
           <QuizRateWidget
-            elementsSize={this.props.widget.elementsSize as QuizRateWidgetElementsType}
+            elementsSize={this.props.widget.position.elementsSize as QuizRateWidgetElementsType}
             params={this.props.widget.content.params}
             onAnswer={this.props.widget.action}
             onGoToStory={this.props.handleGoToStory}
