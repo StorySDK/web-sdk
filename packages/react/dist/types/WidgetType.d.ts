@@ -176,20 +176,13 @@ export interface WidgetPositionType {
     elementsSize?: {
         [key: string]: any;
     };
-    alternative?: {
-        x: number;
-        y: number;
-    };
-    resolutions?: {
-        [key: string]: {
-            x: number;
-            y: number;
-        };
-    };
 }
 export interface WidgetObjectType {
     id: string;
     position: WidgetPositionType;
+    positionByResolutions: {
+        [key: string]: WidgetPositionType;
+    };
     positionLimits: WidgetPositionLimitsType;
     elementsSize?: ChooseAnswerWidgetElemetsType | EmojiReactionWidgetElemetsType | QuestionWidgetElementsType | QuizMultipleAnswerWidgetElementsType | QuizOneAnswerWidgetElementsType | QuizMultipleAnswerWidgetWithImageElementsType | QuizOpenAnswerWidgetElementsType | QuizRateWidgetElementsType | SliderWidgetElementsType | TalkAboutElementsType;
     content: RectangleState | ImageState | VideoState | EllipseState | TextState | SwipeUpState | SliderState | QuestionState | ClickMeState | TalkAboutState | EmojiReactionState | TimerState | ChooseAnswerState | GiphyState | QuizOneAnswerState | QuizMultipleAnswerState | QuizMultipleAnswerWithImageState | QuizRateState | QuizOpenAnswerState;

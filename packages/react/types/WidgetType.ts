@@ -227,21 +227,14 @@ export interface WidgetPositionType {
   realWidth: number;
   realHeight: number;
   elementsSize?: { [key: string]: any };
-  alternative?: {
-    x: number;
-    y: number;
-  };
-  resolutions?: {
-    [key: string]: {
-      x: number;
-      y: number;
-    };
-  };
 }
 
 export interface WidgetObjectType {
   id: string;
   position: WidgetPositionType;
+  positionByResolutions: {
+    [key: string]: WidgetPositionType;
+  };
   positionLimits: WidgetPositionLimitsType;
   elementsSize?:
     | ChooseAnswerWidgetElemetsType
