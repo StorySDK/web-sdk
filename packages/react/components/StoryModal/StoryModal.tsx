@@ -111,13 +111,13 @@ export type StoryCurrentSize = {
 };
 
 export const STORY_SIZE = {
-  width: 1080,
-  height: 1920
+  width: 360,
+  height: 640
 };
 
 export const STORY_SIZE_LARGE = {
-  width: 1080,
-  height: 2338
+  width: 360,
+  height: 780
 };
 
 export const DEFAULT_STORY_DURATION = 7;
@@ -315,7 +315,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     setCurrentStory(currentStoryIndex);
 
     const body = document.querySelector('body');
-  
 
     if (isShowing) {
       setPlayStatus('play');
@@ -663,7 +662,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     }
 
     return PADDING_SIZE;
-  },[isMobile, isShowMockup, heightGap]);
+  }, [isMobile, isShowMockup, heightGap]);
 
   return (
     <StoryContext.Provider

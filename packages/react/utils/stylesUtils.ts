@@ -114,7 +114,7 @@ export const renderPosition = (
   transform: `rotate(${position.rotate}deg)`
 });
 
-const SCALE_INDEX = 2.76;
+const SCALE_INDEX = 1;
 export const getScalableValue = (value: number): number => Math.round(value * SCALE_INDEX);
 
 export const calculateElementSize = (width: number, elementSize: number, minWidth?: number) =>
