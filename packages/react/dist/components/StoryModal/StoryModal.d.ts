@@ -15,6 +15,8 @@ interface StoryModalProps {
     isCacheDisabled?: boolean;
     isLoading?: boolean;
     isEditorMode?: boolean;
+    storyWidth?: number;
+    storyHeight?: number;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;
@@ -30,11 +32,7 @@ export declare type StoryCurrentSize = {
     width: number;
     height: number;
 };
-export declare const STORY_SIZE: {
-    width: number;
-    height: number;
-};
-export declare const STORY_SIZE_LARGE: {
+export declare const STORY_SIZE_DEFAULT: {
     width: number;
     height: number;
 };

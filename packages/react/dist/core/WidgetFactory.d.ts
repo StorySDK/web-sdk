@@ -1,7 +1,9 @@
 import React from 'react';
+import { StoryCurrentSize } from '@components';
 import { WidgetObjectType } from '../types';
 interface WidgetFactoryProps {
     storyId: string;
+    currentStorySize: StoryCurrentSize;
     jsConfetti?: any;
     widget: WidgetObjectType;
     handleGoToStory?: (storyId: string) => void;

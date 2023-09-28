@@ -177,8 +177,7 @@ export interface WidgetPositionType {
 }
 export interface WidgetObjectType {
     id: string;
-    position: WidgetPositionType;
-    positionByResolutions?: {
+    positionByResolutions: {
         [key: string]: WidgetPositionType;
     };
     positionLimits: WidgetPositionLimitsType;

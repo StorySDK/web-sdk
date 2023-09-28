@@ -7,18 +7,12 @@ export enum GroupType {
   TEMPLATE = 'template'
 }
 
-export enum StorySize {
-  SMALL = 'SMALL',
-  LARGE = 'LARGE'
-}
-
 export enum ScoreType {
   NUMBERS = 'numbers',
   LETTERS = 'letters'
 }
 
 export interface StoriesGroupSettings {
-  storiesSize?: StorySize;
   isProgressHidden?: boolean;
   isProhibitToClose?: boolean;
   addToStories?: boolean;

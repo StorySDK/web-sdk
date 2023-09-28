@@ -5,7 +5,7 @@ import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
 import { IconLoader } from '@components/icons';
 import { useAdaptiveValue, useAnswersCache } from '../../hooks';
-import { StoryType, Group, GroupType, StorySize, StoryContenxt, ScoreType } from '../../types';
+import { StoryType, Group, GroupType, StoryContenxt, ScoreType } from '../../types';
 import { StoryContent } from '..';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.png';
 import smallIphoneMockup from '../../assets/images/iphone-mockup-small.svg';
@@ -29,6 +29,8 @@ interface StoryModalProps {
   isCacheDisabled?: boolean;
   isLoading?: boolean;
   isEditorMode?: boolean;
+  storyWidth?: number;
+  storyHeight?: number;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -110,14 +112,9 @@ export type StoryCurrentSize = {
   height: number;
 };
 
-export const STORY_SIZE = {
+export const STORY_SIZE_DEFAULT = {
   width: 360,
   height: 640
-};
-
-export const STORY_SIZE_LARGE = {
-  width: 360,
-  height: 780
 };
 
 export const DEFAULT_STORY_DURATION = 7;
@@ -138,8 +135,7 @@ const INIT_CONTROL_SIDE_PADDING = 8;
 const INIT_CONTROL_SIDE_PADDING_LARGE = 14;
 const INIT_CONTAINER_BORDER_RADIUS = 50;
 
-const ratioIndex = STORY_SIZE.width / STORY_SIZE.height;
-const ratioIndexLarge = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
+const ratioIndex = STORY_SIZE_DEFAULT.width / STORY_SIZE_DEFAULT.height;
 
 const initQuizeState = {
   points: 0,
@@ -192,6 +188,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     forbidClose,
     isLoading,
     isEditorMode,
+    storyWidth,
+    storyHeight,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -212,6 +210,16 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [quizStartedStoryIds, setQuizStartedStoryIds] = useState<{ [key: string]: boolean }>({});
   const [width, height] = useWindowSize();
   const [activeStoriesWithResult, setActiveStoriesWithResult] = useState<StoryType[]>([]);
+
+  const currentStorySize: StoryCurrentSize = useMemo(() => {
+    if (storyWidth && storyHeight) {
+      return {
+        width: storyWidth,
+        height: storyHeight
+      };
+    }
+    return STORY_SIZE_DEFAULT;
+  }, [storyWidth, storyHeight]);
 
   useEffect(() => {
     if (stories && currentGroup) {
@@ -248,14 +256,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const isBackroundFilled =
     activeStoriesWithResult[currentStory]?.background?.isFilled &&
     currentGroupType === GroupType.GROUP;
-  const isLarge =
-    (currentGroup?.settings?.storiesSize === StorySize.LARGE &&
-      !isMobile &&
-      (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE)) ||
-    (currentGroupType === GroupType.GROUP && !isMobile && isShowMockup && isBackroundFilled);
-
   const initBodyOverflow = useMemo(() => document.body.style.overflow, []);
-
   const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
   const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
@@ -265,18 +266,16 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const groupInnerHeightGap = useAdaptiveValue(INIT_INNER_GROUP_PADDING);
   const controlTopSmall = useAdaptiveValue(INIT_CONTROL_TOP);
   const controlTopLarge = useAdaptiveValue(INIT_CONTROL_TOP_LARGE);
-  const controlTop = isLarge ? controlTopLarge : controlTopSmall;
+  const controlTop = controlTopSmall;
   const controlSidePaddingSmall = useAdaptiveValue(INIT_CONTROL_SIDE_PADDING);
   const controlSidePaddingLarge = useAdaptiveValue(INIT_CONTROL_SIDE_PADDING_LARGE);
   const containerBorderRadius = useAdaptiveValue(INIT_CONTAINER_BORDER_RADIUS);
   const statusBarTop = useAdaptiveValue(INIT_TOP_STATUS_BAR);
-  const controlSidePadding = isLarge ? controlSidePaddingLarge : controlSidePaddingSmall;
-  const currentRatioIndex = isLarge ? ratioIndexLarge : ratioIndex;
-  const currentStorySize: StoryCurrentSize = isLarge ? STORY_SIZE_LARGE : STORY_SIZE;
-  const heightGap = isLarge ? largeHeightGap : smallHeightGap;
-  const borderRadius = isLarge ? largeBorderRadius : smallBorderRadius;
+  const controlSidePadding = controlSidePaddingSmall;
+  const currentRatioIndex = ratioIndex;
+  const heightGap = smallHeightGap;
+  const borderRadius = smallBorderRadius;
   const currentPaddingSize = isShowMockup ? PADDING_SIZE + heightGap : PADDING_SIZE;
-  const isShowStatusBarInStory = isShowMockup && !isMobile && isLarge && isStatusBarActive;
   const isShowStatusBarInContainer =
     isShowMockup &&
     !isMobile &&
@@ -728,7 +727,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             <div
               className={b('swiper', {
                 mockup: !isMobile && isShowMockup,
-                small: !isMobile && !isLarge && isShowMockup
+                small: !isMobile && isShowMockup
               })}
               style={{
                 width: !isMobile ? desktopWidth : '100%',
@@ -751,18 +750,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                         >
                           <StoryContent
                             currentPaddingSize={currentPaddingSize}
+                            currentStorySize={currentStorySize}
                             handleGoToStory={handleGoToStory}
-                            innerHeightGap={
-                              isShowMockup && currentGroupType === GroupType.GROUP && isLarge
-                                ? groupInnerHeightGap
-                                : 0
-                            }
-                            isLarge={isLarge}
-                            isLargeBackground={isShowMockup && currentGroupType === GroupType.GROUP}
+                            innerHeightGap={0}
                             jsConfetti={jsConfetti}
                             noTopShadow={noTopShadow}
                             story={story}
-                            storyCurrentSize={currentStorySize}
                           />
                         </div>
                       ))}
@@ -770,29 +763,21 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
                     <div className={b('topContainer')}>
                       <>
-                        {isShowStatusBarInStory && <StatusBar />}
+                        {/* {isShowStatusBarInStory && <StatusBar />} */}
 
                         <div
                           className={b('controls')}
                           style={{
-                            gap:
-                              !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
-                            paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
-                            paddingLeft:
-                              !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
-                            paddingRight:
-                              !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
+                            gap: !isMobile ? controlSidePadding : undefined,
+                            paddingLeft: !isMobile ? controlSidePadding : undefined,
+                            paddingRight: !isMobile ? controlSidePadding : undefined
                           }}
                         >
                           {!currentGroup?.settings?.isProgressHidden && (
                             <div
                               className={b('indicators', {
-                                stopAnimation: playStatus === 'pause',
-                                widePadding: isShowMockup && isLarge
+                                stopAnimation: playStatus === 'pause'
                               })}
-                              style={{
-                                top: isShowMockup && isLarge ? largeIndicatorTop : undefined
-                              }}
                             >
                               {activeStoriesWithResult
                                 .filter((story) => story.layerData?.isDefaultLayer)
@@ -815,12 +800,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           {currentGroupType === GroupType.GROUP && (
                             <div
                               className={b('group', {
-                                noProgress: currentGroup?.settings?.isProgressHidden,
-                                wideLeft: isShowMockup && isLarge
+                                noProgress: currentGroup?.settings?.isProgressHidden
                               })}
-                              style={{
-                                top: isShowMockup && isLarge ? largeElementsTop : undefined
-                              }}
                             >
                               {currentGroup?.imageUrl && (
                                 <div className={b('groupImgWrapper')}>
@@ -840,12 +821,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           {!currentGroup?.settings?.isProhibitToClose && !forbidClose && (
                             <button
                               className={b('close', {
-                                noProgress: currentGroup?.settings?.isProgressHidden,
-                                wideRight: isShowMockup && isLarge
+                                noProgress: currentGroup?.settings?.isProgressHidden
                               })}
-                              style={{
-                                top: isShowMockup && isLarge ? largeElementsTop : undefined
-                              }}
                               onClick={handleClose}
                             >
                               <CloseIcon />
@@ -862,11 +839,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             {isShowMockup && (
               <img
                 className={b('mockup')}
-                src={
-                  isLarge || currentGroupType === GroupType.GROUP
-                    ? largeIphoneMockup
-                    : smallIphoneMockup
-                }
+                src={currentGroupType === GroupType.GROUP ? largeIphoneMockup : smallIphoneMockup}
               />
             )}
           </div>
