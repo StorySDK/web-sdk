@@ -18,6 +18,8 @@ export class Story {
     groupId?: string;
     startStoryId?: string;
     forbidClose?: boolean;
+    storyWidth?: number;
+    storyHeight?: number;
     devMode?: boolean;
   };
 
@@ -33,6 +35,8 @@ export class Story {
       groupId?: string;
       startStoryId?: string;
       forbidClose?: boolean;
+      storyWidth?: number;
+      storyHeight?: number;
       devMode?: boolean;
     }
   ) {
@@ -49,6 +53,8 @@ export class Story {
       this.options.groupId = options?.groupId;
       this.options.forbidClose = options?.forbidClose;
       this.options.startStoryId = options?.startStoryId;
+      this.options.storyWidth = options?.storyWidth;
+      this.options.storyHeight = options?.storyHeight;
       this.options.devMode = options?.devMode;
     }
 
@@ -97,6 +103,8 @@ export const init = () => {
         const startStoryId = container.getAttribute('data-storysdk-start-story-id');
         const forbidClose = container.getAttribute('data-storysdk-forbid-close');
         const devMode = container.getAttribute('data-storysdk-dev-mode');
+        const storyWidth = container.getAttribute('data-storysdk-story-width');
+        const storyHeight = container.getAttribute('data-storysdk-story-height');
 
         const story = new Story(token, {
           groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
@@ -107,6 +115,8 @@ export const init = () => {
           autoplay: autoplay === 'true',
           groupId: groupId ?? undefined,
           startStoryId: startStoryId ?? undefined,
+          storyWidth: storyWidth ? parseInt(storyWidth, 10) : undefined,
+          storyHeight: storyHeight ? parseInt(storyHeight, 10) : undefined,
           forbidClose: forbidClose === 'true',
           devMode: devMode === 'true'
         });

@@ -6,11 +6,11 @@ interface GroupProps {
     isLastGroup: boolean;
     isForceCloseAvailable?: boolean;
     isShowing: boolean;
-    isShowMockup?: boolean;
-    isStatusBarActive?: boolean;
     startStoryId?: string;
     isCacheDisabled?: boolean;
     isEditorMode?: boolean;
+    storyWidth?: number;
+    storyHeight?: number;
     handleCloseModal: () => void;
     handleNextGroup: () => void;
     handlePrevGroup: () => void;

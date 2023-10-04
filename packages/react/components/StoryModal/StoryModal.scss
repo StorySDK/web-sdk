@@ -61,7 +61,7 @@
     gap: 8px;
     grid-template-areas: "indicators indicators"
                           "group close";
-    padding: 0 8px;
+    padding: 8px 8px 0;
   }
 
   &__loader {

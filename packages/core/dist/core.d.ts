@@ -11,6 +11,8 @@ export declare class Story {
         groupId?: string;
         startStoryId?: string;
         forbidClose?: boolean;
+        storyWidth?: number;
+        storyHeight?: number;
         devMode?: boolean;
     };
     constructor(token: string, options?: {
@@ -23,6 +25,8 @@ export declare class Story {
         groupId?: string;
         startStoryId?: string;
         forbidClose?: boolean;
+        storyWidth?: number;
+        storyHeight?: number;
         devMode?: boolean;
     });
     renderGroups(element?: Element | HTMLDivElement | null): void;

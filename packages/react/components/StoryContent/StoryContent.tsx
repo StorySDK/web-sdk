@@ -70,6 +70,8 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         <div
           className={b('scope')}
           style={{
+            width: currentStorySize.width,
+            height: currentStorySize.height,
             transform: isMobile
               ? `scale(${width / currentStorySize.width})`
               : `scale(${(height - currentPaddingSize) / currentStorySize.height})`
@@ -80,7 +82,12 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
               className={b('object')}
               id={`story-${story.id}-widget-${widget.id}`}
               key={widget.id}
-              style={renderPosition(widget.position, widget.positionLimits)}
+              style={renderPosition(
+                widget.positionByResolutions[
+                  `${currentStorySize.width}x${currentStorySize.height}`
+                ],
+                widget.positionLimits
+              )}
             >
               <WidgetFactory
                 currentStorySize={currentStorySize}

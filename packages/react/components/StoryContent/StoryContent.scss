@@ -60,17 +60,13 @@
   }
 
   &__scope {
-    width: 1080px;
-    height: 1920px;
+    width: 360px;
+    height: 640px;
 
     transform-origin: top left;
     position: relative;
 
     background: transparent;
-
-    &_large {
-      height: 2338px;
-    }
   }
 
   &__object {

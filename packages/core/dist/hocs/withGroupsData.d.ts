@@ -10,6 +10,8 @@ declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: 
     groupId?: string | undefined;
     startStoryId?: string | undefined;
     forbidClose?: boolean | undefined;
+    storyWidth?: number | undefined;
+    storyHeight?: number | undefined;
     devMode?: boolean | undefined;
 } | undefined) => () => JSX.Element;
 export default withGroupsData;

@@ -10,11 +10,12 @@ export interface GroupsListProps {
     groupTitleSize?: number;
     groupsClassName?: string;
     groupClassName?: string;
-    isShowMockup?: boolean;
     isLoading?: boolean;
     autoplay?: boolean;
     startStoryId?: string;
     forbidClose?: boolean;
+    storyWidth?: number;
+    storyHeight?: number;
     groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
     onOpenGroup?(id: string): void;
     onCloseGroup?(id: string): void;

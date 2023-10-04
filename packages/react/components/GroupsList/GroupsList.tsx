@@ -20,11 +20,12 @@ export interface GroupsListProps {
   groupTitleSize?: number;
   groupsClassName?: string;
   groupClassName?: string;
-  isShowMockup?: boolean;
   isLoading?: boolean;
   autoplay?: boolean;
   startStoryId?: string;
   forbidClose?: boolean;
+  storyWidth?: number;
+  storyHeight?: number;
   groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
@@ -46,10 +47,11 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groupImageWidth,
     groupImageHeight,
     groupTitleSize,
-    isShowMockup,
     autoplay,
     startStoryId,
     forbidClose,
+    storyWidth,
+    storyHeight,
     onOpenGroup,
     onCloseGroup,
     onNextStory,
@@ -138,10 +140,11 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           isFirstGroup={currentGroup === 0}
           isLastGroup={currentGroup === groups?.length - 1}
           isLoading={isLoading}
-          isShowMockup={isShowMockup}
           isShowing={modalShow}
           startStoryId={startStoryId}
           stories={currentGroupMemo?.stories}
+          storyHeight={storyHeight}
+          storyWidth={storyWidth}
           onClose={handleCloseModal}
           onCloseStory={onCloseStory}
           onFinishQuiz={onFinishQuiz}

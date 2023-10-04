@@ -19,7 +19,7 @@ import {
   TextWidget,
   VideoWidget
 } from '@widgets';
-import { StoryCurrentSize } from '@components';
+import { STORY_SIZE_DEFAULT, StoryCurrentSize } from '@components';
 import {
   ChooseAnswerWidgetElemetsType,
   EmojiReactionWidgetElemetsType,
@@ -48,6 +48,9 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
     const elementsSize =
       this.props.widget.positionByResolutions[
         `${this.props.currentStorySize.width}x${this.props.currentStorySize.height}`
+      ]?.elementsSize ??
+      this.props.widget.positionByResolutions[
+        `${STORY_SIZE_DEFAULT.width}x${STORY_SIZE_DEFAULT.height}`
       ]?.elementsSize;
 
     switch (this.props.widget.content.type) {

@@ -6,11 +6,9 @@ interface StoryModalProps {
     stories?: StoryType[];
     isShowing: boolean;
     forbidClose?: boolean;
-    isShowMockup?: boolean;
     isLastGroup: boolean;
     isFirstGroup: boolean;
     startStoryId?: string;
-    isStatusBarActive?: boolean;
     isForceCloseAvailable?: boolean;
     isCacheDisabled?: boolean;
     isLoading?: boolean;

@@ -30,6 +30,8 @@ const withGroupsData =
       groupId?: string;
       startStoryId?: string;
       forbidClose?: boolean;
+      storyWidth?: number;
+      storyHeight?: number;
       devMode?: boolean;
     }
   ) =>
@@ -37,7 +39,6 @@ const withGroupsData =
     const [data, setData] = useState<any[] | null>(null);
     const [groups, setGroups] = useState<Group[]>([]);
     const [groupView, setGroupView] = useState<GroupsListProps['groupView']>('circle');
-    const [isShowMockup, setIsShowMockup] = useState(false);
     const [appLocale, setAppLocale] = useState(null);
     const [groupsWithStories, setGroupsWithStories] = useState<Group[]>([]);
     const [loadStatus, setLoadStatus] = useState('pending');
@@ -218,15 +219,12 @@ const withGroupsData =
               ? app.settings.groupView.web
               : 'circle';
 
-            const isShowMockupApp = app.settings?.isShowMockup ?? false;
-
             if (app.settings.fonts?.length) {
               loadFontsToPage(app.settings.fonts);
             }
 
             setAppLocale(app.localization);
             setGroupView(appGroupView);
-            setIsShowMockup(isShowMockupApp);
 
             API.groups.getList().then((groupsData) => {
               if (!groupsData.data.error) {
@@ -328,8 +326,9 @@ const withGroupsData =
         groups={data ?? []}
         groupsClassName={options?.groupsClassName}
         isLoading={data === null}
-        isShowMockup={isShowMockup}
         startStoryId={options?.startStoryId}
+        storyHeight={options?.storyHeight}
+        storyWidth={options?.storyWidth}
         onCloseGroup={handleCloseGroup}
         onCloseStory={handleCloseStory}
         onFinishQuiz={handleFinishQuiz}
