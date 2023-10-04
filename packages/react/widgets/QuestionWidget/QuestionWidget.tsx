@@ -41,10 +41,12 @@ export const QuestionWidget: WidgetComponent<{
   const [answer, setAnswer] = useState<string | null>(answerFromCache?.answer || null);
 
   const [percents, setPercents] = useState(
-    answerFromCache?.percents ?? {
-      confirm: 0,
-      decline: 0
-    }
+    answerFromCache?.percents
+      ? { confirm: 0, decline: 0, ...answerFromCache.percents }
+      : {
+          confirm: 0,
+          decline: 0
+        }
   );
 
   const sizes = elementsSize ?? INIT_ELEMENT_STYLES;

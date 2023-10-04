@@ -117,7 +117,6 @@ export const MOBILE_BREAKPOINT = 768;
 const INIT_SMALL_PADDING = 145;
 const INIT_CONTROL_TOP = 10;
 const INIT_CONTROL_SIDE_PADDING = 8;
-const INIT_CONTAINER_BORDER_RADIUS = 50;
 
 const defaultRatioIndex = STORY_SIZE_DEFAULT.width / STORY_SIZE_DEFAULT.height;
 
@@ -242,7 +241,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const smallHeightGap = useAdaptiveValue(INIT_SMALL_PADDING);
   const controlTopSmall = useAdaptiveValue(INIT_CONTROL_TOP);
   const controlSidePaddingSmall = useAdaptiveValue(INIT_CONTROL_SIDE_PADDING);
-  const containerBorderRadius = useAdaptiveValue(INIT_CONTAINER_BORDER_RADIUS);
   const currentRatioIndex =
     storyWidth && storyHeight ? storyWidth / storyHeight : defaultRatioIndex;
   const heightGap = smallHeightGap;
@@ -643,9 +641,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             className={b('bodyContainer', {
               black: currentGroupType === GroupType.GROUP && !isBackroundFilled && !isMobile
             })}
-            style={{
-              borderRadius: containerBorderRadius
-            }}
           >
             <div
               className={b('swiper')}

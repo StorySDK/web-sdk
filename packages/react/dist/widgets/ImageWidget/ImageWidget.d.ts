@@ -1,5 +1,0 @@
-import { ImageWidgetParamsType, WidgetComponent } from '@types';
-import './ImageWidget.scss';
-export declare const ImageWidget: WidgetComponent<{
-    params: ImageWidgetParamsType;
-}>;
