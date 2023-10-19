@@ -25,6 +25,10 @@ const withGroupsData =
       groupImageHeight?: number;
       groupTitleSize?: number;
       groupClassName?: string;
+      isShowMockup?: boolean;
+      isStatusBarActive?: boolean;
+      storyWidth?: number;
+      storyHeight?: number;
       groupsClassName?: string;
       autoplay?: boolean;
       groupId?: string;
@@ -37,7 +41,7 @@ const withGroupsData =
     const [data, setData] = useState<any[] | null>(null);
     const [groups, setGroups] = useState<Group[]>([]);
     const [groupView, setGroupView] = useState<GroupsListProps['groupView']>('circle');
-    const [isShowMockup, setIsShowMockup] = useState(false);
+    const [isShowMockup, setIsShowMockup] = useState(options?.isShowMockup);
     const [appLocale, setAppLocale] = useState(null);
     const [groupsWithStories, setGroupsWithStories] = useState<Group[]>([]);
     const [loadStatus, setLoadStatus] = useState('pending');
@@ -218,7 +222,9 @@ const withGroupsData =
               ? app.settings.groupView.web
               : 'circle';
 
-            const isShowMockupApp = app.settings?.isShowMockup ?? false;
+            const isShowMockupApp = options?.isShowMockup
+              ? options?.isShowMockup
+              : app.settings?.isShowMockup;
 
             if (app.settings.fonts?.length) {
               loadFontsToPage(app.settings.fonts);
@@ -329,7 +335,10 @@ const withGroupsData =
         groupsClassName={options?.groupsClassName}
         isLoading={data === null}
         isShowMockup={isShowMockup}
+        isStatusBarActive={options?.isStatusBarActive}
         startStoryId={options?.startStoryId}
+        storyHeight={options?.storyHeight}
+        storyWidth={options?.storyWidth}
         onCloseGroup={handleCloseGroup}
         onCloseStory={handleCloseStory}
         onFinishQuiz={handleFinishQuiz}

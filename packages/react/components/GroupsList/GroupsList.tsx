@@ -19,6 +19,9 @@ export interface GroupsListProps {
   groupImageHeight?: number;
   groupTitleSize?: number;
   groupsClassName?: string;
+  storyWidth?: number;
+  storyHeight?: number;
+  isStatusBarActive?: boolean;
   groupClassName?: string;
   isShowMockup?: boolean;
   isLoading?: boolean;
@@ -47,9 +50,12 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groupImageHeight,
     groupTitleSize,
     isShowMockup,
+    isStatusBarActive,
     autoplay,
     startStoryId,
     forbidClose,
+    storyWidth,
+    storyHeight,
     onOpenGroup,
     onCloseGroup,
     onNextStory,
@@ -140,8 +146,11 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           isLoading={isLoading}
           isShowMockup={isShowMockup}
           isShowing={modalShow}
+          isStatusBarActive={isStatusBarActive}
           startStoryId={startStoryId}
           stories={currentGroupMemo?.stories}
+          storyHeight={storyHeight}
+          storyWidth={storyWidth}
           onClose={handleCloseModal}
           onCloseStory={onCloseStory}
           onFinishQuiz={onFinishQuiz}

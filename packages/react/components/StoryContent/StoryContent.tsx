@@ -6,13 +6,14 @@ import { StoryType } from '../../types';
 import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackground';
 import { renderBackgroundStyles, renderPosition } from '../../utils';
 import { MOBILE_BREAKPOINT, StoryCurrentSize } from '../StoryModal/StoryModal';
+import { STORY_SIZE_LARGE } from '../StoryModal';
 import './StoryContent.scss';
 
 const b = block('StorySdkContent');
 
 interface StoryContentProps {
   story: StoryType;
-  storyCurrentSize: StoryCurrentSize;
+  currentStorySize: StoryCurrentSize;
   currentPaddingSize: number;
   innerHeightGap: number;
   noTopShadow?: boolean;
@@ -27,7 +28,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     story,
     jsConfetti,
     noTopShadow,
-    storyCurrentSize,
+    currentStorySize,
     currentPaddingSize,
     isLarge,
     isLargeBackground,
@@ -47,7 +48,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         style={{
           background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
           height: isMobile
-            ? Math.round(storyCurrentSize.height * (width / storyCurrentSize.width))
+            ? Math.round(currentStorySize.height * (width / currentStorySize.width))
             : undefined
         }}
       >
@@ -67,16 +68,16 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         className={b({ large: isLarge, center: isLargeBackground })}
         style={{
           height: isMobile
-            ? Math.round(storyCurrentSize.height * (width / storyCurrentSize.width))
+            ? Math.round(currentStorySize.height * (width / currentStorySize.width))
             : `calc(100% - ${innerHeightGap}px)`
         }}
       >
         <div
-          className={b('scope', { large: isLarge })}
+          className={b('scope')}
           style={{
             transform: isMobile
-              ? `scale(${width / storyCurrentSize.width})`
-              : `scale(${(height - currentPaddingSize) / storyCurrentSize.height})`
+              ? `scale(${width / currentStorySize.width})`
+              : `scale(${(height - currentPaddingSize - innerHeightGap) / currentStorySize.height})`
           }}
         >
           {story.storyData.map((widget: any) => (
@@ -84,9 +85,15 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
               className={b('object')}
               id={`story-${story.id}-widget-${widget.id}`}
               key={widget.id}
-              style={renderPosition(widget.position, widget.positionLimits)}
+              style={renderPosition(
+                widget.positionByResolutions[
+                  `${currentStorySize.width}x${currentStorySize.height}`
+                ],
+                widget.positionLimits
+              )}
             >
               <WidgetFactory
+                currentStorySize={currentStorySize}
                 handleGoToStory={handleGoToStory}
                 jsConfetti={jsConfetti}
                 storyId={story.id}

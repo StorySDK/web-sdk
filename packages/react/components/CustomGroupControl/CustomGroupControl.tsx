@@ -8,6 +8,8 @@ interface GroupProps {
   isLastGroup: boolean;
   isForceCloseAvailable?: boolean;
   isShowing: boolean;
+  storyWidth?: number;
+  storyHeight?: number;
   isShowMockup?: boolean;
   isStatusBarActive?: boolean;
   startStoryId?: string;
@@ -28,6 +30,8 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     isForceCloseAvailable,
     isShowMockup,
     isStatusBarActive,
+    storyWidth,
+    storyHeight,
     isEditorMode,
     isShowing,
     isCacheDisabled,
@@ -63,6 +67,8 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
           isStatusBarActive={isStatusBarActive}
           startStoryId={startStoryId}
           stories={group?.stories}
+          storyHeight={storyHeight}
+          storyWidth={storyWidth}
           onClose={handleCloseModal}
           onNextGroup={handleNextGroup}
           onPrevGroup={handlePrevGroup}

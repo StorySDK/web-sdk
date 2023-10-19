@@ -5,6 +5,10 @@ declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: 
     groupImageHeight?: number | undefined;
     groupTitleSize?: number | undefined;
     groupClassName?: string | undefined;
+    isShowMockup?: boolean | undefined;
+    isStatusBarActive?: boolean | undefined;
+    storyWidth?: number | undefined;
+    storyHeight?: number | undefined;
     groupsClassName?: string | undefined;
     autoplay?: boolean | undefined;
     groupId?: string | undefined;

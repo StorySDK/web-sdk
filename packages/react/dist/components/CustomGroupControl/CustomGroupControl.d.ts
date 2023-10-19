@@ -6,6 +6,8 @@ interface GroupProps {
     isLastGroup: boolean;
     isForceCloseAvailable?: boolean;
     isShowing: boolean;
+    storyWidth?: number;
+    storyHeight?: number;
     isShowMockup?: boolean;
     isStatusBarActive?: boolean;
     startStoryId?: string;

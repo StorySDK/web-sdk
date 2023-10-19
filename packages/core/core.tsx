@@ -14,6 +14,10 @@ export class Story {
     groupTitleSize?: number;
     groupClassName?: string;
     groupsClassName?: string;
+    storyWidth?: number;
+    storyHeight?: number;
+    isShowMockup?: boolean;
+    isStatusBarActive?: boolean;
     autoplay?: boolean;
     groupId?: string;
     startStoryId?: string;
@@ -29,6 +33,10 @@ export class Story {
       groupTitleSize?: number;
       groupClassName?: string;
       groupsClassName?: string;
+      storyWidth?: number;
+      storyHeight?: number;
+      isShowMockup?: boolean;
+      isStatusBarActive?: boolean;
       autoplay?: boolean;
       groupId?: string;
       startStoryId?: string;
@@ -47,6 +55,10 @@ export class Story {
       this.options.groupsClassName = options?.groupsClassName;
       this.options.autoplay = options?.autoplay;
       this.options.groupId = options?.groupId;
+      this.options.isShowMockup = options?.isShowMockup;
+      this.options.isStatusBarActive = options?.isStatusBarActive;
+      this.options.storyWidth = options?.storyWidth;
+      this.options.storyHeight = options?.storyHeight;
       this.options.forbidClose = options?.forbidClose;
       this.options.startStoryId = options?.startStoryId;
       this.options.devMode = options?.devMode;
@@ -96,6 +108,10 @@ export const init = () => {
         const groupId = container.getAttribute('data-storysdk-group-id');
         const startStoryId = container.getAttribute('data-storysdk-start-story-id');
         const forbidClose = container.getAttribute('data-storysdk-forbid-close');
+        const storyWidth = container.getAttribute('data-storysdk-story-width');
+        const storyHeight = container.getAttribute('data-storysdk-story-height');
+        const isShowMockup = container.getAttribute('data-storysdk-is-show-mockup');
+        const isStatusBarActive = container.getAttribute('data-storysdk-is-status-bar-active');
         const devMode = container.getAttribute('data-storysdk-dev-mode');
 
         const story = new Story(token, {
@@ -108,7 +124,11 @@ export const init = () => {
           groupId: groupId ?? undefined,
           startStoryId: startStoryId ?? undefined,
           forbidClose: forbidClose === 'true',
-          devMode: devMode === 'true'
+          devMode: devMode === 'true',
+          storyWidth: storyWidth ? parseInt(storyWidth, 10) : undefined,
+          storyHeight: storyHeight ? parseInt(storyHeight, 10) : undefined,
+          isShowMockup: isShowMockup === 'true',
+          isStatusBarActive: isStatusBarActive === 'true'
         });
         story.renderGroups(container);
       } else {

@@ -9,6 +9,9 @@ export interface GroupsListProps {
     groupImageHeight?: number;
     groupTitleSize?: number;
     groupsClassName?: string;
+    storyWidth?: number;
+    storyHeight?: number;
+    isStatusBarActive?: boolean;
     groupClassName?: string;
     isShowMockup?: boolean;
     isLoading?: boolean;
