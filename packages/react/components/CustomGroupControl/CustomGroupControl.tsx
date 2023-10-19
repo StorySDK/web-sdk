@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Group } from '../../types';
 import { StoryModal } from '..';
 
@@ -7,15 +7,17 @@ interface GroupProps {
   isFirstGroup: boolean;
   isLastGroup: boolean;
   isForceCloseAvailable?: boolean;
-  handleCloseModal: () => void;
-  handleNextGroup: () => void;
-  handlePrevGroup: () => void;
   isShowing: boolean;
+  storyWidth?: number;
+  storyHeight?: number;
   isShowMockup?: boolean;
   isStatusBarActive?: boolean;
   startStoryId?: string;
   isCacheDisabled?: boolean;
   isEditorMode?: boolean;
+  handleCloseModal: () => void;
+  handleNextGroup: () => void;
+  handlePrevGroup: () => void;
 }
 
 export const CustomGroupControl: React.FC<GroupProps> = (props) => {
@@ -28,19 +30,23 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     isForceCloseAvailable,
     isShowMockup,
     isStatusBarActive,
+    storyWidth,
+    storyHeight,
     isEditorMode,
+    isShowing,
+    isCacheDisabled,
     handleCloseModal,
     handleNextGroup,
-    handlePrevGroup,
-    isShowing,
-    isCacheDisabled
+    handlePrevGroup
   } = props;
+
+  const initOverlow = useMemo(() => document.body.style.overflow, []);
 
   useEffect(() => {
     if (isShowing) {
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = initOverlow ?? 'auto';
     }
   }, [isShowing]);
 
@@ -61,6 +67,8 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
           isStatusBarActive={isStatusBarActive}
           startStoryId={startStoryId}
           stories={group?.stories}
+          storyHeight={storyHeight}
+          storyWidth={storyWidth}
           onClose={handleCloseModal}
           onNextGroup={handleNextGroup}
           onPrevGroup={handlePrevGroup}

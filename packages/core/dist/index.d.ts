@@ -1,3 +1,5 @@
 import { Story } from './core';
 export { adaptGroupData } from './utils';
-export default Story;
+export { Story };
+declare const _default: void;
+export default _default;

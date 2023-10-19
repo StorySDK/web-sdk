@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
-import { ClickMeWidgetParamsType, WidgetComponent } from '@types';
+import { BackgroundColorType, ClickMeWidgetParamsType, WidgetComponent } from '@types';
 import { MaterialIcon } from '@components';
 import './ClickMeWidget.scss';
 
@@ -78,7 +78,7 @@ export const ClickMeWidget: WidgetComponent<{
       onKeyDown={!isReadOnly ? handleWidgetClick : undefined}
     >
       <div
-        className={b('container', { gradient: color.type === 'gradient' })}
+        className={b('container', { gradient: color.type === BackgroundColorType.GRADIENT })}
         style={{
           fontStyle: fontParams.style,
           fontWeight: fontParams.weight,

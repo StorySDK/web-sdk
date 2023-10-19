@@ -1,12 +1,14 @@
 {
   "name": "@storysdk/react",
-  "version": "0.10.9",
+  "version": "0.14.0",
   "description": "React components for StorySDK rendering",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
   "license": "ISC",
   "main": "dist/bundle.js",
   "module": "dist/bundle.esm.js",
+  "browser": "dist/bundle.umd.js",
+  "iife": "dist/bundle.iife.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
@@ -18,8 +20,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "peerDependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "dependencies": {
     "@react-hook/window-size": "^3.0.7",
@@ -30,7 +32,8 @@
     "luxon": "^3.2.1",
     "nanoid": "^3.1.30",
     "parse-color": "^1.0.0",
-    "react-loading-skeleton": "^3.0.2"
+    "react-loading-skeleton": "^3.0.2",
+    "simplebar-react": "^3.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
@@ -62,6 +65,7 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.4.1",
     "rollup": "^2.57.0",
+    "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-scss": "^3.0.0",
     "rollup-plugin-ts": "^1.4.6",

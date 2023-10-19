@@ -7,6 +7,8 @@ interface StoryModalProps {
     isShowing: boolean;
     forbidClose?: boolean;
     isShowMockup?: boolean;
+    storyWidth?: number;
+    storyHeight?: number;
     isLastGroup: boolean;
     isFirstGroup: boolean;
     startStoryId?: string;
@@ -30,7 +32,7 @@ export declare type StoryCurrentSize = {
     width: number;
     height: number;
 };
-export declare const STORY_SIZE: {
+export declare const STORY_SIZE_DEFAULT: {
     width: number;
     height: number;
 };
@@ -38,6 +40,7 @@ export declare const STORY_SIZE_LARGE: {
     width: number;
     height: number;
 };
+export declare const DEFAULT_STORY_DURATION = 7;
 export declare const PADDING_SIZE = 20;
 export declare const MOBILE_BREAKPOINT = 768;
 export declare const StoryModal: React.FC<StoryModalProps>;

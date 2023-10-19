@@ -29,17 +29,31 @@ import {
   QuizMultipleAnswerWithImageWidgetParamsType,
   QuizRateWidgetParamsType,
   QuizOpenAnswerWidgetParamsType,
-  ImageWidgetParamsType
+  ImageWidgetParamsType,
+  VideoWidgetParamsType
 } from './widgetsParams';
 
-type ColorValue = { type: 'color'; value: string; isFilled?: boolean };
-type GradientValue = { type: 'gradient'; value: string[]; isFilled?: boolean };
+export enum MediaType {
+  IMAGE = 'image',
+  VIDEO = 'video'
+}
+
+export enum BackgroundColorType {
+  GRADIENT = 'gradient',
+  COLOR = 'color'
+}
+
+export type BackgroundFillType = MediaType | BackgroundColorType;
+
+type ColorValue = { type: BackgroundColorType.COLOR; value: string; isFilled?: boolean };
+type GradientValue = { type: BackgroundColorType.GRADIENT; value: string[]; isFilled?: boolean };
 type BackgrounValue = {
-  type: 'image' | 'video';
+  type: MediaType;
   value: string;
   isFilled?: boolean;
   fileId?: string;
   stopAutoplay?: boolean;
+  metadata?: VideoMetadataType;
 };
 
 export type BorderType = GradientValue | ColorValue;
@@ -49,9 +63,14 @@ export interface FontParamsType {
   weight: number;
 }
 
+export type VideoMetadataType = {
+  duration: number;
+};
+
 export enum WidgetsTypes {
   RECTANGLE = 'rectangle',
   IMAGE = 'image',
+  VIDEO = 'video',
   ELLIPSE = 'ellipse',
   TEXT = 'text',
   SWIPE_UP = 'swipe_up',
@@ -79,6 +98,11 @@ export interface RectangleState {
 export interface ImageState {
   type: WidgetsTypes.IMAGE;
   params: ImageWidgetParamsType;
+}
+
+export interface VideoState {
+  type: WidgetsTypes.VIDEO;
+  params: VideoWidgetParamsType;
 }
 
 export interface EllipseState {
@@ -202,17 +226,6 @@ export interface WidgetPositionType {
   rotate: number;
   realWidth: number;
   realHeight: number;
-  elementsSize?: { [key: string]: any };
-  alternative?: {
-    x: number;
-    y: number;
-  };
-}
-
-export interface WidgetObjectType {
-  id: string;
-  position: WidgetPositionType;
-  positionLimits: WidgetPositionLimitsType;
   elementsSize?:
     | ChooseAnswerWidgetElemetsType
     | EmojiReactionWidgetElemetsType
@@ -224,9 +237,18 @@ export interface WidgetObjectType {
     | QuizRateWidgetElementsType
     | SliderWidgetElementsType
     | TalkAboutElementsType;
+}
+
+export interface WidgetObjectType {
+  id: string;
+  positionByResolutions: {
+    [key: string]: WidgetPositionType;
+  };
+  positionLimits: WidgetPositionLimitsType;
   content:
     | RectangleState
     | ImageState
+    | VideoState
     | EllipseState
     | TextState
     | SwipeUpState
@@ -250,6 +272,7 @@ export interface LayerData {
   layersGroupId: string;
   positionInGroup: number;
   isDefaultLayer: boolean;
+  duration?: number;
   score: {
     letter: string;
     points: number;
@@ -262,6 +285,7 @@ export interface StoryType {
   layerData: LayerData;
   background: BackgroundType;
   positionIndex: number;
+  position: number;
 }
 
 export const ScoreWidgets = [

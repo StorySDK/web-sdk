@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { SwipeUpWidgetParamsType, WidgetComponent } from '@types';
+import { BackgroundColorType, SwipeUpWidgetParamsType, WidgetComponent } from '@types';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
 import { MaterialIcon } from '@components';
 import './SwipeUpWidget.scss';
@@ -53,7 +53,7 @@ export const SwipeUpWidget: WidgetComponent<{
 
   return (
     <div
-      className={b({ gradient: color.type === 'gradient' })}
+      className={b({ gradient: color.type === BackgroundColorType.GRADIENT })}
       role="button"
       style={{
         fontFamily,

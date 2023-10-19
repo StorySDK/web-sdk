@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import block from 'bem-cn';
 import { DateTime } from 'luxon';
-import './StatusBar.scss';
 import { IconIphoneBattery, IconIphoneCellular, IconIphoneWifi } from '@components/icons';
 import { useAdaptiveValue } from '@hooks';
+import dynamicIsland from '../../../../assets/images/dynamic-island-mockup.svg';
+import './StatusBar.scss';
 
 const b = block('StorySdkStatusBar');
 
 const INIT_VERTICAL_PADDING = 10;
 const INIT_SIDE_PADDING = 20;
+const DYNAMIS_ISLAND_WIDTH = 80;
 
 interface StatusBarProps {
   className?: string;
@@ -26,6 +28,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({ className }) => {
 
   const paddingSide = useAdaptiveValue(INIT_SIDE_PADDING);
   const paddingVertical = useAdaptiveValue(INIT_VERTICAL_PADDING);
+  const dynamicIslandWidth = useAdaptiveValue(DYNAMIS_ISLAND_WIDTH);
 
   return (
     <div
@@ -38,6 +41,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({ className }) => {
       }}
     >
       <span className={b('time')}>{time}</span>
+      <img alt="" className={b('dynamicIsland')} src={dynamicIsland} width={dynamicIslandWidth} />
       <div className={b('iconWrapper')}>
         <IconIphoneCellular className={b('icon')} />
         <IconIphoneWifi className={b('icon')} />

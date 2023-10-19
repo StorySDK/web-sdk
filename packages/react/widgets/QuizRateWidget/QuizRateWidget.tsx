@@ -2,7 +2,12 @@
 import React, { useCallback, useState } from 'react';
 import { IconRateStar } from '@components/icons';
 import { block, getTextStyles } from '@utils';
-import { QuizRateWidgetElementsType, QuizRateWidgetParamsType, WidgetComponent } from '@types';
+import {
+  BackgroundColorType,
+  QuizRateWidgetElementsType,
+  QuizRateWidgetParamsType,
+  WidgetComponent
+} from '@types';
 import cn from 'classnames';
 import './QuizRateWidget.scss';
 
@@ -59,7 +64,9 @@ export const QuizRateWidget: WidgetComponent<{
       {!isTitleHidden && (
         <div
           className={cn(
-            b('title', { gradient: params.fontColor?.type === 'gradient' }).toString(),
+            b('title', {
+              gradient: params.fontColor?.type === BackgroundColorType.GRADIENT
+            }).toString(),
             'StorySdk-widgetTitle'
           )}
           style={{

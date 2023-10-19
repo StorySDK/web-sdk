@@ -1,21 +1,31 @@
 import { ChooseAnswerWidgetElemetsType, EmojiReactionWidgetElemetsType, QuestionWidgetElementsType, QuizMultipleAnswerWidgetElementsType, QuizMultipleAnswerWidgetWithImageElementsType, QuizOneAnswerWidgetElementsType, QuizOpenAnswerWidgetElementsType, QuizRateWidgetElementsType, SliderWidgetElementsType, TalkAboutElementsType } from './widgetElementsTypes';
-import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerWidgetParamsType, QuizOneAnswerWidgetParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageWidgetParamsType, QuizRateWidgetParamsType, QuizOpenAnswerWidgetParamsType, ImageWidgetParamsType } from './widgetsParams';
+import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerWidgetParamsType, QuizOneAnswerWidgetParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageWidgetParamsType, QuizRateWidgetParamsType, QuizOpenAnswerWidgetParamsType, ImageWidgetParamsType, VideoWidgetParamsType } from './widgetsParams';
+export declare enum MediaType {
+    IMAGE = "image",
+    VIDEO = "video"
+}
+export declare enum BackgroundColorType {
+    GRADIENT = "gradient",
+    COLOR = "color"
+}
+export declare type BackgroundFillType = MediaType | BackgroundColorType;
 declare type ColorValue = {
-    type: 'color';
+    type: BackgroundColorType.COLOR;
     value: string;
     isFilled?: boolean;
 };
 declare type GradientValue = {
-    type: 'gradient';
+    type: BackgroundColorType.GRADIENT;
     value: string[];
     isFilled?: boolean;
 };
 declare type BackgrounValue = {
-    type: 'image' | 'video';
+    type: MediaType;
     value: string;
     isFilled?: boolean;
     fileId?: string;
     stopAutoplay?: boolean;
+    metadata?: VideoMetadataType;
 };
 export declare type BorderType = GradientValue | ColorValue;
 export declare type BackgroundType = GradientValue | ColorValue | BackgrounValue;
@@ -23,9 +33,13 @@ export interface FontParamsType {
     style: string;
     weight: number;
 }
+export declare type VideoMetadataType = {
+    duration: number;
+};
 export declare enum WidgetsTypes {
     RECTANGLE = "rectangle",
     IMAGE = "image",
+    VIDEO = "video",
     ELLIPSE = "ellipse",
     TEXT = "text",
     SWIPE_UP = "swipe_up",
@@ -51,6 +65,10 @@ export interface RectangleState {
 export interface ImageState {
     type: WidgetsTypes.IMAGE;
     params: ImageWidgetParamsType;
+}
+export interface VideoState {
+    type: WidgetsTypes.VIDEO;
+    params: VideoWidgetParamsType;
 }
 export interface EllipseState {
     type: WidgetsTypes.ELLIPSE;
@@ -155,26 +173,22 @@ export interface WidgetPositionType {
     rotate: number;
     realWidth: number;
     realHeight: number;
-    elementsSize?: {
-        [key: string]: any;
-    };
-    alternative?: {
-        x: number;
-        y: number;
-    };
+    elementsSize?: ChooseAnswerWidgetElemetsType | EmojiReactionWidgetElemetsType | QuestionWidgetElementsType | QuizMultipleAnswerWidgetElementsType | QuizOneAnswerWidgetElementsType | QuizMultipleAnswerWidgetWithImageElementsType | QuizOpenAnswerWidgetElementsType | QuizRateWidgetElementsType | SliderWidgetElementsType | TalkAboutElementsType;
 }
 export interface WidgetObjectType {
     id: string;
-    position: WidgetPositionType;
+    positionByResolutions: {
+        [key: string]: WidgetPositionType;
+    };
     positionLimits: WidgetPositionLimitsType;
-    elementsSize?: ChooseAnswerWidgetElemetsType | EmojiReactionWidgetElemetsType | QuestionWidgetElementsType | QuizMultipleAnswerWidgetElementsType | QuizOneAnswerWidgetElementsType | QuizMultipleAnswerWidgetWithImageElementsType | QuizOpenAnswerWidgetElementsType | QuizRateWidgetElementsType | SliderWidgetElementsType | TalkAboutElementsType;
-    content: RectangleState | ImageState | EllipseState | TextState | SwipeUpState | SliderState | QuestionState | ClickMeState | TalkAboutState | EmojiReactionState | TimerState | ChooseAnswerState | GiphyState | QuizOneAnswerState | QuizMultipleAnswerState | QuizMultipleAnswerWithImageState | QuizRateState | QuizOpenAnswerState;
+    content: RectangleState | ImageState | VideoState | EllipseState | TextState | SwipeUpState | SliderState | QuestionState | ClickMeState | TalkAboutState | EmojiReactionState | TimerState | ChooseAnswerState | GiphyState | QuizOneAnswerState | QuizMultipleAnswerState | QuizMultipleAnswerWithImageState | QuizRateState | QuizOpenAnswerState;
     action?(): void;
 }
 export interface LayerData {
     layersGroupId: string;
     positionInGroup: number;
     isDefaultLayer: boolean;
+    duration?: number;
     score: {
         letter: string;
         points: number;
@@ -186,6 +200,7 @@ export interface StoryType {
     layerData: LayerData;
     background: BackgroundType;
     positionIndex: number;
+    position: number;
 }
 export declare const ScoreWidgets: WidgetsTypes[];
 export {};

@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/core",
-  "version": "0.10.9",
+  "version": "0.14.0",
   "description": "StorySDK for web projects",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
@@ -8,6 +8,8 @@
   "main": "dist/bundle.js",
   "module": "dist/bundle.esm.js",
   "types": "dist/index.d.ts",
+  "browser": "dist/bundle.umd.js",
+  "iife": "dist/bundle.iife.js",
   "publishConfig": {
     "access": "public"
   },
@@ -17,10 +19,6 @@
   "files": [
     "dist/"
   ],
-  "peerDependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
-  },
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/preset-react": "^7.14.5",
@@ -28,7 +26,6 @@
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.5",
-    "@storysdk/react": "^0.10.9",
     "@types/axios": "^0.14.0",
     "@types/bem-cn": "^3.0.0",
     "@types/emoji-mart": "^3.0.6",
@@ -59,9 +56,12 @@
   },
   "dependencies": {
     "@react-hook/window-size": "^3.1.1",
+    "@storysdk/react": "^0.14.0",
     "axios": "^0.24.0",
     "luxon": "^2.3.0",
-    "nanoid": "^3.1.32"
+    "nanoid": "^3.1.32",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "gitHead": "86a2ccc8d21a9db1e10233ceeb2dabb25773b186"
 }

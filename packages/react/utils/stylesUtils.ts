@@ -1,7 +1,14 @@
 import { setup } from 'bem-cn';
 import hexToRgba from 'hex-to-rgba';
 import parseColor from 'parse-color';
-import { WidgetPositionType, WidgetPositionLimitsType, BackgroundType, BorderType } from '../types';
+import {
+  WidgetPositionType,
+  WidgetPositionLimitsType,
+  BackgroundType,
+  BorderType,
+  BackgroundColorType,
+  MediaType
+} from '../types';
 
 interface Stroke {
   strokeThickness: number;
@@ -31,7 +38,7 @@ export const renderBackgroundStyles = (background: BackgroundType, opacity?: num
   let color = background.value;
 
   switch (background.type) {
-    case 'color':
+    case BackgroundColorType.COLOR:
       if (color.includes('#') && opacity !== undefined) {
         color = hexToRgba(background.value, opacity / 100);
       } else if (opacity !== undefined) {
@@ -39,9 +46,9 @@ export const renderBackgroundStyles = (background: BackgroundType, opacity?: num
         return `rgba(${parsed.rgb[0]}, ${parsed.rgb[1]}, ${parsed.rgb[2]}, ${opacity / 100})`;
       }
       return color as string;
-    case 'gradient':
+    case BackgroundColorType.GRADIENT:
       return `linear-gradient(180deg, ${background.value[0]} 0%, ${background.value[1]} 100%)`;
-    case 'image':
+    case MediaType.IMAGE:
       return `center / cover url("${background.value}")`;
     default:
       return 'transparent';
@@ -55,11 +62,11 @@ export const renderBorderStyles = ({
   fillBorderRadius
 }: Stroke): any => {
   switch (strokeColor.type) {
-    case 'color':
+    case BackgroundColorType.COLOR:
       return {
         border: `${strokeThickness}px solid ${renderColor(strokeColor.value, strokeOpacity)}`
       };
-    case 'gradient':
+    case BackgroundColorType.GRADIENT:
       return {
         border: `${strokeThickness}px solid`,
         borderImageSlice: `1`,
@@ -81,11 +88,11 @@ export const renderTextBackgroundStyles = ({
   opacity?: number;
 }): React.CSSProperties => {
   switch (color.type) {
-    case 'color':
+    case BackgroundColorType.COLOR:
       return {
         color: color.value
       };
-    case 'gradient':
+    case BackgroundColorType.GRADIENT:
       return {
         background: renderGradient(color.value, opacity)
       };
@@ -107,7 +114,7 @@ export const renderPosition = (
   transform: `rotate(${position.rotate}deg)`
 });
 
-const SCALE_INDEX = 2.76;
+const SCALE_INDEX = 1;
 export const getScalableValue = (value: number): number => Math.round(value * SCALE_INDEX);
 
 export const calculateElementSize = (width: number, elementSize: number, minWidth?: number) =>

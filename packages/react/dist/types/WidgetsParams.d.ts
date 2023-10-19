@@ -1,5 +1,5 @@
 import { MaterialIconValueType } from '../components/MaterialIcon/_types';
-import { BackgroundType, BorderType, FontParamsType } from '.';
+import { BackgroundType, BorderType, FontParamsType, VideoMetadataType } from '.';
 export declare type QuizAnswersScoreParams = {
     letter: string;
     points: number;
@@ -17,11 +17,23 @@ export declare type RectangleWidgetParamsType = {
     strokeColor: BorderType;
     strokeOpacity: number;
     hasBorder: boolean;
+    editor?: {
+        strokeThickness?: number;
+        fillBorderRadius?: number;
+    };
 };
 export declare type ImageWidgetParamsType = {
     borderRadius: number;
     widgetOpacity: number;
     imageUrl: string;
+    fileId?: string;
+};
+export declare type VideoWidgetParamsType = {
+    widgetOpacity: number;
+    videoUrl: string;
+    fileId?: string;
+    stopAutoplay?: boolean;
+    metadata?: VideoMetadataType;
 };
 export declare type EllipseWidgetParamsType = {
     fillColor: BackgroundType;
@@ -30,7 +42,10 @@ export declare type EllipseWidgetParamsType = {
     strokeColor: BorderType;
     strokeOpacity: number;
     widgetOpacity: number;
-    hasBorder: false;
+    hasBorder: boolean;
+    editor?: {
+        strokeThickness?: number;
+    };
 };
 export declare type ClickMeWidgetParamsType = {
     fontFamily: string;
@@ -54,6 +69,12 @@ export declare type ClickMeWidgetParamsType = {
     customFields?: {
         [key: string]: string;
     };
+    editor?: {
+        iconSize?: number;
+        fontSize?: number;
+        borderWidth?: number;
+        borderRadius?: number;
+    };
 };
 export declare type ChooseAnswerWidgetParamsType = {
     text: string;
@@ -75,6 +96,9 @@ export declare type GiphyWidgetParamsType = {
     gif: string;
     widgetOpacity: number;
     borderRadius: number;
+    editor?: {
+        borderRadius?: number;
+    };
 };
 export declare type QuestionWidgetParamsType = {
     question: string;
@@ -105,6 +129,10 @@ export declare type SwipeUpWidgetParamsType = {
     color: BorderType;
     url: string;
     icon: MaterialIconValueType;
+    editor?: {
+        iconSize?: number;
+        fontSize?: number;
+    };
 };
 export declare type TalkAboutWidgetParamsType = {
     text: string;
@@ -127,6 +155,9 @@ export declare type TextWidgetParamsType = {
     opacity: number;
     widgetOpacity: number;
     backgroundOpacity: number;
+    editor?: {
+        fontSize?: number;
+    };
 };
 export declare type TimerWidgetParamsType = {
     time: number;

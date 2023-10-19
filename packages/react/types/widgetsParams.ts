@@ -1,5 +1,5 @@
 import { MaterialIconValueType } from '../components/MaterialIcon/_types';
-import { BackgroundType, BorderType, FontParamsType } from '.';
+import { BackgroundType, BorderType, FontParamsType, VideoMetadataType } from '.';
 
 export type QuizAnswersScoreParams = {
   letter: string;
@@ -20,12 +20,25 @@ export type RectangleWidgetParamsType = {
   strokeColor: BorderType;
   strokeOpacity: number;
   hasBorder: boolean;
+  editor?: {
+    strokeThickness?: number;
+    fillBorderRadius?: number;
+  };
 };
 
 export type ImageWidgetParamsType = {
   borderRadius: number;
   widgetOpacity: number;
   imageUrl: string;
+  fileId?: string;
+};
+
+export type VideoWidgetParamsType = {
+  widgetOpacity: number;
+  videoUrl: string;
+  fileId?: string;
+  stopAutoplay?: boolean;
+  metadata?: VideoMetadataType;
 };
 
 export type EllipseWidgetParamsType = {
@@ -35,7 +48,10 @@ export type EllipseWidgetParamsType = {
   strokeColor: BorderType;
   strokeOpacity: number;
   widgetOpacity: number;
-  hasBorder: false;
+  hasBorder: boolean;
+  editor?: {
+    strokeThickness?: number;
+  };
 };
 
 export type ClickMeWidgetParamsType = {
@@ -60,6 +76,12 @@ export type ClickMeWidgetParamsType = {
   customFields?: {
     [key: string]: string;
   };
+  editor?: {
+    iconSize?: number;
+    fontSize?: number;
+    borderWidth?: number;
+    borderRadius?: number;
+  };
 };
 
 export type ChooseAnswerWidgetParamsType = {
@@ -80,6 +102,9 @@ export type GiphyWidgetParamsType = {
   gif: string;
   widgetOpacity: number;
   borderRadius: number;
+  editor?: {
+    borderRadius?: number;
+  };
 };
 
 export type QuestionWidgetParamsType = {
@@ -113,6 +138,10 @@ export type SwipeUpWidgetParamsType = {
   color: BorderType;
   url: string;
   icon: MaterialIconValueType;
+  editor?: {
+    iconSize?: number;
+    fontSize?: number;
+  };
 };
 
 export type TalkAboutWidgetParamsType = {
@@ -137,6 +166,9 @@ export type TextWidgetParamsType = {
   opacity: number;
   widgetOpacity: number;
   backgroundOpacity: number;
+  editor?: {
+    fontSize?: number;
+  };
 };
 
 export type TimerWidgetParamsType = {

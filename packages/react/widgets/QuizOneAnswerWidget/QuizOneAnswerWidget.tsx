@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { StoryContext } from '@components';
 import {
+  BackgroundColorType,
   QuizOneAnswerWidgetElementsType,
   QuizOneAnswerWidgetParamsType,
   ScoreType,
@@ -97,7 +98,9 @@ export const QuizOneAnswerWidget: WidgetComponent<{
       {!isTitleHidden && (
         <div
           className={cn(
-            b('title', { gradient: params.titleFont?.fontColor?.type === 'gradient' }).toString(),
+            b('title', {
+              gradient: params.titleFont?.fontColor?.type === BackgroundColorType.GRADIENT
+            }).toString(),
             'StorySdk-widgetTitle'
           )}
           style={{
@@ -128,7 +131,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
             <p
               className={cn(
                 b('answerTitle', {
-                  gradient: params.answersFont?.fontColor?.type === 'gradient'
+                  gradient: params.answersFont?.fontColor?.type === BackgroundColorType.GRADIENT
                 }).toString(),
                 'StorySdk-widgetAnswerTitle'
               )}

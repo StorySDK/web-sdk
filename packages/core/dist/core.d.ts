@@ -7,6 +7,10 @@ export declare class Story {
         groupTitleSize?: number;
         groupClassName?: string;
         groupsClassName?: string;
+        storyWidth?: number;
+        storyHeight?: number;
+        isShowMockup?: boolean;
+        isStatusBarActive?: boolean;
         autoplay?: boolean;
         groupId?: string;
         startStoryId?: string;
@@ -19,6 +23,10 @@ export declare class Story {
         groupTitleSize?: number;
         groupClassName?: string;
         groupsClassName?: string;
+        storyWidth?: number;
+        storyHeight?: number;
+        isShowMockup?: boolean;
+        isStatusBarActive?: boolean;
         autoplay?: boolean;
         groupId?: string;
         startStoryId?: string;
@@ -27,3 +35,4 @@ export declare class Story {
     });
     renderGroups(element?: Element | HTMLDivElement | null): void;
 }
+export declare const init: () => void;

@@ -2,11 +2,19 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  position: relative;
 
   &__time {
     color: #FFFFFF;
     font-weight: 600;
     font-size: 14px;
+  }
+
+  &__dynamicIsland {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   &__icon {

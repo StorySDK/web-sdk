@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import cn from 'classnames';
-import { QuestionWidgetParamsType, WidgetComponent, QuestionWidgetElementsType } from '@types';
+import {
+  QuestionWidgetParamsType,
+  WidgetComponent,
+  QuestionWidgetElementsType,
+  BackgroundColorType
+} from '@types';
 import { block, getTextStyles } from '@utils';
 import './QuestionWidget.scss';
 import { StoryContext } from '@components';
@@ -36,10 +41,12 @@ export const QuestionWidget: WidgetComponent<{
   const [answer, setAnswer] = useState<string | null>(answerFromCache?.answer || null);
 
   const [percents, setPercents] = useState(
-    answerFromCache?.percents ?? {
-      confirm: 0,
-      decline: 0
-    }
+    answerFromCache?.percents
+      ? { confirm: 0, decline: 0, ...answerFromCache.percents }
+      : {
+          confirm: 0,
+          decline: 0
+        }
   );
 
   const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
@@ -104,7 +111,9 @@ export const QuestionWidget: WidgetComponent<{
       {!params.isTitleHidden && (
         <div
           className={cn(
-            b('question', { gradient: params.fontColor?.type === 'gradient' }).toString(),
+            b('question', {
+              gradient: params.fontColor?.type === BackgroundColorType.GRADIENT
+            }).toString(),
             'StorySdk-widgetTitle'
           )}
           style={{

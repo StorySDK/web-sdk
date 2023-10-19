@@ -4,7 +4,7 @@ import { StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
 interface StoryContentProps {
     story: StoryType;
-    storyCurrentSize: StoryCurrentSize;
+    currentStorySize: StoryCurrentSize;
     currentPaddingSize: number;
     innerHeightGap: number;
     noTopShadow?: boolean;

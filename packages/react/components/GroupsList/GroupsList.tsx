@@ -1,10 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import block from 'bem-cn';
 import Skeleton from 'react-loading-skeleton';
 import classNames from 'classnames';
+import SimpleBar from 'simplebar-react';
+import ReactDOM from 'react-dom';
 import { Group } from '../../types';
 import { GroupItem, StoryModal } from '..';
 
+import 'simplebar-react/dist/simplebar.min.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
 
@@ -16,6 +19,9 @@ export interface GroupsListProps {
   groupImageHeight?: number;
   groupTitleSize?: number;
   groupsClassName?: string;
+  storyWidth?: number;
+  storyHeight?: number;
+  isStatusBarActive?: boolean;
   groupClassName?: string;
   isShowMockup?: boolean;
   isLoading?: boolean;
@@ -44,9 +50,12 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groupImageHeight,
     groupTitleSize,
     isShowMockup,
+    isStatusBarActive,
     autoplay,
     startStoryId,
     forbidClose,
+    storyWidth,
+    storyHeight,
     onOpenGroup,
     onCloseGroup,
     onNextStory,
@@ -59,6 +68,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
 
   const [currentGroup, setCurrentGroup] = useState(0);
   const [modalShow, setModalShow] = useState(!!autoplay);
+
+  const scrollRef = useRef<any>(null);
 
   useEffect(() => {
     if (autoplay && onOpenGroup && groups?.length) {
@@ -116,34 +127,82 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     }
   }, [currentGroup, forbidClose, groups, onCloseGroup]);
 
+  const rootElement = useMemo(() => document.createElement('div'), []);
+
+  useEffect(() => {
+    document.body.appendChild(rootElement);
+  }, [rootElement]);
+
+  const currentGroupMemo = useMemo(() => groups?.[currentGroup], [groups, currentGroup]);
+
+  useEffect(() => {
+    if (!isLoading || autoplay) {
+      ReactDOM.render(
+        <StoryModal
+          currentGroup={currentGroupMemo}
+          forbidClose={forbidClose}
+          isFirstGroup={currentGroup === 0}
+          isLastGroup={currentGroup === groups?.length - 1}
+          isLoading={isLoading}
+          isShowMockup={isShowMockup}
+          isShowing={modalShow}
+          isStatusBarActive={isStatusBarActive}
+          startStoryId={startStoryId}
+          stories={currentGroupMemo?.stories}
+          storyHeight={storyHeight}
+          storyWidth={storyWidth}
+          onClose={handleCloseModal}
+          onCloseStory={onCloseStory}
+          onFinishQuiz={onFinishQuiz}
+          onNextGroup={handleNextGroup}
+          onNextStory={onNextStory}
+          onOpenStory={onOpenStory}
+          onPrevGroup={handlePrevGroup}
+          onPrevStory={onPrevStory}
+          onStartQuiz={onStartQuiz}
+        />,
+        rootElement
+      );
+    }
+  }, [isLoading, autoplay, currentGroupMemo, modalShow]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.recalculate();
+    }
+  }, [groups.length, isLoading, autoplay]);
+
   return (
     <>
-      {isLoading && !autoplay ? (
-        <div className={b()}>
-          <div className={b('carousel')}>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+      <div className={classNames(b(), groupsClassName)}>
+        <SimpleBar
+          ref={scrollRef}
+          style={{
+            width: '100%'
+          }}
+        >
+          {isLoading && !autoplay ? (
+            <div className={b('carousel')}>
+              <div className={b('loaderItem')}>
+                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+              </div>
+              <div className={b('loaderItem')}>
+                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+              </div>
+              <div className={b('loaderItem')}>
+                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+              </div>
+              <div className={b('loaderItem')}>
+                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+              </div>
             </div>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-          </div>
-        </div>
-      ) : (
-        <>
-          {groups.length ? (
+          ) : (
             <>
-              <div className={classNames(b(), groupsClassName)}>
+              {groups.length ? (
                 <div className={b('carousel')}>
                   {groups
                     .filter((group: any) => group.stories.length)
@@ -163,36 +222,13 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                       />
                     ))}
                 </div>
-              </div>
+              ) : (
+                <p className={b('emptyText')}>Stories will be here</p>
+              )}
             </>
-          ) : (
-            <div className={b({ empty: true })}>
-              <p className={b('emptyText')}>Stories will be here</p>
-            </div>
           )}
-
-          <StoryModal
-            currentGroup={groups?.[currentGroup]}
-            forbidClose={forbidClose}
-            isFirstGroup={currentGroup === 0}
-            isLastGroup={currentGroup === groups?.length - 1}
-            isLoading={isLoading}
-            isShowMockup={isShowMockup}
-            isShowing={modalShow}
-            startStoryId={startStoryId}
-            stories={groups?.[currentGroup]?.stories}
-            onClose={handleCloseModal}
-            onCloseStory={onCloseStory}
-            onFinishQuiz={onFinishQuiz}
-            onNextGroup={handleNextGroup}
-            onNextStory={onNextStory}
-            onOpenStory={onOpenStory}
-            onPrevGroup={handlePrevGroup}
-            onPrevStory={onPrevStory}
-            onStartQuiz={onStartQuiz}
-          />
-        </>
-      )}
+        </SimpleBar>
+      </div>
     </>
   );
 };

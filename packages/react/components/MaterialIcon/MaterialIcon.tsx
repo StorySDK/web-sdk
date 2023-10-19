@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import cn from 'classnames';
 import { nanoid } from 'nanoid';
-import { BackgroundType } from '../../types';
+import { BackgroundColorType, BackgroundType } from '../../types';
 import { MATERIAL_ICONS } from './_constants';
 import './MaterialIcon.scss';
 
@@ -28,7 +28,7 @@ export const MaterialIcon = memo(
     let gradient;
     const gradientId = useMemo(() => nanoid(), []);
 
-    if (background?.type === 'gradient') {
+    if (background?.type === BackgroundColorType.GRADIENT) {
       gradient = (
         <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" stopColor={background.value[0]} />

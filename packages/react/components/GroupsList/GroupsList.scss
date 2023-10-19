@@ -1,29 +1,23 @@
 .GroupsSdkList {
-  display: block;
-
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
   box-sizing: border-box;
   
   & * {
     box-sizing: border-box;
   }
 
-  &_empty {
-    width: 100%;
-    height: 80px;
-    padding: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   &__emptyText {
     margin: 0;
     color: #dddbde;
+    text-align: center;
+    padding: 8px;
   }
 
   &__carousel {
     display: flex;
-    overflow-x: auto;
     padding: 8px;
     min-height: 100px;
   }

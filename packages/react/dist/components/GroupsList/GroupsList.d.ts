@@ -1,5 +1,6 @@
 import React from 'react';
 import { Group } from '../../types';
+import 'simplebar-react/dist/simplebar.min.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
 export interface GroupsListProps {
@@ -8,6 +9,9 @@ export interface GroupsListProps {
     groupImageHeight?: number;
     groupTitleSize?: number;
     groupsClassName?: string;
+    storyWidth?: number;
+    storyHeight?: number;
+    isStatusBarActive?: boolean;
     groupClassName?: string;
     isShowMockup?: boolean;
     isLoading?: boolean;
