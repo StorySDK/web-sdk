@@ -31,7 +31,7 @@ import {
   QuizOpenAnswerWidgetParamsType,
   ImageWidgetParamsType,
   VideoWidgetParamsType
-} from './widgetsParams';
+} from './WidgetsParams';
 
 export enum MediaType {
   IMAGE = 'image',
