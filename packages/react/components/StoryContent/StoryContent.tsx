@@ -17,6 +17,7 @@ interface StoryContentProps {
   currentPaddingSize: number;
   innerHeightGap: number;
   noTopShadow?: boolean;
+  noTopBackgroundShadow?: boolean;
   jsConfetti?: any;
   isLarge?: boolean;
   isLargeBackground?: boolean;
@@ -28,6 +29,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     story,
     jsConfetti,
     noTopShadow,
+    noTopBackgroundShadow,
     currentStorySize,
     currentPaddingSize,
     isLarge,
@@ -44,7 +46,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
   return (
     <>
       <div
-        className={b('background', { noTopShadow })}
+        className={b('background', { noTopShadow: noTopBackgroundShadow })}
         style={{
           background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
           height: isMobile
@@ -65,7 +67,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
       </div>
 
       <div
-        className={b({ large: isLarge, center: isLargeBackground })}
+        className={b({ large: isLarge, center: isLargeBackground, noTopShadow })}
         style={{
           height: isMobile
             ? Math.round(currentStorySize.height * (width / currentStorySize.width))

@@ -647,9 +647,14 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   );
 
   const noTopShadow =
-    currentGroupType === GroupType.ONBOARDING &&
-    currentGroup?.settings?.isProgressHidden &&
-    currentGroup?.settings?.isProhibitToClose;
+    (currentGroupType === GroupType.ONBOARDING &&
+      currentGroup?.settings?.isProgressHidden &&
+      currentGroup?.settings?.isProhibitToClose) ||
+    isGroupWithFilledBackground;
+
+  const noTopBackgroundShadow =
+    currentGroupType === GroupType.ONBOARDING ||
+    (currentGroupType === GroupType.GROUP && !isBackroundFilled);
 
   const handleQuizAnswer = (params: { type: string; answer: string | number }) => {
     if (params.type === 'add' && !isQuizStarted && currentGroup) {
@@ -805,6 +810,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                             isLarge={isLarge || isGroupWithFilledBackground}
                             isLargeBackground={isShowMockup && currentGroupType === GroupType.GROUP}
                             jsConfetti={jsConfetti}
+                            noTopBackgroundShadow={noTopBackgroundShadow}
                             noTopShadow={noTopShadow}
                             story={story}
                           />
