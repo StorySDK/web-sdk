@@ -173,6 +173,7 @@ export interface WidgetPositionType {
     rotate: number;
     realWidth: number;
     realHeight: number;
+    isHeightLocked?: boolean;
     elementsSize?: ChooseAnswerWidgetElemetsType | EmojiReactionWidgetElemetsType | QuestionWidgetElementsType | QuizMultipleAnswerWidgetElementsType | QuizOneAnswerWidgetElementsType | QuizMultipleAnswerWidgetWithImageElementsType | QuizOpenAnswerWidgetElementsType | QuizRateWidgetElementsType | SliderWidgetElementsType | TalkAboutElementsType;
 }
 export interface WidgetObjectType {
