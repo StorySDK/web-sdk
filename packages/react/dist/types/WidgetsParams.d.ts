@@ -31,6 +31,7 @@ export declare type ImageWidgetParamsType = {
 export declare type VideoWidgetParamsType = {
     widgetOpacity: number;
     videoUrl: string;
+    videoPreviewUrl?: string;
     fileId?: string;
     stopAutoplay?: boolean;
     metadata?: VideoMetadataType;

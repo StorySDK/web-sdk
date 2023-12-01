@@ -7,7 +7,7 @@ const b = block('VideoWidget');
 
 export const VideoWidget: WidgetComponent<{ params: VideoWidgetParamsType }> = React.memo(
   (props) => {
-    const { videoUrl, stopAutoplay, widgetOpacity } = props.params;
+    const { videoUrl, videoPreviewUrl, stopAutoplay, widgetOpacity } = props.params;
 
     const styles = {
       opacity: widgetOpacity / 100
@@ -22,7 +22,7 @@ export const VideoWidget: WidgetComponent<{ params: VideoWidgetParamsType }> = R
         muted
         playsInline
         preload="metadata"
-        src={videoUrl}
+        src={videoPreviewUrl ?? videoUrl}
         style={styles}
       />
     );
