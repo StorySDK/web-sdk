@@ -22,7 +22,7 @@ export class Story {
     groupId?: string;
     startStoryId?: string;
     forbidClose?: boolean;
-    devMode?: boolean;
+    devMode?: 'staging' | 'development';
   };
 
   constructor(
@@ -41,7 +41,7 @@ export class Story {
       groupId?: string;
       startStoryId?: string;
       forbidClose?: boolean;
-      devMode?: boolean;
+      devMode?: 'staging' | 'development';
     }
   ) {
     this.token = token;
@@ -64,9 +64,15 @@ export class Story {
       this.options.devMode = options?.devMode;
     }
 
-    axios.defaults.baseURL = options?.devMode
-      ? 'https://api.diffapp.link/sdk/v1'
-      : 'https://api.storysdk.com/sdk/v1';
+    let reqUrl = 'https://api.storysdk.com/sdk/v1';
+
+    if (options?.devMode === 'staging') {
+      reqUrl = 'https://api.diffapp.link/sdk/v1';
+    } else if (options?.devMode === 'development') {
+      reqUrl = 'http://localhost:8080/sdk/v1';
+    }
+
+    axios.defaults.baseURL = reqUrl;
 
     if (token) {
       axios.defaults.headers.common = { Authorization: `SDK ${token}` };
@@ -124,7 +130,7 @@ export const init = () => {
           groupId: groupId ?? undefined,
           startStoryId: startStoryId ?? undefined,
           forbidClose: forbidClose === 'true',
-          devMode: devMode === 'true',
+          devMode: devMode as 'staging' | 'development',
           storyWidth: storyWidth ? parseInt(storyWidth, 10) : undefined,
           storyHeight: storyHeight ? parseInt(storyHeight, 10) : undefined,
           isShowMockup: isShowMockup === 'true',

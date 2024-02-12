@@ -31,7 +31,7 @@ import {
   QuizOpenAnswerWidgetParamsType,
   ImageWidgetParamsType,
   VideoWidgetParamsType
-} from './widgetsParams';
+} from './WidgetsParams';
 
 export enum MediaType {
   IMAGE = 'image',
@@ -226,6 +226,7 @@ export interface WidgetPositionType {
   rotate: number;
   realWidth: number;
   realHeight: number;
+  isHeightLocked?: boolean;
   elementsSize?:
     | ChooseAnswerWidgetElemetsType
     | EmojiReactionWidgetElemetsType

@@ -34,7 +34,6 @@ const withGroupsData =
       groupId?: string;
       startStoryId?: string;
       forbidClose?: boolean;
-      devMode?: boolean;
     }
   ) =>
   () => {

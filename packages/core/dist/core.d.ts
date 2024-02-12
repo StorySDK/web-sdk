@@ -15,7 +15,7 @@ export declare class Story {
         groupId?: string;
         startStoryId?: string;
         forbidClose?: boolean;
-        devMode?: boolean;
+        devMode?: 'staging' | 'development';
     };
     constructor(token: string, options?: {
         groupImageWidth?: number;
@@ -31,7 +31,7 @@ export declare class Story {
         groupId?: string;
         startStoryId?: string;
         forbidClose?: boolean;
-        devMode?: boolean;
+        devMode?: 'staging' | 'development';
     });
     renderGroups(element?: Element | HTMLDivElement | null): void;
 }
