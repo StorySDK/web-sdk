@@ -896,24 +896,27 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                             </div>
                           )}
 
-                          {!currentGroup?.settings?.isProhibitToClose && !forbidClose && (
-                            <button
-                              className={b('close', {
-                                noProgress:
-                                  currentGroup?.settings?.isProgressHidden || isProgressHidden,
-                                wideRight: isShowMockup && (isLarge || isGroupWithFilledBackground)
-                              })}
-                              style={{
-                                top:
-                                  isShowMockup && (isLarge || isGroupWithFilledBackground)
-                                    ? largeElementsTop
-                                    : undefined
-                              }}
-                              onClick={handleClose}
-                            >
-                              <CloseIcon />
-                            </button>
-                          )}
+                          {!currentGroup?.settings?.isProhibitToClose &&
+                            !forbidClose &&
+                            !isForceCloseAvailable && (
+                              <button
+                                className={b('close', {
+                                  noProgress:
+                                    currentGroup?.settings?.isProgressHidden || isProgressHidden,
+                                  wideRight:
+                                    isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                })}
+                                style={{
+                                  top:
+                                    isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                      ? largeElementsTop
+                                      : undefined
+                                }}
+                                onClick={handleClose}
+                              >
+                                <CloseIcon />
+                              </button>
+                            )}
                         </div>
                       </>
                     </div>
