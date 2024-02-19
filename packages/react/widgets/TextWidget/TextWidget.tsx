@@ -22,6 +22,7 @@ export const TextWidget: WidgetComponent<{ params: TextWidgetParamsType }> = Rea
           style={{
             opacity: params.widgetOpacity / 100,
             fontStyle: params.fontParams.style,
+            lineHeight: `${params.lineHeight}px`,
             fontWeight: params.fontParams.weight,
             fontFamily: params.fontFamily,
             fontSize: `${params.fontSize}px`,

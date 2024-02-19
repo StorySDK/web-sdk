@@ -149,6 +149,7 @@ export declare type TextWidgetParamsType = {
     fontSize: number;
     fontFamily: string;
     fontParams: FontParamsType;
+    lineHeight: number;
     align: 'left' | 'center' | 'right';
     color: BorderType;
     backgroundColor: BackgroundType;
