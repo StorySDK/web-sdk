@@ -6,6 +6,7 @@ interface StoryModalProps {
     stories?: StoryType[];
     isShowing: boolean;
     forbidClose?: boolean;
+    isProgressHidden?: boolean;
     isShowMockup?: boolean;
     storyWidth?: number;
     storyHeight?: number;

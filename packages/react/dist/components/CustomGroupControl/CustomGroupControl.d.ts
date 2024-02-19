@@ -8,6 +8,7 @@ interface GroupProps {
     isShowing: boolean;
     storyWidth?: number;
     storyHeight?: number;
+    isProgressHidden?: boolean;
     isShowMockup?: boolean;
     isStatusBarActive?: boolean;
     startStoryId?: string;

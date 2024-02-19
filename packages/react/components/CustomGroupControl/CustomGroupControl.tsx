@@ -10,6 +10,7 @@ interface GroupProps {
   isShowing: boolean;
   storyWidth?: number;
   storyHeight?: number;
+  isProgressHidden?: boolean;
   isShowMockup?: boolean;
   isStatusBarActive?: boolean;
   startStoryId?: string;
@@ -27,6 +28,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     isFirstGroup,
     isLastGroup,
     startStoryId,
+    isProgressHidden,
     isForceCloseAvailable,
     isShowMockup,
     isStatusBarActive,
@@ -62,6 +64,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
           isFirstGroup={isFirstGroup}
           isForceCloseAvailable={isForceCloseAvailable}
           isLastGroup={isLastGroup}
+          isProgressHidden={isProgressHidden}
           isShowMockup={isShowMockup}
           isShowing={isShowing}
           isStatusBarActive={isStatusBarActive}

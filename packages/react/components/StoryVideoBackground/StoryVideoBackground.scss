@@ -18,6 +18,10 @@
     transition: 0.5s ease all;
     border-radius: 8px;
 
+    &_cover {
+      object-fit: cover;
+    }
+
     &_loading {
       opacity: 0;
     }

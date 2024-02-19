@@ -8,6 +8,7 @@ type PropTypes = {
   src: string;
   isLoading?: boolean;
   autoplay?: boolean;
+  isFilled?: boolean;
   onLoadStart?: () => void;
   onLoadEnd?: () => void;
 };
@@ -16,13 +17,14 @@ export const StoryVideoBackground = ({
   src,
   autoplay = false,
   isLoading,
+  isFilled,
   onLoadStart,
   onLoadEnd
 }: PropTypes) => (
   <div className={b()}>
     <video
       autoPlay={autoplay}
-      className={b('video', { loading: isLoading })}
+      className={b('video', { loading: isLoading, cover: isFilled })}
       disablePictureInPicture
       loop
       muted

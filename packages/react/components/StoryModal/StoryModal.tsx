@@ -20,6 +20,7 @@ interface StoryModalProps {
   stories?: StoryType[];
   isShowing: boolean;
   forbidClose?: boolean;
+  isProgressHidden?: boolean;
   isShowMockup?: boolean;
   storyWidth?: number;
   storyHeight?: number;
@@ -194,6 +195,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isCacheDisabled,
     forbidClose,
     isLoading,
+    isProgressHidden,
     isEditorMode,
     storyWidth,
     storyHeight,
@@ -833,7 +835,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                               !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
                           }}
                         >
-                          {!currentGroup?.settings?.isProgressHidden && (
+                          {!currentGroup?.settings?.isProgressHidden && !isProgressHidden && (
                             <div
                               className={b('indicators', {
                                 stopAnimation: playStatus === 'pause',
@@ -868,7 +870,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           {currentGroupType === GroupType.GROUP && (
                             <div
                               className={b('group', {
-                                noProgress: currentGroup?.settings?.isProgressHidden,
+                                noProgress:
+                                  currentGroup?.settings?.isProgressHidden || isProgressHidden,
                                 wideLeft: isShowMockup && (isLarge || isGroupWithFilledBackground)
                               })}
                               style={{
@@ -896,7 +899,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           {!currentGroup?.settings?.isProhibitToClose && !forbidClose && (
                             <button
                               className={b('close', {
-                                noProgress: currentGroup?.settings?.isProgressHidden,
+                                noProgress:
+                                  currentGroup?.settings?.isProgressHidden || isProgressHidden,
                                 wideRight: isShowMockup && (isLarge || isGroupWithFilledBackground)
                               })}
                               style={{
