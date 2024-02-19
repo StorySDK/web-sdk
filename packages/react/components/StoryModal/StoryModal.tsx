@@ -941,7 +941,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           )}
         </div>
 
-        {isForceCloseAvailable && currentGroup?.settings?.isProhibitToClose && (
+        {isForceCloseAvailable && (
           <button className={b('close', { general: true })} onClick={handleClose}>
             <CloseIcon />
           </button>
