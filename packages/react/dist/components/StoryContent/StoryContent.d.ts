@@ -7,6 +7,7 @@ interface StoryContentProps {
     currentStorySize: StoryCurrentSize;
     currentPaddingSize: number;
     innerHeightGap: number;
+    backgroundHeightGap: number;
     noTopShadow?: boolean;
     noTopBackgroundShadow?: boolean;
     jsConfetti?: any;

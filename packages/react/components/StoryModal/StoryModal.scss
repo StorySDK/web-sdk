@@ -16,9 +16,7 @@
   width: 100%;
   z-index: 999;
   box-sizing: border-box;
-
   background: #18182E;
-  // opacity: 0.9;
   justify-content: center;
   align-items: flex-start;
 
@@ -36,7 +34,6 @@
   @media (min-width: 768px) {
     min-height: auto;
     align-items: center;
-    // min-height: 694px;
     height: 100%;
   }
 
@@ -115,10 +112,8 @@
         width: 96%;
         background-color: #000000;
       }
-      
     }
   
-
     @media (max-width: 768px) {
       width: 100%;
     }
@@ -173,7 +168,6 @@
     width: 35px;
     height: 35px;
     max-height: 35px;
-
     border: 1px solid white;
     box-sizing: border-box;
     object-fit: cover;
@@ -199,7 +193,6 @@
 
   &__story {
     display: none;
-
     width: 100%;
     height: 100%;
 
@@ -225,7 +218,6 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 1;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -329,7 +321,6 @@
   &__arrowButton {
     display: flex;
     align-items: center;
-
     width: 15%;
     border: 0;
     background: none;
@@ -337,7 +328,6 @@
     cursor: pointer;
     position: absolute;
     z-index: 99999;
-
     top: 70px;
     left: 0;
     height: 80%;
@@ -364,8 +354,11 @@
   }
 
   &__mockup {
+    position: relative;
+    z-index: 5;
     width: auto;
     height: 100%;
+    pointer-events: none;
   }
 
   &__topContainer {

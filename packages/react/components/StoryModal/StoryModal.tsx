@@ -9,7 +9,6 @@ import { StoryType, Group, GroupType, StoryContenxt, ScoreType } from '../../typ
 import { StoryContent } from '..';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
 import smallIphoneMockup from '../../assets/images/iphone-mockup-small.svg';
-import iphoneMockupBottom from '../../assets/images/iphone-mockup-bottom.png';
 import { StatusBar } from './_components';
 import './StoryModal.scss';
 
@@ -128,7 +127,6 @@ export const PADDING_SIZE = 20;
 export const MOBILE_BREAKPOINT = 768;
 
 const INIT_TOP_ELEMENTS = 20;
-const INIT_TOP_STATUS_BAR = 16;
 const INIT_TOP_INDICATOR = 10;
 const INIT_LARGE_PADDING = 30;
 const INIT_LARGE_RADIUS = 43;
@@ -141,9 +139,8 @@ const INIT_CONTROL_SIDE_PADDING = 8;
 const INIT_CONTROL_SIDE_PADDING_LARGE = 20;
 const INIT_CONTAINER_BORDER_RADIUS = 50;
 const INIT_CONTROL_GAP_LARGE = 8;
-const INIT_MOCK_PADDING_BOTTOM = 40;
 
-const defaultRatioIndex = STORY_SIZE_DEFAULT.width / STORY_SIZE_DEFAULT.height;
+const defaultRatioIndex = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
 
 const initQuizeState = {
   points: 0,
@@ -227,7 +224,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         height: storyHeight
       };
     }
-    return STORY_SIZE_DEFAULT;
+    return STORY_SIZE_LARGE;
   }, [storyWidth, storyHeight]);
 
   useEffect(() => {
@@ -265,9 +262,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const isBackroundFilled =
     activeStoriesWithResult[currentStory]?.background?.isFilled &&
     currentGroupType === GroupType.GROUP;
-
   const initBodyOverflow = useMemo(() => document.body.style.overflow, []);
-
   const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
   const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
@@ -281,19 +276,19 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const controlSidePaddingLarge = useAdaptiveValue(INIT_CONTROL_SIDE_PADDING_LARGE);
   const controlGapLarge = useAdaptiveValue(INIT_CONTROL_GAP_LARGE);
   const containerBorderRadius = useAdaptiveValue(INIT_CONTAINER_BORDER_RADIUS);
-  const statusBarTop = useAdaptiveValue(INIT_TOP_STATUS_BAR);
-  const mockPaddingBottom = useAdaptiveValue(INIT_MOCK_PADDING_BOTTOM);
 
   const isLarge = useMemo(
-    () =>
-      storyHeight === STORY_SIZE_LARGE.height &&
-      !isMobile &&
-      (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE),
-    [currentGroupType, isMobile, storyHeight]
+    () => currentStorySize.height === STORY_SIZE_LARGE.height && !isMobile,
+    [currentGroupType, isMobile, currentStorySize]
   );
 
   const isGroupWithFilledBackground = useMemo(
     () => currentGroupType === GroupType.GROUP && !isMobile && isShowMockup && isBackroundFilled,
+    [currentGroupType, isBackroundFilled, isMobile, isShowMockup]
+  );
+
+  const isGroupWithUnfilledBackground = useMemo(
+    () => currentGroupType === GroupType.GROUP && !isMobile && isShowMockup && !isBackroundFilled,
     [currentGroupType, isBackroundFilled, isMobile, isShowMockup]
   );
 
@@ -305,37 +300,18 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isLarge || isGroupWithFilledBackground ? controlGapLarge : controlSidePaddingSmall;
 
   const currentRatioIndex = useMemo(() => {
-    if (isGroupWithFilledBackground) {
-      return STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
-    }
     if (storyWidth && storyHeight) {
       return storyWidth / storyHeight;
     }
 
     return defaultRatioIndex;
-  }, [isGroupWithFilledBackground, storyHeight, storyWidth]);
+  }, [storyHeight, storyWidth]);
 
-  const heightGap = isLarge || isGroupWithFilledBackground ? largeHeightGap : smallHeightGap;
-  const borderRadius =
-    isLarge || isGroupWithFilledBackground ? largeBorderRadius : smallBorderRadius;
+  const heightGap = isLarge ? largeHeightGap : smallHeightGap;
+  const borderRadius = isLarge ? largeBorderRadius : smallBorderRadius;
   const currentPaddingSize = isShowMockup ? PADDING_SIZE + heightGap : PADDING_SIZE;
-  const isShowStatusBarInStory =
-    isShowMockup && !isMobile && (isLarge || isGroupWithFilledBackground) && isStatusBarActive;
-  const isShowStatusBarInContainer =
-    isShowMockup &&
-    !isMobile &&
-    currentGroupType === GroupType.GROUP &&
-    !isBackroundFilled &&
-    isStatusBarActive;
+  const isShowStatusBarInStory = isShowMockup && !isMobile && isLarge && isStatusBarActive;
   const desktopWidth = currentRatioIndex * (height - currentPaddingSize);
-
-  const getBorderRadius = () => {
-    if (isShowMockup && currentGroupType === GroupType.GROUP && !isBackroundFilled && !isMobile) {
-      return 0;
-    }
-
-    return isShowMockup && !isMobile ? borderRadius : undefined;
-  };
 
   useEffect(() => {
     const body = document.querySelector('body');
@@ -562,7 +538,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const handleAnimationEnd = useCallback(() => {
-    handleNext();
+    // handleNext();
   }, [handleNext]);
 
   const handlePrev = useCallback(() => {
@@ -750,7 +726,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               borderRadius: containerBorderRadius
             }}
           >
-            {isShowStatusBarInContainer && (
+            {/* {isShowStatusBarInContainer && (
               <>
                 <div
                   className={b('statusBar')}
@@ -772,21 +748,16 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                   <img alt="" className={b('bottomMockImg')} src={iphoneMockupBottom} />
                 </div>
               </>
-            )}
+            )} */}
 
             <div
               className={b('swiper', {
-                mockup: !isMobile && isShowMockup,
-                smallTop:
-                  !isMobile &&
-                  isShowMockup &&
-                  currentGroupType === GroupType.GROUP &&
-                  !isBackroundFilled
+                mockup: !isMobile && isShowMockup
               })}
               style={{
                 width: !isMobile ? desktopWidth : '100%',
                 height: `calc(100vh - ${heightModalGap}px)`,
-                borderRadius: getBorderRadius()
+                borderRadius: isShowMockup && !isMobile ? borderRadius : undefined
               }}
             >
               <>
@@ -803,13 +774,16 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           key={story.id}
                         >
                           <StoryContent
+                            backgroundHeightGap={
+                              isShowMockup && isGroupWithUnfilledBackground
+                                ? groupInnerHeightGap
+                                : 0
+                            }
                             currentPaddingSize={currentPaddingSize}
                             currentStorySize={currentStorySize}
                             handleGoToStory={handleGoToStory}
-                            innerHeightGap={
-                              isShowMockup && isGroupWithFilledBackground ? groupInnerHeightGap : 0
-                            }
-                            isLarge={isLarge || isGroupWithFilledBackground}
+                            innerHeightGap={0}
+                            isLarge={isLarge}
                             isLargeBackground={isShowMockup && currentGroupType === GroupType.GROUP}
                             jsConfetti={jsConfetti}
                             noTopBackgroundShadow={noTopBackgroundShadow}
@@ -926,14 +900,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </div>
 
             {isShowMockup && !isMobile && (
-              <img
-                className={b('mockup')}
-                src={
-                  isLarge || currentGroupType === GroupType.GROUP
-                    ? largeIphoneMockup
-                    : smallIphoneMockup
-                }
-              />
+              <img className={b('mockup')} src={isLarge ? largeIphoneMockup : smallIphoneMockup} />
             )}
           </div>
 

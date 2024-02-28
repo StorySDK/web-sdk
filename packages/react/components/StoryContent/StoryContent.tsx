@@ -6,7 +6,6 @@ import { StoryType } from '../../types';
 import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackground';
 import { renderBackgroundStyles, renderPosition } from '../../utils';
 import { MOBILE_BREAKPOINT, StoryCurrentSize } from '../StoryModal/StoryModal';
-import { STORY_SIZE_LARGE } from '../StoryModal';
 import './StoryContent.scss';
 
 const b = block('StorySdkContent');
@@ -16,6 +15,7 @@ interface StoryContentProps {
   currentStorySize: StoryCurrentSize;
   currentPaddingSize: number;
   innerHeightGap: number;
+  backgroundHeightGap: number;
   noTopShadow?: boolean;
   noTopBackgroundShadow?: boolean;
   jsConfetti?: any;
@@ -34,13 +34,13 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     currentPaddingSize,
     isLarge,
     isLargeBackground,
+    backgroundHeightGap,
     innerHeightGap,
     handleGoToStory
   } = props;
+
   const [isVideoLoading, setVideoLoading] = useState(false);
-
   const [width, height] = useWindowSize();
-
   const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
 
   return (
@@ -51,7 +51,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
           background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
           height: isMobile
             ? Math.round(currentStorySize.height * (width / currentStorySize.width))
-            : undefined
+            : `calc(100% - ${backgroundHeightGap}px)`
         }}
       >
         {story.background.type === 'video' && (
@@ -76,7 +76,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         }}
       >
         <div
-          className={b('scope')}
+          className={b('scope', { large: isLarge })}
           style={{
             transform: isMobile
               ? `scale(${width / currentStorySize.width})`
