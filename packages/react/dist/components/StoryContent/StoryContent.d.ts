@@ -10,9 +10,9 @@ interface StoryContentProps {
     backgroundHeightGap: number;
     noTopShadow?: boolean;
     noTopBackgroundShadow?: boolean;
+    isUnfilledBackground?: boolean;
     jsConfetti?: any;
     isLarge?: boolean;
-    isLargeBackground?: boolean;
     handleGoToStory?: (storyId: string) => void;
 }
 export declare const StoryContent: React.FC<StoryContentProps>;

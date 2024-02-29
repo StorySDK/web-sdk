@@ -278,7 +278,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const containerBorderRadius = useAdaptiveValue(INIT_CONTAINER_BORDER_RADIUS);
 
   const isLarge = useMemo(
-    () => currentStorySize.height === STORY_SIZE_LARGE.height && !isMobile,
+    () => currentStorySize.height === STORY_SIZE_LARGE.height,
     [currentGroupType, isMobile, currentStorySize]
   );
 
@@ -538,7 +538,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const handleAnimationEnd = useCallback(() => {
-    // handleNext();
+    handleNext();
   }, [handleNext]);
 
   const handlePrev = useCallback(() => {
@@ -716,40 +716,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
           <div
             className={b('bodyContainer', {
-              black:
-                currentGroupType === GroupType.GROUP &&
-                !isBackroundFilled &&
-                !isMobile &&
-                isShowMockup
+              black: !isMobile && isShowMockup
             })}
             style={{
               borderRadius: containerBorderRadius
             }}
           >
-            {/* {isShowStatusBarInContainer && (
-              <>
-                <div
-                  className={b('statusBar')}
-                  style={{
-                    paddingTop: statusBarTop,
-                    paddingLeft: statusBarTop,
-                    paddingRight: statusBarTop
-                  }}
-                >
-                  <StatusBar />
-                </div>
-
-                <div
-                  className={b('bottomMock')}
-                  style={{
-                    paddingBottom: mockPaddingBottom
-                  }}
-                >
-                  <img alt="" className={b('bottomMockImg')} src={iphoneMockupBottom} />
-                </div>
-              </>
-            )} */}
-
             <div
               className={b('swiper', {
                 mockup: !isMobile && isShowMockup
@@ -784,7 +756,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                             handleGoToStory={handleGoToStory}
                             innerHeightGap={0}
                             isLarge={isLarge}
-                            isLargeBackground={isShowMockup && currentGroupType === GroupType.GROUP}
+                            isUnfilledBackground={
+                              isShowMockup &&
+                              currentGroupType === GroupType.GROUP &&
+                              !story.background.isFilled
+                            }
                             jsConfetti={jsConfetti}
                             noTopBackgroundShadow={noTopBackgroundShadow}
                             noTopShadow={noTopShadow}

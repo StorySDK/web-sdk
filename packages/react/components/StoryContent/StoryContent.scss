@@ -38,6 +38,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
+    &_onTop {
+      top: 0;
+      left: 0;
+      transform: none;
+    }
+
     &::after {
       content: "";
       position: absolute;

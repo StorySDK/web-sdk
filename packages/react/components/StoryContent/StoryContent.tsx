@@ -18,9 +18,9 @@ interface StoryContentProps {
   backgroundHeightGap: number;
   noTopShadow?: boolean;
   noTopBackgroundShadow?: boolean;
+  isUnfilledBackground?: boolean;
   jsConfetti?: any;
   isLarge?: boolean;
-  isLargeBackground?: boolean;
   handleGoToStory?: (storyId: string) => void;
 }
 
@@ -33,7 +33,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     currentStorySize,
     currentPaddingSize,
     isLarge,
-    isLargeBackground,
+    isUnfilledBackground,
     backgroundHeightGap,
     innerHeightGap,
     handleGoToStory
@@ -46,7 +46,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
   return (
     <>
       <div
-        className={b('background', { noTopShadow: noTopBackgroundShadow })}
+        className={b('background', { noTopShadow: noTopBackgroundShadow, onTop: isMobile })}
         style={{
           background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
           height: isMobile
@@ -57,7 +57,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         {story.background.type === 'video' && (
           <StoryVideoBackground
             autoplay
-            isFilled={isLarge}
+            isFilled={isLarge && !isUnfilledBackground}
             isLoading={isVideoLoading}
             src={story.background.value}
             onLoadEnd={() => {
@@ -68,7 +68,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
       </div>
 
       <div
-        className={b({ large: isLarge, center: isLargeBackground, noTopShadow })}
+        className={b({ large: isLarge, noTopShadow })}
         style={{
           height: isMobile
             ? Math.round(currentStorySize.height * (width / currentStorySize.width))
