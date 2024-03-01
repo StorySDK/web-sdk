@@ -57,7 +57,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         {story.background.type === 'video' && (
           <StoryVideoBackground
             autoplay
-            isFilled={isLarge && !isUnfilledBackground}
+            isFilled={!isUnfilledBackground}
             isLoading={isVideoLoading}
             src={story.background.value}
             onLoadEnd={() => {
