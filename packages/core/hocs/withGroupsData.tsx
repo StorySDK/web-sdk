@@ -221,9 +221,10 @@ const withGroupsData =
               ? app.settings.groupView.web
               : 'circle';
 
-            const isShowMockupApp = options?.isShowMockup
-              ? options?.isShowMockup
-              : app.settings?.isShowMockup;
+            const isShowMockupApp =
+              options?.isShowMockup !== undefined
+                ? options.isShowMockup
+                : app.settings?.isShowMockup;
 
             if (app.settings.fonts?.length) {
               loadFontsToPage(app.settings.fonts);

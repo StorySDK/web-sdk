@@ -283,19 +283,18 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   );
 
   const isGroupWithFilledBackground = useMemo(
-    () => currentGroupType === GroupType.GROUP && !isMobile && isShowMockup && isBackroundFilled,
-    [currentGroupType, isBackroundFilled, isMobile, isShowMockup]
+    () => currentGroupType === GroupType.GROUP && !isMobile && isBackroundFilled,
+    [currentGroupType, isBackroundFilled, isMobile]
   );
 
   const isGroupWithUnfilledBackground = useMemo(
-    () => currentGroupType === GroupType.GROUP && !isMobile && isShowMockup && !isBackroundFilled,
-    [currentGroupType, isBackroundFilled, isMobile, isShowMockup]
+    () => currentGroupType === GroupType.GROUP && !isMobile && !isBackroundFilled,
+    [currentGroupType, isBackroundFilled, isMobile]
   );
 
   const controlTop = isLarge || isGroupWithFilledBackground ? controlTopLarge : controlTopSmall;
   const controlSidePadding =
     isLarge || isGroupWithFilledBackground ? controlSidePaddingLarge : controlSidePaddingSmall;
-
   const controlGap =
     isLarge || isGroupWithFilledBackground ? controlGapLarge : controlSidePaddingSmall;
 
@@ -757,9 +756,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                             innerHeightGap={0}
                             isLarge={isLarge}
                             isUnfilledBackground={
-                              isShowMockup &&
-                              currentGroupType === GroupType.GROUP &&
-                              !story.background.isFilled
+                              currentGroupType === GroupType.GROUP && !story.background.isFilled
                             }
                             jsConfetti={jsConfetti}
                             noTopBackgroundShadow={noTopBackgroundShadow}
