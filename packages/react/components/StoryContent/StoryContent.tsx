@@ -13,9 +13,8 @@ const b = block('StorySdkContent');
 interface StoryContentProps {
   story: StoryType;
   currentStorySize: StoryCurrentSize;
-  currentPaddingSize: number;
-  innerHeightGap: number;
   backgroundHeightGap: number;
+  desktopContainerWidth: number;
   noTopShadow?: boolean;
   noTopBackgroundShadow?: boolean;
   isUnfilledBackground?: boolean;
@@ -29,19 +28,23 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     story,
     jsConfetti,
     noTopShadow,
+    desktopContainerWidth,
     noTopBackgroundShadow,
     currentStorySize,
-    currentPaddingSize,
     isLarge,
     isUnfilledBackground,
     backgroundHeightGap,
-    innerHeightGap,
     handleGoToStory
   } = props;
 
   const [isVideoLoading, setVideoLoading] = useState(false);
-  const [width, height] = useWindowSize();
+  const [width] = useWindowSize();
   const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
+
+  const desktopScale = useMemo(
+    () => desktopContainerWidth / currentStorySize.width,
+    [desktopContainerWidth, currentStorySize.width]
+  );
 
   return (
     <>
@@ -72,7 +75,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         style={{
           height: isMobile
             ? Math.round(currentStorySize.height * (width / currentStorySize.width))
-            : `calc(100% - ${innerHeightGap}px)`
+            : `100%`
         }}
       >
         <div
@@ -80,7 +83,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
           style={{
             transform: isMobile
               ? `scale(${width / currentStorySize.width})`
-              : `scale(${(height - currentPaddingSize - innerHeightGap) / currentStorySize.height})`
+              : `scale(${desktopScale})`
           }}
         >
           {story.storyData.map((widget: any) => (

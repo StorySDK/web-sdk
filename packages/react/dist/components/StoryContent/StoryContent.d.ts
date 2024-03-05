@@ -5,9 +5,8 @@ import './StoryContent.scss';
 interface StoryContentProps {
     story: StoryType;
     currentStorySize: StoryCurrentSize;
-    currentPaddingSize: number;
-    innerHeightGap: number;
     backgroundHeightGap: number;
+    desktopContainerWidth: number;
     noTopShadow?: boolean;
     noTopBackgroundShadow?: boolean;
     isUnfilledBackground?: boolean;

@@ -123,7 +123,7 @@ export const STORY_SIZE_LARGE = {
 };
 
 export const DEFAULT_STORY_DURATION = 7;
-export const PADDING_SIZE = 20;
+export const PADDING_SIZE = 25;
 export const MOBILE_BREAKPOINT = 768;
 
 const INIT_TOP_ELEMENTS = 20;
@@ -292,11 +292,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     [currentGroupType, isBackroundFilled, isMobile]
   );
 
-  const controlTop = isLarge || isGroupWithFilledBackground ? controlTopLarge : controlTopSmall;
+  const controlTop = isLarge ? controlTopLarge : controlTopSmall;
   const controlSidePadding =
-    isLarge || isGroupWithFilledBackground ? controlSidePaddingLarge : controlSidePaddingSmall;
-  const controlGap =
-    isLarge || isGroupWithFilledBackground ? controlGapLarge : controlSidePaddingSmall;
+    isLarge && isShowMockup ? controlSidePaddingLarge : controlSidePaddingSmall;
+  const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
 
   const currentRatioIndex = useMemo(() => {
     if (storyWidth && storyHeight) {
@@ -310,7 +309,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const borderRadius = isLarge ? largeBorderRadius : smallBorderRadius;
   const currentPaddingSize = isShowMockup ? PADDING_SIZE + heightGap : PADDING_SIZE;
   const isShowStatusBarInStory = isShowMockup && !isMobile && isLarge && isStatusBarActive;
-  const desktopWidth = currentRatioIndex * (height - currentPaddingSize);
+  const desktopWidth = Math.ceil(currentRatioIndex * (height - currentPaddingSize));
 
   useEffect(() => {
     const body = document.querySelector('body');
@@ -750,10 +749,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                                 ? groupInnerHeightGap
                                 : 0
                             }
-                            currentPaddingSize={currentPaddingSize}
                             currentStorySize={currentStorySize}
+                            desktopContainerWidth={desktopWidth}
                             handleGoToStory={handleGoToStory}
-                            innerHeightGap={0}
                             isLarge={isLarge}
                             isUnfilledBackground={
                               currentGroupType === GroupType.GROUP && !story.background.isFilled
