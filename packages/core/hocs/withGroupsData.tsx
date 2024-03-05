@@ -245,7 +245,7 @@ const withGroupsData =
                     }
 
                     if (item.type === 'onboarding') {
-                      return isActive && item.settings?.addToStories;
+                      return isActive && (item.settings?.addToStories || options?.autoplay);
                     }
 
                     return isActive;
