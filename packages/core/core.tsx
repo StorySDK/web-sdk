@@ -99,6 +99,8 @@ export class Story {
 }
 
 export const init = () => {
+  if (!window) return;
+
   window.onload = () => {
     const container = document.querySelector('[data-storysdk-token]');
     if (container) {

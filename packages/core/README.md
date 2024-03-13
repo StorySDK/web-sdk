@@ -8,7 +8,7 @@ A new level of engagement with your users with a familiar format. StorySDK helps
 
 ```
 import { Story } from "@storysdk/core"; 
-import "@storysdk/core/dist/bundle.css";
+import "@storysdk/core/dist/bundle.umd.css";
 
 const ref = useRef(null);
 

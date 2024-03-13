@@ -51,7 +51,7 @@ export const ClickMeWidget: WidgetComponent<{
 
     if (actionType === 'link' && url) {
       setTimeout(() => {
-        const tab = window.open(url, '_blank');
+        const tab = window?.open(url, '_blank');
         if (tab) {
           tab.focus();
         }

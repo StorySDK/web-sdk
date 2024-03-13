@@ -44,7 +44,7 @@ export const QuizRateWidget: WidgetComponent<{
       onAnswer?.(rate);
 
       if (storeLinks?.web) {
-        const tab = window.open(storeLinks?.web, '_blank');
+        const tab = window?.open(storeLinks?.web, '_blank');
         if (tab) {
           tab.focus();
         }

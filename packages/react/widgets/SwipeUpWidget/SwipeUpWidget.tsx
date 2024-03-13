@@ -31,7 +31,7 @@ export const SwipeUpWidget: WidgetComponent<{
         onSwipe();
       }
 
-      const tab = window.open(url, '_blank');
+      const tab = window?.open(url, '_blank');
       if (tab) {
         tab.focus();
         setTouchStart(0);
@@ -45,7 +45,7 @@ export const SwipeUpWidget: WidgetComponent<{
       onSwipe();
     }
 
-    const tab = window.open(url, '_blank');
+    const tab = window?.open(url, '_blank');
     if (tab) {
       tab.focus();
     }

@@ -702,7 +702,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         className={b({ isShowing })}
         ref={storyModalRef}
         style={{
-          top: window.pageYOffset || document.documentElement.scrollTop
+          top: window?.pageYOffset || document.documentElement.scrollTop
         }}
       >
         <div className={b('body')}>
