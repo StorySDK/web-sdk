@@ -246,14 +246,14 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   useEffect(() => {
     if (openInExternalModal && isShowing) {
-      const leftPosition = isMobile ? 0 : width / 2 - 500;
+      const leftPosition = isMobile ? 0 : 100;
 
       window.open(
         `${appLink}/share/${currentGroup?.settings?.shortDataId}`,
         '_blank',
         `popup,left=${leftPosition},top=${isMobile ? 0 : 50},width=${
           isMobile ? width : 1000
-        },height=${height}`
+        },height=${780}`
       );
 
       onClose();
