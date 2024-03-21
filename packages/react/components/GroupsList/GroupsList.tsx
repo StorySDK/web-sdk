@@ -28,6 +28,8 @@ export interface GroupsListProps {
   autoplay?: boolean;
   startStoryId?: string;
   forbidClose?: boolean;
+  openInExternalModal?: boolean;
+  devMode?: 'staging' | 'development';
   groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
@@ -53,7 +55,9 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     isStatusBarActive,
     autoplay,
     startStoryId,
+    devMode,
     forbidClose,
+    openInExternalModal,
     storyWidth,
     storyHeight,
     onOpenGroup,
@@ -140,6 +144,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
       ReactDOM.render(
         <StoryModal
           currentGroup={currentGroupMemo}
+          devMode={devMode}
           forbidClose={forbidClose}
           isFirstGroup={currentGroup === 0}
           isLastGroup={currentGroup === groups?.length - 1}
@@ -147,6 +152,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           isShowMockup={isShowMockup}
           isShowing={modalShow}
           isStatusBarActive={isStatusBarActive}
+          openInExternalModal={openInExternalModal}
           startStoryId={startStoryId}
           stories={currentGroupMemo?.stories}
           storyHeight={storyHeight}

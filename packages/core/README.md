@@ -24,7 +24,7 @@ useEffect(() => {
 
 ```
 import { Story } from "@storysdk/core"; 
-import "@storysdk/core/dist/bundle.css";
+import "@storysdk/core/dist/bundle.umd.css";
 
 const story = new Story("<APP_TOKEN_HERE>");
 
@@ -37,7 +37,7 @@ story.renderGroups(element);
 ```
 <head>
   <script src="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.umd.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.umd.css">
 </head>
 <body>
   <div data-storysdk-token="<APP_TOKEN_HERE>"></div>

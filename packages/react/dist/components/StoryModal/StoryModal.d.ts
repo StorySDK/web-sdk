@@ -16,8 +16,10 @@ interface StoryModalProps {
     isStatusBarActive?: boolean;
     isForceCloseAvailable?: boolean;
     isCacheDisabled?: boolean;
+    devMode?: 'staging' | 'development';
     isLoading?: boolean;
     isEditorMode?: boolean;
+    openInExternalModal?: boolean;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;

@@ -29,8 +29,10 @@ interface StoryModalProps {
   isStatusBarActive?: boolean;
   isForceCloseAvailable?: boolean;
   isCacheDisabled?: boolean;
+  devMode?: 'staging' | 'development';
   isLoading?: boolean;
   isEditorMode?: boolean;
+  openInExternalModal?: boolean;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -195,7 +197,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isProgressHidden,
     isEditorMode,
     storyWidth,
+    devMode,
     storyHeight,
+    openInExternalModal,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -210,12 +214,25 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [quizState, dispatchQuizState] = useReducer(reducer, initQuizeState);
   const [currentStory, setCurrentStory] = useState(0);
   const [currentStoryId, setCurrentStoryId] = useState('');
+  const [isOpened, setIsOpened] = useState(isShowing);
   const [playStatus, setPlayStatus] = useState<PlayStatusType>('wait');
   const storyModalRef = useRef<HTMLDivElement>(null);
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const [quizStartedStoryIds, setQuizStartedStoryIds] = useState<{ [key: string]: boolean }>({});
   const [width, height] = useWindowSize();
   const [activeStoriesWithResult, setActiveStoriesWithResult] = useState<StoryType[]>([]);
+
+  const appLink = useMemo(() => {
+    if (devMode === 'staging') {
+      return 'https://app.diffapp.link';
+    }
+
+    if (devMode === 'development') {
+      return 'http://localhost:3000';
+    }
+
+    return 'https://app.storysdk.com';
+  }, [devMode]);
 
   const currentStorySize: StoryCurrentSize = useMemo(() => {
     if (storyWidth && storyHeight) {
@@ -226,6 +243,26 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     }
     return STORY_SIZE_LARGE;
   }, [storyWidth, storyHeight]);
+
+  useEffect(() => {
+    if (openInExternalModal && isShowing) {
+      const leftPosition = isMobile ? 0 : width / 2 - 500;
+
+      window.open(
+        `${appLink}/share/${currentGroup?.settings?.shortDataId}`,
+        '_blank',
+        `popup,left=${leftPosition},top=${isMobile ? 0 : 50},width=${
+          isMobile ? width : 1000
+        },height=${height}`
+      );
+
+      onClose();
+    }
+
+    if (!openInExternalModal) {
+      setIsOpened(isShowing);
+    }
+  }, [isShowing]);
 
   useEffect(() => {
     if (stories && currentGroup) {
@@ -334,7 +371,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     const body = document.querySelector('body');
 
-    if (isShowing) {
+    if (isOpened) {
       setPlayStatus('play');
 
       if (body) {
@@ -348,7 +385,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       }
     }
 
-    if (isShowing && activeStoriesWithResult.length) {
+    if (isOpened && activeStoriesWithResult.length) {
       setCurrentStoryId(activeStoriesWithResult[currentStoryIndex].id);
 
       if (onOpenStory && currentGroup) {
@@ -360,7 +397,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onOpenStory,
     activeStoriesWithResult,
     currentGroup,
-    isShowing,
+    isOpened,
     startStoryId
   ]);
 
@@ -699,7 +736,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       }}
     >
       <div
-        className={b({ isShowing })}
+        className={b({ isShowing: isOpened })}
         ref={storyModalRef}
         style={{
           top: window?.pageYOffset || document.documentElement.scrollTop

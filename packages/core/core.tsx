@@ -22,6 +22,7 @@ export class Story {
     groupId?: string;
     startStoryId?: string;
     forbidClose?: boolean;
+    openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
   };
 
@@ -41,6 +42,7 @@ export class Story {
       groupId?: string;
       startStoryId?: string;
       forbidClose?: boolean;
+      openInExternalModal?: boolean;
       devMode?: 'staging' | 'development';
     }
   ) {
@@ -61,6 +63,7 @@ export class Story {
       this.options.storyHeight = options?.storyHeight;
       this.options.forbidClose = options?.forbidClose;
       this.options.startStoryId = options?.startStoryId;
+      this.options.openInExternalModal = options?.openInExternalModal;
       this.options.devMode = options?.devMode;
     }
 
@@ -121,6 +124,7 @@ export const init = () => {
         const isShowMockup = container.getAttribute('data-storysdk-is-show-mockup');
         const isStatusBarActive = container.getAttribute('data-storysdk-is-status-bar-active');
         const devMode = container.getAttribute('data-storysdk-dev-mode');
+        const openInExternalModal = container.getAttribute('data-storysdk-open-in-external-modal');
 
         const story = new Story(token, {
           groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
@@ -136,7 +140,8 @@ export const init = () => {
           storyWidth: storyWidth ? parseInt(storyWidth, 10) : undefined,
           storyHeight: storyHeight ? parseInt(storyHeight, 10) : undefined,
           isShowMockup: isShowMockup === 'true',
-          isStatusBarActive: isStatusBarActive === 'true'
+          isStatusBarActive: isStatusBarActive === 'true',
+          openInExternalModal: openInExternalModal === 'true'
         });
         story.renderGroups(container);
       } else {

@@ -31,9 +31,11 @@ const withGroupsData =
       storyHeight?: number;
       groupsClassName?: string;
       autoplay?: boolean;
+      openInExternalModal?: boolean;
       groupId?: string;
       startStoryId?: string;
       forbidClose?: boolean;
+      devMode?: 'staging' | 'development';
     }
   ) =>
   () => {
@@ -325,6 +327,7 @@ const withGroupsData =
     return (
       <GroupsList
         autoplay={options?.autoplay}
+        devMode={options?.devMode}
         forbidClose={options?.forbidClose}
         groupClassName={options?.groupClassName}
         groupImageHeight={options?.groupImageHeight}
@@ -336,6 +339,7 @@ const withGroupsData =
         isLoading={data === null}
         isShowMockup={isShowMockup}
         isStatusBarActive={options?.isStatusBarActive}
+        openInExternalModal={options?.openInExternalModal}
         startStoryId={options?.startStoryId}
         storyHeight={options?.storyHeight}
         storyWidth={options?.storyWidth}

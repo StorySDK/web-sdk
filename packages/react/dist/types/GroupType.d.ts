@@ -13,12 +13,13 @@ export declare enum ScoreType {
     LETTERS = "letters"
 }
 export interface StoriesGroupSettings {
-    storiesSize?: StorySize;
     isProgressHidden?: boolean;
     isProhibitToClose?: boolean;
     addToStories?: boolean;
     scoreType?: ScoreType;
     scoreResultLayersGroupId?: string;
+    lastStoryPosition?: number;
+    shortDataId?: string;
 }
 export interface Group {
     id: string;
