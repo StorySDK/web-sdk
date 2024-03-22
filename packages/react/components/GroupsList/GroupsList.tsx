@@ -184,7 +184,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         <SimpleBar
           ref={scrollRef}
           style={{
-            width: '100%'
+            width: '100%',
+            minHeight: 100
           }}
         >
           {isLoading && !autoplay ? (
