@@ -4,8 +4,9 @@ import { StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
 interface StoryContentProps {
     story: StoryType;
+    isMobile?: boolean;
+    contentHeight: number | string;
     currentStorySize: StoryCurrentSize;
-    backgroundHeightGap: number;
     desktopContainerWidth: number;
     noTopShadow?: boolean;
     noTopBackgroundShadow?: boolean;

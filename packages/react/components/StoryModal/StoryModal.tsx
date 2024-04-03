@@ -136,9 +136,8 @@ const INIT_SMALL_PADDING = 145;
 const INIT_INNER_GROUP_PADDING = 115;
 const INIT_SMALL_RADIUS = 5;
 const INIT_CONTROL_TOP = 10;
-const INIT_CONTROL_TOP_LARGE = 11;
+const INIT_CONTROL_TOP_LARGE = 35;
 const INIT_CONTROL_SIDE_PADDING = 8;
-const INIT_CONTROL_SIDE_PADDING_LARGE = 20;
 const INIT_CONTAINER_BORDER_RADIUS = 50;
 const INIT_CONTROL_GAP_LARGE = 8;
 
@@ -310,7 +309,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const controlTopSmall = useAdaptiveValue(INIT_CONTROL_TOP);
   const controlTopLarge = useAdaptiveValue(INIT_CONTROL_TOP_LARGE);
   const controlSidePaddingSmall = useAdaptiveValue(INIT_CONTROL_SIDE_PADDING);
-  const controlSidePaddingLarge = useAdaptiveValue(INIT_CONTROL_SIDE_PADDING_LARGE);
   const controlGapLarge = useAdaptiveValue(INIT_CONTROL_GAP_LARGE);
   const containerBorderRadius = useAdaptiveValue(INIT_CONTAINER_BORDER_RADIUS);
 
@@ -330,8 +328,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   );
 
   const controlTop = isLarge ? controlTopLarge : controlTopSmall;
-  const controlSidePadding =
-    isLarge && isShowMockup ? controlSidePaddingLarge : controlSidePaddingSmall;
   const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
 
   const currentRatioIndex = useMemo(() => {
@@ -348,16 +344,33 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const isShowStatusBarInStory = isShowMockup && !isMobile && isLarge && isStatusBarActive;
   const desktopWidth = Math.ceil(currentRatioIndex * (height - currentPaddingSize));
 
+  const contentHeight = useMemo(() => {
+    const backgroundHeightGap =
+      isShowMockup && isGroupWithUnfilledBackground ? groupInnerHeightGap : 0;
+
+    return isMobile
+      ? Math.round(currentStorySize.height * (width / currentStorySize.width))
+      : `calc(100% - ${backgroundHeightGap}px)`;
+  }, [
+    currentStorySize.height,
+    currentStorySize.width,
+    groupInnerHeightGap,
+    isGroupWithUnfilledBackground,
+    isMobile,
+    isShowMockup,
+    width
+  ]);
+
   useEffect(() => {
     const body = document.querySelector('body');
     if (storyModalRef.current && body) {
-      if (width < 767) {
-        storyModalRef.current.style.setProperty('height', `${body.clientHeight}px`);
+      if (isMobile) {
+        storyModalRef.current.style.setProperty('height', `${contentHeight}px`);
       } else {
         storyModalRef.current.style.setProperty('height', `100%`);
       }
     }
-  }, [width, height]);
+  }, [width, height, isMobile, contentHeight]);
 
   useEffect(() => {
     let currentStoryIndex = 0;
@@ -573,7 +586,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const handleAnimationEnd = useCallback(() => {
-    handleNext();
+    // handleNext();
   }, [handleNext]);
 
   const handlePrev = useCallback(() => {
@@ -749,6 +762,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </button>
           )}
 
+          {activeStoriesWithResult.length > 1 && !isLoading && (
+            <button className={b('arrowButton', { right: true })} onClick={handleNext}>
+              <RightArrowIcon />
+            </button>
+          )}
+
           <div
             className={b('bodyContainer', {
               black: !isMobile && isShowMockup
@@ -781,15 +800,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           key={story.id}
                         >
                           <StoryContent
-                            backgroundHeightGap={
-                              isShowMockup && isGroupWithUnfilledBackground
-                                ? groupInnerHeightGap
-                                : 0
-                            }
+                            contentHeight={contentHeight}
                             currentStorySize={currentStorySize}
                             desktopContainerWidth={desktopWidth}
                             handleGoToStory={handleGoToStory}
                             isLarge={isLarge}
+                            isMobile={isMobile}
                             isUnfilledBackground={
                               currentGroupType === GroupType.GROUP && !story.background.isFilled
                             }
@@ -810,11 +826,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           className={b('controls')}
                           style={{
                             gap: !isShowStatusBarInStory && !isMobile ? controlGap : undefined,
-                            paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
-                            paddingLeft:
-                              !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
-                            paddingRight:
-                              !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
+                            paddingTop:
+                              !isShowStatusBarInStory && isShowMockup && !isMobile
+                                ? controlTop
+                                : undefined
                           }}
                         >
                           {!currentGroup?.settings?.isProgressHidden && !isProgressHidden && (
@@ -911,12 +926,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               <img className={b('mockup')} src={isLarge ? largeIphoneMockup : smallIphoneMockup} />
             )}
           </div>
-
-          {activeStoriesWithResult.length > 1 && !isLoading && (
-            <button className={b('arrowButton', { right: true })} onClick={handleNext}>
-              <RightArrowIcon />
-            </button>
-          )}
         </div>
 
         {isForceCloseAvailable && (

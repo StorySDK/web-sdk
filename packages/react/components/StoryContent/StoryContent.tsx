@@ -5,15 +5,16 @@ import { WidgetFactory } from '../../core';
 import { StoryType } from '../../types';
 import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackground';
 import { renderBackgroundStyles, renderPosition } from '../../utils';
-import { MOBILE_BREAKPOINT, StoryCurrentSize } from '../StoryModal/StoryModal';
+import { StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
 
 const b = block('StorySdkContent');
 
 interface StoryContentProps {
   story: StoryType;
+  isMobile?: boolean;
+  contentHeight: number | string;
   currentStorySize: StoryCurrentSize;
-  backgroundHeightGap: number;
   desktopContainerWidth: number;
   noTopShadow?: boolean;
   noTopBackgroundShadow?: boolean;
@@ -29,17 +30,17 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     jsConfetti,
     noTopShadow,
     desktopContainerWidth,
+    isMobile,
     noTopBackgroundShadow,
     currentStorySize,
     isLarge,
     isUnfilledBackground,
-    backgroundHeightGap,
+    contentHeight,
     handleGoToStory
   } = props;
 
   const [isVideoLoading, setVideoLoading] = useState(false);
   const [width] = useWindowSize();
-  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
 
   const desktopScale = useMemo(
     () => desktopContainerWidth / currentStorySize.width,
@@ -52,9 +53,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         className={b('background', { noTopShadow: noTopBackgroundShadow, onTop: isMobile })}
         style={{
           background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
-          height: isMobile
-            ? Math.round(currentStorySize.height * (width / currentStorySize.width))
-            : `calc(100% - ${backgroundHeightGap}px)`
+          height: contentHeight
         }}
       >
         {story.background.type === 'video' && (

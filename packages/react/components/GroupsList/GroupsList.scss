@@ -20,7 +20,6 @@
     display: flex;
     padding: 8px;
     min-height: 100px;
-    justify-content: center;
   }
 
   &__loaderItem {
@@ -28,5 +27,13 @@
     flex-direction: column;
     align-items: center;
     margin-right: 15px;
+  }
+
+  &__carouselContent {
+    display: flex;
+
+    &_centered {
+      justify-content: center;
+    }
   }
 }

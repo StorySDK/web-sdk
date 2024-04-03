@@ -340,6 +340,10 @@
       right: 0;
       left: auto;
       justify-content: flex-end;
+
+      @media (max-width: 768px) {
+        width: 80%;
+      }
     }
 
     &>svg {
