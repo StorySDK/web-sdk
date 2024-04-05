@@ -780,7 +780,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   });
 
   useEffect(() => {
-    setPlayStatus('wait');
+    setPlayStatus('play');
   }, [currentStoryId]);
 
   return (
