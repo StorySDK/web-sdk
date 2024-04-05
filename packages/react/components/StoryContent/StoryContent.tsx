@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import { WidgetFactory } from '../../core';
@@ -13,6 +13,7 @@ const b = block('StorySdkContent');
 interface StoryContentProps {
   story: StoryType;
   isMobile?: boolean;
+  isDisplaying?: boolean;
   contentHeight: number | string;
   currentStorySize: StoryCurrentSize;
   desktopContainerWidth: number;
@@ -22,6 +23,8 @@ interface StoryContentProps {
   jsConfetti?: any;
   isLarge?: boolean;
   handleGoToStory?: (storyId: string) => void;
+  handleMediaLoading: (isLoading: boolean) => void;
+  isMediaLoading?: boolean;
 }
 
 export const StoryContent: React.FC<StoryContentProps> = (props) => {
@@ -31,15 +34,17 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     noTopShadow,
     desktopContainerWidth,
     isMobile,
+    isDisplaying,
     noTopBackgroundShadow,
     currentStorySize,
     isLarge,
     isUnfilledBackground,
     contentHeight,
+    isMediaLoading,
+    handleMediaLoading,
     handleGoToStory
   } = props;
 
-  const [isVideoLoading, setVideoLoading] = useState(false);
   const [width] = useWindowSize();
 
   const desktopScale = useMemo(
@@ -56,14 +61,17 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
           height: contentHeight
         }}
       >
-        {story.background.type === 'video' && (
+        {story.background.type === 'video' && isDisplaying && (
           <StoryVideoBackground
             autoplay
             isFilled={!isUnfilledBackground}
-            isLoading={isVideoLoading}
+            isLoading={isMediaLoading}
             src={story.background.value}
             onLoadEnd={() => {
-              setVideoLoading(false);
+              handleMediaLoading(false);
+            }}
+            onLoadStart={() => {
+              handleMediaLoading(true);
             }}
           />
         )}

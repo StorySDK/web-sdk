@@ -271,6 +271,7 @@
       animation-name: indicator;
       animation-timing-function: linear;
       animation-fill-mode: forwards;
+      animation-play-state: paused;
     }
   }
 
@@ -279,6 +280,12 @@
     display: flex;
     box-sizing: border-box;
     grid-area: indicators;
+
+    &_playAnimation {
+      .StorySdkModal__indicator_current::after {
+        animation-play-state: running;
+      }
+    }
 
     &_stopAnimation {
       .StorySdkModal__indicator_current::after {
@@ -336,28 +343,38 @@
     left: 0;
     height: 80%;
 
-    &_right {
-      right: 0;
-      left: auto;
-      justify-content: flex-end;
-
-      @media (max-width: 768px) {
-        width: 80%;
-      }
-    }
-
     &>svg {
       display: none;
     }
 
     @media (min-width: 768px) {
       width: 72px;
-      position: static;
-      height: auto;
+      height: 100%;
+      top: 0;
 
       &>svg {
         display: block;
       }
+    }
+
+    &_left {
+      left: 0;
+      right: auto;
+      justify-content: flex-start;
+
+      @media (min-width: 768px) {
+        left: -72px;
+      } 
+    }
+
+    &_right {
+      right: 0;
+      left: auto;
+      justify-content: flex-end;
+
+      @media (min-width: 768px) {
+        right: -72px;
+      } 
     }
   }
 

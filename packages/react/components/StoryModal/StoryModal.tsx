@@ -4,6 +4,7 @@ import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
 import { IconLoader } from '@components/icons';
+import { useLongPress } from 'use-long-press';
 import { useAdaptiveValue, useAnswersCache } from '../../hooks';
 import { StoryType, Group, GroupType, StoryContenxt, ScoreType } from '../../types';
 import { StoryContent } from '..';
@@ -107,7 +108,7 @@ export const StoryContext = React.createContext<StoryContenxt>({
   confetti: null
 });
 
-type PlayStatusType = 'wait' | 'play' | 'pause';
+export type PlayStatusType = 'wait' | 'play' | 'pause';
 
 export type StoryCurrentSize = {
   width: number;
@@ -140,6 +141,7 @@ const INIT_CONTROL_TOP_LARGE = 35;
 const INIT_CONTROL_SIDE_PADDING = 8;
 const INIT_CONTAINER_BORDER_RADIUS = 50;
 const INIT_CONTROL_GAP_LARGE = 8;
+const LONG_PRESS_THRESHOLD = 500;
 
 const defaultRatioIndex = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
 
@@ -220,6 +222,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [quizStartedStoryIds, setQuizStartedStoryIds] = useState<{ [key: string]: boolean }>({});
   const [width, height] = useWindowSize();
   const [activeStoriesWithResult, setActiveStoriesWithResult] = useState<StoryType[]>([]);
+  const [isMediaLoading, setIsMediaLoading] = useState(false);
 
   const appLink = useMemo(() => {
     if (devMode === 'staging') {
@@ -586,7 +589,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const handleAnimationEnd = useCallback(() => {
-    // handleNext();
+    handleNext();
   }, [handleNext]);
 
   const handlePrev = useCallback(() => {
@@ -737,6 +740,49 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     return PADDING_SIZE;
   }, [isMobile, isShowMockup, heightGap]);
 
+  useEffect(() => {
+    if (isMediaLoading) {
+      setPlayStatus('pause');
+    } else {
+      setPlayStatus('play');
+    }
+  }, [isMediaLoading]);
+
+  const [clickTimestamp, setClickTimestamp] = useState(0);
+
+  const handleLongPress = useCallback(
+    (e) => {
+      setPlayStatus('play');
+
+      if (e.timeStamp - clickTimestamp < LONG_PRESS_THRESHOLD) {
+        const isBackground = (e.target as Element).classList.contains('StorySdkContent__scope');
+
+        if (isBackground) {
+          handleNext();
+        }
+      }
+    },
+    [clickTimestamp, handleNext]
+  );
+
+  const bind = useLongPress(() => {}, {
+    onStart: (e) => {
+      setClickTimestamp(e.timeStamp);
+      setPlayStatus('pause');
+    },
+    onFinish: (e) => {
+      handleLongPress(e);
+    },
+    onCancel: (e) => {
+      handleLongPress(e);
+    },
+    threshold: LONG_PRESS_THRESHOLD
+  });
+
+  useEffect(() => {
+    setPlayStatus('wait');
+  }, [currentStoryId]);
+
   return (
     <StoryContext.Provider
       value={{
@@ -756,13 +802,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         }}
       >
         <div className={b('body')}>
-          {activeStoriesWithResult.length > 1 && !isLoading && (
+          {!isLoading && (
             <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
               <LeftArrowIcon />
             </button>
           )}
 
-          {activeStoriesWithResult.length > 1 && !isLoading && (
+          {!isLoading && !isMobile && (
             <button className={b('arrowButton', { right: true })} onClick={handleNext}>
               <RightArrowIcon />
             </button>
@@ -796,15 +842,19 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                     <div className={b('swiperContent')}>
                       {activeStoriesWithResult.map((story, index) => (
                         <div
-                          className={b('story', { current: index === currentStory })}
+                          className={b('story', { current: index === currentStory && isOpened })}
                           key={story.id}
+                          {...bind()}
                         >
                           <StoryContent
                             contentHeight={contentHeight}
                             currentStorySize={currentStorySize}
                             desktopContainerWidth={desktopWidth}
                             handleGoToStory={handleGoToStory}
+                            handleMediaLoading={setIsMediaLoading}
+                            isDisplaying={index === currentStory && isOpened}
                             isLarge={isLarge}
+                            isMediaLoading={isMediaLoading}
                             isMobile={isMobile}
                             isUnfilledBackground={
                               currentGroupType === GroupType.GROUP && !story.background.isFilled
@@ -835,6 +885,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           {!currentGroup?.settings?.isProgressHidden && !isProgressHidden && (
                             <div
                               className={b('indicators', {
+                                playAnimation: playStatus === 'play',
                                 stopAnimation: playStatus === 'pause',
                                 widePadding:
                                   isShowMockup && (isLarge || isGroupWithFilledBackground)

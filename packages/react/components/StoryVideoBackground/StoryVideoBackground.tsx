@@ -1,6 +1,7 @@
 import React from 'react';
 import block from 'bem-cn';
 import './StoryVideoBackground.scss';
+import { IconLoader } from '@components/icons';
 
 const b = block('StorySdkVideoBackground');
 
@@ -34,6 +35,8 @@ export const StoryVideoBackground = ({
       onLoadStart={onLoadStart}
       onLoadedData={onLoadEnd}
     />
-    <p className={b('loadText', { show: isLoading })}>Background is loading...</p>
+    <div className={b('loader', { show: isLoading })}>
+      <IconLoader className={b('loaderIcon').toString()} />
+    </div>
   </div>
 );
