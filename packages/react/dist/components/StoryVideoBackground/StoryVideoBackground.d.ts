@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import './StoryVideoBackground.scss';
 declare type PropTypes = {
     src: string;

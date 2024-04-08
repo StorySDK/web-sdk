@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Group, GroupsListProps } from '@storysdk/react';
+import { Group, GroupType, GroupsListProps } from '@storysdk/react';
 import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
@@ -246,7 +246,7 @@ const withGroupsData =
                       return isActive && item.id === options.groupId;
                     }
 
-                    if (item.type === 'onboarding') {
+                    if (item.type === GroupType.ONBOARDING) {
                       return isActive && (item.settings?.addToStories || options?.autoplay);
                     }
 

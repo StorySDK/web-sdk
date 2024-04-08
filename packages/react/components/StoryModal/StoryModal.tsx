@@ -5,7 +5,7 @@ import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
 import { IconLoader } from '@components/icons';
 import { useLongPress } from 'use-long-press';
-import { useAdaptiveValue, useAnswersCache } from '../../hooks';
+import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
 import { StoryType, Group, GroupType, StoryContenxt, ScoreType } from '../../types';
 import { StoryContent } from '..';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
@@ -223,6 +223,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [width, height] = useWindowSize();
   const [activeStoriesWithResult, setActiveStoriesWithResult] = useState<StoryType[]>([]);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
+  const [isSwiped, setIsSwiped] = useState(false);
 
   const appLink = useMemo(() => {
     if (devMode === 'staging') {
@@ -236,6 +237,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     return 'https://app.storysdk.com';
   }, [devMode]);
 
+  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
+
   const currentStorySize: StoryCurrentSize = useMemo(() => {
     if (storyWidth && storyHeight) {
       return {
@@ -243,8 +246,19 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         height: storyHeight
       };
     }
+
+    if (currentGroup?.type === GroupType.ONBOARDING) {
+      if (isMobile) {
+        return STORY_SIZE_DEFAULT;
+      }
+      return STORY_SIZE_LARGE;
+    }
+
     return STORY_SIZE_LARGE;
   }, [storyWidth, storyHeight]);
+
+  const isShowMockupCurrent =
+    currentGroup?.type === GroupType.ONBOARDING && !isMobile ? true : isShowMockup;
 
   useEffect(() => {
     if (openInExternalModal && isShowing) {
@@ -296,7 +310,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     }
   }, [currentGroup, stories]);
 
-  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
   const currentGroupType = currentGroup?.type || GroupType.GROUP;
   const isBackroundFilled =
     activeStoriesWithResult[currentStory]?.background?.isFilled &&
@@ -343,13 +356,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const heightGap = isLarge ? largeHeightGap : smallHeightGap;
   const borderRadius = isLarge ? largeBorderRadius : smallBorderRadius;
-  const currentPaddingSize = isShowMockup ? PADDING_SIZE + heightGap : PADDING_SIZE;
-  const isShowStatusBarInStory = isShowMockup && !isMobile && isLarge && isStatusBarActive;
+  const currentPaddingSize = isShowMockupCurrent ? PADDING_SIZE + heightGap : PADDING_SIZE;
+  const isShowStatusBarInStory = isShowMockupCurrent && !isMobile && isLarge && isStatusBarActive;
   const desktopWidth = Math.ceil(currentRatioIndex * (height - currentPaddingSize));
 
   const contentHeight = useMemo(() => {
     const backgroundHeightGap =
-      isShowMockup && isGroupWithUnfilledBackground ? groupInnerHeightGap : 0;
+      isShowMockupCurrent && isGroupWithUnfilledBackground ? groupInnerHeightGap : 0;
 
     return isMobile
       ? Math.round(currentStorySize.height * (width / currentStorySize.width))
@@ -360,7 +373,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     groupInnerHeightGap,
     isGroupWithUnfilledBackground,
     isMobile,
-    isShowMockup,
+    isShowMockupCurrent,
     width
   ]);
 
@@ -524,6 +537,28 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onFinishQuiz
   ]);
 
+  const handleNextGroup = useCallback(() => {
+    dispatchQuizState({ type: 'reset' });
+    if (isLastGroup) {
+      handleClose();
+    } else {
+      onNextGroup();
+      setIsSwiped(true);
+
+      if (onCloseStory && currentGroup) {
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+      }
+    }
+  }, [
+    activeStoriesWithResult,
+    currentGroup,
+    currentStory,
+    handleClose,
+    isLastGroup,
+    onCloseStory,
+    onNextGroup
+  ]);
+
   const handleNext = useCallback(() => {
     eventPublish('nextStory', {
       stotyId: activeStoriesWithResult[currentStory].id
@@ -535,16 +570,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       currentStory === activeStoriesWithResult.length - 1 ||
       activeStoriesWithResult[currentStory].id === resultStoryId
     ) {
-      dispatchQuizState({ type: 'reset' });
-      if (isLastGroup) {
-        handleClose();
-      } else {
-        onNextGroup();
-
-        if (onCloseStory && currentGroup) {
-          onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
-        }
-      }
+      handleNextGroup();
     } else {
       handleFinishStoryQuiz();
 
@@ -592,6 +618,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     handleNext();
   }, [handleNext]);
 
+  const handlePrevGroup = useCallback(() => {
+    dispatchQuizState({ type: 'reset' });
+    isFirstGroup ? handleClose() : onPrevGroup();
+  }, [handleClose, isFirstGroup, onPrevGroup]);
+
   const handlePrev = useCallback(() => {
     eventPublish('prevStory', {
       stotyId: activeStoriesWithResult[currentStory].id
@@ -601,8 +632,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     const resultStory = activeStoriesWithResult.find((story) => story.id === resultStoryId);
 
     if (currentStory === 0) {
-      dispatchQuizState({ type: 'reset' });
-      isFirstGroup ? handleClose() : onPrevGroup();
+      handlePrevGroup();
     } else {
       if (onCloseStory && currentGroup) {
         onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
@@ -733,12 +763,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       return 0;
     }
 
-    if (isShowMockup) {
+    if (isShowMockupCurrent) {
       return heightGap + PADDING_SIZE;
     }
 
     return PADDING_SIZE;
-  }, [isMobile, isShowMockup, heightGap]);
+  }, [isMobile, isShowMockupCurrent, heightGap]);
 
   useEffect(() => {
     if (isMediaLoading) {
@@ -765,7 +795,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     [clickTimestamp, handleNext]
   );
 
-  const bind = useLongPress(() => {}, {
+  const pressHandlers = useLongPress(() => {}, {
     onStart: (e) => {
       setClickTimestamp(e.timeStamp);
       setPlayStatus('pause');
@@ -779,9 +809,24 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     threshold: LONG_PRESS_THRESHOLD
   });
 
+  const swipeHandlers = useSwipe({
+    onSwipedLeft: () => handleNextGroup(),
+    onSwipedRight: () => handlePrevGroup()
+  });
+
   useEffect(() => {
     setPlayStatus('play');
   }, [currentStoryId]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (isSwiped) {
+        setIsSwiped(false);
+      }
+    }, 600);
+
+    return () => clearTimeout(timeout);
+  }, [isSwiped]);
 
   return (
     <StoryContext.Provider
@@ -816,7 +861,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
           <div
             className={b('bodyContainer', {
-              black: !isMobile && isShowMockup
+              black: !isMobile && isShowMockupCurrent,
+              swiped: isSwiped && isMobile
             })}
             style={{
               borderRadius: containerBorderRadius
@@ -824,12 +870,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           >
             <div
               className={b('swiper', {
-                mockup: !isMobile && isShowMockup
+                mockup: !isMobile && isShowMockupCurrent
               })}
               style={{
                 width: !isMobile ? desktopWidth : '100%',
                 height: `calc(100vh - ${heightModalGap}px)`,
-                borderRadius: isShowMockup && !isMobile ? borderRadius : undefined
+                borderRadius: isShowMockupCurrent && !isMobile ? borderRadius : undefined
               }}
             >
               <>
@@ -844,7 +890,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                         <div
                           className={b('story', { current: index === currentStory && isOpened })}
                           key={story.id}
-                          {...bind()}
+                          {...pressHandlers()}
+                          {...swipeHandlers}
                         >
                           <StoryContent
                             contentHeight={contentHeight}
@@ -877,7 +924,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           style={{
                             gap: !isShowStatusBarInStory && !isMobile ? controlGap : undefined,
                             paddingTop:
-                              !isShowStatusBarInStory && isShowMockup && !isMobile
+                              !isShowStatusBarInStory && isShowMockupCurrent && !isMobile
                                 ? controlTop
                                 : undefined
                           }}
@@ -888,11 +935,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                                 playAnimation: playStatus === 'play',
                                 stopAnimation: playStatus === 'pause',
                                 widePadding:
-                                  isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
                               })}
                               style={{
                                 top:
-                                  isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
                                     ? largeIndicatorTop
                                     : undefined
                               }}
@@ -920,11 +967,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                               className={b('group', {
                                 noProgress:
                                   currentGroup?.settings?.isProgressHidden || isProgressHidden,
-                                wideLeft: isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                wideLeft:
+                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
                               })}
                               style={{
                                 top:
-                                  isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
                                     ? largeElementsTop
                                     : undefined
                               }}
@@ -952,11 +1000,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                                   noProgress:
                                     currentGroup?.settings?.isProgressHidden || isProgressHidden,
                                   wideRight:
-                                    isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                    isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
                                 })}
                                 style={{
                                   top:
-                                    isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                    isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
                                       ? largeElementsTop
                                       : undefined
                                 }}
@@ -973,7 +1021,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               </>
             </div>
 
-            {isShowMockup && !isMobile && (
+            {isShowMockupCurrent && !isMobile && (
               <img className={b('mockup')} src={isLarge ? largeIphoneMockup : smallIphoneMockup} />
             )}
           </div>

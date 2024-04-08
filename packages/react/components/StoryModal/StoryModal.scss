@@ -102,6 +102,24 @@
 
   &__bodyContainer {
     position: relative;
+    transition: 0.6s ease all;
+    opacity: 1;
+
+    &_swiped { 
+      animation: swipe 0.6s ease;
+    }
+
+    @keyframes swipe {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
 
     &_black {
       &::after {
