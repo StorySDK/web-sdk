@@ -255,7 +255,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     }
 
     return STORY_SIZE_LARGE;
-  }, [storyWidth, storyHeight]);
+  }, [storyWidth, storyHeight, isMobile, currentGroup?.type]);
 
   const isShowMockupCurrent =
     currentGroup?.type === GroupType.ONBOARDING && !isMobile ? true : isShowMockup;
