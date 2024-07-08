@@ -6,9 +6,15 @@ export declare enum MediaType {
 }
 export declare enum BackgroundColorType {
     GRADIENT = "gradient",
-    COLOR = "color"
+    COLOR = "color",
+    TRANSPARENT = "transparent"
 }
 export declare type BackgroundFillType = MediaType | BackgroundColorType;
+declare type TransparentValue = {
+    type: BackgroundColorType.TRANSPARENT;
+    value: string;
+    isFilled?: boolean;
+};
 declare type ColorValue = {
     type: BackgroundColorType.COLOR;
     value: string;
@@ -28,7 +34,7 @@ declare type BackgrounValue = {
     metadata?: VideoMetadataType;
 };
 export declare type BorderType = GradientValue | ColorValue;
-export declare type BackgroundType = GradientValue | ColorValue | BackgrounValue;
+export declare type BackgroundType = GradientValue | ColorValue | BackgrounValue | TransparentValue;
 export interface FontParamsType {
     style: string;
     weight: number;

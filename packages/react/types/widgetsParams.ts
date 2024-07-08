@@ -36,6 +36,7 @@ export type ImageWidgetParamsType = {
 export type VideoWidgetParamsType = {
   widgetOpacity: number;
   videoUrl: string;
+  borderRadius: number;
   videoPreviewUrl?: string;
   fileId?: string;
   stopAutoplay?: boolean;

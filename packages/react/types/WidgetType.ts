@@ -40,11 +40,17 @@ export enum MediaType {
 
 export enum BackgroundColorType {
   GRADIENT = 'gradient',
-  COLOR = 'color'
+  COLOR = 'color',
+  TRANSPARENT = 'transparent'
 }
 
 export type BackgroundFillType = MediaType | BackgroundColorType;
 
+type TransparentValue = {
+  type: BackgroundColorType.TRANSPARENT;
+  value: string;
+  isFilled?: boolean;
+};
 type ColorValue = { type: BackgroundColorType.COLOR; value: string; isFilled?: boolean };
 type GradientValue = { type: BackgroundColorType.GRADIENT; value: string[]; isFilled?: boolean };
 type BackgrounValue = {
@@ -57,7 +63,7 @@ type BackgrounValue = {
 };
 
 export type BorderType = GradientValue | ColorValue;
-export type BackgroundType = GradientValue | ColorValue | BackgrounValue;
+export type BackgroundType = GradientValue | ColorValue | BackgrounValue | TransparentValue;
 export interface FontParamsType {
   style: string;
   weight: number;
