@@ -12,6 +12,7 @@ interface Props {
   groupImageWidth?: number;
   groupImageHeight?: number;
   groupClassName?: string;
+  isChosen?: boolean;
   imageUrl: string;
   title: string;
   view: 'circle' | 'square' | 'bigSquare' | 'rectangle';
@@ -30,6 +31,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
     groupTitleSize,
     groupImageWidth,
     groupImageHeight,
+    isChosen,
     onClick
   } = props;
 
@@ -78,7 +80,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
 
   return (
     <button
-      className={classNames(b({ view, type }).toString(), groupClassName || '')}
+      className={classNames(b({ view, type, chosen: isChosen }).toString(), groupClassName || '')}
       style={{
         width: getContainerSize(),
         minHeight:
