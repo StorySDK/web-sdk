@@ -292,6 +292,7 @@ const withGroupsData =
                 const stories = storiesData.data.data.filter(
                   (storyItem: any) =>
                     storyItem.story_data.status === 'active' &&
+                    storyItem.story_data.background.type !== 'transparent' &&
                     ((!storyItem.story_data.start_time && !storyItem.story_data.end_time) ||
                       (((storyItem.story_data.start_time &&
                         DateTime.fromISO(storyItem.story_data.start_time).toSeconds() <
