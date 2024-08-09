@@ -242,10 +242,6 @@ const withGroupsData =
                   .filter((item: any) => {
                     const isActive = item.active && item.type;
 
-                    if (options?.groupId) {
-                      return isActive && item.id === options.groupId;
-                    }
-
                     return isActive;
                   })
 
@@ -351,6 +347,7 @@ const withGroupsData =
         isShowMockup={isShowMockup}
         isStatusBarActive={options?.isStatusBarActive}
         openInExternalModal={options?.openInExternalModal}
+        startGroupId={options?.groupId}
         startStoryId={options?.startStoryId}
         storyHeight={options?.storyHeight}
         storyWidth={options?.storyWidth}

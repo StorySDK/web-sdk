@@ -7,7 +7,6 @@ import ReactDOM from 'react-dom';
 import { useWindowSize } from '@react-hook/window-size';
 import { Group } from '../../types';
 import { GroupItem, StoryModal } from '..';
-
 import 'simplebar-react/dist/simplebar.min.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
@@ -28,6 +27,7 @@ export interface GroupsListProps {
   isLoading?: boolean;
   autoplay?: boolean;
   startStoryId?: string;
+  startGroupId?: string;
   forbidClose?: boolean;
   openInExternalModal?: boolean;
   devMode?: 'staging' | 'development';
@@ -56,6 +56,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     isStatusBarActive,
     autoplay,
     startStoryId,
+    startGroupId,
     devMode,
     forbidClose,
     openInExternalModal,
@@ -82,6 +83,16 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   const carouselSkeletonRef = useRef<HTMLDivElement | null>(null);
 
   const [isCentered, setIsCentered] = useState(true);
+
+  useEffect(() => {
+    if (startGroupId) {
+      const groupIndex = groups.findIndex((group) => group.id === startGroupId);
+
+      if (groupIndex !== -1) {
+        setCurrentGroup(groupIndex);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (autoplay && onOpenGroup && groups?.length) {

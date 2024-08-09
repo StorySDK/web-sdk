@@ -17,6 +17,7 @@ export interface GroupsListProps {
     isLoading?: boolean;
     autoplay?: boolean;
     startStoryId?: string;
+    startGroupId?: string;
     forbidClose?: boolean;
     openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
