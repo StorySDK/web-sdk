@@ -242,9 +242,16 @@ const withGroupsData =
                   .filter((item: any) => {
                     const isActive = item.active && item.type;
 
+                    if (item.type === GroupType.ONBOARDING) {
+                      if (options?.groupId === item.id) {
+                        return isActive;
+                      }
+
+                      return isActive && item.settings?.addToStories;
+                    }
+
                     return isActive;
                   })
-
                   .map((item: any) => ({
                     id: item.id,
                     app_id: item.app_id,

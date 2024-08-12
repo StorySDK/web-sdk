@@ -92,13 +92,13 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         setCurrentGroup(groupIndex);
       }
     }
-  }, []);
+  }, [groups, startGroupId]);
 
   useEffect(() => {
     if (autoplay && onOpenGroup && groups?.length) {
-      onOpenGroup(groups[0].id);
+      onOpenGroup(startGroupId ?? groups[0].id);
     }
-  }, [autoplay, groups, onOpenGroup]);
+  }, [autoplay, groups, startGroupId, onOpenGroup]);
 
   const handleSelectGroup = useCallback(
     (groupIndex: number) => {
