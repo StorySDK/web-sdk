@@ -35,6 +35,11 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
     onClick
   } = props;
 
+  const [titleHeight, setTitleHeight] = React.useState<string | number | undefined>(undefined);
+
+  const titleRef = React.useRef<HTMLParagraphElement>(null);
+  const btnRef = React.useRef<HTMLButtonElement>(null);
+
   const BASE_CONTAINER_WIDTH_INDEX = 1.32;
   const BIG_SQUARE_CONTAINER_WIDTH_INDEX = 0.93;
   const RECTANGLE_CONTAINER_WIDTH_INDEX = 0.97;
@@ -42,6 +47,17 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
   const BIG_SQUARE_IMAGE_WIDTH_INDEX = 0.9;
   const RECTANGLE_IMAGE_WIDTH_INDEX = 0.9;
   const RECTANGLE_IMAGE_HEIGHT_INDEX = 1.26;
+
+  React.useEffect(() => {
+    if (
+      titleRef.current &&
+      btnRef.current &&
+      titleRef.current.offsetHeight > btnRef.current.offsetHeight &&
+      (view === 'rectangle' || view === 'bigSquare')
+    ) {
+      setTitleHeight('100%');
+    }
+  }, [view]);
 
   const getContainerSize = useCallback(() => {
     if (groupImageWidth) {
@@ -81,9 +97,10 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
   return (
     <button
       className={classNames(b({ view, type, chosen: isChosen }).toString(), groupClassName || '')}
+      ref={btnRef}
       style={{
         width: getContainerSize(),
-        minHeight:
+        height:
           view === 'rectangle' && groupImageWidth
             ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
             : getContainerSize()
@@ -107,8 +124,10 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
       <div className={b('titleContainer', { view })}>
         <p
           className={b('title', { view })}
+          ref={titleRef}
           style={{
-            fontSize: groupTitleSize || undefined
+            fontSize: groupTitleSize || undefined,
+            height: titleHeight
           }}
         >
           {title}
