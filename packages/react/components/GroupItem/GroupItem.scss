@@ -6,7 +6,6 @@
   align-items: center;
   padding: 0 5px;
   flex-shrink: 0;
-
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -51,7 +50,6 @@
         margin-right: 0;
       }
     }
-
   }
 
   &_chosen, &:hover {
@@ -118,7 +116,6 @@
         &::after {
           width: 95%;
           height: 95%;
-
           border-radius: 10px;
         }
 
@@ -179,6 +176,8 @@
   &__titleContainer {
     position: relative;
     width: 100%;
+    overflow: hidden;
+
     &_view {
       &_bigSquare {
         height: 100%;
@@ -191,7 +190,6 @@
        display: flex;
        align-items: flex-end;
       }
-
     }  
   }
 
