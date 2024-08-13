@@ -6,6 +6,7 @@ interface StoryModalProps {
     stories?: StoryType[];
     isShowing: boolean;
     forbidClose?: boolean;
+    isProgressHidden?: boolean;
     isShowMockup?: boolean;
     storyWidth?: number;
     storyHeight?: number;
@@ -15,8 +16,10 @@ interface StoryModalProps {
     isStatusBarActive?: boolean;
     isForceCloseAvailable?: boolean;
     isCacheDisabled?: boolean;
+    devMode?: 'staging' | 'development';
     isLoading?: boolean;
     isEditorMode?: boolean;
+    openInExternalModal?: boolean;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;
@@ -28,6 +31,7 @@ interface StoryModalProps {
     onFinishQuiz?(groupId: string, storyId?: string): void;
 }
 export declare const StoryContext: React.Context<StoryContenxt>;
+export declare type PlayStatusType = 'wait' | 'play' | 'pause';
 export declare type StoryCurrentSize = {
     width: number;
     height: number;
@@ -41,7 +45,7 @@ export declare const STORY_SIZE_LARGE: {
     height: number;
 };
 export declare const DEFAULT_STORY_DURATION = 7;
-export declare const PADDING_SIZE = 20;
+export declare const PADDING_SIZE = 25;
 export declare const MOBILE_BREAKPOINT = 768;
 export declare const StoryModal: React.FC<StoryModalProps>;
 export {};

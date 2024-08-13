@@ -17,7 +17,10 @@ export interface GroupsListProps {
     isLoading?: boolean;
     autoplay?: boolean;
     startStoryId?: string;
+    startGroupId?: string;
     forbidClose?: boolean;
+    openInExternalModal?: boolean;
+    devMode?: 'staging' | 'development';
     groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
     onOpenGroup?(id: string): void;
     onCloseGroup?(id: string): void;

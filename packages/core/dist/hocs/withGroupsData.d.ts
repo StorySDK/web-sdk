@@ -11,8 +11,10 @@ declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: 
     storyHeight?: number | undefined;
     groupsClassName?: string | undefined;
     autoplay?: boolean | undefined;
+    openInExternalModal?: boolean | undefined;
     groupId?: string | undefined;
     startStoryId?: string | undefined;
     forbidClose?: boolean | undefined;
+    devMode?: "staging" | "development" | undefined;
 } | undefined) => () => JSX.Element;
 export default withGroupsData;

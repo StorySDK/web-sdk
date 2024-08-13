@@ -7,10 +7,11 @@ const b = block('VideoWidget');
 
 export const VideoWidget: WidgetComponent<{ params: VideoWidgetParamsType }> = React.memo(
   (props) => {
-    const { videoUrl, videoPreviewUrl, stopAutoplay, widgetOpacity } = props.params;
+    const { videoUrl, videoPreviewUrl, stopAutoplay, widgetOpacity, borderRadius } = props.params;
 
     const styles = {
-      opacity: widgetOpacity / 100
+      opacity: widgetOpacity / 100,
+      borderRadius: `${borderRadius}px`
     };
 
     return (

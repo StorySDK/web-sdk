@@ -6,7 +6,6 @@
   align-items: center;
   padding: 0 5px;
   flex-shrink: 0;
-
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -28,6 +27,12 @@
       }
     }
 
+    &_circle.GroupSdkItem_chosen, &_square.GroupSdkItem_chosen {
+      .GroupSdkItem__title {
+        color: #FD19CC;
+      }
+    }
+
     &_bigSquare {
       width: 84px;
       padding: 0;
@@ -45,10 +50,9 @@
         margin-right: 0;
       }
     }
-
   }
 
-  &:hover {
+  &_chosen, &:hover {
     .GroupSdkItem__imgContainer::after {
       border: 2px solid transparent;
       background:linear-gradient(-45deg,#B90AE0, #FF0198 ) border-box;
@@ -82,6 +86,7 @@
       border-radius: 50%;
       border: 2px solid #E9E6E9;
       transition: 0.2s ease-out all;
+      box-sizing: content-box;
     }
 
     &_view{
@@ -111,7 +116,6 @@
         &::after {
           width: 95%;
           height: 95%;
-
           border-radius: 10px;
         }
 
@@ -172,16 +176,20 @@
   &__titleContainer {
     position: relative;
     width: 100%;
-    &_view {
+    overflow: hidden;
 
+    &_view {
       &_bigSquare {
-        margin-top: auto;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
       }
 
       &_rectangle {
-        margin-top: auto;
+       height: 100%;
+       display: flex;
+       align-items: flex-end;
       }
-
     }  
   }
 
@@ -203,12 +211,14 @@
         padding-bottom: 10px;
         padding-left: 10px;
         padding-right: 10px;
+        padding-top: 5px;
         text-align: left;
         transform: none;
         text-overflow: ellipsis;
       }
 
       &_rectangle {
+        overflow: hidden;
         color: #FFFFFF;
         font-weight: 600;
         font-size: 8px;

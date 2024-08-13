@@ -8,9 +8,11 @@ interface GroupProps {
     isShowing: boolean;
     storyWidth?: number;
     storyHeight?: number;
+    isProgressHidden?: boolean;
     isShowMockup?: boolean;
     isStatusBarActive?: boolean;
     startStoryId?: string;
+    forbidClose?: boolean;
     isCacheDisabled?: boolean;
     isEditorMode?: boolean;
     handleCloseModal: () => void;

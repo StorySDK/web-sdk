@@ -4,12 +4,12 @@ import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
 import { IconLoader } from '@components/icons';
-import { useAdaptiveValue, useAnswersCache } from '../../hooks';
+import { useLongPress } from 'use-long-press';
+import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
 import { StoryType, Group, GroupType, StoryContenxt, ScoreType } from '../../types';
 import { StoryContent } from '..';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
 import smallIphoneMockup from '../../assets/images/iphone-mockup-small.svg';
-import iphoneMockupBottom from '../../assets/images/iphone-mockup-bottom.png';
 import { StatusBar } from './_components';
 import './StoryModal.scss';
 
@@ -20,6 +20,7 @@ interface StoryModalProps {
   stories?: StoryType[];
   isShowing: boolean;
   forbidClose?: boolean;
+  isProgressHidden?: boolean;
   isShowMockup?: boolean;
   storyWidth?: number;
   storyHeight?: number;
@@ -29,8 +30,10 @@ interface StoryModalProps {
   isStatusBarActive?: boolean;
   isForceCloseAvailable?: boolean;
   isCacheDisabled?: boolean;
+  devMode?: 'staging' | 'development';
   isLoading?: boolean;
   isEditorMode?: boolean;
+  openInExternalModal?: boolean;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -105,7 +108,7 @@ export const StoryContext = React.createContext<StoryContenxt>({
   confetti: null
 });
 
-type PlayStatusType = 'wait' | 'play' | 'pause';
+export type PlayStatusType = 'wait' | 'play' | 'pause';
 
 export type StoryCurrentSize = {
   width: number;
@@ -123,11 +126,10 @@ export const STORY_SIZE_LARGE = {
 };
 
 export const DEFAULT_STORY_DURATION = 7;
-export const PADDING_SIZE = 20;
+export const PADDING_SIZE = 25;
 export const MOBILE_BREAKPOINT = 768;
 
 const INIT_TOP_ELEMENTS = 20;
-const INIT_TOP_STATUS_BAR = 16;
 const INIT_TOP_INDICATOR = 10;
 const INIT_LARGE_PADDING = 30;
 const INIT_LARGE_RADIUS = 43;
@@ -135,14 +137,13 @@ const INIT_SMALL_PADDING = 145;
 const INIT_INNER_GROUP_PADDING = 115;
 const INIT_SMALL_RADIUS = 5;
 const INIT_CONTROL_TOP = 10;
-const INIT_CONTROL_TOP_LARGE = 11;
+const INIT_CONTROL_TOP_LARGE = 35;
 const INIT_CONTROL_SIDE_PADDING = 8;
-const INIT_CONTROL_SIDE_PADDING_LARGE = 20;
 const INIT_CONTAINER_BORDER_RADIUS = 50;
 const INIT_CONTROL_GAP_LARGE = 8;
-const INIT_MOCK_PADDING_BOTTOM = 40;
+const LONG_PRESS_THRESHOLD = 500;
 
-const defaultRatioIndex = STORY_SIZE_DEFAULT.width / STORY_SIZE_DEFAULT.height;
+const defaultRatioIndex = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
 
 const initQuizeState = {
   points: 0,
@@ -194,9 +195,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isCacheDisabled,
     forbidClose,
     isLoading,
+    isProgressHidden,
     isEditorMode,
     storyWidth,
+    devMode,
     storyHeight,
+    openInExternalModal,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -211,12 +215,29 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [quizState, dispatchQuizState] = useReducer(reducer, initQuizeState);
   const [currentStory, setCurrentStory] = useState(0);
   const [currentStoryId, setCurrentStoryId] = useState('');
+  const [isOpened, setIsOpened] = useState(isShowing);
   const [playStatus, setPlayStatus] = useState<PlayStatusType>('wait');
   const storyModalRef = useRef<HTMLDivElement>(null);
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const [quizStartedStoryIds, setQuizStartedStoryIds] = useState<{ [key: string]: boolean }>({});
   const [width, height] = useWindowSize();
   const [activeStoriesWithResult, setActiveStoriesWithResult] = useState<StoryType[]>([]);
+  const [isMediaLoading, setIsMediaLoading] = useState(false);
+  const [isSwiped, setIsSwiped] = useState(false);
+
+  const appLink = useMemo(() => {
+    if (devMode === 'staging') {
+      return 'https://app.diffapp.link';
+    }
+
+    if (devMode === 'development') {
+      return 'http://localhost:3000';
+    }
+
+    return 'https://app.storysdk.com';
+  }, [devMode]);
+
+  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
 
   const currentStorySize: StoryCurrentSize = useMemo(() => {
     if (storyWidth && storyHeight) {
@@ -225,8 +246,39 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         height: storyHeight
       };
     }
-    return STORY_SIZE_DEFAULT;
-  }, [storyWidth, storyHeight]);
+
+    if (currentGroup?.type === GroupType.ONBOARDING) {
+      if (isMobile) {
+        return STORY_SIZE_DEFAULT;
+      }
+      return STORY_SIZE_LARGE;
+    }
+
+    return STORY_SIZE_LARGE;
+  }, [storyWidth, storyHeight, isMobile, currentGroup?.type]);
+
+  const isShowMockupCurrent =
+    currentGroup?.type === GroupType.ONBOARDING && !isMobile ? true : isShowMockup;
+
+  useEffect(() => {
+    if (openInExternalModal && isShowing) {
+      const leftPosition = isMobile ? 0 : 100;
+
+      window.open(
+        `${appLink}/share/${currentGroup?.settings?.shortDataId}`,
+        '_blank',
+        `popup,left=${leftPosition},top=${isMobile ? 0 : 50},width=${
+          isMobile ? width : 1000
+        },height=${780}`
+      );
+
+      onClose();
+    }
+
+    if (!openInExternalModal) {
+      setIsOpened(isShowing);
+    }
+  }, [isShowing]);
 
   useEffect(() => {
     if (stories && currentGroup) {
@@ -258,14 +310,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     }
   }, [currentGroup, stories]);
 
-  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
   const currentGroupType = currentGroup?.type || GroupType.GROUP;
   const isBackroundFilled =
     activeStoriesWithResult[currentStory]?.background?.isFilled &&
     currentGroupType === GroupType.GROUP;
-
   const initBodyOverflow = useMemo(() => document.body.style.overflow, []);
-
   const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
   const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
@@ -276,75 +325,68 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const controlTopSmall = useAdaptiveValue(INIT_CONTROL_TOP);
   const controlTopLarge = useAdaptiveValue(INIT_CONTROL_TOP_LARGE);
   const controlSidePaddingSmall = useAdaptiveValue(INIT_CONTROL_SIDE_PADDING);
-  const controlSidePaddingLarge = useAdaptiveValue(INIT_CONTROL_SIDE_PADDING_LARGE);
   const controlGapLarge = useAdaptiveValue(INIT_CONTROL_GAP_LARGE);
   const containerBorderRadius = useAdaptiveValue(INIT_CONTAINER_BORDER_RADIUS);
-  const statusBarTop = useAdaptiveValue(INIT_TOP_STATUS_BAR);
-  const mockPaddingBottom = useAdaptiveValue(INIT_MOCK_PADDING_BOTTOM);
 
   const isLarge = useMemo(
-    () =>
-      storyHeight === STORY_SIZE_LARGE.height &&
-      !isMobile &&
-      (currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.TEMPLATE),
-    [currentGroupType, isMobile, storyHeight]
+    () => currentStorySize.height === STORY_SIZE_LARGE.height,
+    [currentGroupType, isMobile, currentStorySize]
   );
 
   const isGroupWithFilledBackground = useMemo(
-    () => currentGroupType === GroupType.GROUP && !isMobile && isShowMockup && isBackroundFilled,
-    [currentGroupType, isBackroundFilled, isMobile, isShowMockup]
+    () => currentGroupType === GroupType.GROUP && !isMobile && isBackroundFilled,
+    [currentGroupType, isBackroundFilled, isMobile]
   );
 
-  const controlTop = isLarge || isGroupWithFilledBackground ? controlTopLarge : controlTopSmall;
-  const controlSidePadding =
-    isLarge || isGroupWithFilledBackground ? controlSidePaddingLarge : controlSidePaddingSmall;
+  const isGroupWithUnfilledBackground = useMemo(
+    () => currentGroupType === GroupType.GROUP && !isMobile && !isBackroundFilled,
+    [currentGroupType, isBackroundFilled, isMobile]
+  );
 
-  const controlGap =
-    isLarge || isGroupWithFilledBackground ? controlGapLarge : controlSidePaddingSmall;
+  const controlTop = isLarge ? controlTopLarge : controlTopSmall;
+  const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
 
   const currentRatioIndex = useMemo(() => {
-    if (isGroupWithFilledBackground) {
-      return STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
-    }
     if (storyWidth && storyHeight) {
       return storyWidth / storyHeight;
     }
 
     return defaultRatioIndex;
-  }, [isGroupWithFilledBackground, storyHeight, storyWidth]);
+  }, [storyHeight, storyWidth]);
 
-  const heightGap = isLarge || isGroupWithFilledBackground ? largeHeightGap : smallHeightGap;
-  const borderRadius =
-    isLarge || isGroupWithFilledBackground ? largeBorderRadius : smallBorderRadius;
-  const currentPaddingSize = isShowMockup ? PADDING_SIZE + heightGap : PADDING_SIZE;
-  const isShowStatusBarInStory =
-    isShowMockup && !isMobile && (isLarge || isGroupWithFilledBackground) && isStatusBarActive;
-  const isShowStatusBarInContainer =
-    isShowMockup &&
-    !isMobile &&
-    currentGroupType === GroupType.GROUP &&
-    !isBackroundFilled &&
-    isStatusBarActive;
-  const desktopWidth = currentRatioIndex * (height - currentPaddingSize);
+  const heightGap = isLarge ? largeHeightGap : smallHeightGap;
+  const borderRadius = isLarge ? largeBorderRadius : smallBorderRadius;
+  const currentPaddingSize = isShowMockupCurrent ? PADDING_SIZE + heightGap : PADDING_SIZE;
+  const isShowStatusBarInStory = isShowMockupCurrent && !isMobile && isLarge && isStatusBarActive;
+  const desktopWidth = Math.ceil(currentRatioIndex * (height - currentPaddingSize));
 
-  const getBorderRadius = () => {
-    if (isShowMockup && currentGroupType === GroupType.GROUP && !isBackroundFilled && !isMobile) {
-      return 0;
-    }
+  const contentHeight = useMemo(() => {
+    const backgroundHeightGap =
+      isShowMockupCurrent && isGroupWithUnfilledBackground ? groupInnerHeightGap : 0;
 
-    return isShowMockup && !isMobile ? borderRadius : undefined;
-  };
+    return isMobile
+      ? Math.round(currentStorySize.height * (width / currentStorySize.width))
+      : `calc(100% - ${backgroundHeightGap}px)`;
+  }, [
+    currentStorySize.height,
+    currentStorySize.width,
+    groupInnerHeightGap,
+    isGroupWithUnfilledBackground,
+    isMobile,
+    isShowMockupCurrent,
+    width
+  ]);
 
   useEffect(() => {
     const body = document.querySelector('body');
     if (storyModalRef.current && body) {
-      if (width < 767) {
-        storyModalRef.current.style.setProperty('height', `${body.clientHeight}px`);
+      if (isMobile) {
+        storyModalRef.current.style.setProperty('height', `${contentHeight}px`);
       } else {
         storyModalRef.current.style.setProperty('height', `100%`);
       }
     }
-  }, [width, height]);
+  }, [width, height, isMobile, contentHeight]);
 
   useEffect(() => {
     let currentStoryIndex = 0;
@@ -358,7 +400,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     const body = document.querySelector('body');
 
-    if (isShowing) {
+    if (isOpened) {
       setPlayStatus('play');
 
       if (body) {
@@ -372,7 +414,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       }
     }
 
-    if (isShowing && activeStoriesWithResult.length) {
+    if (isOpened && activeStoriesWithResult.length) {
       setCurrentStoryId(activeStoriesWithResult[currentStoryIndex].id);
 
       if (onOpenStory && currentGroup) {
@@ -384,7 +426,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onOpenStory,
     activeStoriesWithResult,
     currentGroup,
-    isShowing,
+    isOpened,
     startStoryId
   ]);
 
@@ -495,6 +537,28 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onFinishQuiz
   ]);
 
+  const handleNextGroup = useCallback(() => {
+    dispatchQuizState({ type: 'reset' });
+    if (isLastGroup) {
+      handleClose();
+    } else {
+      onNextGroup();
+      setIsSwiped(true);
+
+      if (onCloseStory && currentGroup) {
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+      }
+    }
+  }, [
+    activeStoriesWithResult,
+    currentGroup,
+    currentStory,
+    handleClose,
+    isLastGroup,
+    onCloseStory,
+    onNextGroup
+  ]);
+
   const handleNext = useCallback(() => {
     eventPublish('nextStory', {
       stotyId: activeStoriesWithResult[currentStory].id
@@ -506,16 +570,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       currentStory === activeStoriesWithResult.length - 1 ||
       activeStoriesWithResult[currentStory].id === resultStoryId
     ) {
-      dispatchQuizState({ type: 'reset' });
-      if (isLastGroup) {
-        handleClose();
-      } else {
-        onNextGroup();
-
-        if (onCloseStory && currentGroup) {
-          onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
-        }
-      }
+      handleNextGroup();
     } else {
       handleFinishStoryQuiz();
 
@@ -563,6 +618,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     handleNext();
   }, [handleNext]);
 
+  const handlePrevGroup = useCallback(() => {
+    dispatchQuizState({ type: 'reset' });
+    isFirstGroup ? handleClose() : onPrevGroup();
+  }, [handleClose, isFirstGroup, onPrevGroup]);
+
   const handlePrev = useCallback(() => {
     eventPublish('prevStory', {
       stotyId: activeStoriesWithResult[currentStory].id
@@ -572,8 +632,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     const resultStory = activeStoriesWithResult.find((story) => story.id === resultStoryId);
 
     if (currentStory === 0) {
-      dispatchQuizState({ type: 'reset' });
-      isFirstGroup ? handleClose() : onPrevGroup();
+      handlePrevGroup();
     } else {
       if (onCloseStory && currentGroup) {
         onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
@@ -704,12 +763,70 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       return 0;
     }
 
-    if (isShowMockup) {
+    if (isShowMockupCurrent) {
       return heightGap + PADDING_SIZE;
     }
 
     return PADDING_SIZE;
-  }, [isMobile, isShowMockup, heightGap]);
+  }, [isMobile, isShowMockupCurrent, heightGap]);
+
+  useEffect(() => {
+    if (isMediaLoading) {
+      setPlayStatus('pause');
+    } else {
+      setPlayStatus('play');
+    }
+  }, [isMediaLoading]);
+
+  const [clickTimestamp, setClickTimestamp] = useState(0);
+
+  const handleLongPress = useCallback(
+    (e) => {
+      setPlayStatus('play');
+
+      if (e.timeStamp - clickTimestamp < LONG_PRESS_THRESHOLD) {
+        const isBackground = (e.target as Element).classList.contains('StorySdkContent__scope');
+
+        if (isBackground) {
+          handleNext();
+        }
+      }
+    },
+    [clickTimestamp, handleNext]
+  );
+
+  const pressHandlers = useLongPress(() => {}, {
+    onStart: (e) => {
+      setClickTimestamp(e.timeStamp);
+      setPlayStatus('pause');
+    },
+    onFinish: (e) => {
+      handleLongPress(e);
+    },
+    onCancel: (e) => {
+      handleLongPress(e);
+    },
+    threshold: LONG_PRESS_THRESHOLD
+  });
+
+  const swipeHandlers = useSwipe({
+    onSwipedLeft: () => handleNextGroup(),
+    onSwipedRight: () => handlePrevGroup()
+  });
+
+  useEffect(() => {
+    setPlayStatus('play');
+  }, [currentStoryId]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (isSwiped) {
+        setIsSwiped(false);
+      }
+    }, 600);
+
+    return () => clearTimeout(timeout);
+  }, [isSwiped]);
 
   return (
     <StoryContext.Provider
@@ -723,68 +840,42 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       }}
     >
       <div
-        className={b({ isShowing })}
+        className={b({ isShowing: isOpened })}
         ref={storyModalRef}
         style={{
-          top: window.pageYOffset || document.documentElement.scrollTop
+          top: window?.pageYOffset || document.documentElement.scrollTop
         }}
       >
         <div className={b('body')}>
-          {activeStoriesWithResult.length > 1 && !isLoading && (
+          {!isLoading && (
             <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
               <LeftArrowIcon />
             </button>
           )}
 
+          {!isLoading && !isMobile && (
+            <button className={b('arrowButton', { right: true })} onClick={handleNext}>
+              <RightArrowIcon />
+            </button>
+          )}
+
           <div
             className={b('bodyContainer', {
-              black:
-                currentGroupType === GroupType.GROUP &&
-                !isBackroundFilled &&
-                !isMobile &&
-                isShowMockup
+              black: !isMobile && isShowMockupCurrent,
+              swiped: isSwiped && isMobile
             })}
             style={{
               borderRadius: containerBorderRadius
             }}
           >
-            {isShowStatusBarInContainer && (
-              <>
-                <div
-                  className={b('statusBar')}
-                  style={{
-                    paddingTop: statusBarTop,
-                    paddingLeft: statusBarTop,
-                    paddingRight: statusBarTop
-                  }}
-                >
-                  <StatusBar />
-                </div>
-
-                <div
-                  className={b('bottomMock')}
-                  style={{
-                    paddingBottom: mockPaddingBottom
-                  }}
-                >
-                  <img alt="" className={b('bottomMockImg')} src={iphoneMockupBottom} />
-                </div>
-              </>
-            )}
-
             <div
               className={b('swiper', {
-                mockup: !isMobile && isShowMockup,
-                smallTop:
-                  !isMobile &&
-                  isShowMockup &&
-                  currentGroupType === GroupType.GROUP &&
-                  !isBackroundFilled
+                mockup: !isMobile && isShowMockupCurrent
               })}
               style={{
                 width: !isMobile ? desktopWidth : '100%',
                 height: `calc(100vh - ${heightModalGap}px)`,
-                borderRadius: getBorderRadius()
+                borderRadius: isShowMockupCurrent && !isMobile ? borderRadius : undefined
               }}
             >
               <>
@@ -797,18 +888,24 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                     <div className={b('swiperContent')}>
                       {activeStoriesWithResult.map((story, index) => (
                         <div
-                          className={b('story', { current: index === currentStory })}
+                          className={b('story', { current: index === currentStory && isOpened })}
                           key={story.id}
+                          {...pressHandlers()}
+                          {...swipeHandlers}
                         >
                           <StoryContent
-                            currentPaddingSize={currentPaddingSize}
+                            contentHeight={contentHeight}
                             currentStorySize={currentStorySize}
+                            desktopContainerWidth={desktopWidth}
                             handleGoToStory={handleGoToStory}
-                            innerHeightGap={
-                              isShowMockup && isGroupWithFilledBackground ? groupInnerHeightGap : 0
+                            handleMediaLoading={setIsMediaLoading}
+                            isDisplaying={index === currentStory && isOpened}
+                            isLarge={isLarge}
+                            isMediaLoading={isMediaLoading}
+                            isMobile={isMobile}
+                            isUnfilledBackground={
+                              currentGroupType === GroupType.GROUP && !story.background.isFilled
                             }
-                            isLarge={isLarge || isGroupWithFilledBackground}
-                            isLargeBackground={isShowMockup && currentGroupType === GroupType.GROUP}
                             jsConfetti={jsConfetti}
                             noTopBackgroundShadow={noTopBackgroundShadow}
                             noTopShadow={noTopShadow}
@@ -826,23 +923,23 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           className={b('controls')}
                           style={{
                             gap: !isShowStatusBarInStory && !isMobile ? controlGap : undefined,
-                            paddingTop: !isShowStatusBarInStory ? controlTop : undefined,
-                            paddingLeft:
-                              !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined,
-                            paddingRight:
-                              !isShowStatusBarInStory && !isMobile ? controlSidePadding : undefined
+                            paddingTop:
+                              !isShowStatusBarInStory && isShowMockupCurrent && !isMobile
+                                ? controlTop
+                                : undefined
                           }}
                         >
-                          {!currentGroup?.settings?.isProgressHidden && (
+                          {!currentGroup?.settings?.isProgressHidden && !isProgressHidden && (
                             <div
                               className={b('indicators', {
+                                playAnimation: playStatus === 'play',
                                 stopAnimation: playStatus === 'pause',
                                 widePadding:
-                                  isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
                               })}
                               style={{
                                 top:
-                                  isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
                                     ? largeIndicatorTop
                                     : undefined
                               }}
@@ -868,12 +965,14 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                           {currentGroupType === GroupType.GROUP && (
                             <div
                               className={b('group', {
-                                noProgress: currentGroup?.settings?.isProgressHidden,
-                                wideLeft: isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                noProgress:
+                                  currentGroup?.settings?.isProgressHidden || isProgressHidden,
+                                wideLeft:
+                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
                               })}
                               style={{
                                 top:
-                                  isShowMockup && (isLarge || isGroupWithFilledBackground)
+                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
                                     ? largeElementsTop
                                     : undefined
                               }}
@@ -893,23 +992,27 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                             </div>
                           )}
 
-                          {!currentGroup?.settings?.isProhibitToClose && !forbidClose && (
-                            <button
-                              className={b('close', {
-                                noProgress: currentGroup?.settings?.isProgressHidden,
-                                wideRight: isShowMockup && (isLarge || isGroupWithFilledBackground)
-                              })}
-                              style={{
-                                top:
-                                  isShowMockup && (isLarge || isGroupWithFilledBackground)
-                                    ? largeElementsTop
-                                    : undefined
-                              }}
-                              onClick={handleClose}
-                            >
-                              <CloseIcon />
-                            </button>
-                          )}
+                          {!currentGroup?.settings?.isProhibitToClose &&
+                            !forbidClose &&
+                            !isForceCloseAvailable && (
+                              <button
+                                className={b('close', {
+                                  noProgress:
+                                    currentGroup?.settings?.isProgressHidden || isProgressHidden,
+                                  wideRight:
+                                    isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
+                                })}
+                                style={{
+                                  top:
+                                    isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
+                                      ? largeElementsTop
+                                      : undefined
+                                }}
+                                onClick={handleClose}
+                              >
+                                <CloseIcon />
+                              </button>
+                            )}
                         </div>
                       </>
                     </div>
@@ -918,26 +1021,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               </>
             </div>
 
-            {isShowMockup && !isMobile && (
-              <img
-                className={b('mockup')}
-                src={
-                  isLarge || currentGroupType === GroupType.GROUP
-                    ? largeIphoneMockup
-                    : smallIphoneMockup
-                }
-              />
+            {isShowMockupCurrent && !isMobile && (
+              <img className={b('mockup')} src={isLarge ? largeIphoneMockup : smallIphoneMockup} />
             )}
           </div>
-
-          {activeStoriesWithResult.length > 1 && !isLoading && (
-            <button className={b('arrowButton', { right: true })} onClick={handleNext}>
-              <RightArrowIcon />
-            </button>
-          )}
         </div>
 
-        {isForceCloseAvailable && currentGroup?.settings?.isProhibitToClose && (
+        {isForceCloseAvailable && (
           <button className={b('close', { general: true })} onClick={handleClose}>
             <CloseIcon />
           </button>

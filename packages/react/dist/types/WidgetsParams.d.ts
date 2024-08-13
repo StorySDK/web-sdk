@@ -31,6 +31,7 @@ export declare type ImageWidgetParamsType = {
 export declare type VideoWidgetParamsType = {
     widgetOpacity: number;
     videoUrl: string;
+    borderRadius: number;
     videoPreviewUrl?: string;
     fileId?: string;
     stopAutoplay?: boolean;
@@ -149,6 +150,7 @@ export declare type TextWidgetParamsType = {
     fontSize: number;
     fontFamily: string;
     fontParams: FontParamsType;
+    lineHeight: number;
     align: 'left' | 'center' | 'right';
     color: BorderType;
     backgroundColor: BackgroundType;

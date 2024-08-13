@@ -28,4 +28,12 @@
     align-items: center;
     margin-right: 15px;
   }
+
+  &__carouselContent {
+    display: flex;
+
+    &_centered {
+      justify-content: center;
+    }
+  }
 }

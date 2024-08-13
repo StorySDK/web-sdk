@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Group, GroupsListProps } from '@storysdk/react';
+import { Group, GroupType, GroupsListProps } from '@storysdk/react';
 import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
@@ -31,9 +31,11 @@ const withGroupsData =
       storyHeight?: number;
       groupsClassName?: string;
       autoplay?: boolean;
+      openInExternalModal?: boolean;
       groupId?: string;
       startStoryId?: string;
       forbidClose?: boolean;
+      devMode?: 'staging' | 'development';
     }
   ) =>
   () => {
@@ -221,9 +223,10 @@ const withGroupsData =
               ? app.settings.groupView.web
               : 'circle';
 
-            const isShowMockupApp = options?.isShowMockup
-              ? options?.isShowMockup
-              : app.settings?.isShowMockup;
+            const isShowMockupApp =
+              options?.isShowMockup !== undefined
+                ? options.isShowMockup
+                : app.settings?.isShowMockup;
 
             if (app.settings.fonts?.length) {
               loadFontsToPage(app.settings.fonts);
@@ -239,11 +242,11 @@ const withGroupsData =
                   .filter((item: any) => {
                     const isActive = item.active && item.type;
 
-                    if (options?.groupId) {
-                      return isActive && item.id === options.groupId;
-                    }
+                    if (item.type === GroupType.ONBOARDING) {
+                      if (options?.groupId === item.id) {
+                        return isActive;
+                      }
 
-                    if (item.type === 'onboarding') {
                       return isActive && item.settings?.addToStories;
                     }
 
@@ -257,8 +260,18 @@ const withGroupsData =
                     settings: item.settings,
                     type: item.type
                   }))
-                  .sort((a: any, b: any) => (a.type > b.type ? -1 : 1));
-
+                  .sort((a: any, b: any) => {
+                    if (a.type === GroupType.ONBOARDING && b.type !== GroupType.ONBOARDING) {
+                      return -1;
+                    }
+                    if (a.type !== GroupType.ONBOARDING && b.type === GroupType.ONBOARDING) {
+                      return 1;
+                    }
+                    if (a.settings?.position && b.settings?.position) {
+                      return a.settings.position - b.settings.position;
+                    }
+                    return 0;
+                  });
                 setGroups(groupsFetchedData);
                 setGroupsWithStories(groupsFetchedData);
                 setLoadStatus('pending');
@@ -282,12 +295,16 @@ const withGroupsData =
                 const stories = storiesData.data.data.filter(
                   (storyItem: any) =>
                     storyItem.story_data.status === 'active' &&
-                    DateTime.fromISO(storyItem.story_data.start_time).toSeconds() <
-                      DateTime.now().toSeconds() &&
-                    (storyItem.story_data.end_time
-                      ? DateTime.fromISO(storyItem.story_data.end_time).toSeconds() >
-                        DateTime.now().toSeconds()
-                      : true)
+                    storyItem.story_data.background.type !== 'transparent' &&
+                    ((!storyItem.story_data.start_time && !storyItem.story_data.end_time) ||
+                      (((storyItem.story_data.start_time &&
+                        DateTime.fromISO(storyItem.story_data.start_time).toSeconds() <
+                          DateTime.now().toSeconds()) ||
+                        !storyItem.story_data.start_time) &&
+                        ((storyItem.story_data.end_time &&
+                          DateTime.fromISO(storyItem.story_data.end_time).toSeconds() >
+                            DateTime.now().toSeconds()) ||
+                          !storyItem.story_data.end_time)))
                 );
 
                 setGroupsWithStories((prevState) =>
@@ -324,6 +341,7 @@ const withGroupsData =
     return (
       <GroupsList
         autoplay={options?.autoplay}
+        devMode={options?.devMode}
         forbidClose={options?.forbidClose}
         groupClassName={options?.groupClassName}
         groupImageHeight={options?.groupImageHeight}
@@ -335,6 +353,8 @@ const withGroupsData =
         isLoading={data === null}
         isShowMockup={isShowMockup}
         isStatusBarActive={options?.isStatusBarActive}
+        openInExternalModal={options?.openInExternalModal}
+        startGroupId={options?.groupId}
         startStoryId={options?.startStoryId}
         storyHeight={options?.storyHeight}
         storyWidth={options?.storyWidth}

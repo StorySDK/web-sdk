@@ -4,9 +4,9 @@ import Skeleton from 'react-loading-skeleton';
 import classNames from 'classnames';
 import SimpleBar from 'simplebar-react';
 import ReactDOM from 'react-dom';
+import { useWindowSize } from '@react-hook/window-size';
 import { Group } from '../../types';
 import { GroupItem, StoryModal } from '..';
-
 import 'simplebar-react/dist/simplebar.min.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
@@ -27,7 +27,10 @@ export interface GroupsListProps {
   isLoading?: boolean;
   autoplay?: boolean;
   startStoryId?: string;
+  startGroupId?: string;
   forbidClose?: boolean;
+  openInExternalModal?: boolean;
+  devMode?: 'staging' | 'development';
   groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
@@ -53,7 +56,10 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     isStatusBarActive,
     autoplay,
     startStoryId,
+    startGroupId,
+    devMode,
     forbidClose,
+    openInExternalModal,
     storyWidth,
     storyHeight,
     onOpenGroup,
@@ -69,13 +75,30 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   const [currentGroup, setCurrentGroup] = useState(0);
   const [modalShow, setModalShow] = useState(!!autoplay);
 
+  const [width] = useWindowSize();
+
   const scrollRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const carouselRef = useRef<HTMLDivElement | null>(null);
+  const carouselSkeletonRef = useRef<HTMLDivElement | null>(null);
+
+  const [isCentered, setIsCentered] = useState(true);
+
+  useEffect(() => {
+    if (startGroupId) {
+      const groupIndex = groups.findIndex((group) => group.id === startGroupId);
+
+      if (groupIndex !== -1) {
+        setCurrentGroup(groupIndex);
+      }
+    }
+  }, [groups, startGroupId]);
 
   useEffect(() => {
     if (autoplay && onOpenGroup && groups?.length) {
-      onOpenGroup(groups[0].id);
+      onOpenGroup(startGroupId ?? groups[0].id);
     }
-  }, [autoplay, groups, onOpenGroup]);
+  }, [autoplay, groups, startGroupId, onOpenGroup]);
 
   const handleSelectGroup = useCallback(
     (groupIndex: number) => {
@@ -140,6 +163,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
       ReactDOM.render(
         <StoryModal
           currentGroup={currentGroupMemo}
+          devMode={devMode}
           forbidClose={forbidClose}
           isFirstGroup={currentGroup === 0}
           isLastGroup={currentGroup === groups?.length - 1}
@@ -147,6 +171,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           isShowMockup={isShowMockup}
           isShowing={modalShow}
           isStatusBarActive={isStatusBarActive}
+          openInExternalModal={openInExternalModal}
           startStoryId={startStoryId}
           stories={currentGroupMemo?.stories}
           storyHeight={storyHeight}
@@ -167,22 +192,58 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   }, [isLoading, autoplay, currentGroupMemo, modalShow]);
 
   useEffect(() => {
+    if (containerRef.current) {
+      const containerWidth = containerRef.current.clientWidth;
+
+      if (carouselRef.current) {
+        const carouselWidth = carouselRef.current.clientWidth;
+
+        if (containerWidth < carouselWidth) {
+          setIsCentered(false);
+        } else {
+          setIsCentered(true);
+        }
+      }
+
+      if (carouselSkeletonRef.current) {
+        const carouselSkeletonWidth = carouselSkeletonRef.current.clientWidth;
+
+        if (containerWidth < carouselSkeletonWidth) {
+          setIsCentered(false);
+        } else {
+          setIsCentered(true);
+        }
+      }
+    }
+
     if (scrollRef.current) {
       scrollRef.current.recalculate();
     }
-  }, [groups.length, isLoading, autoplay]);
+  }, [
+    containerRef.current,
+    carouselSkeletonRef.current,
+    carouselRef.current,
+    groups.length,
+    isLoading,
+    autoplay,
+    width
+  ]);
 
   return (
     <>
-      <div className={classNames(b(), groupsClassName)}>
+      <div className={classNames(b(), groupsClassName)} ref={containerRef}>
         <SimpleBar
+          classNames={{
+            contentEl: b('carouselContent', { centered: isCentered }).toString()
+          }}
           ref={scrollRef}
           style={{
-            width: '100%'
+            width: '100%',
+            minHeight: 100
           }}
         >
           {isLoading && !autoplay ? (
-            <div className={b('carousel')}>
+            <div className={b('carousel')} ref={carouselSkeletonRef}>
               <div className={b('loaderItem')}>
                 <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
                 <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
@@ -203,7 +264,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           ) : (
             <>
               {groups.length ? (
-                <div className={b('carousel')}>
+                <div className={b('carousel')} ref={carouselRef}>
                   {groups
                     .filter((group: any) => group.stories.length)
                     .map((group, index) => (

@@ -18,6 +18,10 @@
     transition: 0.5s ease all;
     border-radius: 8px;
 
+    &_cover {
+      object-fit: cover;
+    }
+
     &_loading {
       opacity: 0;
     }
@@ -40,6 +44,24 @@
     &_show {
       opacity: 1;
     }
+  }
+
+  &__loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    transition: 0.5s ease opacity;
+    opacity: 0;
+
+    &_show {
+      opacity: 1;
+    }
+  }
+
+  &__loaderIcon {
+    animation: rotate 1.5s linear infinite;
   }
 
 }

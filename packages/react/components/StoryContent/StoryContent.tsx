@@ -1,27 +1,30 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import { WidgetFactory } from '../../core';
 import { StoryType } from '../../types';
 import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackground';
 import { renderBackgroundStyles, renderPosition } from '../../utils';
-import { MOBILE_BREAKPOINT, StoryCurrentSize } from '../StoryModal/StoryModal';
-import { STORY_SIZE_LARGE } from '../StoryModal';
+import { StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
 
 const b = block('StorySdkContent');
 
 interface StoryContentProps {
   story: StoryType;
+  isMobile?: boolean;
+  isDisplaying?: boolean;
+  contentHeight: number | string;
   currentStorySize: StoryCurrentSize;
-  currentPaddingSize: number;
-  innerHeightGap: number;
+  desktopContainerWidth: number;
   noTopShadow?: boolean;
   noTopBackgroundShadow?: boolean;
+  isUnfilledBackground?: boolean;
   jsConfetti?: any;
   isLarge?: boolean;
-  isLargeBackground?: boolean;
   handleGoToStory?: (storyId: string) => void;
+  handleMediaLoading: (isLoading: boolean) => void;
+  isMediaLoading?: boolean;
 }
 
 export const StoryContent: React.FC<StoryContentProps> = (props) => {
@@ -29,57 +32,65 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     story,
     jsConfetti,
     noTopShadow,
+    desktopContainerWidth,
+    isMobile,
+    isDisplaying,
     noTopBackgroundShadow,
     currentStorySize,
-    currentPaddingSize,
     isLarge,
-    isLargeBackground,
-    innerHeightGap,
+    isUnfilledBackground,
+    contentHeight,
+    isMediaLoading,
+    handleMediaLoading,
     handleGoToStory
   } = props;
-  const [isVideoLoading, setVideoLoading] = useState(false);
 
-  const [width, height] = useWindowSize();
+  const [width] = useWindowSize();
 
-  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
+  const desktopScale = useMemo(
+    () => desktopContainerWidth / currentStorySize.width,
+    [desktopContainerWidth, currentStorySize.width]
+  );
 
   return (
     <>
       <div
-        className={b('background', { noTopShadow: noTopBackgroundShadow })}
+        className={b('background', { noTopShadow: noTopBackgroundShadow, onTop: isMobile })}
         style={{
           background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
-          height: isMobile
-            ? Math.round(currentStorySize.height * (width / currentStorySize.width))
-            : undefined
+          height: contentHeight
         }}
       >
-        {story.background.type === 'video' && (
+        {story.background.type === 'video' && isDisplaying && (
           <StoryVideoBackground
             autoplay
-            isLoading={isVideoLoading}
+            isFilled={!isUnfilledBackground}
+            isLoading={isMediaLoading}
             src={story.background.value}
             onLoadEnd={() => {
-              setVideoLoading(false);
+              handleMediaLoading(false);
+            }}
+            onLoadStart={() => {
+              handleMediaLoading(true);
             }}
           />
         )}
       </div>
 
       <div
-        className={b({ large: isLarge, center: isLargeBackground, noTopShadow })}
+        className={b({ large: isLarge, noTopShadow })}
         style={{
           height: isMobile
             ? Math.round(currentStorySize.height * (width / currentStorySize.width))
-            : `calc(100% - ${innerHeightGap}px)`
+            : `100%`
         }}
       >
         <div
-          className={b('scope')}
+          className={b('scope', { large: isLarge })}
           style={{
             transform: isMobile
               ? `scale(${width / currentStorySize.width})`
-              : `scale(${(height - currentPaddingSize - innerHeightGap) / currentStorySize.height})`
+              : `scale(${desktopScale})`
           }}
         >
           {story.storyData.map((widget: any) => (
