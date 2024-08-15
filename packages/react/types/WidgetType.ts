@@ -30,7 +30,8 @@ import {
   QuizRateWidgetParamsType,
   QuizOpenAnswerWidgetParamsType,
   ImageWidgetParamsType,
-  VideoWidgetParamsType
+  VideoWidgetParamsType,
+  LinkWidgetParamsType
 } from './WidgetsParams';
 
 export enum MediaType {
@@ -138,6 +139,11 @@ export interface SliderState {
 export interface QuestionState {
   type: WidgetsTypes.QUESTION;
   params: QuestionWidgetParamsType;
+}
+
+export interface LinkState {
+  type: WidgetsTypes.LINK;
+  params: LinkWidgetParamsType;
 }
 
 export interface ClickMeState {
@@ -263,6 +269,7 @@ export interface WidgetObjectType {
     | SliderState
     | QuestionState
     | ClickMeState
+    | LinkState
     | TalkAboutState
     | EmojiReactionState
     | TimerState

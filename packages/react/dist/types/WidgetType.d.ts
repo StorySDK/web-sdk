@@ -1,5 +1,5 @@
 import { ChooseAnswerWidgetElemetsType, EmojiReactionWidgetElemetsType, QuestionWidgetElementsType, QuizMultipleAnswerWidgetElementsType, QuizMultipleAnswerWidgetWithImageElementsType, QuizOneAnswerWidgetElementsType, QuizOpenAnswerWidgetElementsType, QuizRateWidgetElementsType, SliderWidgetElementsType, TalkAboutElementsType } from './widgetElementsTypes';
-import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerWidgetParamsType, QuizOneAnswerWidgetParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageWidgetParamsType, QuizRateWidgetParamsType, QuizOpenAnswerWidgetParamsType, ImageWidgetParamsType, VideoWidgetParamsType } from './WidgetsParams';
+import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerWidgetParamsType, QuizOneAnswerWidgetParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageWidgetParamsType, QuizRateWidgetParamsType, QuizOpenAnswerWidgetParamsType, ImageWidgetParamsType, VideoWidgetParamsType, LinkWidgetParamsType } from './WidgetsParams';
 export declare enum MediaType {
     IMAGE = "image",
     VIDEO = "video"
@@ -100,6 +100,10 @@ export interface QuestionState {
     type: WidgetsTypes.QUESTION;
     params: QuestionWidgetParamsType;
 }
+export interface LinkState {
+    type: WidgetsTypes.LINK;
+    params: LinkWidgetParamsType;
+}
 export interface ClickMeState {
     type: WidgetsTypes.CLICK_ME;
     params: ClickMeWidgetParamsType;
@@ -189,7 +193,7 @@ export interface WidgetObjectType {
         [key: string]: WidgetPositionType;
     };
     positionLimits: WidgetPositionLimitsType;
-    content: RectangleState | ImageState | VideoState | EllipseState | TextState | SwipeUpState | SliderState | QuestionState | ClickMeState | TalkAboutState | EmojiReactionState | TimerState | ChooseAnswerState | GiphyState | QuizOneAnswerState | QuizMultipleAnswerState | QuizMultipleAnswerWithImageState | QuizRateState | QuizOpenAnswerState;
+    content: RectangleState | ImageState | VideoState | EllipseState | TextState | SwipeUpState | SliderState | QuestionState | ClickMeState | LinkState | TalkAboutState | EmojiReactionState | TimerState | ChooseAnswerState | GiphyState | QuizOneAnswerState | QuizMultipleAnswerState | QuizMultipleAnswerWithImageState | QuizRateState | QuizOpenAnswerState;
     action?(): void;
 }
 export interface LayerData {
