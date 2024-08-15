@@ -10,13 +10,12 @@ import {
   ArrowUpOutlineIcon,
   ArrowUpsFillIcon,
   ArrowUpsLineIcon,
-  // ArrowUpwardOutlineIcon,
   IconChevronCircleUp,
   LinkIcon,
   LinksLineIcon,
   ShareLineIcon,
-  UploadOutlineIcon,
-} from "../icons";
+  UploadOutlineIcon
+} from '../icons';
 
 export const MATERIAL_ICONS: any = {
   IconChevronCircleUp,
@@ -31,10 +30,8 @@ export const MATERIAL_ICONS: any = {
   ArrowUpOutlineIcon,
   ArrowUpsFillIcon,
   ArrowUpsLineIcon,
-  // ArrowUpwardOutlineIcon,
-  // ChevronUpOutlineIcon,
   LinkIcon,
   LinksLineIcon,
   ShareLineIcon,
-  UploadOutlineIcon,
+  UploadOutlineIcon
 };

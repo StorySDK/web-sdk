@@ -52,6 +52,7 @@ export declare enum WidgetsTypes {
     SLIDER = "slider",
     QUESTION = "question",
     CLICK_ME = "click_me",
+    LINK = "link",
     TALK_ABOUT = "talk_about",
     EMOJI_REACTION = "emoji_reaction",
     TIMER = "timer",

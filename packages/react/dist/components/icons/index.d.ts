@@ -7,3 +7,4 @@ export * from './IconIphoneCellular';
 export * from './IconRateStar';
 export * from './IconArrowSend';
 export * from './IconLoader';
+export * from './IconClose';

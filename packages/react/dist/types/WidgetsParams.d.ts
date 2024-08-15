@@ -78,6 +78,16 @@ export declare type ClickMeWidgetParamsType = {
         borderRadius?: number;
     };
 };
+export declare type LinkWidgetParamsType = {
+    fontFamily: string;
+    fontSize: number;
+    color: BorderType;
+    opacity: number;
+    fontParams: FontParamsType;
+    text: string;
+    backgroundColor: BackgroundType;
+    url?: string;
+};
 export declare type ChooseAnswerWidgetParamsType = {
     text: string;
     color: string;

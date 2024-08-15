@@ -17,6 +17,7 @@ import { QuizRateWidget } from './QuizRateWidget';
 import { QuizMultipleAnswerWithImageWidget } from './QuizMultipleAnswerWithImageWidget';
 import { ImageWidget } from './ImageWidget';
 import { VideoWidget } from './VideoWidget';
+import { LinkWidget } from './LinkWidget';
 declare const widgets: {
     choose_answer: import("@types").WidgetComponent<{
         id: string;
@@ -128,6 +129,11 @@ declare const widgets: {
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
     }>;
+    link: import("@types").WidgetComponent<{
+        params: import("@types").LinkWidgetParamsType;
+        isReadOnly?: boolean | undefined;
+        onClick?(): void;
+    }>;
 };
 export default widgets;
-export { ChooseAnswerWidget, ImageWidget, VideoWidget, ClickMeWidget, EllipseWidget, EmojiReactionWidget, GiphyWidget, QuestionWidget, RectangleWidget, SliderWidget, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, QuizMultipleAnswerWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, QuizMultipleAnswerWithImageWidget };
+export { ChooseAnswerWidget, ImageWidget, VideoWidget, ClickMeWidget, EllipseWidget, EmojiReactionWidget, GiphyWidget, QuestionWidget, RectangleWidget, SliderWidget, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, QuizMultipleAnswerWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, QuizMultipleAnswerWithImageWidget, LinkWidget };

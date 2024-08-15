@@ -3,7 +3,7 @@ interface SwipeInput {
     onSwipedLeft?: () => void;
     onSwipedRight?: () => void;
 }
-interface SwipeOutput {
+export interface SwipeOutput {
     onTouchStart: (e: TouchEvent) => void;
     onTouchMove: (e: TouchEvent) => void;
     onTouchEnd: () => void;

@@ -86,6 +86,17 @@ export type ClickMeWidgetParamsType = {
   };
 };
 
+export type LinkWidgetParamsType = {
+  fontFamily: string;
+  fontSize: number;
+  color: BorderType;
+  opacity: number;
+  fontParams: FontParamsType;
+  text: string;
+  backgroundColor: BackgroundType;
+  url?: string;
+};
+
 export type ChooseAnswerWidgetParamsType = {
   text: string;
   color: string;
