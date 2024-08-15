@@ -6,6 +6,7 @@ import {
   EmojiReactionWidget,
   GiphyWidget,
   ImageWidget,
+  LinkWidget,
   QuestionWidget,
   QuizMultipleAnswerWidget,
   QuizMultipleAnswerWithImageWidget,
@@ -72,6 +73,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
             onGoToStory={this.props.handleGoToStory}
           />
         );
+      case WidgetsTypes.LINK:
+        return <LinkWidget params={this.props.widget.content.params} />;
       case WidgetsTypes.ELLIPSE:
         return <EllipseWidget params={this.props.widget.content.params} />;
       case WidgetsTypes.IMAGE:
@@ -128,14 +131,6 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         );
       case WidgetsTypes.TEXT:
         return <TextWidget params={this.props.widget.content.params} />;
-      // case WidgetsTypes.TIMER:
-      //   return (
-      //     <TimerWidget
-      //       params={this.props.widget.content.params}
-      //       position={this.props.widget.position}
-      //       positionLimits={this.props.widget.positionLimits}
-      //     />
-      //   );
       case WidgetsTypes.QUIZ_ONE_ANSWER:
         return (
           <QuizOneAnswerWidget

@@ -11,12 +11,11 @@ const DELAY_MS = 200;
 export const LinkWidget: WidgetComponent<{
   params: LinkWidgetParamsType;
   isReadOnly?: boolean;
-  onClick?(): void;
 }> = React.memo((props) => {
   const { fontFamily, fontParams, fontSize, text, color, opacity, backgroundColor, url } =
     props.params;
 
-  const { isReadOnly, onClick } = props;
+  const { isReadOnly } = props;
 
   const [isClicked, setIsClicked] = useState(false);
 
@@ -27,10 +26,6 @@ export const LinkWidget: WidgetComponent<{
       setIsClicked(false);
     }, DELAY_MS);
 
-    if (onClick) {
-      onClick();
-    }
-
     if (url) {
       setTimeout(() => {
         const tab = window?.open(url, '_blank');
@@ -39,7 +34,7 @@ export const LinkWidget: WidgetComponent<{
         }
       }, DELAY_MS);
     }
-  }, [onClick, url]);
+  }, [url]);
 
   return (
     <div
