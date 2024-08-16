@@ -48,7 +48,7 @@ export const LinkWidget: WidgetComponent<{
       onKeyDown={!isReadOnly ? handleWidgetClick : undefined}
     >
       <div
-        className={b('container', { gradient: color.type === BackgroundColorType.GRADIENT })}
+        className={b('container')}
         style={{
           fontStyle: fontParams.style,
           fontWeight: fontParams.weight,
