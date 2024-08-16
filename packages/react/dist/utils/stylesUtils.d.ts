@@ -1,5 +1,4 @@
 /// <reference types="react" />
-import { GradientDirection } from 'dist';
 import { WidgetPositionType, WidgetPositionLimitsType, BackgroundType, BorderType } from '../types';
 interface Stroke {
     strokeThickness: number;
@@ -9,7 +8,6 @@ interface Stroke {
 }
 export declare const block: import("bem-cn").BemCn;
 export declare const renderColor: (color: string, opacity?: number | undefined) => string;
-export declare const getGradientDirection: (direction?: GradientDirection | undefined) => "180deg" | "90deg";
 export declare const renderGradient: (colors: string[], opacity?: number | undefined) => string;
 export declare const renderBackgroundStyles: (background: BackgroundType, opacity?: number | undefined) => string;
 export declare const renderBorderStyles: ({ strokeThickness, strokeColor, strokeOpacity, fillBorderRadius }: Stroke) => any;

@@ -1,14 +1,14 @@
 import { setup } from 'bem-cn';
 import hexToRgba from 'hex-to-rgba';
 import parseColor from 'parse-color';
-import { GradientDirection } from 'dist';
 import {
   WidgetPositionType,
   WidgetPositionLimitsType,
   BackgroundType,
   BorderType,
   BackgroundColorType,
-  MediaType
+  MediaType,
+  GradientDirection
 } from '../types';
 
 interface Stroke {
@@ -28,7 +28,7 @@ export const renderColor = (color: string, opacity?: number) => {
   return color;
 };
 
-export const getGradientDirection = (direction?: GradientDirection) => {
+const getGradientDirection = (direction?: GradientDirection) => {
   switch (direction) {
     case GradientDirection.TOP_TO_BOTTOM:
       return '180deg';
