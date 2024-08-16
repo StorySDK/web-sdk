@@ -57,7 +57,7 @@ type TransparentValue = {
   value: string;
   isFilled?: boolean;
 };
-type ColorValue = { type: BackgroundColorType.COLOR; value: string; isFilled?: boolean };
+export type ColorValue = { type: BackgroundColorType.COLOR; value: string; isFilled?: boolean };
 export type GradientValue = {
   type: BackgroundColorType.GRADIENT;
   value: string[];

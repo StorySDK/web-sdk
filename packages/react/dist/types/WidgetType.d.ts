@@ -19,7 +19,7 @@ declare type TransparentValue = {
     value: string;
     isFilled?: boolean;
 };
-declare type ColorValue = {
+export declare type ColorValue = {
     type: BackgroundColorType.COLOR;
     value: string;
     isFilled?: boolean;
