@@ -93,7 +93,7 @@ export type LinkWidgetParamsType = {
   opacity: number;
   fontParams: FontParamsType;
   text: string;
-  backgroundColor: BackgroundType;
+  backgroundColor: BorderType;
   url?: string;
 };
 

@@ -85,7 +85,7 @@ export declare type LinkWidgetParamsType = {
     opacity: number;
     fontParams: FontParamsType;
     text: string;
-    backgroundColor: BackgroundType;
+    backgroundColor: BorderType;
     url?: string;
 };
 export declare type ChooseAnswerWidgetParamsType = {
