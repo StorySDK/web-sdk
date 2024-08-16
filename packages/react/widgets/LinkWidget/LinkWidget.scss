@@ -25,7 +25,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 14px;
+    padding: 10px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
     position: relative;
     z-index: 1;
@@ -41,6 +41,7 @@
     margin-right: 9px;
     display: flex;
     align-self: center;
+    flex-shrink: 0;
   }
 
   &__background {
