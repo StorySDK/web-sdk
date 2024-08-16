@@ -1,6 +1,7 @@
 import { setup } from 'bem-cn';
 import hexToRgba from 'hex-to-rgba';
 import parseColor from 'parse-color';
+import { GradientDirection } from 'dist';
 import {
   WidgetPositionType,
   WidgetPositionLimitsType,
@@ -27,6 +28,17 @@ export const renderColor = (color: string, opacity?: number) => {
   return color;
 };
 
+export const getGradientDirection = (direction?: GradientDirection) => {
+  switch (direction) {
+    case GradientDirection.TOP_TO_BOTTOM:
+      return '180deg';
+    case GradientDirection.LEFT_TO_RIGHT:
+      return '90deg';
+    default:
+      return '180deg';
+  }
+};
+
 export const renderGradient = (colors: string[], opacity?: number) => {
   const first = renderColor(colors[0], opacity);
   const second = renderColor(colors[1], opacity);
@@ -47,7 +59,9 @@ export const renderBackgroundStyles = (background: BackgroundType, opacity?: num
       }
       return color as string;
     case BackgroundColorType.GRADIENT:
-      return `linear-gradient(180deg, ${background.value[0]} 0%, ${background.value[1]} 100%)`;
+      return `linear-gradient(${getGradientDirection(background.direction)}, ${
+        background.value[0]
+      } 0%, ${background.value[1]} 100%)`;
     case MediaType.IMAGE:
       return `center / cover url("${background.value}")`;
     default:
