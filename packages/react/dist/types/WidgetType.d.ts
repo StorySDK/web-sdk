@@ -9,6 +9,10 @@ export declare enum BackgroundColorType {
     COLOR = "color",
     TRANSPARENT = "transparent"
 }
+export declare enum GradientDirection {
+    TOP_TO_BOTTOM = "top_to_bottom",
+    LEFT_TO_RIGHT = "left_to_right"
+}
 export declare type BackgroundFillType = MediaType | BackgroundColorType;
 declare type TransparentValue = {
     type: BackgroundColorType.TRANSPARENT;
@@ -20,9 +24,10 @@ declare type ColorValue = {
     value: string;
     isFilled?: boolean;
 };
-declare type GradientValue = {
+export declare type GradientValue = {
     type: BackgroundColorType.GRADIENT;
     value: string[];
+    direction?: GradientDirection;
     isFilled?: boolean;
 };
 declare type BackgrounValue = {

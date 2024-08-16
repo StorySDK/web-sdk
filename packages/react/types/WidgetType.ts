@@ -45,6 +45,11 @@ export enum BackgroundColorType {
   TRANSPARENT = 'transparent'
 }
 
+export enum GradientDirection {
+  TOP_TO_BOTTOM = 'top_to_bottom',
+  LEFT_TO_RIGHT = 'left_to_right'
+}
+
 export type BackgroundFillType = MediaType | BackgroundColorType;
 
 type TransparentValue = {
@@ -53,7 +58,12 @@ type TransparentValue = {
   isFilled?: boolean;
 };
 type ColorValue = { type: BackgroundColorType.COLOR; value: string; isFilled?: boolean };
-type GradientValue = { type: BackgroundColorType.GRADIENT; value: string[]; isFilled?: boolean };
+export type GradientValue = {
+  type: BackgroundColorType.GRADIENT;
+  value: string[];
+  direction?: GradientDirection;
+  isFilled?: boolean;
+};
 type BackgrounValue = {
   type: MediaType;
   value: string;
