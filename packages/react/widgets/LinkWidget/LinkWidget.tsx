@@ -52,6 +52,7 @@ export const LinkWidget: WidgetComponent<{
         style={{
           fontStyle: fontParams.style,
           fontWeight: fontParams.weight,
+          lineHeight: fontSize,
           fontFamily,
           fontSize,
           ...renderTextBackgroundStyles({ color })
