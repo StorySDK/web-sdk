@@ -52,4 +52,8 @@
     height: 100%;
     z-index: 0;
   }
+
+  &__text {
+    white-space: nowrap;
+  }
 }
