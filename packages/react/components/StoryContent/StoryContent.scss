@@ -100,4 +100,30 @@
     position: absolute;
     z-index: auto;
   }
+
+  &__playBtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    svg {
+      width: 25px;
+      height: 25px;
+      fill: white;
+    }
+  }
 }

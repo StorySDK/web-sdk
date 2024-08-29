@@ -5,6 +5,8 @@ interface WidgetFactoryProps {
     storyId: string;
     currentStorySize: StoryCurrentSize;
     jsConfetti?: any;
+    isDisplaying?: boolean;
+    isAutoplayVideos?: boolean;
     widget: WidgetObjectType;
     handleGoToStory?: (storyId: string) => void;
 }

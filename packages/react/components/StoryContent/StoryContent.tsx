@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
+import { IconPlay } from '@components/icons';
 import { WidgetFactory } from '../../core';
 import { StoryType } from '../../types';
 import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackground';
@@ -14,6 +15,7 @@ interface StoryContentProps {
   story: StoryType;
   isMobile?: boolean;
   isDisplaying?: boolean;
+  isAutoplayVideos?: boolean;
   contentHeight: number | string;
   currentStorySize: StoryCurrentSize;
   desktopContainerWidth: number;
@@ -39,6 +41,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     currentStorySize,
     isLarge,
     isUnfilledBackground,
+    isAutoplayVideos,
     contentHeight,
     isMediaLoading,
     handleMediaLoading,
@@ -52,6 +55,18 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     [desktopContainerWidth, currentStorySize.width]
   );
 
+  const [isVideoPlaying, setIsVideoPlaying] = React.useState(isAutoplayVideos ?? false);
+
+  useEffect(() => {
+    if (isAutoplayVideos) {
+      setIsVideoPlaying(true);
+    }
+  }, [isAutoplayVideos]);
+
+  const togglePlay = () => {
+    setIsVideoPlaying((prev) => !prev);
+  };
+
   return (
     <>
       <div
@@ -63,9 +78,11 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
       >
         {story.background.type === 'video' && isDisplaying && (
           <StoryVideoBackground
-            autoplay
+            autoplay={isAutoplayVideos}
             isFilled={!isUnfilledBackground}
             isLoading={isMediaLoading}
+            isPlaying={isVideoPlaying && isDisplaying}
+            setIsPlaying={setIsVideoPlaying}
             src={story.background.value}
             onLoadEnd={() => {
               handleMediaLoading(false);
@@ -93,6 +110,14 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
               : `scale(${desktopScale})`
           }}
         >
+          {story.background.type === 'video' &&
+            isDisplaying &&
+            !isVideoPlaying &&
+            !isAutoplayVideos && (
+              <button className={b('playBtn')} onClick={togglePlay}>
+                <IconPlay />
+              </button>
+            )}
           {story.storyData.map((widget: any) => (
             <div
               className={b('object')}
@@ -108,6 +133,8 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
               <WidgetFactory
                 currentStorySize={currentStorySize}
                 handleGoToStory={handleGoToStory}
+                isAutoplayVideos={isAutoplayVideos}
+                isDisplaying={isDisplaying}
                 jsConfetti={jsConfetti}
                 storyId={story.id}
                 widget={widget}

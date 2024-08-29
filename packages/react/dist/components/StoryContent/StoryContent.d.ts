@@ -6,6 +6,7 @@ interface StoryContentProps {
     story: StoryType;
     isMobile?: boolean;
     isDisplaying?: boolean;
+    isAutoplayVideos?: boolean;
     contentHeight: number | string;
     currentStorySize: StoryCurrentSize;
     desktopContainerWidth: number;

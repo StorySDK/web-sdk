@@ -1,7 +1,9 @@
-import React from 'react';
+/* eslint-disable jsx-a11y/media-has-caption */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import React, { useEffect } from 'react';
 import block from 'bem-cn';
 import './StoryVideoBackground.scss';
-import { IconLoader } from '@components/icons';
+import { IconLoader, IconPlay } from '@components/icons';
 
 const b = block('StorySdkVideoBackground');
 
@@ -10,6 +12,8 @@ type PropTypes = {
   isLoading?: boolean;
   autoplay?: boolean;
   isFilled?: boolean;
+  isPlaying?: boolean;
+  setIsPlaying?: (isPlaying: boolean) => void;
   onLoadStart?: () => void;
   onLoadEnd?: () => void;
 };
@@ -18,25 +22,50 @@ export const StoryVideoBackground = ({
   src,
   autoplay = false,
   isLoading,
+  isPlaying,
+  setIsPlaying,
   isFilled,
   onLoadStart,
   onLoadEnd
-}: PropTypes) => (
-  <div className={b()}>
-    <video
-      autoPlay={autoplay}
-      className={b('video', { loading: isLoading, cover: isFilled })}
-      disablePictureInPicture
-      loop
-      muted
-      playsInline
-      preload="metadata"
-      src={src}
-      onLoadStart={onLoadStart}
-      onLoadedData={onLoadEnd}
-    />
-    <div className={b('loader', { show: isLoading })}>
-      <IconLoader className={b('loaderIcon').toString()} />
+}: PropTypes) => {
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
+  const handlePlay = () => {
+    setIsPlaying?.(true);
+  };
+
+  const handlePause = () => {
+    setIsPlaying?.(false);
+  };
+
+  useEffect(() => {
+    if (isPlaying) {
+      videoRef.current?.play();
+    } else {
+      videoRef.current?.pause();
+    }
+  }, [videoRef, isPlaying]);
+
+  return (
+    <div className={b()} role="button" tabIndex={0}>
+      <video
+        autoPlay={autoplay}
+        className={b('video', { loading: isLoading, cover: isFilled })}
+        disablePictureInPicture
+        loop
+        muted={autoplay}
+        playsInline={autoplay}
+        preload="metadata"
+        ref={videoRef}
+        src={src}
+        onLoadStart={onLoadStart}
+        onLoadedData={onLoadEnd}
+        onPause={handlePause}
+        onPlay={handlePlay}
+      />
+      <div className={b('loader', { show: isLoading })}>
+        <IconLoader className={b('loaderIcon').toString()} />
+      </div>
     </div>
-  </div>
-);
+  );
+};

@@ -564,7 +564,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const handleAnimationEnd = useCallback(() => {
-    // handleNext();
+    handleNext();
   }, [handleNext]);
 
   const handlePrevGroup = useCallback(() => {
@@ -653,16 +653,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       canvas: canvasRef.current as HTMLCanvasElement
     })
   );
-
-  const noTopShadow =
-    (currentGroupType === GroupType.ONBOARDING &&
-      currentGroup?.settings?.isProgressHidden &&
-      currentGroup?.settings?.isProhibitToClose) ||
-    isGroupWithFilledBackground;
-
-  const noTopBackgroundShadow =
-    currentGroupType === GroupType.ONBOARDING ||
-    (currentGroupType === GroupType.GROUP && !isBackroundFilled);
 
   const handleQuizAnswer = (params: { type: string; answer: string | number }) => {
     if (params.type === 'add' && !isQuizStarted && currentGroup) {

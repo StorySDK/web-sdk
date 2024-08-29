@@ -25,6 +25,7 @@ export interface StoriesGroupSettings {
   scoreResultLayersGroupId?: string;
   lastStoryPosition?: number;
   shortDataId?: string;
+  autoplayVideos?: boolean;
 }
 
 export interface Group {

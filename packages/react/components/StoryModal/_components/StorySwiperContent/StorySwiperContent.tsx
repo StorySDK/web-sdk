@@ -167,6 +167,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     desktopContainerWidth={desktopWidth}
                     handleGoToStory={handleGoToStory}
                     handleMediaLoading={setIsMediaLoading}
+                    isAutoplayVideos={currentGroup.settings?.autoplayVideos}
                     isDisplaying={index === currentStory && isOpened}
                     isLarge={isLarge}
                     isMediaLoading={isMediaLoading}

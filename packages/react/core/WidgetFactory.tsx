@@ -40,6 +40,8 @@ interface WidgetFactoryProps {
   storyId: string;
   currentStorySize: StoryCurrentSize;
   jsConfetti?: any;
+  isDisplaying?: boolean;
+  isAutoplayVideos?: boolean;
   widget: WidgetObjectType;
   handleGoToStory?: (storyId: string) => void;
 }
@@ -80,7 +82,13 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.IMAGE:
         return <ImageWidget params={this.props.widget.content.params} />;
       case WidgetsTypes.VIDEO:
-        return <VideoWidget params={this.props.widget.content.params} />;
+        return (
+          <VideoWidget
+            autoplay={this.props.isAutoplayVideos}
+            isDisplaying={this.props.isDisplaying}
+            params={this.props.widget.content.params}
+          />
+        );
       case WidgetsTypes.EMOJI_REACTION:
         return (
           <EmojiReactionWidget
