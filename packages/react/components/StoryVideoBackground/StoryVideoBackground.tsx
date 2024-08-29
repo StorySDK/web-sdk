@@ -44,11 +44,7 @@ export const StoryVideoBackground = ({
     } else {
       videoRef.current?.pause();
     }
-
-    return () => {
-      videoRef.current?.pause();
-    };
-  }, [videoRef, isPlaying]);
+  }, [isPlaying]);
 
   return (
     <div className={b()} role="button" tabIndex={0}>

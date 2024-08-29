@@ -47,11 +47,7 @@ export const VideoWidget: WidgetComponent<{
     } else {
       videoRef.current?.pause();
     }
-
-    return () => {
-      videoRef.current?.pause();
-    };
-  }, [videoRef, isPlaying, props.isDisplaying]);
+  }, [isPlaying, props.isDisplaying]);
 
   return (
     <div className={b()} role="button" tabIndex={0} onClick={!isAutoplay ? togglePlay : undefined}>
