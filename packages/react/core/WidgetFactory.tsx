@@ -44,6 +44,8 @@ interface WidgetFactoryProps {
   isAutoplayVideos?: boolean;
   widget: WidgetObjectType;
   handleGoToStory?: (storyId: string) => void;
+  handleVideoPlaying?: (isPlaying: boolean) => void;
+  handleMediaLoading?: (isLoading: boolean) => void;
 }
 
 export class WidgetFactory extends React.Component<WidgetFactoryProps> {
@@ -85,6 +87,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         return (
           <VideoWidget
             autoplay={this.props.isAutoplayVideos}
+            handleMediaLoading={this.props.handleMediaLoading}
+            handleMediaPlaying={this.props.handleVideoPlaying}
             isDisplaying={this.props.isDisplaying}
             params={this.props.widget.content.params}
           />

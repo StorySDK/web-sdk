@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import block from 'bem-cn';
 import './StoryVideoBackground.scss';
-import { IconLoader, IconPlay } from '@components/icons';
+import { IconLoader } from '@components/icons';
 
 const b = block('StorySdkVideoBackground');
 
@@ -13,7 +13,7 @@ type PropTypes = {
   autoplay?: boolean;
   isFilled?: boolean;
   isPlaying?: boolean;
-  setIsPlaying?: (isPlaying: boolean) => void;
+  handleVideoBackgroundPlaying?: (isPlaying: boolean) => void;
   onLoadStart?: () => void;
   onLoadEnd?: () => void;
 };
@@ -23,7 +23,7 @@ export const StoryVideoBackground = ({
   autoplay = false,
   isLoading,
   isPlaying,
-  setIsPlaying,
+  handleVideoBackgroundPlaying,
   isFilled,
   onLoadStart,
   onLoadEnd
@@ -31,11 +31,11 @@ export const StoryVideoBackground = ({
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   const handlePlay = () => {
-    setIsPlaying?.(true);
+    handleVideoBackgroundPlaying?.(true);
   };
 
   const handlePause = () => {
-    setIsPlaying?.(false);
+    handleVideoBackgroundPlaying?.(false);
   };
 
   useEffect(() => {

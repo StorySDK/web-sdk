@@ -12,6 +12,8 @@ export const VideoWidget: WidgetComponent<{
   params: VideoWidgetParamsType;
   autoplay?: boolean;
   isDisplaying?: boolean;
+  handleMediaPlaying?: (isPlaying: boolean) => void;
+  handleMediaLoading?: (isLoading: boolean) => void;
 }> = React.memo((props) => {
   const { videoUrl, videoPreviewUrl, stopAutoplay, widgetOpacity, borderRadius } = props.params;
   const isAutoplay = props.autoplay ?? true;
@@ -24,6 +26,15 @@ export const VideoWidget: WidgetComponent<{
   };
 
   const [isPlaying, setIsPlaying] = React.useState(isAutoplay);
+  const [isVideoLoading, setIsVideoLoading] = React.useState(true);
+
+  useEffect(() => {
+    props.handleMediaPlaying?.(isPlaying);
+  }, [isPlaying, props]);
+
+  useEffect(() => {
+    props.handleMediaLoading?.(isVideoLoading);
+  }, [isVideoLoading, props]);
 
   useEffect(() => {
     setIsPlaying(isAutoplay);
@@ -62,10 +73,16 @@ export const VideoWidget: WidgetComponent<{
         ref={videoRef}
         src={videoPreviewUrl ?? videoUrl}
         style={styles}
+        onLoadStart={() => {
+          setIsVideoLoading(true);
+        }}
+        onLoadedData={() => {
+          setIsVideoLoading(false);
+        }}
         onPause={handlePause}
         onPlay={handlePlay}
       />
-      {!isPlaying && !isAutoplay && (
+      {!isPlaying && !isAutoplay && !isVideoLoading && (
         <button className={b('playBtn')}>
           <IconPlay />
         </button>

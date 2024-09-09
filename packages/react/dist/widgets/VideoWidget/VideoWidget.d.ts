@@ -4,4 +4,6 @@ export declare const VideoWidget: WidgetComponent<{
     params: VideoWidgetParamsType;
     autoplay?: boolean;
     isDisplaying?: boolean;
+    handleMediaPlaying?: (isPlaying: boolean) => void;
+    handleMediaLoading?: (isLoading: boolean) => void;
 }>;

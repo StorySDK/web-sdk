@@ -15,9 +15,11 @@ interface StoryContentProps {
     isUnfilledBackground?: boolean;
     jsConfetti?: any;
     isLarge?: boolean;
+    isMediaLoading?: boolean;
     handleGoToStory?: (storyId: string) => void;
     handleMediaLoading: (isLoading: boolean) => void;
-    isMediaLoading?: boolean;
+    handleVideoPlaying: (isPlaying: boolean) => void;
+    handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
 }
 export declare const StoryContent: React.FC<StoryContentProps>;
 export {};

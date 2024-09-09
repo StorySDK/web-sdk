@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import { IconPlay } from '@components/icons';
@@ -24,9 +24,11 @@ interface StoryContentProps {
   isUnfilledBackground?: boolean;
   jsConfetti?: any;
   isLarge?: boolean;
+  isMediaLoading?: boolean;
   handleGoToStory?: (storyId: string) => void;
   handleMediaLoading: (isLoading: boolean) => void;
-  isMediaLoading?: boolean;
+  handleVideoPlaying: (isPlaying: boolean) => void;
+  handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
 }
 
 export const StoryContent: React.FC<StoryContentProps> = (props) => {
@@ -45,6 +47,8 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     contentHeight,
     isMediaLoading,
     handleMediaLoading,
+    handleVideoPlaying,
+    handleVideoBackgroundPlaying,
     handleGoToStory
   } = props;
 
@@ -55,13 +59,24 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     [desktopContainerWidth, currentStorySize.width]
   );
 
-  const [isVideoPlaying, setIsVideoPlaying] = React.useState(isAutoplayVideos ?? false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isVideoBackgroundPlaying, setIsVideoBackgroundPlaying] = useState(
+    isAutoplayVideos ?? false
+  );
 
   useEffect(() => {
     if (isAutoplayVideos) {
-      setIsVideoPlaying(true);
+      setIsVideoBackgroundPlaying(true);
     }
   }, [isAutoplayVideos]);
+
+  useEffect(() => {
+    handleVideoPlaying(isVideoPlaying);
+  }, [isVideoPlaying]);
+
+  useEffect(() => {
+    handleVideoBackgroundPlaying(isVideoBackgroundPlaying);
+  }, [isVideoBackgroundPlaying]);
 
   const togglePlay = () => {
     setIsVideoPlaying((prev) => !prev);
@@ -79,10 +94,10 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         {story.background.type === 'video' && isDisplaying && (
           <StoryVideoBackground
             autoplay={isAutoplayVideos}
+            handleVideoBackgroundPlaying={setIsVideoBackgroundPlaying}
             isFilled={!isUnfilledBackground}
             isLoading={isMediaLoading}
-            isPlaying={isVideoPlaying && isDisplaying}
-            setIsPlaying={setIsVideoPlaying}
+            isPlaying={isVideoBackgroundPlaying && isDisplaying}
             src={story.background.value}
             onLoadEnd={() => {
               handleMediaLoading(false);
@@ -113,7 +128,8 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
           {story.background.type === 'video' &&
             isDisplaying &&
             !isVideoPlaying &&
-            !isAutoplayVideos && (
+            !isAutoplayVideos &&
+            !isMediaLoading && (
               <button className={b('playBtn')} onClick={togglePlay}>
                 <IconPlay />
               </button>
@@ -133,6 +149,8 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
               <WidgetFactory
                 currentStorySize={currentStorySize}
                 handleGoToStory={handleGoToStory}
+                handleMediaLoading={handleMediaLoading}
+                handleVideoPlaying={handleVideoPlaying}
                 isAutoplayVideos={isAutoplayVideos}
                 isDisplaying={isDisplaying}
                 jsConfetti={jsConfetti}

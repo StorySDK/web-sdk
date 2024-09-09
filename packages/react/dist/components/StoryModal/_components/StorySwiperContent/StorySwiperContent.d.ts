@@ -7,6 +7,7 @@ import '../../StoryModal.scss';
 interface StorySwiperContentProps {
     isMobile: boolean;
     isLarge: boolean;
+    isAutoplayVideos: boolean;
     isShowMockupCurrent?: boolean;
     isGroupWithFilledBackground?: boolean;
     isProgressHidden?: boolean;
@@ -31,7 +32,9 @@ interface StorySwiperContentProps {
     jsConfetti: React.MutableRefObject<JSConfetti>;
     handleClose: () => void;
     handleAnimationEnd: () => void;
-    setIsMediaLoading: (isMediaLoading: boolean) => void;
+    handleMediaLoading: (isMediaLoading: boolean) => void;
+    handleVideoPlaying: (isPlaying: boolean) => void;
+    handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
     handleGoToStory: (storyId: string) => void;
     pressHandlers: () => LongPressTouchHandlers<Element>;
     swipeHandlers: SwipeOutput;

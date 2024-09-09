@@ -14,6 +14,7 @@ const b = block('StorySdkModal');
 interface StorySwiperContentProps {
   isMobile: boolean;
   isLarge: boolean;
+  isAutoplayVideos: boolean;
   isShowMockupCurrent?: boolean;
   isGroupWithFilledBackground?: boolean;
   isProgressHidden?: boolean;
@@ -38,7 +39,9 @@ interface StorySwiperContentProps {
   jsConfetti: React.MutableRefObject<JSConfetti>;
   handleClose: () => void;
   handleAnimationEnd: () => void;
-  setIsMediaLoading: (isMediaLoading: boolean) => void;
+  handleMediaLoading: (isMediaLoading: boolean) => void;
+  handleVideoPlaying: (isPlaying: boolean) => void;
+  handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
   handleGoToStory: (storyId: string) => void;
   pressHandlers: () => LongPressTouchHandlers<Element>;
   swipeHandlers: SwipeOutput;
@@ -79,11 +82,14 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     isForceCloseAvailable,
     playStatus,
     jsConfetti,
+    isAutoplayVideos,
     handleClose,
     handleAnimationEnd,
-    setIsMediaLoading,
+    handleMediaLoading,
     handleGoToStory,
     pressHandlers,
+    handleVideoPlaying,
+    handleVideoBackgroundPlaying,
     swipeHandlers
   } = props;
 
@@ -135,6 +141,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
 
     return PADDING_SIZE;
   }, [isMobile, isShowMockupCurrent, heightGap]);
+
   return (
     <div
       className={b('swiper', {
@@ -166,8 +173,10 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     currentStorySize={currentStorySize}
                     desktopContainerWidth={desktopWidth}
                     handleGoToStory={handleGoToStory}
-                    handleMediaLoading={setIsMediaLoading}
-                    isAutoplayVideos={currentGroup.settings?.autoplayVideos}
+                    handleMediaLoading={handleMediaLoading}
+                    handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
+                    handleVideoPlaying={handleVideoPlaying}
+                    isAutoplayVideos={isAutoplayVideos}
                     isDisplaying={index === currentStory && isOpened}
                     isLarge={isLarge}
                     isMediaLoading={isMediaLoading}
@@ -186,7 +195,6 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
             <div className={b('topContainer')}>
               <>
                 {isShowStatusBarInStory && <StatusBar />}
-
                 <div
                   className={b('controls')}
                   style={{

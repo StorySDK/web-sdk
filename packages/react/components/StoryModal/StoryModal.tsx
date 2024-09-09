@@ -115,8 +115,6 @@ const INIT_INNER_GROUP_PADDING = 115;
 const INIT_CONTAINER_BORDER_RADIUS = 50;
 const LONG_PRESS_THRESHOLD = 500;
 
-// const defaultRatioIndex = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
-
 const initQuizeState = {
   points: 0,
   letters: ''
@@ -195,7 +193,22 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [width, height] = useWindowSize();
   const [activeStoriesWithResult, setActiveStoriesWithResult] = useState<StoryType[]>([]);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isBackgroundVideoPlaying, setIsBackgroundVideoPlaying] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
+  const [isAutoplayVideos, setIsAutoplayVideos] = useState<boolean>(
+    currentGroup?.settings?.autoplayVideos ?? false
+  );
+
+  useEffect(() => {
+    if (isVideoPlaying || isBackgroundVideoPlaying) {
+      setIsAutoplayVideos(true);
+    }
+  }, [isVideoPlaying, isBackgroundVideoPlaying]);
+
+  useEffect(() => {
+    setIsAutoplayVideos(currentGroup?.settings?.autoplayVideos ?? false);
+  }, [currentGroup]);
 
   const appLink = useMemo(() => {
     if (devMode === 'staging') {
@@ -698,12 +711,23 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
 
   useEffect(() => {
-    if (isMediaLoading) {
+    console.log(playStatus);
+  }, [playStatus]);
+
+  useEffect(() => {
+    console.log('isBackgroundVideoPlaying', isBackgroundVideoPlaying);
+    console.log('isVideoPlaying', isVideoPlaying);
+    console.log('isMediaLoading', isMediaLoading);
+    console.log('currentStoryId', currentStoryId);
+
+    if (isMediaLoading || isVideoPlaying) {
+      console.log('PAUSE HERE');
       setPlayStatus('pause');
     } else {
+      console.log('PLAY HERE');
       setPlayStatus('play');
     }
-  }, [isMediaLoading]);
+  }, [isMediaLoading, isVideoPlaying, isBackgroundVideoPlaying, currentStoryId]);
 
   const [clickTimestamp, setClickTimestamp] = useState(0);
 
@@ -740,10 +764,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onSwipedLeft: () => handleNextGroup(),
     onSwipedRight: () => handlePrevGroup()
   });
-
-  useEffect(() => {
-    setPlayStatus('play');
-  }, [currentStoryId]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -806,8 +826,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               handleAnimationEnd={handleAnimationEnd}
               handleClose={handleClose}
               handleGoToStory={handleGoToStory}
+              handleMediaLoading={setIsMediaLoading}
+              handleVideoBackgroundPlaying={setIsBackgroundVideoPlaying}
+              handleVideoPlaying={setIsVideoPlaying}
               height={height}
               heightGap={heightGap}
+              isAutoplayVideos={isAutoplayVideos}
               isBackroundFilled={isBackroundFilled}
               isForceCloseAvailable={isForceCloseAvailable}
               isGroupWithFilledBackground={isGroupWithFilledBackground}
@@ -822,7 +846,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               jsConfetti={jsConfetti}
               playStatus={playStatus}
               pressHandlers={pressHandlers}
-              setIsMediaLoading={setIsMediaLoading}
               storyHeight={storyHeight}
               storyWidth={storyWidth}
               swipeHandlers={swipeHandlers}

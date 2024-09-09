@@ -32,6 +32,10 @@ declare const widgets: {
     }>;
     video: import("@types").WidgetComponent<{
         params: import("@types").VideoWidgetParamsType;
+        autoplay?: boolean | undefined;
+        isDisplaying?: boolean | undefined;
+        handleMediaPlaying?: ((isPlaying: boolean) => void) | undefined;
+        handleMediaLoading?: ((isLoading: boolean) => void) | undefined;
     }>;
     click_me: import("@types").WidgetComponent<{
         params: import("@types").ClickMeWidgetParamsType;
@@ -132,7 +136,6 @@ declare const widgets: {
     link: import("@types").WidgetComponent<{
         params: import("@types").LinkWidgetParamsType;
         isReadOnly?: boolean | undefined;
-        onClick?(): void;
     }>;
 };
 export default widgets;
