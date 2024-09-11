@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import block from 'bem-cn';
 import classNames from 'classnames';
 import { GroupType } from '../../types';
@@ -48,7 +48,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
   const RECTANGLE_IMAGE_WIDTH_INDEX = 0.9;
   const RECTANGLE_IMAGE_HEIGHT_INDEX = 1.26;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (
       titleRef.current &&
       btnRef.current &&
@@ -59,20 +59,23 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
     }
   }, [view]);
 
-  const getContainerSize = useCallback(() => {
-    if (groupImageWidth) {
-      switch (view) {
-        case 'bigSquare':
-          return groupImageWidth * BIG_SQUARE_CONTAINER_WIDTH_INDEX;
-        case 'rectangle':
-          return groupImageWidth * RECTANGLE_CONTAINER_WIDTH_INDEX;
-        default:
-          return groupImageWidth * BASE_CONTAINER_WIDTH_INDEX;
+  const getContainerSize = useCallback(
+    (isHeight?: boolean) => {
+      if (groupImageWidth) {
+        switch (view) {
+          case 'bigSquare':
+            return groupImageWidth * BIG_SQUARE_CONTAINER_WIDTH_INDEX;
+          case 'rectangle':
+            return groupImageWidth * RECTANGLE_CONTAINER_WIDTH_INDEX;
+          default:
+            return isHeight ? undefined : groupImageWidth * BASE_CONTAINER_WIDTH_INDEX;
+        }
       }
-    }
 
-    return undefined;
-  }, [groupImageWidth, view]);
+      return undefined;
+    },
+    [groupImageWidth, view]
+  );
 
   const getImageSize = useCallback(
     (imageSize, isHeight = false) => {
@@ -103,7 +106,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
         height:
           view === 'rectangle' && groupImageWidth
             ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
-            : getContainerSize()
+            : getContainerSize(true)
       }}
       onClick={() => onClick && onClick(index)}
     >
