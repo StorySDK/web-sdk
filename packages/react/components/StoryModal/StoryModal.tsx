@@ -718,14 +718,14 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     // console.log('isMediaLoading', isMediaLoading);
     // console.log('currentStoryId', currentStoryId);
 
-    if (isMediaLoading || (isVideoPlaying && !isAutoplayVideos)) {
+    if (isMediaLoading) {
       // console.log('PAUSE HERE');
       setPlayStatus('pause');
     } else {
       // console.log('PLAY HERE');
       setPlayStatus('play');
     }
-  }, [isMediaLoading, isVideoPlaying, isBackgroundVideoPlaying, isAutoplayVideos, currentStoryId]);
+  }, [isMediaLoading, isVideoPlaying, isBackgroundVideoPlaying, , currentStoryId]);
 
   const [clickTimestamp, setClickTimestamp] = useState(0);
 
