@@ -36,7 +36,7 @@ interface StorySwiperContentProps {
     handleVideoPlaying: (isPlaying: boolean) => void;
     handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
     handleGoToStory: (storyId: string) => void;
-    pressHandlers: () => LongPressTouchHandlers<Element>;
+    pressHandlers?: () => LongPressTouchHandlers<Element>;
     swipeHandlers: SwipeOutput;
 }
 export declare const StorySwiperContent: React.FC<StorySwiperContentProps>;

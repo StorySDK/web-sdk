@@ -18,6 +18,8 @@ export const VideoWidget: WidgetComponent<{
   const { videoUrl, videoPreviewUrl, stopAutoplay, widgetOpacity, borderRadius } = props.params;
   const isAutoplay = props.autoplay ?? true;
 
+  // console.log('isAutoplay', props.autoplay);
+
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   const styles = {

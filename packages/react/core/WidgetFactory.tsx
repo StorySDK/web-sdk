@@ -82,7 +82,12 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.ELLIPSE:
         return <EllipseWidget params={this.props.widget.content.params} />;
       case WidgetsTypes.IMAGE:
-        return <ImageWidget params={this.props.widget.content.params} />;
+        return (
+          <ImageWidget
+            handleMediaLoading={this.props.handleMediaLoading}
+            params={this.props.widget.content.params}
+          />
+        );
       case WidgetsTypes.VIDEO:
         return (
           <VideoWidget

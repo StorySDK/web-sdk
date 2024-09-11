@@ -196,19 +196,17 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isBackgroundVideoPlaying, setIsBackgroundVideoPlaying] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
-  const [isAutoplayVideos, setIsAutoplayVideos] = useState<boolean>(
-    currentGroup?.settings?.autoplayVideos ?? false
-  );
+  const [isAutoplayVideos, setIsAutoplayVideos] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (isVideoPlaying || isBackgroundVideoPlaying) {
-      setIsAutoplayVideos(true);
-    }
-  }, [isVideoPlaying, isBackgroundVideoPlaying]);
+  // useEffect(() => {
+  //   if (isVideoPlaying || isBackgroundVideoPlaying) {
+  //     setIsAutoplayVideos(true);
+  //   }
+  // }, [isVideoPlaying, isBackgroundVideoPlaying]);
 
-  useEffect(() => {
-    setIsAutoplayVideos(currentGroup?.settings?.autoplayVideos ?? false);
-  }, [currentGroup]);
+  // useEffect(() => {
+  //   setIsAutoplayVideos(currentGroup?.settings?.autoplayVideos ?? false);
+  // }, [currentGroup]);
 
   const appLink = useMemo(() => {
     if (devMode === 'staging') {
@@ -710,24 +708,24 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const uniqUserId = getUniqUserId();
   const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
 
-  useEffect(() => {
-    console.log(playStatus);
-  }, [playStatus]);
+  // useEffect(() => {
+  //   console.log('playStatus', playStatus);
+  // }, [playStatus]);
 
   useEffect(() => {
-    console.log('isBackgroundVideoPlaying', isBackgroundVideoPlaying);
-    console.log('isVideoPlaying', isVideoPlaying);
-    console.log('isMediaLoading', isMediaLoading);
-    console.log('currentStoryId', currentStoryId);
+    // console.log('isBackgroundVideoPlaying', isBackgroundVideoPlaying);
+    // console.log('isVideoPlaying', isVideoPlaying);
+    // console.log('isMediaLoading', isMediaLoading);
+    // console.log('currentStoryId', currentStoryId);
 
-    if (isMediaLoading || isVideoPlaying) {
-      console.log('PAUSE HERE');
+    if (isMediaLoading || (isVideoPlaying && !isAutoplayVideos)) {
+      // console.log('PAUSE HERE');
       setPlayStatus('pause');
     } else {
-      console.log('PLAY HERE');
+      // console.log('PLAY HERE');
       setPlayStatus('play');
     }
-  }, [isMediaLoading, isVideoPlaying, isBackgroundVideoPlaying, currentStoryId]);
+  }, [isMediaLoading, isVideoPlaying, isBackgroundVideoPlaying, isAutoplayVideos, currentStoryId]);
 
   const [clickTimestamp, setClickTimestamp] = useState(0);
 
