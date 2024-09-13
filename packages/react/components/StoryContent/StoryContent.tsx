@@ -91,7 +91,11 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
           height: contentHeight
         }}
       >
-        {story.background.type === 'video' && isDisplaying && (
+        {story.background.type === 'image' && (
+          <img alt="" className={b('imageBackground')} src={story.background.value} />
+        )}
+
+        {story.background.type === 'video' && (
           <StoryVideoBackground
             autoplay={isAutoplayVideos}
             handleVideoBackgroundPlaying={setIsVideoBackgroundPlaying}

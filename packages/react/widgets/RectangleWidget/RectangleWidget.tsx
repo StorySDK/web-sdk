@@ -24,7 +24,8 @@ export const RectangleWidget: WidgetComponent<{ params: RectangleWidgetParamsTyp
     const backgroundStyles = useMemo(
       () => ({
         background: renderBackgroundStyles(fillColor),
-        borderRadius: `${+fillBorderRadius - +strokeThickness}px`
+        borderRadius:
+          +fillBorderRadius - +strokeThickness > 0 ? `${+fillBorderRadius - +strokeThickness}px` : 0
       }),
       [fillColor, fillBorderRadius, strokeThickness]
     );

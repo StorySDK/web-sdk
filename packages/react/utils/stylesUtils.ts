@@ -62,8 +62,8 @@ export const renderBackgroundStyles = (background: BackgroundType, opacity?: num
       return `linear-gradient(${getGradientDirection(background.direction)}, ${
         background.value[0]
       } 0%, ${background.value[1]} 100%)`;
-    case MediaType.IMAGE:
-      return `center / cover url("${background.value}")`;
+    // case MediaType.IMAGE:
+    //   return `center / cover url("${background.value}")`;
     default:
       return 'transparent';
   }
