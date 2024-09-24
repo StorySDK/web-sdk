@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, useRef, useCallback } from 'react';
-import { Emoji } from 'emoji-mart';
 import { block, getClientPosition, getScalableValue } from '@utils';
+import { Emoji } from '@components';
 
 import './SliderCustom.scss';
 
@@ -145,11 +145,11 @@ export const SliderCustom: FC<SliderCustomProps> = React.memo(
               className={b('up', { moved: changeStatus === 'moved' })}
               style={{ top: `-${bigSize + getScalableValue(10)}px` }}
             >
-              <Emoji emoji={emoji} set="apple" size={bigSize} />
+              <Emoji emoji={emoji} size={bigSize} />
             </div>
           ) : null}
 
-          <Emoji emoji={emoji} set="apple" size={initSize} />
+          <Emoji emoji={emoji} size={initSize} />
         </div>
 
         <div className={b('track')} style={{ height, borderRadius }}>

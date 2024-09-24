@@ -36,3 +36,10 @@ export interface Group {
   type: GroupType;
   settings?: StoriesGroupSettings;
 }
+
+export interface LoadStory {
+  id: string;
+  position: number;
+  groupId: string;
+  status: 'init' | 'waiting' | 'loading' | 'ready';
+}

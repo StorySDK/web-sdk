@@ -4,3 +4,4 @@ export * from './StoryModal/StoryModal';
 export * from './StoryContent/StoryContent';
 export * from './CustomGroupControl/CustomGroupControl';
 export * from './MaterialIcon';
+export * from './Emoji';

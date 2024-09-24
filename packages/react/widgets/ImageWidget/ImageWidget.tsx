@@ -27,11 +27,11 @@ export const ImageWidget: WidgetComponent<{
       className={b('image')}
       src={imageUrl}
       style={styles}
+      onLoad={() => {
+        setIsImageLoading(false);
+      }}
       onLoadStart={() => {
         setIsImageLoading(true);
-      }}
-      onLoadedData={() => {
-        setIsImageLoading(false);
       }}
     />
   );

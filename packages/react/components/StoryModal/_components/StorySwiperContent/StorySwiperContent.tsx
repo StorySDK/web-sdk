@@ -29,6 +29,7 @@ interface StorySwiperContentProps {
   height: number;
   currentStorySize: any;
   heightGap: number;
+  contentWidth: number | string;
   contentHeight: number | string;
   forbidClose?: boolean;
   isStatusBarActive?: boolean;
@@ -37,7 +38,9 @@ interface StorySwiperContentProps {
   isForceCloseAvailable?: boolean;
   playStatus: string;
   jsConfetti: React.MutableRefObject<JSConfetti>;
+  loadedStoriesIds: { [key: string]: boolean };
   handleClose: () => void;
+  handleLoadStory: (storyId: string) => void;
   handleAnimationEnd: () => void;
   handleMediaLoading: (isMediaLoading: boolean) => void;
   handleVideoPlaying: (isPlaying: boolean) => void;
@@ -74,6 +77,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     height,
     currentStorySize,
     heightGap,
+    contentWidth,
     contentHeight,
     forbidClose,
     isStatusBarActive,
@@ -83,6 +87,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     playStatus,
     jsConfetti,
     isAutoplayVideos,
+    handleLoadStory,
     handleClose,
     handleAnimationEnd,
     handleMediaLoading,
@@ -166,19 +171,22 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                   className={b('story', { current: index === currentStory && isOpened })}
                   key={story.id}
                   {...pressHandlers?.()}
-                  {...swipeHandlers}
+                  {...(isMobile ? swipeHandlers : {})}
                 >
                   <StoryContent
                     contentHeight={contentHeight}
+                    contentWidth={contentWidth}
                     currentStorySize={currentStorySize}
                     desktopContainerWidth={desktopWidth}
                     handleGoToStory={handleGoToStory}
+                    handleLoadStory={handleLoadStory}
                     handleMediaLoading={handleMediaLoading}
                     handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
                     handleVideoPlaying={handleVideoPlaying}
                     isAutoplayVideos={isAutoplayVideos}
                     isDisplaying={index === currentStory && isOpened}
                     isLarge={isLarge}
+                    isLoaded={props.loadedStoriesIds[story.id]}
                     isMediaLoading={isMediaLoading}
                     isMobile={isMobile}
                     isUnfilledBackground={

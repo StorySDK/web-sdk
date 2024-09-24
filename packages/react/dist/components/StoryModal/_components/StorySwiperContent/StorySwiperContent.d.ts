@@ -22,6 +22,7 @@ interface StorySwiperContentProps {
     height: number;
     currentStorySize: any;
     heightGap: number;
+    contentWidth: number | string;
     contentHeight: number | string;
     forbidClose?: boolean;
     isStatusBarActive?: boolean;
@@ -30,7 +31,11 @@ interface StorySwiperContentProps {
     isForceCloseAvailable?: boolean;
     playStatus: string;
     jsConfetti: React.MutableRefObject<JSConfetti>;
+    loadedStoriesIds: {
+        [key: string]: boolean;
+    };
     handleClose: () => void;
+    handleLoadStory: (storyId: string) => void;
     handleAnimationEnd: () => void;
     handleMediaLoading: (isMediaLoading: boolean) => void;
     handleVideoPlaying: (isPlaying: boolean) => void;

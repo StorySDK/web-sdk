@@ -29,6 +29,7 @@ declare const widgets: {
     }>;
     image: import("@types").WidgetComponent<{
         params: import("@types").ImageWidgetParamsType;
+        handleMediaLoading?: ((isLoading: boolean) => void) | undefined;
     }>;
     video: import("@types").WidgetComponent<{
         params: import("@types").VideoWidgetParamsType;

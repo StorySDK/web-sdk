@@ -17,6 +17,13 @@ interface DurationProps {
   startTime: number;
 }
 
+interface LoadStory {
+  id: string;
+  position: number;
+  groupId: string;
+  status: 'init' | 'waiting' | 'loading' | 'ready';
+}
+
 const withGroupsData =
   (
     GroupsList: React.FC<GroupsListProps>,
@@ -50,6 +57,7 @@ const withGroupsData =
     const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
     const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
     const [width] = useWindowSize();
+    const [storiesToLoad, setStoriesToLoad] = useState<{ [key: string]: LoadStory[] }>({});
 
     const isMobile = useMemo(() => width < 768, [width]);
 
@@ -285,6 +293,7 @@ const withGroupsData =
     useEffect(() => {
       if (groups.length) {
         setLoadStatus('loading');
+
         groups.forEach((groupItem: Group, groupIndex: number) => {
           API.stories
             .getList({
@@ -306,6 +315,16 @@ const withGroupsData =
                             DateTime.now().toSeconds()) ||
                           !storyItem.story_data.end_time)))
                 );
+
+                setStoriesToLoad((prevState) => ({
+                  ...prevState,
+                  [groupItem.id]: stories.map((story: any) => ({
+                    id: story.id,
+                    position: story.position,
+                    groupId: groupItem.id,
+                    status: 'init'
+                  }))
+                }));
 
                 setGroupsWithStories((prevState) =>
                   prevState.map((item: any) => {
@@ -350,6 +369,7 @@ const withGroupsData =
         groupView={groupView}
         groups={data ?? []}
         groupsClassName={options?.groupsClassName}
+        initLoadStories={storiesToLoad}
         isLoading={data === null}
         isShowMockup={isShowMockup}
         isStatusBarActive={options?.isStatusBarActive}

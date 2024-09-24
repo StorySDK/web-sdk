@@ -10,6 +10,7 @@ import { StoryType, Group, GroupType, StoryContenxt, ScoreType } from '../../typ
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
 import smallIphoneMockup from '../../assets/images/iphone-mockup-small.svg';
 import { StorySwiperContent } from './_components';
+
 import './StoryModal.scss';
 
 const b = block('StorySdkModal');
@@ -197,16 +198,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [isBackgroundVideoPlaying, setIsBackgroundVideoPlaying] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
   const [isAutoplayVideos, setIsAutoplayVideos] = useState<boolean>(true);
-
-  // useEffect(() => {
-  //   if (isVideoPlaying || isBackgroundVideoPlaying) {
-  //     setIsAutoplayVideos(true);
-  //   }
-  // }, [isVideoPlaying, isBackgroundVideoPlaying]);
-
-  // useEffect(() => {
-  //   setIsAutoplayVideos(currentGroup?.settings?.autoplayVideos ?? false);
-  // }, [currentGroup]);
+  const [loadedStoriesIds, setLoadedStoriesIds] = useState<{ [key: string]: boolean }>({});
 
   const appLink = useMemo(() => {
     if (devMode === 'staging') {
@@ -320,14 +312,32 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const heightGap = isLarge ? largeHeightGap : smallHeightGap;
 
+  const contentWidth = useMemo(() => {
+    if (isMobile) {
+      const newWidth = Math.round(currentStorySize.width * (height / currentStorySize.height));
+
+      if (newWidth < width) {
+        return newWidth;
+      }
+    }
+
+    return `100%`;
+  }, [currentStorySize.height, currentStorySize.width, height, isMobile, width]);
+
   const contentHeight = useMemo(() => {
     const backgroundHeightGap =
       isShowMockupCurrent && isGroupWithUnfilledBackground ? groupInnerHeightGap : 0;
 
-    return isMobile
-      ? Math.round(currentStorySize.height * (width / currentStorySize.width))
-      : `calc(100% - ${backgroundHeightGap}px)`;
+    if (isMobile) {
+      if (contentWidth === '100%') {
+        return Math.round(currentStorySize.height * (width / currentStorySize.width));
+      }
+      return '100%';
+    }
+
+    return `calc(100% - ${backgroundHeightGap}px)`;
   }, [
+    contentWidth,
     currentStorySize.height,
     currentStorySize.width,
     groupInnerHeightGap,
@@ -340,7 +350,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   useEffect(() => {
     const body = document.querySelector('body');
     if (storyModalRef.current && body) {
-      if (isMobile) {
+      if (isMobile && contentHeight !== '100%') {
         storyModalRef.current.style.setProperty('height', `${contentHeight}px`);
       } else {
         storyModalRef.current.style.setProperty('height', `100%`);
@@ -575,7 +585,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const handleAnimationEnd = useCallback(() => {
-    handleNext();
+    // handleNext();
   }, [handleNext]);
 
   const handlePrevGroup = useCallback(() => {
@@ -708,10 +718,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const uniqUserId = getUniqUserId();
   const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
 
-  // useEffect(() => {
-  //   console.log('playStatus', playStatus);
-  // }, [playStatus]);
-
   useEffect(() => {
     // console.log('isBackgroundVideoPlaying', isBackgroundVideoPlaying);
     // console.log('isVideoPlaying', isVideoPlaying);
@@ -734,9 +740,22 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       setPlayStatus('play');
 
       if (e.timeStamp - clickTimestamp < LONG_PRESS_THRESHOLD) {
-        const isBackground = (e.target as Element).classList.contains('StorySdkContent__scope');
+        let isNextAllowed = false;
+        let element: HTMLElement | null = e.target as HTMLElement;
 
-        if (isBackground) {
+        if (element.classList.contains('StorySdkContent__scope')) {
+          isNextAllowed = true;
+        } else {
+          while (element) {
+            if (element.classList.contains('StorySdkContent__object_noClickable')) {
+              isNextAllowed = true;
+              break;
+            }
+            element = (element as HTMLElement).offsetParent as HTMLElement;
+          }
+        }
+
+        if (isNextAllowed) {
           handleNext();
         }
       }
@@ -772,6 +791,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     return () => clearTimeout(timeout);
   }, [isSwiped]);
+
+  const handleLoadStory = useCallback((id: string) => {
+    setLoadedStoriesIds((prevState) => ({
+      ...prevState,
+      [id]: true
+    }));
+  }, []);
 
   return (
     <StoryContext.Provider
@@ -816,6 +842,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             <StorySwiperContent
               activeStoriesWithResult={activeStoriesWithResult}
               contentHeight={contentHeight}
+              contentWidth={contentWidth}
               currentGroup={currentGroup}
               currentGroupType={currentGroupType}
               currentStory={currentStory}
@@ -824,6 +851,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               handleAnimationEnd={handleAnimationEnd}
               handleClose={handleClose}
               handleGoToStory={handleGoToStory}
+              handleLoadStory={handleLoadStory}
               handleMediaLoading={setIsMediaLoading}
               handleVideoBackgroundPlaying={setIsBackgroundVideoPlaying}
               handleVideoPlaying={setIsVideoPlaying}
@@ -842,6 +870,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               isShowMockupCurrent={isShowMockupCurrent}
               isStatusBarActive={isStatusBarActive}
               jsConfetti={jsConfetti}
+              loadedStoriesIds={loadedStoriesIds}
               playStatus={playStatus}
               pressHandlers={pressHandlers}
               storyHeight={storyHeight}

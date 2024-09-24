@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { StoryContext } from '@components';
+import { StoryContext, Emoji } from '@components';
 import {
   BackgroundColorType,
   QuizOneAnswerWidgetElementsType,
@@ -8,7 +8,6 @@ import {
   WidgetComponent
 } from '@types';
 import { block, getTextStyles } from '@utils';
-import { Emoji } from 'emoji-mart';
 import cn from 'classnames';
 import './QuizOneAnswerWidget.scss';
 
@@ -125,9 +124,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
             style={sizes.answer}
             onClick={() => !userAnswer && !isReadOnly && handleAnswer(answer.id)}
           >
-            {answer.emoji && (
-              <Emoji emoji={answer.emoji?.name} set="apple" size={sizes.emoji.width} />
-            )}
+            {answer.emoji && <Emoji emoji={answer.emoji?.name} size={sizes.emoji.width} />}
             <p
               className={cn(
                 b('answerTitle', {
