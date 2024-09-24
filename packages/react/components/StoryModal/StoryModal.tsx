@@ -585,7 +585,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const handleAnimationEnd = useCallback(() => {
-    // handleNext();
+    handleNext();
   }, [handleNext]);
 
   const handlePrevGroup = useCallback(() => {
