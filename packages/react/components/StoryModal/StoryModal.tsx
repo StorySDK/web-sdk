@@ -197,7 +197,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isBackgroundVideoPlaying, setIsBackgroundVideoPlaying] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
-  const [isAutoplayVideos, setIsAutoplayVideos] = useState<boolean>(true);
+  const [isAutoplayVideos, setIsAutoplayVideos] = useState<boolean>(false);
+
   const [loadedStoriesIds, setLoadedStoriesIds] = useState<{ [key: string]: boolean }>({});
 
   const appLink = useMemo(() => {
@@ -213,6 +214,16 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [devMode]);
 
   const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
+
+  useEffect(() => {
+    if (isVideoPlaying || isBackgroundVideoPlaying) {
+      setIsAutoplayVideos(true);
+    }
+  }, [isVideoPlaying, isBackgroundVideoPlaying]);
+
+  useEffect(() => {
+    setIsAutoplayVideos(currentGroup?.settings?.autoplayVideos ?? false);
+  }, [currentGroup]);
 
   const currentStorySize: StoryCurrentSize = useMemo(() => {
     if (storyWidth && storyHeight) {
@@ -719,16 +730,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
 
   useEffect(() => {
-    // console.log('isBackgroundVideoPlaying', isBackgroundVideoPlaying);
-    // console.log('isVideoPlaying', isVideoPlaying);
-    // console.log('isMediaLoading', isMediaLoading);
-    // console.log('currentStoryId', currentStoryId);
-
     if (isMediaLoading) {
-      // console.log('PAUSE HERE');
       setPlayStatus('pause');
     } else {
-      // console.log('PLAY HERE');
       setPlayStatus('play');
     }
   }, [isMediaLoading, currentStoryId]);
@@ -869,6 +873,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               isProgressHidden={isProgressHidden}
               isShowMockupCurrent={isShowMockupCurrent}
               isStatusBarActive={isStatusBarActive}
+              isVideoPlaying={isVideoPlaying || isBackgroundVideoPlaying}
               jsConfetti={jsConfetti}
               loadedStoriesIds={loadedStoriesIds}
               playStatus={playStatus}

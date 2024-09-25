@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import block from 'bem-cn';
-import { IconClose, IconLoader } from '@components/icons';
+import { IconClose, IconLoader, IconMute, IconUnmute } from '@components/icons';
 import { LongPressTouchHandlers } from 'use-long-press';
-import { GroupType, StoryType } from '@types';
+import { GroupType, StoryType, WidgetsTypes } from '@types';
 import JSConfetti from 'js-confetti';
 import { SwipeOutput, useAdaptiveValue } from '@hooks';
 import { PADDING_SIZE, STORY_SIZE_LARGE, StoryContent } from '../../..';
@@ -10,7 +10,6 @@ import { StatusBar } from '../StatusBar';
 import '../../StoryModal.scss';
 
 const b = block('StorySdkModal');
-
 interface StorySwiperContentProps {
   isMobile: boolean;
   isLarge: boolean;
@@ -36,6 +35,7 @@ interface StorySwiperContentProps {
   storyWidth?: number;
   storyHeight?: number;
   isForceCloseAvailable?: boolean;
+  isVideoPlaying?: boolean;
   playStatus: string;
   jsConfetti: React.MutableRefObject<JSConfetti>;
   loadedStoriesIds: { [key: string]: boolean };
@@ -72,6 +72,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     currentStory,
     isOpened,
     isMediaLoading,
+    isVideoPlaying,
     isLoading,
     activeStoriesWithResult,
     height,
@@ -108,6 +109,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   const controlGapLarge = useAdaptiveValue(INIT_CONTROL_GAP_LARGE);
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
   const smallBorderRadius = useAdaptiveValue(INIT_SMALL_RADIUS);
+  const [isVideoMuted, setIsVideoMuted] = useState<boolean>(!isAutoplayVideos ?? false);
 
   const controlTop = isLarge ? controlTopLarge : controlTopSmall;
   const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
@@ -146,6 +148,18 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
 
     return PADDING_SIZE;
   }, [isMobile, isShowMockupCurrent, heightGap]);
+
+  useEffect(() => {
+    setIsVideoMuted(!isVideoPlaying);
+  }, [isVideoPlaying]);
+
+  const isVideoExists = useMemo(
+    () =>
+      activeStoriesWithResult[currentStory]?.storyData.some(
+        (widget) => widget.content.type === WidgetsTypes.VIDEO
+      ) || activeStoriesWithResult[currentStory]?.background.type === 'video',
+    [activeStoriesWithResult, currentStory]
+  );
 
   return (
     <div
@@ -192,6 +206,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     isUnfilledBackground={
                       currentGroupType === GroupType.GROUP && !story.background.isFilled
                     }
+                    isVideoMuted={isVideoMuted}
                     jsConfetti={jsConfetti}
                     noTopBackgroundShadow={noTopBackgroundShadow}
                     noTopShadow={noTopShadow}
@@ -269,25 +284,44 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     </div>
                   )}
 
-                  {!currentGroup?.settings?.isProhibitToClose &&
-                    !forbidClose &&
-                    !isForceCloseAvailable && (
+                  <div className={b('rightTopContainer')}>
+                    {isVideoExists && (
                       <button
-                        className={b('close', {
-                          noProgress: currentGroup?.settings?.isProgressHidden || isProgressHidden,
-                          wideRight: isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                        })}
-                        style={{
-                          top:
-                            isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                              ? largeElementsTop
-                              : undefined
+                        className={b('muteBtn')}
+                        onClick={() => {
+                          setIsVideoMuted(!isVideoMuted);
                         }}
-                        onClick={handleClose}
                       >
-                        <IconClose />
+                        {isVideoMuted ? (
+                          <IconUnmute className={b('muteBtnIcon').toString()} />
+                        ) : (
+                          <IconMute className={b('muteBtnIcon').toString()} />
+                        )}
                       </button>
                     )}
+
+                    {!currentGroup?.settings?.isProhibitToClose &&
+                      !forbidClose &&
+                      !isForceCloseAvailable && (
+                        <button
+                          className={b('close', {
+                            noProgress:
+                              currentGroup?.settings?.isProgressHidden || isProgressHidden,
+                            wideRight:
+                              isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
+                          })}
+                          style={{
+                            top:
+                              isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
+                                ? largeElementsTop
+                                : undefined
+                          }}
+                          onClick={handleClose}
+                        >
+                          <IconClose />
+                        </button>
+                      )}
+                  </div>
                 </div>
               </>
             </div>

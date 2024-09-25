@@ -34,6 +34,7 @@ declare const widgets: {
     video: import("@types").WidgetComponent<{
         params: import("@types").VideoWidgetParamsType;
         autoplay?: boolean | undefined;
+        isMuted?: boolean | undefined;
         isDisplaying?: boolean | undefined;
         handleMediaPlaying?: ((isPlaying: boolean) => void) | undefined;
         handleMediaLoading?: ((isLoading: boolean) => void) | undefined;

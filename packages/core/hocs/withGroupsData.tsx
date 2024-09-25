@@ -369,7 +369,6 @@ const withGroupsData =
         groupView={groupView}
         groups={data ?? []}
         groupsClassName={options?.groupsClassName}
-        initLoadStories={storiesToLoad}
         isLoading={data === null}
         isShowMockup={isShowMockup}
         isStatusBarActive={options?.isStatusBarActive}

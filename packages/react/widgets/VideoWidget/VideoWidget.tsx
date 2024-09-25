@@ -11,6 +11,7 @@ const b = block('VideoWidget');
 export const VideoWidget: WidgetComponent<{
   params: VideoWidgetParamsType;
   autoplay?: boolean;
+  isMuted?: boolean;
   isDisplaying?: boolean;
   handleMediaPlaying?: (isPlaying: boolean) => void;
   handleMediaLoading?: (isLoading: boolean) => void;
@@ -67,7 +68,7 @@ export const VideoWidget: WidgetComponent<{
         className={b('video')}
         disablePictureInPicture
         loop
-        muted={isAutoplay}
+        muted={props.isMuted ?? isAutoplay}
         playsInline={isAutoplay}
         preload="metadata"
         ref={videoRef}

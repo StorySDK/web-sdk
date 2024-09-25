@@ -336,6 +336,13 @@
     }
   }
 
+  &__rightTopContainer {
+    display: flex;
+    align-items: center;
+    justify-self: flex-end;
+    gap: 8px;
+  }
+
   &__navStories {
     position: absolute;
     top: 48px;
@@ -414,5 +421,17 @@
     display: flex;
     z-index: 99999;
     flex-direction: column;
+  }
+
+  &__muteBtn {
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  &__muteBtnIcon {
+    width: 14px;
+    height: 14px;
   }
 }

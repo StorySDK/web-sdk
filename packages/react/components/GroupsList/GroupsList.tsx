@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import SimpleBar from 'simplebar-react';
 import ReactDOM from 'react-dom';
 import { useWindowSize } from '@react-hook/window-size';
-import { Group, LoadStory } from '../../types';
+import { Group } from '../../types';
 import { GroupItem, StoryModal } from '..';
 import 'simplebar-react/dist/simplebar.min.css';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -18,7 +18,6 @@ export interface GroupsListProps {
   groupImageHeight?: number;
   groupTitleSize?: number;
   groupsClassName?: string;
-  initLoadStories: { [key: string]: LoadStory[] };
   storyWidth?: number;
   storyHeight?: number;
   isStatusBarActive?: boolean;
@@ -62,7 +61,6 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     openInExternalModal,
     storyWidth,
     storyHeight,
-    initLoadStories,
     onOpenGroup,
     onCloseGroup,
     onNextStory,
@@ -73,7 +71,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     onFinishQuiz
   } = props;
 
-  const [currentGroup, setCurrentGroup] = useState(0);
+  const [currentGroup, setCurrentGroup] = useState(-1);
   const [modalShow, setModalShow] = useState(!!autoplay);
   const [width] = useWindowSize();
   const scrollRef = useRef<any>(null);
@@ -81,32 +79,6 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const carouselSkeletonRef = useRef<HTMLDivElement | null>(null);
   const [isCentered, setIsCentered] = useState(true);
-
-  // const [loadStories, setLoadStories] = useState<{ [key: string]: LoadStory[] }>(initLoadStories);
-
-  // useEffect(() => {
-  //   if (initLoadStories) {
-  //     const loadStoriesObj: { [key: string]: LoadStory[] } = { ...initLoadStories };
-
-  //     // eslint-disable-next-line guard-for-in
-  //     for (const key in loadStoriesObj) {
-  //       loadStoriesObj[key] = loadStoriesObj[key]
-  //         .filter((story) => story.status === 'init')
-  //         .sort((storyA, storyB) => storyA.position - storyB.position)
-  //         .map((story, index) => {
-  //           if (index < 2) {
-  //             return {
-  //               ...story,
-  //               status: 'waiting'
-  //             };
-  //           }
-  //           return story;
-  //         });
-  //     }
-
-  //     // console.log('loadStoriesObj', loadStoriesObj);
-  //   }
-  // }, [initLoadStories]);
 
   useEffect(() => {
     if (startGroupId) {

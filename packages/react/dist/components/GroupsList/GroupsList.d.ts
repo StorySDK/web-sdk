@@ -1,5 +1,5 @@
 import React from 'react';
-import { Group, LoadStory } from '../../types';
+import { Group } from '../../types';
 import 'simplebar-react/dist/simplebar.min.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
@@ -9,9 +9,6 @@ export interface GroupsListProps {
     groupImageHeight?: number;
     groupTitleSize?: number;
     groupsClassName?: string;
-    initLoadStories: {
-        [key: string]: LoadStory[];
-    };
     storyWidth?: number;
     storyHeight?: number;
     isStatusBarActive?: boolean;

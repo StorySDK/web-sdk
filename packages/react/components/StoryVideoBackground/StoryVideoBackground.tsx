@@ -10,6 +10,7 @@ const b = block('StorySdkVideoBackground');
 type PropTypes = {
   src: string;
   isLoading?: boolean;
+  isMuted?: boolean;
   autoplay?: boolean;
   isFilled?: boolean;
   isPlaying?: boolean;
@@ -23,8 +24,9 @@ export const StoryVideoBackground = ({
   autoplay = false,
   isLoading,
   isPlaying,
-  handleVideoBackgroundPlaying,
+  isMuted,
   isFilled,
+  handleVideoBackgroundPlaying,
   onLoadStart,
   onLoadEnd
 }: PropTypes) => {
@@ -37,6 +39,12 @@ export const StoryVideoBackground = ({
   const handlePause = () => {
     handleVideoBackgroundPlaying?.(false);
   };
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = !!isMuted;
+    }
+  }, [isMuted]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -53,7 +61,7 @@ export const StoryVideoBackground = ({
         className={b('video', { loading: isLoading, cover: isFilled })}
         disablePictureInPicture
         loop
-        muted={autoplay}
+        muted={isMuted ?? autoplay}
         playsInline={autoplay}
         preload="metadata"
         ref={videoRef}

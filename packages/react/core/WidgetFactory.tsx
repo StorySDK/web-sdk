@@ -41,6 +41,7 @@ interface WidgetFactoryProps {
   currentStorySize: StoryCurrentSize;
   jsConfetti?: any;
   isDisplaying?: boolean;
+  isVideoMuted?: boolean;
   isAutoplayVideos?: boolean;
   widget: WidgetObjectType;
   handleGoToStory?: (storyId: string) => void;
@@ -95,6 +96,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
             handleMediaLoading={this.props.handleMediaLoading}
             handleMediaPlaying={this.props.handleVideoPlaying}
             isDisplaying={this.props.isDisplaying}
+            isMuted={this.props.isVideoMuted}
             params={this.props.widget.content.params}
           />
         );

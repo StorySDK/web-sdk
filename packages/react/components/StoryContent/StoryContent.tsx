@@ -45,6 +45,7 @@ interface StoryContentProps {
   jsConfetti?: any;
   isLarge?: boolean;
   isMediaLoading?: boolean;
+  isVideoMuted?: boolean;
   handleLoadStory?: (storyId: string) => void;
   handleGoToStory?: (storyId: string) => void;
   handleMediaLoading: (isLoading: boolean) => void;
@@ -69,6 +70,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     contentWidth,
     contentHeight,
     isMediaLoading,
+    isVideoMuted,
     handleMediaLoading,
     handleLoadStory,
     handleVideoPlaying,
@@ -114,7 +116,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
 
   useEffect(() => {
     if (isAutoplayVideos) {
-      setIsVideoBackgroundPlaying(true);
+      setIsVideoBackgroundPlaying(isAutoplayVideos);
     }
   }, [isAutoplayVideos]);
 
@@ -197,6 +199,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
             handleVideoBackgroundPlaying={setIsVideoBackgroundPlaying}
             isFilled={!isUnfilledBackground}
             isLoading={isMediaLoading}
+            isMuted={isVideoMuted}
             isPlaying={isVideoBackgroundPlaying && isDisplaying}
             src={story.background.value}
             onLoadEnd={() => {
@@ -253,6 +256,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
                 handleVideoPlaying={handleVideoPlaying}
                 isAutoplayVideos={isAutoplayVideos}
                 isDisplaying={isDisplaying}
+                isVideoMuted={isVideoMuted}
                 jsConfetti={jsConfetti}
                 storyId={story.id}
                 widget={widget}

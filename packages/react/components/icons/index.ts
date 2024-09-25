@@ -9,3 +9,5 @@ export * from './IconArrowSend';
 export * from './IconLoader';
 export * from './IconClose';
 export * from './IconPlay';
+export * from './IconMute';
+export * from './IconUnmute';

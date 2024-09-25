@@ -19,6 +19,7 @@ interface StoryContentProps {
     jsConfetti?: any;
     isLarge?: boolean;
     isMediaLoading?: boolean;
+    isVideoMuted?: boolean;
     handleLoadStory?: (storyId: string) => void;
     handleGoToStory?: (storyId: string) => void;
     handleMediaLoading: (isLoading: boolean) => void;
