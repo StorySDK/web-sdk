@@ -5,7 +5,7 @@ import { LongPressTouchHandlers } from 'use-long-press';
 import { GroupType, StoryType, WidgetsTypes } from '@types';
 import JSConfetti from 'js-confetti';
 import { SwipeOutput, useAdaptiveValue } from '@hooks';
-import { PADDING_SIZE, STORY_SIZE_LARGE, StoryContent } from '../../..';
+import { PADDING_SIZE, StoryContent } from '../../..';
 import { StatusBar } from '../StatusBar';
 import '../../StoryModal.scss';
 
@@ -99,7 +99,10 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     swipeHandlers
   } = props;
 
-  const defaultRatioIndex = useMemo(() => STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height, []);
+  const defaultRatioIndex = useMemo(
+    () => currentStorySize.width / currentStorySize.height,
+    [currentStorySize]
+  );
 
   const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
   const largeIndicatorTop = useAdaptiveValue(INIT_TOP_INDICATOR);

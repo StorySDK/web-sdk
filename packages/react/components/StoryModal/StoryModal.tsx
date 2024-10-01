@@ -240,7 +240,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       return STORY_SIZE_LARGE;
     }
 
-    return STORY_SIZE_LARGE;
+    return STORY_SIZE_DEFAULT;
   }, [storyWidth, storyHeight, isMobile, currentGroup?.type]);
 
   const isShowMockupCurrent =
@@ -255,7 +255,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         '_blank',
         `popup,left=${leftPosition},top=${isMobile ? 0 : 50},width=${
           isMobile ? width : 1000
-        },height=${780}`
+        },height=${640}`
       );
 
       onClose();
@@ -596,7 +596,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const handleAnimationEnd = useCallback(() => {
-    handleNext();
+    // handleNext();
   }, [handleNext]);
 
   const handlePrevGroup = useCallback(() => {
@@ -828,7 +828,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </button>
           )}
 
-          {!isLoading && !isMobile && (
+          {!isLoading && (
             <button className={b('arrowButton', { right: true })} onClick={handleNext}>
               <RightArrowIcon />
             </button>
