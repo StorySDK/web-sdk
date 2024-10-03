@@ -296,9 +296,9 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                         }}
                       >
                         {isVideoMuted ? (
-                          <IconUnmute className={b('muteBtnIcon').toString()} />
-                        ) : (
                           <IconMute className={b('muteBtnIcon').toString()} />
+                        ) : (
+                          <IconUnmute className={b('muteBtnIcon').toString()} />
                         )}
                       </button>
                     )}
