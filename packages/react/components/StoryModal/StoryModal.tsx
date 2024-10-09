@@ -8,7 +8,7 @@ import { useLongPress } from 'use-long-press';
 import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
 import { StoryType, Group, GroupType, StoryContenxt, ScoreType } from '../../types';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
-import smallIphoneMockup from '../../assets/images/iphone-mockup-small.svg';
+import smallIphoneMockup from '../../assets/images/iphone-mockup-small-1.svg';
 import { StorySwiperContent } from './_components';
 
 import './StoryModal.scss';
@@ -198,8 +198,36 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [isBackgroundVideoPlaying, setIsBackgroundVideoPlaying] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
   const [isAutoplayVideos, setIsAutoplayVideos] = useState<boolean>(false);
-
   const [loadedStoriesIds, setLoadedStoriesIds] = useState<{ [key: string]: boolean }>({});
+  const [bodyContainerWidth, setBodyContainerWidth] = useState(0);
+
+  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
+
+  const isShowMockupCurrent = useMemo(
+    () => (currentGroup?.type === GroupType.ONBOARDING && !isMobile ? true : isShowMockup),
+    [currentGroup?.type, isMobile, isShowMockup]
+  );
+
+  const mockupRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (mockupRef.current && isShowMockupCurrent) {
+      const observer = new ResizeObserver(() => {
+        if (mockupRef.current?.offsetWidth) {
+          setBodyContainerWidth(mockupRef.current.offsetWidth);
+        } else {
+          setBodyContainerWidth(0);
+        }
+      });
+
+      observer.observe(mockupRef.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+    return undefined;
+  }, [mockupRef, isShowMockupCurrent]);
 
   const appLink = useMemo(() => {
     if (devMode === 'staging') {
@@ -212,8 +240,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     return 'https://app.storysdk.com';
   }, [devMode]);
-
-  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
 
   useEffect(() => {
     if (isVideoPlaying || isBackgroundVideoPlaying) {
@@ -242,9 +268,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     return STORY_SIZE_DEFAULT;
   }, [storyWidth, storyHeight, isMobile, currentGroup?.type]);
-
-  const isShowMockupCurrent =
-    currentGroup?.type === GroupType.ONBOARDING && !isMobile ? true : isShowMockup;
 
   useEffect(() => {
     if (openInExternalModal && isShowing) {
@@ -297,9 +320,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [currentGroup, stories]);
 
   const currentGroupType = currentGroup?.type || GroupType.GROUP;
-  const isBackroundFilled =
-    activeStoriesWithResult[currentStory]?.background?.isFilled &&
-    currentGroupType === GroupType.GROUP;
+  const isBackroundFilled = true;
   const initBodyOverflow = useMemo(() => document.body.style.overflow, []);
   const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
   const smallHeightGap = useAdaptiveValue(INIT_SMALL_PADDING);
@@ -596,7 +617,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   ]);
 
   const handleAnimationEnd = useCallback(() => {
-    // handleNext();
+    handleNext();
   }, [handleNext]);
 
   const handlePrevGroup = useCallback(() => {
@@ -840,7 +861,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               swiped: isSwiped && isMobile
             })}
             style={{
-              borderRadius: containerBorderRadius
+              borderRadius: containerBorderRadius,
+              width: !isMobile && bodyContainerWidth ? bodyContainerWidth : '100%'
             }}
           >
             <StorySwiperContent
@@ -884,7 +906,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             />
 
             {isShowMockupCurrent && !isMobile && (
-              <img className={b('mockup')} src={isLarge ? largeIphoneMockup : smallIphoneMockup} />
+              <img
+                className={b('mockup')}
+                ref={mockupRef}
+                src={isLarge ? largeIphoneMockup : smallIphoneMockup}
+              />
             )}
           </div>
         </div>

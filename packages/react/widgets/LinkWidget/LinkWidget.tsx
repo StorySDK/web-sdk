@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
-import { BackgroundColorType, LinkWidgetParamsType, WidgetComponent } from '@types';
+import { LinkWidgetParamsType, WidgetComponent } from '@types';
 import { MaterialIcon } from '@components';
 import './LinkWidget.scss';
 

@@ -112,7 +112,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   const controlGapLarge = useAdaptiveValue(INIT_CONTROL_GAP_LARGE);
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
   const smallBorderRadius = useAdaptiveValue(INIT_SMALL_RADIUS);
-  const [isVideoMuted, setIsVideoMuted] = useState<boolean>(!isAutoplayVideos ?? false);
+  const [isVideoMuted, setIsVideoMuted] = useState<boolean>(!isAutoplayVideos);
 
   const controlTop = isLarge ? controlTopLarge : controlTopSmall;
   const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
@@ -124,7 +124,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     }
 
     return defaultRatioIndex;
-  }, [storyHeight, storyWidth]);
+  }, [storyHeight, storyWidth, defaultRatioIndex]);
 
   const currentPaddingSize = isShowMockupCurrent ? PADDING_SIZE + heightGap : PADDING_SIZE;
   const isShowStatusBarInStory = isShowMockupCurrent && !isMobile && isLarge && isStatusBarActive;
@@ -206,9 +206,6 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     isLoaded={props.loadedStoriesIds[story.id]}
                     isMediaLoading={isMediaLoading}
                     isMobile={isMobile}
-                    isUnfilledBackground={
-                      currentGroupType === GroupType.GROUP && !story.background.isFilled
-                    }
                     isVideoMuted={isVideoMuted}
                     jsConfetti={jsConfetti}
                     noTopBackgroundShadow={noTopBackgroundShadow}
