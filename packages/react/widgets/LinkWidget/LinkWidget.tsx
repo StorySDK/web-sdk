@@ -73,7 +73,8 @@ export const LinkWidget: WidgetComponent<{
       <div
         className={b('background')}
         style={{
-          background: renderBackgroundStyles(backgroundColor)
+          background: renderBackgroundStyles(backgroundColor),
+          display: 'block'
         }}
       />
     </div>

@@ -8,7 +8,7 @@ A new level of engagement with your users with a familiar format. StorySDK helps
 
 ```
 import { Story } from "@storysdk/core"; 
-import "@storysdk/core/dist/bundle.umd.css";
+import "@storysdk/core/dist/bundle.css";
 
 const ref = useRef(null);
 
@@ -24,7 +24,7 @@ useEffect(() => {
 
 ```
 import { Story } from "@storysdk/core"; 
-import "@storysdk/core/dist/bundle.umd.css";
+import "@storysdk/core/dist/bundle.css";
 
 const story = new Story("<APP_TOKEN_HERE>");
 
@@ -36,8 +36,8 @@ story.renderGroups(element);
 
 ```
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.umd.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.umd.css">
+  <script src="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.css">
 </head>
 <body>
   <div data-storysdk-token="<APP_TOKEN_HERE>" style="min-height: 100px;"></div>
