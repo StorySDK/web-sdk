@@ -5,4 +5,6 @@ export declare const ClickMeWidget: WidgetComponent<{
     isReadOnly?: boolean;
     onClick?(): void;
     onGoToStory?(storyId: string): void;
+    handleMediaPlaying?(isPlaying: boolean): void;
+    handleVideoBackgroundPlaying?(isPlaying: boolean): void;
 }>;

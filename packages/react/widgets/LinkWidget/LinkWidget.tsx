@@ -11,6 +11,8 @@ const DELAY_MS = 200;
 export const LinkWidget: WidgetComponent<{
   params: LinkWidgetParamsType;
   isReadOnly?: boolean;
+  handleMediaPlaying?: (isPlaying: boolean) => void;
+  handleVideoBackgroundPlaying?: (isPlaying: boolean) => void;
 }> = React.memo((props) => {
   const { fontFamily, fontParams, fontSize, text, color, opacity, backgroundColor, url } =
     props.params;
@@ -31,10 +33,13 @@ export const LinkWidget: WidgetComponent<{
         const tab = window?.open(url, '_blank');
         if (tab) {
           tab.focus();
+
+          props.handleMediaPlaying?.(false);
+          props.handleVideoBackgroundPlaying?.(false);
         }
       }, DELAY_MS);
     }
-  }, [url]);
+  }, [props, url]);
 
   return (
     <div

@@ -46,6 +46,7 @@ interface WidgetFactoryProps {
   widget: WidgetObjectType;
   handleGoToStory?: (storyId: string) => void;
   handleVideoPlaying?: (isPlaying: boolean) => void;
+  handleVideoBackgroundPlaying?: (isPlaying: boolean) => void;
   handleMediaLoading?: (isLoading: boolean) => void;
 }
 
@@ -73,13 +74,21 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.CLICK_ME:
         return (
           <ClickMeWidget
+            handleMediaPlaying={this.props.handleVideoPlaying}
+            handleVideoBackgroundPlaying={this.props.handleVideoBackgroundPlaying}
             params={this.props.widget.content.params}
             onClick={this.props.widget.action}
             onGoToStory={this.props.handleGoToStory}
           />
         );
       case WidgetsTypes.LINK:
-        return <LinkWidget params={this.props.widget.content.params} />;
+        return (
+          <LinkWidget
+            handleMediaPlaying={this.props.handleVideoPlaying}
+            handleVideoBackgroundPlaying={this.props.handleVideoBackgroundPlaying}
+            params={this.props.widget.content.params}
+          />
+        );
       case WidgetsTypes.ELLIPSE:
         return <EllipseWidget params={this.props.widget.content.params} />;
       case WidgetsTypes.IMAGE:
@@ -135,6 +144,8 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.SWIPE_UP:
         return (
           <SwipeUpWidget
+            handleMediaPlaying={this.props.handleVideoPlaying}
+            handleVideoBackgroundPlaying={this.props.handleVideoBackgroundPlaying}
             params={this.props.widget.content.params}
             onSwipe={this.props.widget.action}
           />

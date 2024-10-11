@@ -13,6 +13,8 @@ export const ClickMeWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onClick?(): void;
   onGoToStory?(storyId: string): void;
+  handleMediaPlaying?(isPlaying: boolean): void;
+  handleVideoBackgroundPlaying?(isPlaying: boolean): void;
 }> = React.memo((props) => {
   const {
     fontFamily,
@@ -54,6 +56,9 @@ export const ClickMeWidget: WidgetComponent<{
         const tab = window?.open(url, '_blank');
         if (tab) {
           tab.focus();
+
+          props.handleMediaPlaying?.(false);
+          props.handleVideoBackgroundPlaying?.(false);
         }
       }, DELAY_MS);
     } else if (actionType === 'story' && onGoToStory && storyId) {
@@ -61,7 +66,7 @@ export const ClickMeWidget: WidgetComponent<{
         onGoToStory(storyId);
       }, DELAY_MS);
     }
-  }, [actionType, onClick, onGoToStory, storyId, url]);
+  }, [actionType, onClick, onGoToStory, props, storyId, url]);
 
   return (
     <div
