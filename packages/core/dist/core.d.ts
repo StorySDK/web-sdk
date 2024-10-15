@@ -10,6 +10,7 @@ export declare class Story {
         storyWidth?: number;
         storyHeight?: number;
         isShowMockup?: boolean;
+        isShowLabel?: boolean;
         isStatusBarActive?: boolean;
         autoplay?: boolean;
         groupId?: string;
@@ -27,6 +28,7 @@ export declare class Story {
         storyWidth?: number;
         storyHeight?: number;
         isShowMockup?: boolean;
+        isShowLabel?: boolean;
         isStatusBarActive?: boolean;
         autoplay?: boolean;
         groupId?: string;

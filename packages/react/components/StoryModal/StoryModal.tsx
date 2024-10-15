@@ -9,6 +9,7 @@ import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
 import { StoryType, Group, GroupType, StoryContenxt, ScoreType } from '../../types';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
 import smallIphoneMockup from '../../assets/images/iphone-mockup-small-1.svg';
+import storySdkLogo from '../../assets/images/storysdk-logo.svg';
 import { StorySwiperContent } from './_components';
 
 import './StoryModal.scss';
@@ -22,6 +23,7 @@ interface StoryModalProps {
   forbidClose?: boolean;
   isProgressHidden?: boolean;
   isShowMockup?: boolean;
+  isShowLabel?: boolean;
   storyWidth?: number;
   storyHeight?: number;
   isLastGroup: boolean;
@@ -160,6 +162,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isFirstGroup,
     startStoryId,
     isShowMockup,
+    isShowLabel,
     isForceCloseAvailable,
     isStatusBarActive,
     currentGroup,
@@ -250,6 +253,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   useEffect(() => {
     setIsAutoplayVideos(currentGroup?.settings?.autoplayVideos ?? false);
   }, [currentGroup]);
+
+  useEffect(() => {
+    if (isAutoplayVideos) {
+      setIsBackgroundVideoPlaying(true);
+      setIsVideoPlaying(true);
+    }
+  }, [isAutoplayVideos]);
 
   const currentStorySize: StoryCurrentSize = useMemo(() => {
     if (storyWidth && storyHeight) {
@@ -884,6 +894,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               height={height}
               heightGap={heightGap}
               isAutoplayVideos={isAutoplayVideos}
+              isBackgroundVideoPlaying={isBackgroundVideoPlaying}
               isBackroundFilled={isBackroundFilled}
               isForceCloseAvailable={isForceCloseAvailable}
               isGroupWithFilledBackground={isGroupWithFilledBackground}
@@ -895,7 +906,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               isProgressHidden={isProgressHidden}
               isShowMockupCurrent={isShowMockupCurrent}
               isStatusBarActive={isStatusBarActive}
-              isVideoPlaying={isVideoPlaying || isBackgroundVideoPlaying}
+              isVideoPlaying={isVideoPlaying}
               jsConfetti={jsConfetti}
               loadedStoriesIds={loadedStoriesIds}
               playStatus={playStatus}
@@ -914,6 +925,16 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             )}
           </div>
         </div>
+
+        {isShowLabel && !isMobile && (
+          <a className={b('label')} href="https://storysdk.com/">
+            <img alt="StorySDK" className={b('labelLogo')} src={storySdkLogo} />
+            <div className={b('labelTextContainer')}>
+              <span className={b('labelTitle')}>StorySDK</span>
+              <span className={b('labelText')}>create own widget</span>
+            </div>
+          </a>
+        )}
 
         {isForceCloseAvailable && (
           <button className={b('close', { general: true })} onClick={handleClose}>

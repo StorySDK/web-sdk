@@ -23,6 +23,7 @@ export interface GroupsListProps {
   isStatusBarActive?: boolean;
   groupClassName?: string;
   isShowMockup?: boolean;
+  isShowLabel?: boolean;
   isLoading?: boolean;
   autoplay?: boolean;
   startStoryId?: string;
@@ -52,6 +53,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groupImageHeight,
     groupTitleSize,
     isShowMockup,
+    isShowLabel,
     isStatusBarActive,
     autoplay,
     startStoryId,
@@ -165,6 +167,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           isFirstGroup={currentGroup === 0}
           isLastGroup={currentGroup === groups?.length - 1}
           isLoading={isLoading}
+          isShowLabel={isShowLabel}
           isShowMockup={isShowMockup}
           isShowing={modalShow}
           isStatusBarActive={isStatusBarActive}

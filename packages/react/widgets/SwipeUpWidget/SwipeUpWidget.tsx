@@ -10,11 +10,10 @@ export const SwipeUpWidget: WidgetComponent<{
   params: SwipeUpWidgetParamsType;
   isReadOnly?: boolean;
   onSwipe?(): void;
-  handleMediaPlaying?(isPlaying: boolean): void;
-  handleVideoBackgroundPlaying?(isPlaying: boolean): void;
+  handleMuteVideo?(isMuted: boolean): void;
 }> = React.memo((props) => {
   const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
-  const { isReadOnly, onSwipe, handleMediaPlaying, handleVideoBackgroundPlaying } = props;
+  const { isReadOnly, onSwipe, handleMuteVideo } = props;
 
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
@@ -37,14 +36,13 @@ export const SwipeUpWidget: WidgetComponent<{
       if (tab) {
         tab.focus();
 
-        handleMediaPlaying?.(false);
-        handleVideoBackgroundPlaying?.(false);
+        handleMuteVideo?.(true);
 
         setTouchStart(0);
         setTouchEnd(0);
       }
     }
-  }, [onSwipe, handleMediaPlaying, handleVideoBackgroundPlaying, touchEnd, touchStart, url]);
+  }, [onSwipe, handleMuteVideo, touchEnd, touchStart, url]);
 
   const handleClick = useCallback(() => {
     if (onSwipe) {
@@ -54,10 +52,10 @@ export const SwipeUpWidget: WidgetComponent<{
     const tab = window?.open(url, '_blank');
     if (tab) {
       tab.focus();
-      handleMediaPlaying?.(false);
-      handleVideoBackgroundPlaying?.(false);
+
+      handleMuteVideo?.(true);
     }
-  }, [handleMediaPlaying, handleVideoBackgroundPlaying, onSwipe, url]);
+  }, [handleMuteVideo, onSwipe, url]);
 
   return (
     <div

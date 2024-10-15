@@ -10,14 +10,14 @@ const b = block('VideoWidget');
 
 export const VideoWidget: WidgetComponent<{
   params: VideoWidgetParamsType;
-  autoplay?: boolean;
+  isVideoPlaying?: boolean;
   isMuted?: boolean;
+  isAutoplay?: boolean;
   isDisplaying?: boolean;
   handleMediaPlaying?: (isPlaying: boolean) => void;
   handleMediaLoading?: (isLoading: boolean) => void;
 }> = React.memo((props) => {
   const { videoUrl, videoPreviewUrl, stopAutoplay, widgetOpacity, borderRadius } = props.params;
-  const isAutoplay = props.autoplay ?? true;
 
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
@@ -26,50 +26,46 @@ export const VideoWidget: WidgetComponent<{
     borderRadius: `${borderRadius}px`
   };
 
-  const [isPlaying, setIsPlaying] = React.useState(isAutoplay);
   const [isVideoLoading, setIsVideoLoading] = React.useState(true);
-
-  useEffect(() => {
-    props.handleMediaPlaying?.(isPlaying);
-  }, [isPlaying, props]);
 
   useEffect(() => {
     props.handleMediaLoading?.(isVideoLoading);
   }, [isVideoLoading, props]);
 
-  useEffect(() => {
-    setIsPlaying(isAutoplay);
-  }, [isAutoplay]);
-
   const togglePlay = () => {
-    setIsPlaying((prev) => !prev);
+    props.handleMediaPlaying?.(!props.isVideoPlaying);
   };
 
   const handlePlay = () => {
-    setIsPlaying(true);
+    props.handleMediaPlaying?.(true);
   };
 
   const handlePause = () => {
-    setIsPlaying(false);
+    props.handleMediaPlaying?.(false);
   };
 
   useEffect(() => {
-    if (isPlaying && props.isDisplaying) {
+    if (props.isVideoPlaying && props.isDisplaying) {
       videoRef.current?.play();
     } else {
       videoRef.current?.pause();
     }
-  }, [isPlaying, props.isDisplaying]);
+  }, [props.isVideoPlaying, props.isDisplaying]);
 
   return (
-    <div className={b()} role="button" tabIndex={0} onClick={!isAutoplay ? togglePlay : undefined}>
+    <div
+      className={b()}
+      role="button"
+      tabIndex={0}
+      onClick={!props.isAutoplay ? togglePlay : undefined}
+    >
       <video
-        autoPlay={!stopAutoplay && isAutoplay}
+        autoPlay={!stopAutoplay && props.isAutoplay}
         className={b('video')}
         disablePictureInPicture
         loop
-        muted={props.isMuted ?? isAutoplay}
-        playsInline={isAutoplay}
+        muted={props.isMuted ?? props.isAutoplay}
+        playsInline={props.isAutoplay}
         preload="metadata"
         ref={videoRef}
         src={videoPreviewUrl ?? videoUrl}
@@ -83,7 +79,7 @@ export const VideoWidget: WidgetComponent<{
         onPause={handlePause}
         onPlay={handlePlay}
       />
-      {!isPlaying && !isAutoplay && !isVideoLoading && (
+      {!props.isVideoPlaying && !props.isAutoplay && !isVideoLoading && (
         <button className={b('playBtn')}>
           <IconPlay />
         </button>

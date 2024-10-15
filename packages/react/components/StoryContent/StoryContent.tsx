@@ -35,6 +35,8 @@ interface StoryContentProps {
   isDisplaying?: boolean;
   isAutoplayVideos?: boolean;
   isLoaded?: boolean;
+  isBackgroundVideoPlaying?: boolean;
+  isVideoPlaying?: boolean;
   contentWidth: number | string;
   contentHeight: number | string;
   currentStorySize: StoryCurrentSize;
@@ -46,6 +48,7 @@ interface StoryContentProps {
   isLarge?: boolean;
   isMediaLoading?: boolean;
   isVideoMuted?: boolean;
+  handleMuteVideo?: (isMuted: boolean) => void;
   handleLoadStory?: (storyId: string) => void;
   handleGoToStory?: (storyId: string) => void;
   handleMediaLoading: (isLoading: boolean) => void;
@@ -62,6 +65,8 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     isMobile,
     isDisplaying,
     isLoaded,
+    isBackgroundVideoPlaying,
+    isVideoPlaying,
     noTopBackgroundShadow,
     currentStorySize,
     isLarge,
@@ -71,6 +76,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     contentHeight,
     isMediaLoading,
     isVideoMuted,
+    handleMuteVideo,
     handleMediaLoading,
     handleLoadStory,
     handleVideoPlaying,
@@ -85,10 +91,6 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     [desktopContainerWidth, currentStorySize.width]
   );
 
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [isVideoBackgroundPlaying, setIsVideoBackgroundPlaying] = useState(
-    isAutoplayVideos ?? false
-  );
   const [resourcesToLoad, setResourcesToLoad] = useState(1);
 
   useEffect(() => {
@@ -114,22 +116,8 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     setResourcesToLoad(resources);
   }, [story.storyData, story.background, isDisplaying]);
 
-  useEffect(() => {
-    if (isAutoplayVideos) {
-      setIsVideoBackgroundPlaying(isAutoplayVideos);
-    }
-  }, [isAutoplayVideos]);
-
-  useEffect(() => {
-    handleVideoPlaying(isVideoPlaying);
-  }, [isVideoPlaying]);
-
-  useEffect(() => {
-    handleVideoBackgroundPlaying(isVideoBackgroundPlaying);
-  }, [isVideoBackgroundPlaying]);
-
   const togglePlay = () => {
-    setIsVideoPlaying((prev) => !prev);
+    handleVideoPlaying(!isVideoPlaying);
   };
 
   const handleResourcesLoading = useCallback((isLoading: boolean) => {
@@ -196,11 +184,11 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         {story.background.type === 'video' && (
           <StoryVideoBackground
             autoplay={isAutoplayVideos}
-            handleVideoBackgroundPlaying={setIsVideoBackgroundPlaying}
+            handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
             isFilled={!isUnfilledBackground}
             isLoading={isMediaLoading}
             isMuted={isVideoMuted}
-            isPlaying={isVideoBackgroundPlaying && isDisplaying}
+            isPlaying={isBackgroundVideoPlaying && isDisplaying}
             src={story.background.value}
             onLoadEnd={() => {
               handleResourcesLoading(false);
@@ -253,11 +241,13 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
                 currentStorySize={currentStorySize}
                 handleGoToStory={handleGoToStory}
                 handleMediaLoading={handleResourcesLoading}
+                handleMuteVideo={handleMuteVideo}
                 handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
                 handleVideoPlaying={handleVideoPlaying}
                 isAutoplayVideos={isAutoplayVideos}
                 isDisplaying={isDisplaying}
                 isVideoMuted={isVideoMuted}
+                isVideoPlaying={isVideoPlaying}
                 jsConfetti={jsConfetti}
                 storyId={story.id}
                 widget={widget}

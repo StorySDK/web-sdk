@@ -7,11 +7,12 @@ interface WidgetFactoryProps {
     jsConfetti?: any;
     isDisplaying?: boolean;
     isVideoMuted?: boolean;
+    isVideoPlaying?: boolean;
     isAutoplayVideos?: boolean;
     widget: WidgetObjectType;
+    handleMuteVideo?: (isMuted: boolean) => void;
     handleGoToStory?: (storyId: string) => void;
     handleVideoPlaying?: (isPlaying: boolean) => void;
-    handleVideoBackgroundPlaying?: (isPlaying: boolean) => void;
     handleMediaLoading?: (isLoading: boolean) => void;
 }
 export declare class WidgetFactory extends React.Component<WidgetFactoryProps> {

@@ -427,4 +427,35 @@
     width: 20px;
     height: 20px;
   }
+
+  &__label {
+    display: flex;
+    position: absolute;
+    left: 40px;
+    bottom: 40px;
+    background-color: #05051D;
+    border-radius: 8px;
+    padding: 14px;
+    gap: 14px;
+    z-index: 2;
+    text-decoration: none;
+  }
+
+  &__labelTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  &__labelText {
+    font-size: 12px;
+    font-weight: 400;
+    color: #FFFFFF;
+    opacity: 0.7;
+  }
+
+  &__labelTextContainer {
+    display: flex;
+    flex-direction: column;
+  }
 }

@@ -9,6 +9,8 @@ interface StoryContentProps {
     isDisplaying?: boolean;
     isAutoplayVideos?: boolean;
     isLoaded?: boolean;
+    isBackgroundVideoPlaying?: boolean;
+    isVideoPlaying?: boolean;
     contentWidth: number | string;
     contentHeight: number | string;
     currentStorySize: StoryCurrentSize;
@@ -20,6 +22,7 @@ interface StoryContentProps {
     isLarge?: boolean;
     isMediaLoading?: boolean;
     isVideoMuted?: boolean;
+    handleMuteVideo?: (isMuted: boolean) => void;
     handleLoadStory?: (storyId: string) => void;
     handleGoToStory?: (storyId: string) => void;
     handleMediaLoading: (isLoading: boolean) => void;

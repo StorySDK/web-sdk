@@ -30,6 +30,7 @@ interface StorySwiperContentProps {
     storyHeight?: number;
     isForceCloseAvailable?: boolean;
     isVideoPlaying?: boolean;
+    isBackgroundVideoPlaying?: boolean;
     playStatus: string;
     jsConfetti: React.MutableRefObject<JSConfetti>;
     loadedStoriesIds: {

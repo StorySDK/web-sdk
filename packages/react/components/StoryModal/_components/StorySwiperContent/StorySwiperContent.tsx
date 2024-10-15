@@ -36,6 +36,7 @@ interface StorySwiperContentProps {
   storyHeight?: number;
   isForceCloseAvailable?: boolean;
   isVideoPlaying?: boolean;
+  isBackgroundVideoPlaying?: boolean;
   playStatus: string;
   jsConfetti: React.MutableRefObject<JSConfetti>;
   loadedStoriesIds: { [key: string]: boolean };
@@ -73,6 +74,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     isOpened,
     isMediaLoading,
     isVideoPlaying,
+    isBackgroundVideoPlaying,
     isLoading,
     activeStoriesWithResult,
     height,
@@ -153,8 +155,8 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   }, [isMobile, isShowMockupCurrent, heightGap]);
 
   useEffect(() => {
-    setIsVideoMuted(!isVideoPlaying);
-  }, [isVideoPlaying]);
+    setIsVideoMuted(!isVideoPlaying || !isBackgroundVideoPlaying);
+  }, [isVideoPlaying, isBackgroundVideoPlaying]);
 
   const isVideoExists = useMemo(
     () =>
@@ -198,15 +200,18 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     handleGoToStory={handleGoToStory}
                     handleLoadStory={handleLoadStory}
                     handleMediaLoading={handleMediaLoading}
+                    handleMuteVideo={setIsVideoMuted}
                     handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
                     handleVideoPlaying={handleVideoPlaying}
                     isAutoplayVideos={isAutoplayVideos}
+                    isBackgroundVideoPlaying={isBackgroundVideoPlaying}
                     isDisplaying={index === currentStory && isOpened}
                     isLarge={isLarge}
                     isLoaded={props.loadedStoriesIds[story.id]}
                     isMediaLoading={isMediaLoading}
                     isMobile={isMobile}
                     isVideoMuted={isVideoMuted}
+                    isVideoPlaying={isVideoPlaying}
                     jsConfetti={jsConfetti}
                     noTopBackgroundShadow={noTopBackgroundShadow}
                     noTopShadow={noTopShadow}

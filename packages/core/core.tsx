@@ -17,6 +17,7 @@ export class Story {
     storyWidth?: number;
     storyHeight?: number;
     isShowMockup?: boolean;
+    isShowLabel?: boolean;
     isStatusBarActive?: boolean;
     autoplay?: boolean;
     groupId?: string;
@@ -37,6 +38,7 @@ export class Story {
       storyWidth?: number;
       storyHeight?: number;
       isShowMockup?: boolean;
+      isShowLabel?: boolean;
       isStatusBarActive?: boolean;
       autoplay?: boolean;
       groupId?: string;
@@ -65,6 +67,7 @@ export class Story {
       this.options.startStoryId = options?.startStoryId;
       this.options.openInExternalModal = options?.openInExternalModal;
       this.options.devMode = options?.devMode;
+      this.options.isShowLabel = options?.isShowLabel;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -122,6 +125,7 @@ export const init = () => {
         const storyWidth = container.getAttribute('data-storysdk-story-width');
         const storyHeight = container.getAttribute('data-storysdk-story-height');
         const isShowMockup = container.getAttribute('data-storysdk-is-show-mockup');
+        const isShowLabel = container.getAttribute('data-storysdk-is-show-label');
         const isStatusBarActive = container.getAttribute('data-storysdk-is-status-bar-active');
         const devMode = container.getAttribute('data-storysdk-dev-mode');
         const openInExternalModal = container.getAttribute('data-storysdk-open-in-external-modal');
@@ -140,6 +144,7 @@ export const init = () => {
           storyWidth: storyWidth ? parseInt(storyWidth, 10) : undefined,
           storyHeight: storyHeight ? parseInt(storyHeight, 10) : undefined,
           isShowMockup: isShowMockup === 'true',
+          isShowLabel: isShowLabel === 'true',
           isStatusBarActive: isStatusBarActive === 'true',
           openInExternalModal: openInExternalModal === 'true'
         });

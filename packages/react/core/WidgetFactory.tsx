@@ -42,11 +42,12 @@ interface WidgetFactoryProps {
   jsConfetti?: any;
   isDisplaying?: boolean;
   isVideoMuted?: boolean;
+  isVideoPlaying?: boolean;
   isAutoplayVideos?: boolean;
   widget: WidgetObjectType;
+  handleMuteVideo?: (isMuted: boolean) => void;
   handleGoToStory?: (storyId: string) => void;
   handleVideoPlaying?: (isPlaying: boolean) => void;
-  handleVideoBackgroundPlaying?: (isPlaying: boolean) => void;
   handleMediaLoading?: (isLoading: boolean) => void;
 }
 
@@ -74,8 +75,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.CLICK_ME:
         return (
           <ClickMeWidget
-            handleMediaPlaying={this.props.handleVideoPlaying}
-            handleVideoBackgroundPlaying={this.props.handleVideoBackgroundPlaying}
+            handleMuteVideo={this.props.handleMuteVideo}
             params={this.props.widget.content.params}
             onClick={this.props.widget.action}
             onGoToStory={this.props.handleGoToStory}
@@ -84,8 +84,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.LINK:
         return (
           <LinkWidget
-            handleMediaPlaying={this.props.handleVideoPlaying}
-            handleVideoBackgroundPlaying={this.props.handleVideoBackgroundPlaying}
+            handleMuteVideo={this.props.handleMuteVideo}
             params={this.props.widget.content.params}
           />
         );
@@ -101,11 +100,12 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.VIDEO:
         return (
           <VideoWidget
-            autoplay={this.props.isAutoplayVideos}
             handleMediaLoading={this.props.handleMediaLoading}
             handleMediaPlaying={this.props.handleVideoPlaying}
+            isAutoplay={this.props.isAutoplayVideos}
             isDisplaying={this.props.isDisplaying}
             isMuted={this.props.isVideoMuted}
+            isVideoPlaying={this.props.isVideoPlaying}
             params={this.props.widget.content.params}
           />
         );
@@ -144,8 +144,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.SWIPE_UP:
         return (
           <SwipeUpWidget
-            handleMediaPlaying={this.props.handleVideoPlaying}
-            handleVideoBackgroundPlaying={this.props.handleVideoBackgroundPlaying}
+            handleMuteVideo={this.props.handleMuteVideo}
             params={this.props.widget.content.params}
             onSwipe={this.props.widget.action}
           />
