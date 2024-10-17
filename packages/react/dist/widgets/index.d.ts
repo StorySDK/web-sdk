@@ -82,8 +82,7 @@ declare const widgets: {
         params: import("@types").SwipeUpWidgetParamsType;
         isReadOnly?: boolean | undefined;
         onSwipe?(): void;
-        handleMediaPlaying?(isPlaying: boolean): void;
-        handleVideoBackgroundPlaying?(isPlaying: boolean): void;
+        handleMuteVideo?(isMuted: boolean): void;
     }>;
     talk_about: import("@types").WidgetComponent<{
         id: string;
@@ -142,8 +141,7 @@ declare const widgets: {
     link: import("@types").WidgetComponent<{
         params: import("@types").LinkWidgetParamsType;
         isReadOnly?: boolean | undefined;
-        handleMediaPlaying?: ((isPlaying: boolean) => void) | undefined;
-        handleVideoBackgroundPlaying?: ((isPlaying: boolean) => void) | undefined;
+        handleMuteVideo?(isMuted: boolean): void;
     }>;
 };
 export default widgets;

@@ -439,6 +439,10 @@
     gap: 14px;
     z-index: 2;
     text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   &__labelTitle {

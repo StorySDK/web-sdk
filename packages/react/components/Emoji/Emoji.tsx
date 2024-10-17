@@ -11,5 +11,13 @@ interface EmojiProps {
 
 export const Emoji: React.FC<EmojiProps> = ({ emoji, size }) => (
   // @ts-ignore
-  <em-emoji id={emoji} set="apple" size={size} />
+  <em-emoji
+    id={emoji}
+    set="apple"
+    size={size}
+    style={{
+      display: 'flex',
+      alignItems: 'center'
+    }}
+  />
 );

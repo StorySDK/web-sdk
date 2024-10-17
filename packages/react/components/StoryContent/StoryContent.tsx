@@ -242,7 +242,6 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
                 handleGoToStory={handleGoToStory}
                 handleMediaLoading={handleResourcesLoading}
                 handleMuteVideo={handleMuteVideo}
-                handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
                 handleVideoPlaying={handleVideoPlaying}
                 isAutoplayVideos={isAutoplayVideos}
                 isDisplaying={isDisplaying}
