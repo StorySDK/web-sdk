@@ -8,7 +8,7 @@ import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage } from '../utils/fontsInclude';
-import { getUniqUserId } from '../utils';
+import { checkIos, getUniqUserId } from '../utils';
 import { useGroupCache, useStoryCache } from '../hooks';
 
 interface DurationProps {
@@ -26,6 +26,7 @@ const withGroupsData =
       groupTitleSize?: number;
       groupClassName?: string;
       isShowMockup?: boolean;
+      isShowLabel?: boolean;
       isStatusBarActive?: boolean;
       storyWidth?: number;
       storyHeight?: number;
@@ -43,6 +44,7 @@ const withGroupsData =
     const [groups, setGroups] = useState<Group[]>([]);
     const [groupView, setGroupView] = useState<GroupsListProps['groupView']>('circle');
     const [isShowMockup, setIsShowMockup] = useState(options?.isShowMockup);
+    const [isShowLabel, setIsShowLabel] = useState(false);
     const [appLocale, setAppLocale] = useState(null);
     const [groupsWithStories, setGroupsWithStories] = useState<Group[]>([]);
     const [loadStatus, setLoadStatus] = useState('pending');
@@ -50,7 +52,6 @@ const withGroupsData =
     const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
     const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
     const [width] = useWindowSize();
-
     const isMobile = useMemo(() => width < 768, [width]);
 
     const [groupDuration, setGroupDuration] = useState<DurationProps>({
@@ -234,7 +235,8 @@ const withGroupsData =
 
             setAppLocale(app.localization);
             setGroupView(appGroupView);
-            setIsShowMockup(isShowMockupApp);
+            setIsShowMockup(checkIos() ? false : isShowMockupApp);
+            setIsShowLabel(!app.plan || app.plan === 'Free');
 
             API.groups.getList().then((groupsData) => {
               if (!groupsData.data.error) {
@@ -285,6 +287,7 @@ const withGroupsData =
     useEffect(() => {
       if (groups.length) {
         setLoadStatus('loading');
+
         groups.forEach((groupItem: Group, groupIndex: number) => {
           API.stories
             .getList({
@@ -351,6 +354,7 @@ const withGroupsData =
         groups={data ?? []}
         groupsClassName={options?.groupsClassName}
         isLoading={data === null}
+        isShowLabel={isShowLabel}
         isShowMockup={isShowMockup}
         isStatusBarActive={options?.isStatusBarActive}
         openInExternalModal={options?.openInExternalModal}

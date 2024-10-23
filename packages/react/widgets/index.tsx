@@ -18,6 +18,7 @@ import { QuizRateWidget } from './QuizRateWidget';
 import { QuizMultipleAnswerWithImageWidget } from './QuizMultipleAnswerWithImageWidget';
 import { ImageWidget } from './ImageWidget';
 import { VideoWidget } from './VideoWidget';
+import { LinkWidget } from './LinkWidget';
 
 const widgets = {
   [WidgetsTypes.CHOOSE_ANSWER]: ChooseAnswerWidget,
@@ -38,7 +39,8 @@ const widgets = {
   [WidgetsTypes.QUIZ_ONE_ANSWER]: QuizOneAnswerWidget,
   [WidgetsTypes.QUIZ_OPEN_ANSWER]: QuizOpenAnswerWidget,
   [WidgetsTypes.QUIZ_RATE]: QuizRateWidget,
-  [WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE]: QuizMultipleAnswerWithImageWidget
+  [WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE]: QuizMultipleAnswerWithImageWidget,
+  [WidgetsTypes.LINK]: LinkWidget
 };
 
 export default widgets;
@@ -62,5 +64,6 @@ export {
   QuizOneAnswerWidget,
   QuizOpenAnswerWidget,
   QuizRateWidget,
-  QuizMultipleAnswerWithImageWidget
+  QuizMultipleAnswerWithImageWidget,
+  LinkWidget
 };

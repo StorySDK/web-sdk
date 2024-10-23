@@ -2,10 +2,16 @@ import React from 'react';
 import { StoryType } from '../../types';
 import { StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
+import '../StoryModal/StoryModal.scss';
 interface StoryContentProps {
     story: StoryType;
     isMobile?: boolean;
     isDisplaying?: boolean;
+    isAutoplayVideos?: boolean;
+    isLoaded?: boolean;
+    isBackgroundVideoPlaying?: boolean;
+    isVideoPlaying?: boolean;
+    contentWidth: number | string;
     contentHeight: number | string;
     currentStorySize: StoryCurrentSize;
     desktopContainerWidth: number;
@@ -14,9 +20,14 @@ interface StoryContentProps {
     isUnfilledBackground?: boolean;
     jsConfetti?: any;
     isLarge?: boolean;
+    isMediaLoading?: boolean;
+    isVideoMuted?: boolean;
+    handleMuteVideo?: (isMuted: boolean) => void;
+    handleLoadStory?: (storyId: string) => void;
     handleGoToStory?: (storyId: string) => void;
     handleMediaLoading: (isLoading: boolean) => void;
-    isMediaLoading?: boolean;
+    handleVideoPlaying: (isPlaying: boolean) => void;
+    handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
 }
 export declare const StoryContent: React.FC<StoryContentProps>;
 export {};

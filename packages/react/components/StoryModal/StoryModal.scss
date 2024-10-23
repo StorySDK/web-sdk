@@ -19,10 +19,7 @@
   background: #18182E;
   justify-content: center;
   align-items: flex-start;
-
-  div:empty {
-    display: block !important;
-  }
+  font-family: 'Inter', Helvetica, sans-serif;
 
   &::after {
     content: "";
@@ -92,6 +89,11 @@
     z-index: 2;
     height: 100%;
     width: 100%;
+
+    &_centered {
+      top: 50%;
+      transform: translateY(-50%);
+    }
 
     @media (min-width: 768px) {
       width: auto;
@@ -333,6 +335,13 @@
     }
   }
 
+  &__rightTopContainer {
+    display: flex;
+    align-items: center;
+    justify-self: flex-end;
+    gap: 8px;
+  }
+
   &__navStories {
     position: absolute;
     top: 48px;
@@ -349,16 +358,16 @@
   &__arrowButton {
     display: flex;
     align-items: center;
-    width: 15%;
+    width: 10%;
     border: 0;
     background: none;
     padding: 0;
     cursor: pointer;
     position: absolute;
     z-index: 99999;
-    top: 70px;
+    top: 0;
     left: 0;
-    height: 80%;
+    height: 100%;
 
     &>svg {
       display: none;
@@ -410,6 +419,53 @@
     width: 100%;
     display: flex;
     z-index: 99999;
+    flex-direction: column;
+  }
+
+  &__muteBtn {
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  &__muteBtnIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  &__label {
+    display: flex;
+    position: absolute;
+    left: 40px;
+    bottom: 40px;
+    background-color: #05051D;
+    border-radius: 8px;
+    padding: 14px;
+    gap: 14px;
+    z-index: 2;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &__labelTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+  }
+
+  &__labelText {
+    font-size: 12px;
+    font-weight: 400;
+    color: #FFFFFF;
+    opacity: 0.7;
+  }
+
+  &__labelTextContainer {
+    display: flex;
     flex-direction: column;
   }
 }

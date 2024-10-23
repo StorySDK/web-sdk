@@ -3,18 +3,18 @@ import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
-import { IconLoader } from '@components/icons';
+import { IconClose } from '@components/icons';
 import { useLongPress } from 'use-long-press';
 import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
 import { StoryType, Group, GroupType, StoryContenxt, ScoreType } from '../../types';
-import { StoryContent } from '..';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
-import smallIphoneMockup from '../../assets/images/iphone-mockup-small.svg';
-import { StatusBar } from './_components';
+import smallIphoneMockup from '../../assets/images/iphone-mockup-small-1.svg';
+import storySdkLogo from '../../assets/images/storysdk-logo.svg';
+import { StorySwiperContent } from './_components';
+
 import './StoryModal.scss';
 
 const b = block('StorySdkModal');
-
 interface StoryModalProps {
   currentGroup?: Group;
   stories?: StoryType[];
@@ -22,6 +22,7 @@ interface StoryModalProps {
   forbidClose?: boolean;
   isProgressHidden?: boolean;
   isShowMockup?: boolean;
+  isShowLabel?: boolean;
   storyWidth?: number;
   storyHeight?: number;
   isLastGroup: boolean;
@@ -44,25 +45,6 @@ interface StoryModalProps {
   onStartQuiz?(groupId: string, storyId?: string): void;
   onFinishQuiz?(groupId: string, storyId?: string): void;
 }
-
-const CloseIcon: React.FC = () => (
-  <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M18.0002 6.00079L6.00024 18.0008"
-      stroke="#FAFAFA"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="1.72796"
-    />
-    <path
-      d="M6.00024 6.00079L18.0002 18.0008"
-      stroke="#FAFAFA"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="1.72796"
-    />
-  </svg>
-);
 
 const LeftArrowIcon: React.FC = () => (
   <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -129,21 +111,11 @@ export const DEFAULT_STORY_DURATION = 7;
 export const PADDING_SIZE = 25;
 export const MOBILE_BREAKPOINT = 768;
 
-const INIT_TOP_ELEMENTS = 20;
-const INIT_TOP_INDICATOR = 10;
 const INIT_LARGE_PADDING = 30;
-const INIT_LARGE_RADIUS = 43;
 const INIT_SMALL_PADDING = 145;
 const INIT_INNER_GROUP_PADDING = 115;
-const INIT_SMALL_RADIUS = 5;
-const INIT_CONTROL_TOP = 10;
-const INIT_CONTROL_TOP_LARGE = 35;
-const INIT_CONTROL_SIDE_PADDING = 8;
 const INIT_CONTAINER_BORDER_RADIUS = 50;
-const INIT_CONTROL_GAP_LARGE = 8;
 const LONG_PRESS_THRESHOLD = 500;
-
-const defaultRatioIndex = STORY_SIZE_LARGE.width / STORY_SIZE_LARGE.height;
 
 const initQuizeState = {
   points: 0,
@@ -189,6 +161,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isFirstGroup,
     startStoryId,
     isShowMockup,
+    isShowLabel,
     isForceCloseAvailable,
     isStatusBarActive,
     currentGroup,
@@ -223,7 +196,40 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [width, height] = useWindowSize();
   const [activeStoriesWithResult, setActiveStoriesWithResult] = useState<StoryType[]>([]);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isBackgroundVideoPlaying, setIsBackgroundVideoPlaying] = useState(false);
   const [isSwiped, setIsSwiped] = useState(false);
+  const [isAutoplayVideos, setIsAutoplayVideos] = useState<boolean>(false);
+  const [loadedStoriesIds, setLoadedStoriesIds] = useState<{ [key: string]: boolean }>({});
+  const [bodyContainerWidth, setBodyContainerWidth] = useState(0);
+
+  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
+
+  const isShowMockupCurrent = useMemo(
+    () => (currentGroup?.type === GroupType.ONBOARDING && !isMobile ? true : isShowMockup),
+    [currentGroup?.type, isMobile, isShowMockup]
+  );
+
+  const mockupRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (mockupRef.current && isShowMockupCurrent) {
+      const observer = new ResizeObserver(() => {
+        if (mockupRef.current?.offsetWidth) {
+          setBodyContainerWidth(mockupRef.current.offsetWidth);
+        } else {
+          setBodyContainerWidth(0);
+        }
+      });
+
+      observer.observe(mockupRef.current);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+    return undefined;
+  }, [mockupRef, isShowMockupCurrent]);
 
   const appLink = useMemo(() => {
     if (devMode === 'staging') {
@@ -237,7 +243,22 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     return 'https://app.storysdk.com';
   }, [devMode]);
 
-  const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
+  useEffect(() => {
+    if (isVideoPlaying || isBackgroundVideoPlaying) {
+      setIsAutoplayVideos(true);
+    }
+  }, [isVideoPlaying, isBackgroundVideoPlaying]);
+
+  useEffect(() => {
+    setIsAutoplayVideos(currentGroup?.settings?.autoplayVideos ?? false);
+  }, [currentGroup]);
+
+  useEffect(() => {
+    if (isAutoplayVideos) {
+      setIsBackgroundVideoPlaying(true);
+      setIsVideoPlaying(true);
+    }
+  }, [isAutoplayVideos]);
 
   const currentStorySize: StoryCurrentSize = useMemo(() => {
     if (storyWidth && storyHeight) {
@@ -254,11 +275,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       return STORY_SIZE_LARGE;
     }
 
-    return STORY_SIZE_LARGE;
+    return STORY_SIZE_DEFAULT;
   }, [storyWidth, storyHeight, isMobile, currentGroup?.type]);
-
-  const isShowMockupCurrent =
-    currentGroup?.type === GroupType.ONBOARDING && !isMobile ? true : isShowMockup;
 
   useEffect(() => {
     if (openInExternalModal && isShowing) {
@@ -269,7 +287,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         '_blank',
         `popup,left=${leftPosition},top=${isMobile ? 0 : 50},width=${
           isMobile ? width : 1000
-        },height=${780}`
+        },height=${640}`
       );
 
       onClose();
@@ -311,21 +329,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [currentGroup, stories]);
 
   const currentGroupType = currentGroup?.type || GroupType.GROUP;
-  const isBackroundFilled =
-    activeStoriesWithResult[currentStory]?.background?.isFilled &&
-    currentGroupType === GroupType.GROUP;
+  const isBackroundFilled = true;
   const initBodyOverflow = useMemo(() => document.body.style.overflow, []);
   const largeHeightGap = useAdaptiveValue(INIT_LARGE_PADDING);
-  const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
-  const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
-  const largeIndicatorTop = useAdaptiveValue(INIT_TOP_INDICATOR);
   const smallHeightGap = useAdaptiveValue(INIT_SMALL_PADDING);
-  const smallBorderRadius = useAdaptiveValue(INIT_SMALL_RADIUS);
   const groupInnerHeightGap = useAdaptiveValue(INIT_INNER_GROUP_PADDING);
-  const controlTopSmall = useAdaptiveValue(INIT_CONTROL_TOP);
-  const controlTopLarge = useAdaptiveValue(INIT_CONTROL_TOP_LARGE);
-  const controlSidePaddingSmall = useAdaptiveValue(INIT_CONTROL_SIDE_PADDING);
-  const controlGapLarge = useAdaptiveValue(INIT_CONTROL_GAP_LARGE);
   const containerBorderRadius = useAdaptiveValue(INIT_CONTAINER_BORDER_RADIUS);
 
   const isLarge = useMemo(
@@ -343,31 +351,34 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     [currentGroupType, isBackroundFilled, isMobile]
   );
 
-  const controlTop = isLarge ? controlTopLarge : controlTopSmall;
-  const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
+  const heightGap = isLarge ? largeHeightGap : smallHeightGap;
 
-  const currentRatioIndex = useMemo(() => {
-    if (storyWidth && storyHeight) {
-      return storyWidth / storyHeight;
+  const contentWidth = useMemo(() => {
+    if (isMobile) {
+      const newWidth = Math.round(currentStorySize.width * (height / currentStorySize.height));
+
+      if (newWidth < width) {
+        return newWidth;
+      }
     }
 
-    return defaultRatioIndex;
-  }, [storyHeight, storyWidth]);
-
-  const heightGap = isLarge ? largeHeightGap : smallHeightGap;
-  const borderRadius = isLarge ? largeBorderRadius : smallBorderRadius;
-  const currentPaddingSize = isShowMockupCurrent ? PADDING_SIZE + heightGap : PADDING_SIZE;
-  const isShowStatusBarInStory = isShowMockupCurrent && !isMobile && isLarge && isStatusBarActive;
-  const desktopWidth = Math.ceil(currentRatioIndex * (height - currentPaddingSize));
+    return `100%`;
+  }, [currentStorySize.height, currentStorySize.width, height, isMobile, width]);
 
   const contentHeight = useMemo(() => {
     const backgroundHeightGap =
       isShowMockupCurrent && isGroupWithUnfilledBackground ? groupInnerHeightGap : 0;
 
-    return isMobile
-      ? Math.round(currentStorySize.height * (width / currentStorySize.width))
-      : `calc(100% - ${backgroundHeightGap}px)`;
+    if (isMobile) {
+      if (contentWidth === '100%') {
+        return Math.round(currentStorySize.height * (width / currentStorySize.width));
+      }
+      return '100%';
+    }
+
+    return `calc(100% - ${backgroundHeightGap}px)`;
   }, [
+    contentWidth,
     currentStorySize.height,
     currentStorySize.width,
     groupInnerHeightGap,
@@ -381,7 +392,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     const body = document.querySelector('body');
     if (storyModalRef.current && body) {
       if (isMobile) {
-        storyModalRef.current.style.setProperty('height', `${contentHeight}px`);
+        storyModalRef.current.style.setProperty('height', `100vh`);
       } else {
         storyModalRef.current.style.setProperty('height', `100%`);
       }
@@ -705,16 +716,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     })
   );
 
-  const noTopShadow =
-    (currentGroupType === GroupType.ONBOARDING &&
-      currentGroup?.settings?.isProgressHidden &&
-      currentGroup?.settings?.isProhibitToClose) ||
-    isGroupWithFilledBackground;
-
-  const noTopBackgroundShadow =
-    currentGroupType === GroupType.ONBOARDING ||
-    (currentGroupType === GroupType.GROUP && !isBackroundFilled);
-
   const handleQuizAnswer = (params: { type: string; answer: string | number }) => {
     if (params.type === 'add' && !isQuizStarted && currentGroup) {
       onStartQuiz && onStartQuiz(currentGroup.id);
@@ -758,25 +759,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const uniqUserId = getUniqUserId();
   const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
 
-  const heightModalGap = useMemo(() => {
-    if (isMobile) {
-      return 0;
-    }
-
-    if (isShowMockupCurrent) {
-      return heightGap + PADDING_SIZE;
-    }
-
-    return PADDING_SIZE;
-  }, [isMobile, isShowMockupCurrent, heightGap]);
-
   useEffect(() => {
     if (isMediaLoading) {
       setPlayStatus('pause');
     } else {
       setPlayStatus('play');
     }
-  }, [isMediaLoading]);
+  }, [isMediaLoading, currentStoryId]);
 
   const [clickTimestamp, setClickTimestamp] = useState(0);
 
@@ -785,9 +774,22 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       setPlayStatus('play');
 
       if (e.timeStamp - clickTimestamp < LONG_PRESS_THRESHOLD) {
-        const isBackground = (e.target as Element).classList.contains('StorySdkContent__scope');
+        let isNextAllowed = false;
+        let element: HTMLElement | null = e.target as HTMLElement;
 
-        if (isBackground) {
+        if (element.classList.contains('StorySdkContent__scope')) {
+          isNextAllowed = true;
+        } else {
+          while (element) {
+            if (element.classList.contains('StorySdkContent__object_noClickable')) {
+              isNextAllowed = true;
+              break;
+            }
+            element = (element as HTMLElement).offsetParent as HTMLElement;
+          }
+        }
+
+        if (isNextAllowed) {
           handleNext();
         }
       }
@@ -815,10 +817,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   });
 
   useEffect(() => {
-    setPlayStatus('play');
-  }, [currentStoryId]);
-
-  useEffect(() => {
     const timeout = setTimeout(() => {
       if (isSwiped) {
         setIsSwiped(false);
@@ -827,6 +825,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     return () => clearTimeout(timeout);
   }, [isSwiped]);
+
+  const handleLoadStory = useCallback((id: string) => {
+    setLoadedStoriesIds((prevState) => ({
+      ...prevState,
+      [id]: true
+    }));
+  }, []);
 
   return (
     <StoryContext.Provider
@@ -846,14 +851,19 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           top: window?.pageYOffset || document.documentElement.scrollTop
         }}
       >
-        <div className={b('body')}>
+        <div
+          className={b('body', { centered: isMobile })}
+          style={{
+            height: isMobile ? contentHeight : undefined
+          }}
+        >
           {!isLoading && (
             <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
               <LeftArrowIcon />
             </button>
           )}
 
-          {!isLoading && !isMobile && (
+          {!isLoading && (
             <button className={b('arrowButton', { right: true })} onClick={handleNext}>
               <RightArrowIcon />
             </button>
@@ -865,171 +875,74 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               swiped: isSwiped && isMobile
             })}
             style={{
-              borderRadius: containerBorderRadius
+              borderRadius: containerBorderRadius,
+              width: !isMobile && bodyContainerWidth ? bodyContainerWidth : '100%'
             }}
           >
-            <div
-              className={b('swiper', {
-                mockup: !isMobile && isShowMockupCurrent
-              })}
-              style={{
-                width: !isMobile ? desktopWidth : '100%',
-                height: `calc(100vh - ${heightModalGap}px)`,
-                borderRadius: isShowMockupCurrent && !isMobile ? borderRadius : undefined
-              }}
-            >
-              <>
-                {isLoading || !currentGroup?.stories ? (
-                  <div className={b('loader')}>
-                    <IconLoader className={b('loaderIcon').toString()} />
-                  </div>
-                ) : (
-                  <>
-                    <div className={b('swiperContent')}>
-                      {activeStoriesWithResult.map((story, index) => (
-                        <div
-                          className={b('story', { current: index === currentStory && isOpened })}
-                          key={story.id}
-                          {...pressHandlers()}
-                          {...swipeHandlers}
-                        >
-                          <StoryContent
-                            contentHeight={contentHeight}
-                            currentStorySize={currentStorySize}
-                            desktopContainerWidth={desktopWidth}
-                            handleGoToStory={handleGoToStory}
-                            handleMediaLoading={setIsMediaLoading}
-                            isDisplaying={index === currentStory && isOpened}
-                            isLarge={isLarge}
-                            isMediaLoading={isMediaLoading}
-                            isMobile={isMobile}
-                            isUnfilledBackground={
-                              currentGroupType === GroupType.GROUP && !story.background.isFilled
-                            }
-                            jsConfetti={jsConfetti}
-                            noTopBackgroundShadow={noTopBackgroundShadow}
-                            noTopShadow={noTopShadow}
-                            story={story}
-                          />
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className={b('topContainer')}>
-                      <>
-                        {isShowStatusBarInStory && <StatusBar />}
-
-                        <div
-                          className={b('controls')}
-                          style={{
-                            gap: !isShowStatusBarInStory && !isMobile ? controlGap : undefined,
-                            paddingTop:
-                              !isShowStatusBarInStory && isShowMockupCurrent && !isMobile
-                                ? controlTop
-                                : undefined
-                          }}
-                        >
-                          {!currentGroup?.settings?.isProgressHidden && !isProgressHidden && (
-                            <div
-                              className={b('indicators', {
-                                playAnimation: playStatus === 'play',
-                                stopAnimation: playStatus === 'pause',
-                                widePadding:
-                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                              })}
-                              style={{
-                                top:
-                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                                    ? largeIndicatorTop
-                                    : undefined
-                              }}
-                            >
-                              {activeStoriesWithResult
-                                .filter((story) => story.layerData?.isDefaultLayer)
-                                .map((story, index) => (
-                                  <div
-                                    className={b('indicator', {
-                                      filled: index < currentStory,
-                                      current: index === currentStory
-                                    })}
-                                    key={story.id}
-                                    style={{
-                                      animationDuration: `${story.layerData?.duration}s`
-                                    }}
-                                    onAnimationEnd={handleAnimationEnd}
-                                  />
-                                ))}
-                            </div>
-                          )}
-
-                          {currentGroupType === GroupType.GROUP && (
-                            <div
-                              className={b('group', {
-                                noProgress:
-                                  currentGroup?.settings?.isProgressHidden || isProgressHidden,
-                                wideLeft:
-                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                              })}
-                              style={{
-                                top:
-                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                                    ? largeElementsTop
-                                    : undefined
-                              }}
-                            >
-                              {currentGroup?.imageUrl && (
-                                <div className={b('groupImgWrapper')}>
-                                  <img
-                                    alt=""
-                                    className={b('groupImg')}
-                                    src={currentGroup?.imageUrl}
-                                  />
-                                </div>
-                              )}
-                              {currentGroup?.title && (
-                                <p className={b('groupTitle')}>{currentGroup?.title}</p>
-                              )}
-                            </div>
-                          )}
-
-                          {!currentGroup?.settings?.isProhibitToClose &&
-                            !forbidClose &&
-                            !isForceCloseAvailable && (
-                              <button
-                                className={b('close', {
-                                  noProgress:
-                                    currentGroup?.settings?.isProgressHidden || isProgressHidden,
-                                  wideRight:
-                                    isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                                })}
-                                style={{
-                                  top:
-                                    isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                                      ? largeElementsTop
-                                      : undefined
-                                }}
-                                onClick={handleClose}
-                              >
-                                <CloseIcon />
-                              </button>
-                            )}
-                        </div>
-                      </>
-                    </div>
-                  </>
-                )}
-              </>
-            </div>
+            <StorySwiperContent
+              activeStoriesWithResult={activeStoriesWithResult}
+              contentHeight={contentHeight}
+              contentWidth={contentWidth}
+              currentGroup={currentGroup}
+              currentGroupType={currentGroupType}
+              currentStory={currentStory}
+              currentStorySize={currentStorySize}
+              forbidClose={forbidClose}
+              handleAnimationEnd={handleAnimationEnd}
+              handleClose={handleClose}
+              handleGoToStory={handleGoToStory}
+              handleLoadStory={handleLoadStory}
+              handleMediaLoading={setIsMediaLoading}
+              handleVideoBackgroundPlaying={setIsBackgroundVideoPlaying}
+              handleVideoPlaying={setIsVideoPlaying}
+              height={height}
+              heightGap={heightGap}
+              isAutoplayVideos={isAutoplayVideos}
+              isBackgroundVideoPlaying={isBackgroundVideoPlaying}
+              isBackroundFilled={isBackroundFilled}
+              isForceCloseAvailable={isForceCloseAvailable}
+              isGroupWithFilledBackground={isGroupWithFilledBackground}
+              isLarge={isLarge}
+              isLoading={isLoading}
+              isMediaLoading={isMediaLoading}
+              isMobile={isMobile}
+              isOpened={isOpened}
+              isProgressHidden={isProgressHidden}
+              isShowMockupCurrent={isShowMockupCurrent}
+              isStatusBarActive={isStatusBarActive}
+              isVideoPlaying={isVideoPlaying}
+              jsConfetti={jsConfetti}
+              loadedStoriesIds={loadedStoriesIds}
+              playStatus={playStatus}
+              pressHandlers={pressHandlers}
+              storyHeight={storyHeight}
+              storyWidth={storyWidth}
+              swipeHandlers={swipeHandlers}
+            />
 
             {isShowMockupCurrent && !isMobile && (
-              <img className={b('mockup')} src={isLarge ? largeIphoneMockup : smallIphoneMockup} />
+              <img
+                className={b('mockup')}
+                ref={mockupRef}
+                src={isLarge ? largeIphoneMockup : smallIphoneMockup}
+              />
             )}
           </div>
         </div>
 
+        {isShowLabel && !isMobile && (
+          <a className={b('label')} href="https://storysdk.com/">
+            <img alt="StorySDK" className={b('labelLogo')} src={storySdkLogo} />
+            <div className={b('labelTextContainer')}>
+              <span className={b('labelTitle')}>StorySDK</span>
+              <span className={b('labelText')}>create own widget</span>
+            </div>
+          </a>
+        )}
+
         {isForceCloseAvailable && (
           <button className={b('close', { general: true })} onClick={handleClose}>
-            <CloseIcon />
+            <IconClose />
           </button>
         )}
       </div>

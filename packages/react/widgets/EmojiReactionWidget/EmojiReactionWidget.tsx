@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useMemo, useContext } from 'react';
-import { Emoji } from 'emoji-mart';
 import { block, getScalableValue } from '@utils';
 import {
   EmojiReactionWidgetParamsType,
@@ -8,7 +7,7 @@ import {
 } from '@types';
 import { useInterval } from '@hooks';
 import './EmojiReactionWidget.scss';
-import { StoryContext } from '@components';
+import { StoryContext, Emoji } from '@components';
 
 const b = block('EmojiReactionWidget');
 
@@ -48,7 +47,7 @@ export const EmojiReactionWidget: WidgetComponent<{
     ? storyContextVal.getAnswerCache(id)
     : null;
 
-  const [clickedIndex, setClickedIndex] = useState<number | null>(answerFromCache);
+  const [clickedIndex, setClickedIndex] = useState<number | null>(answerFromCache ?? null);
   const [bigSize, setBigSize] = useState(initEmojiSize);
   const [delay, setDelay] = useState(0);
   const [isToched, setIsToched] = useState<boolean>(false);
@@ -95,9 +94,9 @@ export const EmojiReactionWidget: WidgetComponent<{
           }}
         >
           <div className={b('subItem', { clicked: index === clickedIndex })}>
-            <Emoji emoji={emojiItem.name} set="apple" size={bigSize} />
+            <Emoji emoji={emojiItem.name} size={bigSize} />
           </div>
-          <Emoji emoji={emojiItem.name} set="apple" size={sizes.emoji.width} />
+          <Emoji emoji={emojiItem.name} size={sizes.emoji.width} />
         </button>
       ))}
     </div>

@@ -1,5 +1,5 @@
 import { ChooseAnswerWidgetElemetsType, EmojiReactionWidgetElemetsType, QuestionWidgetElementsType, QuizMultipleAnswerWidgetElementsType, QuizMultipleAnswerWidgetWithImageElementsType, QuizOneAnswerWidgetElementsType, QuizOpenAnswerWidgetElementsType, QuizRateWidgetElementsType, SliderWidgetElementsType, TalkAboutElementsType } from './widgetElementsTypes';
-import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerWidgetParamsType, QuizOneAnswerWidgetParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageWidgetParamsType, QuizRateWidgetParamsType, QuizOpenAnswerWidgetParamsType, ImageWidgetParamsType, VideoWidgetParamsType } from './WidgetsParams';
+import { ChooseAnswerWidgetParamsType, ClickMeWidgetParamsType, EllipseWidgetParamsType, EmojiReactionWidgetParamsType, GiphyWidgetParamsType, QuestionWidgetParamsType, QuizMultipleAnswerWidgetParamsType, QuizOneAnswerWidgetParamsType, RectangleWidgetParamsType, SliderWidgetParamsType, SwipeUpWidgetParamsType, TalkAboutWidgetParamsType, TextWidgetParamsType, TimerWidgetParamsType, QuizMultipleAnswerWithImageWidgetParamsType, QuizRateWidgetParamsType, QuizOpenAnswerWidgetParamsType, ImageWidgetParamsType, VideoWidgetParamsType, LinkWidgetParamsType } from './WidgetsParams';
 export declare enum MediaType {
     IMAGE = "image",
     VIDEO = "video"
@@ -9,20 +9,25 @@ export declare enum BackgroundColorType {
     COLOR = "color",
     TRANSPARENT = "transparent"
 }
+export declare enum GradientDirection {
+    TOP_TO_BOTTOM = "top_to_bottom",
+    LEFT_TO_RIGHT = "left_to_right"
+}
 export declare type BackgroundFillType = MediaType | BackgroundColorType;
 declare type TransparentValue = {
     type: BackgroundColorType.TRANSPARENT;
     value: string;
     isFilled?: boolean;
 };
-declare type ColorValue = {
+export declare type ColorValue = {
     type: BackgroundColorType.COLOR;
     value: string;
     isFilled?: boolean;
 };
-declare type GradientValue = {
+export declare type GradientValue = {
     type: BackgroundColorType.GRADIENT;
     value: string[];
+    direction?: GradientDirection;
     isFilled?: boolean;
 };
 declare type BackgrounValue = {
@@ -52,6 +57,7 @@ export declare enum WidgetsTypes {
     SLIDER = "slider",
     QUESTION = "question",
     CLICK_ME = "click_me",
+    LINK = "link",
     TALK_ABOUT = "talk_about",
     EMOJI_REACTION = "emoji_reaction",
     TIMER = "timer",
@@ -98,6 +104,10 @@ export interface SliderState {
 export interface QuestionState {
     type: WidgetsTypes.QUESTION;
     params: QuestionWidgetParamsType;
+}
+export interface LinkState {
+    type: WidgetsTypes.LINK;
+    params: LinkWidgetParamsType;
 }
 export interface ClickMeState {
     type: WidgetsTypes.CLICK_ME;
@@ -188,7 +198,7 @@ export interface WidgetObjectType {
         [key: string]: WidgetPositionType;
     };
     positionLimits: WidgetPositionLimitsType;
-    content: RectangleState | ImageState | VideoState | EllipseState | TextState | SwipeUpState | SliderState | QuestionState | ClickMeState | TalkAboutState | EmojiReactionState | TimerState | ChooseAnswerState | GiphyState | QuizOneAnswerState | QuizMultipleAnswerState | QuizMultipleAnswerWithImageState | QuizRateState | QuizOpenAnswerState;
+    content: RectangleState | ImageState | VideoState | EllipseState | TextState | SwipeUpState | SliderState | QuestionState | ClickMeState | LinkState | TalkAboutState | EmojiReactionState | TimerState | ChooseAnswerState | GiphyState | QuizOneAnswerState | QuizMultipleAnswerState | QuizMultipleAnswerWithImageState | QuizRateState | QuizOpenAnswerState;
     action?(): void;
 }
 export interface LayerData {

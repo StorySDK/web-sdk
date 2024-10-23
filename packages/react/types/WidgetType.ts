@@ -30,7 +30,8 @@ import {
   QuizRateWidgetParamsType,
   QuizOpenAnswerWidgetParamsType,
   ImageWidgetParamsType,
-  VideoWidgetParamsType
+  VideoWidgetParamsType,
+  LinkWidgetParamsType
 } from './WidgetsParams';
 
 export enum MediaType {
@@ -44,6 +45,11 @@ export enum BackgroundColorType {
   TRANSPARENT = 'transparent'
 }
 
+export enum GradientDirection {
+  TOP_TO_BOTTOM = 'top_to_bottom',
+  LEFT_TO_RIGHT = 'left_to_right'
+}
+
 export type BackgroundFillType = MediaType | BackgroundColorType;
 
 type TransparentValue = {
@@ -51,8 +57,13 @@ type TransparentValue = {
   value: string;
   isFilled?: boolean;
 };
-type ColorValue = { type: BackgroundColorType.COLOR; value: string; isFilled?: boolean };
-type GradientValue = { type: BackgroundColorType.GRADIENT; value: string[]; isFilled?: boolean };
+export type ColorValue = { type: BackgroundColorType.COLOR; value: string; isFilled?: boolean };
+export type GradientValue = {
+  type: BackgroundColorType.GRADIENT;
+  value: string[];
+  direction?: GradientDirection;
+  isFilled?: boolean;
+};
 type BackgrounValue = {
   type: MediaType;
   value: string;
@@ -83,6 +94,7 @@ export enum WidgetsTypes {
   SLIDER = 'slider',
   QUESTION = 'question',
   CLICK_ME = 'click_me',
+  LINK = 'link',
   TALK_ABOUT = 'talk_about',
   EMOJI_REACTION = 'emoji_reaction',
   TIMER = 'timer',
@@ -137,6 +149,11 @@ export interface SliderState {
 export interface QuestionState {
   type: WidgetsTypes.QUESTION;
   params: QuestionWidgetParamsType;
+}
+
+export interface LinkState {
+  type: WidgetsTypes.LINK;
+  params: LinkWidgetParamsType;
 }
 
 export interface ClickMeState {
@@ -262,6 +279,7 @@ export interface WidgetObjectType {
     | SliderState
     | QuestionState
     | ClickMeState
+    | LinkState
     | TalkAboutState
     | EmojiReactionState
     | TimerState

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { RectangleWidgetParamsType, WidgetComponent } from '@types';
 import { block, renderBackgroundStyles } from '@utils';
 import './RectangleWidget.scss';
@@ -10,18 +10,25 @@ export const RectangleWidget: WidgetComponent<{ params: RectangleWidgetParamsTyp
     const { fillColor, fillBorderRadius, strokeThickness, strokeColor, widgetOpacity, hasBorder } =
       props.params;
 
-    const styles = {
-      borderStyle: 'solid',
-      borderWidth: `${hasBorder ? strokeThickness : 0}px`,
-      borderColor: renderBackgroundStyles(strokeColor),
-      borderRadius: `${fillBorderRadius}px`,
-      opacity: widgetOpacity / 100
-    };
+    const styles = useMemo(
+      () => ({
+        borderStyle: 'solid',
+        borderWidth: `${hasBorder ? strokeThickness : 0}px`,
+        borderColor: renderBackgroundStyles(strokeColor),
+        borderRadius: `${+fillBorderRadius}px`,
+        opacity: widgetOpacity / 100
+      }),
+      [fillBorderRadius, hasBorder, strokeColor, strokeThickness, widgetOpacity]
+    );
 
-    const backgroundStyles = {
-      background: renderBackgroundStyles(fillColor),
-      borderRadius: `${fillBorderRadius - strokeThickness}px`
-    };
+    const backgroundStyles = useMemo(
+      () => ({
+        background: renderBackgroundStyles(fillColor),
+        borderRadius:
+          +fillBorderRadius - +strokeThickness > 0 ? `${+fillBorderRadius - +strokeThickness}px` : 0
+      }),
+      [fillColor, fillBorderRadius, strokeThickness]
+    );
 
     return (
       <div className={b()} style={styles}>

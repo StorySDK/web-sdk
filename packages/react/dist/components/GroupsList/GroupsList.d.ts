@@ -14,6 +14,7 @@ export interface GroupsListProps {
     isStatusBarActive?: boolean;
     groupClassName?: string;
     isShowMockup?: boolean;
+    isShowLabel?: boolean;
     isLoading?: boolean;
     autoplay?: boolean;
     startStoryId?: string;

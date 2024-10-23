@@ -2,7 +2,6 @@
 
 .StorySdk-TextWidget {
     position: relative;
-    border-radius: 8px;
     overflow: hidden;
     height: 100%;
   
@@ -23,11 +22,15 @@
       resize: none;
       background: none;
       overflow: hidden;
+      word-break: break-word;
+      white-space: pre-line;
     }
   
     &__span {
+      width: 100%;
+      display: block;
       word-break: break-word;
-      white-space: pre-line;
+      white-space: break-spaces;
     }
   
     &__background {
@@ -39,5 +42,3 @@
       z-index: 0;
     }  
 }
-
-

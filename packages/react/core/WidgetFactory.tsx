@@ -6,6 +6,7 @@ import {
   EmojiReactionWidget,
   GiphyWidget,
   ImageWidget,
+  LinkWidget,
   QuestionWidget,
   QuizMultipleAnswerWidget,
   QuizMultipleAnswerWithImageWidget,
@@ -39,8 +40,15 @@ interface WidgetFactoryProps {
   storyId: string;
   currentStorySize: StoryCurrentSize;
   jsConfetti?: any;
+  isDisplaying?: boolean;
+  isVideoMuted?: boolean;
+  isVideoPlaying?: boolean;
+  isAutoplayVideos?: boolean;
   widget: WidgetObjectType;
+  handleMuteVideo?: (isMuted: boolean) => void;
   handleGoToStory?: (storyId: string) => void;
+  handleVideoPlaying?: (isPlaying: boolean) => void;
+  handleMediaLoading?: (isLoading: boolean) => void;
 }
 
 export class WidgetFactory extends React.Component<WidgetFactoryProps> {
@@ -67,17 +75,40 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.CLICK_ME:
         return (
           <ClickMeWidget
+            handleMuteVideo={this.props.handleMuteVideo}
             params={this.props.widget.content.params}
             onClick={this.props.widget.action}
             onGoToStory={this.props.handleGoToStory}
           />
         );
+      case WidgetsTypes.LINK:
+        return (
+          <LinkWidget
+            handleMuteVideo={this.props.handleMuteVideo}
+            params={this.props.widget.content.params}
+          />
+        );
       case WidgetsTypes.ELLIPSE:
         return <EllipseWidget params={this.props.widget.content.params} />;
       case WidgetsTypes.IMAGE:
-        return <ImageWidget params={this.props.widget.content.params} />;
+        return (
+          <ImageWidget
+            handleMediaLoading={this.props.handleMediaLoading}
+            params={this.props.widget.content.params}
+          />
+        );
       case WidgetsTypes.VIDEO:
-        return <VideoWidget params={this.props.widget.content.params} />;
+        return (
+          <VideoWidget
+            handleMediaLoading={this.props.handleMediaLoading}
+            handleMediaPlaying={this.props.handleVideoPlaying}
+            isAutoplay={this.props.isAutoplayVideos}
+            isDisplaying={this.props.isDisplaying}
+            isMuted={this.props.isVideoMuted}
+            isVideoPlaying={this.props.isVideoPlaying}
+            params={this.props.widget.content.params}
+          />
+        );
       case WidgetsTypes.EMOJI_REACTION:
         return (
           <EmojiReactionWidget
@@ -113,6 +144,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
       case WidgetsTypes.SWIPE_UP:
         return (
           <SwipeUpWidget
+            handleMuteVideo={this.props.handleMuteVideo}
             params={this.props.widget.content.params}
             onSwipe={this.props.widget.action}
           />
@@ -128,14 +160,6 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         );
       case WidgetsTypes.TEXT:
         return <TextWidget params={this.props.widget.content.params} />;
-      // case WidgetsTypes.TIMER:
-      //   return (
-      //     <TimerWidget
-      //       params={this.props.widget.content.params}
-      //       position={this.props.widget.position}
-      //       positionLimits={this.props.widget.positionLimits}
-      //     />
-      //   );
       case WidgetsTypes.QUIZ_ONE_ANSWER:
         return (
           <QuizOneAnswerWidget

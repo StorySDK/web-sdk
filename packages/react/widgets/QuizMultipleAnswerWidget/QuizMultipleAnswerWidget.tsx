@@ -1,4 +1,3 @@
-import { Emoji } from 'emoji-mart';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { block, eventSubscribe, eventUnsubscribe, getTextStyles } from '@utils';
 import cn from 'classnames';
@@ -9,7 +8,7 @@ import {
   ScoreType,
   WidgetComponent
 } from '@types';
-import { StoryContext } from '@components';
+import { StoryContext, Emoji } from '@components';
 import './QuizMultipleAnswerWidget.scss';
 
 const b = block('QuizMultipleAnswerWidget');
@@ -171,9 +170,7 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
             style={sizes.answer}
             onClick={() => !isReadOnly && handleAnswer(answer.id)}
           >
-            {answer.emoji && (
-              <Emoji emoji={answer.emoji?.name} set="apple" size={sizes.emoji.width} />
-            )}
+            {answer.emoji && <Emoji emoji={answer.emoji?.name} size={sizes.emoji.width} />}
             <p
               className={cn(
                 b('answerTitle', {

@@ -12,7 +12,6 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
 
 const b = block('GroupsSdkList');
-
 export interface GroupsListProps {
   groups: Group[];
   groupImageWidth?: number;
@@ -24,6 +23,7 @@ export interface GroupsListProps {
   isStatusBarActive?: boolean;
   groupClassName?: string;
   isShowMockup?: boolean;
+  isShowLabel?: boolean;
   isLoading?: boolean;
   autoplay?: boolean;
   startStoryId?: string;
@@ -53,6 +53,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groupImageHeight,
     groupTitleSize,
     isShowMockup,
+    isShowLabel,
     isStatusBarActive,
     autoplay,
     startStoryId,
@@ -72,17 +73,15 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     onFinishQuiz
   } = props;
 
-  const [currentGroup, setCurrentGroup] = useState(0);
+  const [currentGroup, setCurrentGroup] = useState(-1);
   const [modalShow, setModalShow] = useState(!!autoplay);
-
   const [width] = useWindowSize();
-
   const scrollRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const carouselSkeletonRef = useRef<HTMLDivElement | null>(null);
-
   const [isCentered, setIsCentered] = useState(true);
+  const [groupMinHeight, setGroupMinHeight] = useState(100);
 
   useEffect(() => {
     if (startGroupId) {
@@ -168,6 +167,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           isFirstGroup={currentGroup === 0}
           isLastGroup={currentGroup === groups?.length - 1}
           isLoading={isLoading}
+          isShowLabel={isShowLabel}
           isShowMockup={isShowMockup}
           isShowing={modalShow}
           isStatusBarActive={isStatusBarActive}
@@ -192,42 +192,39 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   }, [isLoading, autoplay, currentGroupMemo, modalShow]);
 
   useEffect(() => {
-    if (containerRef.current) {
-      const containerWidth = containerRef.current.clientWidth;
+    const containerElement = containerRef.current;
+    const carouselElement = carouselRef.current;
+    const carouselSkeletonElement = carouselSkeletonRef.current;
 
-      if (carouselRef.current) {
-        const carouselWidth = carouselRef.current.clientWidth;
+    const handleResize = () => {
+      if (containerElement) {
+        const containerWidth = containerElement.clientWidth;
+        const containerHeight = containerElement.clientHeight;
+        setGroupMinHeight(containerHeight);
 
-        if (containerWidth < carouselWidth) {
-          setIsCentered(false);
-        } else {
-          setIsCentered(true);
+        if (carouselElement) {
+          const carouselWidth = carouselElement.clientWidth;
+          setIsCentered(containerWidth >= carouselWidth);
+        }
+
+        if (carouselSkeletonElement) {
+          const carouselSkeletonWidth = carouselSkeletonElement.clientWidth;
+          setIsCentered(containerWidth >= carouselSkeletonWidth);
         }
       }
+    };
 
-      if (carouselSkeletonRef.current) {
-        const carouselSkeletonWidth = carouselSkeletonRef.current.clientWidth;
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (containerElement) {
+      resizeObserver.observe(containerElement);
+    }
 
-        if (containerWidth < carouselSkeletonWidth) {
-          setIsCentered(false);
-        } else {
-          setIsCentered(true);
-        }
+    return () => {
+      if (containerElement) {
+        resizeObserver.unobserve(containerElement);
       }
-    }
-
-    if (scrollRef.current) {
-      scrollRef.current.recalculate();
-    }
-  }, [
-    containerRef.current,
-    carouselSkeletonRef.current,
-    carouselRef.current,
-    groups.length,
-    isLoading,
-    autoplay,
-    width
-  ]);
+    };
+  }, [groups.length, isLoading, autoplay, width]);
 
   return (
     <>
@@ -239,7 +236,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           ref={scrollRef}
           style={{
             width: '100%',
-            minHeight: 100
+            minHeight: groupMinHeight
           }}
         >
           {isLoading && !autoplay ? (

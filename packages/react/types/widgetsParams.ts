@@ -1,5 +1,5 @@
 import { MaterialIconValueType } from '../components/MaterialIcon/_types';
-import { BackgroundType, BorderType, FontParamsType, VideoMetadataType } from '.';
+import { BackgroundType, BorderType, ColorValue, FontParamsType, VideoMetadataType } from '.';
 
 export type QuizAnswersScoreParams = {
   letter: string;
@@ -84,6 +84,17 @@ export type ClickMeWidgetParamsType = {
     borderWidth?: number;
     borderRadius?: number;
   };
+};
+
+export type LinkWidgetParamsType = {
+  fontFamily: string;
+  fontSize: number;
+  color: ColorValue;
+  opacity: number;
+  fontParams: FontParamsType;
+  text: string;
+  backgroundColor: BorderType;
+  url?: string;
 };
 
 export type ChooseAnswerWidgetParamsType = {

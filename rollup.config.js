@@ -56,7 +56,8 @@ export default [
         ],
       }),
       scss({
-        outputStyle: 'compressed'
+        outputStyle: 'compressed',
+        fileName: 'bundle.css' 
       }),
       replace({
         'process.env.NODE_ENV': NODE_ENV,

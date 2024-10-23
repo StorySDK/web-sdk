@@ -20,6 +20,7 @@ export interface StoriesGroupSettings {
     scoreResultLayersGroupId?: string;
     lastStoryPosition?: number;
     shortDataId?: string;
+    autoplayVideos?: boolean;
 }
 export interface Group {
     id: string;
@@ -28,4 +29,10 @@ export interface Group {
     stories: StoryType[];
     type: GroupType;
     settings?: StoriesGroupSettings;
+}
+export interface LoadStory {
+    id: string;
+    position: number;
+    groupId: string;
+    status: 'init' | 'waiting' | 'loading' | 'ready';
 }
