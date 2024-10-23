@@ -15,7 +15,6 @@ import { StorySwiperContent } from './_components';
 import './StoryModal.scss';
 
 const b = block('StorySdkModal');
-
 interface StoryModalProps {
   currentGroup?: Group;
   stories?: StoryType[];
@@ -392,8 +391,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   useEffect(() => {
     const body = document.querySelector('body');
     if (storyModalRef.current && body) {
-      if (isMobile && contentHeight !== '100%') {
-        storyModalRef.current.style.setProperty('height', `${contentHeight}px`);
+      if (isMobile) {
+        storyModalRef.current.style.setProperty('height', `100vh`);
       } else {
         storyModalRef.current.style.setProperty('height', `100%`);
       }
@@ -852,7 +851,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           top: window?.pageYOffset || document.documentElement.scrollTop
         }}
       >
-        <div className={b('body')}>
+        <div
+          className={b('body', { centered: isMobile })}
+          style={{
+            height: isMobile ? contentHeight : undefined
+          }}
+        >
           {!isLoading && (
             <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
               <LeftArrowIcon />

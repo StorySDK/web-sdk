@@ -19,6 +19,7 @@
   background: #18182E;
   justify-content: center;
   align-items: flex-start;
+  font-family: 'Inter', Helvetica, sans-serif;
 
   &::after {
     content: "";
@@ -88,6 +89,11 @@
     z-index: 2;
     height: 100%;
     width: 100%;
+
+    &_centered {
+      top: 50%;
+      transform: translateY(-50%);
+    }
 
     @media (min-width: 768px) {
       width: auto;

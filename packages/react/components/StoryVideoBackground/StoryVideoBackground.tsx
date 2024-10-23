@@ -47,8 +47,6 @@ export const StoryVideoBackground = ({
   }, [isMuted]);
 
   useEffect(() => {
-    console.log('isBackgroundVideoPlaying', isPlaying);
-
     if (isPlaying) {
       videoRef.current?.play();
     } else {
