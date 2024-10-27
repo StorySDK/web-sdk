@@ -62,10 +62,11 @@ export const StoryVideoBackground = ({
         disablePictureInPicture
         loop
         muted={isMuted ?? autoplay}
-        playsInline={autoplay}
+        playsInline
         preload="metadata"
         ref={videoRef}
         src={src}
+        webkit-playsinline="true"
         onLoadStart={onLoadStart}
         onLoadedData={onLoadEnd}
         onPause={handlePause}

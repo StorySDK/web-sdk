@@ -33,9 +33,8 @@ declare const widgets: {
     }>;
     video: import("@types").WidgetComponent<{
         params: import("@types").VideoWidgetParamsType;
-        isVideoPlaying?: boolean | undefined;
+        autoplay?: boolean | undefined;
         isMuted?: boolean | undefined;
-        isAutoplay?: boolean | undefined;
         isDisplaying?: boolean | undefined;
         handleMediaPlaying?: ((isPlaying: boolean) => void) | undefined;
         handleMediaLoading?: ((isLoading: boolean) => void) | undefined;
@@ -45,7 +44,6 @@ declare const widgets: {
         isReadOnly?: boolean | undefined;
         onClick?(): void;
         onGoToStory?(storyId: string): void;
-        handleMuteVideo?(isMuted: boolean): void;
     }>;
     ellipse: import("@types").WidgetComponent<{
         params: import("@types").EllipseWidgetParamsType;
@@ -82,7 +80,6 @@ declare const widgets: {
         params: import("@types").SwipeUpWidgetParamsType;
         isReadOnly?: boolean | undefined;
         onSwipe?(): void;
-        handleMuteVideo?(isMuted: boolean): void;
     }>;
     talk_about: import("@types").WidgetComponent<{
         id: string;
@@ -141,7 +138,6 @@ declare const widgets: {
     link: import("@types").WidgetComponent<{
         params: import("@types").LinkWidgetParamsType;
         isReadOnly?: boolean | undefined;
-        handleMuteVideo?(isMuted: boolean): void;
     }>;
 };
 export default widgets;

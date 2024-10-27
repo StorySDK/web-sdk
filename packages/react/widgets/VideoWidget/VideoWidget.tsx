@@ -65,11 +65,12 @@ export const VideoWidget: WidgetComponent<{
         disablePictureInPicture
         loop
         muted={props.isMuted ?? props.isAutoplay}
-        playsInline={props.isAutoplay}
+        playsInline
         preload="metadata"
         ref={videoRef}
         src={videoPreviewUrl ?? videoUrl}
         style={styles}
+        webkit-playsinline="true"
         onLoadStart={() => {
           setIsVideoLoading(true);
         }}
