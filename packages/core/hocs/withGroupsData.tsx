@@ -53,6 +53,7 @@ const withGroupsData =
     const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
     const [width] = useWindowSize();
     const isMobile = useMemo(() => width < 768, [width]);
+    const [isNeedToLoad, setIsNeedToLoad] = useState(false);
 
     const [groupDuration, setGroupDuration] = useState<DurationProps>({
       groupId: '',
@@ -213,6 +214,22 @@ const withGroupsData =
     );
 
     useEffect(() => {
+      setIsNeedToLoad(true);
+
+      const handleResume = () => {
+        setIsNeedToLoad(true);
+      };
+
+      document.addEventListener('resume', handleResume, false);
+
+      return () => {
+        document.removeEventListener('resume', handleResume, false);
+      };
+    }, []);
+
+    useEffect(() => {
+      if (!isNeedToLoad) return;
+
       setLoadStatus('loading');
 
       API.app.getApp().then((appData) => {
@@ -282,7 +299,9 @@ const withGroupsData =
           }
         }
       });
-    }, []);
+
+      setIsNeedToLoad(false);
+    }, [isNeedToLoad]);
 
     useEffect(() => {
       if (groups.length) {
@@ -353,7 +372,7 @@ const withGroupsData =
         groupView={groupView}
         groups={data ?? []}
         groupsClassName={options?.groupsClassName}
-        isLoading={data === null}
+        isLoading={data === null || loadStatus === 'loading'}
         isShowLabel={isShowLabel}
         isShowMockup={isShowMockup}
         isStatusBarActive={options?.isStatusBarActive}

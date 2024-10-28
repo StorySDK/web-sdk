@@ -107,7 +107,7 @@ export class Story {
 export const init = () => {
   if (!window) return;
 
-  window.onload = () => {
+  const initStorySDK = () => {
     const container = document.querySelector('[data-storysdk-token]');
     if (container) {
       const token = container.getAttribute('data-storysdk-token');
@@ -156,4 +156,16 @@ export const init = () => {
       console.warn('StorySDK: container not found.');
     }
   };
+
+  window.onload = () => {
+    initStorySDK();
+  };
+
+  document.addEventListener(
+    'resume',
+    () => {
+      initStorySDK();
+    },
+    false
+  );
 };

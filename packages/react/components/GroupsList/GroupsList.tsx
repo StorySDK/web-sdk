@@ -84,6 +84,18 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   const [groupMinHeight, setGroupMinHeight] = useState(100);
 
   useEffect(() => {
+    const handlePause = () => {
+      setModalShow(false);
+    };
+
+    document.addEventListener('pause', handlePause, false);
+
+    return () => {
+      document.removeEventListener('pause', handlePause, false);
+    };
+  }, []);
+
+  useEffect(() => {
     if (startGroupId) {
       const groupIndex = groups.findIndex((group) => group.id === startGroupId);
 
