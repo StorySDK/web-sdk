@@ -45,11 +45,19 @@ export const VideoWidget: WidgetComponent<{
   };
 
   useEffect(() => {
+    const videoElement = videoRef.current;
+
     if (props.isVideoPlaying && props.isDisplaying) {
-      videoRef.current?.play();
+      videoElement?.play().catch((error) => {
+        console.error('StorySDK: Error attempting to play media:', error);
+      });
     } else {
-      videoRef.current?.pause();
+      videoElement?.pause();
     }
+
+    return () => {
+      videoElement?.pause();
+    };
   }, [props.isVideoPlaying, props.isDisplaying]);
 
   return (

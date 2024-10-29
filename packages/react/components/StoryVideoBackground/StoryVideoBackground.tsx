@@ -47,11 +47,19 @@ export const StoryVideoBackground = ({
   }, [isMuted]);
 
   useEffect(() => {
+    const videoElement = videoRef.current;
+
     if (isPlaying) {
-      videoRef.current?.play();
+      videoElement?.play().catch((error) => {
+        console.error('StorySDK: Error attempting to play media:', error);
+      });
     } else {
-      videoRef.current?.pause();
+      videoElement?.pause();
     }
+
+    return () => {
+      videoElement?.pause();
+    };
   }, [isPlaying]);
 
   return (
