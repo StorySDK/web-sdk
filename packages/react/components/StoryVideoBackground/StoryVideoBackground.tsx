@@ -32,14 +32,6 @@ export const StoryVideoBackground = ({
 }: PropTypes) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
-  const handlePlay = () => {
-    handleVideoBackgroundPlaying?.(true);
-  };
-
-  const handlePause = () => {
-    handleVideoBackgroundPlaying?.(false);
-  };
-
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = !!isMuted;
@@ -62,6 +54,38 @@ export const StoryVideoBackground = ({
     };
   }, [isPlaying]);
 
+  useEffect(() => {
+    const videoElement = videoRef.current;
+
+    const handleLoadStart = () => {
+      onLoadStart?.();
+    };
+
+    const handleCanPlay = () => {
+      onLoadEnd?.();
+    };
+
+    const handlePause = () => {
+      handleVideoBackgroundPlaying?.(false);
+    };
+
+    const handlePlay = () => {
+      handleVideoBackgroundPlaying?.(true);
+    };
+
+    videoElement?.addEventListener('loadstart', handleLoadStart);
+    videoElement?.addEventListener('canplay', handleCanPlay);
+    videoElement?.addEventListener('pause', handlePause);
+    videoElement?.addEventListener('play', handlePlay);
+
+    return () => {
+      videoElement?.removeEventListener('loadstart', handleLoadStart);
+      videoElement?.removeEventListener('canplay', handleCanPlay);
+      videoElement?.removeEventListener('pause', handlePause);
+      videoElement?.removeEventListener('play', handlePlay);
+    };
+  }, []);
+
   return (
     <div className={b()} role="button" tabIndex={0}>
       <video
@@ -75,10 +99,6 @@ export const StoryVideoBackground = ({
         ref={videoRef}
         src={src}
         webkit-playsinline="true"
-        onLoadStart={onLoadStart}
-        onLoadedData={onLoadEnd}
-        onPause={handlePause}
-        onPlay={handlePlay}
       />
       <div className={b('loader', { show: isLoading })}>
         <IconLoader className={b('loaderIcon').toString()} />

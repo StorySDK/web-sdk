@@ -160,12 +160,4 @@ export const init = () => {
   window.onload = () => {
     initStorySDK();
   };
-
-  document.addEventListener(
-    'resume',
-    () => {
-      initStorySDK();
-    },
-    false
-  );
 };

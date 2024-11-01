@@ -91,10 +91,15 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     [desktopContainerWidth, currentStorySize.width]
   );
 
+  const imageBackgroundRef = React.useRef<HTMLImageElement>(null);
+
   const [resourcesToLoad, setResourcesToLoad] = useState(1);
 
   useEffect(() => {
     if (!isDisplaying) {
+      if (resourcesToLoad > 0) {
+        setResourcesToLoad(1);
+      }
       return;
     }
 
@@ -114,7 +119,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     });
 
     setResourcesToLoad(resources);
-  }, [story.storyData, story.background, isDisplaying]);
+  }, [story, isDisplaying]);
 
   const togglePlay = () => {
     handleVideoPlaying(!isVideoPlaying);
@@ -125,6 +130,25 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
       setResourcesToLoad((prev) => (prev - 1 > 0 ? prev - 1 : 0));
     }
   }, []);
+
+  useEffect(() => {
+    const handleLoad = () => {
+      handleResourcesLoading(false);
+    };
+
+    const imageBackgroundElement = imageBackgroundRef.current;
+
+    if (imageBackgroundElement && story.background.type === 'image') {
+      imageBackgroundElement.addEventListener('load', handleLoad);
+      imageBackgroundElement.src = story.background.value;
+    }
+
+    return () => {
+      if (imageBackgroundElement) {
+        imageBackgroundElement.removeEventListener('load', handleLoad);
+      }
+    };
+  }, [isDisplaying, handleResourcesLoading, story.background]);
 
   useEffect(() => {
     handleMediaLoading(resourcesToLoad > 0);
@@ -167,20 +191,11 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
           height: contentHeight
         }}
       >
-        {story.background.type === 'image' && (
-          <img
-            alt=""
-            className={b('imageBackground')}
-            src={story.background.value}
-            onLoad={() => {
-              handleResourcesLoading(false);
-            }}
-            onLoadStart={() => {
-              handleResourcesLoading(true);
-            }}
-          />
-        )}
-
+        <img
+          alt=""
+          className={b('imageBackground', { show: story.background.type === 'image' })}
+          ref={imageBackgroundRef}
+        />
         {story.background.type === 'video' && (
           <StoryVideoBackground
             autoplay={isAutoplayVideos}
