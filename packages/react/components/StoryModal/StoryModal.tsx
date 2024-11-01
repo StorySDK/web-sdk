@@ -213,6 +213,18 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const mockupRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
+    const handleResume = () => {
+      setLoadedStoriesIds({});
+    };
+
+    document.addEventListener('resume', handleResume, false);
+
+    return () => {
+      document.removeEventListener('resume', handleResume, false);
+    };
+  }, []);
+
+  useEffect(() => {
     if (mockupRef.current && isShowMockupCurrent) {
       const observer = new ResizeObserver(() => {
         if (mockupRef.current?.offsetWidth) {

@@ -32,14 +32,6 @@ export const StoryVideoBackground = ({
 }: PropTypes) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
-  const handlePlay = () => {
-    handleVideoBackgroundPlaying?.(true);
-  };
-
-  const handlePause = () => {
-    handleVideoBackgroundPlaying?.(false);
-  };
-
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = !!isMuted;
@@ -47,12 +39,52 @@ export const StoryVideoBackground = ({
   }, [isMuted]);
 
   useEffect(() => {
+    const videoElement = videoRef.current;
+
     if (isPlaying) {
-      videoRef.current?.play();
+      videoElement?.play().catch((error) => {
+        console.error('StorySDK: Error attempting to play media:', error);
+      });
     } else {
-      videoRef.current?.pause();
+      videoElement?.pause();
     }
+
+    return () => {
+      videoElement?.pause();
+    };
   }, [isPlaying]);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+
+    const handleLoadStart = () => {
+      onLoadStart?.();
+    };
+
+    const handleCanPlay = () => {
+      onLoadEnd?.();
+    };
+
+    const handlePause = () => {
+      handleVideoBackgroundPlaying?.(false);
+    };
+
+    const handlePlay = () => {
+      handleVideoBackgroundPlaying?.(true);
+    };
+
+    videoElement?.addEventListener('loadstart', handleLoadStart);
+    videoElement?.addEventListener('canplay', handleCanPlay);
+    videoElement?.addEventListener('pause', handlePause);
+    videoElement?.addEventListener('play', handlePlay);
+
+    return () => {
+      videoElement?.removeEventListener('loadstart', handleLoadStart);
+      videoElement?.removeEventListener('canplay', handleCanPlay);
+      videoElement?.removeEventListener('pause', handlePause);
+      videoElement?.removeEventListener('play', handlePlay);
+    };
+  }, []);
 
   return (
     <div className={b()} role="button" tabIndex={0}>
@@ -62,14 +94,11 @@ export const StoryVideoBackground = ({
         disablePictureInPicture
         loop
         muted={isMuted ?? autoplay}
-        playsInline={autoplay}
+        playsInline
         preload="metadata"
         ref={videoRef}
         src={src}
-        onLoadStart={onLoadStart}
-        onLoadedData={onLoadEnd}
-        onPause={handlePause}
-        onPlay={handlePlay}
+        webkit-playsinline="true"
       />
       <div className={b('loader', { show: isLoading })}>
         <IconLoader className={b('loaderIcon').toString()} />

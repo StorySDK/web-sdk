@@ -32,15 +32,18 @@ export const SwipeUpWidget: WidgetComponent<{
         onSwipe();
       }
 
-      const tab = window?.open(url, '_blank');
-      if (tab) {
-        tab.focus();
-
-        handleMuteVideo?.(true);
-
-        setTouchStart(0);
-        setTouchEnd(0);
+      if (window.cordova) {
+        window.cordova?.InAppBrowser?.open(url, '_system');
+      } else {
+        const tab = window?.open(url, '_blank');
+        if (tab) {
+          tab.focus();
+        }
       }
+
+      handleMuteVideo?.(true);
+      setTouchStart(0);
+      setTouchEnd(0);
     }
   }, [onSwipe, handleMuteVideo, touchEnd, touchStart, url]);
 
@@ -49,12 +52,16 @@ export const SwipeUpWidget: WidgetComponent<{
       onSwipe();
     }
 
-    const tab = window?.open(url, '_blank');
-    if (tab) {
-      tab.focus();
-
-      handleMuteVideo?.(true);
+    if (window.cordova) {
+      window.cordova?.InAppBrowser?.open(url, '_system');
+    } else {
+      const tab = window?.open(url, '_blank');
+      if (tab) {
+        tab.focus();
+      }
     }
+
+    handleMuteVideo?.(true);
   }, [handleMuteVideo, onSwipe, url]);
 
   return (

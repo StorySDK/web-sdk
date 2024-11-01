@@ -29,12 +29,15 @@ export const LinkWidget: WidgetComponent<{
 
     if (url) {
       setTimeout(() => {
-        const tab = window?.open(url, '_blank');
-        if (tab) {
-          tab.focus();
-
-          props.handleMuteVideo?.(true);
+        if (window.cordova) {
+          window.cordova?.InAppBrowser?.open(url, '_system');
+        } else {
+          const tab = window?.open(url, '_blank');
+          if (tab) {
+            tab.focus();
+          }
         }
+        props.handleMuteVideo?.(true);
       }, DELAY_MS);
     }
   }, [props, url]);

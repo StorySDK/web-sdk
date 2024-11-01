@@ -4,6 +4,16 @@ import { BackgroundColorType, ClickMeWidgetParamsType, WidgetComponent } from '@
 import { MaterialIcon } from '@components';
 import './ClickMeWidget.scss';
 
+declare global {
+  interface Window {
+    cordova?: {
+      InAppBrowser?: {
+        open: (url: string, target: string) => void;
+      };
+    };
+  }
+}
+
 const b = block('ClickMeWidget');
 
 const DELAY_MS = 200;
@@ -52,12 +62,16 @@ export const ClickMeWidget: WidgetComponent<{
 
     if (actionType === 'link' && url) {
       setTimeout(() => {
-        const tab = window?.open(url, '_blank');
-        if (tab) {
-          tab.focus();
-
-          props.handleMuteVideo?.(true);
+        if (window.cordova) {
+          window.cordova?.InAppBrowser?.open(url, '_system');
+        } else {
+          const tab = window?.open(url, '_blank');
+          if (tab) {
+            tab.focus();
+          }
         }
+
+        props.handleMuteVideo?.(true);
       }, DELAY_MS);
     } else if (actionType === 'story' && onGoToStory && storyId) {
       setTimeout(() => {

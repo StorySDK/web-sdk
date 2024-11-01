@@ -43,6 +43,7 @@ export const RectangleWidget: WidgetComponent<{ params: RectangleWidgetParamsTyp
               playsInline
               preload="metadata"
               src={fillColor.value}
+              webkit-playsinline="true"
             />
           )}
         </div>

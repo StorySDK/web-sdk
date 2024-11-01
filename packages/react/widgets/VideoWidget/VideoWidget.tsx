@@ -30,27 +30,59 @@ export const VideoWidget: WidgetComponent<{
 
   useEffect(() => {
     props.handleMediaLoading?.(isVideoLoading);
-  }, [isVideoLoading, props]);
+  }, [isVideoLoading]);
 
   const togglePlay = () => {
     props.handleMediaPlaying?.(!props.isVideoPlaying);
   };
 
-  const handlePlay = () => {
-    props.handleMediaPlaying?.(true);
-  };
+  useEffect(() => {
+    const videoElement = videoRef.current;
 
-  const handlePause = () => {
-    props.handleMediaPlaying?.(false);
-  };
+    if (props.isVideoPlaying && props.isDisplaying) {
+      videoElement?.play().catch((error) => {
+        console.error('StorySDK: Error attempting to play media:', error);
+      });
+    } else {
+      videoElement?.pause();
+    }
+
+    return () => {
+      videoElement?.pause();
+    };
+  }, [props.isVideoPlaying, props.isDisplaying]);
 
   useEffect(() => {
-    if (props.isVideoPlaying && props.isDisplaying) {
-      videoRef.current?.play();
-    } else {
-      videoRef.current?.pause();
-    }
-  }, [props.isVideoPlaying, props.isDisplaying]);
+    const videoElement = videoRef.current;
+
+    const handleLoadStart = () => {
+      setIsVideoLoading(true);
+    };
+
+    const handleCanPlay = () => {
+      setIsVideoLoading(false);
+    };
+
+    const handlePause = () => {
+      props.handleMediaPlaying?.(false);
+    };
+
+    const handlePlay = () => {
+      props.handleMediaPlaying?.(true);
+    };
+
+    videoElement?.addEventListener('loadstart', handleLoadStart);
+    videoElement?.addEventListener('canplay', handleCanPlay);
+    videoElement?.addEventListener('pause', handlePause);
+    videoElement?.addEventListener('play', handlePlay);
+
+    return () => {
+      videoElement?.removeEventListener('loadstart', handleLoadStart);
+      videoElement?.removeEventListener('canplay', handleCanPlay);
+      videoElement?.removeEventListener('pause', handlePause);
+      videoElement?.removeEventListener('play', handlePlay);
+    };
+  }, []);
 
   return (
     <div
@@ -65,19 +97,12 @@ export const VideoWidget: WidgetComponent<{
         disablePictureInPicture
         loop
         muted={props.isMuted ?? props.isAutoplay}
-        playsInline={props.isAutoplay}
+        playsInline
         preload="metadata"
         ref={videoRef}
         src={videoPreviewUrl ?? videoUrl}
         style={styles}
-        onLoadStart={() => {
-          setIsVideoLoading(true);
-        }}
-        onLoadedData={() => {
-          setIsVideoLoading(false);
-        }}
-        onPause={handlePause}
-        onPlay={handlePlay}
+        webkit-playsinline="true"
       />
       {!props.isVideoPlaying && !props.isAutoplay && !isVideoLoading && (
         <button className={b('playBtn')}>
