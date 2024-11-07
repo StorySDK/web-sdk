@@ -17,6 +17,7 @@ interface StorySwiperContentProps {
   isShowMockupCurrent?: boolean;
   isGroupWithFilledBackground?: boolean;
   isProgressHidden?: boolean;
+  isAutoplay?: boolean;
   isBackroundFilled?: boolean;
   currentGroupType: GroupType;
   currentGroup: any;
@@ -89,6 +90,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     isForceCloseAvailable,
     playStatus,
     jsConfetti,
+    isAutoplay,
     isAutoplayVideos,
     handleLoadStory,
     handleClose,
@@ -115,6 +117,10 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
   const smallBorderRadius = useAdaptiveValue(INIT_SMALL_RADIUS);
   const [isVideoMuted, setIsVideoMuted] = useState<boolean>(!isAutoplayVideos);
+
+  useEffect(() => {
+    setIsVideoMuted(!!isAutoplay);
+  }, [isAutoplay]);
 
   const controlTop = isLarge ? controlTopLarge : controlTopSmall;
   const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
@@ -155,7 +161,9 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   }, [isMobile, isShowMockupCurrent, heightGap]);
 
   useEffect(() => {
-    setIsVideoMuted(!isVideoPlaying || !isBackgroundVideoPlaying);
+    if (!isAutoplay) {
+      setIsVideoMuted(!isVideoPlaying || !isBackgroundVideoPlaying);
+    }
   }, [isVideoPlaying, isBackgroundVideoPlaying]);
 
   const isVideoExists = useMemo(

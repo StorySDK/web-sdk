@@ -19,6 +19,7 @@ interface StoryModalProps {
   currentGroup?: Group;
   stories?: StoryType[];
   isShowing: boolean;
+  isAutoplay?: boolean;
   forbidClose?: boolean;
   isProgressHidden?: boolean;
   isShowMockup?: boolean;
@@ -173,6 +174,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     storyWidth,
     devMode,
     storyHeight,
+    isAutoplay,
     openInExternalModal,
     onClose,
     onNextGroup,
@@ -909,6 +911,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               handleVideoPlaying={setIsVideoPlaying}
               height={height}
               heightGap={heightGap}
+              isAutoplay={isAutoplay}
               isAutoplayVideos={isAutoplayVideos}
               isBackgroundVideoPlaying={isBackgroundVideoPlaying}
               isBackroundFilled={isBackroundFilled}

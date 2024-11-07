@@ -176,6 +176,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           currentGroup={currentGroupMemo}
           devMode={devMode}
           forbidClose={forbidClose}
+          isAutoplay={autoplay}
           isFirstGroup={currentGroup === 0}
           isLastGroup={currentGroup === groups?.length - 1}
           isLoading={isLoading}
