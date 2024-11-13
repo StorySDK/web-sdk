@@ -11,6 +11,7 @@ interface StorySwiperContentProps {
     isShowMockupCurrent?: boolean;
     isGroupWithFilledBackground?: boolean;
     isProgressHidden?: boolean;
+    isAutoplay?: boolean;
     isBackroundFilled?: boolean;
     currentGroupType: GroupType;
     currentGroup: any;
