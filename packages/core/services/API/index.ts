@@ -1,4 +1,4 @@
-import { group } from 'console';
+import { group, time } from 'console';
 import axios from 'axios';
 import ReactGA from 'react-ga4';
 
@@ -35,6 +35,13 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        ReactGA.gtag('event', 'storysdk_group_duration', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          value: params.seconds,
+          language: params.language
+        });
+
         ReactGA.event({
           category: 'StorySDK-Groups',
           action: 'duration',
@@ -55,6 +62,12 @@ export const API = {
         });
       },
       onOpen(params: { groupId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_group_open', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          language: params.language
+        });
+
         ReactGA.event({
           category: 'StorySDK-Groups',
           action: 'open',
@@ -74,6 +87,12 @@ export const API = {
         });
       },
       onClose(params: { groupId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_group_close', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          language: params.language
+        });
+
         ReactGA.event({
           category: 'StorySDK-Groups',
           action: 'close',
@@ -101,6 +120,14 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        ReactGA.gtag('event', 'storysdk_story_duration', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          value: params.seconds,
+          language: params.language
+        });
+
         ReactGA.event({
           category: 'StorySDK-Stories',
           action: 'duration',
@@ -129,6 +156,14 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        ReactGA.gtag('event', 'storysdk_story_impression', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          value: params.seconds,
+          language: params.language
+        });
+
         ReactGA.event({
           category: 'StorySDK-Stories',
           action: 'impression',
@@ -150,6 +185,13 @@ export const API = {
         });
       },
       onOpen(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_story_open', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language
+        });
+
         ReactGA.event({
           category: 'StorySDK-Stories',
           action: 'open',
@@ -170,6 +212,13 @@ export const API = {
         });
       },
       onClose(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_story_close', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language
+        });
+
         ReactGA.event({
           category: 'StorySDK-Stories',
           action: 'close',
@@ -190,6 +239,13 @@ export const API = {
         });
       },
       onNext(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_story_next', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language
+        });
+
         ReactGA.event({
           category: 'StorySDK-Stories',
           action: 'next',
@@ -210,6 +266,13 @@ export const API = {
         });
       },
       onPrev(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_story_back', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language
+        });
+
         ReactGA.event({
           category: 'StorySDK-Stories',
           action: 'back',
@@ -240,6 +303,15 @@ export const API = {
           uniqUserId: string;
           language: string;
         }) {
+          ReactGA.gtag('event', 'storysdk_widget_answer', {
+            group_id: params.groupId,
+            user_id: params.uniqUserId,
+            story_id: params.storyId,
+            language: params.language,
+            value: params.answer,
+            widget_id: params.widgetId
+          });
+
           ReactGA.event({
             category: 'StorySDK-Widgets',
             action: 'answer',
@@ -270,6 +342,15 @@ export const API = {
           url: string;
           language: string;
         }) {
+          ReactGA.gtag('event', 'storysdk_widget_click', {
+            group_id: params.groupId,
+            user_id: params.uniqUserId,
+            story_id: params.storyId,
+            language: params.language,
+            value: params.url,
+            widget_id: params.widgetId
+          });
+
           ReactGA.event({
             category: 'StorySDK-Widgets',
             action: 'click',
@@ -300,6 +381,14 @@ export const API = {
         language: string;
         storyId?: string;
       }) {
+        ReactGA.gtag('event', 'storysdk_quiz_start', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language,
+          time: params.time
+        });
+
         ReactGA.event({
           category: 'StorySDK-Quizes',
           action: 'start',
@@ -327,6 +416,14 @@ export const API = {
         language: string;
         storyId?: string;
       }) {
+        ReactGA.gtag('event', 'storysdk_quiz_finish', {
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language,
+          time: params.time
+        });
+
         ReactGA.event({
           category: 'StorySDK-Quizes',
           action: 'finish',
