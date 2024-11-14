@@ -34,6 +34,7 @@
     "luxon": "^3.2.1",
     "nanoid": "^3.1.30",
     "parse-color": "^1.0.0",
+    "react-ga4": "^2.1.0",
     "react-loading-skeleton": "^3.0.2",
     "simplebar-react": "^3.2.4",
     "use-long-press": "^3.2.0"

@@ -1,4 +1,6 @@
+import { group } from 'console';
 import axios from 'axios';
+import ReactGA from 'react-ga4';
 
 export const API = {
   app: {
@@ -33,6 +35,13 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        ReactGA.event({
+          category: 'StorySDK-Groups',
+          action: 'duration',
+          label: params.groupId,
+          value: params.seconds
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -46,6 +55,12 @@ export const API = {
         });
       },
       onOpen(params: { groupId: string; uniqUserId: string; language: string }) {
+        ReactGA.event({
+          category: 'StorySDK-Groups',
+          action: 'open',
+          label: params.groupId
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -59,6 +74,12 @@ export const API = {
         });
       },
       onClose(params: { groupId: string; uniqUserId: string; language: string }) {
+        ReactGA.event({
+          category: 'StorySDK-Groups',
+          action: 'close',
+          label: params.groupId
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -80,6 +101,13 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        ReactGA.event({
+          category: 'StorySDK-Stories',
+          action: 'duration',
+          label: params.storyId,
+          value: params.seconds
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -101,6 +129,13 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        ReactGA.event({
+          category: 'StorySDK-Stories',
+          action: 'impression',
+          label: params.storyId,
+          value: params.seconds
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -115,6 +150,12 @@ export const API = {
         });
       },
       onOpen(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.event({
+          category: 'StorySDK-Stories',
+          action: 'open',
+          label: params.storyId
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -129,6 +170,12 @@ export const API = {
         });
       },
       onClose(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.event({
+          category: 'StorySDK-Stories',
+          action: 'close',
+          label: params.storyId
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -143,6 +190,12 @@ export const API = {
         });
       },
       onNext(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.event({
+          category: 'StorySDK-Stories',
+          action: 'next',
+          label: params.storyId
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -157,6 +210,12 @@ export const API = {
         });
       },
       onPrev(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.event({
+          category: 'StorySDK-Stories',
+          action: 'back',
+          label: params.storyId
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -181,6 +240,12 @@ export const API = {
           uniqUserId: string;
           language: string;
         }) {
+          ReactGA.event({
+            category: 'StorySDK-Widgets',
+            action: 'answer',
+            label: params.widgetId
+          });
+
           return axios({
             method: 'post',
             url: `/reactions`,
@@ -205,6 +270,12 @@ export const API = {
           url: string;
           language: string;
         }) {
+          ReactGA.event({
+            category: 'StorySDK-Widgets',
+            action: 'click',
+            label: params.widgetId
+          });
+
           return axios({
             method: 'post',
             url: `/reactions`,
@@ -229,6 +300,13 @@ export const API = {
         language: string;
         storyId?: string;
       }) {
+        ReactGA.event({
+          category: 'StorySDK-Quizes',
+          action: 'start',
+          label: params.storyId,
+          value: +params.time
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -249,6 +327,13 @@ export const API = {
         language: string;
         storyId?: string;
       }) {
+        ReactGA.event({
+          category: 'StorySDK-Quizes',
+          action: 'finish',
+          label: params.storyId,
+          value: +params.time
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,

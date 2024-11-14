@@ -4,6 +4,7 @@ import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
 import axios from 'axios';
+import ReactGA from 'react-ga4';
 import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
@@ -248,6 +249,10 @@ const withGroupsData =
 
             if (app.settings.fonts?.length) {
               loadFontsToPage(app.settings.fonts);
+            }
+
+            if (app.settings.integrations.googleAnalytics.trackingId) {
+              ReactGA.initialize(app.settings.integrations.googleAnalytics.trackingId);
             }
 
             setAppLocale(app.localization);
