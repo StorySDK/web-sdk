@@ -251,7 +251,7 @@ const withGroupsData =
               loadFontsToPage(app.settings.fonts);
             }
 
-            if (app.settings.integrations.googleAnalytics.trackingId) {
+            if (app.settings?.integrations?.googleAnalytics?.trackingId) {
               ReactGA.initialize(app.settings.integrations.googleAnalytics.trackingId);
             }
 
