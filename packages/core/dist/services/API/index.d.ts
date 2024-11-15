@@ -1,4 +1,3 @@
-import { time } from 'console';
 export declare const API: {
     app: {
         getApp(): import("axios").AxiosPromise<any>;

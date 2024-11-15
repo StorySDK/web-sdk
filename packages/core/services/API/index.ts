@@ -1,4 +1,3 @@
-import { group, time } from 'console';
 import axios from 'axios';
 import ReactGA from 'react-ga4';
 
@@ -36,17 +35,11 @@ export const API = {
         language: string;
       }) {
         ReactGA.gtag('event', 'storysdk_group_duration', {
+          event_category: 'storysdk_groups',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           value: params.seconds,
           language: params.language
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Groups',
-          action: 'duration',
-          label: params.groupId,
-          value: params.seconds
         });
 
         return axios({
@@ -63,15 +56,10 @@ export const API = {
       },
       onOpen(params: { groupId: string; uniqUserId: string; language: string }) {
         ReactGA.gtag('event', 'storysdk_group_open', {
+          event_category: 'storysdk_groups',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           language: params.language
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Groups',
-          action: 'open',
-          label: params.groupId
         });
 
         return axios({
@@ -88,15 +76,10 @@ export const API = {
       },
       onClose(params: { groupId: string; uniqUserId: string; language: string }) {
         ReactGA.gtag('event', 'storysdk_group_close', {
+          event_category: 'storysdk_groups',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           language: params.language
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Groups',
-          action: 'close',
-          label: params.groupId
         });
 
         return axios({
@@ -121,18 +104,12 @@ export const API = {
         language: string;
       }) {
         ReactGA.gtag('event', 'storysdk_story_duration', {
+          event_category: 'storysdk_stories',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           story_id: params.storyId,
           value: params.seconds,
           language: params.language
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Stories',
-          action: 'duration',
-          label: params.storyId,
-          value: params.seconds
         });
 
         return axios({
@@ -157,18 +134,12 @@ export const API = {
         language: string;
       }) {
         ReactGA.gtag('event', 'storysdk_story_impression', {
+          event_category: 'storysdk_stories',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           story_id: params.storyId,
           value: params.seconds,
           language: params.language
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Stories',
-          action: 'impression',
-          label: params.storyId,
-          value: params.seconds
         });
 
         return axios({
@@ -186,16 +157,11 @@ export const API = {
       },
       onOpen(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
         ReactGA.gtag('event', 'storysdk_story_open', {
+          event_category: 'storysdk_stories',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           story_id: params.storyId,
           language: params.language
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Stories',
-          action: 'open',
-          label: params.storyId
         });
 
         return axios({
@@ -213,16 +179,11 @@ export const API = {
       },
       onClose(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
         ReactGA.gtag('event', 'storysdk_story_close', {
+          event_category: 'storysdk_stories',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           story_id: params.storyId,
           language: params.language
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Stories',
-          action: 'close',
-          label: params.storyId
         });
 
         return axios({
@@ -240,16 +201,11 @@ export const API = {
       },
       onNext(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
         ReactGA.gtag('event', 'storysdk_story_next', {
+          event_category: 'storysdk_stories',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           story_id: params.storyId,
           language: params.language
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Stories',
-          action: 'next',
-          label: params.storyId
         });
 
         return axios({
@@ -267,16 +223,11 @@ export const API = {
       },
       onPrev(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
         ReactGA.gtag('event', 'storysdk_story_back', {
+          event_category: 'storysdk_stories',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           story_id: params.storyId,
           language: params.language
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Stories',
-          action: 'back',
-          label: params.storyId
         });
 
         return axios({
@@ -304,18 +255,13 @@ export const API = {
           language: string;
         }) {
           ReactGA.gtag('event', 'storysdk_widget_answer', {
+            event_category: 'storysdk_widgets',
             group_id: params.groupId,
             user_id: params.uniqUserId,
             story_id: params.storyId,
             language: params.language,
             value: params.answer,
             widget_id: params.widgetId
-          });
-
-          ReactGA.event({
-            category: 'StorySDK-Widgets',
-            action: 'answer',
-            label: params.widgetId
           });
 
           return axios({
@@ -343,18 +289,13 @@ export const API = {
           language: string;
         }) {
           ReactGA.gtag('event', 'storysdk_widget_click', {
+            event_category: 'storysdk_widgets',
             group_id: params.groupId,
             user_id: params.uniqUserId,
             story_id: params.storyId,
             language: params.language,
             value: params.url,
             widget_id: params.widgetId
-          });
-
-          ReactGA.event({
-            category: 'StorySDK-Widgets',
-            action: 'click',
-            label: params.widgetId
           });
 
           return axios({
@@ -382,18 +323,12 @@ export const API = {
         storyId?: string;
       }) {
         ReactGA.gtag('event', 'storysdk_quiz_start', {
+          event_category: 'storysdk_quizes',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           story_id: params.storyId,
           language: params.language,
           time: params.time
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Quizes',
-          action: 'start',
-          label: params.storyId,
-          value: +params.time
         });
 
         return axios({
@@ -417,18 +352,12 @@ export const API = {
         storyId?: string;
       }) {
         ReactGA.gtag('event', 'storysdk_quiz_finish', {
+          event_category: 'storysdk_quizes',
           group_id: params.groupId,
           user_id: params.uniqUserId,
           story_id: params.storyId,
           language: params.language,
           time: params.time
-        });
-
-        ReactGA.event({
-          category: 'StorySDK-Quizes',
-          action: 'finish',
-          label: params.storyId,
-          value: +params.time
         });
 
         return axios({
