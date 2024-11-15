@@ -252,9 +252,7 @@ const withGroupsData =
             }
 
             if (app.settings?.integrations?.googleAnalytics?.trackingId) {
-              ReactGA.initialize(app.settings.integrations.googleAnalytics.trackingId, {
-                testMode: options?.devMode === 'development' || options?.devMode === 'staging'
-              });
+              ReactGA.initialize(app.settings.integrations.googleAnalytics.trackingId);
             }
 
             setAppLocale(app.localization);

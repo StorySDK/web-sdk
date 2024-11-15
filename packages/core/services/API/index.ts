@@ -56,7 +56,7 @@ export const API = {
             type: 'duration',
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: params.seconds,
+            value: `${params.seconds}`,
             locale: params.language
           }
         });
@@ -143,7 +143,7 @@ export const API = {
             story_id: params.storyId,
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: params.seconds,
+            value: `${params.seconds}`,
             locale: params.language
           }
         });
@@ -179,7 +179,7 @@ export const API = {
             story_id: params.storyId,
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: params.seconds,
+            value: `${params.seconds}`,
             locale: params.language
           }
         });
@@ -327,7 +327,7 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.answer,
+              value: `${params.answer}`,
               locale: params.language
             }
           });
@@ -366,7 +366,7 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.url,
+              value: `${params.url}`,
               locale: params.language
             }
           });
@@ -404,7 +404,7 @@ export const API = {
             user_id: params.uniqUserId,
             group_id: params.groupId,
             story_id: params.storyId,
-            value: params.time,
+            value: `${params.time}`,
             locale: params.language
           }
         });
@@ -438,7 +438,7 @@ export const API = {
             type: 'finish',
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: params.time,
+            value: `${params.time}`,
             story_id: params.storyId,
             locale: params.language
           }
