@@ -87,27 +87,39 @@ export class Story {
       const debugContainer = document.querySelector('#storysdk-debug');
 
       axios.interceptors.request.use((request) => {
-        console.log('StorySDK - Starting Request', JSON.stringify(request, null, 2));
+        console.log('StorySDK - Starting Request to', request.url);
 
         if (debugContainer) {
           const debugElement = document.createElement('pre');
-          debugElement.innerHTML = JSON.stringify(request, null, 2);
+          debugElement.innerHTML = `Starting Request to: ${request.url}`;
           debugContainer.appendChild(debugElement);
         }
 
         return request;
       });
 
-      axios.interceptors.response.use((response) => {
-        console.log('StorySDK - Response:', JSON.stringify(response, null, 2));
+      axios.interceptors.response.use(
+        (response) => {
+          console.log('StorySDK - Response Status:', response.status);
 
-        if (debugContainer) {
-          const debugElement = document.createElement('pre');
-          debugElement.innerHTML = JSON.stringify(response, null, 2);
-          debugContainer.appendChild(debugElement);
+          if (debugContainer) {
+            const debugElement = document.createElement('pre');
+            debugElement.innerHTML = `Response Status: ${response.status}`;
+            debugContainer.appendChild(debugElement);
+          }
+          return response;
+        },
+        (error) => {
+          console.error('StorySDK - Response Error:', error);
+
+          if (debugContainer) {
+            const debugElement = document.createElement('pre');
+            debugElement.innerHTML = `Response Error: ${error}`;
+            debugContainer.appendChild(debugElement);
+          }
+          return Promise.reject(error);
         }
-        return response;
-      });
+      );
     }
 
     if (token) {
