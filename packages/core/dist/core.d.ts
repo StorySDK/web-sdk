@@ -14,12 +14,14 @@ export declare class Story {
         isStatusBarActive?: boolean;
         autoplay?: boolean;
         groupId?: string;
+        isDebugMode?: boolean;
         startStoryId?: string;
         forbidClose?: boolean;
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
     };
     constructor(token: string, options?: {
+        isDebugMode?: boolean;
         groupImageWidth?: number;
         groupImageHeight?: number;
         groupTitleSize?: number;

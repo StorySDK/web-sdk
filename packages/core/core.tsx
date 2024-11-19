@@ -21,6 +21,7 @@ export class Story {
     isStatusBarActive?: boolean;
     autoplay?: boolean;
     groupId?: string;
+    isDebugMode?: boolean;
     startStoryId?: string;
     forbidClose?: boolean;
     openInExternalModal?: boolean;
@@ -30,6 +31,7 @@ export class Story {
   constructor(
     token: string,
     options?: {
+      isDebugMode?: boolean;
       groupImageWidth?: number;
       groupImageHeight?: number;
       groupTitleSize?: number;
@@ -68,6 +70,7 @@ export class Story {
       this.options.openInExternalModal = options?.openInExternalModal;
       this.options.devMode = options?.devMode;
       this.options.isShowLabel = options?.isShowLabel;
+      this.options.isDebugMode = options?.isDebugMode;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -79,6 +82,33 @@ export class Story {
     }
 
     axios.defaults.baseURL = reqUrl;
+
+    if (options?.isDebugMode) {
+      const debugContainer = document.querySelector('#storysdk-debug');
+
+      axios.interceptors.request.use((request) => {
+        console.log('StorySDK - Starting Request', JSON.stringify(request, null, 2));
+
+        if (debugContainer) {
+          const debugElement = document.createElement('pre');
+          debugElement.innerHTML = JSON.stringify(request, null, 2);
+          debugContainer.appendChild(debugElement);
+        }
+
+        return request;
+      });
+
+      axios.interceptors.response.use((response) => {
+        console.log('StorySDK - Response:', JSON.stringify(response, null, 2));
+
+        if (debugContainer) {
+          const debugElement = document.createElement('pre');
+          debugElement.innerHTML = JSON.stringify(response, null, 2);
+          debugContainer.appendChild(debugElement);
+        }
+        return response;
+      });
+    }
 
     if (token) {
       axios.defaults.headers.common = { Authorization: `SDK ${token}` };
@@ -129,6 +159,7 @@ export const init = () => {
         const isStatusBarActive = container.getAttribute('data-storysdk-is-status-bar-active');
         const devMode = container.getAttribute('data-storysdk-dev-mode');
         const openInExternalModal = container.getAttribute('data-storysdk-open-in-external-modal');
+        const isDebugMode = container.getAttribute('data-storysdk-is-debug-mode');
 
         const story = new Story(token, {
           groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
@@ -146,7 +177,8 @@ export const init = () => {
           isShowMockup: isShowMockup === 'true',
           isShowLabel: isShowLabel === 'true',
           isStatusBarActive: isStatusBarActive === 'true',
-          openInExternalModal: openInExternalModal === 'true'
+          openInExternalModal: openInExternalModal === 'true',
+          isDebugMode: isDebugMode === 'true'
         });
         story.renderGroups(container);
       } else {
