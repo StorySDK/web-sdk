@@ -17,7 +17,8 @@ export declare class Story {
         isDebugMode?: boolean;
         startStoryId?: string;
         forbidClose?: boolean;
-        groupOutlineColor?: string;
+        activeGroupOutlineColor?: string;
+        groupsOutlineColor?: string;
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
     };
@@ -25,7 +26,8 @@ export declare class Story {
         isDebugMode?: boolean;
         groupImageWidth?: number;
         groupImageHeight?: number;
-        groupOutlineColor?: string;
+        activeGroupOutlineColor?: string;
+        groupsOutlineColor?: string;
         groupTitleSize?: number;
         groupClassName?: string;
         groupsClassName?: string;

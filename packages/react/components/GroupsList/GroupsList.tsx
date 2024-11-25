@@ -20,7 +20,8 @@ export interface GroupsListProps {
   groupsClassName?: string;
   storyWidth?: number;
   storyHeight?: number;
-  groupOutlineColor?: string;
+  activeGroupOutlineColor?: string;
+  groupsOutlineColor?: string;
   isStatusBarActive?: boolean;
   groupClassName?: string;
   isShowMockup?: boolean;
@@ -51,7 +52,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groupClassName,
     groupsClassName,
     groupImageWidth,
-    groupOutlineColor,
+    activeGroupOutlineColor,
+    groupsOutlineColor,
     groupImageHeight,
     groupTitleSize,
     isShowMockup,
@@ -281,11 +283,12 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                     .filter((group: any) => group.stories.length)
                     .map((group, index) => (
                       <GroupItem
+                        activeGroupOutlineColor={activeGroupOutlineColor}
                         groupClassName={groupClassName}
                         groupImageHeight={groupImageHeight}
                         groupImageWidth={groupImageWidth}
-                        groupOutlineColor={groupOutlineColor}
                         groupTitleSize={groupTitleSize}
+                        groupsOutlineColor={groupsOutlineColor}
                         imageUrl={group.imageUrl}
                         index={index}
                         key={group.id}

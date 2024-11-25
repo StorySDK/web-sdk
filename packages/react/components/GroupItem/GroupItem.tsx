@@ -12,7 +12,8 @@ interface Props {
   groupImageWidth?: number;
   groupImageHeight?: number;
   groupClassName?: string;
-  groupOutlineColor?: string;
+  activeGroupOutlineColor?: string;
+  groupsOutlineColor?: string;
   isChosen?: boolean;
   imageUrl: string;
   title: string;
@@ -29,7 +30,8 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
     index,
     type,
     groupClassName,
-    groupOutlineColor,
+    activeGroupOutlineColor,
+    groupsOutlineColor,
     groupTitleSize,
     groupImageWidth,
     groupImageHeight,
@@ -111,6 +113,18 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
     [view]
   );
 
+  const getOulineColor = () => {
+    if ((isChosen || isHovered) && activeGroupOutlineColor) {
+      return activeGroupOutlineColor;
+    }
+
+    if (groupsOutlineColor && !isChosen && !isHovered) {
+      return groupsOutlineColor;
+    }
+
+    return undefined;
+  };
+
   return (
     <button
       className={classNames(b({ view, type, chosen: isChosen }).toString(), groupClassName || '')}
@@ -141,13 +155,12 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
         />
         <div
           className={b('outline', {
-            background: !groupOutlineColor,
-            border: !!groupOutlineColor,
+            background: !activeGroupOutlineColor && !groupsOutlineColor,
+            border: !!activeGroupOutlineColor || !!groupsOutlineColor,
             view
           })}
           style={{
-            borderColor:
-              (isHovered || isChosen) && groupOutlineColor ? groupOutlineColor : undefined
+            borderColor: getOulineColor()
           }}
         />
       </div>
@@ -160,7 +173,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
             height: titleHeight,
             color:
               (isChosen || isHovered) && view !== 'rectangle' && view !== 'bigSquare'
-                ? groupOutlineColor
+                ? getOulineColor()
                 : undefined
           }}
         >
