@@ -9,7 +9,7 @@ import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage } from '../utils/fontsInclude';
-import { checkIos, getUniqUserId } from '../utils';
+import { checkIos, getUniqUserId, writeToDebug } from '../utils';
 import { useGroupCache, useStoryCache } from '../hooks';
 
 interface DurationProps {
@@ -26,8 +26,10 @@ const withGroupsData =
       groupImageHeight?: number;
       groupTitleSize?: number;
       groupClassName?: string;
+      groupOutlineColor?: string;
       isShowMockup?: boolean;
       isShowLabel?: boolean;
+      isDebugMode?: boolean;
       isStatusBarActive?: boolean;
       storyWidth?: number;
       storyHeight?: number;
@@ -234,6 +236,10 @@ const withGroupsData =
       setLoadStatus('loading');
 
       API.app.getApp().then((appData) => {
+        if (options?.isDebugMode) {
+          writeToDebug(`App data: ${JSON.stringify(appData)}`);
+        }
+
         if (!appData.data.error) {
           const app = appData.data.data;
 
@@ -261,6 +267,10 @@ const withGroupsData =
             setIsShowLabel(!app.plan || app.plan === 'Free');
 
             API.groups.getList().then((groupsData) => {
+              if (options?.isDebugMode) {
+                writeToDebug(`Groupd data: ${JSON.stringify(groupsData)}`);
+              }
+
               if (!groupsData.data.error) {
                 const groupsFetchedData = groupsData.data.data
                   .filter((item: any) => {
@@ -318,6 +328,10 @@ const withGroupsData =
               groupId: groupItem.id
             })
             .then((storiesData) => {
+              if (options?.isDebugMode) {
+                writeToDebug(`Stories data: ${JSON.stringify(storiesData)}`);
+              }
+
               if (!storiesData.data.error) {
                 const stories = storiesData.data.data.filter(
                   (storyItem: any) =>
@@ -373,6 +387,7 @@ const withGroupsData =
         groupClassName={options?.groupClassName}
         groupImageHeight={options?.groupImageHeight}
         groupImageWidth={options?.groupImageWidth}
+        groupOutlineColor={options?.groupOutlineColor}
         groupTitleSize={options?.groupTitleSize}
         groupView={groupView}
         groups={data ?? []}

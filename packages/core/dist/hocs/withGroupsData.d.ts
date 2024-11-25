@@ -5,8 +5,10 @@ declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: 
     groupImageHeight?: number | undefined;
     groupTitleSize?: number | undefined;
     groupClassName?: string | undefined;
+    groupOutlineColor?: string | undefined;
     isShowMockup?: boolean | undefined;
     isShowLabel?: boolean | undefined;
+    isDebugMode?: boolean | undefined;
     isStatusBarActive?: boolean | undefined;
     storyWidth?: number | undefined;
     storyHeight?: number | undefined;

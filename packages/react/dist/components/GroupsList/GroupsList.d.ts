@@ -11,6 +11,7 @@ export interface GroupsListProps {
     groupsClassName?: string;
     storyWidth?: number;
     storyHeight?: number;
+    groupOutlineColor?: string;
     isStatusBarActive?: boolean;
     groupClassName?: string;
     isShowMockup?: boolean;

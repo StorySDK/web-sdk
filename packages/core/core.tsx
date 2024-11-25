@@ -24,6 +24,7 @@ export class Story {
     isDebugMode?: boolean;
     startStoryId?: string;
     forbidClose?: boolean;
+    groupOutlineColor?: string;
     openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
   };
@@ -34,6 +35,7 @@ export class Story {
       isDebugMode?: boolean;
       groupImageWidth?: number;
       groupImageHeight?: number;
+      groupOutlineColor?: string;
       groupTitleSize?: number;
       groupClassName?: string;
       groupsClassName?: string;
@@ -71,6 +73,7 @@ export class Story {
       this.options.devMode = options?.devMode;
       this.options.isShowLabel = options?.isShowLabel;
       this.options.isDebugMode = options?.isDebugMode;
+      this.options.groupOutlineColor = options?.groupOutlineColor;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -88,10 +91,13 @@ export class Story {
 
       axios.interceptors.request.use((request) => {
         console.log('StorySDK - Starting Request to', request.url);
+        console.log('StorySDK - Request Headers:', request.headers);
 
         if (debugContainer) {
           const debugElement = document.createElement('pre');
-          debugElement.innerHTML = `Starting Request to: ${request.url}`;
+          debugElement.innerHTML = `Starting Request to: ${
+            request.url
+          }\nRequest Headers: ${JSON.stringify(request.headers, null, 2)}`;
           debugContainer.appendChild(debugElement);
         }
 
@@ -101,10 +107,13 @@ export class Story {
       axios.interceptors.response.use(
         (response) => {
           console.log('StorySDK - Response Status:', response.status);
+          console.log('StorySDK - Response Headers:', response.headers);
 
           if (debugContainer) {
             const debugElement = document.createElement('pre');
-            debugElement.innerHTML = `Response Status: ${response.status}`;
+            debugElement.innerHTML = `Response Status: ${
+              response.status
+            }\nResponse Headers: ${JSON.stringify(response.headers, null, 2)}`;
             debugContainer.appendChild(debugElement);
           }
           return response;
@@ -159,6 +168,7 @@ export const init = () => {
         const groupImageHeight = container.getAttribute('data-storysdk-group-image-height');
         const groupTitleSize = container.getAttribute('data-storysdk-group-title-size');
         const groupClassName = container.getAttribute('data-storysdk-group-class-name');
+        const groupOutlineColor = container.getAttribute('data-storysdk-group-outline-color');
         const groupsClassName = container.getAttribute('data-storysdk-groups-class-name');
         const autoplay = container.getAttribute('data-storysdk-autoplay');
         const groupId = container.getAttribute('data-storysdk-group-id');
@@ -190,7 +200,8 @@ export const init = () => {
           isShowLabel: isShowLabel === 'true',
           isStatusBarActive: isStatusBarActive === 'true',
           openInExternalModal: openInExternalModal === 'true',
-          isDebugMode: isDebugMode === 'true'
+          isDebugMode: isDebugMode === 'true',
+          groupOutlineColor: groupOutlineColor ?? undefined
         });
         story.renderGroups(container);
       } else {

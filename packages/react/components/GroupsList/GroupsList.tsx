@@ -20,6 +20,7 @@ export interface GroupsListProps {
   groupsClassName?: string;
   storyWidth?: number;
   storyHeight?: number;
+  groupOutlineColor?: string;
   isStatusBarActive?: boolean;
   groupClassName?: string;
   isShowMockup?: boolean;
@@ -50,6 +51,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     groupClassName,
     groupsClassName,
     groupImageWidth,
+    groupOutlineColor,
     groupImageHeight,
     groupTitleSize,
     isShowMockup,
@@ -282,6 +284,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                         groupClassName={groupClassName}
                         groupImageHeight={groupImageHeight}
                         groupImageWidth={groupImageWidth}
+                        groupOutlineColor={groupOutlineColor}
                         groupTitleSize={groupTitleSize}
                         imageUrl={group.imageUrl}
                         index={index}
