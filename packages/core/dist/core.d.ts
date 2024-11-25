@@ -14,14 +14,18 @@ export declare class Story {
         isStatusBarActive?: boolean;
         autoplay?: boolean;
         groupId?: string;
+        isDebugMode?: boolean;
         startStoryId?: string;
         forbidClose?: boolean;
+        groupOutlineColor?: string;
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
     };
     constructor(token: string, options?: {
+        isDebugMode?: boolean;
         groupImageWidth?: number;
         groupImageHeight?: number;
+        groupOutlineColor?: string;
         groupTitleSize?: number;
         groupClassName?: string;
         groupsClassName?: string;

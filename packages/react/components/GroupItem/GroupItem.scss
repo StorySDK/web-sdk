@@ -52,15 +52,51 @@
     }
   }
 
+  &__outline {
+    display: block;
+    position: absolute;
+    width: 94%;
+    height: 94%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-width: 2px;
+    border-style: solid;
+    border-color: #E9E6E9;
+    transition: 0.2s ease-out all;
+    box-sizing: content-box !important;
+    border-radius: 50%;
+
+    &_view {
+      &_square {
+        border-radius: 10px;
+      }
+
+      &_bigSquare {
+        border-radius: 10px;
+      }
+
+      &_rectangle {
+        border-radius: 10px; 
+      }
+    }  
+  }
+
   &_chosen, &:hover {
-    .GroupSdkItem__imgContainer::after {
+    .GroupSdkItem__outline_background {
       border: 2px solid transparent;
-      background:linear-gradient(-45deg,#B90AE0, #FF0198 ) border-box;
+      background: linear-gradient(-45deg,#B90AE0, #FF0198 ) border-box;
       -webkit-mask: 
          linear-gradient(#fff 0 0) padding-box, 
          linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor; 
               mask-composite: exclude; 
+    }
+
+    .GroupSdkItem__outline {
+      border-width: 2px;
+      border-style: solid;
+      border-color: #FD19CC;
     }
   }
 
@@ -74,22 +110,7 @@
     position: relative;
     margin-bottom: 4px;
 
-    &::after {
-      content: "";
-      display: block;
-      position: absolute;
-      width: 94%;
-      height: 94%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      border: 2px solid #E9E6E9;
-      transition: 0.2s ease-out all;
-      box-sizing: content-box;
-    }
-
-    &_view{
+    &_view {
       &_square {
         &::after {
           border-radius: 10px;
@@ -133,7 +154,7 @@
           left: 50%;
           transform: translate(-50%, -50%);
           width: 89%;
-          height: 100%;
+          height: 90%;
           background:rgba(0, 0, 0, 0.2);
           border-radius: 7px;
         }
@@ -181,12 +202,14 @@
     &_view {
       &_bigSquare {
         height: 100%;
+        padding: 5px 0;
         display: flex;
         align-items: flex-end;
       }
 
       &_rectangle {
        height: 100%;
+       padding: 5px 0;
        display: flex;
        align-items: flex-end;
       }
@@ -201,6 +224,7 @@
     color: #2B1E2A;
     word-break: break-word;
     transition: 0.2s ease-out all;
+    max-height: 100%;
 
     &_view {
       &_bigSquare {
@@ -208,7 +232,6 @@
         font-weight: 600;
         font-size: 10px;
         line-height: 1.2em;
-        padding-bottom: 10px;
         padding-left: 10px;
         padding-right: 10px;
         padding-top: 5px;
@@ -223,7 +246,6 @@
         font-weight: 600;
         font-size: 8px;
         line-height: 1.5em;
-        padding-bottom: 10px;
         padding-left: 10px;
         padding-right: 10px;
         text-align: left;

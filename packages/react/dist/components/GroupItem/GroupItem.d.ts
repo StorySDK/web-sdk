@@ -7,6 +7,7 @@ interface Props {
     groupImageWidth?: number;
     groupImageHeight?: number;
     groupClassName?: string;
+    groupOutlineColor?: string;
     isChosen?: boolean;
     imageUrl: string;
     title: string;

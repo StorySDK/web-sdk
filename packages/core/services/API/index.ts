@@ -1,4 +1,5 @@
 import axios from 'axios';
+import ReactGA from 'react-ga4';
 
 export const API = {
   app: {
@@ -33,6 +34,14 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        ReactGA.gtag('event', 'storysdk_group_duration', {
+          event_category: 'storysdk_groups',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          value: params.seconds,
+          language: params.language
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -40,12 +49,19 @@ export const API = {
             type: 'duration',
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: params.seconds,
+            value: `${params.seconds}`,
             locale: params.language
           }
         });
       },
       onOpen(params: { groupId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_group_open', {
+          event_category: 'storysdk_groups',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          language: params.language
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -59,6 +75,13 @@ export const API = {
         });
       },
       onClose(params: { groupId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_group_close', {
+          event_category: 'storysdk_groups',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          language: params.language
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -80,6 +103,15 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        ReactGA.gtag('event', 'storysdk_story_duration', {
+          event_category: 'storysdk_stories',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          value: params.seconds,
+          language: params.language
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -88,7 +120,7 @@ export const API = {
             story_id: params.storyId,
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: params.seconds,
+            value: `${params.seconds}`,
             locale: params.language
           }
         });
@@ -101,6 +133,15 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        ReactGA.gtag('event', 'storysdk_story_impression', {
+          event_category: 'storysdk_stories',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          value: params.seconds,
+          language: params.language
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -109,12 +150,20 @@ export const API = {
             story_id: params.storyId,
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: params.seconds,
+            value: `${params.seconds}`,
             locale: params.language
           }
         });
       },
       onOpen(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_story_open', {
+          event_category: 'storysdk_stories',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -129,6 +178,14 @@ export const API = {
         });
       },
       onClose(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_story_close', {
+          event_category: 'storysdk_stories',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -143,6 +200,14 @@ export const API = {
         });
       },
       onNext(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_story_next', {
+          event_category: 'storysdk_stories',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -157,6 +222,14 @@ export const API = {
         });
       },
       onPrev(params: { groupId: string; storyId: string; uniqUserId: string; language: string }) {
+        ReactGA.gtag('event', 'storysdk_story_back', {
+          event_category: 'storysdk_stories',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -181,6 +254,16 @@ export const API = {
           uniqUserId: string;
           language: string;
         }) {
+          ReactGA.gtag('event', 'storysdk_widget_answer', {
+            event_category: 'storysdk_widgets',
+            group_id: params.groupId,
+            user_id: params.uniqUserId,
+            story_id: params.storyId,
+            language: params.language,
+            value: params.answer,
+            widget_id: params.widgetId
+          });
+
           return axios({
             method: 'post',
             url: `/reactions`,
@@ -190,7 +273,7 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.answer,
+              value: `${params.answer}`,
               locale: params.language
             }
           });
@@ -205,6 +288,16 @@ export const API = {
           url: string;
           language: string;
         }) {
+          ReactGA.gtag('event', 'storysdk_widget_click', {
+            event_category: 'storysdk_widgets',
+            group_id: params.groupId,
+            user_id: params.uniqUserId,
+            story_id: params.storyId,
+            language: params.language,
+            value: params.url,
+            widget_id: params.widgetId
+          });
+
           return axios({
             method: 'post',
             url: `/reactions`,
@@ -214,7 +307,7 @@ export const API = {
               story_id: params.storyId,
               widget_id: params.widgetId,
               user_id: params.uniqUserId,
-              value: params.url,
+              value: `${params.url}`,
               locale: params.language
             }
           });
@@ -229,6 +322,15 @@ export const API = {
         language: string;
         storyId?: string;
       }) {
+        ReactGA.gtag('event', 'storysdk_quiz_start', {
+          event_category: 'storysdk_quizes',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language,
+          time: params.time
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -237,7 +339,7 @@ export const API = {
             user_id: params.uniqUserId,
             group_id: params.groupId,
             story_id: params.storyId,
-            value: params.time,
+            value: `${params.time}`,
             locale: params.language
           }
         });
@@ -249,6 +351,15 @@ export const API = {
         language: string;
         storyId?: string;
       }) {
+        ReactGA.gtag('event', 'storysdk_quiz_finish', {
+          event_category: 'storysdk_quizes',
+          group_id: params.groupId,
+          user_id: params.uniqUserId,
+          story_id: params.storyId,
+          language: params.language,
+          time: params.time
+        });
+
         return axios({
           method: 'post',
           url: `/reactions`,
@@ -256,7 +367,7 @@ export const API = {
             type: 'finish',
             user_id: params.uniqUserId,
             group_id: params.groupId,
-            value: params.time,
+            value: `${params.time}`,
             story_id: params.storyId,
             locale: params.language
           }

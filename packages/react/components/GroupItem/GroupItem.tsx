@@ -12,6 +12,7 @@ interface Props {
   groupImageWidth?: number;
   groupImageHeight?: number;
   groupClassName?: string;
+  groupOutlineColor?: string;
   isChosen?: boolean;
   imageUrl: string;
   title: string;
@@ -28,6 +29,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
     index,
     type,
     groupClassName,
+    groupOutlineColor,
     groupTitleSize,
     groupImageWidth,
     groupImageHeight,
@@ -36,6 +38,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
   } = props;
 
   const [titleHeight, setTitleHeight] = React.useState<string | number | undefined>(undefined);
+  const [isHovered, setIsHovered] = React.useState<boolean>(false);
 
   const titleRef = React.useRef<HTMLParagraphElement>(null);
   const btnRef = React.useRef<HTMLButtonElement>(null);
@@ -47,6 +50,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
   const BIG_SQUARE_IMAGE_WIDTH_INDEX = 0.9;
   const RECTANGLE_IMAGE_WIDTH_INDEX = 0.9;
   const RECTANGLE_IMAGE_HEIGHT_INDEX = 1.26;
+  const BIG_SQUARE_DEFAULT_HEIGHT = 84;
 
   useEffect(() => {
     if (
@@ -61,38 +65,48 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
 
   const getContainerSize = useCallback(
     (isHeight?: boolean) => {
-      if (groupImageWidth) {
-        switch (view) {
-          case 'bigSquare':
-            return groupImageWidth * BIG_SQUARE_CONTAINER_WIDTH_INDEX;
-          case 'rectangle':
-            return groupImageWidth * RECTANGLE_CONTAINER_WIDTH_INDEX;
-          default:
-            return isHeight ? undefined : groupImageWidth * BASE_CONTAINER_WIDTH_INDEX;
-        }
-      }
+      switch (view) {
+        case 'bigSquare':
+          return groupImageWidth
+            ? groupImageWidth * BIG_SQUARE_CONTAINER_WIDTH_INDEX
+            : BIG_SQUARE_DEFAULT_HEIGHT;
+        case 'rectangle':
+          if (groupImageWidth && !isHeight) {
+            return groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX;
+          }
 
-      return undefined;
+          if (isHeight && !groupImageHeight) {
+            return BIG_SQUARE_DEFAULT_HEIGHT;
+          }
+
+          return groupImageWidth ? groupImageWidth * RECTANGLE_CONTAINER_WIDTH_INDEX : undefined;
+        default:
+          if (groupImageWidth && !isHeight) {
+            return groupImageWidth * BASE_CONTAINER_WIDTH_INDEX;
+          }
+
+          return undefined;
+      }
     },
     [groupImageWidth, view]
   );
 
   const getImageSize = useCallback(
     (imageSize, isHeight = false) => {
-      if (imageSize) {
-        switch (view) {
-          case 'bigSquare':
-            return imageSize * BIG_SQUARE_IMAGE_WIDTH_INDEX;
-          case 'rectangle':
+      switch (view) {
+        case 'bigSquare':
+          return imageSize ? imageSize * BIG_SQUARE_IMAGE_WIDTH_INDEX : undefined;
+        case 'rectangle':
+          if (imageSize) {
             return isHeight
               ? imageSize * RECTANGLE_IMAGE_HEIGHT_INDEX
               : imageSize * RECTANGLE_IMAGE_WIDTH_INDEX;
-          default:
-            return imageSize * BASE_IMAGE_WIDTH_INDEX;
-        }
-      }
+          }
+          return undefined;
 
-      return undefined;
+        default:
+          return imageSize ? imageSize * BASE_IMAGE_WIDTH_INDEX : undefined;
+      }
     },
     [view]
   );
@@ -103,16 +117,18 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
       ref={btnRef}
       style={{
         width: getContainerSize(),
-        height:
-          view === 'rectangle' && groupImageWidth
-            ? groupImageWidth * RECTANGLE_IMAGE_HEIGHT_INDEX
-            : getContainerSize(true)
+        height: getContainerSize(true)
       }}
       onClick={() => onClick && onClick(index)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div
         className={b('imgContainer', { view, type })}
-        style={{ width: groupImageWidth, height: view !== 'rectangle' ? groupImageHeight : 'auto' }}
+        style={{
+          width: groupImageWidth,
+          height: view !== 'rectangle' ? groupImageHeight : BIG_SQUARE_DEFAULT_HEIGHT
+        }}
       >
         <img
           alt=""
@@ -123,6 +139,17 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
             height: getImageSize(groupImageHeight, true)
           }}
         />
+        <div
+          className={b('outline', {
+            background: !groupOutlineColor,
+            border: !!groupOutlineColor,
+            view
+          })}
+          style={{
+            borderColor:
+              (isHovered || isChosen) && groupOutlineColor ? groupOutlineColor : undefined
+          }}
+        />
       </div>
       <div className={b('titleContainer', { view })}>
         <p
@@ -130,7 +157,11 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
           ref={titleRef}
           style={{
             fontSize: groupTitleSize || undefined,
-            height: titleHeight
+            height: titleHeight,
+            color:
+              (isChosen || isHovered) && view !== 'rectangle' && view !== 'bigSquare'
+                ? groupOutlineColor
+                : undefined
           }}
         >
           {title}
