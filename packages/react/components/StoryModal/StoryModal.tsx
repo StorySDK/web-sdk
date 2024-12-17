@@ -3,10 +3,10 @@ import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
-import { IconClose } from '@components/icons';
+import { IconClose, IconMute, IconUnmute } from '@components/icons';
 import { useLongPress } from 'use-long-press';
 import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
-import { StoryType, Group, GroupType, StoryContenxt, ScoreType } from '../../types';
+import { StoryType, Group, GroupType, StoryContenxt, ScoreType, WidgetsTypes } from '../../types';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
 import smallIphoneMockup from '../../assets/images/iphone-mockup-small-1.svg';
 import storySdkLogo from '../../assets/images/storysdk-logo.svg';
@@ -204,6 +204,21 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [isAutoplayVideos, setIsAutoplayVideos] = useState<boolean>(false);
   const [loadedStoriesIds, setLoadedStoriesIds] = useState<{ [key: string]: boolean }>({});
   const [bodyContainerWidth, setBodyContainerWidth] = useState(0);
+  const [isVideoMuted, setIsVideoMuted] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!isAutoplay) {
+      setIsVideoMuted(!isVideoPlaying || !isBackgroundVideoPlaying);
+    }
+  }, [isVideoPlaying, isBackgroundVideoPlaying]);
+
+  const isVideoExists = useMemo(
+    () =>
+      activeStoriesWithResult[currentStory]?.storyData.some(
+        (widget) => widget.content.type === WidgetsTypes.VIDEO
+      ) || activeStoriesWithResult[currentStory]?.background.type === 'video',
+    [activeStoriesWithResult, currentStory]
+  );
 
   const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
 
@@ -788,27 +803,43 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       setPlayStatus('play');
 
       if (e.timeStamp - clickTimestamp < LONG_PRESS_THRESHOLD) {
-        let isNextAllowed = false;
+        let isTransitionAllowed = false;
+        let transitionType = 'next';
         let element: HTMLElement | null = e.target as HTMLElement;
 
+        const scopeElement = document.querySelector('.StorySdkContent__scope');
+
+        if (scopeElement) {
+          const scopeElementRect = scopeElement.getBoundingClientRect();
+          const scopeElemenetCenter = scopeElementRect.left + scopeElementRect.width / 2;
+
+          if (e.clientX < scopeElemenetCenter) {
+            transitionType = 'prev';
+          }
+        }
+
         if (element.classList.contains('StorySdkContent__scope')) {
-          isNextAllowed = true;
+          isTransitionAllowed = true;
         } else {
           while (element) {
             if (element.classList.contains('StorySdkContent__object_noClickable')) {
-              isNextAllowed = true;
+              isTransitionAllowed = true;
               break;
             }
             element = (element as HTMLElement).offsetParent as HTMLElement;
           }
         }
 
-        if (isNextAllowed) {
-          handleNext();
+        if (isTransitionAllowed) {
+          if (transitionType === 'prev') {
+            handlePrev();
+          } else {
+            handleNext();
+          }
         }
       }
     },
-    [clickTimestamp, handleNext]
+    [clickTimestamp, handleNext, handlePrev]
   );
 
   const pressHandlers = useLongPress(() => {}, {
@@ -907,6 +938,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               handleGoToStory={handleGoToStory}
               handleLoadStory={handleLoadStory}
               handleMediaLoading={setIsMediaLoading}
+              handleMuteVideo={setIsVideoMuted}
               handleVideoBackgroundPlaying={setIsBackgroundVideoPlaying}
               handleVideoPlaying={setIsVideoPlaying}
               height={height}
@@ -925,6 +957,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               isProgressHidden={isProgressHidden}
               isShowMockupCurrent={isShowMockupCurrent}
               isStatusBarActive={isStatusBarActive}
+              isVideoExists={isVideoExists}
+              isVideoMuted={isVideoMuted}
               isVideoPlaying={isVideoPlaying}
               jsConfetti={jsConfetti}
               loadedStoriesIds={loadedStoriesIds}
@@ -955,11 +989,32 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           </a>
         )}
 
-        {isForceCloseAvailable && (
-          <button className={b('close', { general: true })} onClick={handleClose}>
-            <IconClose />
-          </button>
-        )}
+        <div className={b('closeContainer')}>
+          {isVideoExists &&
+            (currentGroup?.type !== GroupType.ONBOARDING ||
+              currentGroup?.category !== 'onboarding') && (
+              <button
+                className={b('muteBtn')}
+                onClick={() => {
+                  setIsVideoMuted(!isVideoMuted);
+                }}
+              >
+                {isVideoMuted ? (
+                  <IconUnmute className={b('muteBtnIcon').toString()} />
+                ) : (
+                  <IconMute className={b('muteBtnIcon').toString()} />
+                )}
+              </button>
+            )}
+
+          {(isForceCloseAvailable ||
+            currentGroup?.type === GroupType.ONBOARDING ||
+            currentGroup?.category === 'onboarding') && (
+            <button className={b('close')} onClick={handleClose}>
+              <IconClose />
+            </button>
+          )}
+        </div>
       </div>
 
       <canvas

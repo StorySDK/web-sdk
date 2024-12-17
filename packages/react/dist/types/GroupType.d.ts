@@ -29,6 +29,7 @@ export interface Group {
     stories: StoryType[];
     type: GroupType;
     settings?: StoriesGroupSettings;
+    category?: string;
 }
 export interface LoadStory {
     id: string;

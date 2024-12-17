@@ -12,6 +12,8 @@ interface StorySwiperContentProps {
     isGroupWithFilledBackground?: boolean;
     isProgressHidden?: boolean;
     isAutoplay?: boolean;
+    isVideoMuted: boolean;
+    isVideoExists?: boolean;
     isBackroundFilled?: boolean;
     currentGroupType: GroupType;
     currentGroup: any;
@@ -44,6 +46,7 @@ interface StorySwiperContentProps {
     handleVideoPlaying: (isPlaying: boolean) => void;
     handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
     handleGoToStory: (storyId: string) => void;
+    handleMuteVideo: (isMuted: boolean) => void;
     pressHandlers?: () => LongPressTouchHandlers<Element>;
     swipeHandlers: SwipeOutput;
 }

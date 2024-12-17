@@ -24,7 +24,8 @@ export class Story {
     isDebugMode?: boolean;
     startStoryId?: string;
     forbidClose?: boolean;
-    groupOutlineColor?: string;
+    activeGroupOutlineColor?: string;
+    groupsOutlineColor?: string;
     openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
   };
@@ -35,7 +36,8 @@ export class Story {
       isDebugMode?: boolean;
       groupImageWidth?: number;
       groupImageHeight?: number;
-      groupOutlineColor?: string;
+      activeGroupOutlineColor?: string;
+      groupsOutlineColor?: string;
       groupTitleSize?: number;
       groupClassName?: string;
       groupsClassName?: string;
@@ -73,7 +75,8 @@ export class Story {
       this.options.devMode = options?.devMode;
       this.options.isShowLabel = options?.isShowLabel;
       this.options.isDebugMode = options?.isDebugMode;
-      this.options.groupOutlineColor = options?.groupOutlineColor;
+      this.options.activeGroupOutlineColor = options?.activeGroupOutlineColor;
+      this.options.groupsOutlineColor = options?.groupsOutlineColor;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -168,7 +171,10 @@ export const init = () => {
         const groupImageHeight = container.getAttribute('data-storysdk-group-image-height');
         const groupTitleSize = container.getAttribute('data-storysdk-group-title-size');
         const groupClassName = container.getAttribute('data-storysdk-group-class-name');
-        const groupOutlineColor = container.getAttribute('data-storysdk-group-outline-color');
+        const activeGroupOutlineColor = container.getAttribute(
+          'data-storysdk-active-group-outline-color'
+        );
+        const groupsOutlineColor = container.getAttribute('data-storysdk-groups-outline-color');
         const groupsClassName = container.getAttribute('data-storysdk-groups-class-name');
         const autoplay = container.getAttribute('data-storysdk-autoplay');
         const groupId = container.getAttribute('data-storysdk-group-id');
@@ -201,7 +207,8 @@ export const init = () => {
           isStatusBarActive: isStatusBarActive === 'true',
           openInExternalModal: openInExternalModal === 'true',
           isDebugMode: isDebugMode === 'true',
-          groupOutlineColor: groupOutlineColor ?? undefined
+          activeGroupOutlineColor: activeGroupOutlineColor ?? undefined,
+          groupsOutlineColor: groupsOutlineColor ?? undefined
         });
         story.renderGroups(container);
       } else {

@@ -26,7 +26,8 @@ const withGroupsData =
       groupImageHeight?: number;
       groupTitleSize?: number;
       groupClassName?: string;
-      groupOutlineColor?: string;
+      activeGroupOutlineColor?: string;
+      groupsOutlineColor?: string;
       isShowMockup?: boolean;
       isShowLabel?: boolean;
       isDebugMode?: boolean;
@@ -381,17 +382,18 @@ const withGroupsData =
 
     return (
       <GroupsList
+        activeGroupOutlineColor={options?.activeGroupOutlineColor}
         autoplay={options?.autoplay}
         devMode={options?.devMode}
         forbidClose={options?.forbidClose}
         groupClassName={options?.groupClassName}
         groupImageHeight={options?.groupImageHeight}
         groupImageWidth={options?.groupImageWidth}
-        groupOutlineColor={options?.groupOutlineColor}
         groupTitleSize={options?.groupTitleSize}
         groupView={groupView}
         groups={data ?? []}
         groupsClassName={options?.groupsClassName}
+        groupsOutlineColor={options?.groupsOutlineColor}
         isLoading={data === null || loadStatus === 'loading'}
         isShowLabel={isShowLabel}
         isShowMockup={isShowMockup}
