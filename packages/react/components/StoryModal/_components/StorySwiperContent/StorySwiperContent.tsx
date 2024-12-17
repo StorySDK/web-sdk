@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import block from 'bem-cn';
 import { IconClose, IconLoader, IconMute, IconUnmute } from '@components/icons';
 import { LongPressTouchHandlers } from 'use-long-press';
-import { GroupType, StoryType, WidgetsTypes } from '@types';
+import { GroupType, StoryType } from '@types';
 import JSConfetti from 'js-confetti';
 import { SwipeOutput, useAdaptiveValue } from '@hooks';
 import { PADDING_SIZE, StoryContent } from '../../..';
@@ -18,6 +18,8 @@ interface StorySwiperContentProps {
   isGroupWithFilledBackground?: boolean;
   isProgressHidden?: boolean;
   isAutoplay?: boolean;
+  isVideoMuted: boolean;
+  isVideoExists?: boolean;
   isBackroundFilled?: boolean;
   currentGroupType: GroupType;
   currentGroup: any;
@@ -48,6 +50,7 @@ interface StorySwiperContentProps {
   handleVideoPlaying: (isPlaying: boolean) => void;
   handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
   handleGoToStory: (storyId: string) => void;
+  handleMuteVideo: (isMuted: boolean) => void;
   pressHandlers?: () => LongPressTouchHandlers<Element>;
   swipeHandlers: SwipeOutput;
 }
@@ -75,6 +78,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     isOpened,
     isMediaLoading,
     isVideoPlaying,
+    isVideoExists,
     isBackgroundVideoPlaying,
     isLoading,
     activeStoriesWithResult,
@@ -90,8 +94,9 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     isForceCloseAvailable,
     playStatus,
     jsConfetti,
-    isAutoplay,
     isAutoplayVideos,
+    isVideoMuted,
+    handleMuteVideo,
     handleLoadStory,
     handleClose,
     handleAnimationEnd,
@@ -116,11 +121,6 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   const controlGapLarge = useAdaptiveValue(INIT_CONTROL_GAP_LARGE);
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
   const smallBorderRadius = useAdaptiveValue(INIT_SMALL_RADIUS);
-  const [isVideoMuted, setIsVideoMuted] = useState<boolean>(!isAutoplayVideos);
-
-  useEffect(() => {
-    setIsVideoMuted(!!isAutoplay);
-  }, [isAutoplay]);
 
   const controlTop = isLarge ? controlTopLarge : controlTopSmall;
   const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
@@ -160,20 +160,6 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     return PADDING_SIZE;
   }, [isMobile, isShowMockupCurrent, heightGap]);
 
-  useEffect(() => {
-    if (!isAutoplay) {
-      setIsVideoMuted(!isVideoPlaying || !isBackgroundVideoPlaying);
-    }
-  }, [isVideoPlaying, isBackgroundVideoPlaying]);
-
-  const isVideoExists = useMemo(
-    () =>
-      activeStoriesWithResult[currentStory]?.storyData.some(
-        (widget) => widget.content.type === WidgetsTypes.VIDEO
-      ) || activeStoriesWithResult[currentStory]?.background.type === 'video',
-    [activeStoriesWithResult, currentStory]
-  );
-
   return (
     <div
       className={b('swiper', {
@@ -208,7 +194,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     handleGoToStory={handleGoToStory}
                     handleLoadStory={handleLoadStory}
                     handleMediaLoading={handleMediaLoading}
-                    handleMuteVideo={setIsVideoMuted}
+                    handleMuteVideo={handleMuteVideo}
                     handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
                     handleVideoPlaying={handleVideoPlaying}
                     isAutoplayVideos={isAutoplayVideos}
@@ -232,7 +218,12 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
               <>
                 {isShowStatusBarInStory && <StatusBar />}
                 <div
-                  className={b('controls')}
+                  className={b('controls', {
+                    noClose:
+                      currentGroup?.settings?.isProhibitToClose ||
+                      forbidClose ||
+                      isForceCloseAvailable
+                  })}
                   style={{
                     gap: !isShowStatusBarInStory && !isMobile ? controlGap : undefined,
                     paddingTop:
@@ -298,24 +289,28 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                   )}
 
                   <div className={b('rightTopContainer')}>
-                    {isVideoExists && (
-                      <button
-                        className={b('muteBtn')}
-                        onClick={() => {
-                          setIsVideoMuted(!isVideoMuted);
-                        }}
-                      >
-                        {isVideoMuted ? (
-                          <IconUnmute className={b('muteBtnIcon').toString()} />
-                        ) : (
-                          <IconMute className={b('muteBtnIcon').toString()} />
-                        )}
-                      </button>
-                    )}
+                    {isVideoExists &&
+                      currentGroup.type !== GroupType.ONBOARDING &&
+                      currentGroup.category !== 'onboarding' && (
+                        <button
+                          className={b('muteBtn')}
+                          onClick={() => {
+                            handleMuteVideo(!isVideoMuted);
+                          }}
+                        >
+                          {isVideoMuted ? (
+                            <IconUnmute className={b('muteBtnIcon').toString()} />
+                          ) : (
+                            <IconMute className={b('muteBtnIcon').toString()} />
+                          )}
+                        </button>
+                      )}
 
                     {!currentGroup?.settings?.isProhibitToClose &&
                       !forbidClose &&
-                      !isForceCloseAvailable && (
+                      !isForceCloseAvailable &&
+                      currentGroup.type !== GroupType.ONBOARDING &&
+                      currentGroup.category !== 'onboarding' && (
                         <button
                           className={b('close', {
                             noProgress:

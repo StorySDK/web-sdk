@@ -17,7 +17,7 @@ export const VideoWidget: WidgetComponent<{
   handleMediaPlaying?: (isPlaying: boolean) => void;
   handleMediaLoading?: (isLoading: boolean) => void;
 }> = React.memo((props) => {
-  const { videoUrl, videoPreviewUrl, stopAutoplay, widgetOpacity, borderRadius } = props.params;
+  const { videoUrl, videoPreviewUrl, widgetOpacity, borderRadius } = props.params;
 
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
@@ -92,7 +92,6 @@ export const VideoWidget: WidgetComponent<{
       onClick={!props.isAutoplay ? togglePlay : undefined}
     >
       <video
-        autoPlay={!stopAutoplay && props.isAutoplay}
         className={b('video')}
         disablePictureInPicture
         loop
