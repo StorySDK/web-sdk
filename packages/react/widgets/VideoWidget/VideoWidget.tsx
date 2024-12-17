@@ -55,6 +55,10 @@ export const VideoWidget: WidgetComponent<{
   useEffect(() => {
     const videoElement = videoRef.current;
 
+    const handleError = (e: Event) => {
+      console.error('Video error:', e);
+    };
+
     const handleLoadStart = () => {
       setIsVideoLoading(true);
     };
@@ -71,16 +75,18 @@ export const VideoWidget: WidgetComponent<{
       props.handleMediaPlaying?.(true);
     };
 
+    videoElement?.addEventListener('error', handleError);
     videoElement?.addEventListener('loadstart', handleLoadStart);
-    videoElement?.addEventListener('canplay', handleCanPlay);
+    videoElement?.addEventListener('loadeddata', handleCanPlay);
     videoElement?.addEventListener('pause', handlePause);
     videoElement?.addEventListener('play', handlePlay);
 
     return () => {
       videoElement?.removeEventListener('loadstart', handleLoadStart);
-      videoElement?.removeEventListener('canplay', handleCanPlay);
+      videoElement?.removeEventListener('loadeddata', handleCanPlay);
       videoElement?.removeEventListener('pause', handlePause);
       videoElement?.removeEventListener('play', handlePlay);
+      videoElement?.removeEventListener('error', handleError);
     };
   }, []);
 
@@ -97,7 +103,7 @@ export const VideoWidget: WidgetComponent<{
         loop
         muted={props.isMuted ?? props.isAutoplay}
         playsInline
-        preload="metadata"
+        preload="auto"
         ref={videoRef}
         src={videoPreviewUrl ?? videoUrl}
         style={styles}

@@ -2,8 +2,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect } from 'react';
 import block from 'bem-cn';
-import './StoryVideoBackground.scss';
 import { IconLoader } from '@components/icons';
+import './StoryVideoBackground.scss';
 
 const b = block('StorySdkVideoBackground');
 
@@ -57,6 +57,10 @@ export const StoryVideoBackground = ({
   useEffect(() => {
     const videoElement = videoRef.current;
 
+    const handleError = (e: Event) => {
+      console.error('Video error:', e);
+    };
+
     const handleLoadStart = () => {
       onLoadStart?.();
     };
@@ -77,12 +81,14 @@ export const StoryVideoBackground = ({
     videoElement?.addEventListener('canplay', handleCanPlay);
     videoElement?.addEventListener('pause', handlePause);
     videoElement?.addEventListener('play', handlePlay);
+    videoElement?.addEventListener('error', handleError);
 
     return () => {
       videoElement?.removeEventListener('loadstart', handleLoadStart);
       videoElement?.removeEventListener('canplay', handleCanPlay);
       videoElement?.removeEventListener('pause', handlePause);
       videoElement?.removeEventListener('play', handlePlay);
+      videoElement?.removeEventListener('error', handleError);
     };
   }, []);
 
@@ -95,7 +101,7 @@ export const StoryVideoBackground = ({
         loop
         muted={isMuted ?? autoplay}
         playsInline
-        preload="metadata"
+        preload="auto"
         ref={videoRef}
         src={src}
         webkit-playsinline="true"
