@@ -77,13 +77,13 @@ export const VideoWidget: WidgetComponent<{
 
     videoElement?.addEventListener('error', handleError);
     videoElement?.addEventListener('loadstart', handleLoadStart);
-    videoElement?.addEventListener('loadeddata', handleCanPlay);
+    videoElement?.addEventListener('canplay', handleCanPlay);
     videoElement?.addEventListener('pause', handlePause);
     videoElement?.addEventListener('play', handlePlay);
 
     return () => {
       videoElement?.removeEventListener('loadstart', handleLoadStart);
-      videoElement?.removeEventListener('loadeddata', handleCanPlay);
+      videoElement?.removeEventListener('canplay', handleCanPlay);
       videoElement?.removeEventListener('pause', handlePause);
       videoElement?.removeEventListener('play', handlePlay);
       videoElement?.removeEventListener('error', handleError);

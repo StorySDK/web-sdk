@@ -991,8 +991,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
         <div className={b('closeContainer')}>
           {isVideoExists &&
-            (currentGroup?.type !== GroupType.ONBOARDING ||
-              currentGroup?.category !== 'onboarding') && (
+            (currentGroup?.type === GroupType.ONBOARDING ||
+              (currentGroup?.type === GroupType.TEMPLATE &&
+                currentGroup?.category === 'onboarding')) && (
               <button
                 className={b('muteBtn')}
                 onClick={() => {
@@ -1007,13 +1008,15 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               </button>
             )}
 
-          {(isForceCloseAvailable ||
-            currentGroup?.type === GroupType.ONBOARDING ||
-            currentGroup?.category === 'onboarding') && (
-            <button className={b('close')} onClick={handleClose}>
-              <IconClose />
-            </button>
-          )}
+          {!forbidClose &&
+            (isForceCloseAvailable ||
+              currentGroup?.type === GroupType.ONBOARDING ||
+              (currentGroup?.type === GroupType.TEMPLATE &&
+                currentGroup?.category === 'onboarding')) && (
+              <button className={b('close')} onClick={handleClose}>
+                <IconClose />
+              </button>
+            )}
         </div>
       </div>
 
