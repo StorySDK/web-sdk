@@ -200,10 +200,11 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
           <StoryVideoBackground
             autoplay={isAutoplayVideos}
             handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
+            isDisplaying={isDisplaying}
             isFilled={!isUnfilledBackground}
             isLoading={isMediaLoading}
             isMuted={isVideoMuted}
-            isPlaying={isBackgroundVideoPlaying && isDisplaying}
+            isPlaying={isBackgroundVideoPlaying}
             src={story.background.value}
             onLoadEnd={() => {
               handleResourcesLoading(false);

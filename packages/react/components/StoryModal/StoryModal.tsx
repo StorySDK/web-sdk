@@ -236,8 +236,17 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     document.addEventListener('resume', handleResume, false);
 
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsAutoplayVideos(false);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
       document.removeEventListener('resume', handleResume, false);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -943,7 +952,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               handleVideoPlaying={setIsVideoPlaying}
               height={height}
               heightGap={heightGap}
-              isAutoplay={isAutoplay}
               isAutoplayVideos={isAutoplayVideos}
               isBackgroundVideoPlaying={isBackgroundVideoPlaying}
               isBackroundFilled={isBackroundFilled}

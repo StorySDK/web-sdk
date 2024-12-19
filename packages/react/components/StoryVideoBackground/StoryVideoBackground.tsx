@@ -14,6 +14,7 @@ type PropTypes = {
   autoplay?: boolean;
   isFilled?: boolean;
   isPlaying?: boolean;
+  isDisplaying?: boolean;
   handleVideoBackgroundPlaying?: (isPlaying: boolean) => void;
   onLoadStart?: () => void;
   onLoadEnd?: () => void;
@@ -24,6 +25,7 @@ export const StoryVideoBackground = ({
   autoplay = false,
   isLoading,
   isPlaying,
+  isDisplaying,
   isMuted,
   isFilled,
   handleVideoBackgroundPlaying,
@@ -41,7 +43,7 @@ export const StoryVideoBackground = ({
   useEffect(() => {
     const videoElement = videoRef.current;
 
-    if (isPlaying) {
+    if (isPlaying && isDisplaying) {
       videoElement?.play().catch((error) => {
         console.error('StorySDK: Error attempting to play media:', error);
       });
@@ -52,7 +54,7 @@ export const StoryVideoBackground = ({
     return () => {
       videoElement?.pause();
     };
-  }, [isPlaying]);
+  }, [isPlaying, isDisplaying]);
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -73,21 +75,15 @@ export const StoryVideoBackground = ({
       handleVideoBackgroundPlaying?.(false);
     };
 
-    const handlePlay = () => {
-      handleVideoBackgroundPlaying?.(true);
-    };
-
     videoElement?.addEventListener('loadstart', handleLoadStart);
     videoElement?.addEventListener('canplay', handleCanPlay);
     videoElement?.addEventListener('pause', handlePause);
-    videoElement?.addEventListener('play', handlePlay);
     videoElement?.addEventListener('error', handleError);
 
     return () => {
       videoElement?.removeEventListener('loadstart', handleLoadStart);
       videoElement?.removeEventListener('canplay', handleCanPlay);
       videoElement?.removeEventListener('pause', handlePause);
-      videoElement?.removeEventListener('play', handlePlay);
       videoElement?.removeEventListener('error', handleError);
     };
   }, []);
@@ -95,7 +91,6 @@ export const StoryVideoBackground = ({
   return (
     <div className={b()} role="button" tabIndex={0}>
       <video
-        autoPlay={autoplay}
         className={b('video', { loading: isLoading, cover: isFilled })}
         disablePictureInPicture
         loop
