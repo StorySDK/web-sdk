@@ -248,7 +248,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
       <div className={classNames(b(), groupsClassName)} ref={containerRef}>
         <SimpleBar
           classNames={{
-            contentEl: b('carouselContent', { centered: isCentered }).toString()
+            contentEl: b('carouselContent', { centered: isCentered }).toString(),
+            track: b('track').toString()
           }}
           ref={scrollRef}
           style={{
