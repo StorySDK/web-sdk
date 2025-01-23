@@ -86,6 +86,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
           <LinkWidget
             handleMuteVideo={this.props.handleMuteVideo}
             params={this.props.widget.content.params}
+            onClick={this.props.widget.action}
           />
         );
       case WidgetsTypes.ELLIPSE:

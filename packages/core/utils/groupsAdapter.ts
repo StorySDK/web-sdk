@@ -16,7 +16,7 @@ const answerWidgets = [
 
 export const DEFAULT_STORY_DURATION = 7;
 
-const clickWidgets = [WidgetsTypes.CLICK_ME, WidgetsTypes.SWIPE_UP];
+const clickWidgets = [WidgetsTypes.CLICK_ME, WidgetsTypes.SWIPE_UP, WidgetsTypes.LINK];
 
 const actionToWidget = (
   widget: any,

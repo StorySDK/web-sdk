@@ -11,6 +11,7 @@ const DELAY_MS = 200;
 export const LinkWidget: WidgetComponent<{
   params: LinkWidgetParamsType;
   isReadOnly?: boolean;
+  onClick?: () => void;
   handleMuteVideo?(isMuted: boolean): void;
 }> = React.memo((props) => {
   const { fontFamily, fontParams, fontSize, text, color, opacity, backgroundColor, url } =
@@ -22,6 +23,7 @@ export const LinkWidget: WidgetComponent<{
 
   const handleWidgetClick = useCallback(() => {
     setIsClicked(true);
+    props.onClick?.();
 
     setTimeout(() => {
       setIsClicked(false);
