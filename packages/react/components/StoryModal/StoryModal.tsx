@@ -236,8 +236,17 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     document.addEventListener('resume', handleResume, false);
 
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsAutoplayVideos(false);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
       document.removeEventListener('resume', handleResume, false);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -943,7 +952,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               handleVideoPlaying={setIsVideoPlaying}
               height={height}
               heightGap={heightGap}
-              isAutoplay={isAutoplay}
               isAutoplayVideos={isAutoplayVideos}
               isBackgroundVideoPlaying={isBackgroundVideoPlaying}
               isBackroundFilled={isBackroundFilled}
@@ -991,8 +999,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
         <div className={b('closeContainer')}>
           {isVideoExists &&
-            (currentGroup?.type !== GroupType.ONBOARDING ||
-              currentGroup?.category !== 'onboarding') && (
+            (currentGroup?.type === GroupType.ONBOARDING ||
+              (currentGroup?.type === GroupType.TEMPLATE &&
+                currentGroup?.category === 'onboarding')) && (
               <button
                 className={b('muteBtn')}
                 onClick={() => {
@@ -1007,13 +1016,15 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               </button>
             )}
 
-          {(isForceCloseAvailable ||
-            currentGroup?.type === GroupType.ONBOARDING ||
-            currentGroup?.category === 'onboarding') && (
-            <button className={b('close')} onClick={handleClose}>
-              <IconClose />
-            </button>
-          )}
+          {!forbidClose &&
+            (isForceCloseAvailable ||
+              currentGroup?.type === GroupType.ONBOARDING ||
+              (currentGroup?.type === GroupType.TEMPLATE &&
+                currentGroup?.category === 'onboarding')) && (
+              <button className={b('close')} onClick={handleClose}>
+                <IconClose />
+              </button>
+            )}
         </div>
       </div>
 
