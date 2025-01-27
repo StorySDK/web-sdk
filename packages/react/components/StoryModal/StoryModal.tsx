@@ -3,7 +3,7 @@ import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
-import { IconClose, IconMute, IconUnmute } from '@components/icons';
+import { IconClose, IconMute, IconStoryPause, IconStoryPlay, IconUnmute } from '@components/icons';
 import { useLongPress } from 'use-long-press';
 import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
 import { StoryType, Group, GroupType, StoryContenxt, ScoreType, WidgetsTypes } from '../../types';
@@ -996,12 +996,29 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </div>
           </a>
         )}
-
-        <div className={b('closeContainer')}>
-          {isVideoExists &&
-            (currentGroup?.type === GroupType.ONBOARDING ||
-              (currentGroup?.type === GroupType.TEMPLATE &&
-                currentGroup?.category === 'onboarding')) && (
+        {(currentGroup?.type === GroupType.ONBOARDING ||
+          (currentGroup?.type === GroupType.TEMPLATE &&
+            currentGroup?.category === 'onboarding')) && (
+          <div className={b('closeContainer')}>
+            {!currentGroup?.settings?.isProgressHidden && playStatus !== 'wait' && (
+              <>
+                <button
+                  className={b('topBtn')}
+                  onClick={
+                    playStatus === 'play'
+                      ? () => setPlayStatus('pause')
+                      : () => setPlayStatus('play')
+                  }
+                >
+                  {playStatus === 'play' ? (
+                    <IconStoryPause className={b('playBtnIcon').toString()} />
+                  ) : (
+                    <IconStoryPlay className={b('playBtnIcon').toString()} />
+                  )}
+                </button>
+              </>
+            )}
+            {isVideoExists && (
               <button
                 className={b('muteBtn')}
                 onClick={() => {
@@ -1009,23 +1026,20 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                 }}
               >
                 {isVideoMuted ? (
-                  <IconUnmute className={b('muteBtnIcon').toString()} />
-                ) : (
                   <IconMute className={b('muteBtnIcon').toString()} />
+                ) : (
+                  <IconUnmute className={b('muteBtnIcon').toString()} />
                 )}
               </button>
             )}
 
-          {!forbidClose &&
-            (isForceCloseAvailable ||
-              currentGroup?.type === GroupType.ONBOARDING ||
-              (currentGroup?.type === GroupType.TEMPLATE &&
-                currentGroup?.category === 'onboarding')) && (
+            {(!forbidClose || isForceCloseAvailable) && (
               <button className={b('close')} onClick={handleClose}>
                 <IconClose />
               </button>
             )}
-        </div>
+          </div>
+        )}
       </div>
 
       <canvas

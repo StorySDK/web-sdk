@@ -1,11 +1,18 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import block from 'bem-cn';
-import { IconClose, IconLoader, IconMute, IconUnmute } from '@components/icons';
+import {
+  IconClose,
+  IconLoader,
+  IconMute,
+  IconStoryPause,
+  IconStoryPlay,
+  IconUnmute
+} from '@components/icons';
 import { LongPressTouchHandlers } from 'use-long-press';
 import { GroupType, StoryType } from '@types';
 import JSConfetti from 'js-confetti';
 import { SwipeOutput, useAdaptiveValue } from '@hooks';
-import { PADDING_SIZE, StoryContent } from '../../..';
+import { PADDING_SIZE, StoryContent, StoryContext } from '../../..';
 import { StatusBar } from '../StatusBar';
 import '../../StoryModal.scss';
 
@@ -159,6 +166,8 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     return PADDING_SIZE;
   }, [isMobile, isShowMockupCurrent, heightGap]);
 
+  const storyContextVal = useContext(StoryContext);
+
   return (
     <div
       className={b('swiper', {
@@ -287,48 +296,66 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     </div>
                   )}
 
-                  <div className={b('rightTopContainer')}>
-                    {isVideoExists &&
-                      currentGroup.type !== GroupType.ONBOARDING &&
-                      currentGroup.category !== 'onboarding' && (
-                        <button
-                          className={b('muteBtn')}
-                          onClick={() => {
-                            handleMuteVideo(!isVideoMuted);
-                          }}
-                        >
-                          {isVideoMuted ? (
-                            <IconUnmute className={b('muteBtnIcon').toString()} />
-                          ) : (
-                            <IconMute className={b('muteBtnIcon').toString()} />
-                          )}
-                        </button>
-                      )}
+                  {currentGroup.type !== GroupType.ONBOARDING &&
+                    currentGroup.category !== 'onboarding' && (
+                      <div className={b('rightTopContainer')}>
+                        {!currentGroup?.settings?.isProgressHidden && playStatus !== 'wait' && (
+                          <>
+                            <button
+                              className={b('topBtn')}
+                              onClick={
+                                playStatus === 'play'
+                                  ? () => storyContextVal.playStatusChange('pause')
+                                  : () => storyContextVal.playStatusChange('play')
+                              }
+                            >
+                              {playStatus === 'play' ? (
+                                <IconStoryPause className={b('playBtnIcon').toString()} />
+                              ) : (
+                                <IconStoryPlay className={b('playBtnIcon').toString()} />
+                              )}
+                            </button>
+                          </>
+                        )}
 
-                    {!currentGroup?.settings?.isProhibitToClose &&
-                      !forbidClose &&
-                      !isForceCloseAvailable &&
-                      currentGroup.type !== GroupType.ONBOARDING &&
-                      currentGroup.category !== 'onboarding' && (
-                        <button
-                          className={b('close', {
-                            noProgress:
-                              currentGroup?.settings?.isProgressHidden || isProgressHidden,
-                            wideRight:
-                              isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                          })}
-                          style={{
-                            top:
-                              isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                                ? largeElementsTop
-                                : undefined
-                          }}
-                          onClick={handleClose}
-                        >
-                          <IconClose />
-                        </button>
-                      )}
-                  </div>
+                        {isVideoExists && (
+                          <button
+                            className={b('topBtn')}
+                            onClick={() => {
+                              handleMuteVideo(!isVideoMuted);
+                            }}
+                          >
+                            {isVideoMuted ? (
+                              <IconUnmute className={b('muteBtnIcon').toString()} />
+                            ) : (
+                              <IconMute className={b('muteBtnIcon').toString()} />
+                            )}
+                          </button>
+                        )}
+
+                        {!currentGroup?.settings?.isProhibitToClose &&
+                          !forbidClose &&
+                          !isForceCloseAvailable && (
+                            <button
+                              className={b('close', {
+                                noProgress:
+                                  currentGroup?.settings?.isProgressHidden || isProgressHidden,
+                                wideRight:
+                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
+                              })}
+                              style={{
+                                top:
+                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
+                                    ? largeElementsTop
+                                    : undefined
+                              }}
+                              onClick={handleClose}
+                            >
+                              <IconClose />
+                            </button>
+                          )}
+                      </div>
+                    )}
                 </div>
               </>
             </div>

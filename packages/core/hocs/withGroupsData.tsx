@@ -265,7 +265,7 @@ const withGroupsData =
             setAppLocale(app.localization);
             setGroupView(appGroupView);
             setIsShowMockup(checkIos() ? false : isShowMockupApp);
-            setIsShowLabel(!app.plan || app.plan === 'Free');
+            setIsShowLabel(!app.premium_owner);
 
             API.groups.getList().then((groupsData) => {
               if (options?.isDebugMode) {

@@ -55,7 +55,7 @@
   &__controls {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 50px;
+    grid-template-columns: 1fr 88px;
     gap: 8px;
     grid-template-areas: "indicators indicators"
                           "group close";
@@ -333,6 +333,16 @@
     }
   }
 
+  &__topBtn {
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
   &__close {
     grid-area: close;
     border: 0;
@@ -342,12 +352,6 @@
     width: 24px;
     cursor: pointer;
     justify-self: flex-end;
-  }
-
-  &__muteBtn {
-    height: 24px;
-    width: 24px;
-    cursor: pointer;
   }
 
   &__rightTopContainer {
@@ -447,6 +451,12 @@
   &__muteBtnIcon {
     width: 20px;
     height: 20px;
+  }
+
+  &__playBtnIcon {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
   }
 
   &__label {
