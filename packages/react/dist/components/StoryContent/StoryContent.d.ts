@@ -27,7 +27,6 @@ interface StoryContentProps {
     handleGoToStory?: (storyId: string) => void;
     handleMediaLoading: (isLoading: boolean) => void;
     handleVideoPlaying: (isPlaying: boolean) => void;
-    handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
 }
 export declare const StoryContent: React.FC<StoryContentProps>;
 export {};

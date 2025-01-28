@@ -15,7 +15,6 @@ type PropTypes = {
   isFilled?: boolean;
   isPlaying?: boolean;
   isDisplaying?: boolean;
-  handleVideoBackgroundPlaying?: (isPlaying: boolean) => void;
   onLoadStart?: () => void;
   onLoadEnd?: () => void;
 };
@@ -28,7 +27,6 @@ export const StoryVideoBackground = ({
   isDisplaying,
   isMuted,
   isFilled,
-  handleVideoBackgroundPlaying,
   onLoadStart,
   onLoadEnd
 }: PropTypes) => {
@@ -71,19 +69,13 @@ export const StoryVideoBackground = ({
       onLoadEnd?.();
     };
 
-    const handlePause = () => {
-      handleVideoBackgroundPlaying?.(false);
-    };
-
     videoElement?.addEventListener('loadstart', handleLoadStart);
     videoElement?.addEventListener('canplay', handleCanPlay);
-    videoElement?.addEventListener('pause', handlePause);
     videoElement?.addEventListener('error', handleError);
 
     return () => {
       videoElement?.removeEventListener('loadstart', handleLoadStart);
       videoElement?.removeEventListener('canplay', handleCanPlay);
-      videoElement?.removeEventListener('pause', handlePause);
       videoElement?.removeEventListener('error', handleError);
     };
   }, []);

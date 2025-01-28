@@ -43,7 +43,6 @@ interface StorySwiperContentProps {
     handleAnimationEnd: () => void;
     handleMediaLoading: (isMediaLoading: boolean) => void;
     handleVideoPlaying: (isPlaying: boolean) => void;
-    handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
     handleGoToStory: (storyId: string) => void;
     handleMuteVideo: (isMuted: boolean) => void;
     pressHandlers?: () => LongPressTouchHandlers<Element>;

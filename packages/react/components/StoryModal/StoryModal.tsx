@@ -948,7 +948,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               handleLoadStory={handleLoadStory}
               handleMediaLoading={setIsMediaLoading}
               handleMuteVideo={setIsVideoMuted}
-              handleVideoBackgroundPlaying={setIsBackgroundVideoPlaying}
               handleVideoPlaying={setIsVideoPlaying}
               height={height}
               heightGap={heightGap}

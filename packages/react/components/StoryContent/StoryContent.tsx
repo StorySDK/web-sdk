@@ -53,7 +53,6 @@ interface StoryContentProps {
   handleGoToStory?: (storyId: string) => void;
   handleMediaLoading: (isLoading: boolean) => void;
   handleVideoPlaying: (isPlaying: boolean) => void;
-  handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
 }
 
 export const StoryContent: React.FC<StoryContentProps> = (props) => {
@@ -80,7 +79,6 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     handleMediaLoading,
     handleLoadStory,
     handleVideoPlaying,
-    handleVideoBackgroundPlaying,
     handleGoToStory
   } = props;
 
@@ -199,7 +197,6 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         {story.background.type === 'video' && (
           <StoryVideoBackground
             autoplay={isAutoplayVideos}
-            handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
             isDisplaying={isDisplaying}
             isFilled={!isUnfilledBackground}
             isLoading={isMediaLoading}

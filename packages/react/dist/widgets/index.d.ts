@@ -141,6 +141,7 @@ declare const widgets: {
     link: import("@types").WidgetComponent<{
         params: import("@types").LinkWidgetParamsType;
         isReadOnly?: boolean | undefined;
+        onClick?: (() => void) | undefined;
         handleMuteVideo?(isMuted: boolean): void;
     }>;
 };

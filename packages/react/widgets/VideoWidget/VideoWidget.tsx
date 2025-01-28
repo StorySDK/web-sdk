@@ -45,10 +45,12 @@ export const VideoWidget: WidgetComponent<{
       });
     } else {
       videoElement?.pause();
+      props.handleMediaPlaying?.(false);
     }
 
     return () => {
       videoElement?.pause();
+      props.handleMediaPlaying?.(false);
     };
   }, [props.isVideoPlaying, props.isDisplaying]);
 
@@ -67,25 +69,13 @@ export const VideoWidget: WidgetComponent<{
       setIsVideoLoading(false);
     };
 
-    const handlePause = () => {
-      props.handleMediaPlaying?.(false);
-    };
-
-    // const handlePlay = () => {
-    //   props.handleMediaPlaying?.(true);
-    // };
-
     videoElement?.addEventListener('error', handleError);
     videoElement?.addEventListener('loadstart', handleLoadStart);
     videoElement?.addEventListener('canplay', handleCanPlay);
-    videoElement?.addEventListener('pause', handlePause);
-    // videoElement?.addEventListener('play', handlePlay);
 
     return () => {
       videoElement?.removeEventListener('loadstart', handleLoadStart);
       videoElement?.removeEventListener('canplay', handleCanPlay);
-      videoElement?.removeEventListener('pause', handlePause);
-      // videoElement?.removeEventListener('play', handlePlay);
       videoElement?.removeEventListener('error', handleError);
     };
   }, []);

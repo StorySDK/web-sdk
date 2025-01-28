@@ -54,7 +54,6 @@ interface StorySwiperContentProps {
   handleAnimationEnd: () => void;
   handleMediaLoading: (isMediaLoading: boolean) => void;
   handleVideoPlaying: (isPlaying: boolean) => void;
-  handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
   handleGoToStory: (storyId: string) => void;
   handleMuteVideo: (isMuted: boolean) => void;
   pressHandlers?: () => LongPressTouchHandlers<Element>;
@@ -110,7 +109,6 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     handleGoToStory,
     pressHandlers,
     handleVideoPlaying,
-    handleVideoBackgroundPlaying,
     swipeHandlers
   } = props;
 
@@ -203,7 +201,6 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     handleLoadStory={handleLoadStory}
                     handleMediaLoading={handleMediaLoading}
                     handleMuteVideo={handleMuteVideo}
-                    handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
                     handleVideoPlaying={handleVideoPlaying}
                     isAutoplayVideos={isAutoplayVideos}
                     isBackgroundVideoPlaying={isBackgroundVideoPlaying}
