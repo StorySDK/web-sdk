@@ -4,12 +4,11 @@ import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
 import axios from 'axios';
-import ReactGA from 'react-ga4';
 import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage } from '../utils/fontsInclude';
-import { checkIos, getUniqUserId, writeToDebug } from '../utils';
+import { checkIos, getUniqUserId, initGA, writeToDebug } from '../utils';
 import { useGroupCache, useStoryCache } from '../hooks';
 
 interface DurationProps {
@@ -254,13 +253,11 @@ const withGroupsData =
                 ? options.isShowMockup
                 : app.settings?.isShowMockup;
 
-            if (app.settings.fonts?.length) {
+            if (app.settings?.fonts?.length) {
               loadFontsToPage(app.settings.fonts);
             }
 
-            if (app.settings?.integrations?.googleAnalytics?.trackingId) {
-              ReactGA.initialize(app.settings.integrations.googleAnalytics.trackingId);
-            }
+            initGA(app.settings?.integrations?.googleAnalytics?.trackingId);
 
             setAppLocale(app.localization);
             setGroupView(appGroupView);
