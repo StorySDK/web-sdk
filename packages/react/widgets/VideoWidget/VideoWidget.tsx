@@ -69,6 +69,8 @@ export const VideoWidget: WidgetComponent<{
       setIsVideoLoading(false);
     };
 
+    videoElement?.load();
+
     videoElement?.addEventListener('error', handleError);
     videoElement?.addEventListener('loadstart', handleLoadStart);
     videoElement?.addEventListener('canplay', handleCanPlay);

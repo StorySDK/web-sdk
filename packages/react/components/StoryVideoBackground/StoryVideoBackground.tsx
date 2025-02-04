@@ -69,6 +69,8 @@ export const StoryVideoBackground = ({
       onLoadEnd?.();
     };
 
+    videoElement?.load();
+
     videoElement?.addEventListener('loadstart', handleLoadStart);
     videoElement?.addEventListener('canplay', handleCanPlay);
     videoElement?.addEventListener('error', handleError);
