@@ -39,18 +39,32 @@ export const VideoWidget: WidgetComponent<{
   useEffect(() => {
     const videoElement = videoRef.current;
 
+    const handleReadyStateChange = () => {
+      if (
+        props.isVideoPlaying &&
+        props.isDisplaying &&
+        videoElement?.readyState &&
+        videoElement.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA
+      ) {
+        videoElement.play().catch((error) => {
+          console.warn('StorySDK: Error attempting to play media:', error);
+        });
+      } else {
+        videoElement?.pause();
+      }
+    };
+
     if (props.isVideoPlaying && props.isDisplaying) {
       videoElement?.play().catch((error) => {
-        console.error('StorySDK: Error attempting to play media:', error);
+        console.warn('StorySDK: Error attempting to play media:', error);
       });
-    } else {
-      videoElement?.pause();
-      props.handleMediaPlaying?.(false);
     }
 
+    videoElement?.addEventListener('loadeddata', handleReadyStateChange);
+
     return () => {
+      videoElement?.removeEventListener('loadeddata', handleReadyStateChange);
       videoElement?.pause();
-      props.handleMediaPlaying?.(false);
     };
   }, [props.isVideoPlaying, props.isDisplaying]);
 

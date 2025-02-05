@@ -41,15 +41,31 @@ export const StoryVideoBackground = ({
   useEffect(() => {
     const videoElement = videoRef.current;
 
+    const handleReadyStateChange = () => {
+      if (
+        isPlaying &&
+        isDisplaying &&
+        videoElement?.readyState &&
+        videoElement.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA
+      ) {
+        videoElement.play().catch((error) => {
+          console.warn('StorySDK: Error attempting to play media:', error);
+        });
+      } else {
+        videoElement?.pause();
+      }
+    };
+
     if (isPlaying && isDisplaying) {
       videoElement?.play().catch((error) => {
-        console.error('StorySDK: Error attempting to play media:', error);
+        console.warn('StorySDK: Error attempting to play media:', error);
       });
-    } else {
-      videoElement?.pause();
     }
 
+    videoElement?.addEventListener('loadeddata', handleReadyStateChange);
+
     return () => {
+      videoElement?.removeEventListener('loadeddata', handleReadyStateChange);
       videoElement?.pause();
     };
   }, [isPlaying, isDisplaying]);
