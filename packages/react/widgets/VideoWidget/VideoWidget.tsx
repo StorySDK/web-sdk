@@ -44,7 +44,7 @@ export const VideoWidget: WidgetComponent<{
         props.isVideoPlaying &&
         props.isDisplaying &&
         videoElement?.readyState &&
-        videoElement.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA
+        videoElement.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA
       ) {
         videoElement.play().catch((error) => {
           console.warn('StorySDK: Error attempting to play media:', error);
@@ -83,7 +83,9 @@ export const VideoWidget: WidgetComponent<{
       setIsVideoLoading(false);
     };
 
-    videoElement?.load();
+    if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING) {
+      videoElement.load();
+    }
 
     videoElement?.addEventListener('error', handleError);
     videoElement?.addEventListener('loadstart', handleLoadStart);

@@ -11,10 +11,11 @@ import { loadFontsToPage } from '../utils/fontsInclude';
 import { checkIos, getUniqUserId, initGA, writeToDebug } from '../utils';
 import { useGroupCache, useStoryCache } from '../hooks';
 
-interface DurationProps {
+export interface DurationProps {
   storyId?: string;
   groupId: string;
   startTime: number;
+  endTime?: number;
 }
 
 const withGroupsData =
@@ -59,12 +60,6 @@ const withGroupsData =
     const [isNeedToLoad, setIsNeedToLoad] = useState(false);
 
     const [groupDuration, setGroupDuration] = useState<DurationProps>({
-      groupId: '',
-      startTime: 0
-    });
-
-    const [storyDuration, setStoryDuration] = useState<DurationProps>({
-      storyId: '',
       groupId: '',
       startTime: 0
     });
@@ -164,12 +159,6 @@ const withGroupsData =
           handleFinishQuiz(groupId);
         }
 
-        setStoryDuration(() => ({
-          groupId,
-          storyId,
-          startTime: DateTime.now().toSeconds()
-        }));
-
         API.statistics.story.onOpen({ groupId, storyId, uniqUserId, language });
       },
 
@@ -177,31 +166,27 @@ const withGroupsData =
     );
 
     const handleCloseStory = useCallback(
-      (groupId: string, storyId: string) => {
-        if (storyDuration.storyId === storyId && storyDuration.groupId === groupId) {
-          const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+      (groupId: string, storyId: string, duration: number) => {
+        API.statistics.story.sendDuration({
+          storyId,
+          groupId,
+          uniqUserId,
+          seconds: duration,
+          language
+        });
 
-          API.statistics.story.sendDuration({
-            storyId: storyDuration.storyId,
-            groupId: storyDuration.groupId,
+        if (duration > 1) {
+          API.statistics.story.sendImpression({
+            storyId,
+            groupId,
             uniqUserId,
             seconds: duration,
             language
           });
-
-          if (duration > 1) {
-            API.statistics.story.sendImpression({
-              storyId: storyDuration.storyId,
-              groupId: storyDuration.groupId,
-              uniqUserId,
-              seconds: duration,
-              language
-            });
-          }
         }
         API.statistics.story.onClose({ groupId, storyId, uniqUserId, language });
       },
-      [storyDuration, uniqUserId, language]
+      [uniqUserId, language]
     );
 
     const handleNextStory = useCallback(

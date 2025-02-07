@@ -38,7 +38,7 @@ export interface GroupsListProps {
   onCloseGroup?(id: string): void;
   onNextStory?(groupId: string, storyId: string): void;
   onPrevStory?(groupId: string, storyId: string): void;
-  onCloseStory?(groupId: string, storyId: string): void;
+  onCloseStory?(groupId: string, storyId: string, duration: number): void;
   onOpenStory?(groupId: string, storyId: string): void;
   onStartQuiz?(groupId: string, storyId?: string): void;
   onFinishQuiz?(groupId: string, storyId?: string): void;

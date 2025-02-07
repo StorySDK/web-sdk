@@ -5,6 +5,7 @@ import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
 import { IconClose, IconMute, IconStoryPause, IconStoryPlay, IconUnmute } from '@components/icons';
 import { useLongPress } from 'use-long-press';
+import { DateTime } from 'luxon';
 import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
 import { StoryType, Group, GroupType, StoryContenxt, ScoreType, WidgetsTypes } from '../../types';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
@@ -42,7 +43,7 @@ interface StoryModalProps {
   onNextStory?(groupId: string, storyId: string): void;
   onPrevStory?(groupId: string, storyId: string): void;
   onOpenStory?(groupId: string, storyId: string): void;
-  onCloseStory?(groupId: string, storyId: string): void;
+  onCloseStory?(groupId: string, storyId: string, duration: number): void;
   onStartQuiz?(groupId: string, storyId?: string): void;
   onFinishQuiz?(groupId: string, storyId?: string): void;
 }
@@ -205,6 +206,22 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [loadedStoriesIds, setLoadedStoriesIds] = useState<{ [key: string]: boolean }>({});
   const [bodyContainerWidth, setBodyContainerWidth] = useState(0);
   const [isVideoMuted, setIsVideoMuted] = useState<boolean>(true);
+
+  const [storyDuration, setStoryDuration] = useState({
+    storyId: '',
+    groupId: '',
+    startTime: 0
+  });
+
+  const handleOpenStory = useCallback((groupId: string, storyId: string) => {
+    setStoryDuration({
+      groupId,
+      storyId,
+      startTime: DateTime.now().toSeconds()
+    });
+
+    onOpenStory?.(groupId, storyId);
+  }, []);
 
   useEffect(() => {
     if (!isAutoplay) {
@@ -466,13 +483,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     if (isOpened && activeStoriesWithResult.length) {
       setCurrentStoryId(activeStoriesWithResult[currentStoryIndex].id);
 
-      if (onOpenStory && currentGroup) {
-        onOpenStory(currentGroup.id, activeStoriesWithResult[currentStoryIndex].id);
+      if (currentGroup) {
+        handleOpenStory(currentGroup.id, activeStoriesWithResult[currentStoryIndex].id);
       }
     }
   }, [
     activeStoriesWithResult.length,
-    onOpenStory,
+    handleOpenStory,
     activeStoriesWithResult,
     currentGroup,
     isOpened,
@@ -483,7 +500,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onClose();
 
     if (onCloseStory && currentGroup) {
-      onCloseStory(currentGroup.id, currentStoryId);
+      const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+      onCloseStory(currentGroup.id, currentStoryId, duration);
     }
   }, [
     currentGroup?.id,
@@ -491,7 +509,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onClose,
     onCloseStory,
     activeStoriesWithResult,
-    currentStoryId
+    currentStoryId,
+    storyDuration
   ]);
 
   const resultStories = useMemo(() => {
@@ -595,7 +614,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       setIsSwiped(true);
 
       if (onCloseStory && currentGroup) {
-        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+        const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id, duration);
       }
     }
   }, [
@@ -605,7 +625,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     handleClose,
     isLastGroup,
     onCloseStory,
-    onNextGroup
+    onNextGroup,
+    storyDuration
   ]);
 
   const handleNext = useCallback(() => {
@@ -624,12 +645,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       handleFinishStoryQuiz();
 
       if (onCloseStory && currentGroup) {
-        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+        const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id, duration);
       }
 
-      if (onOpenStory && currentGroup) {
+      if (currentGroup) {
         setTimeout(() => {
-          onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
+          handleOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
         }, 0);
       }
 
@@ -659,8 +681,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onNextGroup,
     onCloseStory,
     currentGroup?.id,
-    onOpenStory,
-    onNextStory
+    handleOpenStory,
+    onNextStory,
+    storyDuration
   ]);
 
   const handleAnimationEnd = useCallback(() => {
@@ -684,14 +707,15 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       handlePrevGroup();
     } else {
       if (onCloseStory && currentGroup) {
-        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+        const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id, duration);
       }
 
       handleFinishStoryQuiz();
 
-      if (onOpenStory && currentGroup) {
+      if (currentGroup) {
         setTimeout(() => {
-          onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
+          handleOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
         }, 0);
       }
 
@@ -723,7 +747,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     handleClose,
     onPrevGroup,
     onCloseStory,
-    onOpenStory,
+    handleOpenStory,
     onPrevStory,
     currentGroup?.id
   ]);
@@ -736,9 +760,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         stotyId: storyId
       });
 
-      if (onOpenStory && currentGroup) {
+      if (currentGroup) {
         setTimeout(() => {
-          onOpenStory(currentGroup.id, activeStoriesWithResult[storyIndex].id);
+          handleOpenStory(currentGroup.id, activeStoriesWithResult[storyIndex].id);
         }, 0);
       }
 

@@ -40,7 +40,7 @@ story.renderGroups(element);
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.css">
 </head>
 <body>
-  <div data-storysdk-token="<APP_TOKEN_HERE>" style="min-height: 100px;"></div>
+  <div data-storysdk-token="<APP_TOKEN_HERE>" style="min-height: 100px;" class="storysdk-container"></div>
 </body>
 ```
 

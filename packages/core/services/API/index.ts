@@ -125,7 +125,6 @@ export const API = {
           }
         });
       },
-
       sendImpression(params: {
         groupId: string;
         storyId: string;

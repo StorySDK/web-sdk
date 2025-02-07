@@ -28,7 +28,7 @@ interface StoryModalProps {
     onNextStory?(groupId: string, storyId: string): void;
     onPrevStory?(groupId: string, storyId: string): void;
     onOpenStory?(groupId: string, storyId: string): void;
-    onCloseStory?(groupId: string, storyId: string): void;
+    onCloseStory?(groupId: string, storyId: string, duration: number): void;
     onStartQuiz?(groupId: string, storyId?: string): void;
     onFinishQuiz?(groupId: string, storyId?: string): void;
 }

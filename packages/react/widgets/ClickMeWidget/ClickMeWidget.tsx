@@ -42,7 +42,8 @@ export const ClickMeWidget: WidgetComponent<{
     hasIcon,
     url,
     storyId,
-    actionType
+    actionType,
+    customFields
   } = props.params;
 
   const { isReadOnly, onClick, onGoToStory } = props;
@@ -77,8 +78,18 @@ export const ClickMeWidget: WidgetComponent<{
       setTimeout(() => {
         onGoToStory(storyId);
       }, DELAY_MS);
+    } else if (actionType === 'custom' && customFields?.web) {
+      const container = document.querySelector('.storysdk-container');
+
+      const clickEvent = new CustomEvent('storysdk_custom_click', {
+        detail: {
+          data: customFields?.web
+        }
+      });
+
+      container?.dispatchEvent(clickEvent);
     }
-  }, [actionType, onClick, onGoToStory, props, storyId, url]);
+  }, [actionType, customFields?.web, onClick, onGoToStory, props, storyId, url]);
 
   return (
     <div

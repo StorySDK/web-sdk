@@ -1,5 +1,11 @@
 import React from 'react';
 import { GroupsListProps } from '@storysdk/react';
+export interface DurationProps {
+    storyId?: string;
+    groupId: string;
+    startTime: number;
+    endTime?: number;
+}
 declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: {
     groupImageWidth?: number | undefined;
     groupImageHeight?: number | undefined;
