@@ -79,7 +79,7 @@ export const ClickMeWidget: WidgetComponent<{
         onGoToStory(storyId);
       }, DELAY_MS);
     } else if (actionType === 'custom' && customFields?.web) {
-      const container = document.querySelector('.storysdk-container');
+      const container = document.querySelector('#storysdk');
 
       const clickEvent = new CustomEvent('storysdk_custom_click', {
         detail: {
