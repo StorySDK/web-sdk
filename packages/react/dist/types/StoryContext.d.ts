@@ -1,9 +1,11 @@
+import { PlayStatusType } from '@components';
 import { ScoreType } from '@types';
 export interface StoryContenxt {
     currentStoryId: string;
     quizMode?: ScoreType;
     playStatusChange?: any;
     confetti?: any;
+    playStatus: PlayStatusType;
     handleQuizAnswer?: (params: {
         type: string;
         answer: number | string;

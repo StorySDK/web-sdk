@@ -58,6 +58,8 @@ export const VideoWidget: WidgetComponent<{
       videoElement?.play().catch((error) => {
         console.warn('StorySDK: Error attempting to play media:', error);
       });
+    } else {
+      videoElement?.pause();
     }
 
     videoElement?.addEventListener('loadeddata', handleReadyStateChange);

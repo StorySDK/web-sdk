@@ -48,6 +48,8 @@ interface StoryModalProps {
   onFinishQuiz?(groupId: string, storyId?: string): void;
 }
 
+export type PlayStatusType = 'wait' | 'play' | 'pause';
+
 const LeftArrowIcon: React.FC = () => (
   <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
     <path
@@ -88,11 +90,10 @@ const RightArrowIcon: React.FC = () => (
 
 export const StoryContext = React.createContext<StoryContenxt>({
   currentStoryId: '',
+  playStatus: 'wait',
   playStatusChange: () => {},
   confetti: null
 });
-
-export type PlayStatusType = 'wait' | 'play' | 'pause';
 
 export type StoryCurrentSize = {
   width: number;
@@ -916,6 +917,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       value={{
         currentStoryId,
         quizMode: currentGroup?.settings?.scoreType,
+        playStatus,
         playStatusChange: setPlayStatus,
         handleQuizAnswer,
         getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,

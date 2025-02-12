@@ -3,6 +3,7 @@ import { LongPressTouchHandlers } from 'use-long-press';
 import { GroupType, StoryType } from '@types';
 import JSConfetti from 'js-confetti';
 import { SwipeOutput } from '@hooks';
+import { PlayStatusType } from '../../..';
 import '../../StoryModal.scss';
 interface StorySwiperContentProps {
     isMobile: boolean;
@@ -33,7 +34,7 @@ interface StorySwiperContentProps {
     isForceCloseAvailable?: boolean;
     isVideoPlaying?: boolean;
     isBackgroundVideoPlaying?: boolean;
-    playStatus: string;
+    playStatus: PlayStatusType;
     jsConfetti: React.MutableRefObject<JSConfetti>;
     loadedStoriesIds: {
         [key: string]: boolean;

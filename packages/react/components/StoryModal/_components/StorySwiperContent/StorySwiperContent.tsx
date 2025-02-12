@@ -12,7 +12,7 @@ import { LongPressTouchHandlers } from 'use-long-press';
 import { GroupType, StoryType } from '@types';
 import JSConfetti from 'js-confetti';
 import { SwipeOutput, useAdaptiveValue } from '@hooks';
-import { PADDING_SIZE, StoryContent, StoryContext } from '../../..';
+import { PADDING_SIZE, PlayStatusType, StoryContent, StoryContext } from '../../..';
 import { StatusBar } from '../StatusBar';
 import '../../StoryModal.scss';
 
@@ -46,7 +46,7 @@ interface StorySwiperContentProps {
   isForceCloseAvailable?: boolean;
   isVideoPlaying?: boolean;
   isBackgroundVideoPlaying?: boolean;
-  playStatus: string;
+  playStatus: PlayStatusType;
   jsConfetti: React.MutableRefObject<JSConfetti>;
   loadedStoriesIds: { [key: string]: boolean };
   handleClose: () => void;
@@ -215,6 +215,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     noTopBackgroundShadow={noTopBackgroundShadow}
                     noTopShadow={noTopShadow}
                     story={story}
+                    storyPlayStatus={playStatus}
                   />
                 </div>
               ))}

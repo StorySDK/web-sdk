@@ -6,7 +6,7 @@ import { WidgetFactory } from '../../core';
 import { StoryType, WidgetsTypes } from '../../types';
 import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackground';
 import { renderBackgroundStyles, renderPosition } from '../../utils';
-import { StoryCurrentSize } from '../StoryModal/StoryModal';
+import { PlayStatusType, StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
 import '../StoryModal/StoryModal.scss';
 
@@ -40,6 +40,7 @@ interface StoryContentProps {
   contentWidth: number | string;
   contentHeight: number | string;
   currentStorySize: StoryCurrentSize;
+  storyPlayStatus: PlayStatusType;
   desktopContainerWidth: number;
   noTopShadow?: boolean;
   noTopBackgroundShadow?: boolean;
@@ -75,6 +76,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     contentHeight,
     isMediaLoading,
     isVideoMuted,
+    storyPlayStatus,
     handleMuteVideo,
     handleMediaLoading,
     handleLoadStory,
@@ -201,7 +203,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
             isFilled={!isUnfilledBackground}
             isLoading={isMediaLoading}
             isMuted={isVideoMuted}
-            isPlaying={isBackgroundVideoPlaying}
+            isPlaying={isBackgroundVideoPlaying && storyPlayStatus === 'play'}
             src={story.background.value}
             onLoadEnd={() => {
               handleResourcesLoading(false);

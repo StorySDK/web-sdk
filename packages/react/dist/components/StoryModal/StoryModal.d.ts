@@ -32,8 +32,8 @@ interface StoryModalProps {
     onStartQuiz?(groupId: string, storyId?: string): void;
     onFinishQuiz?(groupId: string, storyId?: string): void;
 }
-export declare const StoryContext: React.Context<StoryContenxt>;
 export declare type PlayStatusType = 'wait' | 'play' | 'pause';
+export declare const StoryContext: React.Context<StoryContenxt>;
 export declare type StoryCurrentSize = {
     width: number;
     height: number;
