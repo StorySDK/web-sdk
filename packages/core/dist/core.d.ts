@@ -23,6 +23,7 @@ export declare class Story {
         groupsOutlineColor?: string;
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
+        onGroupClose?: () => void;
     };
     constructor(token: string, options?: {
         isDebugMode?: boolean;
@@ -46,6 +47,7 @@ export declare class Story {
         forbidClose?: boolean;
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
+        onGroupClose?: () => void;
     });
     renderGroups(element?: Element | HTMLDivElement | null): void;
 }

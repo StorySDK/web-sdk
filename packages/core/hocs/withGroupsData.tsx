@@ -43,6 +43,7 @@ const withGroupsData =
       startStoryId?: string;
       forbidClose?: boolean;
       devMode?: 'staging' | 'development';
+      onGroupClose?: () => void;
     }
   ) =>
   () => {
@@ -134,6 +135,9 @@ const withGroupsData =
 
     const handleCloseGroup = useCallback(
       (groupId: string) => {
+
+        options?.onGroupClose?.();
+
         const duration = DateTime.now().toSeconds() - groupDuration.startTime;
 
         API.statistics.group.sendDuration({
@@ -145,7 +149,7 @@ const withGroupsData =
 
         return API.statistics.group.onClose({ groupId, uniqUserId, language });
       },
-      [groupDuration, uniqUserId, language]
+      [groupDuration, uniqUserId, language, options?.onGroupClose]
     );
 
     const handleOpenStory = useCallback(
