@@ -22,16 +22,16 @@ export const LinkWidget: WidgetComponent<{
   const [isClicked, setIsClicked] = useState(false);
 
   const handleWidgetClick = useCallback(() => {
-    setIsClicked(true);
-    props.onClick?.();
-
-    setTimeout(() => {
-      setIsClicked(false);
-    }, DELAY_MS);
-
     if (url) {
+      setIsClicked(true);
+      props.onClick?.();
+
       setTimeout(() => {
-        if (window.cordova) {
+        setIsClicked(false);
+      }, DELAY_MS);
+
+      setTimeout(() => {
+        if (window?.cordova) {
           window.cordova?.InAppBrowser?.open(url, '_system');
         } else {
           const tab = window?.open(url, '_blank');

@@ -18,6 +18,8 @@ export class Story {
     storyHeight?: number;
     isShowMockup?: boolean;
     isShowLabel?: boolean;
+    arrowsColor?: string;
+    backgroundColor?: string;
     isStatusBarActive?: boolean;
     autoplay?: boolean;
     groupId?: string;
@@ -41,6 +43,8 @@ export class Story {
       groupTitleSize?: number;
       groupClassName?: string;
       groupsClassName?: string;
+      arrowsColor?: string;
+      backgroundColor?: string;
       storyWidth?: number;
       storyHeight?: number;
       isShowMockup?: boolean;
@@ -77,6 +81,8 @@ export class Story {
       this.options.isDebugMode = options?.isDebugMode;
       this.options.activeGroupOutlineColor = options?.activeGroupOutlineColor;
       this.options.groupsOutlineColor = options?.groupsOutlineColor;
+      this.options.arrowsColor = options?.arrowsColor;
+      this.options.backgroundColor = options?.backgroundColor;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -188,6 +194,8 @@ export const init = () => {
         const devMode = container.getAttribute('data-storysdk-dev-mode');
         const openInExternalModal = container.getAttribute('data-storysdk-open-in-external-modal');
         const isDebugMode = container.getAttribute('data-storysdk-is-debug-mode');
+        const arrowsColor = container.getAttribute('data-storysdk-arrows-color');
+        const backgroundColor = container.getAttribute('data-storysdk-background-color');
 
         const story = new Story(token, {
           groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
@@ -208,7 +216,9 @@ export const init = () => {
           openInExternalModal: openInExternalModal === 'true',
           isDebugMode: isDebugMode === 'true',
           activeGroupOutlineColor: activeGroupOutlineColor ?? undefined,
-          groupsOutlineColor: groupsOutlineColor ?? undefined
+          groupsOutlineColor: groupsOutlineColor ?? undefined,
+          arrowsColor: arrowsColor ?? undefined,
+          backgroundColor: backgroundColor ?? undefined
         });
         story.renderGroups(container);
       } else {

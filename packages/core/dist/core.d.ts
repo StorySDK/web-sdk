@@ -11,6 +11,8 @@ export declare class Story {
         storyHeight?: number;
         isShowMockup?: boolean;
         isShowLabel?: boolean;
+        arrowsColor?: string;
+        backgroundColor?: string;
         isStatusBarActive?: boolean;
         autoplay?: boolean;
         groupId?: string;
@@ -31,6 +33,8 @@ export declare class Story {
         groupTitleSize?: number;
         groupClassName?: string;
         groupsClassName?: string;
+        arrowsColor?: string;
+        backgroundColor?: string;
         storyWidth?: number;
         storyHeight?: number;
         isShowMockup?: boolean;

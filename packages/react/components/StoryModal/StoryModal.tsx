@@ -3,7 +3,14 @@ import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
-import { IconClose, IconMute, IconStoryPause, IconStoryPlay, IconUnmute } from '@components/icons';
+import {
+  IconArrow,
+  IconClose,
+  IconMute,
+  IconStoryPause,
+  IconStoryPlay,
+  IconUnmute
+} from '@components/icons';
 import { useLongPress } from 'use-long-press';
 import { DateTime } from 'luxon';
 import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
@@ -34,9 +41,11 @@ interface StoryModalProps {
   isForceCloseAvailable?: boolean;
   isCacheDisabled?: boolean;
   devMode?: 'staging' | 'development';
+  arrowsColor?: string;
   isLoading?: boolean;
   isEditorMode?: boolean;
   openInExternalModal?: boolean;
+  backgroundColor?: string;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -50,48 +59,11 @@ interface StoryModalProps {
 
 export type PlayStatusType = 'wait' | 'play' | 'pause';
 
-const LeftArrowIcon: React.FC = () => (
-  <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M19 12H5"
-      stroke="#FAFAFA"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    />
-    <path
-      d="M12 19L5 12L12 4.99997"
-      stroke="#FAFAFA"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    />
-  </svg>
-);
-
-const RightArrowIcon: React.FC = () => (
-  <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M5 12H19"
-      stroke="#FAFAFA"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    />
-    <path
-      d="M12 4.99997L19 12L12 19"
-      stroke="#FAFAFA"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    />
-  </svg>
-);
-
 export const StoryContext = React.createContext<StoryContenxt>({
   currentStoryId: '',
   playStatus: 'wait',
   playStatusChange: () => {},
+  closeStoryGroup: () => {},
   confetti: null
 });
 
@@ -176,8 +148,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     storyWidth,
     devMode,
     storyHeight,
+    arrowsColor,
     isAutoplay,
     openInExternalModal,
+    backgroundColor,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -338,7 +312,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     if (openInExternalModal && isShowing) {
       const leftPosition = isMobile ? 0 : 100;
 
-      window.open(
+      window?.open(
         `${appLink}/share/${currentGroup?.settings?.shortDataId}`,
         '_blank',
         `popup,left=${leftPosition},top=${isMobile ? 0 : 50},width=${
@@ -632,7 +606,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const handleNext = useCallback(() => {
     eventPublish('nextStory', {
-      stotyId: activeStoriesWithResult[currentStory].id
+      storyId: activeStoriesWithResult[currentStory].id
     });
 
     const resultStoryId = getResultStoryId();
@@ -698,7 +672,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const handlePrev = useCallback(() => {
     eventPublish('prevStory', {
-      stotyId: activeStoriesWithResult[currentStory].id
+      storyId: activeStoriesWithResult[currentStory]?.id
     });
 
     const resultStoryId = getResultStoryId();
@@ -709,7 +683,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     } else {
       if (onCloseStory && currentGroup) {
         const duration = DateTime.now().toSeconds() - storyDuration.startTime;
-        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id, duration);
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory]?.id, duration);
       }
 
       handleFinishStoryQuiz();
@@ -758,7 +732,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     if (storyIndex > -1) {
       eventPublish('nextStory', {
-        stotyId: storyId
+        storyId
       });
 
       if (currentGroup) {
@@ -919,6 +893,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         quizMode: currentGroup?.settings?.scoreType,
         playStatus,
         playStatusChange: setPlayStatus,
+        closeStoryGroup: !forbidClose || isForceCloseAvailable ? handleClose : undefined,
         handleQuizAnswer,
         getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
         setAnswerCache: isCacheDisabled ? undefined : setAnswerCache
@@ -939,13 +914,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         >
           {!isLoading && (
             <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
-              <LeftArrowIcon />
+              <IconArrow className={b('arrowIcon')} stroke={arrowsColor} />
             </button>
           )}
 
           {!isLoading && (
             <button className={b('arrowButton', { right: true })} onClick={handleNext}>
-              <RightArrowIcon />
+              <IconArrow className={b('arrowIcon', { right: true })} stroke={arrowsColor} />
             </button>
           )}
 
@@ -1066,6 +1041,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           </div>
         )}
       </div>
+      <div
+        className={b('background', { isShowing: isOpened })}
+        style={{
+          backgroundColor
+        }}
+      />
 
       <canvas
         ref={canvasRef}

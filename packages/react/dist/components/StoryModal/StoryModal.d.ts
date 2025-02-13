@@ -19,9 +19,11 @@ interface StoryModalProps {
     isForceCloseAvailable?: boolean;
     isCacheDisabled?: boolean;
     devMode?: 'staging' | 'development';
+    arrowsColor?: string;
     isLoading?: boolean;
     isEditorMode?: boolean;
     openInExternalModal?: boolean;
+    backgroundColor?: string;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;

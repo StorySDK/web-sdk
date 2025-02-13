@@ -30,6 +30,7 @@
     "axios": "^0.23.0",
     "emoji-mart": "^5.6.0",
     "hex-to-rgba": "^2.0.1",
+    "hls.js": "^1.5.20",
     "js-confetti": "^0.10.2",
     "luxon": "^3.2.1",
     "nanoid": "^3.1.30",

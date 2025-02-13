@@ -16,20 +16,30 @@
   width: 100%;
   z-index: 999;
   box-sizing: border-box;
-  background: #18182E;
+  background: transparent;
   justify-content: center;
   align-items: flex-start;
   font-family: 'Inter', Helvetica, sans-serif;
 
-  &::after {
-    content: "";
+  &__background {
+    display: none;
     position: absolute;
     width: 100%;
     height: 100vh;
-    background: #18182E;
+    background-color: #18182E;
     top: 0;
     left: 0;
     z-index: 1;
+
+    &_isShowing {
+      display: block !important;
+    }
+  }
+
+  &__arrowIcon {
+    &_right {
+      transform: rotate(180deg);
+    }
   }
 
   @media (min-width: 768px) {
@@ -60,12 +70,6 @@
     grid-template-areas: "indicators indicators"
                           "group close";
     padding: 8px 8px 0;
-
-    &_noClose {
-      grid-template-columns: 1fr;
-      grid-template-areas: "indicators"
-      "group";
-    }
   }
 
   &__loader {

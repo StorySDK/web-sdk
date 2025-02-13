@@ -17,9 +17,11 @@ export interface GroupsListProps {
     groupClassName?: string;
     isShowMockup?: boolean;
     isShowLabel?: boolean;
+    arrowsColor?: string;
     isLoading?: boolean;
     autoplay?: boolean;
     startStoryId?: string;
+    backgroundColor?: string;
     startGroupId?: string;
     forbidClose?: boolean;
     openInExternalModal?: boolean;

@@ -31,6 +31,8 @@ const withGroupsData =
       isShowMockup?: boolean;
       isShowLabel?: boolean;
       isDebugMode?: boolean;
+      arrowsColor?: string;
+      backgroundColor?: string;
       isStatusBarActive?: boolean;
       storyWidth?: number;
       storyHeight?: number;
@@ -365,7 +367,9 @@ const withGroupsData =
     return (
       <GroupsList
         activeGroupOutlineColor={options?.activeGroupOutlineColor}
+        arrowsColor={options?.arrowsColor}
         autoplay={options?.autoplay}
+        backgroundColor={options?.backgroundColor}
         devMode={options?.devMode}
         forbidClose={options?.forbidClose || options?.autoplay}
         groupClassName={options?.groupClassName}

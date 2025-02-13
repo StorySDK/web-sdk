@@ -16,6 +16,8 @@ declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: 
     isShowMockup?: boolean | undefined;
     isShowLabel?: boolean | undefined;
     isDebugMode?: boolean | undefined;
+    arrowsColor?: string | undefined;
+    backgroundColor?: string | undefined;
     isStatusBarActive?: boolean | undefined;
     storyWidth?: number | undefined;
     storyHeight?: number | undefined;

@@ -13,3 +13,4 @@ export * from './IconMute';
 export * from './IconUnmute';
 export * from './IconStoryPlay';
 export * from './IconStoryPause';
+export * from './IconArrow';

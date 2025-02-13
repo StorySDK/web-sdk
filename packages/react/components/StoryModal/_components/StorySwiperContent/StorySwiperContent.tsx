@@ -303,8 +303,8 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                               className={b('topBtn')}
                               onClick={
                                 playStatus === 'play'
-                                  ? () => storyContextVal.playStatusChange('pause')
-                                  : () => storyContextVal.playStatusChange('play')
+                                  ? () => storyContextVal.playStatusChange?.('pause')
+                                  : () => storyContextVal.playStatusChange?.('play')
                               }
                             >
                               {playStatus === 'play' ? (
