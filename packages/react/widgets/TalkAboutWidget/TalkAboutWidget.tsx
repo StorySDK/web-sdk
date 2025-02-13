@@ -70,7 +70,7 @@ export const TalkAboutWidget: WidgetComponent<{
   const handleTextChange = useCallback(
     (e: any) => {
       setText(e.target.value);
-      storyContextVal.playStatusChange('pause');
+      storyContextVal.playStatusChange?.('pause');
     },
     [storyContextVal]
   );
@@ -83,7 +83,7 @@ export const TalkAboutWidget: WidgetComponent<{
         storyContextVal.setAnswerCache(id, text);
       }
 
-      storyContextVal.playStatusChange('play');
+      storyContextVal.playStatusChange?.('play');
       setIsSent(true);
     }
   }, [id, props, storyContextVal, text]);
@@ -94,9 +94,9 @@ export const TalkAboutWidget: WidgetComponent<{
   const handleClickOutside = useCallback(
     (event: any) => {
       if (ref.current && !ref.current.contains(event.target)) {
-        storyContextVal.playStatusChange('play');
+        storyContextVal.playStatusChange?.('play');
       } else if (inputRef.current && inputRef.current.contains(event.target) && !isSent) {
-        storyContextVal.playStatusChange('pause');
+        storyContextVal.playStatusChange?.('pause');
       }
     },
     [isSent, storyContextVal]

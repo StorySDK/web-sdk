@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/react",
-  "version": "1.3.3",
+  "version": "1.4.8",
   "description": "React components for StorySDK rendering",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "",
@@ -30,6 +30,7 @@
     "axios": "^0.23.0",
     "emoji-mart": "^5.6.0",
     "hex-to-rgba": "^2.0.1",
+    "hls.js": "^1.5.20",
     "js-confetti": "^0.10.2",
     "luxon": "^3.2.1",
     "nanoid": "^3.1.30",
@@ -76,5 +77,5 @@
     "sass": "^1.42.1",
     "typescript": "^4.5.4"
   },
-  "gitHead": "5dca414a1ce6491f4df13d3a5a839deeb932082c"
+  "gitHead": "c4a66ff0b61fd7babb9d489a8506c23e7c7ef821"
 }

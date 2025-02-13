@@ -4,18 +4,18 @@ import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
 import axios from 'axios';
-import ReactGA from 'react-ga4';
 import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage } from '../utils/fontsInclude';
-import { checkIos, getUniqUserId, writeToDebug } from '../utils';
+import { checkIos, getUniqUserId, initGA, writeToDebug } from '../utils';
 import { useGroupCache, useStoryCache } from '../hooks';
 
-interface DurationProps {
+export interface DurationProps {
   storyId?: string;
   groupId: string;
   startTime: number;
+  endTime?: number;
 }
 
 const withGroupsData =
@@ -31,6 +31,8 @@ const withGroupsData =
       isShowMockup?: boolean;
       isShowLabel?: boolean;
       isDebugMode?: boolean;
+      arrowsColor?: string;
+      backgroundColor?: string;
       isStatusBarActive?: boolean;
       storyWidth?: number;
       storyHeight?: number;
@@ -60,12 +62,6 @@ const withGroupsData =
     const [isNeedToLoad, setIsNeedToLoad] = useState(false);
 
     const [groupDuration, setGroupDuration] = useState<DurationProps>({
-      groupId: '',
-      startTime: 0
-    });
-
-    const [storyDuration, setStoryDuration] = useState<DurationProps>({
-      storyId: '',
       groupId: '',
       startTime: 0
     });
@@ -165,12 +161,6 @@ const withGroupsData =
           handleFinishQuiz(groupId);
         }
 
-        setStoryDuration(() => ({
-          groupId,
-          storyId,
-          startTime: DateTime.now().toSeconds()
-        }));
-
         API.statistics.story.onOpen({ groupId, storyId, uniqUserId, language });
       },
 
@@ -178,31 +168,27 @@ const withGroupsData =
     );
 
     const handleCloseStory = useCallback(
-      (groupId: string, storyId: string) => {
-        if (storyDuration.storyId === storyId && storyDuration.groupId === groupId) {
-          const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+      (groupId: string, storyId: string, duration: number) => {
+        API.statistics.story.sendDuration({
+          storyId,
+          groupId,
+          uniqUserId,
+          seconds: duration,
+          language
+        });
 
-          API.statistics.story.sendDuration({
-            storyId: storyDuration.storyId,
-            groupId: storyDuration.groupId,
+        if (duration > 1) {
+          API.statistics.story.sendImpression({
+            storyId,
+            groupId,
             uniqUserId,
             seconds: duration,
             language
           });
-
-          if (duration > 1) {
-            API.statistics.story.sendImpression({
-              storyId: storyDuration.storyId,
-              groupId: storyDuration.groupId,
-              uniqUserId,
-              seconds: duration,
-              language
-            });
-          }
         }
         API.statistics.story.onClose({ groupId, storyId, uniqUserId, language });
       },
-      [storyDuration, uniqUserId, language]
+      [uniqUserId, language]
     );
 
     const handleNextStory = useCallback(
@@ -254,18 +240,16 @@ const withGroupsData =
                 ? options.isShowMockup
                 : app.settings?.isShowMockup;
 
-            if (app.settings.fonts?.length) {
+            if (app.settings?.fonts?.length) {
               loadFontsToPage(app.settings.fonts);
             }
 
-            if (app.settings?.integrations?.googleAnalytics?.trackingId) {
-              ReactGA.initialize(app.settings.integrations.googleAnalytics.trackingId);
-            }
+            initGA(app.settings?.integrations?.googleAnalytics?.trackingId);
 
             setAppLocale(app.localization);
             setGroupView(appGroupView);
             setIsShowMockup(checkIos() ? false : isShowMockupApp);
-            setIsShowLabel(!app.plan || app.plan === 'Free');
+            setIsShowLabel(!app.premium_owner);
 
             API.groups.getList().then((groupsData) => {
               if (options?.isDebugMode) {
@@ -383,7 +367,9 @@ const withGroupsData =
     return (
       <GroupsList
         activeGroupOutlineColor={options?.activeGroupOutlineColor}
+        arrowsColor={options?.arrowsColor}
         autoplay={options?.autoplay}
+        backgroundColor={options?.backgroundColor}
         devMode={options?.devMode}
         forbidClose={options?.forbidClose || options?.autoplay}
         groupClassName={options?.groupClassName}

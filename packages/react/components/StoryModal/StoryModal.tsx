@@ -3,8 +3,16 @@ import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
 import { eventPublish, getUniqUserId } from '@utils';
-import { IconClose, IconMute, IconUnmute } from '@components/icons';
+import {
+  IconArrow,
+  IconClose,
+  IconMute,
+  IconStoryPause,
+  IconStoryPlay,
+  IconUnmute
+} from '@components/icons';
 import { useLongPress } from 'use-long-press';
+import { DateTime } from 'luxon';
 import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
 import { StoryType, Group, GroupType, StoryContenxt, ScoreType, WidgetsTypes } from '../../types';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
@@ -33,65 +41,31 @@ interface StoryModalProps {
   isForceCloseAvailable?: boolean;
   isCacheDisabled?: boolean;
   devMode?: 'staging' | 'development';
+  arrowsColor?: string;
   isLoading?: boolean;
   isEditorMode?: boolean;
   openInExternalModal?: boolean;
+  backgroundColor?: string;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
   onNextStory?(groupId: string, storyId: string): void;
   onPrevStory?(groupId: string, storyId: string): void;
   onOpenStory?(groupId: string, storyId: string): void;
-  onCloseStory?(groupId: string, storyId: string): void;
+  onCloseStory?(groupId: string, storyId: string, duration: number): void;
   onStartQuiz?(groupId: string, storyId?: string): void;
   onFinishQuiz?(groupId: string, storyId?: string): void;
 }
 
-const LeftArrowIcon: React.FC = () => (
-  <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M19 12H5"
-      stroke="#FAFAFA"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    />
-    <path
-      d="M12 19L5 12L12 4.99997"
-      stroke="#FAFAFA"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    />
-  </svg>
-);
-
-const RightArrowIcon: React.FC = () => (
-  <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M5 12H19"
-      stroke="#FAFAFA"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    />
-    <path
-      d="M12 4.99997L19 12L12 19"
-      stroke="#FAFAFA"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    />
-  </svg>
-);
+export type PlayStatusType = 'wait' | 'play' | 'pause';
 
 export const StoryContext = React.createContext<StoryContenxt>({
   currentStoryId: '',
+  playStatus: 'wait',
   playStatusChange: () => {},
+  closeStoryGroup: () => {},
   confetti: null
 });
-
-export type PlayStatusType = 'wait' | 'play' | 'pause';
 
 export type StoryCurrentSize = {
   width: number;
@@ -174,8 +148,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     storyWidth,
     devMode,
     storyHeight,
+    arrowsColor,
     isAutoplay,
     openInExternalModal,
+    backgroundColor,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -205,6 +181,22 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [loadedStoriesIds, setLoadedStoriesIds] = useState<{ [key: string]: boolean }>({});
   const [bodyContainerWidth, setBodyContainerWidth] = useState(0);
   const [isVideoMuted, setIsVideoMuted] = useState<boolean>(true);
+
+  const [storyDuration, setStoryDuration] = useState({
+    storyId: '',
+    groupId: '',
+    startTime: 0
+  });
+
+  const handleOpenStory = useCallback((groupId: string, storyId: string) => {
+    setStoryDuration({
+      groupId,
+      storyId,
+      startTime: DateTime.now().toSeconds()
+    });
+
+    onOpenStory?.(groupId, storyId);
+  }, []);
 
   useEffect(() => {
     if (!isAutoplay) {
@@ -320,7 +312,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     if (openInExternalModal && isShowing) {
       const leftPosition = isMobile ? 0 : 100;
 
-      window.open(
+      window?.open(
         `${appLink}/share/${currentGroup?.settings?.shortDataId}`,
         '_blank',
         `popup,left=${leftPosition},top=${isMobile ? 0 : 50},width=${
@@ -466,13 +458,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     if (isOpened && activeStoriesWithResult.length) {
       setCurrentStoryId(activeStoriesWithResult[currentStoryIndex].id);
 
-      if (onOpenStory && currentGroup) {
-        onOpenStory(currentGroup.id, activeStoriesWithResult[currentStoryIndex].id);
+      if (currentGroup) {
+        handleOpenStory(currentGroup.id, activeStoriesWithResult[currentStoryIndex].id);
       }
     }
   }, [
     activeStoriesWithResult.length,
-    onOpenStory,
+    handleOpenStory,
     activeStoriesWithResult,
     currentGroup,
     isOpened,
@@ -483,7 +475,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onClose();
 
     if (onCloseStory && currentGroup) {
-      onCloseStory(currentGroup.id, currentStoryId);
+      const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+      onCloseStory(currentGroup.id, currentStoryId, duration);
     }
   }, [
     currentGroup?.id,
@@ -491,7 +484,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onClose,
     onCloseStory,
     activeStoriesWithResult,
-    currentStoryId
+    currentStoryId,
+    storyDuration
   ]);
 
   const resultStories = useMemo(() => {
@@ -595,7 +589,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       setIsSwiped(true);
 
       if (onCloseStory && currentGroup) {
-        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+        const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id, duration);
       }
     }
   }, [
@@ -605,12 +600,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     handleClose,
     isLastGroup,
     onCloseStory,
-    onNextGroup
+    onNextGroup,
+    storyDuration
   ]);
 
   const handleNext = useCallback(() => {
     eventPublish('nextStory', {
-      stotyId: activeStoriesWithResult[currentStory].id
+      storyId: activeStoriesWithResult[currentStory].id
     });
 
     const resultStoryId = getResultStoryId();
@@ -624,12 +620,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       handleFinishStoryQuiz();
 
       if (onCloseStory && currentGroup) {
-        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+        const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id, duration);
       }
 
-      if (onOpenStory && currentGroup) {
+      if (currentGroup) {
         setTimeout(() => {
-          onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
+          handleOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
         }, 0);
       }
 
@@ -659,8 +656,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onNextGroup,
     onCloseStory,
     currentGroup?.id,
-    onOpenStory,
-    onNextStory
+    handleOpenStory,
+    onNextStory,
+    storyDuration
   ]);
 
   const handleAnimationEnd = useCallback(() => {
@@ -674,7 +672,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const handlePrev = useCallback(() => {
     eventPublish('prevStory', {
-      stotyId: activeStoriesWithResult[currentStory].id
+      storyId: activeStoriesWithResult[currentStory]?.id
     });
 
     const resultStoryId = getResultStoryId();
@@ -684,14 +682,15 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       handlePrevGroup();
     } else {
       if (onCloseStory && currentGroup) {
-        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+        const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory]?.id, duration);
       }
 
       handleFinishStoryQuiz();
 
-      if (onOpenStory && currentGroup) {
+      if (currentGroup) {
         setTimeout(() => {
-          onOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
+          handleOpenStory(currentGroup.id, activeStoriesWithResult[currentStory - 1].id);
         }, 0);
       }
 
@@ -723,7 +722,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     handleClose,
     onPrevGroup,
     onCloseStory,
-    onOpenStory,
+    handleOpenStory,
     onPrevStory,
     currentGroup?.id
   ]);
@@ -733,12 +732,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     if (storyIndex > -1) {
       eventPublish('nextStory', {
-        stotyId: storyId
+        storyId
       });
 
-      if (onOpenStory && currentGroup) {
+      if (currentGroup) {
         setTimeout(() => {
-          onOpenStory(currentGroup.id, activeStoriesWithResult[storyIndex].id);
+          handleOpenStory(currentGroup.id, activeStoriesWithResult[storyIndex].id);
         }, 0);
       }
 
@@ -892,7 +891,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       value={{
         currentStoryId,
         quizMode: currentGroup?.settings?.scoreType,
+        playStatus,
         playStatusChange: setPlayStatus,
+        closeStoryGroup: !forbidClose || isForceCloseAvailable ? handleClose : undefined,
         handleQuizAnswer,
         getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
         setAnswerCache: isCacheDisabled ? undefined : setAnswerCache
@@ -913,13 +914,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         >
           {!isLoading && (
             <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
-              <LeftArrowIcon />
+              <IconArrow className={b('arrowIcon')} stroke={arrowsColor} />
             </button>
           )}
 
           {!isLoading && (
             <button className={b('arrowButton', { right: true })} onClick={handleNext}>
-              <RightArrowIcon />
+              <IconArrow className={b('arrowIcon', { right: true })} stroke={arrowsColor} />
             </button>
           )}
 
@@ -948,7 +949,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               handleLoadStory={handleLoadStory}
               handleMediaLoading={setIsMediaLoading}
               handleMuteVideo={setIsVideoMuted}
-              handleVideoBackgroundPlaying={setIsBackgroundVideoPlaying}
               handleVideoPlaying={setIsVideoPlaying}
               height={height}
               heightGap={heightGap}
@@ -996,12 +996,29 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </div>
           </a>
         )}
-
-        <div className={b('closeContainer')}>
-          {isVideoExists &&
-            (currentGroup?.type === GroupType.ONBOARDING ||
-              (currentGroup?.type === GroupType.TEMPLATE &&
-                currentGroup?.category === 'onboarding')) && (
+        {(currentGroup?.type === GroupType.ONBOARDING ||
+          (currentGroup?.type === GroupType.TEMPLATE &&
+            currentGroup?.category === 'onboarding')) && (
+          <div className={b('closeContainer')}>
+            {!currentGroup?.settings?.isProgressHidden && playStatus !== 'wait' && (
+              <>
+                <button
+                  className={b('topBtn')}
+                  onClick={
+                    playStatus === 'play'
+                      ? () => setPlayStatus('pause')
+                      : () => setPlayStatus('play')
+                  }
+                >
+                  {playStatus === 'play' ? (
+                    <IconStoryPause className={b('playBtnIcon').toString()} />
+                  ) : (
+                    <IconStoryPlay className={b('playBtnIcon').toString()} />
+                  )}
+                </button>
+              </>
+            )}
+            {isVideoExists && (
               <button
                 className={b('muteBtn')}
                 onClick={() => {
@@ -1009,24 +1026,27 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                 }}
               >
                 {isVideoMuted ? (
-                  <IconUnmute className={b('muteBtnIcon').toString()} />
-                ) : (
                   <IconMute className={b('muteBtnIcon').toString()} />
+                ) : (
+                  <IconUnmute className={b('muteBtnIcon').toString()} />
                 )}
               </button>
             )}
 
-          {!forbidClose &&
-            (isForceCloseAvailable ||
-              currentGroup?.type === GroupType.ONBOARDING ||
-              (currentGroup?.type === GroupType.TEMPLATE &&
-                currentGroup?.category === 'onboarding')) && (
+            {(!forbidClose || isForceCloseAvailable) && (
               <button className={b('close')} onClick={handleClose}>
                 <IconClose />
               </button>
             )}
-        </div>
+          </div>
+        )}
       </div>
+      <div
+        className={b('background', { isShowing: isOpened })}
+        style={{
+          backgroundColor
+        }}
+      />
 
       <canvas
         ref={canvasRef}

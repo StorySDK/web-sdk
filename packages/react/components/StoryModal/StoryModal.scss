@@ -16,20 +16,30 @@
   width: 100%;
   z-index: 999;
   box-sizing: border-box;
-  background: #18182E;
+  background: transparent;
   justify-content: center;
   align-items: flex-start;
   font-family: 'Inter', Helvetica, sans-serif;
 
-  &::after {
-    content: "";
+  &__background {
+    display: none;
     position: absolute;
     width: 100%;
     height: 100vh;
-    background: #18182E;
+    background-color: #18182E;
     top: 0;
     left: 0;
     z-index: 1;
+
+    &_isShowing {
+      display: block !important;
+    }
+  }
+
+  &__arrowIcon {
+    &_right {
+      transform: rotate(180deg);
+    }
   }
 
   @media (min-width: 768px) {
@@ -55,17 +65,11 @@
   &__controls {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 50px;
+    grid-template-columns: 1fr 88px;
     gap: 8px;
     grid-template-areas: "indicators indicators"
                           "group close";
     padding: 8px 8px 0;
-
-    &_noClose {
-      grid-template-columns: 1fr;
-      grid-template-areas: "indicators"
-      "group";
-    }
   }
 
   &__loader {
@@ -268,6 +272,7 @@
   }
 
   &__indicator {
+    display: block !important;
     position: relative;
     width: 100%;
     height: 2px;
@@ -333,6 +338,16 @@
     }
   }
 
+  &__topBtn {
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
   &__close {
     grid-area: close;
     border: 0;
@@ -342,12 +357,6 @@
     width: 24px;
     cursor: pointer;
     justify-self: flex-end;
-  }
-
-  &__muteBtn {
-    height: 24px;
-    width: 24px;
-    cursor: pointer;
   }
 
   &__rightTopContainer {
@@ -447,6 +456,12 @@
   &__muteBtnIcon {
     width: 20px;
     height: 20px;
+  }
+
+  &__playBtnIcon {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
   }
 
   &__label {

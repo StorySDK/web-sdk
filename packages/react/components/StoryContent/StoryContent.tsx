@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import { IconLoader, IconPlay } from '@components/icons';
@@ -6,7 +6,7 @@ import { WidgetFactory } from '../../core';
 import { StoryType, WidgetsTypes } from '../../types';
 import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackground';
 import { renderBackgroundStyles, renderPosition } from '../../utils';
-import { StoryCurrentSize } from '../StoryModal/StoryModal';
+import { PlayStatusType, StoryContext, StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
 import '../StoryModal/StoryModal.scss';
 
@@ -40,6 +40,7 @@ interface StoryContentProps {
   contentWidth: number | string;
   contentHeight: number | string;
   currentStorySize: StoryCurrentSize;
+  storyPlayStatus: PlayStatusType;
   desktopContainerWidth: number;
   noTopShadow?: boolean;
   noTopBackgroundShadow?: boolean;
@@ -53,7 +54,6 @@ interface StoryContentProps {
   handleGoToStory?: (storyId: string) => void;
   handleMediaLoading: (isLoading: boolean) => void;
   handleVideoPlaying: (isPlaying: boolean) => void;
-  handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
 }
 
 export const StoryContent: React.FC<StoryContentProps> = (props) => {
@@ -76,11 +76,11 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     contentHeight,
     isMediaLoading,
     isVideoMuted,
+    storyPlayStatus,
     handleMuteVideo,
     handleMediaLoading,
     handleLoadStory,
     handleVideoPlaying,
-    handleVideoBackgroundPlaying,
     handleGoToStory
   } = props;
 
@@ -94,6 +94,8 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
   const imageBackgroundRef = React.useRef<HTMLImageElement>(null);
 
   const [resourcesToLoad, setResourcesToLoad] = useState(1);
+
+  const storyContextVal = useContext(StoryContext);
 
   useEffect(() => {
     if (!isDisplaying) {
@@ -199,12 +201,11 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         {story.background.type === 'video' && (
           <StoryVideoBackground
             autoplay={isAutoplayVideos}
-            handleVideoBackgroundPlaying={handleVideoBackgroundPlaying}
             isDisplaying={isDisplaying}
             isFilled={!isUnfilledBackground}
             isLoading={isMediaLoading}
             isMuted={isVideoMuted}
-            isPlaying={isBackgroundVideoPlaying}
+            isPlaying={isBackgroundVideoPlaying && storyPlayStatus === 'play'}
             src={story.background.value}
             onLoadEnd={() => {
               handleResourcesLoading(false);
@@ -255,6 +256,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
             >
               <WidgetFactory
                 currentStorySize={currentStorySize}
+                handleCloseStory={storyContextVal.closeStoryGroup}
                 handleGoToStory={handleGoToStory}
                 handleMediaLoading={handleResourcesLoading}
                 handleMuteVideo={handleMuteVideo}

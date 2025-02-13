@@ -47,6 +47,7 @@ interface WidgetFactoryProps {
   widget: WidgetObjectType;
   handleMuteVideo?: (isMuted: boolean) => void;
   handleGoToStory?: (storyId: string) => void;
+  handleCloseStory?: () => void;
   handleVideoPlaying?: (isPlaying: boolean) => void;
   handleMediaLoading?: (isLoading: boolean) => void;
 }
@@ -78,6 +79,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
             handleMuteVideo={this.props.handleMuteVideo}
             params={this.props.widget.content.params}
             onClick={this.props.widget.action}
+            onCloseStory={this.props.handleCloseStory}
             onGoToStory={this.props.handleGoToStory}
           />
         );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StoryType } from '../../types';
-import { StoryCurrentSize } from '../StoryModal/StoryModal';
+import { PlayStatusType, StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
 import '../StoryModal/StoryModal.scss';
 interface StoryContentProps {
@@ -14,6 +14,7 @@ interface StoryContentProps {
     contentWidth: number | string;
     contentHeight: number | string;
     currentStorySize: StoryCurrentSize;
+    storyPlayStatus: PlayStatusType;
     desktopContainerWidth: number;
     noTopShadow?: boolean;
     noTopBackgroundShadow?: boolean;
@@ -27,7 +28,6 @@ interface StoryContentProps {
     handleGoToStory?: (storyId: string) => void;
     handleMediaLoading: (isLoading: boolean) => void;
     handleVideoPlaying: (isPlaying: boolean) => void;
-    handleVideoBackgroundPlaying: (isPlaying: boolean) => void;
 }
 export declare const StoryContent: React.FC<StoryContentProps>;
 export {};

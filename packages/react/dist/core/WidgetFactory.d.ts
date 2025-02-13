@@ -12,6 +12,7 @@ interface WidgetFactoryProps {
     widget: WidgetObjectType;
     handleMuteVideo?: (isMuted: boolean) => void;
     handleGoToStory?: (storyId: string) => void;
+    handleCloseStory?: () => void;
     handleVideoPlaying?: (isPlaying: boolean) => void;
     handleMediaLoading?: (isLoading: boolean) => void;
 }

@@ -19,21 +19,23 @@ interface StoryModalProps {
     isForceCloseAvailable?: boolean;
     isCacheDisabled?: boolean;
     devMode?: 'staging' | 'development';
+    arrowsColor?: string;
     isLoading?: boolean;
     isEditorMode?: boolean;
     openInExternalModal?: boolean;
+    backgroundColor?: string;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;
     onNextStory?(groupId: string, storyId: string): void;
     onPrevStory?(groupId: string, storyId: string): void;
     onOpenStory?(groupId: string, storyId: string): void;
-    onCloseStory?(groupId: string, storyId: string): void;
+    onCloseStory?(groupId: string, storyId: string, duration: number): void;
     onStartQuiz?(groupId: string, storyId?: string): void;
     onFinishQuiz?(groupId: string, storyId?: string): void;
 }
-export declare const StoryContext: React.Context<StoryContenxt>;
 export declare type PlayStatusType = 'wait' | 'play' | 'pause';
+export declare const StoryContext: React.Context<StoryContenxt>;
 export declare type StoryCurrentSize = {
     width: number;
     height: number;

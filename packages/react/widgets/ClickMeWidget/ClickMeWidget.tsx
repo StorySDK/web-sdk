@@ -23,6 +23,7 @@ export const ClickMeWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onClick?(): void;
   onGoToStory?(storyId: string): void;
+  onCloseStory?(): void;
   handleMuteVideo?(isMuted: boolean): void;
 }> = React.memo((props) => {
   const {
@@ -42,10 +43,11 @@ export const ClickMeWidget: WidgetComponent<{
     hasIcon,
     url,
     storyId,
-    actionType
+    actionType,
+    customFields
   } = props.params;
 
-  const { isReadOnly, onClick, onGoToStory } = props;
+  const { isReadOnly, onClick, onGoToStory, onCloseStory } = props;
 
   const [isClicked, setIsClicked] = useState(false);
 
@@ -62,7 +64,7 @@ export const ClickMeWidget: WidgetComponent<{
 
     if (actionType === 'link' && url) {
       setTimeout(() => {
-        if (window.cordova) {
+        if (window?.cordova) {
           window.cordova?.InAppBrowser?.open(url, '_system');
         } else {
           const tab = window?.open(url, '_blank');
@@ -77,8 +79,20 @@ export const ClickMeWidget: WidgetComponent<{
       setTimeout(() => {
         onGoToStory(storyId);
       }, DELAY_MS);
+    } else if (actionType === 'custom' && customFields?.web) {
+      const container = document.querySelector('#storysdk');
+
+      const clickEvent = new CustomEvent('storysdk_custom_click', {
+        detail: {
+          data: customFields?.web
+        }
+      });
+
+      container?.dispatchEvent(clickEvent);
+    } else if (actionType === 'close') {
+      onCloseStory?.();
     }
-  }, [actionType, onClick, onGoToStory, props, storyId, url]);
+  }, [actionType, customFields?.web, onClick, onGoToStory, props, storyId, url]);
 
   return (
     <div

@@ -17,9 +17,11 @@ export interface GroupsListProps {
     groupClassName?: string;
     isShowMockup?: boolean;
     isShowLabel?: boolean;
+    arrowsColor?: string;
     isLoading?: boolean;
     autoplay?: boolean;
     startStoryId?: string;
+    backgroundColor?: string;
     startGroupId?: string;
     forbidClose?: boolean;
     openInExternalModal?: boolean;
@@ -29,7 +31,7 @@ export interface GroupsListProps {
     onCloseGroup?(id: string): void;
     onNextStory?(groupId: string, storyId: string): void;
     onPrevStory?(groupId: string, storyId: string): void;
-    onCloseStory?(groupId: string, storyId: string): void;
+    onCloseStory?(groupId: string, storyId: string, duration: number): void;
     onOpenStory?(groupId: string, storyId: string): void;
     onStartQuiz?(groupId: string, storyId?: string): void;
     onFinishQuiz?(groupId: string, storyId?: string): void;

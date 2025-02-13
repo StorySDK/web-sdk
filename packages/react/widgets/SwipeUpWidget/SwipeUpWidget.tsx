@@ -32,7 +32,7 @@ export const SwipeUpWidget: WidgetComponent<{
         onSwipe();
       }
 
-      if (window.cordova) {
+      if (window?.cordova) {
         window.cordova?.InAppBrowser?.open(url, '_system');
       } else {
         const tab = window?.open(url, '_blank');
@@ -52,7 +52,7 @@ export const SwipeUpWidget: WidgetComponent<{
       onSwipe();
     }
 
-    if (window.cordova) {
+    if (window?.cordova) {
       window.cordova?.InAppBrowser?.open(url, '_system');
     } else {
       const tab = window?.open(url, '_blank');

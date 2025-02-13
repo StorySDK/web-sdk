@@ -26,9 +26,11 @@ export interface GroupsListProps {
   groupClassName?: string;
   isShowMockup?: boolean;
   isShowLabel?: boolean;
+  arrowsColor?: string;
   isLoading?: boolean;
   autoplay?: boolean;
   startStoryId?: string;
+  backgroundColor?: string;
   startGroupId?: string;
   forbidClose?: boolean;
   openInExternalModal?: boolean;
@@ -38,7 +40,7 @@ export interface GroupsListProps {
   onCloseGroup?(id: string): void;
   onNextStory?(groupId: string, storyId: string): void;
   onPrevStory?(groupId: string, storyId: string): void;
-  onCloseStory?(groupId: string, storyId: string): void;
+  onCloseStory?(groupId: string, storyId: string, duration: number): void;
   onOpenStory?(groupId: string, storyId: string): void;
   onStartQuiz?(groupId: string, storyId?: string): void;
   onFinishQuiz?(groupId: string, storyId?: string): void;
@@ -61,6 +63,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     isStatusBarActive,
     autoplay,
     startStoryId,
+    arrowsColor,
+    backgroundColor,
     startGroupId,
     devMode,
     forbidClose,
@@ -106,6 +110,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
       if (groupIndex !== -1) {
         setCurrentGroup(groupIndex);
       }
+    } else if (groups?.length) {
+      setCurrentGroup(0);
     }
   }, [groups, startGroupId]);
 
@@ -177,6 +183,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     if (!isLoading || autoplay) {
       ReactDOM.render(
         <StoryModal
+          arrowsColor={arrowsColor}
+          backgroundColor={backgroundColor}
           currentGroup={currentGroupMemo}
           devMode={devMode}
           forbidClose={forbidClose}

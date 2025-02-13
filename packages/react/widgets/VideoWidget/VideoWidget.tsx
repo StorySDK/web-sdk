@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { VideoWidgetParamsType, WidgetComponent } from '@types';
 import { block } from '@utils';
 import { IconPlay } from '@components/icons';
 import './VideoWidget.scss';
+import Hls from 'hls.js';
 
 const b = block('VideoWidget');
 
@@ -26,69 +27,96 @@ export const VideoWidget: WidgetComponent<{
     borderRadius: `${borderRadius}px`
   };
 
-  const [isVideoLoading, setIsVideoLoading] = React.useState(true);
+  const [isReadyToPlay, setIsReadyToPlay] = React.useState(false);
 
   useEffect(() => {
-    props.handleMediaLoading?.(isVideoLoading);
-  }, [isVideoLoading]);
+    props.handleMediaLoading?.(!isReadyToPlay);
+  }, [isReadyToPlay]);
 
   const togglePlay = () => {
     props.handleMediaPlaying?.(!props.isVideoPlaying);
   };
 
+  const hls = useRef<Hls | null>(null);
+  const streamSource = useMemo(() => `${videoUrl}/ik-master.m3u8?tr=sr-720_1080`, [videoUrl]);
+
   useEffect(() => {
     const videoElement = videoRef.current;
 
-    if (props.isVideoPlaying && props.isDisplaying) {
-      videoElement?.play().catch((error) => {
-        console.error('StorySDK: Error attempting to play media:', error);
-      });
-    } else {
-      videoElement?.pause();
+    if (!videoElement) {
+      return () => {};
     }
 
-    return () => {
-      videoElement?.pause();
-    };
-  }, [props.isVideoPlaying, props.isDisplaying]);
-
-  useEffect(() => {
-    const videoElement = videoRef.current;
-
     const handleError = (e: Event) => {
-      console.error('Video error:', e);
+      console.error('StorySDK - Error attempting to play media:', e);
     };
 
     const handleLoadStart = () => {
-      setIsVideoLoading(true);
+      setIsReadyToPlay(false);
     };
 
     const handleCanPlay = () => {
-      setIsVideoLoading(false);
+      setIsReadyToPlay(true);
     };
 
-    const handlePause = () => {
-      props.handleMediaPlaying?.(false);
-    };
+    if (Hls.isSupported()) {
+      hls.current = new Hls();
+      hls.current.loadSource(streamSource);
+      hls.current.attachMedia(videoElement);
 
-    // const handlePlay = () => {
-    //   props.handleMediaPlaying?.(true);
-    // };
+      handleLoadStart();
 
-    videoElement?.addEventListener('error', handleError);
-    videoElement?.addEventListener('loadstart', handleLoadStart);
-    videoElement?.addEventListener('canplay', handleCanPlay);
-    videoElement?.addEventListener('pause', handlePause);
-    // videoElement?.addEventListener('play', handlePlay);
+      hls.current.on(Hls.Events.MANIFEST_PARSED, () => {
+        handleCanPlay();
+      });
 
-    return () => {
-      videoElement?.removeEventListener('loadstart', handleLoadStart);
-      videoElement?.removeEventListener('canplay', handleCanPlay);
-      videoElement?.removeEventListener('pause', handlePause);
-      // videoElement?.removeEventListener('play', handlePlay);
-      videoElement?.removeEventListener('error', handleError);
-    };
-  }, []);
+      hls.current.on(Hls.Events.ERROR, () => {
+        videoElement.src = videoUrl;
+        if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING) {
+          videoElement.load();
+        }
+        videoElement?.addEventListener('loadstart', handleLoadStart);
+        videoElement?.addEventListener('canplay', handleCanPlay);
+        videoElement?.addEventListener('error', handleError);
+      });
+
+      return () => {
+        hls.current?.destroy();
+      };
+    }
+
+    const isCanPlayStream = videoElement?.canPlayType('application/vnd.apple.mpegurl');
+
+    videoElement.src = isCanPlayStream ? streamSource : videoUrl;
+
+    if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING && !isCanPlayStream) {
+      videoElement.load();
+    }
+
+    videoElement?.removeEventListener('loadstart', handleLoadStart);
+
+    videoElement.addEventListener('loadeddata', () => {
+      handleCanPlay();
+    });
+
+    return () => {};
+  }, [streamSource, videoUrl]);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+
+    if (videoElement && isReadyToPlay) {
+      setIsReadyToPlay(true);
+
+      if (props.isVideoPlaying && props.isDisplaying) {
+        videoElement?.play().catch((error) => {
+          console.warn('StorySDK - Error attempting to play media:', error);
+        });
+      } else {
+        videoElement?.pause();
+      }
+    }
+  }, [props.isVideoPlaying, props.isDisplaying, isReadyToPlay]);
 
   return (
     <div
@@ -109,7 +137,7 @@ export const VideoWidget: WidgetComponent<{
         style={styles}
         webkit-playsinline="true"
       />
-      {!props.isVideoPlaying && !props.isAutoplay && !isVideoLoading && (
+      {!props.isVideoPlaying && !props.isAutoplay && isReadyToPlay && (
         <button className={b('playBtn')}>
           <IconPlay />
         </button>
