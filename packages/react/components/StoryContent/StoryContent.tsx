@@ -124,12 +124,16 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
   }, [story, isDisplaying]);
 
   const togglePlay = () => {
-    handleVideoPlaying(!isVideoPlaying);
+    handleMuteVideo?.(false);
+
+    handleVideoPlaying(true);
   };
 
   const handleResourcesLoading = useCallback((isLoading: boolean) => {
     if (!isLoading) {
       setResourcesToLoad((prev) => (prev - 1 > 0 ? prev - 1 : 0));
+    } else {
+      handleMediaLoading(true);
     }
   }, []);
 
@@ -200,7 +204,6 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         />
         {story.background.type === 'video' && (
           <StoryVideoBackground
-            autoplay={isAutoplayVideos}
             isDisplaying={isDisplaying}
             isFilled={!isUnfilledBackground}
             isLoading={isMediaLoading}
@@ -232,7 +235,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         >
           {story.background.type === 'video' &&
             isDisplaying &&
-            !isVideoPlaying &&
+            !isBackgroundVideoPlaying &&
             !isAutoplayVideos &&
             !isMediaLoading && (
               <button className={b('playBtn')} onClick={togglePlay}>
@@ -260,7 +263,12 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
                 handleGoToStory={handleGoToStory}
                 handleMediaLoading={handleResourcesLoading}
                 handleMuteVideo={handleMuteVideo}
-                handleVideoPlaying={handleVideoPlaying}
+                handleVideoPlaying={(isPlaying: boolean) => {
+                  if (isPlaying) {
+                    handleMuteVideo?.(false);
+                  }
+                  handleVideoPlaying(isPlaying);
+                }}
                 isAutoplayVideos={isAutoplayVideos}
                 isDisplaying={isDisplaying}
                 isVideoMuted={isVideoMuted}

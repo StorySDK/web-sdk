@@ -198,12 +198,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onOpenStory?.(groupId, storyId);
   }, []);
 
-  useEffect(() => {
-    if (!isAutoplay) {
-      setIsVideoMuted(!isVideoPlaying || !isBackgroundVideoPlaying);
-    }
-  }, [isVideoPlaying, isBackgroundVideoPlaying]);
-
   const isVideoExists = useMemo(
     () =>
       activeStoriesWithResult[currentStory]?.storyData.some(
@@ -604,62 +598,70 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     storyDuration
   ]);
 
-  const handleNext = useCallback(() => {
-    eventPublish('nextStory', {
-      storyId: activeStoriesWithResult[currentStory].id
-    });
+  const handleNext = useCallback(
+    (isManual?: boolean) => {
+      eventPublish('nextStory', {
+        storyId: activeStoriesWithResult[currentStory].id
+      });
 
-    const resultStoryId = getResultStoryId();
+      const resultStoryId = getResultStoryId();
 
-    if (
-      currentStory === activeStoriesWithResult.length - 1 ||
-      activeStoriesWithResult[currentStory].id === resultStoryId
-    ) {
-      handleNextGroup();
-    } else {
-      handleFinishStoryQuiz();
-
-      if (onCloseStory && currentGroup) {
-        const duration = DateTime.now().toSeconds() - storyDuration.startTime;
-        onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id, duration);
+      if (isAutoplayVideos && !isManual) {
+        setIsVideoMuted(true);
       }
 
-      if (currentGroup) {
-        setTimeout(() => {
-          handleOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
-        }, 0);
-      }
-
-      if (onNextStory && currentGroup) {
-        onNextStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
-      }
-
-      if (resultStoryId) {
-        const resultStoryIndex = activeStoriesWithResult.findIndex(
-          (story) => story.id === resultStoryId
-        );
-
-        setCurrentStory(resultStoryIndex);
-        setCurrentStoryId(activeStoriesWithResult[resultStoryIndex].id);
+      if (
+        currentStory === activeStoriesWithResult.length - 1 ||
+        activeStoriesWithResult[currentStory].id === resultStoryId
+      ) {
+        handleNextGroup();
       } else {
-        setCurrentStory(currentStory + 1);
-        setCurrentStoryId(activeStoriesWithResult[currentStory + 1].id);
+        handleFinishStoryQuiz();
+
+        if (onCloseStory && currentGroup) {
+          const duration = DateTime.now().toSeconds() - storyDuration.startTime;
+          onCloseStory(currentGroup.id, activeStoriesWithResult[currentStory].id, duration);
+        }
+
+        if (currentGroup) {
+          setTimeout(() => {
+            handleOpenStory(currentGroup.id, activeStoriesWithResult[currentStory + 1].id);
+          }, 0);
+        }
+
+        if (onNextStory && currentGroup) {
+          onNextStory(currentGroup.id, activeStoriesWithResult[currentStory].id);
+        }
+
+        if (resultStoryId) {
+          const resultStoryIndex = activeStoriesWithResult.findIndex(
+            (story) => story.id === resultStoryId
+          );
+
+          setCurrentStory(resultStoryIndex);
+          setCurrentStoryId(activeStoriesWithResult[resultStoryIndex].id);
+        } else {
+          setCurrentStory(currentStory + 1);
+          setCurrentStoryId(activeStoriesWithResult[currentStory + 1].id);
+        }
       }
-    }
-  }, [
-    activeStoriesWithResult,
-    currentStory,
-    currentStoryId,
-    getResultStoryId,
-    isLastGroup,
-    handleClose,
-    onNextGroup,
-    onCloseStory,
-    currentGroup?.id,
-    handleOpenStory,
-    onNextStory,
-    storyDuration
-  ]);
+    },
+    [
+      activeStoriesWithResult,
+      currentStory,
+      currentStoryId,
+      getResultStoryId,
+      isLastGroup,
+      handleClose,
+      onNextGroup,
+      onCloseStory,
+      currentGroup?.id,
+      handleOpenStory,
+      onNextStory,
+      storyDuration,
+      isAutoplayVideos
+    ]
+  );
 
   const handleAnimationEnd = useCallback(() => {
     handleNext();
@@ -919,7 +921,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           )}
 
           {!isLoading && (
-            <button className={b('arrowButton', { right: true })} onClick={handleNext}>
+            <button className={b('arrowButton', { right: true })} onClick={() => handleNext(true)}>
               <IconArrow className={b('arrowIcon', { right: true })} stroke={arrowsColor} />
             </button>
           )}

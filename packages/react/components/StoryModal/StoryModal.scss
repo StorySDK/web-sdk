@@ -82,6 +82,7 @@
 
   &__loaderIcon {
     animation: rotate 1.5s linear infinite;
+    opacity: 0.5;
   }
 
   @keyframes rotate {

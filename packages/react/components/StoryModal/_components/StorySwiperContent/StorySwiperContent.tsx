@@ -333,10 +333,12 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
 
                         {!currentGroup?.settings?.isProhibitToClose &&
                           !forbidClose &&
-                          !(isForceCloseAvailable && 
-                          ((currentGroup?.type === GroupType.ONBOARDING ||
-                          (currentGroup?.type === GroupType.TEMPLATE &&
-                          currentGroup?.category === 'onboarding')))) && (
+                          !(
+                            isForceCloseAvailable &&
+                            (currentGroup?.type === GroupType.ONBOARDING ||
+                              (currentGroup?.type === GroupType.TEMPLATE &&
+                                currentGroup?.category === 'onboarding'))
+                          ) && (
                             <button
                               className={b('close', {
                                 noProgress:
