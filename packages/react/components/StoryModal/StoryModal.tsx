@@ -149,7 +149,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     devMode,
     storyHeight,
     arrowsColor,
-    isAutoplay,
     openInExternalModal,
     backgroundColor,
     onClose,
@@ -169,6 +168,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [isOpened, setIsOpened] = useState(isShowing);
   const [playStatus, setPlayStatus] = useState<PlayStatusType>('wait');
   const storyModalRef = useRef<HTMLDivElement>(null);
+  const backgroundRef = useRef<HTMLDivElement>(null);
   const [isQuizStarted, setIsQuizStarted] = useState(false);
   const [quizStartedStoryIds, setQuizStartedStoryIds] = useState<{ [key: string]: boolean }>({});
   const [width, height] = useWindowSize();
@@ -416,10 +416,14 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     const body = document.querySelector('body');
     if (storyModalRef.current && body) {
       if (isMobile) {
-        storyModalRef.current.style.setProperty('height', `${window.innerHeight}px`);
+        storyModalRef.current.style.setProperty('height', `${height}px`);
       } else {
         storyModalRef.current.style.setProperty('height', `100%`);
       }
+    }
+
+    if(backgroundRef.current) {
+      backgroundRef.current.style.setProperty('height', `${height}px`);
     }
   }, [width, height, isMobile, contentHeight]);
 
@@ -1045,6 +1049,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       </div>
       <div
         className={b('background', { isShowing: isOpened })}
+        ref={backgroundRef}
         style={{
           backgroundColor
         }}
