@@ -47,11 +47,14 @@ export const VideoWidget: WidgetComponent<{
       return () => {};
     }
 
+    const isNativeHlsSupport = videoElement?.canPlayType('application/vnd.apple.mpegurl');
+
     const handleError = (e: Event) => {
       console.error('StorySDK - Error attempting to play media:', e);
     };
 
     const handleLoadStart = () => {
+      props.handleMediaLoading?.(true);
       setIsReadyToPlay(false);
     };
 
@@ -59,54 +62,63 @@ export const VideoWidget: WidgetComponent<{
       setIsReadyToPlay(true);
     };
 
-    if (Hls.isSupported()) {
+    if (!isNativeHlsSupport && Hls.isSupported()) {
       hls.current = new Hls();
+
       hls.current.loadSource(streamSource);
       hls.current.attachMedia(videoElement);
-
       handleLoadStart();
 
       hls.current.on(Hls.Events.MANIFEST_PARSED, () => {
         handleCanPlay();
       });
 
-      hls.current.on(Hls.Events.ERROR, () => {
-        videoElement.src = videoUrl;
-        if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING) {
-          videoElement.load();
+      hls.current.on(Hls.Events.ERROR, (event, data) => {
+        if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          videoElement.currentTime += 0.5;
+        } else {
+          hls.current?.destroy();
+          handleLoadStart();
+
+          videoElement.src = videoUrl;
+          if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING) {
+            videoElement.load();
+          }
+          videoElement?.addEventListener('canplay', handleCanPlay);
+          videoElement?.addEventListener('error', handleError);
         }
-        videoElement?.addEventListener('loadstart', handleLoadStart);
-        videoElement?.addEventListener('canplay', handleCanPlay);
-        videoElement?.addEventListener('error', handleError);
       });
 
       return () => {
         hls.current?.destroy();
+        videoElement?.removeEventListener('canplay', handleCanPlay);
+        videoElement?.removeEventListener('error', handleError);
       };
     }
 
-    const isCanPlayStream = videoElement?.canPlayType('application/vnd.apple.mpegurl');
+    videoElement.src = isNativeHlsSupport ? streamSource : videoUrl;
 
-    videoElement.src = isCanPlayStream ? streamSource : videoUrl;
-
-    if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING && !isCanPlayStream) {
+    if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING) {
+      handleLoadStart();
       videoElement.load();
     }
 
-    videoElement?.removeEventListener('loadstart', handleLoadStart);
-
-    videoElement.addEventListener('loadeddata', () => {
+    videoElement.addEventListener('canplay', () => {
       handleCanPlay();
     });
 
-    return () => {};
+    return () => {
+      videoElement?.removeEventListener('canplay', () => {
+        handleCanPlay();
+      });
+    };
   }, [streamSource, videoUrl]);
 
   useEffect(() => {
     const videoElement = videoRef.current;
 
     if (videoElement && isReadyToPlay) {
-      setIsReadyToPlay(true);
+      props.handleMediaLoading?.(false);
 
       if (props.isVideoPlaying && props.isDisplaying) {
         videoElement?.play().catch((error) => {

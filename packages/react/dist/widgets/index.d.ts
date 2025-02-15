@@ -45,6 +45,7 @@ declare const widgets: {
         isReadOnly?: boolean | undefined;
         onClick?(): void;
         onGoToStory?(storyId: string): void;
+        onCloseStory?(): void;
         handleMuteVideo?(isMuted: boolean): void;
     }>;
     ellipse: import("@types").WidgetComponent<{

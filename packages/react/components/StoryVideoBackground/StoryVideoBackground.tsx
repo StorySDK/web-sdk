@@ -12,7 +12,6 @@ type PropTypes = {
   src: string;
   isLoading?: boolean;
   isMuted?: boolean;
-  autoplay?: boolean;
   isFilled?: boolean;
   isPlaying?: boolean;
   isDisplaying?: boolean;
@@ -22,7 +21,6 @@ type PropTypes = {
 
 export const StoryVideoBackground = ({
   src,
-  autoplay = false,
   isLoading,
   isPlaying,
   isDisplaying,
@@ -51,6 +49,8 @@ export const StoryVideoBackground = ({
       return () => {};
     }
 
+    const isNativeHlsSupport = videoElement?.canPlayType('application/vnd.apple.mpegurl');
+
     const handleError = (e: Event) => {
       console.error('StorySDK - Error attempting to play media:', e);
     };
@@ -64,46 +64,56 @@ export const StoryVideoBackground = ({
       setIsReadyToPlay(true);
     };
 
-    if (Hls.isSupported()) {
+    if (!isNativeHlsSupport && Hls.isSupported()) {
       hls.current = new Hls();
+
       hls.current.loadSource(streamSource);
       hls.current.attachMedia(videoElement);
-
       handleLoadStart();
 
       hls.current.on(Hls.Events.MANIFEST_PARSED, () => {
         handleCanPlay();
       });
 
-      hls.current.on(Hls.Events.ERROR, () => {
-        videoElement.src = src;
-        if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING) {
-          videoElement.load();
+      hls.current.on(Hls.Events.ERROR, (event, data) => {
+        if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          videoElement.currentTime += 0.5;
+        } else {
+          hls.current?.destroy();
+          handleLoadStart();
+
+          videoElement.src = src;
+          if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING) {
+            videoElement.load();
+          }
+          videoElement?.addEventListener('canplay', handleCanPlay);
+          videoElement?.addEventListener('error', handleError);
         }
-        videoElement?.addEventListener('loadstart', handleLoadStart);
-        videoElement?.addEventListener('canplay', handleCanPlay);
-        videoElement?.addEventListener('error', handleError);
       });
 
       return () => {
         hls.current?.destroy();
+        videoElement?.removeEventListener('canplay', handleCanPlay);
+        videoElement?.removeEventListener('error', handleError);
       };
     }
-    const isCanPlayStream = videoElement?.canPlayType('application/vnd.apple.mpegurl');
 
-    videoElement.src = isCanPlayStream ? streamSource : src;
+    videoElement.src = isNativeHlsSupport ? streamSource : src;
 
-    if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING && !isCanPlayStream) {
+    if (videoElement?.readyState === HTMLMediaElement.HAVE_NOTHING) {
+      handleLoadStart();
       videoElement.load();
     }
 
-    videoElement?.removeEventListener('loadstart', handleLoadStart);
-
-    videoElement.addEventListener('loadeddata', () => {
+    videoElement.addEventListener('canplay', () => {
       handleCanPlay();
     });
 
-    return () => {};
+    return () => {
+      videoElement?.removeEventListener('canplay', () => {
+        handleCanPlay();
+      });
+    };
   }, [streamSource, src]);
 
   useEffect(() => {
@@ -128,7 +138,7 @@ export const StoryVideoBackground = ({
         className={b('video', { loading: isLoading, cover: isFilled })}
         disablePictureInPicture
         loop
-        muted={isMuted ?? autoplay}
+        muted={isMuted}
         playsInline
         preload="auto"
         ref={videoRef}

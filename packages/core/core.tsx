@@ -4,6 +4,7 @@ import axios from 'axios';
 import { GroupsList } from '@storysdk/react';
 import withGroupsData from './hocs/withGroupsData';
 import '@storysdk/react/dist/bundle.css';
+import { on } from 'events';
 
 export class Story {
   token: string;
@@ -30,6 +31,7 @@ export class Story {
     groupsOutlineColor?: string;
     openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
+    onGroupClose?: () => void;
   };
 
   constructor(
@@ -56,6 +58,7 @@ export class Story {
       forbidClose?: boolean;
       openInExternalModal?: boolean;
       devMode?: 'staging' | 'development';
+      onGroupClose?: () => void;
     }
   ) {
     this.token = token;
@@ -83,6 +86,7 @@ export class Story {
       this.options.groupsOutlineColor = options?.groupsOutlineColor;
       this.options.arrowsColor = options?.arrowsColor;
       this.options.backgroundColor = options?.backgroundColor;
+      this.options.onGroupClose = options?.onGroupClose;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
