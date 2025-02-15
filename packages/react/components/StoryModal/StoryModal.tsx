@@ -416,7 +416,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     const body = document.querySelector('body');
     if (storyModalRef.current && body) {
       if (isMobile) {
-        storyModalRef.current.style.setProperty('height', `100vh`);
+        storyModalRef.current.style.setProperty('height', `${window.innerHeight}px`);
       } else {
         storyModalRef.current.style.setProperty('height', `100%`);
       }

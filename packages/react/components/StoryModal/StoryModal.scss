@@ -20,6 +20,11 @@
   justify-content: center;
   align-items: flex-start;
   font-family: 'Inter', Helvetica, sans-serif;
+  user-select: none;
+
+  * {
+    user-select: none;  
+  }
 
   &__background {
     display: none;
