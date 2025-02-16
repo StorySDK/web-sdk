@@ -173,7 +173,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
       })}
       style={{
         width: !isMobile ? desktopWidth : '100%',
-        height: `calc(100vh - ${heightModalGap}px)`,
+        height: `calc(${height} - ${heightModalGap}px)`,
         borderRadius: isShowMockupCurrent && !isMobile ? borderRadius : undefined
       }}
     >
