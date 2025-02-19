@@ -388,7 +388,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     if (isShowMockupCurrent && !isMobile) {
       if (
         currentGroupType === GroupType.GROUP ||
-        (currentGroup?.type === GroupType.TEMPLATE && currentGroup?.category === 'stories')
+        (currentGroup?.type === GroupType.TEMPLATE && currentGroup?.category === 'stories') ||
+        storyHeight === STORY_SIZE_DEFAULT.height
       ) {
         backgroundHeightGap = groupInnerHeightGap;
       } else {
