@@ -12,7 +12,7 @@ import { LongPressTouchHandlers } from 'use-long-press';
 import { GroupType, StoryType } from '@types';
 import JSConfetti from 'js-confetti';
 import { SwipeOutput, useAdaptiveValue } from '@hooks';
-import { PADDING_SIZE, PlayStatusType, StoryContent, StoryContext } from '../../..';
+import { PlayStatusType, StoryContent, StoryContext } from '../../..';
 import { StatusBar } from '../StatusBar';
 import '../../StoryModal.scss';
 
@@ -22,11 +22,9 @@ interface StorySwiperContentProps {
   isLarge: boolean;
   isAutoplayVideos: boolean;
   isShowMockupCurrent?: boolean;
-  isGroupWithFilledBackground?: boolean;
   isProgressHidden?: boolean;
   isVideoMuted: boolean;
   isVideoExists?: boolean;
-  isBackroundFilled?: boolean;
   currentGroupType: GroupType;
   currentGroup: any;
   currentStory: number;
@@ -34,11 +32,9 @@ interface StorySwiperContentProps {
   isMediaLoading: boolean;
   isLoading?: boolean;
   activeStoriesWithResult: StoryType[];
-  height: number;
   currentStorySize: any;
-  heightGap: number;
   contentWidth: number | string;
-  contentHeight: number | string;
+  contentHeight: number;
   forbidClose?: boolean;
   isStatusBarActive?: boolean;
   storyWidth?: number;
@@ -74,9 +70,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     isMobile,
     isLarge,
     isShowMockupCurrent,
-    isGroupWithFilledBackground,
     isProgressHidden,
-    isBackroundFilled,
     currentGroupType,
     currentGroup,
     currentStory,
@@ -87,9 +81,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     isBackgroundVideoPlaying,
     isLoading,
     activeStoriesWithResult,
-    height,
     currentStorySize,
-    heightGap,
     contentWidth,
     contentHeight,
     forbidClose,
@@ -138,31 +130,16 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     return defaultRatioIndex;
   }, [storyHeight, storyWidth, defaultRatioIndex]);
 
-  const currentPaddingSize = isShowMockupCurrent ? PADDING_SIZE + heightGap : PADDING_SIZE;
   const isShowStatusBarInStory = isShowMockupCurrent && !isMobile && isLarge && isStatusBarActive;
-  const desktopWidth = Math.ceil(currentRatioIndex * (height - currentPaddingSize));
+  const desktopWidth = Math.ceil(currentRatioIndex * contentHeight);
 
   const noTopShadow =
-    (currentGroupType === GroupType.ONBOARDING &&
-      currentGroup?.settings?.isProgressHidden &&
-      currentGroup?.settings?.isProhibitToClose) ||
-    isGroupWithFilledBackground;
+    currentGroupType === GroupType.ONBOARDING &&
+    currentGroup?.settings?.isProgressHidden &&
+    currentGroup?.settings?.isProhibitToClose;
 
   const noTopBackgroundShadow =
-    currentGroupType === GroupType.ONBOARDING ||
-    (currentGroupType === GroupType.GROUP && !isBackroundFilled);
-
-  const heightModalGap = useMemo(() => {
-    if (isMobile) {
-      return 0;
-    }
-
-    if (isShowMockupCurrent) {
-      return heightGap + PADDING_SIZE;
-    }
-
-    return PADDING_SIZE;
-  }, [isMobile, isShowMockupCurrent, heightGap]);
+    currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.GROUP;
 
   const storyContextVal = useContext(StoryContext);
 
@@ -173,7 +150,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
       })}
       style={{
         width: !isMobile ? desktopWidth : '100%',
-        height: `calc(${height} - ${heightModalGap}px)`,
+        height: contentHeight,
         borderRadius: isShowMockupCurrent && !isMobile ? borderRadius : undefined
       }}
     >
@@ -243,13 +220,10 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                       className={b('indicators', {
                         playAnimation: playStatus === 'play',
                         stopAnimation: playStatus === 'pause',
-                        widePadding: isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
+                        widePadding: isShowMockupCurrent && isLarge
                       })}
                       style={{
-                        top:
-                          isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                            ? largeIndicatorTop
-                            : undefined
+                        top: isShowMockupCurrent && isLarge ? largeIndicatorTop : undefined
                       }}
                     >
                       {activeStoriesWithResult
@@ -274,13 +248,10 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     <div
                       className={b('group', {
                         noProgress: currentGroup?.settings?.isProgressHidden || isProgressHidden,
-                        wideLeft: isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
+                        wideLeft: isShowMockupCurrent && isLarge
                       })}
                       style={{
-                        top:
-                          isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                            ? largeElementsTop
-                            : undefined
+                        top: isShowMockupCurrent && isLarge ? largeElementsTop : undefined
                       }}
                     >
                       {currentGroup?.imageUrl && (
@@ -343,14 +314,10 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                               className={b('close', {
                                 noProgress:
                                   currentGroup?.settings?.isProgressHidden || isProgressHidden,
-                                wideRight:
-                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
+                                wideRight: isShowMockupCurrent && isLarge
                               })}
                               style={{
-                                top:
-                                  isShowMockupCurrent && (isLarge || isGroupWithFilledBackground)
-                                    ? largeElementsTop
-                                    : undefined
+                                top: isShowMockupCurrent && isLarge ? largeElementsTop : undefined
                               }}
                               onClick={handleClose}
                             >

@@ -219,9 +219,8 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
           />
         )}
       </div>
-
       <div
-        className={b({ large: isLarge, noTopShadow, center: isMobile })}
+        className={b({ large: isLarge, noTopShadow })}
         style={{
           width: contentWidth,
           height: contentHeight
@@ -230,7 +229,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         <div
           className={b('scope', { large: isLarge })}
           style={{
-            transform: `scale(${contentScale})`
+            transform: `scale(${contentScale}) translateY(-50%)`
           }}
         >
           {story.background.type === 'video' &&

@@ -135,7 +135,6 @@ const withGroupsData =
 
     const handleCloseGroup = useCallback(
       (groupId: string) => {
-
         options?.onGroupClose?.();
 
         const duration = DateTime.now().toSeconds() - groupDuration.startTime;

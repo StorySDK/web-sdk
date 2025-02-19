@@ -3,7 +3,7 @@
   "version": "1.5.7",
   "description": "StorySDK for web projects",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
-  "homepage": "",
+  "homepage": "storysdk.com",
   "license": "ISC",
   "main": "dist/bundle.js",
   "module": "dist/bundle.esm.js",
