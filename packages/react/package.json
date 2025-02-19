@@ -1,9 +1,9 @@
 {
   "name": "@storysdk/react",
-  "version": "1.5.6",
+  "version": "1.5.9",
   "description": "React components for StorySDK rendering",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
-  "homepage": "",
+  "homepage": "storysdk.com",
   "license": "ISC",
   "main": "dist/bundle.js",
   "module": "dist/bundle.esm.js",

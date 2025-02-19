@@ -4,7 +4,6 @@ import axios from 'axios';
 import { GroupsList } from '@storysdk/react';
 import withGroupsData from './hocs/withGroupsData';
 import '@storysdk/react/dist/bundle.css';
-import { on } from 'events';
 
 export class Story {
   token: string;

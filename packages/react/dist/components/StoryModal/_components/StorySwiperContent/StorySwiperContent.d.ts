@@ -10,11 +10,9 @@ interface StorySwiperContentProps {
     isLarge: boolean;
     isAutoplayVideos: boolean;
     isShowMockupCurrent?: boolean;
-    isGroupWithFilledBackground?: boolean;
     isProgressHidden?: boolean;
     isVideoMuted: boolean;
     isVideoExists?: boolean;
-    isBackroundFilled?: boolean;
     currentGroupType: GroupType;
     currentGroup: any;
     currentStory: number;
@@ -22,11 +20,9 @@ interface StorySwiperContentProps {
     isMediaLoading: boolean;
     isLoading?: boolean;
     activeStoriesWithResult: StoryType[];
-    height: number;
     currentStorySize: any;
-    heightGap: number;
     contentWidth: number | string;
-    contentHeight: number | string;
+    contentHeight: number;
     forbidClose?: boolean;
     isStatusBarActive?: boolean;
     storyWidth?: number;

@@ -5,7 +5,6 @@ interface StoryModalProps {
     currentGroup?: Group;
     stories?: StoryType[];
     isShowing: boolean;
-    isAutoplay?: boolean;
     forbidClose?: boolean;
     isProgressHidden?: boolean;
     isShowMockup?: boolean;

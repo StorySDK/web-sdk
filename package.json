@@ -19,6 +19,7 @@
     "@rollup/plugin-typescript": "^8.3.0",
     "@types/react": "^17.0.21",
     "@types/react-dom": "^17.0.9",
+    "@types/rollup-plugin-node-resolve": "^4.1.0",
     "lerna": "^4.0.0",
     "rollup": "^2.57.0",
     "rollup-plugin-copy": "^3.4.0",
