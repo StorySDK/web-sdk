@@ -183,6 +183,15 @@ For static HTML pages:
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       // The SDK will automatically initialize using the data-storysdk-token attribute
+      // The SDK instance is automatically created and available globally as window.storysdk
+      
+      // You can access the story instance methods directly:
+      console.log(window.storysdk); // Access the Story instance
+      
+      // Example: Subscribe to events using the global instance
+      window.storysdk.on('storyOpen', function(event) {
+        console.log('Story opened:', event);
+      });
     });
   </script>
 </body>
