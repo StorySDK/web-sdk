@@ -6,7 +6,8 @@ import {
   QuizMultipleAnswerWidgetElementsType,
   QuizMultipleAnswerWidgetParamsType,
   ScoreType,
-  WidgetComponent
+  WidgetComponent,
+  WidgetsTypes
 } from '@types';
 import { StoryContext, Emoji } from '@components';
 import './QuizMultipleAnswerWidget.scss';
@@ -112,6 +113,20 @@ export const QuizMultipleAnswerWidget: WidgetComponent<{
 
   const handleSendAnswer = useCallback(() => {
     if (!isReadOnly && userAnswers.length && !isSent) {
+      const generalAnswerEvent = new CustomEvent('storysdk:widget:answer', {
+        detail: {
+          widget: WidgetsTypes.QUIZ_MULTIPLE_ANSWERS,
+          userId: storyContextVal.uniqUserId,
+          storyId: storyContextVal.currentStoryId,
+          widgetId: props.id,
+          data: {
+            answer: userAnswers
+          }
+        }
+      });
+
+      storyContextVal.container?.dispatchEvent(generalAnswerEvent);
+
       userAnswers.forEach((answer: string) => {
         onAnswer?.(answer);
       });

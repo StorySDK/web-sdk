@@ -5,7 +5,8 @@ import {
   QuizOneAnswerWidgetElementsType,
   QuizOneAnswerWidgetParamsType,
   ScoreType,
-  WidgetComponent
+  WidgetComponent,
+  WidgetsTypes
 } from '@types';
 import { block, getTextStyles } from '@utils';
 import cn from 'classnames';
@@ -77,6 +78,20 @@ export const QuizOneAnswerWidget: WidgetComponent<{
       setUserAnswer(answerId);
       onAnswer?.(answerId);
       handleSendScore(answerId);
+
+      const generalAnswerEvent = new CustomEvent('storysdk:widget:answer', {
+        detail: {
+          widget: WidgetsTypes.QUIZ_ONE_ANSWER,
+          userId: storyContextVal.uniqUserId,
+          storyId: storyContextVal.currentStoryId,
+          widgetId: props.id,
+          data: {
+            answer: answerId
+          }
+        }
+      });
+
+      storyContextVal.container?.dispatchEvent(generalAnswerEvent);
 
       if (storyContextVal.setAnswerCache && id) {
         storyContextVal.setAnswerCache(id, answerId);

@@ -4,7 +4,8 @@ import {
   QuestionWidgetParamsType,
   WidgetComponent,
   QuestionWidgetElementsType,
-  BackgroundColorType
+  BackgroundColorType,
+  WidgetsTypes
 } from '@types';
 import { block, getTextStyles } from '@utils';
 import './QuestionWidget.scss';
@@ -54,6 +55,19 @@ export const QuestionWidget: WidgetComponent<{
   const handleChange = useCallback(
     (option: string) => {
       if (!answer) {
+        const generalAnswerEvent = new CustomEvent('storysdk:widget:answer', {
+          detail: {
+            widget: WidgetsTypes.QUESTION,
+            userId: storyContextVal.uniqUserId,
+            storyId: storyContextVal.currentStoryId,
+            widgetId: props.id,
+            data: {
+              answer
+            }
+          }
+        });
+
+        storyContextVal.container?.dispatchEvent(generalAnswerEvent);
         if (onAnswer) {
           onAnswer(option).then((res: any) => {
             if (res.data && !res.data.error) {

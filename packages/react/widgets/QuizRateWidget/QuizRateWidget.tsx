@@ -1,15 +1,17 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { IconRateStar } from '@components/icons';
 import { block, getTextStyles } from '@utils';
 import {
   BackgroundColorType,
   QuizRateWidgetElementsType,
   QuizRateWidgetParamsType,
-  WidgetComponent
+  WidgetComponent,
+  WidgetsTypes
 } from '@types';
 import cn from 'classnames';
 import './QuizRateWidget.scss';
+import { StoryContext } from '@components';
 
 const b = block('QuizRateWidget');
 
@@ -26,6 +28,7 @@ const INIT_ELEMENT_STYLES = {
 const RATE_MAX = 5;
 
 export const QuizRateWidget: WidgetComponent<{
+  id?: string;
   params: QuizRateWidgetParamsType;
   elementsSize: QuizRateWidgetElementsType;
   isReadOnly?: boolean;
@@ -39,9 +42,25 @@ export const QuizRateWidget: WidgetComponent<{
 
   const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
+  const storyContextVal = useContext(StoryContext);
+
   const handleAnswer = useCallback(
     (rate: string) => {
       onAnswer?.(rate);
+
+      const generalAnswerEvent = new CustomEvent('storysdk:widget:answer', {
+        detail: {
+          widget: WidgetsTypes.QUIZ_RATE,
+          userId: storyContextVal.uniqUserId,
+          storyId: storyContextVal.currentStoryId,
+          widgetId: props.id,
+          data: {
+            answer: rate
+          }
+        }
+      });
+
+      storyContextVal.container?.dispatchEvent(generalAnswerEvent);
 
       if (storeLinks?.web) {
         const tab = window?.open(storeLinks?.web, '_blank');

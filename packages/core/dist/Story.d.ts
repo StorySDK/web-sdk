@@ -1,5 +1,10 @@
 import EventEmitter from './EventEmitter';
 import '@storysdk/react/dist/bundle.css';
+declare global {
+    interface Window {
+        storysdk?: Story;
+    }
+}
 /**
  * Main Story class for StorySDK
  */
@@ -55,6 +60,7 @@ export declare class Story extends EventEmitter {
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
     });
+    private setupEventListeners;
     renderGroups(container?: Element | HTMLDivElement | null): void;
     destroy(): void;
 }

@@ -4,7 +4,8 @@ import { block, getTextStyles } from '@utils';
 import {
   QuizOpenAnswerWidgetElementsType,
   QuizOpenAnswerWidgetParamsType,
-  WidgetComponent
+  WidgetComponent,
+  WidgetsTypes
 } from '@types';
 import cn from 'classnames';
 import { IconArrowSend } from '@components/icons';
@@ -77,6 +78,20 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
   const handleSendClick = useCallback(() => {
     if (text.length) {
       onAnswer?.(text);
+
+      const generalAnswerEvent = new CustomEvent('storysdk:widget:answer', {
+        detail: {
+          widget: WidgetsTypes.QUIZ_OPEN_ANSWER,
+          userId: storyContextVal.uniqUserId,
+          storyId: storyContextVal.currentStoryId,
+          widgetId: props.id,
+          data: {
+            answer: text
+          }
+        }
+      });
+
+      storyContextVal.container?.dispatchEvent(generalAnswerEvent);
 
       if (storyId) {
         onGoToStory?.(storyId);

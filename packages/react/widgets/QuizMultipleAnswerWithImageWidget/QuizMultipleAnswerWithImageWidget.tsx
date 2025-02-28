@@ -4,7 +4,8 @@ import {
   WidgetComponent,
   ScoreType,
   QuizMultipleAnswerWidgetWithImageElementsType,
-  BackgroundColorType
+  BackgroundColorType,
+  WidgetsTypes
 } from '@types';
 import { block, eventSubscribe, eventUnsubscribe, getTextStyles } from '@utils';
 import cn from 'classnames';
@@ -111,6 +112,20 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
 
   const handleSendAnswer = useCallback(() => {
     if (!isReadOnly && userAnswers.length && !isSent) {
+      const generalAnswerEvent = new CustomEvent('storysdk:widget:answer', {
+        detail: {
+          widget: WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE,
+          userId: storyContextVal.uniqUserId,
+          storyId: storyContextVal.currentStoryId,
+          widgetId: props.id,
+          data: {
+            answer: userAnswers
+          }
+        }
+      });
+
+      storyContextVal.container?.dispatchEvent(generalAnswerEvent);
+
       userAnswers.forEach((answer: string) => {
         onAnswer?.(answer);
       });

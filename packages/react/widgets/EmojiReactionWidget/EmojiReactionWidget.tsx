@@ -3,7 +3,8 @@ import { block, getScalableValue } from '@utils';
 import {
   EmojiReactionWidgetParamsType,
   WidgetComponent,
-  EmojiReactionWidgetElemetsType
+  EmojiReactionWidgetElemetsType,
+  WidgetsTypes
 } from '@types';
 import { useInterval } from '@hooks';
 import './EmojiReactionWidget.scss';
@@ -64,6 +65,20 @@ export const EmojiReactionWidget: WidgetComponent<{
 
   const handleReactionClick = useCallback(
     (index: number, emoji: string) => {
+      const generalAnswerEvent = new CustomEvent('storysdk:widget:answer', {
+        detail: {
+          widget: WidgetsTypes.EMOJI_REACTION,
+          userId: storyContextVal.uniqUserId,
+          storyId: storyContextVal.currentStoryId,
+          widgetId: props.id,
+          data: {
+            answer: emoji
+          }
+        }
+      });
+
+      storyContextVal.container?.dispatchEvent(generalAnswerEvent);
+
       onAnswer?.(emoji);
 
       if (storyContextVal.setAnswerCache && id) {

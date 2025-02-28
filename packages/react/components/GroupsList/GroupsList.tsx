@@ -36,6 +36,7 @@ export interface GroupsListProps {
   openInExternalModal?: boolean;
   devMode?: 'staging' | 'development';
   groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
+  container?: Element | HTMLDivElement | null;
   onOpenGroup?(id: string): void;
   onCloseGroup?(id: string): void;
   onNextStory?(groupId: string, storyId: string): void;
@@ -71,6 +72,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     openInExternalModal,
     storyWidth,
     storyHeight,
+    container,
     onOpenGroup,
     onCloseGroup,
     onNextStory,
@@ -171,7 +173,11 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     }
   }, [currentGroup, forbidClose, groups, onCloseGroup]);
 
-  const rootElement = useMemo(() => document.createElement('div'), []);
+  const rootElement = useMemo(() => {
+    const element = document.createElement('div');
+    element.id = 'storysdk-modal-root';
+    return element;
+  }, []);
 
   useEffect(() => {
     document.body.appendChild(rootElement);
@@ -185,6 +191,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         <StoryModal
           arrowsColor={arrowsColor}
           backgroundColor={backgroundColor}
+          container={container}
           currentGroup={currentGroupMemo}
           devMode={devMode}
           forbidClose={forbidClose}

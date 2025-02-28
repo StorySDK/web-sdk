@@ -6,6 +6,8 @@ export interface StoryContenxt {
   quizMode?: ScoreType;
   confetti?: any;
   playStatus: PlayStatusType;
+  container?: Element | HTMLDivElement | null;
+  uniqUserId?: string;
   closeStoryGroup?: () => void;
   playStatusChange?: (status: PlayStatusType) => void;
   handleQuizAnswer?: (params: { type: string; answer: number | string }) => void;

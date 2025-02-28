@@ -3,7 +3,8 @@ import {
   BackgroundColorType,
   SliderWidgetElementsType,
   SliderWidgetParamsType,
-  WidgetComponent
+  WidgetComponent,
+  WidgetsTypes
 } from '@types';
 import cn from 'classnames';
 import { block, getTextStyles } from '@utils';
@@ -78,6 +79,20 @@ export const SliderWidget: WidgetComponent<{
   useEffect(() => {
     if (changeStatus === 'moved') {
       onAnswer?.(sliderValue);
+
+      const generalAnswerEvent = new CustomEvent('storysdk:widget:answer', {
+        detail: {
+          widget: WidgetsTypes.SLIDER,
+          userId: storyContextVal.uniqUserId,
+          storyId: storyContextVal.currentStoryId,
+          widgetId: props.id,
+          data: {
+            answer: sliderValue
+          }
+        }
+      });
+
+      storyContextVal.container?.dispatchEvent(generalAnswerEvent);
 
       if (storyContextVal.setAnswerCache && id) {
         storyContextVal.setAnswerCache(id, sliderValue);

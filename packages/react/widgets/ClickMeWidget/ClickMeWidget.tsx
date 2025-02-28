@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
 import { BackgroundColorType, ClickMeWidgetParamsType, WidgetComponent } from '@types';
-import { MaterialIcon } from '@components';
+import { MaterialIcon, StoryContext } from '@components';
 import './ClickMeWidget.scss';
 
 declare global {
@@ -19,6 +19,7 @@ const b = block('ClickMeWidget');
 const DELAY_MS = 200;
 
 export const ClickMeWidget: WidgetComponent<{
+  id?: string;
   params: ClickMeWidgetParamsType;
   isReadOnly?: boolean;
   onClick?(): void;
@@ -51,6 +52,8 @@ export const ClickMeWidget: WidgetComponent<{
 
   const [isClicked, setIsClicked] = useState(false);
 
+  const storyContextVal = useContext(StoryContext);
+
   const handleWidgetClick = useCallback(() => {
     setIsClicked(true);
 
@@ -61,6 +64,23 @@ export const ClickMeWidget: WidgetComponent<{
     if (onClick) {
       onClick();
     }
+
+    const generalClickEvent = new CustomEvent('storysdk:widget:click', {
+      detail: {
+        widget: 'button',
+        actionType,
+        userId: storyContextVal.uniqUserId,
+        storyId: storyContextVal.currentStoryId,
+        widgetId: props.id,
+        data: {
+          url,
+          storyId,
+          customFields
+        }
+      }
+    });
+
+    storyContextVal.container?.dispatchEvent(generalClickEvent);
 
     if (actionType === 'link' && url) {
       setTimeout(() => {
@@ -80,7 +100,7 @@ export const ClickMeWidget: WidgetComponent<{
         onGoToStory(storyId);
       }, DELAY_MS);
     } else if (actionType === 'custom' && customFields?.web) {
-      const container = document.querySelector('#storysdk');
+      const container = document.querySelector('#storysdk') ?? storyContextVal.container;
 
       const clickEvent = new CustomEvent('storysdk_custom_click', {
         detail: {

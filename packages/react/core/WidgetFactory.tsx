@@ -77,6 +77,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         return (
           <ClickMeWidget
             handleMuteVideo={this.props.handleMuteVideo}
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             onClick={this.props.widget.action}
             onCloseStory={this.props.handleCloseStory}
@@ -87,6 +88,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         return (
           <LinkWidget
             handleMuteVideo={this.props.handleMuteVideo}
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             onClick={this.props.widget.action}
           />
@@ -148,6 +150,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         return (
           <SwipeUpWidget
             handleMuteVideo={this.props.handleMuteVideo}
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             onSwipe={this.props.widget.action}
           />
@@ -207,6 +210,7 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         return (
           <QuizRateWidget
             elementsSize={elementsSize as QuizRateWidgetElementsType}
+            id={this.props.widget.id}
             params={this.props.widget.content.params}
             onAnswer={this.props.widget.action}
             onGoToStory={this.props.handleGoToStory}

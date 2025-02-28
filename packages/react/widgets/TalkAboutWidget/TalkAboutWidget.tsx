@@ -3,7 +3,8 @@ import {
   TalkAboutWidgetParamsType,
   WidgetComponent,
   TalkAboutElementsType,
-  BackgroundColorType
+  BackgroundColorType,
+  WidgetsTypes
 } from '@types';
 import cn from 'classnames';
 import { StoryContext } from '@components';
@@ -78,6 +79,20 @@ export const TalkAboutWidget: WidgetComponent<{
   const handleSendClick = useCallback(() => {
     if (text.length) {
       props.onAnswer?.(text);
+
+      const generalAnswerEvent = new CustomEvent('storysdk:widget:answer', {
+        detail: {
+          widget: WidgetsTypes.TALK_ABOUT,
+          userId: storyContextVal.uniqUserId,
+          storyId: storyContextVal.currentStoryId,
+          widgetId: props.id,
+          data: {
+            answer: text
+          }
+        }
+      });
+
+      storyContextVal.container?.dispatchEvent(generalAnswerEvent);
 
       if (storyContextVal.setAnswerCache && id) {
         storyContextVal.setAnswerCache(id, text);
