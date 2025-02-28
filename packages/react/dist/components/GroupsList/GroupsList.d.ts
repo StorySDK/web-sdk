@@ -27,6 +27,7 @@ export interface GroupsListProps {
     openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
     groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
+    container?: Element | HTMLDivElement | null;
     onOpenGroup?(id: string): void;
     onCloseGroup?(id: string): void;
     onNextStory?(groupId: string, storyId: string): void;

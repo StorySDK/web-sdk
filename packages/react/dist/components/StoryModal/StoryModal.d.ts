@@ -23,6 +23,7 @@ interface StoryModalProps {
     isEditorMode?: boolean;
     openInExternalModal?: boolean;
     backgroundColor?: string;
+    container?: Element | HTMLDivElement | null;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;

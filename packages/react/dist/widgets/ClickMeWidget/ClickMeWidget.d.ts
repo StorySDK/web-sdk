@@ -10,6 +10,7 @@ declare global {
     }
 }
 export declare const ClickMeWidget: WidgetComponent<{
+    id?: string;
     params: ClickMeWidgetParamsType;
     isReadOnly?: boolean;
     onClick?(): void;

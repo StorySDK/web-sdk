@@ -45,6 +45,7 @@ interface StoryModalProps {
   isEditorMode?: boolean;
   openInExternalModal?: boolean;
   backgroundColor?: string;
+  container?: Element | HTMLDivElement | null;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -149,6 +150,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     arrowsColor,
     openInExternalModal,
     backgroundColor,
+    container,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -902,8 +904,10 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     <StoryContext.Provider
       value={{
         currentStoryId,
+        uniqUserId: uniqUserId ?? undefined,
         quizMode: currentGroup?.settings?.scoreType,
         playStatus,
+        container,
         playStatusChange: setPlayStatus,
         closeStoryGroup: !forbidClose || isForceCloseAvailable ? handleClose : undefined,
         handleQuizAnswer,

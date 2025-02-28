@@ -43,8 +43,11 @@ const withGroupsData =
       startStoryId?: string;
       forbidClose?: boolean;
       devMode?: 'staging' | 'development';
-      onGroupClose?: () => void;
-    }
+      on?(event: string, callback: (data: any) => void): void;
+      off?(event: string, callback: (data: any) => void): void;
+      destroy?(): void;
+    },
+    container?: Element | HTMLDivElement | null
   ) =>
   () => {
     const [data, setData] = useState<any[] | null>(null);
@@ -76,6 +79,15 @@ const withGroupsData =
     }, [appLocale]);
 
     useEffect(() => {
+      const source = axios.CancelToken.source();
+      axios.defaults.cancelToken = source.token;
+
+      return () => {
+        source.cancel('Component unmounted');
+      };
+    }, []);
+
+    useEffect(() => {
       if (language) {
         axios.defaults.headers.common['Accept-Language'] = language;
       }
@@ -83,10 +95,23 @@ const withGroupsData =
 
     const handleOpenGroup = useCallback(
       (groupId: string) => {
+        const startTime = DateTime.now().toSeconds();
+
         setGroupDuration(() => ({
           groupId,
-          startTime: DateTime.now().toSeconds()
+          startTime
         }));
+
+        const customEvent = new CustomEvent('storysdk:group:open', {
+          detail: {
+            uniqUserId,
+            groupId,
+            startTime,
+            language
+          }
+        });
+
+        container?.dispatchEvent(customEvent);
 
         return API.statistics.group.onOpen({ groupId, uniqUserId, language });
       },
@@ -96,6 +121,18 @@ const withGroupsData =
     const handleStartQuiz = useCallback(
       (groupId: string, storyId?: string) => {
         const time = DateTime.now().toISO();
+
+        const customEvent = new CustomEvent('storysdk:quiz:start', {
+          detail: {
+            groupId,
+            storyId,
+            uniqUserId,
+            startTime: time,
+            language
+          }
+        });
+
+        container?.dispatchEvent(customEvent);
 
         return API.statistics.quiz.onQuizStart({ groupId, storyId, uniqUserId, time, language });
       },
@@ -128,15 +165,25 @@ const withGroupsData =
 
         const time = DateTime.now().toISO();
 
+        const customEvent = new CustomEvent('storysdk:quiz:finish', {
+          detail: {
+            groupId,
+            storyId,
+            uniqUserId,
+            entTime: time,
+            language
+          }
+        });
+
+        container?.dispatchEvent(customEvent);
+
         return API.statistics.quiz.onQuizFinish({ groupId, storyId, uniqUserId, time, language });
       },
-      [uniqUserId, language]
+      [uniqUserId, language, getGroupCache, setGroupCache, getStoryCache, setStoryCache]
     );
 
     const handleCloseGroup = useCallback(
       (groupId: string) => {
-        options?.onGroupClose?.();
-
         const duration = DateTime.now().toSeconds() - groupDuration.startTime;
 
         API.statistics.group.sendDuration({
@@ -146,9 +193,20 @@ const withGroupsData =
           language
         });
 
+        const customEvent = new CustomEvent('storysdk:group:close', {
+          detail: {
+            groupId,
+            uniqUserId,
+            duration,
+            language
+          }
+        });
+
+        container?.dispatchEvent(customEvent);
+
         return API.statistics.group.onClose({ groupId, uniqUserId, language });
       },
-      [groupDuration, uniqUserId, language, options?.onGroupClose]
+      [groupDuration, uniqUserId, language]
     );
 
     const handleOpenStory = useCallback(
@@ -163,6 +221,17 @@ const withGroupsData =
         if (isResultStory) {
           handleFinishQuiz(groupId);
         }
+
+        const customEvent = new CustomEvent('storysdk:story:open', {
+          detail: {
+            groupId,
+            storyId,
+            uniqUserId,
+            language
+          }
+        });
+
+        container?.dispatchEvent(customEvent);
 
         API.statistics.story.onOpen({ groupId, storyId, uniqUserId, language });
       },
@@ -189,20 +258,57 @@ const withGroupsData =
             language
           });
         }
+
+        const customEvent = new CustomEvent('storysdk:story:close', {
+          detail: {
+            groupId,
+            storyId,
+            uniqUserId,
+            duration,
+            language
+          }
+        });
+
+        container?.dispatchEvent(customEvent);
+
         API.statistics.story.onClose({ groupId, storyId, uniqUserId, language });
       },
       [uniqUserId, language]
     );
 
     const handleNextStory = useCallback(
-      (groupId: string, storyId: string) =>
-        API.statistics.story.onNext({ groupId, storyId, uniqUserId, language }),
+      (groupId: string, storyId: string) => {
+        const customEvent = new CustomEvent('storysdk:story:next', {
+          detail: {
+            groupId,
+            storyId,
+            uniqUserId,
+            language
+          }
+        });
+
+        container?.dispatchEvent(customEvent);
+
+        API.statistics.story.onNext({ groupId, storyId, uniqUserId, language });
+      },
       [uniqUserId, language]
     );
 
     const handlePrevStory = useCallback(
-      (groupId: string, storyId: string) =>
-        API.statistics.story.onPrev({ groupId, storyId, uniqUserId, language }),
+      (groupId: string, storyId: string) => {
+        const customEvent = new CustomEvent('storysdk:story:prev', {
+          detail: {
+            groupId,
+            storyId,
+            uniqUserId,
+            language
+          }
+        });
+
+        container?.dispatchEvent(customEvent);
+
+        API.statistics.story.onPrev({ groupId, storyId, uniqUserId, language });
+      },
       [uniqUserId, language]
     );
 
@@ -373,6 +479,7 @@ const withGroupsData =
         arrowsColor={options?.arrowsColor}
         autoplay={options?.autoplay}
         backgroundColor={options?.backgroundColor}
+        container={container}
         devMode={options?.devMode}
         forbidClose={options?.forbidClose || options?.autoplay}
         groupClassName={options?.groupClassName}

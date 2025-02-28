@@ -1,12 +1,18 @@
-import React, { useCallback, useState } from 'react';
-import { BackgroundColorType, SwipeUpWidgetParamsType, WidgetComponent } from '@types';
+import React, { useCallback, useContext, useState } from 'react';
+import {
+  BackgroundColorType,
+  SwipeUpWidgetParamsType,
+  WidgetComponent,
+  WidgetsTypes
+} from '@types';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
-import { MaterialIcon } from '@components';
+import { MaterialIcon, StoryContext } from '@components';
 import './SwipeUpWidget.scss';
 
 const b = block('SwipeUpWidget');
 
 export const SwipeUpWidget: WidgetComponent<{
+  id?: string;
   params: SwipeUpWidgetParamsType;
   isReadOnly?: boolean;
   onSwipe?(): void;
@@ -18,6 +24,8 @@ export const SwipeUpWidget: WidgetComponent<{
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
+  const storyContextVal = useContext(StoryContext);
+
   const handleTouchStart = useCallback((e: any) => {
     setTouchStart(e.targetTouches[0].clientY);
   }, []);
@@ -28,6 +36,20 @@ export const SwipeUpWidget: WidgetComponent<{
 
   const handleTouchEnd = useCallback(() => {
     if (touchStart - touchEnd > 200) {
+      const generalAnswerEvent = new CustomEvent('storysdk:widget:click', {
+        detail: {
+          widget: WidgetsTypes.SWIPE_UP,
+          userId: storyContextVal.uniqUserId,
+          storyId: storyContextVal.currentStoryId,
+          widgetId: props.id,
+          data: {
+            url
+          }
+        }
+      });
+
+      storyContextVal.container?.dispatchEvent(generalAnswerEvent);
+
       if (onSwipe) {
         onSwipe();
       }

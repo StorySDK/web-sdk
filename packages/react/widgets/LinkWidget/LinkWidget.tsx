@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
 import { LinkWidgetParamsType, WidgetComponent } from '@types';
-import { MaterialIcon } from '@components';
+import { MaterialIcon, StoryContext } from '@components';
 import './LinkWidget.scss';
 
 const b = block('LinkWidget');
@@ -9,6 +9,7 @@ const b = block('LinkWidget');
 const DELAY_MS = 200;
 
 export const LinkWidget: WidgetComponent<{
+  id?: string;
   params: LinkWidgetParamsType;
   isReadOnly?: boolean;
   onClick?: () => void;
@@ -21,7 +22,23 @@ export const LinkWidget: WidgetComponent<{
 
   const [isClicked, setIsClicked] = useState(false);
 
+  const storyContextVal = useContext(StoryContext);
+
   const handleWidgetClick = useCallback(() => {
+    const generalClickEvent = new CustomEvent('storysdk:widget:click', {
+      detail: {
+        widget: 'link',
+        userId: storyContextVal.uniqUserId,
+        storyId: storyContextVal.currentStoryId,
+        widgetId: props.id,
+        data: {
+          url
+        }
+      }
+    });
+
+    storyContextVal.container?.dispatchEvent(generalClickEvent);
+
     if (url) {
       setIsClicked(true);
       props.onClick?.();

@@ -2,10 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { GroupsList } from '@storysdk/react';
+import EventEmitter from './EventEmitter';
 import withGroupsData from './hocs/withGroupsData';
 import '@storysdk/react/dist/bundle.css';
+import { StoryEventTypes } from './types';
 
-export class Story {
+declare global {
+  interface Window {
+    storysdk?: Story;
+  }
+}
+
+/**
+ * Main Story class for StorySDK
+ */
+export class Story extends EventEmitter {
   token: string;
 
   options?: {
@@ -30,8 +41,11 @@ export class Story {
     groupsOutlineColor?: string;
     openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
-    onGroupClose?: () => void;
   };
+
+  container?: Element | HTMLDivElement | null;
+
+  eventHandlers: { [key: string]: ((data: any) => void)[] };
 
   constructor(
     token: string,
@@ -57,11 +71,13 @@ export class Story {
       forbidClose?: boolean;
       openInExternalModal?: boolean;
       devMode?: 'staging' | 'development';
-      onGroupClose?: () => void;
     }
   ) {
+    super();
     this.token = token;
     this.options = {};
+    this.container = null;
+    this.eventHandlers = {};
 
     if (this.options) {
       this.options.groupImageWidth = options?.groupImageWidth;
@@ -85,7 +101,6 @@ export class Story {
       this.options.groupsOutlineColor = options?.groupsOutlineColor;
       this.options.arrowsColor = options?.arrowsColor;
       this.options.backgroundColor = options?.backgroundColor;
-      this.options.onGroupClose = options?.onGroupClose;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -148,10 +163,52 @@ export class Story {
     }
   }
 
-  renderGroups(element?: Element | HTMLDivElement | null) {
+  // * Set up event listeners for story interactions
+  // * @private
+  // * @param element Container element
+  // */
+  private setupEventListeners(element: Element | HTMLDivElement): void {
+    element.addEventListener('storysdk:widget:click', (event) => {
+      this.emit(StoryEventTypes.WIDGET_CLICK, event);
+    });
+
+    element.addEventListener('storysdk:widget:answer', (event) => {
+      this.emit(StoryEventTypes.WINDGET_ANSWER, event);
+    });
+
+    element.addEventListener('storysdk:group:open', (event) => {
+      this.emit(StoryEventTypes.GROUP_OPEN, event);
+    });
+
+    element.addEventListener('storysdk:group:close', (event) => {
+      this.emit(StoryEventTypes.GROUP_CLOSE, event);
+    });
+
+    element.addEventListener('storysdk:story:open', (event) => {
+      this.emit(StoryEventTypes.STORY_OPEN, event);
+    });
+
+    element.addEventListener('storysdk:story:close', (event) => {
+      this.emit(StoryEventTypes.STORY_CLOSE, event);
+    });
+
+    element.addEventListener('storysdk:story:next', (event) => {
+      this.emit(StoryEventTypes.STORY_NEXT, event);
+    });
+
+    element.addEventListener('storysdk:story:prev', (event) => {
+      this.emit(StoryEventTypes.STORY_PREV, event);
+    });
+  }
+
+  renderGroups(container?: Element | HTMLDivElement | null) {
+    if (container) {
+      this.container = container;
+    }
+
     if (!this.token) {
-      if (element) {
-        ReactDOM.render(<p>StorySDK has not been initialized.</p>, element);
+      if (container) {
+        ReactDOM.render(<p>StorySDK has not been initialized.</p>, container);
       } else {
         console.warn('StorySDK has not been initialized.');
       }
@@ -159,10 +216,22 @@ export class Story {
       return;
     }
 
-    const Groups = withGroupsData(GroupsList, this.options);
+    const Groups = withGroupsData(GroupsList, this.options, container);
 
-    if (element) {
-      ReactDOM.render(<Groups />, element);
+    if (container) {
+      ReactDOM.render(<Groups />, container);
+      this.setupEventListeners(container);
+    }
+  }
+
+  destroy() {
+    if (this.container) {
+      ReactDOM.unmountComponentAtNode(this.container);
+      const modalRoot = document.getElementById('storysdk-modal-root');
+
+      if (modalRoot) {
+        ReactDOM.unmountComponentAtNode(modalRoot);
+      }
     }
   }
 }
@@ -224,6 +293,7 @@ export const init = () => {
           backgroundColor: backgroundColor ?? undefined
         });
         story.renderGroups(container);
+        window.storysdk = story;
       } else {
         console.warn('StorySDK: wrong app token');
       }
