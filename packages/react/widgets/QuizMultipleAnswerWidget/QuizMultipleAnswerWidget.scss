@@ -1,4 +1,4 @@
-@import "../../styles/variables.scss";
+@use "../../styles/variables.scss" as *;
 
 .StorySdk-QuizMultipleAnswerWidget {
   width: 100%;
@@ -38,7 +38,8 @@
       gap: 0 !important;
     }
 
-    &:hover, &_selected {
+    &:hover,
+    &_selected {
       color: #ffffff !important;
       background: none !important;
       background-color: map-get($theme-colors, "black") !important;
@@ -80,7 +81,8 @@
     transition: 0.2s ease-out background-color;
     cursor: pointer;
 
-    &_sent, &:hover {
+    &_sent,
+    &:hover {
       background-color: map-get($theme-colors, "black");
       color: #ffffff !important;
     }

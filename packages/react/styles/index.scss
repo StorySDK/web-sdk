@@ -1,4 +1,3 @@
-@import './mixins.scss';
-@import './variables.scss';
-@import './custom-fonts';
-@import './global.scss';
+@use './variables';
+@use './custom-fonts';
+@use './global';

@@ -1,8 +1,12 @@
 import EventEmitter from './EventEmitter';
-import '@storysdk/react/dist/bundle.css';
+import { StoryEventTypes } from './types';
 declare global {
     interface Window {
         storysdk?: Story;
+        Story?: typeof Story;
+        ReactNativeWebView?: {
+            postMessage: (message: string) => void;
+        };
     }
 }
 /**
@@ -10,6 +14,7 @@ declare global {
  */
 export declare class Story extends EventEmitter {
     token: string;
+    isInReactNativeWebView: boolean;
     options?: {
         groupImageWidth?: number;
         groupImageHeight?: number;
@@ -32,6 +37,7 @@ export declare class Story extends EventEmitter {
         groupsOutlineColor?: string;
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
+        isInReactNativeWebView?: boolean;
     };
     container?: Element | HTMLDivElement | null;
     eventHandlers: {
@@ -59,7 +65,11 @@ export declare class Story extends EventEmitter {
         forbidClose?: boolean;
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
+        isInReactNativeWebView?: boolean;
     });
+    private handleReactNativeMessage;
+    private sendMessageToReactNative;
+    emit(eventName: StoryEventTypes, data: any): void;
     private setupEventListeners;
     renderGroups(container?: Element | HTMLDivElement | null): void;
     destroy(): void;

@@ -18,7 +18,13 @@ interface Stroke {
   fillBorderRadius?: number;
 }
 
-export const block = setup({ ns: 'StorySdk-' });
+export const block = (name: string) => {
+  const bemBlock = setup({ ns: 'StorySdk-' })(name);
+  return (...args: any[]) => {
+    const classes = bemBlock(...args);
+    return classes.mix('storysdk-component');
+  };
+};
 
 export const renderColor = (color: string, opacity?: number) => {
   if (color.includes('#') && opacity) {

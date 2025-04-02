@@ -1,4 +1,4 @@
-@import "../../styles/variables.scss";
+@use "../../styles/variables.scss" as *;
 
 @mixin buttons() {
   align-items: center;
@@ -136,7 +136,10 @@
     }
 
     &_noAnimation {
-      &.StorySdk-QuestionWidget__item_answerConfirm, &.StorySdk-QuestionWidget__item_answerDecline, &.StorySdk-QuestionWidget__item_full {
+
+      &.StorySdk-QuestionWidget__item_answerConfirm,
+      &.StorySdk-QuestionWidget__item_answerDecline,
+      &.StorySdk-QuestionWidget__item_full {
         &::after {
           width: 100%;
           height: 100%;

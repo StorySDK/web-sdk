@@ -1,4 +1,4 @@
-@import "../../styles/variables.scss";
+@use "../../styles/variables.scss" as *;
 
 .StorySdk-QuizMultipleAnswerWithImageWidget {
   width: 100%;
@@ -10,7 +10,7 @@
     text-align: center;
     word-break: break-word;
     font-weight: 800;
-    
+
     &_gradient {
       -webkit-background-clip: text !important;
       -webkit-text-fill-color: transparent;
@@ -22,14 +22,14 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
-  
+
   &__answerTitle {
     font-weight: 700;
     font-size: 17px;
     line-height: 123%;
     color: #000000;
     margin: 0;
-    
+
     &_gradient {
       -webkit-background-clip: text !important;
       -webkit-text-fill-color: transparent;
@@ -48,7 +48,8 @@
     cursor: pointer;
     transition: 0.2s ease-out background-color;
 
-    &:hover, &_selected {
+    &:hover,
+    &_selected {
       color: #ffffff !important;
       background-color: map-get($theme-colors, "black");
 
@@ -92,7 +93,8 @@
     transition: 0.2s ease-out background-color;
     cursor: pointer;
 
-    &_sent, &:hover {
+    &_sent,
+    &:hover {
       background-color: map-get($theme-colors, "black");
       color: #ffffff !important;
     }

@@ -41,6 +41,7 @@ declare const widgets: {
         handleMediaLoading?: ((isLoading: boolean) => void) | undefined;
     }>;
     click_me: import("@types").WidgetComponent<{
+        id?: string | undefined;
         params: import("@types").ClickMeWidgetParamsType;
         isReadOnly?: boolean | undefined;
         onClick?(): void;
@@ -80,6 +81,7 @@ declare const widgets: {
         onAnswer?(value: number): void;
     }>;
     swipe_up: import("@types").WidgetComponent<{
+        id?: string | undefined;
         params: import("@types").SwipeUpWidgetParamsType;
         isReadOnly?: boolean | undefined;
         onSwipe?(): void;
@@ -125,6 +127,7 @@ declare const widgets: {
         onGoToStory?(storyId: string): void;
     }>;
     quiz_rate: import("@types").WidgetComponent<{
+        id?: string | undefined;
         params: import("@types").QuizRateWidgetParamsType;
         elementsSize: import("@types").QuizRateWidgetElementsType;
         isReadOnly?: boolean | undefined;
@@ -140,6 +143,7 @@ declare const widgets: {
         onGoToStory?(storyId: string): void;
     }>;
     link: import("@types").WidgetComponent<{
+        id?: string | undefined;
         params: import("@types").LinkWidgetParamsType;
         isReadOnly?: boolean | undefined;
         onClick?: (() => void) | undefined;

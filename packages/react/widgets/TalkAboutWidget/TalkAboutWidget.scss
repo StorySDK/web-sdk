@@ -1,5 +1,5 @@
-@import "../../styles/index.scss";
-@import "../../styles/variables.scss";
+@use "../../styles/index.scss" as styles;
+@use "../../styles/variables.scss" as *;
 
 .StorySdk-TalkAboutWidget {
   width: 100%;
