@@ -35,9 +35,11 @@
     "luxon": "^3.2.1",
     "nanoid": "^3.1.30",
     "parse-color": "^1.0.0",
+    "bem-cn": "^3.0.1",
     "react-loading-skeleton": "^3.0.2",
     "simplebar-react": "^3.2.4",
-    "use-long-press": "^3.2.0"
+    "use-long-press": "^3.2.0",
+    "classnames": "^2.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
@@ -55,8 +57,6 @@
     "@types/parse-color": "^1.0.1",
     "@types/react": "^17.0.21",
     "@types/react-dom": "^17.0.9",
-    "bem-cn": "^3.0.1",
-    "classnames": "^2.3.1",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",

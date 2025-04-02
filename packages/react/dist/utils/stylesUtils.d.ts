@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { WidgetPositionType, WidgetPositionLimitsType, BackgroundType, BorderType } from '../types';
 interface Stroke {
     strokeThickness: number;
