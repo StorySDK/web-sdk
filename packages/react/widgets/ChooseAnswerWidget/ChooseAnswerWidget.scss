@@ -1,4 +1,4 @@
-@import "../../styles/variables.scss";
+@use "../../styles/variables.scss" as *;
 
 .StorySdk-ChooseAnswerWidget {
   width: 100%;
@@ -69,10 +69,8 @@
       border-color: transparent;
       cursor: auto;
 
-      background-color: rgba(
-        $color: map-get($theme-colors, "green"),
-        $alpha: 0.8
-      );
+      background-color: rgba($color: map-get($theme-colors, "green"),
+          $alpha: 0.8);
     }
 
     &_filled {
@@ -84,10 +82,8 @@
       cursor: auto !important;
 
       &.StorySdk-ChooseAnswerWidget__answer_incorrect {
-        background-color: rgba(
-          $color: map-get($theme-colors, "red"),
-          $alpha: 0.8
-        );
+        background-color: rgba($color: map-get($theme-colors, "red"),
+            $alpha: 0.8);
       }
     }
   }

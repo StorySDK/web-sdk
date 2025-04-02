@@ -2,7 +2,7 @@ import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
-import scss from 'rollup-plugin-scss';
+import postcss from 'rollup-plugin-postcss';
 import json from '@rollup/plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 import image from '@rollup/plugin-image';
@@ -14,6 +14,9 @@ const PACKAGE_ROOT_PATH = process.cwd();
 const { LERNA_PACKAGE_NAME, NODE_ENV } = process.env;
 
 const pkg = LERNA_PACKAGE_NAME && require(`${PACKAGE_ROOT_PATH}/package.json`);
+
+const isCore = LERNA_PACKAGE_NAME === '@storysdk/core';
+console.log(`Building package: ${LERNA_PACKAGE_NAME}, isCore: ${isCore}`);
 
 export default [
   {
@@ -52,15 +55,39 @@ export default [
       }),
       copy({
         targets: [
-            { src: "assets/fonts", dest: "dist" },
+          { src: "assets/fonts", dest: "dist" },
         ],
       }),
-      scss({
-        outputStyle: 'compressed',
-        fileName: 'bundle.css' 
-      }),
+      ...(!isCore ? [
+        postcss({
+          extract: 'bundle.css',
+          minimize: true,
+          modules: false,
+          sourceMap: false,
+          inject: false,
+          use: ['sass'],
+          plugins: [
+            require('postcss-nested'),
+            require('autoprefixer')({
+              overrideBrowserslist: ['last 2 versions', '> 1%', 'not dead']
+            })
+          ],
+          parser: require('postcss-scss')
+        })
+      ] : [
+        copy({
+          targets: [
+            { 
+              src: "../react/dist/bundle.css", 
+              dest: "dist/",
+              hook: 'writeBundle'
+            }
+          ],
+        })
+      ]),
       replace({
         'process.env.NODE_ENV': NODE_ENV,
+        preventAssignment: true
       }),
       json(),
       nodePolyfills(),

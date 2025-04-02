@@ -1,15 +1,19 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { GroupsList } from '@storysdk/react';
 import EventEmitter from './EventEmitter';
 import withGroupsData from './hocs/withGroupsData';
-import '@storysdk/react/dist/bundle.css';
 import { StoryEventTypes } from './types';
 
 declare global {
   interface Window {
     storysdk?: Story;
+    Story?: typeof Story;
+    ReactNativeWebView?: {
+      postMessage: (message: string) => void;
+    };
   }
 }
 
@@ -18,6 +22,8 @@ declare global {
  */
 export class Story extends EventEmitter {
   token: string;
+
+  isInReactNativeWebView: boolean;
 
   options?: {
     groupImageWidth?: number;
@@ -41,6 +47,7 @@ export class Story extends EventEmitter {
     groupsOutlineColor?: string;
     openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
+    isInReactNativeWebView?: boolean;
   };
 
   container?: Element | HTMLDivElement | null;
@@ -71,6 +78,7 @@ export class Story extends EventEmitter {
       forbidClose?: boolean;
       openInExternalModal?: boolean;
       devMode?: 'staging' | 'development';
+      isInReactNativeWebView?: boolean;
     }
   ) {
     super();
@@ -78,6 +86,10 @@ export class Story extends EventEmitter {
     this.options = {};
     this.container = null;
     this.eventHandlers = {};
+
+    // Detect if running in React Native WebView
+    this.isInReactNativeWebView = !!options?.isInReactNativeWebView ||
+      (typeof window !== 'undefined' && window.ReactNativeWebView !== undefined);
 
     if (this.options) {
       this.options.groupImageWidth = options?.groupImageWidth;
@@ -101,6 +113,7 @@ export class Story extends EventEmitter {
       this.options.groupsOutlineColor = options?.groupsOutlineColor;
       this.options.arrowsColor = options?.arrowsColor;
       this.options.backgroundColor = options?.backgroundColor;
+      this.options.isInReactNativeWebView = this.isInReactNativeWebView;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -122,9 +135,8 @@ export class Story extends EventEmitter {
 
         if (debugContainer) {
           const debugElement = document.createElement('pre');
-          debugElement.innerHTML = `Starting Request to: ${
-            request.url
-          }\nRequest Headers: ${JSON.stringify(request.headers, null, 2)}`;
+          debugElement.innerHTML = `Starting Request to: ${request.url
+            }\nRequest Headers: ${JSON.stringify(request.headers, null, 2)}`;
           debugContainer.appendChild(debugElement);
         }
 
@@ -138,9 +150,8 @@ export class Story extends EventEmitter {
 
           if (debugContainer) {
             const debugElement = document.createElement('pre');
-            debugElement.innerHTML = `Response Status: ${
-              response.status
-            }\nResponse Headers: ${JSON.stringify(response.headers, null, 2)}`;
+            debugElement.innerHTML = `Response Status: ${response.status
+              }\nResponse Headers: ${JSON.stringify(response.headers, null, 2)}`;
             debugContainer.appendChild(debugElement);
           }
           return response;
@@ -160,6 +171,56 @@ export class Story extends EventEmitter {
 
     if (token) {
       axios.defaults.headers.common = { Authorization: `SDK ${token}` };
+    }
+
+    // Set up message listener for React Native WebView
+    if (this.isInReactNativeWebView && typeof window !== 'undefined') {
+      window.addEventListener('message', this.handleReactNativeMessage);
+    }
+  }
+
+  // New method to handle messages from React Native
+  private handleReactNativeMessage = (event: MessageEvent) => {
+    try {
+      const message = JSON.parse(event.data);
+
+      if (message && message.type && message.type.startsWith('storysdk:')) {
+        // Forward the message to our event system
+        this.emit(message.type, message.data);
+      }
+    } catch (e) {
+      // Ignore non-JSON messages
+      if (this.options?.isDebugMode) {
+        console.warn('StorySDK - Failed to parse message from React Native WebView:', e);
+      }
+    }
+  };
+
+  // New method to send messages to React Native
+  private sendMessageToReactNative(type: string, data: any) {
+    if (this.isInReactNativeWebView &&
+      typeof window !== 'undefined' &&
+      window.ReactNativeWebView &&
+      typeof window.ReactNativeWebView.postMessage === 'function') {
+
+      window.ReactNativeWebView.postMessage(JSON.stringify({
+        type,
+        data
+      }));
+
+      if (this.options?.isDebugMode) {
+        console.log('StorySDK - Sent message to React Native:', { type, data });
+      }
+    }
+  }
+
+  // Override emit method to also send events to React Native WebView
+  emit(eventName: StoryEventTypes, data: any) {
+    super.emit(eventName, data);
+
+    // Also send to React Native if in WebView
+    if (this.isInReactNativeWebView) {
+      this.sendMessageToReactNative(eventName, data);
     }
   }
 
@@ -204,6 +265,9 @@ export class Story extends EventEmitter {
   renderGroups(container?: Element | HTMLDivElement | null) {
     if (container) {
       this.container = container;
+      if (!container.classList.contains('storysdk-container')) {
+        container.classList.add('storysdk-container');
+      }
     }
 
     if (!this.token) {
@@ -233,66 +297,121 @@ export class Story extends EventEmitter {
         ReactDOM.unmountComponentAtNode(modalRoot);
       }
     }
+
+    // Clean up event listeners if in React Native WebView
+    if (this.isInReactNativeWebView && typeof window !== 'undefined') {
+      window.removeEventListener('message', this.handleReactNativeMessage);
+    }
   }
 }
 
 export const init = () => {
-  if (!window) return;
-
   const initStorySDK = () => {
+    if (!window) return;
+
+    // Check if running in React Native WebView
+    const isInReactNativeWebView = typeof window !== 'undefined' && window.ReactNativeWebView !== undefined;
+    let tokenFromUrl;
+    let optionsFromUrl = {};
+
+    if (isInReactNativeWebView) {
+      // Try to get token and options from URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      tokenFromUrl = urlParams.get('storysdk-token');
+
+      // Parse options from URL if available
+      const optionsParam = urlParams.get('storysdk-options');
+      if (optionsParam) {
+        try {
+          optionsFromUrl = JSON.parse(decodeURIComponent(optionsParam));
+        } catch (e) {
+          console.warn('StorySDK: Failed to parse options from URL', e);
+        }
+      }
+    }
+
+    // First check for container with data attribute
     const container = document.querySelector('[data-storysdk-token]');
-    if (container) {
-      const token = container.getAttribute('data-storysdk-token');
+
+    if (container || tokenFromUrl) {
+      const token = container?.getAttribute('data-storysdk-token') || tokenFromUrl;
 
       if (token) {
-        const groupImageWidth = container.getAttribute('data-storysdk-group-image-width');
-        const groupImageHeight = container.getAttribute('data-storysdk-group-image-height');
-        const groupTitleSize = container.getAttribute('data-storysdk-group-title-size');
-        const groupClassName = container.getAttribute('data-storysdk-group-class-name');
-        const activeGroupOutlineColor = container.getAttribute(
-          'data-storysdk-active-group-outline-color'
-        );
-        const groupsOutlineColor = container.getAttribute('data-storysdk-groups-outline-color');
-        const groupsClassName = container.getAttribute('data-storysdk-groups-class-name');
-        const autoplay = container.getAttribute('data-storysdk-autoplay');
-        const groupId = container.getAttribute('data-storysdk-group-id');
-        const startStoryId = container.getAttribute('data-storysdk-start-story-id');
-        const forbidClose = container.getAttribute('data-storysdk-forbid-close');
-        const storyWidth = container.getAttribute('data-storysdk-story-width');
-        const storyHeight = container.getAttribute('data-storysdk-story-height');
-        const isShowMockup = container.getAttribute('data-storysdk-is-show-mockup');
-        const isShowLabel = container.getAttribute('data-storysdk-is-show-label');
-        const isStatusBarActive = container.getAttribute('data-storysdk-is-status-bar-active');
-        const devMode = container.getAttribute('data-storysdk-dev-mode');
-        const openInExternalModal = container.getAttribute('data-storysdk-open-in-external-modal');
-        const isDebugMode = container.getAttribute('data-storysdk-is-debug-mode');
-        const arrowsColor = container.getAttribute('data-storysdk-arrows-color');
-        const backgroundColor = container.getAttribute('data-storysdk-background-color');
+        // If in container mode, extract attributes
+        let storyOptions: any = { isInReactNativeWebView };
 
-        const story = new Story(token, {
-          groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
-          groupImageHeight: groupImageHeight ? parseInt(groupImageHeight, 10) : undefined,
-          groupTitleSize: groupTitleSize ? parseInt(groupTitleSize, 10) : undefined,
-          groupClassName: groupClassName ?? undefined,
-          groupsClassName: groupsClassName ?? undefined,
-          autoplay: autoplay === 'true',
-          groupId: groupId ?? undefined,
-          startStoryId: startStoryId ?? undefined,
-          forbidClose: forbidClose === 'true',
-          devMode: devMode as 'staging' | 'development',
-          storyWidth: storyWidth ? parseInt(storyWidth, 10) : undefined,
-          storyHeight: storyHeight ? parseInt(storyHeight, 10) : undefined,
-          isShowMockup: isShowMockup === 'true',
-          isShowLabel: isShowLabel === 'true',
-          isStatusBarActive: isStatusBarActive === 'true',
-          openInExternalModal: openInExternalModal === 'true',
-          isDebugMode: isDebugMode === 'true',
-          activeGroupOutlineColor: activeGroupOutlineColor ?? undefined,
-          groupsOutlineColor: groupsOutlineColor ?? undefined,
-          arrowsColor: arrowsColor ?? undefined,
-          backgroundColor: backgroundColor ?? undefined
-        });
-        story.renderGroups(container);
+        if (container) {
+          const groupImageWidth = container.getAttribute('data-storysdk-group-image-width');
+          const groupImageHeight = container.getAttribute('data-storysdk-group-image-height');
+          const groupTitleSize = container.getAttribute('data-storysdk-group-title-size');
+          const groupClassName = container.getAttribute('data-storysdk-group-class-name');
+          const activeGroupOutlineColor = container.getAttribute(
+            'data-storysdk-active-group-outline-color'
+          );
+          const groupsOutlineColor = container.getAttribute('data-storysdk-groups-outline-color');
+          const groupsClassName = container.getAttribute('data-storysdk-groups-class-name');
+          const autoplay = container.getAttribute('data-storysdk-autoplay');
+          const groupId = container.getAttribute('data-storysdk-group-id');
+          const startStoryId = container.getAttribute('data-storysdk-start-story-id');
+          const forbidClose = container.getAttribute('data-storysdk-forbid-close');
+          const storyWidth = container.getAttribute('data-storysdk-story-width');
+          const storyHeight = container.getAttribute('data-storysdk-story-height');
+          const isShowMockup = container.getAttribute('data-storysdk-is-show-mockup');
+          const isShowLabel = container.getAttribute('data-storysdk-is-show-label');
+          const isStatusBarActive = container.getAttribute('data-storysdk-is-status-bar-active');
+          const devMode = container.getAttribute('data-storysdk-dev-mode');
+          const openInExternalModal = container.getAttribute('data-storysdk-open-in-external-modal');
+          const isDebugMode = container.getAttribute('data-storysdk-is-debug-mode');
+          const arrowsColor = container.getAttribute('data-storysdk-arrows-color');
+          const backgroundColor = container.getAttribute('data-storysdk-background-color');
+
+          storyOptions = {
+            ...storyOptions,
+            groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
+            groupImageHeight: groupImageHeight ? parseInt(groupImageHeight, 10) : undefined,
+            groupTitleSize: groupTitleSize ? parseInt(groupTitleSize, 10) : undefined,
+            groupClassName: groupClassName ?? undefined,
+            groupsClassName: groupsClassName ?? undefined,
+            autoplay: autoplay === 'true',
+            groupId: groupId ?? undefined,
+            startStoryId: startStoryId ?? undefined,
+            forbidClose: forbidClose === 'true',
+            devMode: devMode as 'staging' | 'development',
+            storyWidth: storyWidth ? parseInt(storyWidth, 10) : undefined,
+            storyHeight: storyHeight ? parseInt(storyHeight, 10) : undefined,
+            isShowMockup: isShowMockup === 'true',
+            isShowLabel: isShowLabel === 'true',
+            isStatusBarActive: isStatusBarActive === 'true',
+            openInExternalModal: openInExternalModal === 'true',
+            isDebugMode: isDebugMode === 'true',
+            activeGroupOutlineColor: activeGroupOutlineColor ?? undefined,
+            groupsOutlineColor: groupsOutlineColor ?? undefined,
+            arrowsColor: arrowsColor ?? undefined,
+            backgroundColor: backgroundColor ?? undefined
+          };
+        }
+
+        // Merge with options from URL if in WebView mode
+        if (isInReactNativeWebView) {
+          storyOptions = { ...storyOptions, ...optionsFromUrl };
+        }
+
+        const story = new Story(token, storyOptions);
+
+        // If in React Native WebView and no container, create one
+        if (isInReactNativeWebView && !container) {
+          const newContainer = document.createElement('div');
+          newContainer.id = 'storysdk-container';
+          newContainer.classList.add('storysdk-container');
+          document.body.appendChild(newContainer);
+          story.renderGroups(newContainer);
+        } else if (container) {
+          if (!container.classList.contains('storysdk-container')) {
+            container.classList.add('storysdk-container');
+          }
+          story.renderGroups(container as HTMLDivElement);
+        }
+
         window.storysdk = story;
       } else {
         console.warn('StorySDK: wrong app token');
@@ -302,7 +421,10 @@ export const init = () => {
     }
   };
 
-  window.onload = () => {
+  document.addEventListener('DOMContentLoaded', () => {
     initStorySDK();
-  };
+    if (window) {
+      window.Story = Story;
+    }
+  });
 };

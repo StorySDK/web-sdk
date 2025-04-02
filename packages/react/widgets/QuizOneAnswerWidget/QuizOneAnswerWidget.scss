@@ -1,4 +1,4 @@
-@import "../../styles/variables.scss";
+@use "../../styles/variables.scss" as *;
 
 .StorySdk-QuizOneAnswerWidget {
   width: 100%;
@@ -48,7 +48,8 @@
     transition: 0.2s ease-out background-color;
     cursor: pointer;
 
-    &:hover, &_selected {
+    &:hover,
+    &_selected {
       color: #ffffff !important;
       background-color: map-get($theme-colors, "black");
 

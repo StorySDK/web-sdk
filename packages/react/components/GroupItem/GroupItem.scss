@@ -1,3 +1,5 @@
+@use "../../styles/variables.scss" as *;
+
 .GroupSdkItem {
   position: relative;
   display: flex;
@@ -19,7 +21,9 @@
   }
 
   &_view {
-    &_circle, &_square {
+
+    &_circle,
+    &_square {
       &:hover {
         .GroupSdkItem__title {
           color: #FD19CC;
@@ -27,7 +31,8 @@
       }
     }
 
-    &_circle.GroupSdkItem_chosen, &_square.GroupSdkItem_chosen {
+    &_circle.GroupSdkItem_chosen,
+    &_square.GroupSdkItem_chosen {
       .GroupSdkItem__title {
         color: #FD19CC;
       }
@@ -37,6 +42,7 @@
       width: 84px;
       padding: 0;
       margin-right: 15px;
+
       &:last-child {
         margin-right: 0;
       }
@@ -46,6 +52,7 @@
       width: 66px;
       padding: 0;
       margin-right: 10px;
+
       &:last-child {
         margin-right: 0;
       }
@@ -77,20 +84,21 @@
       }
 
       &_rectangle {
-        border-radius: 10px; 
+        border-radius: 10px;
       }
-    }  
+    }
   }
 
-  &_chosen, &:hover {
+  &_chosen,
+  &:hover {
     .GroupSdkItem__outline_background {
       border: 2px solid transparent;
-      background: linear-gradient(-45deg,#B90AE0, #FF0198 ) border-box;
-      -webkit-mask: 
-         linear-gradient(#fff 0 0) padding-box, 
-         linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor; 
-              mask-composite: exclude; 
+      background: linear-gradient(-45deg, #B90AE0, #FF0198) border-box;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) padding-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
     }
 
     .GroupSdkItem__outline {
@@ -130,7 +138,7 @@
           transform: translate(-50%, -50%);
           width: 90%;
           height: 90%;
-          background:rgba(0, 0, 0, 0.2);
+          background: rgba(0, 0, 0, 0.2);
           border-radius: 7px;
         }
 
@@ -155,7 +163,7 @@
           transform: translate(-50%, -50%);
           width: 89%;
           height: 90%;
-          background:rgba(0, 0, 0, 0.2);
+          background: rgba(0, 0, 0, 0.2);
           border-radius: 7px;
         }
 
@@ -166,7 +174,7 @@
           border-radius: 10px;
         }
       }
-    }  
+    }
   }
 
   &__img {
@@ -191,7 +199,7 @@
         height: 76px;
         border-radius: 7px;
       }
-    }  
+    }
   }
 
   &__titleContainer {
@@ -208,12 +216,12 @@
       }
 
       &_rectangle {
-       height: 100%;
-       padding: 5px 0;
-       display: flex;
-       align-items: flex-end;
+        height: 100%;
+        padding: 5px 0;
+        display: flex;
+        align-items: flex-end;
       }
-    }  
+    }
   }
 
   &__title {

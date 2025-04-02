@@ -62,7 +62,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
+
     &_onTop {
       top: 0;
       transform: translateX(-50%);
@@ -79,7 +79,7 @@
       background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 17.64%, rgba(0, 0, 0, 0) 82.22%, rgba(0, 0, 0, 0) 100%);
       pointer-events: none;
     }
-    
+
     &_noTopShadow {
       &::after {
         display: none;
@@ -163,5 +163,5 @@
       opacity: 1;
       pointer-events: all;
     }
-  } 
+  }
 }

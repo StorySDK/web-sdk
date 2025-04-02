@@ -23,7 +23,7 @@
   user-select: none;
 
   * {
-    user-select: none;  
+    user-select: none;
   }
 
   &__background {
@@ -73,7 +73,7 @@
     grid-template-columns: 1fr 88px;
     gap: 8px;
     grid-template-areas: "indicators indicators"
-                          "group close";
+      "group close";
     padding: 8px 8px 0;
   }
 
@@ -94,6 +94,7 @@
     from {
       transform: rotate(0deg);
     }
+
     to {
       transform: rotate(360deg);
     }
@@ -122,7 +123,7 @@
     position: relative;
     opacity: 1;
 
-    &_swiped { 
+    &_swiped {
       animation: swipe 0.6s ease;
     }
 
@@ -130,9 +131,11 @@
       0% {
         opacity: 1;
       }
+
       50% {
         opacity: 0;
       }
+
       100% {
         opacity: 1;
       }
@@ -152,7 +155,7 @@
         background-color: #000000;
       }
     }
-  
+
     @media (max-width: 768px) {
       width: 100%;
     }
@@ -421,7 +424,7 @@
 
       @media (min-width: 768px) {
         left: -72px;
-      } 
+      }
     }
 
     &_right {
@@ -431,7 +434,7 @@
 
       @media (min-width: 768px) {
         right: -72px;
-      } 
+      }
     }
   }
 

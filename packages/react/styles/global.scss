@@ -1,5 +1,16 @@
-button {
-  border: none;
-  outline: none;
-  background: none;
+@use "variables" as vars;
+
+.storysdk-container,
+.StorySdkModal {
+
+  button,
+  button[type],
+  input[type="button"],
+  input[type="submit"] {
+    @include vars.button-reset;
+  }
+
+  div:empty {
+    display: block !important;
+  }
 }

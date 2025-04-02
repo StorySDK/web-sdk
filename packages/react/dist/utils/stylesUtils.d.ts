@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { WidgetPositionType, WidgetPositionLimitsType, BackgroundType, BorderType } from '../types';
 interface Stroke {
     strokeThickness: number;
@@ -6,7 +5,7 @@ interface Stroke {
     strokeOpacity: number;
     fillBorderRadius?: number;
 }
-export declare const block: import("bem-cn").BemCn;
+export declare const block: (name: string) => (...args: any[]) => import("bem-cn").BemItem & string;
 export declare const renderColor: (color: string, opacity?: number | undefined) => string;
 export declare const renderGradient: (colors: string[], opacity?: number | undefined) => string;
 export declare const renderBackgroundStyles: (background: BackgroundType, opacity?: number | undefined) => string;

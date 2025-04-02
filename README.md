@@ -2,6 +2,8 @@
 
 StorySDK is an open-source SDK and web service that makes it easy to create and integrate video stories and onboarding into mobile apps and websites. It provides a powerful solution for implementing story-based experiences similar to those found in major banking and social media apps, but accessible to indie developers without contracts, sales calls, or unnecessary hassle.
 
+> **Please note:** StorySDK Core is built on React and requires it to be present in your project. React is NOT bundled with the library, including the CDN version. Detailed information is in the [Installation](#installation) section.
+
 This SDK is part of the StorySDK platform, which is available at [storysdk.com](https://storysdk.com).
 
 ## Features
@@ -44,6 +46,20 @@ This SDK is part of the StorySDK platform, which is available at [storysdk.com](
 6. [Troubleshooting](#troubleshooting)
 
 ## Installation
+
+> **Important:** `@storysdk/core` uses React as a peer dependency. You need to install React in your project before using StorySDK.
+
+### Dependencies
+
+StorySDK will not work without React. It relies on React for rendering components and uses React hooks internally.
+
+```bash
+# Install React if it's not already installed in your project
+npm install react react-dom
+
+# Recommended versions: React 16.8.0 and above
+# Minimum supported React version: 16.8.0 (with hooks support)
+```
 
 ### NPM
 
@@ -150,9 +166,16 @@ export default StoryComponent;
 
 ### JavaScript (ES6)
 
-For vanilla JavaScript applications:
+For use in vanilla JavaScript applications:
+
+> **Important:** Even in pure JS applications, React is still required as a dependency, since StorySDK internally uses React for rendering components. You must include React separately or install it via npm/yarn.
 
 ```javascript
+// First import React (if using npm/yarn)
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+// Then import StorySDK
 import { Story } from "@storysdk/core"; 
 import "@storysdk/core/dist/bundle.css";
 
@@ -168,8 +191,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 For static HTML pages:
 
+> **Important:** React is NOT included in the CDN bundle. You need to include React and ReactDOM separately before loading StorySDK.
+
 ```html
 <head>
+  <!-- First include React -->
+  <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Then include StorySDK -->
   <script src="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.css">
 </head>
@@ -927,8 +957,6 @@ Then in your CSS:
 }
 ```
 
-
-
 ## Troubleshooting
 
 ### Debug Mode
@@ -953,11 +981,22 @@ With debug mode enabled:
    - Check browser console for errors
    - Make sure you've imported the CSS: `import "@storysdk/core/dist/bundle.css";`
 
-2. **Initialization issues**
+2. **React not found / Invalid hook call errors**
+   - StorySDK requires React as a peer dependency
+   - Make sure you have installed React: `npm install react react-dom`
+   - When using the CDN version, ensure you've included React and ReactDOM before loading StorySDK:
+     ```html
+     <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+     ```
+   - Check that the React version you're using is compatible with StorySDK (17.0.0 or higher)
+   - If you have multiple instances of React in your application, this may cause issues with hooks
+
+3. **Initialization issues**
    - When using the static HTML approach, make sure the `data-storysdk-token` attribute is correctly set
    - If manually initializing, ensure the container element exists in the DOM before calling `renderGroups()`
 
-3. **Cleanup issues**
+4. **Cleanup issues**
    - Always call `destroy()` when unmounting your component to prevent memory leaks
 
 ### Browser Support

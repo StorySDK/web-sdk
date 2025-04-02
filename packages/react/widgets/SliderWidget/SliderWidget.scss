@@ -1,4 +1,4 @@
-@import "../../styles/variables.scss";
+@use "../../styles/variables.scss" as *;
 
 .StorySdk-SliderWidget {
   background: #fff;
@@ -34,7 +34,7 @@
   }
 
   &_color {
-    &_white { 
+    &_white {
       .StorySdk-SliderWidget__text {
         color: map-get($theme-colors, "black");
       }

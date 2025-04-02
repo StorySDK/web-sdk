@@ -27,4 +27,7 @@ sketch
 # Ignore all local history of files
 .history
 
+# Test files
+test-storysdk.html
+
 
