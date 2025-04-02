@@ -18,13 +18,7 @@ interface Stroke {
   fillBorderRadius?: number;
 }
 
-export const block = (name: string) => {
-  const bemBlock = setup({ ns: 'StorySdk-' })(name);
-  return (...args: any[]) => {
-    const classes = bemBlock(...args);
-    return classes.mix('storysdk-component');
-  };
-};
+export const block = setup({ ns: 'StorySdk-' });
 
 export const renderColor = (color: string, opacity?: number) => {
   if (color.includes('#') && opacity) {
@@ -65,9 +59,8 @@ export const renderBackgroundStyles = (background: BackgroundType, opacity?: num
       }
       return color as string;
     case BackgroundColorType.GRADIENT:
-      return `linear-gradient(${getGradientDirection(background.direction)}, ${
-        background.value[0]
-      } 0%, ${background.value[1]} 100%)`;
+      return `linear-gradient(${getGradientDirection(background.direction)}, ${background.value[0]
+        } 0%, ${background.value[1]} 100%)`;
     default:
       return 'transparent';
   }
