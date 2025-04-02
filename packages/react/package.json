@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/react",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "React components for StorySDK rendering",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "storysdk.com",
@@ -28,6 +28,8 @@
     "@emoji-mart/react": "^1.1.1",
     "@react-hook/window-size": "^3.0.7",
     "axios": "^0.23.0",
+    "bem-cn": "^3.0.1",
+    "classnames": "^2.3.1",
     "emoji-mart": "^5.6.0",
     "hex-to-rgba": "^2.0.1",
     "hls.js": "^1.5.20",
@@ -35,11 +37,9 @@
     "luxon": "^3.2.1",
     "nanoid": "^3.1.30",
     "parse-color": "^1.0.0",
-    "bem-cn": "^3.0.1",
     "react-loading-skeleton": "^3.0.2",
     "simplebar-react": "^3.2.4",
-    "use-long-press": "^3.2.0",
-    "classnames": "^2.3.1"
+    "use-long-press": "^3.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
