@@ -2,7 +2,7 @@ import { StoryEventTypes } from './types';
 /**
  * Generic event listener type
  */
-declare type EventListener<T = any> = (data: T) => void;
+type EventListener<T = any> = (data: T) => void;
 /**
  * Event emitter implementation for StorySDK
  */

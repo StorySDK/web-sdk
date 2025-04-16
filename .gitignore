@@ -1,4 +1,4 @@
-### react ###
+### React ###
 .DS_*
 *.log
 logs
@@ -15,7 +15,7 @@ thumb
 sketch
 
 
-### VisualStudioCode ###
+### Visual Studio Code ###
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -23,11 +23,14 @@ sketch
 !.vscode/extensions.json
 *.code-workspace
 
-### VisualStudioCode Patch ###
+### Visual Studio Code Patch ###
 # Ignore all local history of files
 .history
 
 # Test files
 test-storysdk.html
+
+# React Native
+packages/react-native/
 
 

@@ -1,4 +1,4 @@
-export declare type MaterialIconValueType = {
+export type MaterialIconValueType = {
     name: string;
 };
-export declare type MaterialIconChangeType = (params: MaterialIconValueType) => void;
+export type MaterialIconChangeType = (params: MaterialIconValueType) => void;

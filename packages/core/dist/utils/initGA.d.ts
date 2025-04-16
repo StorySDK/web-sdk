@@ -1,1 +1,1 @@
-export declare const initGA: (GA_MEASUREMENT_ID?: string | undefined) => void;
+export declare const initGA: (GA_MEASUREMENT_ID?: string) => void;

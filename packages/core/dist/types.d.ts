@@ -6,5 +6,8 @@ export declare enum StoryEventTypes {
     STORY_NEXT = "storyNext",
     STORY_PREV = "storyPrev",
     WINDGET_ANSWER = "widgetAnswer",
-    WIDGET_CLICK = "widgetClick"
+    WIDGET_CLICK = "widgetClick",
+    MODAL_OPEN = "storyModalOpen",
+    MODAL_CLOSE = "storyModalClose",
+    GROUP_CLICK = "groupClick"
 }

@@ -18,6 +18,7 @@ export interface GroupsListProps {
     isShowMockup?: boolean;
     isShowLabel?: boolean;
     arrowsColor?: string;
+    preventCloseOnGroupClick?: boolean;
     isLoading?: boolean;
     autoplay?: boolean;
     startStoryId?: string;
@@ -36,5 +37,7 @@ export interface GroupsListProps {
     onOpenStory?(groupId: string, storyId: string): void;
     onStartQuiz?(groupId: string, storyId?: string): void;
     onFinishQuiz?(groupId: string, storyId?: string): void;
+    onModalOpen?(groupId: string, storyId: string): void;
+    onModalClose?(groupId: string, storyId: string): void;
 }
 export declare const GroupsList: React.FC<GroupsListProps>;

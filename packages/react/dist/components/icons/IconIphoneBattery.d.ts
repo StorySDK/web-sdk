@@ -1,6 +1,6 @@
-/// <reference types="react" />
-declare type PropsType = {
+import React from 'react';
+type PropsType = {
     className?: string;
 };
-export declare const IconIphoneBattery: ({ className }: PropsType) => JSX.Element;
+export declare const IconIphoneBattery: ({ className }: PropsType) => React.JSX.Element;
 export {};

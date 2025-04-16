@@ -38,6 +38,7 @@ export declare class Story extends EventEmitter {
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
         isInReactNativeWebView?: boolean;
+        preventCloseOnGroupClick?: boolean;
     };
     container?: Element | HTMLDivElement | null;
     eventHandlers: {
@@ -66,6 +67,7 @@ export declare class Story extends EventEmitter {
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
         isInReactNativeWebView?: boolean;
+        preventCloseOnGroupClick?: boolean;
     });
     private handleReactNativeMessage;
     private sendMessageToReactNative;

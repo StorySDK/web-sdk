@@ -46,7 +46,7 @@ export const StoryVideoBackground = ({
     const videoElement = videoRef.current;
 
     if (!videoElement) {
-      return () => {};
+      return () => { };
     }
 
     const isNativeHlsSupport = videoElement?.canPlayType('application/vnd.apple.mpegurl');
@@ -75,7 +75,7 @@ export const StoryVideoBackground = ({
         handleCanPlay();
       });
 
-      hls.current.on(Hls.Events.ERROR, (event, data) => {
+      hls.current.on(Hls.Events.ERROR, (event: any, data: any) => {
         if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
           videoElement.currentTime += 0.5;
         } else {
@@ -142,6 +142,7 @@ export const StoryVideoBackground = ({
         playsInline
         preload="auto"
         ref={videoRef}
+        // eslint-disable-next-line react/no-unknown-property
         webkit-playsinline="true"
       />
       <div className={b('loader', { show: isLoading })}>

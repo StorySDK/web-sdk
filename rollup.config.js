@@ -1,7 +1,7 @@
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import postcss from 'rollup-plugin-postcss';
 import json from '@rollup/plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
@@ -35,12 +35,16 @@ export default [
       {
         file: pkg.browser,
         format: 'umd',
-        name: 'index',
+        name: isCore ? 'StorySDK' : 'Story',
         sourcemap: false,
         globals: {
           react: 'React',
-          'react-dom': 'ReactDOM'
-        }
+          'react-dom': 'ReactDOM',
+          'hls.js': 'Hls'
+        },
+        ...(isCore && {
+          footer: "if(typeof window !== 'undefined') { window.Story = StorySDK.Story; }"
+        })
       }
     ],
     plugins: [
@@ -87,7 +91,10 @@ export default [
       ]),
       replace({
         'process.env.NODE_ENV': NODE_ENV,
-        preventAssignment: true
+        preventAssignment: true,
+        ...(pkg.browser && {
+          IS_UMD: JSON.stringify(true)
+        })
       }),
       json(),
       nodePolyfills(),

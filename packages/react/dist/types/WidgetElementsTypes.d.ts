@@ -1,4 +1,4 @@
-export declare type ChooseAnswerWidgetElemetsType = {
+export type ChooseAnswerWidgetElemetsType = {
     widget: {
         borderRadius: number;
     };
@@ -24,7 +24,7 @@ export declare type ChooseAnswerWidgetElemetsType = {
         fontSize: number;
     };
 };
-export declare type EmojiReactionWidgetElemetsType = {
+export type EmojiReactionWidgetElemetsType = {
     widget: {
         borderRadius: number;
         paddingTop: number;
@@ -40,7 +40,7 @@ export declare type EmojiReactionWidgetElemetsType = {
         marginLeft: number;
     };
 };
-export declare type QuestionWidgetElementsType = {
+export type QuestionWidgetElementsType = {
     text: {
         fontSize: number;
         marginBottom: number;
@@ -51,7 +51,7 @@ export declare type QuestionWidgetElementsType = {
         borderRadius: number;
     };
 };
-export declare type QuizMultipleAnswerWidgetElementsType = {
+export type QuizMultipleAnswerWidgetElementsType = {
     title: {
         fontSize: number;
         marginBottom: number;
@@ -78,7 +78,7 @@ export declare type QuizMultipleAnswerWidgetElementsType = {
         lineHeight: number;
     };
 };
-export declare type QuizOneAnswerWidgetElementsType = {
+export type QuizOneAnswerWidgetElementsType = {
     title: {
         fontSize: number;
         marginBottom: number;
@@ -98,7 +98,7 @@ export declare type QuizOneAnswerWidgetElementsType = {
         fontSize: number;
     };
 };
-export declare type QuizMultipleAnswerWidgetWithImageElementsType = {
+export type QuizMultipleAnswerWidgetWithImageElementsType = {
     title: {
         fontSize: number;
         marginBottom: number;
@@ -124,7 +124,7 @@ export declare type QuizMultipleAnswerWidgetWithImageElementsType = {
         marginTop: number;
     };
 };
-export declare type QuizOpenAnswerWidgetElementsType = {
+export type QuizOpenAnswerWidgetElementsType = {
     title: {
         fontSize: number;
         marginBottom: number;
@@ -144,7 +144,7 @@ export declare type QuizOpenAnswerWidgetElementsType = {
         right: number;
     };
 };
-export declare type QuizRateWidgetElementsType = {
+export type QuizRateWidgetElementsType = {
     title: {
         fontSize: number;
         marginBottom: number;
@@ -153,7 +153,7 @@ export declare type QuizRateWidgetElementsType = {
         gap: number;
     };
 };
-export declare type SliderWidgetElementsType = {
+export type SliderWidgetElementsType = {
     widget: {
         borderRadius: number;
         paddingTop: number;
@@ -174,7 +174,7 @@ export declare type SliderWidgetElementsType = {
         borderRadius: number;
     };
 };
-export declare type TalkAboutElementsType = {
+export type TalkAboutElementsType = {
     widget: {
         borderRadius: number;
     };
