@@ -1,5 +1,48 @@
 import { nanoid } from 'nanoid';
 
+// Add ReactNativeWebView to Window interface if not already defined
+declare global {
+  interface Window {
+    ReactNativeWebView?: {
+      postMessage: (message: string) => void;
+    };
+  }
+}
+
+// Safe check for localStorage availability
+const isLocalStorageAvailable = (): boolean => {
+  try {
+    // Try to use localStorage by setting and getting a test item
+    const testKey = '__storage_test__';
+    localStorage.setItem(testKey, testKey);
+    localStorage.removeItem(testKey);
+    return true;
+  } catch (e) {
+    // If any error occurs, localStorage is not available
+    return false;
+  }
+};
+
+// In-memory fallback when localStorage is not available
+const memoryStorage: Record<string, string> = {};
+
+// Safe get item function
+const safeGetItem = (key: string): string | null => {
+  if (isLocalStorageAvailable()) {
+    return localStorage.getItem(key);
+  }
+  return memoryStorage[key] || null;
+};
+
+// Safe set item function
+const safeSetItem = (key: string, value: string): void => {
+  if (isLocalStorageAvailable()) {
+    localStorage.setItem(key, value);
+  } else {
+    memoryStorage[key] = value;
+  }
+};
+
 export const getUniqUserId = () => {
   // Check if we are in React Native WebView
   const isInReactNativeWebView =
@@ -77,13 +120,14 @@ export const getUniqUserId = () => {
       }, 1000);
     });
   }
-  // For regular browser use localStorage
-  if (typeof localStorage !== 'undefined' && localStorage.getItem('StorySdkUserId')) {
-    return localStorage.getItem('StorySdkUserId');
+
+  // Use safe localStorage functions to handle Safari in private mode
+  const existingId = safeGetItem('StorySdkUserId');
+  if (existingId) {
+    return existingId;
   }
+
   const id = nanoid();
-  if (typeof localStorage !== 'undefined') {
-    localStorage.setItem('StorySdkUserId', id);
-  }
+  safeSetItem('StorySdkUserId', id);
   return id;
 };

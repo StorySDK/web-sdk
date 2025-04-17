@@ -1,1 +1,8 @@
-export declare const getUniqUserId: () => string | Promise<unknown> | null;
+declare global {
+    interface Window {
+        ReactNativeWebView?: {
+            postMessage: (message: string) => void;
+        };
+    }
+}
+export declare const getUniqUserId: () => string | Promise<unknown>;

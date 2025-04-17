@@ -1,5 +1,48 @@
 import React, { useState, useEffect } from 'react';
 
+// Add ReactNativeWebView to Window interface if not already defined
+declare global {
+  interface Window {
+    ReactNativeWebView?: {
+      postMessage: (message: string) => void;
+    };
+  }
+}
+
+// Safe check for localStorage availability
+const isLocalStorageAvailable = (): boolean => {
+  try {
+    // Try to use localStorage by setting and getting a test item
+    const testKey = '__storage_test__';
+    localStorage.setItem(testKey, testKey);
+    localStorage.removeItem(testKey);
+    return true;
+  } catch (e) {
+    // If any error occurs, localStorage is not available
+    return false;
+  }
+};
+
+// In-memory fallback when localStorage is not available
+const memoryStorage: Record<string, string> = {};
+
+// Safe get item function
+const safeGetItem = (key: string): string | null => {
+  if (isLocalStorageAvailable()) {
+    return localStorage.getItem(key);
+  }
+  return memoryStorage[key] || null;
+};
+
+// Safe set item function
+const safeSetItem = (key: string, value: string): void => {
+  if (isLocalStorageAvailable()) {
+    localStorage.setItem(key, value);
+  } else {
+    memoryStorage[key] = value;
+  }
+};
+
 export const useLocalStorage = (key: string, initialValue: any) => {
   const [storedValue, setStoredValue] = useState(initialValue);
   const [isNativeEnvironment, setIsNativeEnvironment] = useState(false);
@@ -26,7 +69,7 @@ export const useLocalStorage = (key: string, initialValue: any) => {
       } else {
         // If we are in a regular browser, get the value from localStorage
         try {
-          const item = window?.localStorage?.getItem(key);
+          const item = safeGetItem(key);
           if (item) {
             setStoredValue(JSON.parse(item));
           }
@@ -88,9 +131,9 @@ export const useLocalStorage = (key: string, initialValue: any) => {
             }
           })
         );
-      } else if (typeof window !== 'undefined' && window.localStorage) {
-        // In a regular browser, use localStorage
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      } else if (typeof window !== 'undefined') {
+        // In a regular browser, use localStorage safely
+        safeSetItem(key, JSON.stringify(valueToStore));
       }
     } catch (error) {
       console.log(error);
