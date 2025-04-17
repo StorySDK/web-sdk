@@ -1,1 +1,1 @@
-export declare const getUniqUserId: () => string | null;
+export declare const getUniqUserId: () => string | Promise<unknown> | null;

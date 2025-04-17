@@ -135,6 +135,13 @@ export class Story extends EventEmitter {
         console.log('StorySDK - Starting Request to', request.url);
         console.log('StorySDK - Request Headers:', request.headers);
 
+        if (this.options?.isDebugMode && this.isInReactNativeWebView) {
+          this.sendDebugInfoToReactNative('Starting Request', {
+            url: request.url,
+            headers: request.headers
+          });
+        }
+
         if (debugContainer) {
           const debugElement = document.createElement('pre');
           debugElement.innerHTML = `Starting Request to: ${request.url
@@ -150,6 +157,13 @@ export class Story extends EventEmitter {
           console.log('StorySDK - Response Status:', response.status);
           console.log('StorySDK - Response Headers:', response.headers);
 
+          if (this.options?.isDebugMode && this.isInReactNativeWebView) {
+            this.sendDebugInfoToReactNative('Response Received', {
+              status: response.status,
+              headers: response.headers
+            });
+          }
+
           if (debugContainer) {
             const debugElement = document.createElement('pre');
             debugElement.innerHTML = `Response Status: ${response.status
@@ -160,6 +174,10 @@ export class Story extends EventEmitter {
         },
         (error) => {
           console.error('StorySDK - Response Error:', error);
+
+          if (this.options?.isDebugMode && this.isInReactNativeWebView) {
+            this.sendDebugInfoToReactNative('Response Error', { error: String(error) });
+          }
 
           if (debugContainer) {
             const debugElement = document.createElement('pre');
@@ -191,6 +209,7 @@ export class Story extends EventEmitter {
     } catch (e) {
       if (this.options?.isDebugMode) {
         console.warn('StorySDK - Failed to parse message from React Native WebView:', e);
+        this.sendDebugInfoToReactNative('Failed to parse message from React Native WebView', { error: String(e) });
       }
     }
   };
@@ -208,7 +227,21 @@ export class Story extends EventEmitter {
 
       if (this.options?.isDebugMode) {
         console.log('StorySDK - Sent message to React Native:', { type, data });
+        this.sendDebugInfoToReactNative('Sent message to React Native', { type, data });
       }
+    }
+  }
+
+  /**
+   * Отправляет отладочные сообщения в React Native WebView, если isInReactNativeWebView и isDebugMode = true
+   */
+  private sendDebugInfoToReactNative(message: string, data?: any) {
+    if (this.isInReactNativeWebView && this.options?.isDebugMode) {
+      this.sendMessageToReactNative('storysdk:debug:info', {
+        message,
+        data,
+        timestamp: new Date().toISOString()
+      });
     }
   }
 

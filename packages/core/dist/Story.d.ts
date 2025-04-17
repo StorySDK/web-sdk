@@ -71,6 +71,10 @@ export declare class Story extends EventEmitter {
     });
     private handleReactNativeMessage;
     private sendMessageToReactNative;
+    /**
+     * Отправляет отладочные сообщения в React Native WebView, если isInReactNativeWebView и isDebugMode = true
+     */
+    private sendDebugInfoToReactNative;
     emit(eventName: StoryEventTypes, data: any): void;
     private setupEventListeners;
     renderGroups(container?: Element | HTMLDivElement | null): void;
