@@ -20,8 +20,10 @@ export interface GroupsListProps {
     arrowsColor?: string;
     preventCloseOnGroupClick?: boolean;
     isLoading?: boolean;
+    isInReactNativeWebView?: boolean;
     autoplay?: boolean;
     startStoryId?: string;
+    isForceCloseAvailable?: boolean;
     backgroundColor?: string;
     startGroupId?: string;
     forbidClose?: boolean;

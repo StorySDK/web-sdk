@@ -38,6 +38,7 @@ export class Story extends EventEmitter {
     arrowsColor?: string;
     backgroundColor?: string;
     isStatusBarActive?: boolean;
+    isForceCloseAvailable?: boolean;
     autoplay?: boolean;
     groupId?: string;
     isDebugMode?: boolean;
@@ -72,6 +73,7 @@ export class Story extends EventEmitter {
       storyHeight?: number;
       isShowMockup?: boolean;
       isShowLabel?: boolean;
+      isForceCloseAvailable?: boolean;
       isStatusBarActive?: boolean;
       autoplay?: boolean;
       groupId?: string;
@@ -259,47 +261,47 @@ export class Story extends EventEmitter {
   // */
   private setupEventListeners(element: Element | HTMLDivElement): void {
     element.addEventListener('storysdk:widget:click', (event) => {
-      this.emit(StoryEventTypes.WIDGET_CLICK, event);
+      this.emit(StoryEventTypes.WIDGET_CLICK, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:widget:answer', (event) => {
-      this.emit(StoryEventTypes.WINDGET_ANSWER, event);
+      this.emit(StoryEventTypes.WINDGET_ANSWER, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:group:open', (event) => {
-      this.emit(StoryEventTypes.GROUP_OPEN, event);
+      this.emit(StoryEventTypes.GROUP_OPEN, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:group:close', (event) => {
-      this.emit(StoryEventTypes.GROUP_CLOSE, event);
+      this.emit(StoryEventTypes.GROUP_CLOSE, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:story:open', (event) => {
-      this.emit(StoryEventTypes.STORY_OPEN, event);
+      this.emit(StoryEventTypes.STORY_OPEN, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:story:close', (event) => {
-      this.emit(StoryEventTypes.STORY_CLOSE, event);
+      this.emit(StoryEventTypes.STORY_CLOSE, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:story:next', (event) => {
-      this.emit(StoryEventTypes.STORY_NEXT, event);
+      this.emit(StoryEventTypes.STORY_NEXT, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:story:prev', (event) => {
-      this.emit(StoryEventTypes.STORY_PREV, event);
+      this.emit(StoryEventTypes.STORY_PREV, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:modal:open', (event) => {
-      this.emit(StoryEventTypes.MODAL_OPEN, event);
+      this.emit(StoryEventTypes.MODAL_OPEN, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:modal:close', (event) => {
-      this.emit(StoryEventTypes.MODAL_CLOSE, event);
+      this.emit(StoryEventTypes.MODAL_CLOSE, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:group:click', (event) => {
-      this.emit(StoryEventTypes.GROUP_CLICK, event);
+      this.emit(StoryEventTypes.GROUP_CLICK, (event as CustomEvent).detail || {});
     });
   }
 
@@ -404,6 +406,7 @@ export const init = () => {
           const arrowsColor = container.getAttribute('data-storysdk-arrows-color');
           const backgroundColor = container.getAttribute('data-storysdk-background-color');
           const preventCloseOnGroupClick = container.getAttribute('data-storysdk-prevent-close-on-group-click');
+          const isForceCloseAvailable = container.getAttribute('data-storysdk-is-force-close-available');
           storyOptions = {
             ...storyOptions,
             groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
@@ -427,7 +430,8 @@ export const init = () => {
             groupsOutlineColor: groupsOutlineColor ?? undefined,
             arrowsColor: arrowsColor ?? undefined,
             backgroundColor: backgroundColor ?? undefined,
-            preventCloseOnGroupClick: preventCloseOnGroupClick === 'true'
+            preventCloseOnGroupClick: preventCloseOnGroupClick === 'true',
+            isForceCloseAvailable: isForceCloseAvailable === 'true'
           };
         }
 

@@ -24,7 +24,9 @@ declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: 
     preventCloseOnGroupClick?: boolean | undefined;
     groupsClassName?: string | undefined;
     autoplay?: boolean | undefined;
+    isForceCloseAvailable?: boolean | undefined;
     openInExternalModal?: boolean | undefined;
+    isInReactNativeWebView?: boolean | undefined;
     groupId?: string | undefined;
     startStoryId?: string | undefined;
     forbidClose?: boolean | undefined;

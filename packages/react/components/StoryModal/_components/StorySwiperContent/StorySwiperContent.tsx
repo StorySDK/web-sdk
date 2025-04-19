@@ -31,6 +31,7 @@ interface StorySwiperContentProps {
   isOpened: boolean;
   isMediaLoading: boolean;
   isLoading?: boolean;
+  isInReactNativeWebView?: boolean;
   activeStoriesWithResult: StoryType[];
   currentStorySize: any;
   contentWidth: number | string;
@@ -88,6 +89,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     isStatusBarActive,
     storyWidth,
     storyHeight,
+    isInReactNativeWebView,
     isForceCloseAvailable,
     playStatus,
     jsConfetti,
@@ -302,14 +304,16 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                           </button>
                         )}
 
-                        {!currentGroup?.settings?.isProhibitToClose &&
-                          !forbidClose &&
-                          !(
-                            isForceCloseAvailable &&
-                            (currentGroup?.type === GroupType.ONBOARDING ||
-                              (currentGroup?.type === GroupType.TEMPLATE &&
-                                currentGroup?.category === 'onboarding'))
-                          ) && (
+                        {((isInReactNativeWebView &&
+                          !(currentGroup?.type === GroupType.ONBOARDING)) ||
+                          (!currentGroup?.settings?.isProhibitToClose &&
+                            !forbidClose &&
+                            !(
+                              isForceCloseAvailable &&
+                              (currentGroup?.type === GroupType.ONBOARDING ||
+                                (currentGroup?.type === GroupType.TEMPLATE &&
+                                  currentGroup?.category === 'onboarding'))
+                            ))) && (
                             <button
                               className={b('close', {
                                 noProgress:

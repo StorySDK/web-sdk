@@ -39,6 +39,7 @@ interface StoryModalProps {
   isStatusBarActive?: boolean;
   isForceCloseAvailable?: boolean;
   isCacheDisabled?: boolean;
+  isInReactNativeWebView?: boolean;
   devMode?: 'staging' | 'development';
   arrowsColor?: string;
   isLoading?: boolean;
@@ -139,6 +140,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isShowMockup,
     isShowLabel,
     isForceCloseAvailable,
+    isInReactNativeWebView,
     isStatusBarActive,
     currentGroup,
     isCacheDisabled,
@@ -497,7 +499,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const handleClose = useCallback(() => {
     onClose();
-
+    onModalClose?.(currentGroup?.id ?? '', currentStoryId);
     if (onCloseStory && currentGroup) {
       const duration = DateTime.now().toSeconds() - storyDuration.startTime;
       onCloseStory(currentGroup.id, currentStoryId, duration);
@@ -987,6 +989,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               isAutoplayVideos={isAutoplayVideos}
               isBackgroundVideoPlaying={isBackgroundVideoPlaying}
               isForceCloseAvailable={isForceCloseAvailable}
+              isInReactNativeWebView={isInReactNativeWebView}
               isLarge={isLarge}
               isLoading={isLoading}
               isMediaLoading={isMediaLoading}
@@ -1063,7 +1066,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                 </button>
               )}
 
-              {(!forbidClose || isForceCloseAvailable) && (
+              {(!forbidClose || (isForceCloseAvailable && !isInReactNativeWebView)) && (
                 <button className={b('close')} onClick={handleClose}>
                   <IconClose />
                 </button>

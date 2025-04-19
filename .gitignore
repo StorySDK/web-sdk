@@ -30,7 +30,4 @@ sketch
 # Test files
 test-storysdk.html
 
-# React Native
-packages/react-native/
-
 

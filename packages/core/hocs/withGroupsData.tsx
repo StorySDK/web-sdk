@@ -39,7 +39,9 @@ const withGroupsData =
       preventCloseOnGroupClick?: boolean;
       groupsClassName?: string;
       autoplay?: boolean;
+      isForceCloseAvailable?: boolean;
       openInExternalModal?: boolean;
+      isInReactNativeWebView?: boolean;
       groupId?: string;
       startStoryId?: string;
       forbidClose?: boolean;
@@ -540,6 +542,8 @@ const withGroupsData =
           groups={data ?? []}
           groupsClassName={options?.groupsClassName}
           groupsOutlineColor={options?.groupsOutlineColor}
+          isForceCloseAvailable={options?.isForceCloseAvailable}
+          isInReactNativeWebView={options?.isInReactNativeWebView}
           isLoading={data === null || loadStatus === 'loading'}
           isShowLabel={isShowLabel}
           isShowMockup={isShowMockup}

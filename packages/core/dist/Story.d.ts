@@ -28,6 +28,7 @@ export declare class Story extends EventEmitter {
         arrowsColor?: string;
         backgroundColor?: string;
         isStatusBarActive?: boolean;
+        isForceCloseAvailable?: boolean;
         autoplay?: boolean;
         groupId?: string;
         isDebugMode?: boolean;
@@ -59,6 +60,7 @@ export declare class Story extends EventEmitter {
         storyHeight?: number;
         isShowMockup?: boolean;
         isShowLabel?: boolean;
+        isForceCloseAvailable?: boolean;
         isStatusBarActive?: boolean;
         autoplay?: boolean;
         groupId?: string;

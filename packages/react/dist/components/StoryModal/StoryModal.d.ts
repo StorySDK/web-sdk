@@ -17,6 +17,7 @@ interface StoryModalProps {
     isStatusBarActive?: boolean;
     isForceCloseAvailable?: boolean;
     isCacheDisabled?: boolean;
+    isInReactNativeWebView?: boolean;
     devMode?: 'staging' | 'development';
     arrowsColor?: string;
     isLoading?: boolean;

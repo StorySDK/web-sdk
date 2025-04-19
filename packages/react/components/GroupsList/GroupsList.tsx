@@ -30,8 +30,10 @@ export interface GroupsListProps {
   arrowsColor?: string;
   preventCloseOnGroupClick?: boolean;
   isLoading?: boolean;
+  isInReactNativeWebView?: boolean;
   autoplay?: boolean;
   startStoryId?: string;
+  isForceCloseAvailable?: boolean;
   backgroundColor?: string;
   startGroupId?: string;
   forbidClose?: boolean;
@@ -73,6 +75,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     startGroupId,
     devMode,
     forbidClose,
+    isInReactNativeWebView,
+    isForceCloseAvailable,
     openInExternalModal,
     storyWidth,
     preventCloseOnGroupClick,
@@ -203,6 +207,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           devMode={devMode}
           forbidClose={forbidClose}
           isFirstGroup={currentGroup === 0}
+          isForceCloseAvailable={isForceCloseAvailable}
+          isInReactNativeWebView={isInReactNativeWebView}
           isLastGroup={currentGroup === groups?.length - 1}
           isLoading={isLoading}
           isShowLabel={isShowLabel}
