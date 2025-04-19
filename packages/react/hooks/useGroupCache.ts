@@ -3,7 +3,10 @@ import { useLocalStorage } from './useLocalStorage';
 export const useGroupCache = (
   userId: string | null
 ): [(groupId: string) => any, (groupId: string, data: any) => void] => {
-  const [storedValue, setValue] = useLocalStorage(`StorySdkGroupsData-${userId}`, {});
+  const safeUserId =
+    userId && typeof userId === 'object' ? 'promise-user-id' : String(userId || 'anonymous');
+
+  const [storedValue, setValue] = useLocalStorage(`StorySdkGroupsData-${safeUserId}`, {});
 
   const setData = (groupId: string, data: any) => {
     setValue({

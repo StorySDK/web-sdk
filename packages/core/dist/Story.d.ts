@@ -28,6 +28,7 @@ export declare class Story extends EventEmitter {
         arrowsColor?: string;
         backgroundColor?: string;
         isStatusBarActive?: boolean;
+        isForceCloseAvailable?: boolean;
         autoplay?: boolean;
         groupId?: string;
         isDebugMode?: boolean;
@@ -38,6 +39,7 @@ export declare class Story extends EventEmitter {
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
         isInReactNativeWebView?: boolean;
+        preventCloseOnGroupClick?: boolean;
     };
     container?: Element | HTMLDivElement | null;
     eventHandlers: {
@@ -58,6 +60,7 @@ export declare class Story extends EventEmitter {
         storyHeight?: number;
         isShowMockup?: boolean;
         isShowLabel?: boolean;
+        isForceCloseAvailable?: boolean;
         isStatusBarActive?: boolean;
         autoplay?: boolean;
         groupId?: string;
@@ -66,9 +69,14 @@ export declare class Story extends EventEmitter {
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
         isInReactNativeWebView?: boolean;
+        preventCloseOnGroupClick?: boolean;
     });
     private handleReactNativeMessage;
     private sendMessageToReactNative;
+    /**
+     * Отправляет отладочные сообщения в React Native WebView, если isInReactNativeWebView и isDebugMode = true
+     */
+    private sendDebugInfoToReactNative;
     emit(eventName: StoryEventTypes, data: any): void;
     private setupEventListeners;
     renderGroups(container?: Element | HTMLDivElement | null): void;

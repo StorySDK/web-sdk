@@ -1,14 +1,14 @@
 import { MaterialIconValueType } from '../components/MaterialIcon/_types';
 import { BackgroundType, BorderType, ColorValue, FontParamsType, VideoMetadataType } from '.';
-export declare type QuizAnswersScoreParams = {
+export type QuizAnswersScoreParams = {
     letter: string;
     points: number;
 };
-export declare type EmojiItemType = {
+export type EmojiItemType = {
     name: string;
     unicode: string;
 };
-export declare type RectangleWidgetParamsType = {
+export type RectangleWidgetParamsType = {
     fillColor: BackgroundType;
     fillBorderRadius: number;
     fillOpacity: number;
@@ -22,13 +22,13 @@ export declare type RectangleWidgetParamsType = {
         fillBorderRadius?: number;
     };
 };
-export declare type ImageWidgetParamsType = {
+export type ImageWidgetParamsType = {
     borderRadius: number;
     widgetOpacity: number;
     imageUrl: string;
     fileId?: string;
 };
-export declare type VideoWidgetParamsType = {
+export type VideoWidgetParamsType = {
     widgetOpacity: number;
     videoUrl: string;
     borderRadius: number;
@@ -37,7 +37,7 @@ export declare type VideoWidgetParamsType = {
     stopAutoplay?: boolean;
     metadata?: VideoMetadataType;
 };
-export declare type EllipseWidgetParamsType = {
+export type EllipseWidgetParamsType = {
     fillColor: BackgroundType;
     fillOpacity: number;
     strokeThickness: number;
@@ -49,7 +49,7 @@ export declare type EllipseWidgetParamsType = {
         strokeThickness?: number;
     };
 };
-export declare type ClickMeWidgetParamsType = {
+export type ClickMeWidgetParamsType = {
     fontFamily: string;
     fontSize: number;
     iconSize: number;
@@ -78,7 +78,7 @@ export declare type ClickMeWidgetParamsType = {
         borderRadius?: number;
     };
 };
-export declare type LinkWidgetParamsType = {
+export type LinkWidgetParamsType = {
     fontFamily: string;
     fontSize: number;
     color: ColorValue;
@@ -88,7 +88,7 @@ export declare type LinkWidgetParamsType = {
     backgroundColor: BorderType;
     url?: string;
 };
-export declare type ChooseAnswerWidgetParamsType = {
+export type ChooseAnswerWidgetParamsType = {
     text: string;
     color: string;
     markCorrectAnswer: boolean;
@@ -100,11 +100,11 @@ export declare type ChooseAnswerWidgetParamsType = {
     correct: string;
     isTitleHidden: boolean;
 };
-export declare type EmojiReactionWidgetParamsType = {
+export type EmojiReactionWidgetParamsType = {
     emoji: EmojiItemType[];
     color: string;
 };
-export declare type GiphyWidgetParamsType = {
+export type GiphyWidgetParamsType = {
     gif: string;
     widgetOpacity: number;
     borderRadius: number;
@@ -112,7 +112,7 @@ export declare type GiphyWidgetParamsType = {
         borderRadius?: number;
     };
 };
-export declare type QuestionWidgetParamsType = {
+export type QuestionWidgetParamsType = {
     question: string;
     confirm: string;
     decline: string;
@@ -122,7 +122,7 @@ export declare type QuestionWidgetParamsType = {
     fontColor: BorderType;
     isTitleHidden: boolean;
 };
-export declare type SliderWidgetParamsType = {
+export type SliderWidgetParamsType = {
     color: string;
     fontFamily: string;
     fontParams: FontParamsType;
@@ -131,7 +131,7 @@ export declare type SliderWidgetParamsType = {
     text?: string;
     value: number;
 };
-export declare type SwipeUpWidgetParamsType = {
+export type SwipeUpWidgetParamsType = {
     text: string;
     opacity: number;
     iconSize: number;
@@ -146,7 +146,7 @@ export declare type SwipeUpWidgetParamsType = {
         fontSize?: number;
     };
 };
-export declare type TalkAboutWidgetParamsType = {
+export type TalkAboutWidgetParamsType = {
     text: string;
     fontFamily: string;
     fontParams: FontParamsType;
@@ -155,7 +155,7 @@ export declare type TalkAboutWidgetParamsType = {
     color: string;
     isTitleHidden: boolean;
 };
-export declare type TextWidgetParamsType = {
+export type TextWidgetParamsType = {
     text: string;
     fontSize: number;
     fontFamily: string;
@@ -172,12 +172,12 @@ export declare type TextWidgetParamsType = {
         fontSize?: number;
     };
 };
-export declare type TimerWidgetParamsType = {
+export type TimerWidgetParamsType = {
     time: number;
     text: string;
     color: string;
 };
-export declare type QuizMultipleAnswerWidgetParamsType = {
+export type QuizMultipleAnswerWidgetParamsType = {
     title: string;
     color?: string;
     answers: Array<{
@@ -199,7 +199,7 @@ export declare type QuizMultipleAnswerWidgetParamsType = {
         fontColor: BorderType;
     };
 };
-export declare type QuizMultipleAnswerWithImageWidgetParamsType = {
+export type QuizMultipleAnswerWithImageWidgetParamsType = {
     title: string;
     color?: string;
     answers: Array<{
@@ -224,7 +224,7 @@ export declare type QuizMultipleAnswerWithImageWidgetParamsType = {
         fontColor: BorderType;
     };
 };
-export declare type QuizOneAnswerWidgetParamsType = {
+export type QuizOneAnswerWidgetParamsType = {
     title: string;
     color?: string;
     answers: Array<{
@@ -246,7 +246,7 @@ export declare type QuizOneAnswerWidgetParamsType = {
         fontColor: BorderType;
     };
 };
-export declare type QuizOpenAnswerWidgetParamsType = {
+export type QuizOpenAnswerWidgetParamsType = {
     title: string;
     isTitleHidden: boolean;
     storyId?: string;
@@ -254,7 +254,7 @@ export declare type QuizOpenAnswerWidgetParamsType = {
     fontParams: FontParamsType;
     fontColor: BorderType;
 };
-export declare type QuizRateWidgetParamsType = {
+export type QuizRateWidgetParamsType = {
     title: string;
     isTitleHidden: boolean;
     storeLinks: {

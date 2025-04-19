@@ -38,6 +38,7 @@ export class Story extends EventEmitter {
     arrowsColor?: string;
     backgroundColor?: string;
     isStatusBarActive?: boolean;
+    isForceCloseAvailable?: boolean;
     autoplay?: boolean;
     groupId?: string;
     isDebugMode?: boolean;
@@ -48,6 +49,7 @@ export class Story extends EventEmitter {
     openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
     isInReactNativeWebView?: boolean;
+    preventCloseOnGroupClick?: boolean;
   };
 
   container?: Element | HTMLDivElement | null;
@@ -71,6 +73,7 @@ export class Story extends EventEmitter {
       storyHeight?: number;
       isShowMockup?: boolean;
       isShowLabel?: boolean;
+      isForceCloseAvailable?: boolean;
       isStatusBarActive?: boolean;
       autoplay?: boolean;
       groupId?: string;
@@ -79,6 +82,7 @@ export class Story extends EventEmitter {
       openInExternalModal?: boolean;
       devMode?: 'staging' | 'development';
       isInReactNativeWebView?: boolean;
+      preventCloseOnGroupClick?: boolean;
     }
   ) {
     super();
@@ -87,7 +91,6 @@ export class Story extends EventEmitter {
     this.container = null;
     this.eventHandlers = {};
 
-    // Detect if running in React Native WebView
     this.isInReactNativeWebView = !!options?.isInReactNativeWebView ||
       (typeof window !== 'undefined' && window.ReactNativeWebView !== undefined);
 
@@ -114,6 +117,7 @@ export class Story extends EventEmitter {
       this.options.arrowsColor = options?.arrowsColor;
       this.options.backgroundColor = options?.backgroundColor;
       this.options.isInReactNativeWebView = this.isInReactNativeWebView;
+      this.options.preventCloseOnGroupClick = options?.preventCloseOnGroupClick;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -133,6 +137,13 @@ export class Story extends EventEmitter {
         console.log('StorySDK - Starting Request to', request.url);
         console.log('StorySDK - Request Headers:', request.headers);
 
+        if (this.options?.isDebugMode && this.isInReactNativeWebView) {
+          this.sendDebugInfoToReactNative('Starting Request', {
+            url: request.url,
+            headers: request.headers
+          });
+        }
+
         if (debugContainer) {
           const debugElement = document.createElement('pre');
           debugElement.innerHTML = `Starting Request to: ${request.url
@@ -148,6 +159,13 @@ export class Story extends EventEmitter {
           console.log('StorySDK - Response Status:', response.status);
           console.log('StorySDK - Response Headers:', response.headers);
 
+          if (this.options?.isDebugMode && this.isInReactNativeWebView) {
+            this.sendDebugInfoToReactNative('Response Received', {
+              status: response.status,
+              headers: response.headers
+            });
+          }
+
           if (debugContainer) {
             const debugElement = document.createElement('pre');
             debugElement.innerHTML = `Response Status: ${response.status
@@ -158,6 +176,10 @@ export class Story extends EventEmitter {
         },
         (error) => {
           console.error('StorySDK - Response Error:', error);
+
+          if (this.options?.isDebugMode && this.isInReactNativeWebView) {
+            this.sendDebugInfoToReactNative('Response Error', { error: String(error) });
+          }
 
           if (debugContainer) {
             const debugElement = document.createElement('pre');
@@ -179,24 +201,21 @@ export class Story extends EventEmitter {
     }
   }
 
-  // New method to handle messages from React Native
   private handleReactNativeMessage = (event: MessageEvent) => {
     try {
       const message = JSON.parse(event.data);
 
       if (message && message.type && message.type.startsWith('storysdk:')) {
-        // Forward the message to our event system
         this.emit(message.type, message.data);
       }
     } catch (e) {
-      // Ignore non-JSON messages
       if (this.options?.isDebugMode) {
         console.warn('StorySDK - Failed to parse message from React Native WebView:', e);
+        this.sendDebugInfoToReactNative('Failed to parse message from React Native WebView', { error: String(e) });
       }
     }
   };
 
-  // New method to send messages to React Native
   private sendMessageToReactNative(type: string, data: any) {
     if (this.isInReactNativeWebView &&
       typeof window !== 'undefined' &&
@@ -210,15 +229,27 @@ export class Story extends EventEmitter {
 
       if (this.options?.isDebugMode) {
         console.log('StorySDK - Sent message to React Native:', { type, data });
+        this.sendDebugInfoToReactNative('Sent message to React Native', { type, data });
       }
     }
   }
 
-  // Override emit method to also send events to React Native WebView
+  /**
+   * Отправляет отладочные сообщения в React Native WebView, если isInReactNativeWebView и isDebugMode = true
+   */
+  private sendDebugInfoToReactNative(message: string, data?: any) {
+    if (this.isInReactNativeWebView && this.options?.isDebugMode) {
+      this.sendMessageToReactNative('storysdk:debug:info', {
+        message,
+        data,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
   emit(eventName: StoryEventTypes, data: any) {
     super.emit(eventName, data);
 
-    // Also send to React Native if in WebView
     if (this.isInReactNativeWebView) {
       this.sendMessageToReactNative(eventName, data);
     }
@@ -230,35 +261,47 @@ export class Story extends EventEmitter {
   // */
   private setupEventListeners(element: Element | HTMLDivElement): void {
     element.addEventListener('storysdk:widget:click', (event) => {
-      this.emit(StoryEventTypes.WIDGET_CLICK, event);
+      this.emit(StoryEventTypes.WIDGET_CLICK, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:widget:answer', (event) => {
-      this.emit(StoryEventTypes.WINDGET_ANSWER, event);
+      this.emit(StoryEventTypes.WINDGET_ANSWER, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:group:open', (event) => {
-      this.emit(StoryEventTypes.GROUP_OPEN, event);
+      this.emit(StoryEventTypes.GROUP_OPEN, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:group:close', (event) => {
-      this.emit(StoryEventTypes.GROUP_CLOSE, event);
+      this.emit(StoryEventTypes.GROUP_CLOSE, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:story:open', (event) => {
-      this.emit(StoryEventTypes.STORY_OPEN, event);
+      this.emit(StoryEventTypes.STORY_OPEN, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:story:close', (event) => {
-      this.emit(StoryEventTypes.STORY_CLOSE, event);
+      this.emit(StoryEventTypes.STORY_CLOSE, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:story:next', (event) => {
-      this.emit(StoryEventTypes.STORY_NEXT, event);
+      this.emit(StoryEventTypes.STORY_NEXT, (event as CustomEvent).detail || {});
     });
 
     element.addEventListener('storysdk:story:prev', (event) => {
-      this.emit(StoryEventTypes.STORY_PREV, event);
+      this.emit(StoryEventTypes.STORY_PREV, (event as CustomEvent).detail || {});
+    });
+
+    element.addEventListener('storysdk:modal:open', (event) => {
+      this.emit(StoryEventTypes.MODAL_OPEN, (event as CustomEvent).detail || {});
+    });
+
+    element.addEventListener('storysdk:modal:close', (event) => {
+      this.emit(StoryEventTypes.MODAL_CLOSE, (event as CustomEvent).detail || {});
+    });
+
+    element.addEventListener('storysdk:group:click', (event) => {
+      this.emit(StoryEventTypes.GROUP_CLICK, (event as CustomEvent).detail || {});
     });
   }
 
@@ -298,7 +341,6 @@ export class Story extends EventEmitter {
       }
     }
 
-    // Clean up event listeners if in React Native WebView
     if (this.isInReactNativeWebView && typeof window !== 'undefined') {
       window.removeEventListener('message', this.handleReactNativeMessage);
     }
@@ -309,7 +351,6 @@ export const init = () => {
   const initStorySDK = () => {
     if (!window) return;
 
-    // Check if running in React Native WebView
     const isInReactNativeWebView = typeof window !== 'undefined' && window.ReactNativeWebView !== undefined;
     let tokenFromUrl;
     let optionsFromUrl = {};
@@ -364,7 +405,8 @@ export const init = () => {
           const isDebugMode = container.getAttribute('data-storysdk-is-debug-mode');
           const arrowsColor = container.getAttribute('data-storysdk-arrows-color');
           const backgroundColor = container.getAttribute('data-storysdk-background-color');
-
+          const preventCloseOnGroupClick = container.getAttribute('data-storysdk-prevent-close-on-group-click');
+          const isForceCloseAvailable = container.getAttribute('data-storysdk-is-force-close-available');
           storyOptions = {
             ...storyOptions,
             groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
@@ -387,7 +429,9 @@ export const init = () => {
             activeGroupOutlineColor: activeGroupOutlineColor ?? undefined,
             groupsOutlineColor: groupsOutlineColor ?? undefined,
             arrowsColor: arrowsColor ?? undefined,
-            backgroundColor: backgroundColor ?? undefined
+            backgroundColor: backgroundColor ?? undefined,
+            preventCloseOnGroupClick: preventCloseOnGroupClick === 'true',
+            isForceCloseAvailable: isForceCloseAvailable === 'true'
           };
         }
 

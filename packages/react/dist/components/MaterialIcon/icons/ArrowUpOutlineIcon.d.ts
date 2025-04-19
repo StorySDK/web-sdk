@@ -1,8 +1,8 @@
-/// <reference types="react" />
-declare type PropsType = {
+import React from 'react';
+type PropsType = {
     color?: string;
     gradient?: any;
     gradientId?: string;
 };
-export declare const ArrowUpOutlineIcon: ({ color, gradient, gradientId }: PropsType) => JSX.Element;
+export declare const ArrowUpOutlineIcon: ({ color, gradient, gradientId }: PropsType) => React.JSX.Element;
 export {};

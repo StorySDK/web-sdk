@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/core",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "description": "StorySDK for web projects",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "storysdk.com",
@@ -60,7 +60,8 @@
   },
   "dependencies": {
     "@react-hook/window-size": "^3.1.1",
-    "@storysdk/react": "^1.6.3",
+    "@storysdk/react": "^1.7.0",
+    "@storysdk/types": "^1.6.6",
     "axios": "^0.24.0",
     "luxon": "^2.3.0",
     "nanoid": "^3.1.32",
@@ -68,5 +69,5 @@
     "react-dom": "^17.0.2",
     "react-ga4": "^2.1.0"
   },
-  "gitHead": "c4a66ff0b61fd7babb9d489a8506c23e7c7ef821"
+  "gitHead": "3171d2ff16b38eb74361173159c5c8cc4ffee84a"
 }

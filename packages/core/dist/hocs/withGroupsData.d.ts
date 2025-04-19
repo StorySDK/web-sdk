@@ -21,9 +21,12 @@ declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: 
     isStatusBarActive?: boolean | undefined;
     storyWidth?: number | undefined;
     storyHeight?: number | undefined;
+    preventCloseOnGroupClick?: boolean | undefined;
     groupsClassName?: string | undefined;
     autoplay?: boolean | undefined;
+    isForceCloseAvailable?: boolean | undefined;
     openInExternalModal?: boolean | undefined;
+    isInReactNativeWebView?: boolean | undefined;
     groupId?: string | undefined;
     startStoryId?: string | undefined;
     forbidClose?: boolean | undefined;
@@ -31,5 +34,5 @@ declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: 
     on?(event: string, callback: (data: any) => void): void;
     off?(event: string, callback: (data: any) => void): void;
     destroy?(): void;
-} | undefined, container?: Element | HTMLDivElement | null | undefined) => () => JSX.Element;
+} | undefined, container?: Element | HTMLDivElement | null) => () => React.JSX.Element;
 export default withGroupsData;

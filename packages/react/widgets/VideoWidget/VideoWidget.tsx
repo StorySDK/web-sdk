@@ -4,8 +4,8 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { VideoWidgetParamsType, WidgetComponent } from '@types';
 import { block } from '@utils';
 import { IconPlay } from '@components/icons';
-import './VideoWidget.scss';
 import Hls from 'hls.js';
+import './VideoWidget.scss';
 
 const b = block('VideoWidget');
 
@@ -44,7 +44,7 @@ export const VideoWidget: WidgetComponent<{
     const videoElement = videoRef.current;
 
     if (!videoElement) {
-      return () => {};
+      return () => { };
     }
 
     const isNativeHlsSupport = videoElement?.canPlayType('application/vnd.apple.mpegurl');
@@ -73,7 +73,7 @@ export const VideoWidget: WidgetComponent<{
         handleCanPlay();
       });
 
-      hls.current.on(Hls.Events.ERROR, (event, data) => {
+      hls.current.on(Hls.Events.ERROR, (event: any, data: any) => {
         if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
           videoElement.currentTime += 0.5;
         } else {
@@ -147,6 +147,7 @@ export const VideoWidget: WidgetComponent<{
         ref={videoRef}
         src={videoPreviewUrl ?? videoUrl}
         style={styles}
+        // eslint-disable-next-line react/no-unknown-property
         webkit-playsinline="true"
       />
       {!props.isVideoPlaying && !props.isAutoplay && isReadyToPlay && (

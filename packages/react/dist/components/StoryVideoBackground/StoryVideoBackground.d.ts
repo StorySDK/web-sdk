@@ -1,6 +1,6 @@
-/// <reference types="react" />
+import React from 'react';
 import './StoryVideoBackground.scss';
-declare type PropTypes = {
+type PropTypes = {
     src: string;
     isLoading?: boolean;
     isMuted?: boolean;
@@ -10,5 +10,5 @@ declare type PropTypes = {
     onLoadStart?: () => void;
     onLoadEnd?: () => void;
 };
-export declare const StoryVideoBackground: ({ src, isLoading, isPlaying, isDisplaying, isMuted, isFilled, onLoadStart, onLoadEnd }: PropTypes) => JSX.Element;
+export declare const StoryVideoBackground: ({ src, isLoading, isPlaying, isDisplaying, isMuted, isFilled, onLoadStart, onLoadEnd }: PropTypes) => React.JSX.Element;
 export {};

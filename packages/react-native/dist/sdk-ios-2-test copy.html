@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: https://ssl.gstatic.com; script-src * 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:3003; style-src * 'self' 'unsafe-inline'; media-src * blob: 'self' 'unsafe-inline'; img-src * 'self' data: blob:;">
+  <title>StorySDK</title>
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.css" />
+  
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #f0f0f0;
+    }
+    #storysdk-container {
+      width: 100%;
+      height: 100%;
+    }
+    #storysdk-debug {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      font-family: monospace;
+      font-size: 14px;
+      max-height: 50%;
+      overflow: auto;
+      padding: 10px;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <div id="storysdk-container"></div>
+  <!-- <div id="storysdk-debug"></div> -->
+
+  <script>
+    // Проверка поддержки необходимых функций браузера
+    function checkBrowserCompatibility() {
+      const requiredFeatures = {
+        'Promise': typeof Promise !== 'undefined',
+        'fetch': typeof fetch !== 'undefined',
+        'JSON': typeof JSON !== 'undefined',
+        'postMessage': typeof window.postMessage !== 'undefined'
+      };
+
+      const missingFeatures = Object.entries(requiredFeatures)
+        .filter(([_, supported]) => !supported)
+        .map(([feature]) => feature);
+
+      if (missingFeatures.length > 0) {
+        throw new Error(`Браузер не поддерживает необходимые функции: ${missingFeatures.join(', ')}`);
+      }
+    }
+
+    function debug(message, data) {
+      console.log(message, data);
+      const debugContainer = document.getElementById('storysdk-debug');
+      if (debugContainer) {
+        const logEntry = document.createElement('div');
+        logEntry.style.borderBottom = '1px solid #444';
+        logEntry.style.padding = '3px 0';
+        
+        const timestamp = new Date().toISOString().slice(11, 23);
+        let content = `<span style="color: #aaa">[${timestamp}]</span> ${message}`;
+        
+        if (data !== undefined) {
+          try {
+            if (typeof data === 'object') {
+              content += `<pre style="margin: 2px 0; color: #8f8;">${JSON.stringify(data, null, 2)}</pre>`;
+            } else {
+              content += ` <span style="color: #8f8;">${data}</span>`;
+            }
+          } catch (e) {
+            content += ` <span style="color: #f88;">[Error: ${e.message}]</span>`;
+          }
+        }
+        
+        logEntry.innerHTML = content;
+        debugContainer.appendChild(logEntry);
+        debugContainer.scrollTop = debugContainer.scrollHeight;
+      }
+      
+    }
+
+    function postMessageToReactNative(type, data) {
+      if (window.ReactNativeWebView) {
+        const message = {
+          type,
+          data: data || {}
+        };
+        try {
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+          debug('Отправлено сообщение в React Native:', message);
+        } catch (error) {
+          debug('Ошибка отправки сообщения в React Native:', error);
+        }
+      }
+    }
+
+    function loadSDKScript(mode) {
+      return new Promise((resolve, reject) => {
+        if (typeof window.Story === 'function') {
+          debug('SDK уже загружен');
+          resolve(true);
+          return;
+        }
+
+        // Используем HTTPS для загрузки скрипта
+        let scriptUrl;
+        // if (window.location.protocol === 'https:') {
+        //   scriptUrl = 'https://localhost:3443/bundle.umd.js';
+        // } else if (window.location.protocol === 'http:') {
+          scriptUrl = 'http://localhost:3003/bundle.umd.js';
+        // } else {
+        //   // Для about: или других небезопасных протоколов используем CDN
+          //scriptUrl = 'https://cdn.jsdelivr.net/npm/@storysdk/core@1.6.8/dist/bundle.umd.js';
+        // }
+
+        debug('Загрузка SDK скрипта из:', scriptUrl);
+        
+        const script = document.createElement('script');
+        script.onerror = (error) => {
+          debug('Ошибка загрузки скрипта:', error);
+          const diagData = {
+            userAgent: navigator.userAgent,
+            protocol: window.location.protocol,
+            availableAPIs: Object.keys(window).filter(key => typeof window[key] === 'function').join(', '),
+            securityError: (error.message || '').includes('security') ? 'yes' : 'no',
+            scriptUrl: scriptUrl
+          };
+          debug('Диагностика ошибки загрузки:', diagData);
+          
+          postMessageToReactNative('error', { 
+            message: 'Failed to load SDK script',
+            details: error.message,
+            diagnostics: diagData
+          });
+          reject(error);
+        };
+        
+        script.onload = () => {
+          debug('Скрипт успешно загружен');
+          if (typeof window.Story === 'function') {
+            debug('Story конструктор доступен');
+            resolve(true);
+          } else {
+            debug('Story конструктор недоступен после загрузки');
+            const diagData = {
+              availableGlobals: Object.keys(window),
+              userAgent: navigator.userAgent,
+              scriptUrl: scriptUrl
+            };
+            debug('Диагностика после загрузки:', diagData);
+            reject(new Error('Story constructor not available after script load'));
+          }
+        };
+        
+        script.crossOrigin = 'anonymous';
+        script.integrity = '';
+        script.referrerPolicy = 'no-referrer';
+        
+        script.src = scriptUrl;
+        document.head.appendChild(script);
+      });
+    }
+
+    async function initSDK(options) {
+      try {
+        debug('Начало инициализации SDK');
+        
+        // Проверяем совместимость браузера
+        checkBrowserCompatibility();
+
+        if (!options || !options.token) {
+          throw new Error('Не указан токен SDK');
+        }
+
+        const loaded = await loadSDKScript(options.devMode);
+        if (!loaded) {
+          throw new Error('Не удалось загрузить SDK');
+        }
+
+        debug('Создание экземпляра Story с опциями:', options);
+        
+        // Создаем безопасный объект опций
+        const safeOptions = {
+          token: options.token,
+          isDebugMode: options.isDebugMode || false,
+          ...options,
+          // Принудительно указываем параметры безопасности для мобильных устройств
+          allowInsecureProtocols: true,
+          allowAboutProtocol: true,
+          isInReactNativeWebView: true,
+          corsMode: 'no-cors',
+          // Добавляем дополнительную метаинформацию
+          environment: 'react-native-ios',
+          version: '1.6.6'
+        };
+
+        // Проверяем доступность конструктора
+        if (typeof window.Story !== 'function') {
+          const diagData = {
+            scriptLoaded: true,
+            hasStoryConstructor: false,
+            storyConstructorType: typeof window.Story,
+            storySDKInitialized: false,
+            availableGlobals: Object.keys(window).slice(0, 50),
+            userAgent: navigator.userAgent
+          };
+          
+          throw new Error('The operation is insecure. Story constructor not available. See diagnostics for details: ' + JSON.stringify(diagData));
+        }
+
+        // Дополнительная обработка для протокола about:
+        if (window.location.protocol === 'about:') {
+          debug('Обнаружен протокол about:, применяю особые настройки безопасности');
+          
+          // Устанавливаем дополнительные параметры для about: протокола
+          safeOptions.forceHttps = true;
+          safeOptions.useExternalCDN = true;
+          
+          // Проверяем, не добавляет ли iOS или Android дополнительные ограничения
+          if (/iPhone|iPad|iPod|Android/.test(navigator.userAgent)) {
+            safeOptions.mobileMode = true;
+          }
+        }
+
+        debug('Финальные опции для SDK:', safeOptions);
+        
+        // Создаем экземпляр SDK с безопасными опциями
+        const storySDK = new window.Story(safeOptions.token, safeOptions);
+
+        const container = document.getElementById('storysdk-container');
+        if (!container) {
+          throw new Error('Контейнер не найден');
+        }
+
+        debug('Рендеринг групп');
+        storySDK.renderGroups(container);
+
+        // Подписка на события для отладки
+        const events = [
+          'storysdk:widget:click',
+          'storysdk:widget:answer',
+          'storysdk:group:open',
+          'storysdk:group:close',
+          'storysdk:story:open',
+          'storysdk:story:close'
+        ];
+
+        events.forEach(eventName => {
+          storySDK.on(eventName, (data) => {
+            debug(`Событие ${eventName}:`, data);
+            postMessageToReactNative(eventName, data);
+          });
+        });
+
+        debug('SDK успешно инициализирован');
+        postMessageToReactNative('init:success', { 
+          message: 'StorySDK initialized successfully' 
+        });
+      } catch (error) {
+        debug('Ошибка инициализации SDK:', error);
+        
+        const diagData = {
+          scriptLoaded: typeof window.Story !== 'undefined',
+          hasStoryConstructor: typeof window.Story === 'function',
+          storyConstructorType: typeof window.Story,
+          storySDKInitialized: false,
+          availableGlobals: Object.keys(window).slice(0, 50).join(','),
+          userAgent: navigator.userAgent,
+          protocol: window.location.protocol,
+          browserCompatibility: {
+            Promise: typeof Promise !== 'undefined',
+            fetch: typeof fetch !== 'undefined',
+            JSON: typeof JSON !== 'undefined',
+            postMessage: typeof window.postMessage !== 'undefined'
+          }
+        };
+        
+        debug('Диагностические данные:', diagData);
+        
+        postMessageToReactNative('error', { 
+          message: 'Failed to initialize SDK',
+          details: error.message,
+          diagnostics: diagData
+        });
+      }
+    }
+
+    // Обработка сообщений от React Native
+    window.addEventListener('message', function(event) {
+      try {
+        const message = JSON.parse(event.data);
+        debug('Получено сообщение от React Native:', message);
+        
+        if (message.type === 'init') {
+          const options = JSON.parse(message.options);
+          initSDK(options);
+        }
+      } catch (error) {
+        debug('Ошибка обработки сообщения:', error);
+        postMessageToReactNative('error', { 
+          message: 'Error processing message',
+          details: error.message
+        });
+      }
+    });
+
+    // Автоматическая инициализация для браузера
+    if (!window.ReactNativeWebView) {
+      debug('Обнаружен обычный браузер, запускаем автоинициализацию');
+      
+      // Параметры для инициализации в браузере
+      const browserOptions = {
+        token: '4933397a-8205-4308-b8a8-29bdd1d153c0', // Замените на ваш токен
+      };
+
+      // Запускаем инициализацию
+      initSDK(browserOptions).catch(error => {
+        debug('Ошибка автоинициализации:', error);
+      });
+    }
+
+    // Оповещаем React Native о готовности WebView
+    window.addEventListener('DOMContentLoaded', function() {
+      debug('Документ загружен, протокол: ' + window.location.protocol);
+      debug('User Agent: ' + navigator.userAgent);
+      postMessageToReactNative('webview:ready', {
+        protocol: window.location.protocol,
+        userAgent: navigator.userAgent
+      });
+    });
+    
+    // На случай, если событие DOMContentLoaded уже произошло
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+      debug('Документ уже загружен, протокол: ' + window.location.protocol);
+      debug('User Agent: ' + navigator.userAgent);
+      postMessageToReactNative('webview:ready', {
+        protocol: window.location.protocol,
+        userAgent: navigator.userAgent
+      });
+    }
+  </script>
+</body>
+</html> 

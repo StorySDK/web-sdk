@@ -19,6 +19,7 @@ interface StorySwiperContentProps {
     isOpened: boolean;
     isMediaLoading: boolean;
     isLoading?: boolean;
+    isInReactNativeWebView?: boolean;
     activeStoriesWithResult: StoryType[];
     currentStorySize: any;
     contentWidth: number | string;

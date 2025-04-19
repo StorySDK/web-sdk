@@ -39,6 +39,7 @@ interface StoryModalProps {
   isStatusBarActive?: boolean;
   isForceCloseAvailable?: boolean;
   isCacheDisabled?: boolean;
+  isInReactNativeWebView?: boolean;
   devMode?: 'staging' | 'development';
   arrowsColor?: string;
   isLoading?: boolean;
@@ -55,6 +56,8 @@ interface StoryModalProps {
   onCloseStory?(groupId: string, storyId: string, duration: number): void;
   onStartQuiz?(groupId: string, storyId?: string): void;
   onFinishQuiz?(groupId: string, storyId?: string): void;
+  onModalOpen?(groupId: string, storyId: string): void;
+  onModalClose?(groupId: string, storyId: string): void;
 }
 
 export type PlayStatusType = 'wait' | 'play' | 'pause';
@@ -62,8 +65,8 @@ export type PlayStatusType = 'wait' | 'play' | 'pause';
 export const StoryContext = React.createContext<StoryContenxt>({
   currentStoryId: '',
   playStatus: 'wait',
-  playStatusChange: () => {},
-  closeStoryGroup: () => {},
+  playStatusChange: () => { },
+  closeStoryGroup: () => { },
   confetti: null
 });
 
@@ -137,6 +140,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isShowMockup,
     isShowLabel,
     isForceCloseAvailable,
+    isInReactNativeWebView,
     isStatusBarActive,
     currentGroup,
     isCacheDisabled,
@@ -159,7 +163,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onOpenStory,
     onCloseStory,
     onStartQuiz,
-    onFinishQuiz
+    onFinishQuiz,
+    onModalOpen,
+    onModalClose
   } = props;
 
   const [quizState, dispatchQuizState] = useReducer(reducer, initQuizeState);
@@ -182,6 +188,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [bodyContainerWidth, setBodyContainerWidth] = useState(0);
   const [isVideoMuted, setIsVideoMuted] = useState<boolean>(true);
 
+  const isFirstRender = useRef(true);
+
   const [storyDuration, setStoryDuration] = useState({
     storyId: '',
     groupId: '',
@@ -198,6 +206,19 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onOpenStory?.(groupId, storyId);
   }, []);
 
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    if (isOpened) {
+      onModalOpen?.(currentGroup?.id ?? '', currentStoryId);
+    } else {
+      onModalClose?.(currentGroup?.id ?? '', currentStoryId);
+    }
+  }, [isOpened]);
+
   const isVideoExists = useMemo(
     () =>
       activeStoriesWithResult[currentStory]?.storyData.some(
@@ -212,8 +233,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     () =>
       (currentGroup?.type === GroupType.ONBOARDING ||
         (currentGroup?.type === GroupType.TEMPLATE && currentGroup?.category === 'onboarding')) &&
-      !isMobile &&
-      isShowMockup !== false
+        !isMobile &&
+        isShowMockup !== false
         ? true
         : isShowMockup,
     [currentGroup, isMobile, isShowMockup]
@@ -318,8 +339,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       window?.open(
         `${appLink}/share/${currentGroup?.settings?.shortDataId}`,
         '_blank',
-        `popup,left=${leftPosition},top=${isMobile ? 0 : 50},width=${
-          isMobile ? width : 1000
+        `popup,left=${leftPosition},top=${isMobile ? 0 : 50},width=${isMobile ? width : 1000
         },height=${640}`
       );
 
@@ -479,7 +499,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const handleClose = useCallback(() => {
     onClose();
-
+    onModalClose?.(currentGroup?.id ?? '', currentStoryId);
     if (onCloseStory && currentGroup) {
       const duration = DateTime.now().toSeconds() - storyDuration.startTime;
       onCloseStory(currentGroup.id, currentStoryId, duration);
@@ -864,7 +884,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     [clickTimestamp, handleNext, handlePrev]
   );
 
-  const pressHandlers = useLongPress(() => {}, {
+  const pressHandlers = useLongPress(() => { }, {
     onStart: (e) => {
       setClickTimestamp(e.timeStamp);
       setPlayStatus('pause');
@@ -969,6 +989,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               isAutoplayVideos={isAutoplayVideos}
               isBackgroundVideoPlaying={isBackgroundVideoPlaying}
               isForceCloseAvailable={isForceCloseAvailable}
+              isInReactNativeWebView={isInReactNativeWebView}
               isLarge={isLarge}
               isLoading={isLoading}
               isMediaLoading={isMediaLoading}
@@ -1011,47 +1032,47 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         {(currentGroup?.type === GroupType.ONBOARDING ||
           (currentGroup?.type === GroupType.TEMPLATE &&
             currentGroup?.category === 'onboarding')) && (
-          <div className={b('closeContainer')}>
-            {!currentGroup?.settings?.isProgressHidden && playStatus !== 'wait' && (
-              <>
+            <div className={b('closeContainer')}>
+              {!currentGroup?.settings?.isProgressHidden && playStatus !== 'wait' && (
+                <>
+                  <button
+                    className={b('topBtn')}
+                    onClick={
+                      playStatus === 'play'
+                        ? () => setPlayStatus('pause')
+                        : () => setPlayStatus('play')
+                    }
+                  >
+                    {playStatus === 'play' ? (
+                      <IconStoryPause className={b('playBtnIcon').toString()} />
+                    ) : (
+                      <IconStoryPlay className={b('playBtnIcon').toString()} />
+                    )}
+                  </button>
+                </>
+              )}
+              {isVideoExists && (
                 <button
-                  className={b('topBtn')}
-                  onClick={
-                    playStatus === 'play'
-                      ? () => setPlayStatus('pause')
-                      : () => setPlayStatus('play')
-                  }
+                  className={b('muteBtn')}
+                  onClick={() => {
+                    setIsVideoMuted(!isVideoMuted);
+                  }}
                 >
-                  {playStatus === 'play' ? (
-                    <IconStoryPause className={b('playBtnIcon').toString()} />
+                  {isVideoMuted ? (
+                    <IconMute className={b('muteBtnIcon').toString()} />
                   ) : (
-                    <IconStoryPlay className={b('playBtnIcon').toString()} />
+                    <IconUnmute className={b('muteBtnIcon').toString()} />
                   )}
                 </button>
-              </>
-            )}
-            {isVideoExists && (
-              <button
-                className={b('muteBtn')}
-                onClick={() => {
-                  setIsVideoMuted(!isVideoMuted);
-                }}
-              >
-                {isVideoMuted ? (
-                  <IconMute className={b('muteBtnIcon').toString()} />
-                ) : (
-                  <IconUnmute className={b('muteBtnIcon').toString()} />
-                )}
-              </button>
-            )}
+              )}
 
-            {(!forbidClose || isForceCloseAvailable) && (
-              <button className={b('close')} onClick={handleClose}>
-                <IconClose />
-              </button>
-            )}
-          </div>
-        )}
+              {(!forbidClose || (isForceCloseAvailable && !isInReactNativeWebView)) && (
+                <button className={b('close')} onClick={handleClose}>
+                  <IconClose />
+                </button>
+              )}
+            </div>
+          )}
       </div>
       <div
         className={b('background', { isShowing: isOpened })}

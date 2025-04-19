@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import SimpleBar from 'simplebar-react';
 import ReactDOM from 'react-dom';
 import { useWindowSize } from '@react-hook/window-size';
+import { getUniqUserId } from '@utils';
 import { Group } from '../../types';
 import { GroupItem, StoryModal } from '..';
 import 'simplebar-react/dist/simplebar.min.css';
@@ -27,9 +28,12 @@ export interface GroupsListProps {
   isShowMockup?: boolean;
   isShowLabel?: boolean;
   arrowsColor?: string;
+  preventCloseOnGroupClick?: boolean;
   isLoading?: boolean;
+  isInReactNativeWebView?: boolean;
   autoplay?: boolean;
   startStoryId?: string;
+  isForceCloseAvailable?: boolean;
   backgroundColor?: string;
   startGroupId?: string;
   forbidClose?: boolean;
@@ -45,6 +49,8 @@ export interface GroupsListProps {
   onOpenStory?(groupId: string, storyId: string): void;
   onStartQuiz?(groupId: string, storyId?: string): void;
   onFinishQuiz?(groupId: string, storyId?: string): void;
+  onModalOpen?(groupId: string, storyId: string): void;
+  onModalClose?(groupId: string, storyId: string): void;
 }
 
 export const GroupsList: React.FC<GroupsListProps> = (props) => {
@@ -69,8 +75,11 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     startGroupId,
     devMode,
     forbidClose,
+    isInReactNativeWebView,
+    isForceCloseAvailable,
     openInExternalModal,
     storyWidth,
+    preventCloseOnGroupClick,
     storyHeight,
     container,
     onOpenGroup,
@@ -80,7 +89,9 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     onCloseStory,
     onOpenStory,
     onStartQuiz,
-    onFinishQuiz
+    onFinishQuiz,
+    onModalOpen,
+    onModalClose
   } = props;
 
   const [currentGroup, setCurrentGroup] = useState(-1);
@@ -196,6 +207,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           devMode={devMode}
           forbidClose={forbidClose}
           isFirstGroup={currentGroup === 0}
+          isForceCloseAvailable={isForceCloseAvailable}
+          isInReactNativeWebView={isInReactNativeWebView}
           isLastGroup={currentGroup === groups?.length - 1}
           isLoading={isLoading}
           isShowLabel={isShowLabel}
@@ -210,6 +223,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           onClose={handleCloseModal}
           onCloseStory={onCloseStory}
           onFinishQuiz={onFinishQuiz}
+          onModalClose={onModalClose}
+          onModalOpen={onModalOpen}
           onNextGroup={handleNextGroup}
           onNextStory={onNextStory}
           onOpenStory={onOpenStory}
@@ -221,6 +236,26 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
       );
     }
   }, [isLoading, autoplay, currentGroupMemo, modalShow]);
+
+  const handleGroupClick = useCallback(
+    (groupIndex: number) => {
+      const customEvent = new CustomEvent('storysdk:group:click', {
+        detail: {
+          groupId: groups[groupIndex].id,
+          uniqUserId: getUniqUserId()
+        }
+      });
+
+      container?.dispatchEvent(customEvent);
+
+      if (preventCloseOnGroupClick) {
+        return;
+      }
+
+      handleSelectGroup(groupIndex);
+    },
+    [preventCloseOnGroupClick, handleSelectGroup]
+  );
 
   useEffect(() => {
     const containerElement = containerRef.current;
@@ -310,7 +345,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                         title={group.title}
                         type={group.type}
                         view={groupView}
-                        onClick={handleSelectGroup}
+                        onClick={handleGroupClick}
                       />
                     ))}
                 </div>

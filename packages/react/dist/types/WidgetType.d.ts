@@ -13,24 +13,24 @@ export declare enum GradientDirection {
     TOP_TO_BOTTOM = "top_to_bottom",
     LEFT_TO_RIGHT = "left_to_right"
 }
-export declare type BackgroundFillType = MediaType | BackgroundColorType;
-declare type TransparentValue = {
+export type BackgroundFillType = MediaType | BackgroundColorType;
+type TransparentValue = {
     type: BackgroundColorType.TRANSPARENT;
     value: string;
     isFilled?: boolean;
 };
-export declare type ColorValue = {
+export type ColorValue = {
     type: BackgroundColorType.COLOR;
     value: string;
     isFilled?: boolean;
 };
-export declare type GradientValue = {
+export type GradientValue = {
     type: BackgroundColorType.GRADIENT;
     value: string[];
     direction?: GradientDirection;
     isFilled?: boolean;
 };
-declare type BackgrounValue = {
+type BackgrounValue = {
     type: MediaType;
     value: string;
     isFilled?: boolean;
@@ -38,13 +38,13 @@ declare type BackgrounValue = {
     stopAutoplay?: boolean;
     metadata?: VideoMetadataType;
 };
-export declare type BorderType = GradientValue | ColorValue;
-export declare type BackgroundType = GradientValue | ColorValue | BackgrounValue | TransparentValue;
+export type BorderType = GradientValue | ColorValue;
+export type BackgroundType = GradientValue | ColorValue | BackgrounValue | TransparentValue;
 export interface FontParamsType {
     style: string;
     weight: number;
 }
-export declare type VideoMetadataType = {
+export type VideoMetadataType = {
     duration: number;
 };
 export declare enum WidgetsTypes {

@@ -18,6 +18,6 @@ interface WidgetFactoryProps {
 }
 export declare class WidgetFactory extends React.Component<WidgetFactoryProps> {
     private makeWidget;
-    render(): JSX.Element;
+    render(): React.JSX.Element;
 }
 export {};

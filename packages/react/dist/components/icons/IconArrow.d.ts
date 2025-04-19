@@ -1,7 +1,7 @@
-/// <reference types="react" />
-declare type PropsType = {
+import React from 'react';
+type PropsType = {
     className?: string;
     stroke?: string;
 };
-export declare const IconArrow: ({ className, stroke }: PropsType) => JSX.Element;
+export declare const IconArrow: ({ className, stroke }: PropsType) => React.JSX.Element;
 export {};
