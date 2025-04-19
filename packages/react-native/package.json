@@ -1,6 +1,6 @@
 {
 	"name": "@storysdk/react-native",
-	"version": "1.6.9",
+	"version": "1.7.0",
 	"description": "React Native components for StorySDK",
 	"main": "dist/index.js",
 	"module": "dist/index.esm.js",
