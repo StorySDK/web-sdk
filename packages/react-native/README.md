@@ -80,6 +80,7 @@ import { StoryModal } from '@storysdk/react-native';
 - `arrowsColor` - Color of navigation arrows
 - `backgroundColor` - Background color of the component
 - `onError` - Error handler callback that receives error details
+- `onEvent` - Event handler callback that receives event type and associated data
 
 ### StoryModal
 
@@ -96,6 +97,62 @@ import { StoryModal } from '@storysdk/react-native';
 - `backgroundColor` - Background color of the component
 - `forbidClose` - Prevent modal from being closed (useful for critical onboarding flows)
 - `onError` - Error handler callback that receives error details
+- `onEvent` - Event handler callback that receives event type and associated data
+
+## SDK Events
+
+`StoryGroups` and `StoryModal` components can handle the following events through the `onEvent` prop:
+
+- `groupClose` - Group of stories closed
+- `groupOpen` - Group of stories opened
+- `storyClose` - Story closed
+- `storyOpen` - Story opened
+- `storyNext` - Navigation to next story
+- `storyPrev` - Navigation to previous story
+- `widgetAnswer` - User response to a widget
+- `widgetClick` - Widget click
+- `storyModalOpen` - Modal window opened
+- `storyModalClose` - Modal window closed
+- `groupClick` - Story group clicked
+
+### onEvent Usage Example
+
+```jsx
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { StoryGroups, StoryModal } from '@storysdk/react-native';
+
+const App = () => {
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
+
+  const handleEvent = (eventType, eventData) => {
+    console.log(`Event: ${eventType}`, eventData);
+    
+    // Example of handling a specific event
+    if (eventType === 'widgetClick') {
+      console.log('User clicked on a widget:', eventData);
+    }
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <StoryGroups
+        token="YOUR_TOKEN"
+        onGroupClick={setSelectedGroupId}
+        onEvent={handleEvent}
+      />
+      <StoryModal
+        token="YOUR_TOKEN"
+        groupId={selectedGroupId}
+        onClose={() => setSelectedGroupId(null)}
+        onEvent={handleEvent}
+      />
+    </View>
+  );
+};
+
+export default App;
+```
 
 ## Usage Example
 
@@ -180,3 +237,43 @@ const App = () => {
 
 export default App;
 ```
+
+## Media Background Playback Permissions
+
+For proper background media playback (audio/video), you need to configure additional permissions in your project:
+
+### iOS
+
+Add the following to your iOS project's `Info.plist` file:
+
+```xml
+<key>UIBackgroundModes</key>
+<array>
+    <string>audio</string>
+</array>
+```
+
+If you encounter the error `ProcessAssertion::acquireSync Failed to acquire RBS assertion 'WebKit Media Playback'`, you may need to add additional entitlements to your project:
+
+1. Create or edit the `.entitlements` file in your iOS project root
+2. Add the following entitlements:
+
+```xml
+<key>com.apple.runningboard.assertions.webkit</key>
+<true/>
+<key>com.apple.multitasking.systemappassertions</key>
+<true/>
+```
+
+3. In Xcode, go to project settings > Signing & Capabilities and add the "Background Modes" capability, then enable the "Audio, AirPlay, and Picture in Picture" option
+
+### Android
+
+Add the following to your Android project's `AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.WAKE_LOCK" />
+```
+
+These permissions are necessary to ensure continuous media playback even when the app is minimized or the screen is locked.

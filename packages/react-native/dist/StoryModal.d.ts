@@ -23,6 +23,7 @@ interface StoryModalProps {
         message: string;
         details?: string;
     }) => void;
+    onEvent?: (event: string, data: any) => void;
 }
 /**
  * Component for displaying stories in a modal window

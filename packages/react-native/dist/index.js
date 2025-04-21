@@ -600,7 +600,7 @@ var StorageHandler = /** @class */ (function () {
  * Uses WebView to render the groups and handles group click events
  */
 var StoryGroups = function (_a) {
-    var token = _a.token, onGroupClick = _a.onGroupClick, groupImageWidth = _a.groupImageWidth, groupImageHeight = _a.groupImageHeight, groupTitleSize = _a.groupTitleSize, groupClassName = _a.groupClassName, groupsClassName = _a.groupsClassName, activeGroupOutlineColor = _a.activeGroupOutlineColor, groupsOutlineColor = _a.groupsOutlineColor, arrowsColor = _a.arrowsColor, backgroundColor = _a.backgroundColor, isDebugMode = _a.isDebugMode, devMode = _a.devMode, onError = _a.onError;
+    var token = _a.token, onGroupClick = _a.onGroupClick, groupImageWidth = _a.groupImageWidth, groupImageHeight = _a.groupImageHeight, groupTitleSize = _a.groupTitleSize, groupClassName = _a.groupClassName, groupsClassName = _a.groupsClassName, activeGroupOutlineColor = _a.activeGroupOutlineColor, groupsOutlineColor = _a.groupsOutlineColor, arrowsColor = _a.arrowsColor, backgroundColor = _a.backgroundColor, isDebugMode = _a.isDebugMode, devMode = _a.devMode, onError = _a.onError, onEvent = _a.onEvent;
     var webViewRef = React.useRef(null);
     var _b = React.useState(false), isReady = _b[0], setIsReady = _b[1];
     React.useEffect(function () {
@@ -631,6 +631,9 @@ var StoryGroups = function (_a) {
     var handleMessage = function (event) {
         try {
             var data = JSON.parse(event.nativeEvent.data);
+            if (onEvent) {
+                onEvent(data.type, data.data);
+            }
             // Processing storage messages
             if (data.type === 'storysdk:storage:get' || data.type === 'storysdk:storage:set') {
                 StorageHandler.handleMessage(data, function (response) {
@@ -675,7 +678,7 @@ var styles$1 = reactNative.StyleSheet.create({
     },
     webview: {
         flex: 1,
-    }
+    },
 });
 
 /**
@@ -683,7 +686,7 @@ var styles$1 = reactNative.StyleSheet.create({
  * Uses WebView to render stories and handles modal close events
  */
 var StoryModal = function (_a) {
-    var token = _a.token, groupId = _a.groupId, onClose = _a.onClose, storyWidth = _a.storyWidth, storyHeight = _a.storyHeight, isShowMockup = _a.isShowMockup, isShowLabel = _a.isShowLabel, isStatusBarActive = _a.isStatusBarActive, arrowsColor = _a.arrowsColor, backgroundColor = _a.backgroundColor, isDebugMode = _a.isDebugMode, devMode = _a.devMode, _b = _a.autoplay, autoplay = _b === void 0 ? true : _b, onError = _a.onError;
+    var token = _a.token, groupId = _a.groupId, onClose = _a.onClose, storyWidth = _a.storyWidth, storyHeight = _a.storyHeight, isShowMockup = _a.isShowMockup, isShowLabel = _a.isShowLabel, isStatusBarActive = _a.isStatusBarActive, arrowsColor = _a.arrowsColor, backgroundColor = _a.backgroundColor, isDebugMode = _a.isDebugMode, devMode = _a.devMode, _b = _a.autoplay, autoplay = _b === void 0 ? true : _b, onError = _a.onError, onEvent = _a.onEvent;
     var webViewRef = React.useRef(null);
     var _c = React.useState(false), isReady = _c[0], setIsReady = _c[1];
     var _d = React.useState(true), isLoading = _d[0], setIsLoading = _d[1];
@@ -730,6 +733,9 @@ var StoryModal = function (_a) {
                 return;
             }
             // Processing events
+            if (onEvent) {
+                onEvent(data.type, data.data);
+            }
             if (data.type === 'webview:ready') {
                 setIsReady(true);
             }
@@ -754,7 +760,6 @@ var StoryModal = function (_a) {
     };
     var handleWebViewError = function (syntheticEvent) {
         var nativeEvent = syntheticEvent.nativeEvent;
-        "WebView error: ".concat(nativeEvent.description);
         setIsLoading(false);
         if (onError) {
             onError({ message: 'WebView error', details: nativeEvent.description });

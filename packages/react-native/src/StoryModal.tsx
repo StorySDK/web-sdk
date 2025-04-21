@@ -25,6 +25,7 @@ interface StoryModalProps {
   forbidClose?: boolean;
   autoplay?: boolean;
   onError?: (error: { message: string, details?: string }) => void;
+  onEvent?: (event: string, data: any) => void;
 }
 
 /**
@@ -46,6 +47,7 @@ export const StoryModal: React.FC<StoryModalProps> = ({
   devMode,
   autoplay = true,
   onError,
+  onEvent,
 }) => {
   const webViewRef = useRef<WebView>(null);
   const [isReady, setIsReady] = useState(false);
@@ -105,6 +107,10 @@ export const StoryModal: React.FC<StoryModalProps> = ({
       }
 
       // Processing events
+      if (onEvent) {
+        onEvent(data.type, data.data);
+      }
+
       if (data.type === 'webview:ready') {
         setIsReady(true);
       } else if (data.type === 'storyModalClose' && onClose) {
@@ -126,7 +132,6 @@ export const StoryModal: React.FC<StoryModalProps> = ({
 
   const handleWebViewError = (syntheticEvent: any) => {
     const { nativeEvent } = syntheticEvent;
-    const errorMessage = `WebView error: ${nativeEvent.description}`;
     setIsLoading(false);
 
     if (onError) {

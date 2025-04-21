@@ -17,6 +17,7 @@ interface StoryGroupsProps {
         message: string;
         details?: string;
     }) => void;
+    onEvent?: (event: string, data: any) => void;
 }
 /**
  * Component for displaying a list of story groups
