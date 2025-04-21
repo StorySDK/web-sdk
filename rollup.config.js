@@ -43,7 +43,7 @@ export default [
           'hls.js': 'Hls'
         },
         ...(isCore && {
-          footer: "if(typeof window !== 'undefined') { window.Story = StorySDK.Story; }"
+          footer: "if(typeof window !== 'undefined') { window.StorySDK = StorySDK; window.Story = StorySDK.Story; }"
         })
       }
     ],
