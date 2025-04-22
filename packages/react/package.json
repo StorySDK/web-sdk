@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/react",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "description": "React components for StorySDK rendering",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "storysdk.com",
