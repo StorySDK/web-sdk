@@ -138,7 +138,7 @@ export const StoryGroups: React.FC<StoryGroupsProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: 120,
+    height: 120
   },
   webview: {
     flex: 1,
