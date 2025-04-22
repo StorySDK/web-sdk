@@ -36,14 +36,13 @@ export default [
         file: pkg.browser,
         format: 'umd',
         name: isCore ? 'StorySDK' : 'Story',
-        sourcemap: false,
+        sourcemap: true,
         globals: {
           react: 'React',
-          'react-dom': 'ReactDOM',
-          'hls.js': 'Hls'
+          'react-dom': 'ReactDOM'
         },
         ...(isCore && {
-          footer: "if(typeof window !== 'undefined') { window.Story = StorySDK.Story; }"
+          footer: "if(typeof window !== 'undefined' && typeof StorySDK !== 'undefined') { window.Story = StorySDK.Story; }"
         })
       }
     ],

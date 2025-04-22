@@ -1,16 +1,7 @@
 import { nanoid } from 'nanoid';
 
-// Add ReactNativeWebView to Window interface if not already defined
-declare global {
-  interface Window {
-    ReactNativeWebView?: {
-      postMessage: (message: string) => void;
-    };
-  }
-}
-
 // Safe check for localStorage availability
-const isLocalStorageAvailable = (): boolean => {
+const isLocalStorageAvailable = () => {
   try {
     // Try to use localStorage by setting and getting a test item
     const testKey = '__storage_test__';

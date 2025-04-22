@@ -1,16 +1,7 @@
-import React, { useState, useEffect } from 'react';
-
-// Add ReactNativeWebView to Window interface
-declare global {
-  interface Window {
-    ReactNativeWebView?: {
-      postMessage: (message: string) => void;
-    };
-  }
-}
+import { useState, useEffect } from 'react';
 
 // Safe check for localStorage availability
-const isLocalStorageAvailable = (): boolean => {
+const isLocalStorageAvailable = () => {
   try {
     // Try to use localStorage by setting and getting a test item
     const testKey = '__storage_test__';
@@ -70,11 +61,16 @@ export const useLocalStorage = (key: string, initialValue: any) => {
         // If we are in a regular browser, get the value from localStorage
         try {
           const item = safeGetItem(key);
-          if (item) {
-            setStoredValue(JSON.parse(item));
+          if (item && item.trim()) {
+            try {
+              setStoredValue(JSON.parse(item));
+            } catch (parseError) {
+              console.error(`Error parsing stored JSON for key "${key}":`, parseError);
+              setStoredValue(initialValue);
+            }
           }
         } catch (error) {
-          console.log(error);
+          console.log('Error accessing localStorage:', error);
         }
       }
     };
@@ -84,7 +80,11 @@ export const useLocalStorage = (key: string, initialValue: any) => {
     // Handler for messages from React Native with storage data
     const handleStorageMessage = (event: MessageEvent) => {
       try {
-        const message = JSON.parse(event.data);
+        if (typeof event.data === 'string' && !event.data.trim()) {
+          return;
+        }
+
+        const message = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
         if (
           message.type === 'storysdk:storage:response' &&
           message.data &&
@@ -122,21 +122,29 @@ export const useLocalStorage = (key: string, initialValue: any) => {
         window.ReactNativeWebView
       ) {
         // If we are in React Native, send the value through the bridge
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({
+        try {
+          const jsonData = JSON.stringify({
             type: 'storysdk:storage:set',
             data: {
               key,
               value: valueToStore
             }
-          })
-        );
+          });
+          window.ReactNativeWebView.postMessage(jsonData);
+        } catch (jsonError) {
+          console.error('Error stringifying data for React Native:', jsonError);
+        }
       } else if (typeof window !== 'undefined') {
         // In a regular browser, use localStorage safely
-        safeSetItem(key, JSON.stringify(valueToStore));
+        try {
+          const jsonValue = JSON.stringify(valueToStore);
+          safeSetItem(key, jsonValue);
+        } catch (jsonError) {
+          console.error('Error stringifying value for localStorage:', jsonError);
+        }
       }
     } catch (error) {
-      console.log(error);
+      console.error('Error in setValue function:', error);
     }
   };
 

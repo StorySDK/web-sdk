@@ -19,6 +19,7 @@ interface StoryGroupsProps {
   isDebugMode?: boolean;
   devMode?: 'staging' | 'development';
   onError?: (error: { message: string, details?: string }) => void;
+  onEvent?: (event: string, data: any) => void;
 }
 
 /**
@@ -40,6 +41,7 @@ export const StoryGroups: React.FC<StoryGroupsProps> = ({
   isDebugMode,
   devMode,
   onError,
+  onEvent,
 }) => {
   const webViewRef = useRef<WebView>(null);
   const [isReady, setIsReady] = useState(false);
@@ -75,6 +77,10 @@ export const StoryGroups: React.FC<StoryGroupsProps> = ({
   const handleMessage = (event: any) => {
     try {
       const data = JSON.parse(event.nativeEvent.data);
+
+      if (onEvent) {
+        onEvent(data.type, data.data);
+      }
 
       // Processing storage messages
       if (data.type === 'storysdk:storage:get' || data.type === 'storysdk:storage:set') {
@@ -136,5 +142,6 @@ const styles = StyleSheet.create({
   },
   webview: {
     flex: 1,
-  }
+  },
+
 }); 
