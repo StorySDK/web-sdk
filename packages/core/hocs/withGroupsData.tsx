@@ -9,6 +9,7 @@ import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage } from '../utils/fontsInclude';
 import { checkIos, getUniqUserId, initGA, writeToDebug } from '../utils';
+
 import { useGroupCache, useStoryCache } from '../hooks';
 
 export interface DurationProps {
@@ -61,9 +62,9 @@ const withGroupsData =
       const [appLocale, setAppLocale] = useState(null);
       const [groupsWithStories, setGroupsWithStories] = useState<Group[]>([]);
       const [loadStatus, setLoadStatus] = useState('pending');
-      const uniqUserId = useMemo(() => getUniqUserId() || nanoid(), []);
-      const [getGroupCache, setGroupCache] = useGroupCache(uniqUserId);
-      const [getStoryCache, setStoryCache] = useStoryCache(uniqUserId);
+      const [userId, setUserId] = useState<string>('');
+      const [getGroupCache, setGroupCache] = useGroupCache(userId || null);
+      const [getStoryCache, setStoryCache] = useStoryCache(userId || null);
       const [width] = useWindowSize();
       const isMobile = useMemo(() => width < 768, [width]);
       const [isNeedToLoad, setIsNeedToLoad] = useState(false);
@@ -96,6 +97,21 @@ const withGroupsData =
         }
       }, [language]);
 
+      useEffect(() => {
+        const fetchUserId = async () => {
+          try {
+            const id = await getUniqUserId();
+            setUserId(typeof id === 'string' ? id : nanoid());
+          } catch {
+            setUserId(nanoid());
+          }
+        };
+        
+        fetchUserId();
+      }, []);
+
+      const uniqUserId = userId || '';
+
       const handleOpenGroup = useCallback(
         (groupId: string) => {
           const startTime = DateTime.now().toSeconds();
@@ -107,7 +123,7 @@ const withGroupsData =
 
           const customEvent = new CustomEvent('storysdk:group:open', {
             detail: {
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               groupId,
               startTime,
               language
@@ -116,7 +132,7 @@ const withGroupsData =
 
           container?.dispatchEvent(customEvent);
 
-          return API.statistics.group.onOpen({ groupId, uniqUserId, language });
+          return API.statistics.group.onOpen({ groupId, uniqUserId: uniqUserId || '', language });
         },
         [uniqUserId, language]
       );
@@ -129,7 +145,7 @@ const withGroupsData =
             detail: {
               groupId,
               storyId,
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               startTime: time,
               language
             }
@@ -140,7 +156,7 @@ const withGroupsData =
           return API.statistics.quiz.onQuizStart({
             groupId,
             storyId,
-            uniqUserId,
+            uniqUserId: uniqUserId || '',
             time,
             language
           });
@@ -178,7 +194,7 @@ const withGroupsData =
             detail: {
               groupId,
               storyId,
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               entTime: time,
               language
             }
@@ -189,7 +205,7 @@ const withGroupsData =
           return API.statistics.quiz.onQuizFinish({
             groupId,
             storyId,
-            uniqUserId,
+            uniqUserId: uniqUserId || '',
             time,
             language
           });
@@ -203,7 +219,7 @@ const withGroupsData =
 
           API.statistics.group.sendDuration({
             groupId: groupDuration.groupId,
-            uniqUserId,
+            uniqUserId: uniqUserId || '',
             seconds: duration,
             language
           });
@@ -211,7 +227,7 @@ const withGroupsData =
           const customEvent = new CustomEvent('storysdk:group:close', {
             detail: {
               groupId,
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               duration,
               language
             }
@@ -219,7 +235,7 @@ const withGroupsData =
 
           container?.dispatchEvent(customEvent);
 
-          return API.statistics.group.onClose({ groupId, uniqUserId, language });
+          return API.statistics.group.onClose({ groupId, uniqUserId: uniqUserId || '', language });
         },
         [groupDuration, uniqUserId, language]
       );
@@ -241,16 +257,15 @@ const withGroupsData =
             detail: {
               groupId,
               storyId,
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               language
             }
           });
 
           container?.dispatchEvent(customEvent);
 
-          API.statistics.story.onOpen({ groupId, storyId, uniqUserId, language });
+          API.statistics.story.onOpen({ groupId, storyId, uniqUserId: uniqUserId || '', language });
         },
-
         [data, uniqUserId, language, handleFinishQuiz]
       );
 
@@ -259,7 +274,7 @@ const withGroupsData =
           API.statistics.story.sendDuration({
             storyId,
             groupId,
-            uniqUserId,
+            uniqUserId: uniqUserId || '',
             seconds: duration,
             language
           });
@@ -268,7 +283,7 @@ const withGroupsData =
             API.statistics.story.sendImpression({
               storyId,
               groupId,
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               seconds: duration,
               language
             });
@@ -278,7 +293,7 @@ const withGroupsData =
             detail: {
               groupId,
               storyId,
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               duration,
               language
             }
@@ -289,7 +304,7 @@ const withGroupsData =
           API.statistics.story.onClose({
             groupId,
             storyId,
-            uniqUserId,
+            uniqUserId: uniqUserId || '',
             language
           });
         },
@@ -302,14 +317,14 @@ const withGroupsData =
             detail: {
               groupId,
               storyId,
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               language
             }
           });
 
           container?.dispatchEvent(customEvent);
 
-          API.statistics.story.onNext({ groupId, storyId, uniqUserId, language });
+          API.statistics.story.onNext({ groupId, storyId, uniqUserId: uniqUserId || '', language });
         },
         [uniqUserId, language]
       );
@@ -320,7 +335,7 @@ const withGroupsData =
             detail: {
               groupId,
               storyId,
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               language
             }
           });
@@ -336,7 +351,7 @@ const withGroupsData =
             detail: {
               groupId,
               storyId,
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               language
             }
           });
@@ -352,14 +367,14 @@ const withGroupsData =
             detail: {
               groupId,
               storyId,
-              uniqUserId,
+              uniqUserId: uniqUserId || '',
               language
             }
           });
 
           container?.dispatchEvent(customEvent);
 
-          API.statistics.story.onPrev({ groupId, storyId, uniqUserId, language });
+          API.statistics.story.onPrev({ groupId, storyId, uniqUserId: uniqUserId || '', language });
         },
         [uniqUserId, language]
       );
@@ -516,7 +531,7 @@ const withGroupsData =
       useEffect(() => {
         if (loadStatus === 'loaded' && groupsWithStories.length) {
           if (groupsWithStories.length) {
-            const adaptedData = adaptGroupData(groupsWithStories, uniqUserId, language, isMobile);
+            const adaptedData = adaptGroupData(groupsWithStories, uniqUserId || '', language, isMobile);
 
             setData(adaptedData);
           } else {

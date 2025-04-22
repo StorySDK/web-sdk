@@ -5,3 +5,4 @@ export * from './useLocalStorage';
 export * from './useStoryCache';
 export * from './useGroupCache';
 export * from './useSwipe';
+export * from './useLocalStorage';
