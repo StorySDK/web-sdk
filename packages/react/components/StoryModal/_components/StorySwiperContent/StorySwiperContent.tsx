@@ -158,7 +158,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     >
       <>
         {isLoading || !currentGroup?.stories ? (
-          <div className={b('loader')}>
+          <div className={b('loader')} style={{ height: isMobile ? contentHeight : undefined }}>
             <IconLoader className={b('loaderIcon').toString()} />
           </div>
         ) : (

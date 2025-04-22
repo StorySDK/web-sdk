@@ -314,7 +314,7 @@ export class Story extends EventEmitter {
     }
 
     if (!this.token) {
-      if (container) {
+      if (container && !this.isInReactNativeWebView) {
         ReactDOM.render(<p>StorySDK has not been initialized.</p>, container);
       } else {
         console.warn('StorySDK has not been initialized.');
