@@ -350,7 +350,10 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                     ))}
                 </div>
               ) : (
-                <p className={b('emptyText')}>Stories will be here</p>
+                { autoplay && (
+                  <p className={b('emptyText')}>Stories will be here</p>
+                )}
+       
               )}
             </>
           )}

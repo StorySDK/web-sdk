@@ -1051,7 +1051,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                   </button>
                 </>
               )}
-              {isVideoExists && (
+              {isVideoExists && !isInReactNativeWebView && (
                 <button
                   className={b('muteBtn')}
                   onClick={() => {
