@@ -323,9 +323,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       currentGroup?.type === GroupType.ONBOARDING ||
       (currentGroup?.type === GroupType.TEMPLATE && currentGroup?.category === 'onboarding')
     ) {
-      if (isMobile) {
-        return STORY_SIZE_DEFAULT;
-      }
       return STORY_SIZE_LARGE;
     }
 
