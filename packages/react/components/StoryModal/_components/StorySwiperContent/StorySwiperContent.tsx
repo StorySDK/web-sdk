@@ -118,11 +118,9 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   const controlSidePaddingSmall = useAdaptiveValue(INIT_CONTROL_SIDE_PADDING);
   const controlGapLarge = useAdaptiveValue(INIT_CONTROL_GAP_LARGE);
   const largeBorderRadius = useAdaptiveValue(INIT_LARGE_RADIUS);
-  const smallBorderRadius = useAdaptiveValue(INIT_SMALL_RADIUS);
 
   const controlTop = isLarge ? controlTopLarge : controlTopSmall;
   const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
-  const borderRadius = isLarge ? largeBorderRadius : smallBorderRadius;
 
   const currentRatioIndex = useMemo(() => {
     if (storyWidth && storyHeight) {
@@ -153,7 +151,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
       style={{
         width: !isMobile ? desktopWidth : '100%',
         height: contentHeight,
-        borderRadius: isShowMockupCurrent && !isMobile ? borderRadius : undefined
+        borderRadius: isLarge ? largeBorderRadius : 0
       }}
     >
       <>
@@ -272,7 +270,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                       <div className={b('rightTopContainer')}>
                         {!currentGroup?.settings?.isProgressHidden && playStatus !== 'wait' && (
                           <>
-                            <button
+                            <div
                               className={b('topBtn')}
                               onClick={
                                 playStatus === 'play'
@@ -285,12 +283,12 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                               ) : (
                                 <IconStoryPlay className={b('playBtnIcon').toString()} />
                               )}
-                            </button>
+                            </div>
                           </>
                         )}
 
                         {isVideoExists && (
-                          <button
+                          <div
                             className={b('topBtn')}
                             onClick={() => {
                               handleMuteVideo(!isVideoMuted);
@@ -301,7 +299,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                             ) : (
                               <IconMute className={b('muteBtnIcon').toString()} />
                             )}
-                          </button>
+                          </div>
                         )}
 
                         {((isInReactNativeWebView &&
@@ -314,7 +312,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                                 (currentGroup?.type === GroupType.TEMPLATE &&
                                   currentGroup?.category === 'onboarding'))
                             ))) && (
-                            <button
+                            <div
                               className={b('close', {
                                 noProgress:
                                   currentGroup?.settings?.isProgressHidden || isProgressHidden,
@@ -326,7 +324,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                               onClick={handleClose}
                             >
                               <IconClose />
-                            </button>
+                            </div>
                           )}
                       </div>
                     )}

@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import { StoryType } from '.';
+import { ColorValue, StoryType } from '.';
 
 export enum GroupType {
   GROUP = 'group',
@@ -26,6 +26,7 @@ export interface StoriesGroupSettings {
   lastStoryPosition?: number;
   shortDataId?: string;
   autoplayVideos?: boolean;
+  background?: ColorValue;
 }
 
 export interface Group {

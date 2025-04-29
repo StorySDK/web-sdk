@@ -159,14 +159,21 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
           onChange={!isReadOnly ? handleTextChange : undefined}
         />
         {text.length > 0 && (
-          <button
+          <div
+            aria-disabled={isSent || isReadOnly}
             className={b('sendButton')}
-            disabled={isSent || isReadOnly}
+            role="button"
             style={sizes.sendButton}
-            onClick={!isReadOnly ? handleSendClick : undefined}
+            tabIndex={isSent || isReadOnly ? -1 : 0}
+            onClick={!isReadOnly && !isSent ? handleSendClick : undefined}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !isReadOnly && !isSent) {
+                handleSendClick();
+              }
+            }}
           >
             <IconArrowSend className={b('sendButtonIcon')} />
-          </button>
+          </div>
         )}
       </div>
     </div>

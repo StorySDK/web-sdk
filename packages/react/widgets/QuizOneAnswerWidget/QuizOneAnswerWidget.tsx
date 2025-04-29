@@ -130,14 +130,22 @@ export const QuizOneAnswerWidget: WidgetComponent<{
       )}
       <div className={b('answers')} style={sizes.answers}>
         {answers.map((answer) => (
-          <button
+          <div
+            aria-disabled={userAnswer !== null || isReadOnly}
             className={b('answer', {
-              selected: userAnswer === answer.id
+              selected: userAnswer === answer.id,
+              disabled: userAnswer !== null || isReadOnly
             })}
-            disabled={userAnswer !== null || isReadOnly}
             key={answer.id}
+            role="button"
             style={sizes.answer}
+            tabIndex={userAnswer !== null || isReadOnly ? -1 : 0}
             onClick={() => !userAnswer && !isReadOnly && handleAnswer(answer.id)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !userAnswer && !isReadOnly) {
+                handleAnswer(answer.id);
+              }
+            }}
           >
             {answer.emoji && <Emoji emoji={answer.emoji?.name} size={sizes.emoji.width} />}
             <p
@@ -158,7 +166,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
             >
               {answer.title}
             </p>
-          </button>
+          </div>
         ))}
       </div>
     </div>

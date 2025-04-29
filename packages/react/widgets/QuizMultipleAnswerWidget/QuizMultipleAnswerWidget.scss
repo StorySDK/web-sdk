@@ -53,6 +53,11 @@
       cursor: auto !important;
       pointer-events: none;
     }
+
+    &_disabled {
+      cursor: auto !important;
+      pointer-events: none;
+    }
   }
 
   &__answerTitle {

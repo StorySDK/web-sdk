@@ -43,7 +43,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
   const [isHovered, setIsHovered] = React.useState<boolean>(false);
 
   const titleRef = React.useRef<HTMLParagraphElement>(null);
-  const btnRef = React.useRef<HTMLButtonElement>(null);
+  const btnRef = React.useRef<HTMLDivElement>(null);
 
   const BASE_CONTAINER_WIDTH_INDEX = 1.32;
   const BIG_SQUARE_CONTAINER_WIDTH_INDEX = 0.93;
@@ -126,14 +126,21 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
   };
 
   return (
-    <button
+    <div
       className={classNames(b({ view, type, chosen: isChosen }).toString(), groupClassName || '')}
       ref={btnRef}
+      role="button"
       style={{
         width: getContainerSize(),
         height: getContainerSize(true)
       }}
+      tabIndex={0}
       onClick={() => onClick && onClick(index)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' && onClick) {
+          onClick(index);
+        }
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -180,6 +187,6 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
           {title}
         </p>
       </div>
-    </button>
+    </div>
   );
 };

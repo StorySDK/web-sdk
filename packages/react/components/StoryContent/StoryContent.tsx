@@ -237,9 +237,15 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
             !isBackgroundVideoPlaying &&
             !isAutoplayVideos &&
             !isMediaLoading && (
-              <button className={b('playBtn')} onClick={togglePlay}>
+              <div
+                className={b('playBtn')}
+                role="button"
+                tabIndex={0}
+                onClick={togglePlay}
+                onKeyDown={(e) => e.key === 'Enter' && togglePlay()}
+              >
                 <IconPlay />
-              </button>
+              </div>
             )}
           {story.storyData.map((widget: any) => (
             <div
@@ -251,7 +257,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
               key={widget.id}
               style={renderPosition(
                 widget.positionByResolutions[
-                  `${currentStorySize.width}x${currentStorySize.height}`
+                `${currentStorySize.width}x${currentStorySize.height}`
                 ],
                 widget.positionLimits
               )}

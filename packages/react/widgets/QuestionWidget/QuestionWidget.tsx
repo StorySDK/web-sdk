@@ -45,9 +45,9 @@ export const QuestionWidget: WidgetComponent<{
     answerFromCache?.percents
       ? { confirm: 0, decline: 0, ...answerFromCache.percents }
       : {
-          confirm: 0,
-          decline: 0
-        }
+        confirm: 0,
+        decline: 0
+      }
   );
 
   const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
@@ -143,7 +143,8 @@ export const QuestionWidget: WidgetComponent<{
       )}
 
       <div className={b('buttons')} style={{ borderRadius: sizes.button.borderRadius }}>
-        <button
+        <div
+          aria-disabled={!!answer || isReadOnly}
           className={b('item', {
             answered: answer === 'confirm',
             confirm: true,
@@ -151,14 +152,19 @@ export const QuestionWidget: WidgetComponent<{
             zero: answer && percents.confirm === 0,
             full: answer && percents.confirm === 100
           })}
-          disabled={!!answer || isReadOnly}
+          role="button"
           style={{
             width: answer ? `${calculateWidth(percents.confirm)}%` : '50%',
             height: sizes.button.height,
             fontSize: sizes.button.fontSize
           }}
-          type="button"
-          onClick={() => !isReadOnly && handleChange('confirm')}
+          tabIndex={!!answer || isReadOnly ? -1 : 0}
+          onClick={() => !isReadOnly && !answer && handleChange('confirm')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !isReadOnly && !answer) {
+              handleChange('confirm');
+            }
+          }}
         >
           <div className={b('itemTextContainer')}>
             <span
@@ -171,8 +177,9 @@ export const QuestionWidget: WidgetComponent<{
             </span>
             {answer && <span className={b('itemTextPercent')}>{percents.confirm}%</span>}
           </div>
-        </button>
-        <button
+        </div>
+        <div
+          aria-disabled={!!answer || isReadOnly}
           className={b('item', {
             answered: answer === 'decline',
             decline: true,
@@ -180,14 +187,19 @@ export const QuestionWidget: WidgetComponent<{
             zero: answer && percents.decline === 0,
             full: answer && percents.decline === 100
           })}
-          disabled={!!answer || isReadOnly}
+          role="button"
           style={{
             width: answer ? `${calculateWidth(percents.decline)}%` : '50%',
             height: sizes.button.height,
             fontSize: sizes.button.fontSize
           }}
-          type="button"
-          onClick={() => !isReadOnly && handleChange('decline')}
+          tabIndex={!!answer || isReadOnly ? -1 : 0}
+          onClick={() => !isReadOnly && !answer && handleChange('decline')}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !isReadOnly && !answer) {
+              handleChange('decline');
+            }
+          }}
         >
           <div className={b('itemTextContainer')}>
             <span
@@ -200,7 +212,7 @@ export const QuestionWidget: WidgetComponent<{
             </span>
             {answer && <span className={b('itemTextPercent')}>{percents.decline}%</span>}
           </div>
-        </button>
+        </div>
       </div>
     </div>
   );

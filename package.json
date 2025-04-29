@@ -3,16 +3,14 @@
   "scripts": {
     "build": "lerna exec --scope @storysdk/types -- tsc && lerna exec --scope @storysdk/react -- rollup -c ../../rollup.config.js && lerna exec --scope @storysdk/core -- rollup -c ../../rollup.config.js && lerna exec --scope @storysdk/react-native -- rollup -c",
     "dev:core": "lerna exec --scope @storysdk/core -- rollup -w -c ../../rollup.config.js",
-    "dev:react": "lerna exec --scope @storysdk/react -- rollup -w -c ../../rollup.config.js",
-    "dev:react-native": "lerna exec --scope @storysdk/react-native -- rollup -w -c"
+    "dev:react": "lerna exec --scope @storysdk/react -- rollup -w -c ../../rollup.config.js" 
   },
   "workspaces": [
     "packages/*"
   ],
   "resolutions": {
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-native": "0.68.2"
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^20.0.0",
