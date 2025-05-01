@@ -64,7 +64,6 @@ const INIT_CONTROL_TOP_LARGE = 35;
 const INIT_CONTROL_SIDE_PADDING = 8;
 const INIT_CONTROL_GAP_LARGE = 8;
 const INIT_LARGE_RADIUS = 43;
-const INIT_SMALL_RADIUS = 5;
 
 export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => {
   const {
