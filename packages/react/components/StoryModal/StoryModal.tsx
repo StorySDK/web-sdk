@@ -946,20 +946,31 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           }}
         >
           {!isLoading && (
-            <button className={b('arrowButton', { left: true })} onClick={handlePrev}>
+            <div
+              className={b('arrowButton', { left: true })}
+              role="button"
+              tabIndex={0}
+              onClick={handlePrev}
+              onKeyDown={(e) => e.key === 'Enter' && handlePrev()}
+            >
               <IconArrow className={b('arrowIcon')} stroke={arrowsColor} />
-            </button>
+            </div>
           )}
 
           {!isLoading && (
-            <button className={b('arrowButton', { right: true })} onClick={() => handleNext(true)}>
+            <div
+              className={b('arrowButton', { right: true })}
+              role="button"
+              tabIndex={0}
+              onClick={() => handleNext(true)}
+              onKeyDown={(e) => e.key === 'Enter' && handleNext(true)}
+            >
               <IconArrow className={b('arrowIcon', { right: true })} stroke={arrowsColor} />
-            </button>
+            </div>
           )}
 
           <div
             className={b('bodyContainer', {
-              black: !isMobile && isShowMockupCurrent,
               swiped: isSwiped && isMobile
             })}
             style={{
@@ -1008,10 +1019,14 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             />
 
             {isShowMockupCurrent && !isMobile && (
-              <img
-                className={b('mockup')}
-                ref={mockupRef}
-                src={isLarge ? largeIphoneMockup : smallIphoneMockup}
+              <img className={b('mockup')} ref={mockupRef} src={largeIphoneMockup} />
+            )}
+            {!isMobile && isShowMockupCurrent && (
+              <div
+                className={b('storyBackground')}
+                style={{
+                  backgroundColor: currentGroup?.settings?.background?.value
+                }}
               />
             )}
           </div>
@@ -1032,7 +1047,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             <div className={b('closeContainer')}>
               {!currentGroup?.settings?.isProgressHidden && playStatus !== 'wait' && (
                 <>
-                  <button
+                  <div
                     className={b('topBtn')}
                     onClick={
                       playStatus === 'play'
@@ -1045,28 +1060,37 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
                     ) : (
                       <IconStoryPlay className={b('playBtnIcon').toString()} />
                     )}
-                  </button>
+                  </div>
                 </>
               )}
               {isVideoExists && !isInReactNativeWebView && (
-                <button
+                <div
                   className={b('muteBtn')}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => {
                     setIsVideoMuted(!isVideoMuted);
                   }}
+                  onKeyDown={(e) => e.key === 'Enter' && setIsVideoMuted(!isVideoMuted)}
                 >
                   {isVideoMuted ? (
                     <IconMute className={b('muteBtnIcon').toString()} />
                   ) : (
                     <IconUnmute className={b('muteBtnIcon').toString()} />
                   )}
-                </button>
+                </div>
               )}
 
               {(!forbidClose || (isForceCloseAvailable && !isInReactNativeWebView)) && (
-                <button className={b('close')} onClick={handleClose}>
+                <div
+                  className={b('close')}
+                  role="button"
+                  tabIndex={0}
+                  onClick={handleClose}
+                  onKeyDown={(e) => e.key === 'Enter' && handleClose()}
+                >
                   <IconClose />
-                </button>
+                </div>
               )}
             </div>
           )}
@@ -1075,7 +1099,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         className={b('background', { isShowing: isOpened })}
         ref={backgroundRef}
         style={{
-          backgroundColor
+          backgroundColor:
+            backgroundColor ??
+            (isMobile && currentGroup?.settings?.background?.value
+              ? currentGroup.settings.background.value
+              : undefined)
         }}
       />
 

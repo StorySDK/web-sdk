@@ -59,6 +59,11 @@
       }
     }
 
+    &_disabled {
+      cursor: auto !important;
+      pointer-events: none;
+    }
+
     &:disabled {
       cursor: auto !important;
       pointer-events: none;

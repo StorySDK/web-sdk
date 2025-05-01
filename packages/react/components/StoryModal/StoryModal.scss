@@ -152,13 +152,26 @@
         transform: translateX(-50%);
         height: 98%;
         width: 96%;
-        background-color: #000000;
+        background-color: #05051D;
       }
     }
 
     @media (max-width: 768px) {
       width: 100%;
     }
+  }
+
+  &__storyBackground {
+    z-index: -1;
+    content: "";
+    border-radius: inherit;
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 98%;
+    width: 96%;
+    background-color: #05051D;
   }
 
   &__group {

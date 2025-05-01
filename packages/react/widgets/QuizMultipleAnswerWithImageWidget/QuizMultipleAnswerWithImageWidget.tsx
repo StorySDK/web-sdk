@@ -71,19 +71,19 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
 
       const answerScore = currentAnswers.length
         ? params.answers
-            .filter((answer) => currentAnswers.includes(answer.id))
-            .reduce(
-              (acc, answer) => {
-                if (storyContextVal.quizMode === ScoreType.LETTERS) {
-                  return acc + answer.score.letter;
-                }
-                if (storyContextVal.quizMode === ScoreType.NUMBERS) {
-                  return +acc + +answer.score.points;
-                }
-                return acc;
-              },
-              storyContextVal.quizMode === ScoreType.LETTERS ? '' : 0
-            )
+          .filter((answer) => currentAnswers.includes(answer.id))
+          .reduce(
+            (acc, answer) => {
+              if (storyContextVal.quizMode === ScoreType.LETTERS) {
+                return acc + answer.score.letter;
+              }
+              if (storyContextVal.quizMode === ScoreType.NUMBERS) {
+                return +acc + +answer.score.points;
+              }
+              return acc;
+            },
+            storyContextVal.quizMode === ScoreType.LETTERS ? '' : 0
+          )
         : undefined;
 
       if (
@@ -174,14 +174,21 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
       )}
       <div className={b('answers')} style={sizes.answers}>
         {answers.map((answer) => (
-          <button
+          <div
             className={b('answer', {
-              selected: userAnswers.includes(answer.id)
+              selected: userAnswers.includes(answer.id),
+              disabled: isSent || isReadOnly
             })}
-            disabled={isSent || isReadOnly}
             key={answer.id}
+            role="button"
             style={sizes.answer}
+            tabIndex={0}
             onClick={() => !isReadOnly && handleAnswer(answer.id)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                !isReadOnly && handleAnswer(answer.id);
+              }
+            }}
           >
             <div
               className={b('answerImgContainer')}
@@ -207,7 +214,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
             >
               {answer.title}
             </p>
-          </button>
+          </div>
         ))}
       </div>
     </div>

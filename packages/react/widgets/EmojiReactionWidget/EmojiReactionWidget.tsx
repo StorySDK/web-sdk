@@ -96,14 +96,21 @@ export const EmojiReactionWidget: WidgetComponent<{
   return (
     <div className={b({ color: params.color })} style={sizes.widget}>
       {params.emoji.map((emojiItem, index) => (
-        <button
+        <div
           className={b('item', { disabled: isReadOnly || isToched || clickedIndex !== null })}
           key={`${emojiItem.unicode}-${index}`}
+          role="button"
           style={sizes.item}
+          tabIndex={0}
           onClick={(e) => {
             e.preventDefault();
 
             if (!isToched && !isReadOnly && clickedIndex === null) {
+              handleReactionClick(index, emojiItem.unicode);
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !isToched && !isReadOnly && clickedIndex === null) {
               handleReactionClick(index, emojiItem.unicode);
             }
           }}
@@ -112,7 +119,7 @@ export const EmojiReactionWidget: WidgetComponent<{
             <Emoji emoji={emojiItem.name} size={bigSize} />
           </div>
           <Emoji emoji={emojiItem.name} size={sizes.emoji.width} />
-        </button>
+        </div>
       ))}
     </div>
   );

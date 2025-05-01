@@ -1,4 +1,4 @@
-import { StoryType } from '.';
+import { ColorValue, StoryType } from '.';
 export declare enum GroupType {
     GROUP = "group",
     ONBOARDING = "onboarding",
@@ -21,6 +21,7 @@ export interface StoriesGroupSettings {
     lastStoryPosition?: number;
     shortDataId?: string;
     autoplayVideos?: boolean;
+    background?: ColorValue;
 }
 export interface Group {
     id: string;

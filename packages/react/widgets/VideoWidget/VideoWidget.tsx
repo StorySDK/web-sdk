@@ -151,9 +151,9 @@ export const VideoWidget: WidgetComponent<{
         webkit-playsinline="true"
       />
       {!props.isVideoPlaying && !props.isAutoplay && isReadyToPlay && (
-        <button className={b('playBtn')}>
+        <div className={b('playBtn')} role="button" tabIndex={0}>
           <IconPlay />
-        </button>
+        </div>
       )}
     </div>
   );

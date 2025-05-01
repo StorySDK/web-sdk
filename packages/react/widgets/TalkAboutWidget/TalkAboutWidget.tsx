@@ -157,7 +157,7 @@ export const TalkAboutWidget: WidgetComponent<{
                       gradient: params.fontColor?.type === BackgroundColorType.GRADIENT
                     }).toString()
                   ),
-                  'StorySdk-widgetTitle')
+                    'StorySdk-widgetTitle')
                 }
                 style={{
                   ...sizes.text,
@@ -184,15 +184,22 @@ export const TalkAboutWidget: WidgetComponent<{
           </div>
 
           {text && (
-            <button
+            <div
               className={b('send', { disabled: isSent || isReadOnly })}
+              role="button"
               style={sizes.send}
+              tabIndex={0}
               onClick={!isSent && !isReadOnly ? handleSendClick : undefined}
+              onKeyDown={(e) => {
+                if ((e.key === 'Enter' || e.key === ' ') && !isSent && !isReadOnly) {
+                  handleSendClick();
+                }
+              }}
             >
               <span className={b('sendText', { green: isSent })} style={sizes.sendText}>
                 {isSent ? 'Sent!' : 'Send'}
               </span>
-            </button>
+            </div>
           )}
         </div>
       </div>
