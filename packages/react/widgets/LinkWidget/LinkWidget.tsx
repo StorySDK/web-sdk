@@ -15,8 +15,9 @@ export const LinkWidget: WidgetComponent<{
   onClick?: () => void;
   handleMuteVideo?(isMuted: boolean): void;
 }> = React.memo((props) => {
-  const { fontFamily, fontParams, fontSize, text, color, opacity, backgroundColor, url } =
-    props.params;
+  const {
+    fontFamily, fontParams, fontSize, text, color, opacity, backgroundColor, url,
+  } = props.params;
 
   const { isReadOnly } = props;
 
@@ -32,9 +33,9 @@ export const LinkWidget: WidgetComponent<{
         storyId: storyContextVal.currentStoryId,
         widgetId: props.id,
         data: {
-          url
-        }
-      }
+          url,
+        },
+      },
     });
 
     storyContextVal.container?.dispatchEvent(generalClickEvent);
@@ -66,7 +67,7 @@ export const LinkWidget: WidgetComponent<{
       className={b({ disabled: isReadOnly, clicked: isClicked })}
       role="button"
       style={{
-        borderRadius: 12
+        borderRadius: 12,
       }}
       tabIndex={0}
       onClick={!isReadOnly ? handleWidgetClick : undefined}
@@ -80,7 +81,7 @@ export const LinkWidget: WidgetComponent<{
           lineHeight: `${fontSize}px`,
           fontFamily,
           fontSize,
-          ...renderTextBackgroundStyles({ color })
+          ...renderTextBackgroundStyles({ color }),
         }}
       >
         <MaterialIcon
@@ -99,7 +100,7 @@ export const LinkWidget: WidgetComponent<{
         className={b('background')}
         style={{
           background: renderBackgroundStyles(backgroundColor),
-          display: 'block'
+          display: 'block',
         }}
       />
     </div>

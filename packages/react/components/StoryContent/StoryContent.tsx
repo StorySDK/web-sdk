@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
+import React, {
+  useState, useEffect, useMemo, useCallback, useContext,
+} from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import { IconLoader, IconPlay } from '@components/icons';
@@ -26,7 +28,7 @@ const CLICKABLE_WIDGETS = {
   [WidgetsTypes.SLIDER]: true,
   [WidgetsTypes.QUIZ_MULTIPLE_ANSWERS]: true,
   [WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE]: true,
-  [WidgetsTypes.QUIZ_RATE]: true
+  [WidgetsTypes.QUIZ_RATE]: true,
 };
 
 interface StoryContentProps {
@@ -81,14 +83,14 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     handleMediaLoading,
     handleLoadStory,
     handleVideoPlaying,
-    handleGoToStory
+    handleGoToStory,
   } = props;
 
   const [width, height] = useWindowSize();
 
   const desktopScale = useMemo(
     () => desktopContainerWidth / currentStorySize.width,
-    [desktopContainerWidth, currentStorySize.width]
+    [desktopContainerWidth, currentStorySize.width],
   );
 
   const imageBackgroundRef = React.useRef<HTMLImageElement>(null);
@@ -113,8 +115,8 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
 
     story.storyData.forEach((widget) => {
       if (
-        widget.content.type === WidgetsTypes.IMAGE ||
-        widget.content.type === WidgetsTypes.VIDEO
+        widget.content.type === WidgetsTypes.IMAGE
+        || widget.content.type === WidgetsTypes.VIDEO
       ) {
         resources++;
       }
@@ -180,7 +182,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
     desktopScale,
     height,
     isMobile,
-    width
+    width,
   ]);
 
   if (!isDisplaying) {
@@ -194,7 +196,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         style={{
           background: story.background.type ? renderBackgroundStyles(story.background) : '#05051D',
           width: contentWidth,
-          height: contentHeight
+          height: contentHeight,
         }}
       >
         <img
@@ -223,20 +225,20 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
         className={b({ large: isLarge, noTopShadow })}
         style={{
           width: contentWidth,
-          height: contentHeight
+          height: contentHeight,
         }}
       >
         <div
           className={b('scope', { large: isLarge })}
           style={{
-            transform: `scale(${contentScale}) translateY(-50%)`
+            transform: `scale(${contentScale}) translateY(-50%)`,
           }}
         >
-          {story.background.type === 'video' &&
-            isDisplaying &&
-            !isBackgroundVideoPlaying &&
-            !isAutoplayVideos &&
-            !isMediaLoading && (
+          {story.background.type === 'video'
+            && isDisplaying
+            && !isBackgroundVideoPlaying
+            && !isAutoplayVideos
+            && !isMediaLoading && (
               <div
                 className={b('playBtn')}
                 role="button"
@@ -251,7 +253,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
             <div
               className={b('object', {
                 noClickable:
-                  !CLICKABLE_WIDGETS[widget.content.type as keyof typeof CLICKABLE_WIDGETS]
+                  !CLICKABLE_WIDGETS[widget.content.type as keyof typeof CLICKABLE_WIDGETS],
               })}
               id={`story-${story.id}-widget-${widget.id}`}
               key={widget.id}
@@ -259,7 +261,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
                 widget.positionByResolutions[
                 `${currentStorySize.width}x${currentStorySize.height}`
                 ],
-                widget.positionLimits
+                widget.positionLimits,
               )}
             >
               <WidgetFactory

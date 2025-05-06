@@ -133,8 +133,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   const desktopWidth = Math.ceil(currentRatioIndex * contentHeight);
 
   const noTopShadow = currentGroupType === GroupType.ONBOARDING
-    && currentGroup?.settings?.isProgressHidden
-    && currentGroup?.settings?.isProhibitToClose;
+    && currentGroup?.settings?.isProgressHidden;
 
   const noTopBackgroundShadow = currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.GROUP;
 
@@ -148,7 +147,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
       style={{
         width: !isMobile ? desktopWidth : '100%',
         height: contentHeight,
-        borderRadius: isLarge && !isMobile ? largeBorderRadius : 0,
+        borderRadius: isLarge && !isMobile && isShowMockupCurrent ? largeBorderRadius : undefined,
       }}
     >
       <>

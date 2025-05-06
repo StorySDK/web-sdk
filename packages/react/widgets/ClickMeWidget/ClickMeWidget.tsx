@@ -45,10 +45,12 @@ export const ClickMeWidget: WidgetComponent<{
     url,
     storyId,
     actionType,
-    customFields
+    customFields,
   } = props.params;
 
-  const { isReadOnly, onClick, onGoToStory, onCloseStory } = props;
+  const {
+    isReadOnly, onClick, onGoToStory, onCloseStory,
+  } = props;
 
   const [isClicked, setIsClicked] = useState(false);
 
@@ -75,12 +77,14 @@ export const ClickMeWidget: WidgetComponent<{
         data: {
           url,
           storyId,
-          customFields
-        }
-      }
+          customFields,
+        },
+      },
     });
 
     storyContextVal.container?.dispatchEvent(generalClickEvent);
+
+    console.log(actionType);
 
     if (actionType === 'link' && url) {
       setTimeout(() => {
@@ -100,19 +104,20 @@ export const ClickMeWidget: WidgetComponent<{
         onGoToStory(storyId);
       }, DELAY_MS);
     } else if (actionType === 'custom' && customFields?.web) {
-      const container = document.querySelector('#storysdk') ?? storyContextVal.container;
+      const container = storyContextVal.container;
 
       const clickEvent = new CustomEvent('storysdk_custom_click', {
         detail: {
-          data: customFields?.web
-        }
+          data: customFields?.web,
+        },
       });
 
       container?.dispatchEvent(clickEvent);
     } else if (actionType === 'close') {
       onCloseStory?.();
     }
-  }, [actionType, customFields?.web, onClick, onGoToStory, props, storyId, url]);
+  }, [actionType, customFields?.web, onClick, onGoToStory, props, storyId,
+    url, storyContextVal.container]);
 
   return (
     <div
@@ -122,7 +127,7 @@ export const ClickMeWidget: WidgetComponent<{
         borderRadius,
         borderStyle: 'solid',
         borderWidth: `${hasBorder ? borderWidth : 0}px`,
-        borderColor: renderBackgroundStyles(borderColor)
+        borderColor: renderBackgroundStyles(borderColor),
       }}
       tabIndex={0}
       onClick={!isReadOnly ? handleWidgetClick : undefined}
@@ -135,7 +140,7 @@ export const ClickMeWidget: WidgetComponent<{
           fontWeight: fontParams.weight,
           fontFamily,
           fontSize,
-          ...renderTextBackgroundStyles({ color })
+          ...renderTextBackgroundStyles({ color }),
         }}
       >
         {hasIcon ? (
@@ -156,7 +161,7 @@ export const ClickMeWidget: WidgetComponent<{
       <div
         className={b('background')}
         style={{
-          background: renderBackgroundStyles(backgroundColor)
+          background: renderBackgroundStyles(backgroundColor),
         }}
       />
     </div>
