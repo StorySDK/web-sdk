@@ -9,7 +9,6 @@ import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage } from '../utils/fontsInclude';
 import { checkIos, getUniqUserId, initGA, writeToDebug } from '../utils';
-
 import { useGroupCache, useStoryCache } from '../hooks';
 
 export interface DurationProps {
@@ -106,7 +105,7 @@ const withGroupsData =
             setUserId(nanoid());
           }
         };
-        
+
         fetchUserId();
       }, []);
 
@@ -420,7 +419,9 @@ const withGroupsData =
                 loadFontsToPage(app.settings.fonts);
               }
 
-              initGA(app.settings?.integrations?.googleAnalytics?.trackingId);
+              if (app.settings?.integrations?.googleAnalytics?.trackingId) {
+                initGA(app.settings?.integrations?.googleAnalytics?.trackingId);
+              }
 
               setAppLocale(app.localization);
               setGroupView(appGroupView);
@@ -438,7 +439,7 @@ const withGroupsData =
                       const isActive = item.active && item.type;
 
                       if (item.type === GroupType.ONBOARDING) {
-                        if (options?.groupId === item.id) {
+                        if (options?.groupId === item.id || options?.autoplay) {
                           return isActive;
                         }
 
@@ -531,7 +532,12 @@ const withGroupsData =
       useEffect(() => {
         if (loadStatus === 'loaded' && groupsWithStories.length) {
           if (groupsWithStories.length) {
-            const adaptedData = adaptGroupData(groupsWithStories, uniqUserId || '', language, isMobile);
+            const adaptedData = adaptGroupData(
+              groupsWithStories,
+              uniqUserId || '',
+              language,
+              isMobile
+            );
 
             setData(adaptedData);
           } else {

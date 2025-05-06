@@ -150,7 +150,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
       style={{
         width: !isMobile ? desktopWidth : '100%',
         height: contentHeight,
-        borderRadius: isLarge ? largeBorderRadius : 0
+        borderRadius: isLarge && !isMobile ? largeBorderRadius : 0
       }}
     >
       <>

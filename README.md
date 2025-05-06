@@ -40,6 +40,7 @@ This SDK is part of the StorySDK platform, which is available at [storysdk.com](
    - [Next.js](#nextjs)
    - [JavaScript (ES6)](#javascript-es6)
    - [Static HTML](#static-html)
+   - [Shopify (Liquid)](#shopify-liquid)
 3. [API Reference](#api-reference)
 4. [Event Handling](#event-handling)
 5. [Styling & Customization](#styling--customization)
@@ -226,6 +227,64 @@ For static HTML pages:
   </script>
 </body>
 ```
+
+### Shopify (Liquid)
+
+StorySDK can be easily integrated into your Shopify store using theme sections. Follow these steps:
+
+1. Add the following code to the `<head>` tag of your Shopify theme:
+
+```html
+<!-- First include React -->
+<script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+
+<!-- Then include StorySDK -->
+<script src="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.umd.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.css"/>
+```
+
+2. Create a section for StorySDK integration in your theme customizer:
+
+```liquid
+{% schema %}
+{
+  "name": "StorySDK Stories",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sdk_token",
+      "label": "StorySDK Token",
+      "default": "<SDK_TOKEN_HERE>"
+    },
+    {
+      "type": "number",
+      "id": "container_height",
+      "label": "Container Height (px)",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "StorySDK Stories",
+      "category": "Interactive"
+    }
+  ]
+}
+{% endschema %}
+
+<!-- StorySDK container -->
+<div
+  data-storysdk-token="{{ section.settings.sdk_token }}"
+  style="min-height: {{ section.settings.container_height }}px;"
+  id="storysdk"
+></div>
+```
+
+This implementation allows you to:
+- Add StorySDK to your Shopify theme through the theme customizer
+- Configure your StorySDK token and container height directly from the Shopify admin
+- Place the StorySDK container anywhere in your store through the theme editor
 
 ## API Reference
 
