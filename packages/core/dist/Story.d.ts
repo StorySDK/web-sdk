@@ -42,6 +42,7 @@ export declare class Story extends EventEmitter {
         preventCloseOnGroupClick?: boolean;
     };
     container?: Element | HTMLDivElement | null;
+    root: any;
     eventHandlers: {
         [key: string]: ((data: any) => void)[];
     };
@@ -74,7 +75,7 @@ export declare class Story extends EventEmitter {
     private handleReactNativeMessage;
     private sendMessageToReactNative;
     /**
-     * Отправляет отладочные сообщения в React Native WebView, если isInReactNativeWebView и isDebugMode = true
+     * Sends debug messages to React Native WebView if isInReactNativeWebView and isDebugMode = true
      */
     private sendDebugInfoToReactNative;
     emit(eventName: StoryEventTypes, data: any): void;

@@ -921,7 +921,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     <StoryContext.Provider
       value={{
         currentStoryId,
-        uniqUserId: uniqUserId ?? undefined,
+        uniqUserId: typeof uniqUserId === 'string' ? uniqUserId : undefined,
         quizMode: currentGroup?.settings?.scoreType,
         playStatus,
         container,
@@ -974,7 +974,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               swiped: isSwiped && isMobile
             })}
             style={{
-              borderRadius: containerBorderRadius,
+              borderRadius: !isMobile && isShowMockupCurrent ? containerBorderRadius : 0,
               width: !isMobile && bodyContainerWidth ? bodyContainerWidth : '100%'
             }}
           >
@@ -1106,7 +1106,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               : undefined)
         }}
       />
-
       <canvas
         ref={canvasRef}
         style={{

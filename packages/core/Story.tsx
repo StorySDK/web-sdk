@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
@@ -6,6 +5,36 @@ import { GroupsList } from '@storysdk/react';
 import EventEmitter from './EventEmitter';
 import withGroupsData from './hocs/withGroupsData';
 import { StoryEventTypes } from './types';
+
+// Function to check if React 18 createRoot API is supported
+const isReact18 = () => !!(typeof ReactDOM === 'object'
+  // @ts-ignore - checking if createRoot exists in ReactDOM
+  && typeof ReactDOM.createRoot === 'function');
+
+// Helper function for rendering in React 17 or React 18
+const renderElement = (element: React.ReactElement, container: Element) => {
+  if (isReact18()) {
+    // React 18
+    // @ts-ignore - using createRoot from React 18
+    const root = ReactDOM.createRoot(container);
+    root.render(element);
+    return root;
+  }
+  // React 17
+  ReactDOM.render(element, container);
+  return null;
+};
+
+// Helper function for unmounting in React 17 or React 18
+const unmountComponent = (container: Element, root: any) => {
+  if (isReact18() && root) {
+    // React 18
+    root.unmount();
+  } else {
+    // React 17
+    ReactDOM.unmountComponentAtNode(container);
+  }
+};
 
 declare global {
   interface Window {
@@ -54,6 +83,8 @@ export class Story extends EventEmitter {
 
   container?: Element | HTMLDivElement | null;
 
+  root: any = null; // For storing reference to root in React 18
+
   eventHandlers: { [key: string]: ((data: any) => void)[] };
 
   constructor(
@@ -83,7 +114,7 @@ export class Story extends EventEmitter {
       devMode?: 'staging' | 'development';
       isInReactNativeWebView?: boolean;
       preventCloseOnGroupClick?: boolean;
-    }
+    },
   ) {
     super();
     this.token = token;
@@ -91,8 +122,8 @@ export class Story extends EventEmitter {
     this.container = null;
     this.eventHandlers = {};
 
-    this.isInReactNativeWebView = !!options?.isInReactNativeWebView ||
-      (typeof window !== 'undefined' && window.ReactNativeWebView !== undefined);
+    this.isInReactNativeWebView = !!options?.isInReactNativeWebView
+      || (typeof window !== 'undefined' && window.ReactNativeWebView !== undefined);
 
     if (this.options) {
       this.options.groupImageWidth = options?.groupImageWidth;
@@ -140,7 +171,7 @@ export class Story extends EventEmitter {
         if (this.options?.isDebugMode && this.isInReactNativeWebView) {
           this.sendDebugInfoToReactNative('Starting Request', {
             url: request.url,
-            headers: request.headers
+            headers: request.headers,
           });
         }
 
@@ -162,7 +193,7 @@ export class Story extends EventEmitter {
           if (this.options?.isDebugMode && this.isInReactNativeWebView) {
             this.sendDebugInfoToReactNative('Response Received', {
               status: response.status,
-              headers: response.headers
+              headers: response.headers,
             });
           }
 
@@ -187,7 +218,7 @@ export class Story extends EventEmitter {
             debugContainer.appendChild(debugElement);
           }
           return Promise.reject(error);
-        }
+        },
       );
     }
 
@@ -217,14 +248,13 @@ export class Story extends EventEmitter {
   };
 
   private sendMessageToReactNative(type: string, data: any) {
-    if (this.isInReactNativeWebView &&
-      typeof window !== 'undefined' &&
-      window.ReactNativeWebView &&
-      typeof window.ReactNativeWebView.postMessage === 'function') {
-
+    if (this.isInReactNativeWebView
+      && typeof window !== 'undefined'
+      && window.ReactNativeWebView
+      && typeof window.ReactNativeWebView.postMessage === 'function') {
       window.ReactNativeWebView.postMessage(JSON.stringify({
         type,
-        data
+        data,
       }));
 
       if (this.options?.isDebugMode) {
@@ -235,14 +265,14 @@ export class Story extends EventEmitter {
   }
 
   /**
-   * Отправляет отладочные сообщения в React Native WebView, если isInReactNativeWebView и isDebugMode = true
+   * Sends debug messages to React Native WebView if isInReactNativeWebView and isDebugMode = true
    */
   private sendDebugInfoToReactNative(message: string, data?: any) {
     if (this.isInReactNativeWebView && this.options?.isDebugMode) {
       this.sendMessageToReactNative('storysdk:debug:info', {
         message,
         data,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
   }
@@ -315,7 +345,7 @@ export class Story extends EventEmitter {
 
     if (!this.token) {
       if (container && !this.isInReactNativeWebView) {
-        ReactDOM.render(<p>StorySDK has not been initialized.</p>, container);
+        this.root = renderElement(<p>StorySDK has not been initialized.</p>, container);
       } else {
         console.warn('StorySDK has not been initialized.');
       }
@@ -326,18 +356,19 @@ export class Story extends EventEmitter {
     const Groups = withGroupsData(GroupsList, this.options, container);
 
     if (container) {
-      ReactDOM.render(<Groups />, container);
+      this.root = renderElement(<Groups />, container);
       this.setupEventListeners(container);
     }
   }
 
   destroy() {
     if (this.container) {
-      ReactDOM.unmountComponentAtNode(this.container);
-      const modalRoot = document.getElementById('storysdk-modal-root');
+      unmountComponent(this.container, this.root);
+      this.root = null;
 
+      const modalRoot = document.getElementById('storysdk-modal-root');
       if (modalRoot) {
-        ReactDOM.unmountComponentAtNode(modalRoot);
+        unmountComponent(modalRoot, null);
       }
     }
 
@@ -387,7 +418,7 @@ export const init = () => {
           const groupTitleSize = container.getAttribute('data-storysdk-group-title-size');
           const groupClassName = container.getAttribute('data-storysdk-group-class-name');
           const activeGroupOutlineColor = container.getAttribute(
-            'data-storysdk-active-group-outline-color'
+            'data-storysdk-active-group-outline-color',
           );
           const groupsOutlineColor = container.getAttribute('data-storysdk-groups-outline-color');
           const groupsClassName = container.getAttribute('data-storysdk-groups-class-name');
@@ -431,7 +462,7 @@ export const init = () => {
             arrowsColor: arrowsColor ?? undefined,
             backgroundColor: backgroundColor ?? undefined,
             preventCloseOnGroupClick: preventCloseOnGroupClick === 'true',
-            isForceCloseAvailable: isForceCloseAvailable === 'true'
+            isForceCloseAvailable: isForceCloseAvailable === 'true',
           };
         }
 

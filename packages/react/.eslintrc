@@ -1,29 +1,17 @@
 {
   "extends": [
     "airbnb",
-    "react-app",
-    "prettier"
+    "react-app"
   ],
   "plugins": [
     "import",
-    "react-hooks",
-    "prettier"
+    "react-hooks"
   ], 
   "parserOptions": {
     "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
     "sourceType": "module" // Allows for the use of imports
   },
   "rules": {
-    "prettier/prettier": [
-      "error",
-      {
-        "singleQuote": true,
-        "trailingComma": "none",
-        "useTabs": false,
-        "endOfLine": "auto",
-        "printWidth": 100
-      }
-    ],
     "no-plusplus": "off",
     "arrow-body-style": [
       "error",
