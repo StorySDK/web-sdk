@@ -1,4 +1,6 @@
-import React, { useContext, useMemo } from 'react';
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import block from 'bem-cn';
 import {
   IconClose,
@@ -105,6 +107,14 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     swipeHandlers,
   } = props;
 
+  const [isGroupImageLoading, setIsGroupImageLoading] = useState(true);
+
+  useEffect(() => {
+    if (currentGroup?.imageUrl) {
+      setIsGroupImageLoading(true);
+    }
+  }, [currentGroup]);
+
   const defaultRatioIndex = useMemo(
     () => currentStorySize.width / currentStorySize.height,
     [currentStorySize],
@@ -139,6 +149,11 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
 
   const storyContextVal = useContext(StoryContext);
 
+  let borderRadius;
+  if (!isMobile && isShowMockupCurrent) {
+    borderRadius = isLarge ? largeBorderRadius : 0;
+  }
+
   return (
     <div
       className={b('swiper', {
@@ -147,7 +162,7 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
       style={{
         width: !isMobile ? desktopWidth : '100%',
         height: contentHeight,
-        borderRadius: isLarge && !isMobile && isShowMockupCurrent ? largeBorderRadius : undefined,
+        borderRadius,
       }}
     >
       <>
@@ -185,8 +200,10 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     isVideoMuted={isVideoMuted}
                     isVideoPlaying={isVideoPlaying}
                     jsConfetti={jsConfetti}
+                    nextStory={index < activeStoriesWithResult.length - 1 ? activeStoriesWithResult[index + 1] : undefined}
                     noTopBackgroundShadow={noTopBackgroundShadow}
                     noTopShadow={noTopShadow}
+                    prevStory={index > 0 ? activeStoriesWithResult[index - 1] : undefined}
                     story={story}
                     storyPlayStatus={playStatus}
                   />
@@ -252,7 +269,12 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     >
                       {currentGroup?.imageUrl && (
                         <div className={b('groupImgWrapper')}>
-                          <img alt="" className={b('groupImg')} src={currentGroup?.imageUrl} />
+                          <img
+                            alt=""
+                            className={b('groupImg', { loading: isGroupImageLoading })}
+                            src={`${currentGroup?.imageUrl}?tr=n-group_thumbnail_small`}
+                            onLoad={() => setIsGroupImageLoading(false)}
+                          />
                         </div>
                       )}
                       {currentGroup?.title && (

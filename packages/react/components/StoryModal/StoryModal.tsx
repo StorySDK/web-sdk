@@ -1,4 +1,6 @@
-import React, { useEffect, useState, useCallback, useRef, useReducer, useMemo } from 'react';
+import React, {
+  useEffect, useState, useCallback, useRef, useReducer, useMemo,
+} from 'react';
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import JSConfetti from 'js-confetti';
@@ -9,12 +11,14 @@ import {
   IconMute,
   IconStoryPause,
   IconStoryPlay,
-  IconUnmute
+  IconUnmute,
 } from '@components/icons';
 import { useLongPress } from 'use-long-press';
 import { DateTime } from 'luxon';
 import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
-import { StoryType, Group, GroupType, StoryContenxt, ScoreType, WidgetsTypes } from '../../types';
+import {
+  StoryType, Group, GroupType, StoryContenxt, ScoreType, WidgetsTypes,
+} from '../../types';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
 import smallIphoneMockup from '../../assets/images/iphone-mockup-small-1.svg';
 import storySdkLogo from '../../assets/images/storysdk-logo.svg';
@@ -67,7 +71,7 @@ export const StoryContext = React.createContext<StoryContenxt>({
   playStatus: 'wait',
   playStatusChange: () => { },
   closeStoryGroup: () => { },
-  confetti: null
+  confetti: null,
 });
 
 export type StoryCurrentSize = {
@@ -77,12 +81,12 @@ export type StoryCurrentSize = {
 
 export const STORY_SIZE_DEFAULT = {
   width: 360,
-  height: 640
+  height: 640,
 };
 
 export const STORY_SIZE_LARGE = {
   width: 360,
-  height: 780
+  height: 780,
 };
 
 export const DEFAULT_STORY_DURATION = 7;
@@ -96,32 +100,32 @@ const LONG_PRESS_THRESHOLD = 500;
 
 const initQuizeState = {
   points: 0,
-  letters: ''
+  letters: '',
 };
 
 const reducer = (state: any, action: any) => {
   if (action.type === 'add_points') {
     return {
       points: state.points + +action.payload,
-      letters: state.letters
+      letters: state.letters,
     };
   }
   if (action.type === 'add_letters') {
     return {
       points: state.points,
-      letters: state.letters + action.payload
+      letters: state.letters + action.payload,
     };
   }
   if (action.type === 'remove_points') {
     return {
       points: state.points - +action.payload,
-      letters: state.letters
+      letters: state.letters,
     };
   }
   if (action.type === 'remove_letters') {
     return {
       points: state.points,
-      letters: state.letters.replace(action.payload, '')
+      letters: state.letters.replace(action.payload, ''),
     };
   }
   if (action.type === 'reset') {
@@ -165,7 +169,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onStartQuiz,
     onFinishQuiz,
     onModalOpen,
-    onModalClose
+    onModalClose,
   } = props;
 
   const [quizState, dispatchQuizState] = useReducer(reducer, initQuizeState);
@@ -193,14 +197,16 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const [storyDuration, setStoryDuration] = useState({
     storyId: '',
     groupId: '',
-    startTime: 0
+    startTime: 0,
   });
+
+  const [userId, setUserId] = useState<string>('');
 
   const handleOpenStory = useCallback((groupId: string, storyId: string) => {
     setStoryDuration({
       groupId,
       storyId,
-      startTime: DateTime.now().toSeconds()
+      startTime: DateTime.now().toSeconds(),
     });
 
     onOpenStory?.(groupId, storyId);
@@ -220,24 +226,22 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [isOpened]);
 
   const isVideoExists = useMemo(
-    () =>
-      activeStoriesWithResult[currentStory]?.storyData.some(
-        (widget) => widget.content.type === WidgetsTypes.VIDEO
-      ) || activeStoriesWithResult[currentStory]?.background.type === 'video',
-    [activeStoriesWithResult, currentStory]
+    () => activeStoriesWithResult[currentStory]?.storyData.some(
+      (widget) => widget.content.type === WidgetsTypes.VIDEO,
+    ) || activeStoriesWithResult[currentStory]?.background.type === 'video',
+    [activeStoriesWithResult, currentStory],
   );
 
   const isMobile = useMemo(() => width < MOBILE_BREAKPOINT, [width]);
 
   const isShowMockupCurrent = useMemo(
-    () =>
-      (currentGroup?.type === GroupType.ONBOARDING ||
-        (currentGroup?.type === GroupType.TEMPLATE && currentGroup?.category === 'onboarding')) &&
-        !isMobile &&
-        isShowMockup !== false
-        ? true
-        : isShowMockup,
-    [currentGroup, isMobile, isShowMockup]
+    () => ((currentGroup?.type === GroupType.ONBOARDING
+      || (currentGroup?.type === GroupType.TEMPLATE && currentGroup?.category === 'onboarding'))
+      && !isMobile
+      && isShowMockup !== false
+      ? true
+      : isShowMockup),
+    [currentGroup, isMobile, isShowMockup],
   );
 
   const mockupRef = useRef<HTMLImageElement>(null);
@@ -315,13 +319,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     if (storyWidth && storyHeight) {
       return {
         width: storyWidth,
-        height: storyHeight
+        height: storyHeight,
       };
     }
 
     if (
-      currentGroup?.type === GroupType.ONBOARDING ||
-      (currentGroup?.type === GroupType.TEMPLATE && currentGroup?.category === 'onboarding')
+      currentGroup?.type === GroupType.ONBOARDING
+      || (currentGroup?.type === GroupType.TEMPLATE && currentGroup?.category === 'onboarding')
     ) {
       return STORY_SIZE_LARGE;
     }
@@ -337,7 +341,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         `${appLink}/share/${currentGroup?.settings?.shortDataId}`,
         '_blank',
         `popup,left=${leftPosition},top=${isMobile ? 0 : 50},width=${isMobile ? width : 1000
-        },height=${640}`
+        },height=${640}`,
       );
 
       onClose();
@@ -386,7 +390,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const isLarge = useMemo(
     () => currentStorySize.height === STORY_SIZE_LARGE.height,
-    [currentStorySize]
+    [currentStorySize],
   );
 
   const contentWidth = useMemo(() => {
@@ -398,7 +402,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       }
     }
 
-    return `100%`;
+    return '100%';
   }, [currentStorySize.height, currentStorySize.width, height, isMobile, width]);
 
   const contentHeight = useMemo(() => {
@@ -406,9 +410,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     if (isShowMockupCurrent && !isMobile) {
       if (
-        currentGroupType === GroupType.GROUP ||
-        (currentGroup?.type === GroupType.TEMPLATE && currentGroup?.category === 'stories') ||
-        storyHeight === STORY_SIZE_DEFAULT.height
+        currentGroupType === GroupType.GROUP
+        || (currentGroup?.type === GroupType.TEMPLATE && currentGroup?.category === 'stories')
+        || storyHeight === STORY_SIZE_DEFAULT.height
       ) {
         backgroundHeightGap = groupInnerHeightGap;
       } else {
@@ -434,7 +438,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentStorySize.height,
     currentStorySize.width,
     width,
-    height
+    height,
   ]);
 
   useEffect(() => {
@@ -443,7 +447,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       if (isMobile) {
         storyModalRef.current.style.setProperty('height', `${height}px`);
       } else {
-        storyModalRef.current.style.setProperty('height', `100%`);
+        storyModalRef.current.style.setProperty('height', '100%');
       }
     }
 
@@ -491,7 +495,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     activeStoriesWithResult,
     currentGroup,
     isOpened,
-    startStoryId
+    startStoryId,
   ]);
 
   const handleClose = useCallback(() => {
@@ -508,20 +512,19 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onCloseStory,
     activeStoriesWithResult,
     currentStoryId,
-    storyDuration
+    storyDuration,
   ]);
 
   const resultStories = useMemo(() => {
     if (currentGroup?.settings?.scoreResultLayersGroupId && stories) {
       return stories
         .filter(
-          (story) =>
-            story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId
+          (story) => story.layerData?.layersGroupId === currentGroup.settings?.scoreResultLayersGroupId,
         )
         .map((story) => ({
           id: story.id,
           isDefaultLayer: story.layerData?.isDefaultLayer,
-          score: story.layerData.score
+          score: story.layerData.score,
         }));
     }
 
@@ -538,9 +541,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     let resultStoryId = '';
 
     if (
-      (nextLayersGroupId &&
-        nextLayersGroupId === currentGroup.settings?.scoreResultLayersGroupId) ||
-      (prevLayersGroupId && prevLayersGroupId === currentGroup.settings?.scoreResultLayersGroupId)
+      (nextLayersGroupId
+        && nextLayersGroupId === currentGroup.settings?.scoreResultLayersGroupId)
+      || (prevLayersGroupId && prevLayersGroupId === currentGroup.settings?.scoreResultLayersGroupId)
     ) {
       resultStoryId = resultStories.find((story) => story.isDefaultLayer)?.id ?? '';
 
@@ -570,9 +573,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
           }
         }
 
-        resultStoryId =
-          resultStories.find((story) => story.score.letter.toLowerCase() === mostFrequentSymbol)
-            ?.id ?? '';
+        resultStoryId = resultStories.find((story) => story.score.letter.toLowerCase() === mostFrequentSymbol)
+          ?.id ?? '';
       }
     }
 
@@ -583,13 +585,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentGroup?.settings?.scoreResultLayersGroupId,
     currentGroup?.settings?.scoreType,
     currentStory,
-    quizState
+    quizState,
   ]);
 
   const handleFinishStoryQuiz = useCallback(() => {
-    const isNotResultStory =
-      currentGroup?.settings?.scoreResultLayersGroupId !==
-      activeStoriesWithResult[currentStory]?.layerData?.layersGroupId;
+    const isNotResultStory = currentGroup?.settings?.scoreResultLayersGroupId
+      !== activeStoriesWithResult[currentStory]?.layerData?.layersGroupId;
 
     if (onFinishQuiz && currentGroup?.settings?.scoreResultLayersGroupId && isNotResultStory) {
       onFinishQuiz(currentGroup.id, currentStoryId);
@@ -600,7 +601,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     currentGroup?.settings?.scoreResultLayersGroupId,
     currentStory,
     currentStoryId,
-    onFinishQuiz
+    onFinishQuiz,
   ]);
 
   const handleNextGroup = useCallback(() => {
@@ -624,13 +625,13 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     isLastGroup,
     onCloseStory,
     onNextGroup,
-    storyDuration
+    storyDuration,
   ]);
 
   const handleNext = useCallback(
     (isManual?: boolean) => {
       eventPublish('nextStory', {
-        storyId: activeStoriesWithResult[currentStory].id
+        storyId: activeStoriesWithResult[currentStory].id,
       });
 
       const resultStoryId = getResultStoryId();
@@ -640,8 +641,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       }
 
       if (
-        currentStory === activeStoriesWithResult.length - 1 ||
-        activeStoriesWithResult[currentStory].id === resultStoryId
+        currentStory === activeStoriesWithResult.length - 1
+        || activeStoriesWithResult[currentStory].id === resultStoryId
       ) {
         handleNextGroup();
       } else {
@@ -664,7 +665,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
         if (resultStoryId) {
           const resultStoryIndex = activeStoriesWithResult.findIndex(
-            (story) => story.id === resultStoryId
+            (story) => story.id === resultStoryId,
           );
 
           setCurrentStory(resultStoryIndex);
@@ -688,8 +689,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       handleOpenStory,
       onNextStory,
       storyDuration,
-      isAutoplayVideos
-    ]
+      isAutoplayVideos,
+    ],
   );
 
   const handleAnimationEnd = useCallback(() => {
@@ -703,7 +704,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
   const handlePrev = useCallback(() => {
     eventPublish('prevStory', {
-      storyId: activeStoriesWithResult[currentStory]?.id
+      storyId: activeStoriesWithResult[currentStory]?.id,
     });
 
     const resultStoryId = getResultStoryId();
@@ -730,13 +731,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       }
 
       if (
-        activeStoriesWithResult[currentStory - 1].layerData.layersGroupId ===
-        resultStory?.layerData.layersGroupId
+        activeStoriesWithResult[currentStory - 1].layerData.layersGroupId
+        === resultStory?.layerData.layersGroupId
       ) {
-        const prevStoryIndex =
-          activeStoriesWithResult.findIndex(
-            (story) => story.layerData.layersGroupId === resultStory?.layerData.layersGroupId
-          ) - 1;
+        const prevStoryIndex = activeStoriesWithResult.findIndex(
+          (story) => story.layerData.layersGroupId === resultStory?.layerData.layersGroupId,
+        ) - 1;
 
         setCurrentStory(prevStoryIndex);
         setCurrentStoryId(activeStoriesWithResult[prevStoryIndex].id);
@@ -755,7 +755,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onCloseStory,
     handleOpenStory,
     onPrevStory,
-    currentGroup?.id
+    currentGroup?.id,
   ]);
 
   const handleGoToStory = (storyId: string) => {
@@ -763,7 +763,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
     if (storyIndex > -1) {
       eventPublish('nextStory', {
-        storyId
+        storyId,
       });
 
       if (currentGroup) {
@@ -780,8 +780,8 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const jsConfetti = useRef(
     new JSConfetti({
-      canvas: canvasRef.current as HTMLCanvasElement
-    })
+      canvas: canvasRef.current as HTMLCanvasElement,
+    }),
   );
 
   const handleQuizAnswer = (params: { type: string; answer: string | number }) => {
@@ -798,34 +798,37 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     if (currentGroup?.settings?.scoreType === ScoreType.LETTERS && params.type === 'add') {
       dispatchQuizState({
         type: 'add_letters',
-        payload: params.answer
+        payload: params.answer,
       });
     } else if (currentGroup?.settings?.scoreType === ScoreType.NUMBERS && params.type === 'add') {
       dispatchQuizState({
         type: 'add_points',
-        payload: +params.answer
+        payload: +params.answer,
       });
     } else if (
-      currentGroup?.settings?.scoreType === ScoreType.LETTERS &&
-      params.type === 'remove'
+      currentGroup?.settings?.scoreType === ScoreType.LETTERS
+      && params.type === 'remove'
     ) {
       dispatchQuizState({
         type: 'remove_letters',
-        payload: params.answer
+        payload: params.answer,
       });
     } else if (
-      currentGroup?.settings?.scoreType === ScoreType.NUMBERS &&
-      params.type === 'remove'
+      currentGroup?.settings?.scoreType === ScoreType.NUMBERS
+      && params.type === 'remove'
     ) {
       dispatchQuizState({
         type: 'remove_points',
-        payload: +params.answer
+        payload: +params.answer,
       });
     }
   };
 
-  const uniqUserId = getUniqUserId();
-  const [getAnswerCache, setAnswerCache] = useAnswersCache(uniqUserId);
+  useEffect(() => {
+    getUniqUserId().then(setUserId);
+  }, []);
+
+  const [getAnswerCache, setAnswerCache] = useAnswersCache(userId);
 
   useEffect(() => {
     if (isMediaLoading) {
@@ -878,7 +881,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         }
       }
     },
-    [clickTimestamp, handleNext, handlePrev]
+    [clickTimestamp, handleNext, handlePrev],
   );
 
   const pressHandlers = useLongPress(() => { }, {
@@ -892,12 +895,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     onCancel: (e) => {
       handleLongPress(e);
     },
-    threshold: LONG_PRESS_THRESHOLD
+    threshold: LONG_PRESS_THRESHOLD,
   });
 
   const swipeHandlers = useSwipe({
     onSwipedLeft: () => handleNextGroup(),
-    onSwipedRight: () => handlePrevGroup()
+    onSwipedRight: () => handlePrevGroup(),
   });
 
   useEffect(() => {
@@ -913,7 +916,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   const handleLoadStory = useCallback((id: string) => {
     setLoadedStoriesIds((prevState) => ({
       ...prevState,
-      [id]: true
+      [id]: true,
     }));
   }, []);
 
@@ -921,7 +924,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     <StoryContext.Provider
       value={{
         currentStoryId,
-        uniqUserId: typeof uniqUserId === 'string' ? uniqUserId : undefined,
+        uniqUserId: typeof userId === 'string' ? userId : undefined,
         quizMode: currentGroup?.settings?.scoreType,
         playStatus,
         container,
@@ -929,20 +932,20 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         closeStoryGroup: !forbidClose || isForceCloseAvailable ? handleClose : undefined,
         handleQuizAnswer,
         getAnswerCache: isCacheDisabled ? undefined : getAnswerCache,
-        setAnswerCache: isCacheDisabled ? undefined : setAnswerCache
+        setAnswerCache: isCacheDisabled ? undefined : setAnswerCache,
       }}
     >
       <div
         className={b({ isShowing: isOpened })}
         ref={storyModalRef}
         style={{
-          top: window?.pageYOffset || document.documentElement.scrollTop
+          top: window?.pageYOffset || document.documentElement.scrollTop,
         }}
       >
         <div
           className={b('body', { centered: isMobile })}
           style={{
-            height: isMobile ? contentHeight : undefined
+            height: isMobile ? contentHeight : undefined,
           }}
         >
           {!isLoading && (
@@ -971,11 +974,11 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
 
           <div
             className={b('bodyContainer', {
-              swiped: isSwiped && isMobile
+              swiped: isSwiped && isMobile,
             })}
             style={{
               borderRadius: !isMobile && isShowMockupCurrent ? containerBorderRadius : 0,
-              width: !isMobile && bodyContainerWidth ? bodyContainerWidth : '100%'
+              width: !isMobile && bodyContainerWidth ? bodyContainerWidth : '100%',
             }}
           >
             <StorySwiperContent
@@ -1025,7 +1028,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               <div
                 className={b('storyBackground')}
                 style={{
-                  backgroundColor: currentGroup?.settings?.background?.value
+                  backgroundColor: currentGroup?.settings?.background?.value,
                 }}
               />
             )}
@@ -1041,9 +1044,9 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
             </div>
           </a>
         )}
-        {(currentGroup?.type === GroupType.ONBOARDING ||
-          (currentGroup?.type === GroupType.TEMPLATE &&
-            currentGroup?.category === 'onboarding')) && (
+        {(currentGroup?.type === GroupType.ONBOARDING
+          || (currentGroup?.type === GroupType.TEMPLATE
+            && currentGroup?.category === 'onboarding')) && (
             <div className={b('closeContainer')}>
               {!currentGroup?.settings?.isProgressHidden && playStatus !== 'wait' && (
                 <>
@@ -1100,16 +1103,16 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         ref={backgroundRef}
         style={{
           backgroundColor:
-            backgroundColor ??
-            (isMobile && currentGroup?.settings?.background?.value
+            backgroundColor
+            ?? (isMobile && currentGroup?.settings?.background?.value
               ? currentGroup.settings.background.value
-              : undefined)
+              : undefined),
         }}
       />
       <canvas
         ref={canvasRef}
         style={{
-          display: 'none'
+          display: 'none',
         }}
       />
     </StoryContext.Provider>

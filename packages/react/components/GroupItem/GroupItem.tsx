@@ -36,11 +36,12 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
     groupImageWidth,
     groupImageHeight,
     isChosen,
-    onClick
+    onClick,
   } = props;
 
   const [titleHeight, setTitleHeight] = React.useState<string | number | undefined>(undefined);
   const [isHovered, setIsHovered] = React.useState<boolean>(false);
+  const [isImageLoading, setIsImageLoading] = React.useState<boolean>(true);
 
   const titleRef = React.useRef<HTMLParagraphElement>(null);
   const btnRef = React.useRef<HTMLDivElement>(null);
@@ -56,10 +57,10 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
 
   useEffect(() => {
     if (
-      titleRef.current &&
-      btnRef.current &&
-      titleRef.current.offsetHeight > btnRef.current.offsetHeight &&
-      (view === 'rectangle' || view === 'bigSquare')
+      titleRef.current
+      && btnRef.current
+      && titleRef.current.offsetHeight > btnRef.current.offsetHeight
+      && (view === 'rectangle' || view === 'bigSquare')
     ) {
       setTitleHeight('100%');
     }
@@ -90,7 +91,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
           return undefined;
       }
     },
-    [groupImageWidth, view]
+    [groupImageWidth, view],
   );
 
   const getImageSize = useCallback(
@@ -110,7 +111,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
           return imageSize ? imageSize * BASE_IMAGE_WIDTH_INDEX : undefined;
       }
     },
-    [view]
+    [view],
   );
 
   const getOulineColor = () => {
@@ -125,6 +126,10 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
     return undefined;
   };
 
+  const handleImageLoad = () => {
+    setIsImageLoading(false);
+  };
+
   return (
     <div
       className={classNames(b({ view, type, chosen: isChosen }).toString(), groupClassName || '')}
@@ -132,7 +137,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
       role="button"
       style={{
         width: getContainerSize(),
-        height: getContainerSize(true)
+        height: getContainerSize(true),
       }}
       tabIndex={0}
       onClick={() => onClick && onClick(index)}
@@ -148,26 +153,39 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
         className={b('imgContainer', { view, type })}
         style={{
           width: groupImageWidth,
-          height: view !== 'rectangle' ? groupImageHeight : BIG_SQUARE_DEFAULT_HEIGHT
+          height: view !== 'rectangle' ? groupImageHeight : BIG_SQUARE_DEFAULT_HEIGHT,
         }}
       >
+        {isImageLoading && (
+          <div
+            className={b('placeholder', { view })}
+            style={{
+              width: getImageSize(groupImageWidth),
+              height: getImageSize(groupImageHeight, true),
+              backgroundColor: '#E0E0E0',
+              position: 'absolute',
+              borderRadius: view === 'circle' ? '50%' : '7px',
+            }}
+          />
+        )}
         <img
           alt=""
-          className={b('img', { view })}
-          src={imageUrl}
+          className={b('img', { view, loading: isImageLoading })}
+          src={`${imageUrl}?tr=n-group_thumbnail`}
           style={{
             width: getImageSize(groupImageWidth),
-            height: getImageSize(groupImageHeight, true)
+            height: getImageSize(groupImageHeight, true),
           }}
+          onLoad={handleImageLoad}
         />
         <div
           className={b('outline', {
             background: !activeGroupOutlineColor && !groupsOutlineColor,
             border: !!activeGroupOutlineColor || !!groupsOutlineColor,
-            view
+            view,
           })}
           style={{
-            borderColor: getOulineColor()
+            borderColor: getOulineColor(),
           }}
         />
       </div>
@@ -181,7 +199,7 @@ export const GroupItem: React.FunctionComponent<Props> = (props) => {
             color:
               (isChosen || isHovered) && view !== 'rectangle' && view !== 'bigSquare'
                 ? getOulineColor()
-                : undefined
+                : undefined,
           }}
         >
           {title}

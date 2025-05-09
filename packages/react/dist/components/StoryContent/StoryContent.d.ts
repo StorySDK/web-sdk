@@ -23,6 +23,8 @@ interface StoryContentProps {
     isLarge?: boolean;
     isMediaLoading?: boolean;
     isVideoMuted?: boolean;
+    nextStory?: StoryType;
+    prevStory?: StoryType;
     handleMuteVideo?: (isMuted: boolean) => void;
     handleLoadStory?: (storyId: string) => void;
     handleGoToStory?: (storyId: string) => void;

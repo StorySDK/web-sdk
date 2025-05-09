@@ -102,7 +102,7 @@ const withGroupsData = (
     const fetchUserId = async () => {
       try {
         const id = await getUniqUserId();
-        setUserId(typeof id === 'string' ? id : nanoid());
+        setUserId(id);
       } catch {
         setUserId(nanoid());
       }

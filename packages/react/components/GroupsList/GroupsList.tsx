@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useRef, useState,
+} from 'react';
 import block from 'bem-cn';
 import Skeleton from 'react-loading-skeleton';
 import classNames from 'classnames';
@@ -91,7 +93,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     onStartQuiz,
     onFinishQuiz,
     onModalOpen,
-    onModalClose
+    onModalClose,
   } = props;
 
   const [currentGroup, setCurrentGroup] = useState(-1);
@@ -103,6 +105,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   const carouselSkeletonRef = useRef<HTMLDivElement | null>(null);
   const [isCentered, setIsCentered] = useState(true);
   const [groupMinHeight, setGroupMinHeight] = useState(100);
+  const [currentGroupItem, setCurrentGroupItem] = useState<Group | undefined>();
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
   useEffect(() => {
     const handlePause = () => {
@@ -143,7 +147,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         onOpenGroup(groups[groupIndex].id);
       }
     },
-    [groups, onOpenGroup]
+    [groups, onOpenGroup],
   );
 
   const handlePrevGroup = useCallback(() => {
@@ -194,7 +198,31 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     document.body.appendChild(rootElement);
   }, [rootElement]);
 
-  const currentGroupMemo = useMemo(() => groups?.[currentGroup], [groups, currentGroup]);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    if (!isLoading && groups.length > 0) {
+      timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, 1000);
+    } else {
+      setShowSkeleton(true);
+    }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [groups, isLoading]);
+
+  useEffect(() => {
+    if (groups?.[currentGroup]) {
+      setCurrentGroupItem(groups[currentGroup]);
+    } else {
+      setCurrentGroupItem(undefined);
+    }
+  }, [currentGroup, groups]);
 
   useEffect(() => {
     if (!isLoading || autoplay) {
@@ -203,7 +231,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           arrowsColor={arrowsColor}
           backgroundColor={backgroundColor}
           container={container}
-          currentGroup={currentGroupMemo}
+          currentGroup={currentGroupItem}
           devMode={devMode}
           forbidClose={forbidClose}
           isFirstGroup={currentGroup === 0}
@@ -217,7 +245,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           isStatusBarActive={isStatusBarActive}
           openInExternalModal={openInExternalModal}
           startStoryId={startStoryId}
-          stories={currentGroupMemo?.stories}
+          stories={currentGroupItem?.stories}
           storyHeight={storyHeight}
           storyWidth={storyWidth}
           onClose={handleCloseModal}
@@ -232,18 +260,18 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           onPrevStory={onPrevStory}
           onStartQuiz={onStartQuiz}
         />,
-        rootElement
+        rootElement,
       );
     }
-  }, [isLoading, autoplay, currentGroupMemo, modalShow]);
+  }, [isLoading, autoplay, modalShow, currentGroupItem]);
 
   const handleGroupClick = useCallback(
     (groupIndex: number) => {
       const customEvent = new CustomEvent('storysdk:group:click', {
         detail: {
           groupId: groups[groupIndex].id,
-          uniqUserId: getUniqUserId()
-        }
+          uniqUserId: getUniqUserId(),
+        },
       });
 
       container?.dispatchEvent(customEvent);
@@ -254,7 +282,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
 
       handleSelectGroup(groupIndex);
     },
-    [preventCloseOnGroupClick, handleSelectGroup]
+    [preventCloseOnGroupClick, handleSelectGroup],
   );
 
   useEffect(() => {
@@ -298,62 +326,61 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         <SimpleBar
           classNames={{
             contentEl: b('carouselContent', { centered: isCentered }).toString(),
-            track: b('track').toString()
+            track: b('track').toString(),
           }}
           ref={scrollRef}
           style={{
             width: '100%',
-            minHeight: groupMinHeight
+            minHeight: groupMinHeight,
           }}
         >
-          {isLoading && !autoplay ? (
-            <div className={b('carousel')} ref={carouselSkeletonRef}>
-              <div className={b('loaderItem')}>
-                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-              </div>
-              <div className={b('loaderItem')}>
-                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-              </div>
-              <div className={b('loaderItem')}>
-                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-              </div>
-              <div className={b('loaderItem')}>
-                <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-                <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-              </div>
+          <div className={b('carousel', { show: showSkeleton && !autoplay, skeleton: true })} ref={carouselSkeletonRef}>
+            <div className={b('loaderItem')}>
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
             </div>
-          ) : (
-            <>
-              {groups.length ? (
-                <div className={b('carousel')} ref={carouselRef}>
-                  {groups
-                    .filter((group: any) => group.stories.length)
-                    .map((group, index) => (
-                      <GroupItem
-                        activeGroupOutlineColor={activeGroupOutlineColor}
-                        groupClassName={groupClassName}
-                        groupImageHeight={groupImageHeight}
-                        groupImageWidth={groupImageWidth}
-                        groupTitleSize={groupTitleSize}
-                        groupsOutlineColor={groupsOutlineColor}
-                        imageUrl={group.imageUrl}
-                        index={index}
-                        key={group.id}
-                        title={group.title}
-                        type={group.type}
-                        view={groupView}
-                        onClick={handleGroupClick}
-                      />
-                    ))}
-                </div>
-              ) : (
-                <>{!autoplay && <p className={b('emptyText')}>Stories will be here</p>}</>
-              )}
-            </>
-          )}
+            <div className={b('loaderItem')}>
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+            </div>
+            <div className={b('loaderItem')}>
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+            </div>
+            <div className={b('loaderItem')}>
+              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
+              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+            </div>
+          </div>
+
+          <>
+            {groups.length ? (
+              <div className={b('carousel', { show: !showSkeleton && !autoplay })} ref={carouselRef}>
+                {groups
+                  .filter((group: any) => group.stories.length)
+                  .map((group, index) => (
+                    <GroupItem
+                      activeGroupOutlineColor={activeGroupOutlineColor}
+                      groupClassName={groupClassName}
+                      groupImageHeight={groupImageHeight}
+                      groupImageWidth={groupImageWidth}
+                      groupTitleSize={groupTitleSize}
+                      groupsOutlineColor={groupsOutlineColor}
+                      imageUrl={group.imageUrl}
+                      index={index}
+                      key={group.id}
+                      title={group.title}
+                      type={group.type}
+                      view={groupView}
+                      onClick={handleGroupClick}
+                    />
+                  ))}
+              </div>
+            ) : (
+              <>{!autoplay && !isLoading && <p className={b('emptyText')}>Stories will be here</p>}</>
+            )}
+          </>
+          {/* )} */}
         </SimpleBar>
       </div>
     </>

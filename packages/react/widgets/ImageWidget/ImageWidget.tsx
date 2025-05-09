@@ -18,7 +18,7 @@ export const ImageWidget: WidgetComponent<{
 
   const styles = {
     borderRadius: `${borderRadius}px`,
-    opacity: widgetOpacity / 100
+    opacity: widgetOpacity / 100,
   };
 
   return (

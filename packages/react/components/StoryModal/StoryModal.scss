@@ -226,6 +226,12 @@
     border: 1px solid white;
     box-sizing: border-box;
     object-fit: cover;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+
+    &_loading {
+      opacity: 0;
+    }
 
     @media (min-width: 768px) {
       width: 31px;

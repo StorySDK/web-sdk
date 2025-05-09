@@ -20,6 +20,20 @@
   &__carousel {
     display: flex;
     min-height: 100px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    &_skeleton {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 100px;
+    }
+
+    &_show {
+      opacity: 1;
+    }
   }
 
   &__loaderItem {
@@ -31,6 +45,7 @@
 
   &__carouselContent {
     display: flex;
+    position: relative;
 
     &_centered {
       justify-content: center;

@@ -34,10 +34,9 @@ const safeSetItem = (key: string, value: string): void => {
   }
 };
 
-export const getUniqUserId = () => {
+export const getUniqUserId = (): Promise<string> => {
   // Check if we are in React Native WebView
-  const isInReactNativeWebView =
-    typeof window !== 'undefined' && typeof window.ReactNativeWebView !== 'undefined';
+  const isInReactNativeWebView = typeof window !== 'undefined' && typeof window.ReactNativeWebView !== 'undefined';
 
   if (isInReactNativeWebView) {
     // Create Promise to get value from React Native
@@ -47,9 +46,9 @@ export const getUniqUserId = () => {
         try {
           const message = JSON.parse(event.data);
           if (
-            message.type === 'storysdk:storage:response' &&
-            message.data &&
-            message.data.key === 'StorySdkUserId'
+            message.type === 'storysdk:storage:response'
+            && message.data
+            && message.data.key === 'StorySdkUserId'
           ) {
             window.removeEventListener('message', handleStorageMessage);
 
@@ -65,9 +64,9 @@ export const getUniqUserId = () => {
                     type: 'storysdk:storage:set',
                     data: {
                       key: 'StorySdkUserId',
-                      value: id
-                    }
-                  })
+                      value: id,
+                    },
+                  }),
                 );
               }
               resolve(id);
@@ -86,8 +85,8 @@ export const getUniqUserId = () => {
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
             type: 'storysdk:storage:get',
-            data: { key: 'StorySdkUserId' }
-          })
+            data: { key: 'StorySdkUserId' },
+          }),
         );
       }
 
@@ -102,9 +101,9 @@ export const getUniqUserId = () => {
               type: 'storysdk:storage:set',
               data: {
                 key: 'StorySdkUserId',
-                value: id
-              }
-            })
+                value: id,
+              },
+            }),
           );
         }
         resolve(id);
@@ -115,10 +114,10 @@ export const getUniqUserId = () => {
   // Use safe localStorage functions to handle Safari in private mode
   const existingId = safeGetItem('StorySdkUserId');
   if (existingId) {
-    return existingId;
+    return Promise.resolve(existingId);
   }
 
   const id = nanoid();
   safeSetItem('StorySdkUserId', id);
-  return id;
+  return Promise.resolve(id);
 };

@@ -12,6 +12,7 @@
   border: none;
   cursor: pointer;
 
+
   &:last-child {
     margin-right: 0;
   }
@@ -182,6 +183,12 @@
     height: 60px;
     border-radius: 50%;
     object-fit: cover;
+    transition: opacity 0.2s ease-out;
+    opacity: 1;
+
+    &_loading {
+      opacity: 0;
+    }
 
     &_view {
       &_square {
@@ -260,6 +267,32 @@
         text-align: left;
         transform: none;
         text-overflow: ellipsis;
+      }
+    }
+  }
+
+  &__placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    z-index: 1;
+
+    &_view {
+      &_square {
+        border-radius: 7px;
+      }
+
+      &_bigSquare {
+        width: 76px;
+        height: 76px;
+        border-radius: 7px;
+      }
+
+      &_rectangle {
+        width: 58px;
+        height: 76px;
+        border-radius: 7px;
       }
     }
   }
