@@ -112,7 +112,15 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   useEffect(() => {
     if (currentGroup?.imageUrl) {
       setIsGroupImageLoading(true);
+
+      const timeout = setTimeout(() => {
+        setIsGroupImageLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(timeout);
     }
+
+    return () => { };
   }, [currentGroup]);
 
   const defaultRatioIndex = useMemo(

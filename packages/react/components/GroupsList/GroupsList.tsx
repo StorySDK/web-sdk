@@ -300,11 +300,6 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           const carouselWidth = carouselElement.clientWidth;
           setIsCentered(containerWidth >= carouselWidth);
         }
-
-        if (carouselSkeletonElement) {
-          const carouselSkeletonWidth = carouselSkeletonElement.clientWidth;
-          setIsCentered(containerWidth >= carouselSkeletonWidth);
-        }
       }
     };
 

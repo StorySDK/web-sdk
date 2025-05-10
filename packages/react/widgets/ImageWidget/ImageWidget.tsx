@@ -8,9 +8,17 @@ const b = block('ImageWidget');
 export const ImageWidget: WidgetComponent<{
   params: ImageWidgetParamsType;
   handleMediaLoading?: (isLoading: boolean) => void;
+  width?: number;
+  height?: number;
 }> = React.memo((props) => {
   const [isImageLoading, setIsImageLoading] = React.useState(true);
-  const { imageUrl, widgetOpacity, borderRadius } = props.params;
+  const {
+    imageUrl, widgetOpacity, borderRadius,
+  } = props.params;
+
+  useEffect(() => {
+    setIsImageLoading(true);
+  }, [imageUrl]);
 
   useEffect(() => {
     props.handleMediaLoading?.(isImageLoading);
@@ -29,9 +37,6 @@ export const ImageWidget: WidgetComponent<{
       style={styles}
       onLoad={() => {
         setIsImageLoading(false);
-      }}
-      onLoadStart={() => {
-        setIsImageLoading(true);
       }}
     />
   );

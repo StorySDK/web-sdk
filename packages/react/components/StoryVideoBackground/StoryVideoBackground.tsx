@@ -4,14 +4,13 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import block from 'bem-cn';
 import { IconLoader } from '@components/icons';
 import Hls from 'hls.js';
+import { VideoCache } from '../../services/VideoCache';
 import './StoryVideoBackground.scss';
 
 const b = block('StorySdkVideoBackground');
 
-// Cache for tracking already played videos
-const playedVideosCache = new Set<string>();
-// Cache for preloaded videos
-const preloadedVideosCache = new Map<string, { hls: Hls | null, directUrl: string | null }>();
+// Export preloadVideo function for backward compatibility
+export const preloadVideo = VideoCache.preloadVideo;
 
 type PropTypes = {
   src: string;
@@ -23,66 +22,6 @@ type PropTypes = {
   isDisplaying?: boolean;
   onLoadStart?: () => void;
   onLoadEnd?: () => void;
-};
-
-// Preload function that can be exported and used to preload upcoming videos
-export const preloadVideo = (src: string) => {
-  if (!src || playedVideosCache.has(src) || preloadedVideosCache.has(src)) {
-    return;
-  }
-
-  // Determine direct URL
-  let directUrl: string | null = null;
-  if (src.toLowerCase().endsWith('.mp4')) {
-    directUrl = src;
-  } else {
-    const urlParts = src.split('?');
-    const baseUrl = urlParts[0];
-    directUrl = baseUrl.toLowerCase().endsWith('.mp4') ? baseUrl : `${baseUrl}.mp4`;
-  }
-
-  // Check direct URL availability
-  fetch(directUrl, { method: 'HEAD' })
-    .then((response) => {
-      if (!response.ok) {
-        directUrl = null;
-      }
-      preloadedVideosCache.set(src, { hls: null, directUrl });
-    })
-    .catch(() => {
-      directUrl = null;
-      preloadedVideosCache.set(src, { hls: null, directUrl });
-    });
-
-  // For devices that support HLS, start preloading manifest
-  if (Hls.isSupported()) {
-    const preloadHls = new Hls({
-      maxBufferLength: 5,
-      maxMaxBufferLength: 15,
-      lowLatencyMode: true,
-    });
-
-    const hlsUrl = src.includes('ik-master.m3u8')
-      ? src
-      : `${src}/ik-master.m3u8?tr=sr-480_720`; // Always preload with lower quality
-
-    preloadHls.loadSource(hlsUrl);
-    preloadHls.on(Hls.Events.MANIFEST_PARSED, () => {
-      preloadedVideosCache.set(src, { hls: preloadHls, directUrl });
-    });
-
-    preloadHls.on(Hls.Events.ERROR, () => {
-      // On error, clean up and rely on direct URL
-      if (preloadHls) {
-        try {
-          preloadHls.destroy();
-        } catch (e) {
-          // Ignore cleanup errors
-        }
-      }
-      preloadedVideosCache.set(src, { hls: null, directUrl });
-    });
-  }
 };
 
 export const StoryVideoBackground = ({
@@ -111,40 +50,13 @@ export const StoryVideoBackground = ({
 
   const [isReadyToPlay, setIsReadyToPlay] = React.useState(false);
   const [loadAttempts, setLoadAttempts] = React.useState(0);
-  const hasBeenPlayed = useRef(playedVideosCache.has(src));
+  const hasBeenPlayed = useRef(VideoCache.hasPlayed(src));
 
   const hls = useRef<Hls | null>(null);
 
-  // Determine optimal video quality based on screen size
-  const getOptimalQuality = () => {
-    const width = window.innerWidth;
-
-    if (width <= 1024) {
-      return 'sr-480_720';
-    }
-    return 'sr-720_1080';
-  };
-
-  // Get the correct direct video link (without double .mp4)
   const directVideoUrl = useMemo(() => {
     if (!src) return '';
-
-    // Check if src already ends with .mp4
-    if (src.toLowerCase().endsWith('.mp4')) {
-      return src;
-    }
-
-    // Remove any URL parameters
-    const urlParts = src.split('?');
-    const baseUrl = urlParts[0];
-
-    // Check if the URL already ends with .mp4
-    if (baseUrl.toLowerCase().endsWith('.mp4')) {
-      return baseUrl;
-    }
-
-    // Add .mp4 only if necessary
-    return `${baseUrl}.mp4`;
+    return src;
   }, [src]);
 
   const streamSource = useMemo(() => {
@@ -163,7 +75,7 @@ export const StoryVideoBackground = ({
       return src;
     }
 
-    return `${src}/ik-master.m3u8?tr=${getOptimalQuality()}`;
+    return `${src}/ik-master.m3u8?tr=${VideoCache.getOptimalQuality()}`;
   }, [src, loadAttempts, directVideoUrl, hasBeenPlayed]);
 
   // Check the availability of direct link
@@ -203,15 +115,15 @@ export const StoryVideoBackground = ({
 
     playTriedRef.current = true;
 
-    // Если видео уже воспроизводилось ранее, можно начать сразу
-    // Для новых видео используем небольшую задержку 50мс вместо 100мс
+    // If video was played before, start immediately
+    // For new videos use a small delay of 50ms instead of 100ms
     const playWithTimeout = hasBeenPlayed.current ? 0 : 50;
 
     // Try to play
     setTimeout(() => {
       if (videoElement && isPlaying && isDisplaying) {
-        // Устанавливаем playbackRate временно в 1.25 для более быстрого начального воспроизведения
-        // (вернется к нормальной скорости после секунды воспроизведения)
+        // Set playbackRate temporarily to 1.25 for faster initial playback
+        // (will return to normal speed after a second of playback)
         if (!hasBeenPlayed.current) {
           videoElement.playbackRate = 1.25;
           setTimeout(() => {
@@ -221,7 +133,7 @@ export const StoryVideoBackground = ({
 
         videoElement.play()
           .then(() => {
-            playedVideosCache.add(src);
+            VideoCache.markAsPlayed(src);
             hasBeenPlayed.current = true;
             playbackStartedRef.current = true;
           })
@@ -251,7 +163,7 @@ export const StoryVideoBackground = ({
     const useFallbackSource = loadAttempts >= 2 || streamSource === directVideoUrl;
 
     // Check if this video was preloaded
-    const preloadedData = preloadedVideosCache.get(src);
+    const preloadedData = VideoCache.getPreloadedData(src);
 
     // Reset readiness state when source changes
     if (!isInitialMount.current) {
@@ -329,7 +241,7 @@ export const StoryVideoBackground = ({
       // Use preloaded HLS instance if available
       if (preloadedData?.hls) {
         hls.current = preloadedData.hls;
-        preloadedVideosCache.delete(src);
+        VideoCache.deletePreloadedData(src);
 
         // Reattach the preloaded HLS instance to our video element
         try {
@@ -343,22 +255,7 @@ export const StoryVideoBackground = ({
 
       // Create a new HLS instance if needed
       if (!hls.current) {
-        hls.current = new Hls({
-          maxBufferLength: 10,
-          maxMaxBufferLength: 30,
-          manifestLoadingTimeOut: 8000,
-          manifestLoadingMaxRetry: 2,
-          levelLoadingTimeOut: 8000,
-          fragLoadingTimeOut: 15000,
-          startLevel: 0,
-          autoStartLoad: true,
-          debug: false,
-          lowLatencyMode: true,
-          progressive: true,
-          xhrSetup: (xhr) => {
-            xhr.timeout = 20000;
-          },
-        });
+        hls.current = new Hls(VideoCache.createHlsConfig());
 
         hls.current.loadSource(streamSource);
         hls.current.attachMedia(videoElement);
@@ -446,7 +343,7 @@ export const StoryVideoBackground = ({
 
           videoElement.play()
             .then(() => {
-              playedVideosCache.add(src);
+              VideoCache.markAsPlayed(src);
               hasBeenPlayed.current = true;
               playbackStartedRef.current = true;
             })
@@ -470,10 +367,10 @@ export const StoryVideoBackground = ({
     }
   }, [isPlaying, isDisplaying, isReadyToPlay, src]);
 
-  // Предзагрузка следующего видео, если оно указано
+  // Preload next video if specified
   useEffect(() => {
-    if (nextSrc && !playedVideosCache.has(nextSrc) && !preloadedVideosCache.has(nextSrc)) {
-      preloadVideo(nextSrc);
+    if (nextSrc && !VideoCache.hasPlayed(nextSrc) && !VideoCache.isPreloaded(nextSrc)) {
+      VideoCache.preloadVideo(nextSrc);
     }
   }, [nextSrc]);
 

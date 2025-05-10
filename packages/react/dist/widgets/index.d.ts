@@ -30,6 +30,8 @@ declare const widgets: {
     image: import("@types").WidgetComponent<{
         params: import("@types").ImageWidgetParamsType;
         handleMediaLoading?: ((isLoading: boolean) => void) | undefined;
+        width?: number | undefined;
+        height?: number | undefined;
     }>;
     video: import("@types").WidgetComponent<{
         params: import("@types").VideoWidgetParamsType;
@@ -39,6 +41,7 @@ declare const widgets: {
         isDisplaying?: boolean | undefined;
         handleMediaPlaying?: ((isPlaying: boolean) => void) | undefined;
         handleMediaLoading?: ((isLoading: boolean) => void) | undefined;
+        nextVideoUrl?: string | undefined;
     }>;
     click_me: import("@types").WidgetComponent<{
         id?: string | undefined;

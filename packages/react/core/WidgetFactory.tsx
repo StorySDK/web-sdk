@@ -18,7 +18,7 @@ import {
   SwipeUpWidget,
   TalkAboutWidget,
   TextWidget,
-  VideoWidget
+  VideoWidget,
 } from '@widgets';
 import { STORY_SIZE_DEFAULT, StoryCurrentSize } from '@components';
 import {
@@ -33,7 +33,7 @@ import {
   SliderWidgetElementsType,
   TalkAboutElementsType,
   WidgetObjectType,
-  WidgetsTypes
+  WidgetsTypes,
 } from '../types';
 
 interface WidgetFactoryProps {
@@ -54,11 +54,10 @@ interface WidgetFactoryProps {
 
 export class WidgetFactory extends React.Component<WidgetFactoryProps> {
   private makeWidget() {
-    const elementsSize =
-      this.props.widget.positionByResolutions[
-        `${this.props.currentStorySize.width}x${this.props.currentStorySize.height}`
-      ]?.elementsSize ??
-      this.props.widget.positionByResolutions[
+    const elementsSize = this.props.widget.positionByResolutions[
+      `${this.props.currentStorySize.width}x${this.props.currentStorySize.height}`
+    ]?.elementsSize
+      ?? this.props.widget.positionByResolutions[
         `${STORY_SIZE_DEFAULT.width}x${STORY_SIZE_DEFAULT.height}`
       ]?.elementsSize;
 
@@ -99,7 +98,9 @@ export class WidgetFactory extends React.Component<WidgetFactoryProps> {
         return (
           <ImageWidget
             handleMediaLoading={this.props.handleMediaLoading}
+            height={this.props.widget.positionByResolutions[`${this.props.currentStorySize.width}x${this.props.currentStorySize.height}`]?.origin.height}
             params={this.props.widget.content.params}
+            width={this.props.widget.positionByResolutions[`${this.props.currentStorySize.width}x${this.props.currentStorySize.height}`]?.origin.width}
           />
         );
       case WidgetsTypes.VIDEO:
