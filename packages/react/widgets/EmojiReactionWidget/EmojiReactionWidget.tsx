@@ -1,10 +1,12 @@
-import React, { useState, useCallback, useMemo, useContext } from 'react';
+import React, {
+  useState, useCallback, useMemo, useContext,
+} from 'react';
 import { block, getScalableValue } from '@utils';
 import {
   EmojiReactionWidgetParamsType,
   WidgetComponent,
   EmojiReactionWidgetElemetsType,
-  WidgetsTypes
+  WidgetsTypes,
 } from '@types';
 import { useInterval } from '@hooks';
 import './EmojiReactionWidget.scss';
@@ -18,15 +20,15 @@ const INIT_ELEMENT_STYLES = {
     paddingTop: 14,
     paddingBottom: 14,
     paddingRight: 11,
-    paddingLeft: 11
+    paddingLeft: 11,
   },
   emoji: {
-    width: 34
+    width: 34,
   },
   item: {
     marginRight: 11,
-    marginLeft: 11
-  }
+    marginLeft: 11,
+  },
 };
 
 export const EmojiReactionWidget: WidgetComponent<{
@@ -36,7 +38,9 @@ export const EmojiReactionWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(emoji: string): void;
 }> = React.memo((props) => {
-  const { id, params, elementsSize, isReadOnly, onAnswer } = props;
+  const {
+    id, params, elementsSize, isReadOnly, onAnswer,
+  } = props;
 
   const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
@@ -72,9 +76,9 @@ export const EmojiReactionWidget: WidgetComponent<{
           storyId: storyContextVal.currentStoryId,
           widgetId: props.id,
           data: {
-            answer: emoji
-          }
-        }
+            answer: emoji,
+          },
+        },
       });
 
       storyContextVal.container?.dispatchEvent(generalAnswerEvent);
@@ -90,7 +94,7 @@ export const EmojiReactionWidget: WidgetComponent<{
       setBigSize(initEmojiSize);
       setDelay(50);
     },
-    [id, initEmojiSize, onAnswer, storyContextVal]
+    [id, initEmojiSize, onAnswer, storyContextVal],
   );
 
   return (

@@ -23,12 +23,21 @@
     opacity: 0;
     transition: opacity 0.3s ease;
 
+    &_loading {
+      cursor: auto;
+      pointer-events: none;
+    }
+
     &_skeleton {
       position: absolute;
       top: 0;
+      left: 5px;
+      height: 100px;
+    }
+
+    &_centered {
       left: 50%;
       transform: translateX(-50%);
-      height: 100px;
     }
 
     &_show {
@@ -41,6 +50,7 @@
     flex-direction: column;
     align-items: center;
     margin-right: 15px;
+    cursor: auto;
   }
 
   &__carouselContent {

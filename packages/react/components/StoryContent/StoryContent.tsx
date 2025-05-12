@@ -16,7 +16,7 @@ import '../StoryModal/StoryModal.scss';
 const b = block('StorySdkContent');
 const m = block('StorySdkModal');
 
-const WAIT_TIME = 2000;
+const WAIT_TIME = 2500;
 
 const loadedImagesCache = new Map<string, boolean>();
 

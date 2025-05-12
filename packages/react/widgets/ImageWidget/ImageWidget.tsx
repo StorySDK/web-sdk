@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ImageWidgetParamsType, WidgetComponent } from '@types';
 import { block } from '@utils';
 import './ImageWidget.scss';
@@ -12,17 +12,45 @@ export const ImageWidget: WidgetComponent<{
   height?: number;
 }> = React.memo((props) => {
   const [isImageLoading, setIsImageLoading] = React.useState(true);
+  const [isImageVisible, setIsImageVisible] = React.useState(false);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
   const {
     imageUrl, widgetOpacity, borderRadius,
   } = props.params;
 
   useEffect(() => {
     setIsImageLoading(true);
+    setIsImageVisible(false);
   }, [imageUrl]);
 
   useEffect(() => {
-    props.handleMediaLoading?.(isImageLoading);
-  }, [isImageLoading, props]);
+    const isFullyRendered = !isImageLoading && isImageVisible;
+    props.handleMediaLoading?.(!isFullyRendered);
+  }, [isImageLoading, isImageVisible, props]);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setIsImageVisible(true);
+
+        if (imageRef.current && observerRef.current) {
+          observerRef.current.unobserve(imageRef.current);
+        }
+      }
+    });
+
+    if (imageRef.current && observerRef.current) {
+      observerRef.current.observe(imageRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [imageRef.current, imageUrl]);
 
   const styles = {
     borderRadius: `${borderRadius}px`,
@@ -33,6 +61,7 @@ export const ImageWidget: WidgetComponent<{
     <img
       alt=""
       className={b('image')}
+      ref={imageRef}
       src={imageUrl}
       style={styles}
       onLoad={() => {

@@ -20,7 +20,6 @@ import {
   StoryType, Group, GroupType, StoryContenxt, ScoreType, WidgetsTypes,
 } from '../../types';
 import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
-import smallIphoneMockup from '../../assets/images/iphone-mockup-small-1.svg';
 import storySdkLogo from '../../assets/images/storysdk-logo.svg';
 import { StorySwiperContent } from './_components';
 

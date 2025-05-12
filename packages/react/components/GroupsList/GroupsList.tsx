@@ -290,20 +290,25 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     const carouselElement = carouselRef.current;
     const carouselSkeletonElement = carouselSkeletonRef.current;
 
-    const handleResize = () => {
-      if (containerElement) {
-        const containerWidth = containerElement.clientWidth;
-        const containerHeight = containerElement.clientHeight;
-        setGroupMinHeight(containerHeight);
+    const updateCentering = () => {
+      if (!containerElement) return;
 
-        if (carouselElement) {
-          const carouselWidth = carouselElement.clientWidth;
-          setIsCentered(containerWidth >= carouselWidth);
-        }
+      const containerWidth = containerElement.clientWidth;
+      const containerHeight = containerElement.clientHeight;
+      setGroupMinHeight(containerHeight);
+
+      if (showSkeleton && carouselSkeletonElement) {
+        const skeletonWidth = carouselSkeletonElement.clientWidth;
+        setIsCentered(containerWidth >= skeletonWidth);
+      } else if (!showSkeleton && carouselElement) {
+        const contentWidth = carouselElement.clientWidth;
+        setIsCentered(containerWidth >= contentWidth);
       }
     };
 
-    const resizeObserver = new ResizeObserver(handleResize);
+    updateCentering();
+
+    const resizeObserver = new ResizeObserver(updateCentering);
     if (containerElement) {
       resizeObserver.observe(containerElement);
     }
@@ -313,7 +318,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         resizeObserver.unobserve(containerElement);
       }
     };
-  }, [groups.length, isLoading, autoplay, width]);
+  }, [width, showSkeleton]);
 
   return (
     <>
@@ -327,9 +332,11 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           style={{
             width: '100%',
             minHeight: groupMinHeight,
+            overflowY: 'hidden',
           }}
+
         >
-          <div className={b('carousel', { show: showSkeleton && !autoplay, skeleton: true })} ref={carouselSkeletonRef}>
+          <div className={b('carousel', { show: showSkeleton && !autoplay, skeleton: true, centered: isCentered })} ref={carouselSkeletonRef}>
             <div className={b('loaderItem')}>
               <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
               <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
@@ -350,7 +357,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
 
           <>
             {groups.length ? (
-              <div className={b('carousel', { show: !showSkeleton && !autoplay })} ref={carouselRef}>
+              <div className={b('carousel', { show: !showSkeleton && !autoplay, loading: showSkeleton })} ref={carouselRef}>
                 {groups
                   .filter((group: any) => group.stories.length)
                   .map((group, index) => (
