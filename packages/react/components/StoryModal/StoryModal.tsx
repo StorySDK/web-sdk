@@ -315,7 +315,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
   }, [isAutoplayVideos]);
 
   const currentStorySize: StoryCurrentSize = useMemo(() => {
-    if (storyWidth && storyHeight) {
+    if (storyWidth && storyHeight && !isInReactNativeWebView) {
       return {
         width: storyWidth,
         height: storyHeight,
@@ -1019,7 +1019,6 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
               storyWidth={storyWidth}
               swipeHandlers={swipeHandlers}
             />
-
             {isShowMockupCurrent && !isMobile && (
               <img className={b('mockup')} ref={mockupRef} src={largeIphoneMockup} />
             )}
@@ -1046,7 +1045,12 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
         {(currentGroup?.type === GroupType.ONBOARDING
           || (currentGroup?.type === GroupType.TEMPLATE
             && currentGroup?.category === 'onboarding')) && (
-            <div className={b('closeContainer')}>
+            <div
+              className={b('closeContainer')}
+              style={{
+                paddingTop: isInReactNativeWebView ? '44px' : undefined,
+              }}
+            >
               {!currentGroup?.settings?.isProgressHidden && playStatus !== 'wait' && (
                 <>
                   <div

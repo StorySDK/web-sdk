@@ -318,7 +318,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         resizeObserver.unobserve(containerElement);
       }
     };
-  }, [width, showSkeleton]);
+  }, [width, showSkeleton, isInReactNativeWebView]);
 
   return (
     <>
@@ -336,7 +336,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           }}
 
         >
-          <div className={b('carousel', { show: showSkeleton && !autoplay, skeleton: true, centered: isCentered })} ref={carouselSkeletonRef}>
+          <div className={b('carousel', { show: showSkeleton && !autoplay, skeleton: true, centered: isInReactNativeWebView ? false : isCentered })} ref={carouselSkeletonRef}>
             <div className={b('loaderItem')}>
               <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
               <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />

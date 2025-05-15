@@ -140,12 +140,12 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
 
   const currentRatioIndex = useMemo(() => {
-    if (storyWidth && storyHeight) {
+    if (storyWidth && storyHeight && !isInReactNativeWebView) {
       return storyWidth / storyHeight;
     }
 
     return defaultRatioIndex;
-  }, [storyHeight, storyWidth, defaultRatioIndex]);
+  }, [storyHeight, storyWidth, defaultRatioIndex, isInReactNativeWebView]);
 
   const isShowStatusBarInStory = isShowMockupCurrent && !isMobile && isLarge && isStatusBarActive;
   const desktopWidth = Math.ceil(currentRatioIndex * contentHeight);
@@ -218,7 +218,12 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                 </div>
               ))}
             </div>
-            <div className={b('topContainer')}>
+            <div
+              className={b('topContainer')}
+              style={{
+                paddingTop: isInReactNativeWebView && currentGroup?.type === GroupType.ONBOARDING ? '88px' : undefined,
+              }}
+            >
               <>
                 {isShowStatusBarInStory && <StatusBar />}
                 <div
