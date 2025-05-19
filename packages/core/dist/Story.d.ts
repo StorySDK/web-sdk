@@ -31,6 +31,7 @@ export declare class Story extends EventEmitter {
         isForceCloseAvailable?: boolean;
         autoplay?: boolean;
         groupId?: string;
+        isOnboarding?: boolean;
         isDebugMode?: boolean;
         startStoryId?: string;
         forbidClose?: boolean;
@@ -67,6 +68,7 @@ export declare class Story extends EventEmitter {
         groupId?: string;
         startStoryId?: string;
         forbidClose?: boolean;
+        isOnboarding?: boolean;
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
         isInReactNativeWebView?: boolean;

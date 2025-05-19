@@ -19,6 +19,7 @@ declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: 
     arrowsColor?: string | undefined;
     backgroundColor?: string | undefined;
     isStatusBarActive?: boolean | undefined;
+    isOnboarding?: boolean | undefined;
     storyWidth?: number | undefined;
     storyHeight?: number | undefined;
     preventCloseOnGroupClick?: boolean | undefined;

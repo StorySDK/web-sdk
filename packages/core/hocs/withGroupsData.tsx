@@ -37,6 +37,7 @@ const withGroupsData = (
     arrowsColor?: string;
     backgroundColor?: string;
     isStatusBarActive?: boolean;
+    isOnboarding?: boolean;
     storyWidth?: number;
     storyHeight?: number;
     preventCloseOnGroupClick?: boolean;
@@ -478,6 +479,10 @@ const withGroupsData = (
               const groupsFetchedData = groupsData.data.data
                 .filter((item: any) => {
                   const isActive = item.active && item.type;
+
+                  if (options?.isOnboarding) {
+                    return options?.groupId === item.id && isActive;
+                  }
 
                   if (item.type === GroupType.ONBOARDING) {
                     if (options?.groupId === item.id || options?.autoplay) {

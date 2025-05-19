@@ -70,6 +70,7 @@ export class Story extends EventEmitter {
     isForceCloseAvailable?: boolean;
     autoplay?: boolean;
     groupId?: string;
+    isOnboarding?: boolean;
     isDebugMode?: boolean;
     startStoryId?: string;
     forbidClose?: boolean;
@@ -110,6 +111,7 @@ export class Story extends EventEmitter {
       groupId?: string;
       startStoryId?: string;
       forbidClose?: boolean;
+      isOnboarding?: boolean;
       openInExternalModal?: boolean;
       devMode?: 'staging' | 'development';
       isInReactNativeWebView?: boolean;
@@ -149,6 +151,7 @@ export class Story extends EventEmitter {
       this.options.backgroundColor = options?.backgroundColor;
       this.options.isInReactNativeWebView = this.isInReactNativeWebView;
       this.options.preventCloseOnGroupClick = options?.preventCloseOnGroupClick;
+      this.options.isOnboarding = options?.isOnboarding;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -438,6 +441,7 @@ export const init = () => {
           const backgroundColor = container.getAttribute('data-storysdk-background-color');
           const preventCloseOnGroupClick = container.getAttribute('data-storysdk-prevent-close-on-group-click');
           const isForceCloseAvailable = container.getAttribute('data-storysdk-is-force-close-available');
+          const isOnboarding = container.getAttribute('data-storysdk-is-onboarding');
           storyOptions = {
             ...storyOptions,
             groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
@@ -463,6 +467,7 @@ export const init = () => {
             backgroundColor: backgroundColor ?? undefined,
             preventCloseOnGroupClick: preventCloseOnGroupClick === 'true',
             isForceCloseAvailable: isForceCloseAvailable === 'true',
+            isOnboarding: isOnboarding === 'true',
           };
         }
 
