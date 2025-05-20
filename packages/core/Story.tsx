@@ -442,6 +442,7 @@ export const init = () => {
           const preventCloseOnGroupClick = container.getAttribute('data-storysdk-prevent-close-on-group-click');
           const isForceCloseAvailable = container.getAttribute('data-storysdk-is-force-close-available');
           const isOnboarding = container.getAttribute('data-storysdk-is-onboarding');
+
           storyOptions = {
             ...storyOptions,
             groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,

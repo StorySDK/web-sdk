@@ -2,7 +2,6 @@ import React, {
   useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import block from 'bem-cn';
-import Skeleton from 'react-loading-skeleton';
 import classNames from 'classnames';
 import SimpleBar from 'simplebar-react';
 import ReactDOM from 'react-dom';
@@ -10,8 +9,7 @@ import { useWindowSize } from '@react-hook/window-size';
 import { getUniqUserId } from '@utils';
 import { Group } from '../../types';
 import { GroupItem, StoryModal } from '..';
-import 'simplebar-react/dist/simplebar.min.css';
-import 'react-loading-skeleton/dist/skeleton.css';
+import { GroupsListLoader } from './GroupsListLoader';
 import './GroupsList.scss';
 
 const b = block('GroupsSdkList');
@@ -204,8 +202,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     if (!isLoading && groups.length > 0) {
       timer = setTimeout(() => {
         setShowSkeleton(false);
-      }, 1000);
-    } else {
+      }, 300);
+    } else if (isLoading) {
       setShowSkeleton(true);
     }
 
@@ -336,25 +334,6 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           }}
 
         >
-          <div className={b('carousel', { show: showSkeleton && !autoplay, skeleton: true, centered: isInReactNativeWebView ? false : isCentered })} ref={carouselSkeletonRef}>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-            <div className={b('loaderItem')}>
-              <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-              <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-            </div>
-          </div>
-
           <>
             {groups.length ? (
               <div className={b('carousel', { show: !showSkeleton && !autoplay, loading: showSkeleton })} ref={carouselRef}>
@@ -382,7 +361,15 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
               <>{!autoplay && !isLoading && <p className={b('emptyText')}>Stories will be here</p>}</>
             )}
           </>
-          {/* )} */}
+
+          <GroupsListLoader
+            autoplay={autoplay}
+            carouselSkeletonRef={carouselSkeletonRef}
+            groupImageWidth={groupImageWidth}
+            isCentered={isCentered}
+            isInReactNativeWebView={isInReactNativeWebView}
+            showSkeleton={showSkeleton}
+          />
         </SimpleBar>
       </div>
     </>

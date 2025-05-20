@@ -1,14 +1,14 @@
 export declare const API: {
     app: {
-        getApp(): import("axios").AxiosPromise<any>;
+        getApp(): Promise<import("axios").AxiosResponse<any, any>>;
     };
     groups: {
-        getList(): import("axios").AxiosPromise<any>;
+        getList(): Promise<import("axios").AxiosResponse<any, any>>;
     };
     stories: {
         getList(params: {
             groupId: string;
-        }): import("axios").AxiosPromise<any>;
+        }): Promise<import("axios").AxiosResponse<any, any>>;
     };
     statistics: {
         group: {

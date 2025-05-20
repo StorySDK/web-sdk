@@ -1,7 +1,5 @@
 import React from 'react';
 import { Group } from '../../types';
-import 'simplebar-react/dist/simplebar.min.css';
-import 'react-loading-skeleton/dist/skeleton.css';
 import './GroupsList.scss';
 export interface GroupsListProps {
     groups: Group[];

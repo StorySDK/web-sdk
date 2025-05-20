@@ -603,7 +603,7 @@ const withGroupsData = (
       groupsOutlineColor={options?.groupsOutlineColor}
       isForceCloseAvailable={options?.isForceCloseAvailable}
       isInReactNativeWebView={options?.isInReactNativeWebView}
-      isLoading={data === null || loadStatus === 'loading'}
+      isLoading={loadStatus !== 'loaded'}
       isShowLabel={isShowLabel}
       isShowMockup={isShowMockup}
       isStatusBarActive={options?.isStatusBarActive}

@@ -29,10 +29,14 @@
     }
 
     &_skeleton {
+      opacity: 1;
       position: absolute;
       top: 0;
       left: 5px;
       height: 100px;
+      pointer-events: none;
+      z-index: 100;
+      transition: opacity 0.4s ease-in-out;
     }
 
     &_centered {
@@ -42,6 +46,12 @@
 
     &_show {
       opacity: 1;
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    &_hide {
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
     }
   }
 
