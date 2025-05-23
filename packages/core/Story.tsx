@@ -77,6 +77,7 @@ export class Story extends EventEmitter {
     activeGroupOutlineColor?: string;
     groupsOutlineColor?: string;
     openInExternalModal?: boolean;
+    isOnlyGroups?: boolean;
     devMode?: 'staging' | 'development';
     isInReactNativeWebView?: boolean;
     preventCloseOnGroupClick?: boolean;
@@ -87,6 +88,8 @@ export class Story extends EventEmitter {
   root: any = null; // For storing reference to root in React 18
 
   eventHandlers: { [key: string]: ((data: any) => void)[] };
+
+  private listenersSetup: boolean = false; // Флаг для предотвращения дублирования обработчиков
 
   constructor(
     token: string,
@@ -116,6 +119,7 @@ export class Story extends EventEmitter {
       devMode?: 'staging' | 'development';
       isInReactNativeWebView?: boolean;
       preventCloseOnGroupClick?: boolean;
+      isOnlyGroups?: boolean;
     },
   ) {
     super();
@@ -152,6 +156,7 @@ export class Story extends EventEmitter {
       this.options.isInReactNativeWebView = this.isInReactNativeWebView;
       this.options.preventCloseOnGroupClick = options?.preventCloseOnGroupClick;
       this.options.isOnboarding = options?.isOnboarding;
+      this.options.isOnlyGroups = options?.isOnlyGroups;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -180,8 +185,8 @@ export class Story extends EventEmitter {
 
         if (debugContainer) {
           const debugElement = document.createElement('pre');
-          debugElement.innerHTML = `Starting Request to: ${request.url
-            }\nRequest Headers: ${JSON.stringify(request.headers, null, 2)}`;
+          debugElement.innerHTML = `Starting Request to: ${request.url}
+Request Headers: ${JSON.stringify(request.headers, null, 2)}`;
           debugContainer.appendChild(debugElement);
         }
 
@@ -202,8 +207,8 @@ export class Story extends EventEmitter {
 
           if (debugContainer) {
             const debugElement = document.createElement('pre');
-            debugElement.innerHTML = `Response Status: ${response.status
-              }\nResponse Headers: ${JSON.stringify(response.headers, null, 2)}`;
+            debugElement.innerHTML = `Response Status: ${response.status}
+Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
             debugContainer.appendChild(debugElement);
           }
           return response;
@@ -260,7 +265,7 @@ export class Story extends EventEmitter {
         data,
       }));
 
-      if (this.options?.isDebugMode) {
+      if (this.options?.isDebugMode && type !== 'storysdk:debug:info') {
         console.log('StorySDK - Sent message to React Native:', { type, data });
         this.sendDebugInfoToReactNative('Sent message to React Native', { type, data });
       }
@@ -293,6 +298,11 @@ export class Story extends EventEmitter {
   // * @param element Container element
   // */
   private setupEventListeners(element: Element | HTMLDivElement): void {
+    // Предотвращаем дублирование обработчиков событий
+    if (this.listenersSetup) {
+      return;
+    }
+
     element.addEventListener('storysdk:widget:click', (event) => {
       this.emit(StoryEventTypes.WIDGET_CLICK, (event as CustomEvent).detail || {});
     });
@@ -336,6 +346,12 @@ export class Story extends EventEmitter {
     element.addEventListener('storysdk:group:click', (event) => {
       this.emit(StoryEventTypes.GROUP_CLICK, (event as CustomEvent).detail || {});
     });
+
+    element.addEventListener('storysdk:data:loaded', (event) => {
+      this.emit(StoryEventTypes.DATA_LOADED, (event as CustomEvent).detail || {});
+    });
+
+    this.listenersSetup = true;
   }
 
   renderGroups(container?: Element | HTMLDivElement | null) {
@@ -356,11 +372,11 @@ export class Story extends EventEmitter {
       return;
     }
 
-    const Groups = withGroupsData(GroupsList, this.options, container);
+    const Groups = withGroupsData(GroupsList, { ...this.options, token: this.token }, container);
 
     if (container) {
-      this.root = renderElement(<Groups />, container);
       this.setupEventListeners(container);
+      this.root = renderElement(<Groups />, container);
     }
   }
 
@@ -378,6 +394,9 @@ export class Story extends EventEmitter {
     if (this.isInReactNativeWebView && typeof window !== 'undefined') {
       window.removeEventListener('message', this.handleReactNativeMessage);
     }
+
+    // Сбрасываем флаг для возможности повторной настройки обработчиков
+    this.listenersSetup = false;
   }
 }
 
@@ -442,6 +461,7 @@ export const init = () => {
           const preventCloseOnGroupClick = container.getAttribute('data-storysdk-prevent-close-on-group-click');
           const isForceCloseAvailable = container.getAttribute('data-storysdk-is-force-close-available');
           const isOnboarding = container.getAttribute('data-storysdk-is-onboarding');
+          const isOnlyGroups = container.getAttribute('data-storysdk-is-only-groups');
 
           storyOptions = {
             ...storyOptions,
@@ -469,6 +489,7 @@ export const init = () => {
             preventCloseOnGroupClick: preventCloseOnGroupClick === 'true',
             isForceCloseAvailable: isForceCloseAvailable === 'true',
             isOnboarding: isOnboarding === 'true',
+            isOnlyGroups: isOnlyGroups === 'true',
           };
         }
 

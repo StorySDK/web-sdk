@@ -9,5 +9,6 @@ export enum StoryEventTypes {
   WIDGET_CLICK = 'widgetClick',
   MODAL_OPEN = 'storyModalOpen',
   MODAL_CLOSE = 'storyModalClose',
-  GROUP_CLICK = 'groupClick'
+  GROUP_CLICK = 'groupClick',
+  DATA_LOADED = 'dataLoaded'
 }

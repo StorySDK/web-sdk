@@ -1,17 +1,21 @@
 import { useLocalStorage } from './useLocalStorage';
 
-export const useStoryCache = (
-  userId: string | null
-): [(storyId: string) => any, (storyId: string, data: any) => void] => {
-  const safeUserId =
-    userId && typeof userId === 'object' ? 'promise-user-id' : String(userId || 'anonymous');
+interface StoryCache {
+  [key: string]: any;
+}
 
-  const [storedValue, setValue] = useLocalStorage(`StorySdkStoriesData-${safeUserId}`, {});
+export const useStoryCache = (
+  userId: string | null,
+): [(storyId: string) => any, (storyId: string, data: any
+) => void] => {
+  const safeUserId = userId && typeof userId === 'object' ? 'promise-user-id' : String(userId || 'anonymous');
+
+  const [storedValue, setValue] = useLocalStorage<StoryCache>(`StorySdkStoriesData-${safeUserId}`, {});
 
   const setData = (storyId: string, data: any) => {
     setValue({
       ...storedValue,
-      [storyId]: data
+      [storyId]: data,
     });
   };
 

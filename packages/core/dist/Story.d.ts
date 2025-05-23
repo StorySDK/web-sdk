@@ -38,6 +38,7 @@ export declare class Story extends EventEmitter {
         activeGroupOutlineColor?: string;
         groupsOutlineColor?: string;
         openInExternalModal?: boolean;
+        isOnlyGroups?: boolean;
         devMode?: 'staging' | 'development';
         isInReactNativeWebView?: boolean;
         preventCloseOnGroupClick?: boolean;
@@ -47,6 +48,7 @@ export declare class Story extends EventEmitter {
     eventHandlers: {
         [key: string]: ((data: any) => void)[];
     };
+    private listenersSetup;
     constructor(token: string, options?: {
         isDebugMode?: boolean;
         groupImageWidth?: number;
@@ -73,6 +75,7 @@ export declare class Story extends EventEmitter {
         devMode?: 'staging' | 'development';
         isInReactNativeWebView?: boolean;
         preventCloseOnGroupClick?: boolean;
+        isOnlyGroups?: boolean;
     });
     private handleReactNativeMessage;
     private sendMessageToReactNative;

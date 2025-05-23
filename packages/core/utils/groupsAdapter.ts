@@ -107,8 +107,9 @@ export const adaptGroupData = (
   uniqUserId: string,
   language: string,
   isMobile?: boolean,
+  isOnlyGroups?: boolean,
 ) => data
-  .filter((group: any) => (group.stories ? group.stories.length : 0))
+  .filter((group: any) => (group.stories ? group.stories.length : 0) || isOnlyGroups)
   .map((group: any) => ({
     id: group.id,
     title: group.title,

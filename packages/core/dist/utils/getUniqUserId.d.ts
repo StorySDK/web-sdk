@@ -1,1 +1,1 @@
-export { getUniqUserId } from '@storysdk/react';
+export declare const getUniqUserId: () => string;

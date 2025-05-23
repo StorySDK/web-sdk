@@ -45,6 +45,7 @@ This SDK is part of the StorySDK platform, which is available at [storysdk.com](
 4. [Event Handling](#event-handling)
 5. [Styling & Customization](#styling--customization)
 6. [Troubleshooting](#troubleshooting)
+7. [Performance Optimizations](#performance-optimizations)
 
 ## Installation
 
@@ -1073,3 +1074,49 @@ StorySDK is an open-source software available for developers. For technical supp
 StorySDK offers transparent pricing without hidden costs. Visit the website for current pricing information.
 
 For comprehensive documentation, including advanced usage guides, API references, and tutorials, visit [docs.storysdk.com](https://docs.storysdk.com/).
+
+## Performance Optimizations
+
+The StorySDK has been optimized for fast initial rendering. Key optimizations include:
+
+### Skeleton Loader
+The SDK now uses a two-phase rendering strategy:
+1. First, it renders a lightweight skeleton loader for immediate visual feedback
+2. Then it loads the actual content progressively
+
+### Progressive Loading Strategy
+- App data is loaded first
+- Group placeholders are shown immediately 
+- Stories are loaded in batches, prioritizing the active group
+- Font loading is non-blocking
+- Analytics initialization is deferred
+
+### Developer Options
+You can improve first render performance by:
+- Pre-caching key API responses
+- Adding the critical CSS to your page's `<head>`
+- Using the `preconnect` hint for API endpoints
+
+```html
+<!-- Add these to your HTML head for even faster loading -->
+<link rel="preconnect" href="https://api.storysdk.com">
+<style>
+  /* Critical skeleton styles */
+  .critical-skeleton-styles {
+    width: 100%;
+    animation: pulse 1.5s infinite;
+    background: linear-gradient(
+      90deg,
+      rgba(190, 190, 190, 0.2) 25%,
+      rgba(129, 129, 129, 0.24) 37%,
+      rgba(190, 190, 190, 0.2) 63%
+    );
+    background-size: 400% 100%;
+  }
+  
+  @keyframes pulse {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+  }
+</style>
+```

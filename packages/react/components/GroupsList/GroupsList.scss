@@ -15,6 +15,13 @@
     color: #dddbde;
     text-align: center;
     padding: 8px;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+
+    &_show {
+      opacity: 1;
+    }
+
   }
 
   &__carousel {
@@ -33,7 +40,6 @@
       position: absolute;
       top: 0;
       left: 5px;
-      height: 100px;
       pointer-events: none;
       z-index: 100;
       transition: opacity 0.4s ease-in-out;
@@ -63,9 +69,27 @@
     cursor: auto;
   }
 
+  &__skeleton {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__skeletonShimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    animation: shimmer 1.5s infinite;
+  }
+
   &__carouselContent {
     display: flex;
     position: relative;
+    min-height: 100px;
 
     &_centered {
       justify-content: center;
@@ -74,5 +98,15 @@
 
   &__track {
     display: none;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
   }
 }

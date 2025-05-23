@@ -4,39 +4,65 @@ import { StorageService } from '@storysdk/react';
 
 // Request wrapper with caching capability
 const makeRequestWithHeadCheck = async (options: any) => {
-  const cacheKey = `storysdk_api_cache_${options.url}`;
+  // Extract token from Authorization header
+  const authHeader = axios.defaults.headers.common?.Authorization as string;
+  const token = authHeader?.replace('SDK ', '') || '';
 
-  // First make a HEAD request
-  const headResult = await axios({
-    method: 'head',
-    url: options.url,
-  });
+  const cacheKey = `storysdk_api_cache_${token}_${options.url}`;
 
-  const lastModified = headResult.headers['last-modified'];
+  try {
+    // First make a HEAD request - always fresh, no caching
+    const headResult = await axios({
+      method: 'head',
+      url: options.url,
+    }).catch((error) => {
+      console.error('StorySDK - HEAD request failed:', error);
+      return { headers: {} };
+    });
 
-  // Try to get cached data
-  const cachedData = await StorageService.getCachedData(cacheKey, lastModified);
+    const lastModified = headResult.headers
+      ? (headResult.headers as Record<string, string>)['last-modified']
+      : undefined;
 
-  // If we have valid cached data, return it
-  if (cachedData) {
-    return {
-      data: cachedData,
-      status: 200,
-      statusText: 'OK (from cache)',
-      headers: headResult.headers,
-      config: {},
+    let cachedData = null;
+
+    if (lastModified) {
+      cachedData = await StorageService.getCachedData(cacheKey, lastModified);
+    }
+
+    // Only use cache if it actually exists and is not empty
+    if (cachedData) {
+      return {
+        data: cachedData,
+        status: 200,
+        statusText: 'OK (from cache)',
+        headers: headResult.headers,
+        config: {},
+      };
+    }
+
+    // Always make a request if cache is missing or empty
+    const response = await axios(options);
+
+    const isDataNotEmpty = (data: any): boolean => {
+      if (Array.isArray(data)) {
+        return data.length > 0;
+      }
+      if (typeof data === 'object' && data !== null) {
+        return Object.keys(data).length > 0;
+      }
+      return data !== null && data !== undefined;
     };
+
+    if (lastModified && response.data && isDataNotEmpty(response.data)) {
+      await StorageService.setCachedData(cacheKey, response.data, lastModified);
+    }
+
+    return response;
+  } catch (error) {
+    console.error('StorySDK - Request failed:', options.url, error);
+    throw error;
   }
-
-  // If no cache or it's outdated - perform the main request
-  const response = await axios(options);
-
-  // Save the result to cache along with the last-modified date
-  if (lastModified) {
-    await StorageService.setCachedData(cacheKey, response.data, lastModified);
-  }
-
-  return response;
 };
 
 export const API = {

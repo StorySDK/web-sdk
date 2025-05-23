@@ -1,17 +1,49 @@
 import React, { RefObject } from 'react';
 import block from 'bem-cn';
-import Skeleton from 'react-loading-skeleton';
 import './GroupsList.scss';
 
 const b = block('GroupsSdkList');
 
+interface SkeletonItemProps {
+  width: number;
+  height: number;
+  style?: React.CSSProperties;
+}
+
+const SkeletonItem: React.FC<SkeletonItemProps> = ({ width, height, style }) => (
+  <div
+    className={b('skeleton')}
+    style={{
+      width: `${width}px`,
+      height: `${height}px`,
+      backgroundColor: '#f0f0f0',
+      borderRadius: '4px',
+      position: 'relative',
+      overflow: 'hidden',
+      ...style,
+    }}
+  >
+    <div
+      className={b('skeletonShimmer')}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: '-100%',
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent)',
+        animation: 'shimmer 1.5s infinite',
+      }}
+    />
+  </div>
+);
+
 interface GroupsListLoaderProps {
   groupImageWidth?: number;
   isInReactNativeWebView?: boolean;
-  isCentered: boolean;
-  showSkeleton: boolean;
-  autoplay?: boolean;
-  carouselSkeletonRef: RefObject<HTMLDivElement>;
+  isCentered?: boolean;
+  showSkeleton?: boolean;
+  carouselSkeletonRef?: RefObject<HTMLDivElement>;
 }
 
 export const GroupsListLoader: React.FC<GroupsListLoaderProps> = ({
@@ -19,32 +51,33 @@ export const GroupsListLoader: React.FC<GroupsListLoaderProps> = ({
   isInReactNativeWebView,
   isCentered,
   showSkeleton,
-  autoplay,
   carouselSkeletonRef,
 }) => (
+
   <div
     className={b('carousel', {
-      hide: !(showSkeleton && !autoplay),
+      hide: !showSkeleton,
       skeleton: true,
       centered: isInReactNativeWebView ? false : isCentered,
     })}
     ref={carouselSkeletonRef}
   >
     <div className={b('loaderItem')}>
-      <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-      <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+      <SkeletonItem height={groupImageWidth || 64} width={groupImageWidth || 64} />
+      <SkeletonItem height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
     </div>
     <div className={b('loaderItem')}>
-      <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-      <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+      <SkeletonItem height={groupImageWidth || 64} width={groupImageWidth || 64} />
+      <SkeletonItem height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
     </div>
     <div className={b('loaderItem')}>
-      <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-      <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+      <SkeletonItem height={groupImageWidth || 64} width={groupImageWidth || 64} />
+      <SkeletonItem height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
     </div>
     <div className={b('loaderItem')}>
-      <Skeleton height={groupImageWidth || 64} width={groupImageWidth || 64} />
-      <Skeleton height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
+      <SkeletonItem height={groupImageWidth || 64} width={groupImageWidth || 64} />
+      <SkeletonItem height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
     </div>
   </div>
+
 );

@@ -33,5 +33,10 @@ export declare const StorageService: {
      * @param lastModified Last-Modified header value
      */
     setCachedData<T_3>(key: string, data: T_3, lastModified?: string): Promise<void>;
+    /**
+     * Check if storage is available
+     * @returns True if storage is available, false otherwise
+     */
+    isAvailable(): boolean;
 };
 export default StorageService;

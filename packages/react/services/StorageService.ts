@@ -10,6 +10,24 @@ export interface StorageAdapter {
   setItem(key: string, value: string): Promise<void>;
 }
 
+// In-memory fallback storage when localStorage is not available
+const memoryStorage: Record<string, string> = {};
+
+// Safe check for localStorage availability
+const isLocalStorageAvailable = (): boolean => {
+  try {
+    // Try to use localStorage by setting and getting a test item
+    const testKey = '__storage_test__';
+    localStorage.setItem(testKey, testKey);
+    localStorage.removeItem(testKey);
+    return true;
+  } catch (e) {
+    // If any error occurs, localStorage is not available
+    console.warn('StorySDK - localStorage is not available, using in-memory storage');
+    return false;
+  }
+};
+
 // Check if we're running in a React Native WebView
 const isInReactNativeWebView = typeof window !== 'undefined'
   && typeof window.ReactNativeWebView !== 'undefined';
@@ -40,18 +58,28 @@ if (isInReactNativeWebView) {
 const webStorageAdapter: StorageAdapter = {
   getItem: async (key: string): Promise<string | null> => {
     try {
-      return localStorage.getItem(key);
+      if (isLocalStorageAvailable()) {
+        return localStorage.getItem(key);
+      }
+      return memoryStorage[key] || null;
     } catch (error) {
       console.error('StorySDK - Error accessing localStorage:', error);
-      return null;
+      // Fallback to memory storage
+      return memoryStorage[key] || null;
     }
   },
 
   setItem: async (key: string, value: string): Promise<void> => {
     try {
-      localStorage.setItem(key, value);
+      if (isLocalStorageAvailable()) {
+        localStorage.setItem(key, value);
+      } else {
+        memoryStorage[key] = value;
+      }
     } catch (error) {
       console.error('StorySDK - Error saving to localStorage:', error);
+      // Fallback to memory storage
+      memoryStorage[key] = value;
     }
   },
 };
@@ -59,6 +87,13 @@ const webStorageAdapter: StorageAdapter = {
 // React Native WebView storage adapter using postMessage
 const reactNativeWebViewAdapter: StorageAdapter = {
   getItem: async (key: string): Promise<string | null> => new Promise((resolve) => {
+    // If ReactNativeWebView is not available anymore, fallback to memory storage
+    if (typeof window === 'undefined' || typeof window.ReactNativeWebView === 'undefined') {
+      console.warn('StorySDK - ReactNativeWebView is not available, using in-memory storage');
+      resolve(memoryStorage[key] || null);
+      return;
+    }
+
     const id = String(callbackId);
     callbackId += 1;
     storageCallbacks[id] = resolve;
@@ -69,14 +104,33 @@ const reactNativeWebViewAdapter: StorageAdapter = {
         callbackId: id,
         data: { key },
       }));
+
+      // Set timeout to avoid waiting indefinitely
+      setTimeout(() => {
+        if (storageCallbacks[id]) {
+          console.warn('StorySDK - Storage request timed out, using in-memory storage');
+          delete storageCallbacks[id];
+          resolve(memoryStorage[key] || null);
+        }
+      }, 2000);
     } catch (error) {
       console.error('StorySDK - Error requesting storage value:', error);
       delete storageCallbacks[id];
-      resolve(null);
+      // Fallback to memory storage
+      resolve(memoryStorage[key] || null);
     }
   }),
 
   setItem: async (key: string, value: string): Promise<void> => {
+    // Store in memory as a backup
+    memoryStorage[key] = value;
+
+    // If ReactNativeWebView is not available anymore, use only memory storage
+    if (typeof window === 'undefined' || typeof window.ReactNativeWebView === 'undefined') {
+      console.warn('StorySDK - ReactNativeWebView is not available, using in-memory storage only');
+      return;
+    }
+
     try {
       window.ReactNativeWebView!.postMessage(JSON.stringify({
         type: 'storysdk:storage:set',
@@ -84,6 +138,7 @@ const reactNativeWebViewAdapter: StorageAdapter = {
       }));
     } catch (error) {
       console.error('StorySDK - Error setting storage value:', error);
+      // Already stored in memory storage as backup
     }
   },
 };
@@ -104,12 +159,43 @@ export const StorageService = {
     const value = await storageAdapter.getItem(key);
     if (value) {
       try {
-        return JSON.parse(value);
+        const parsedValue = JSON.parse(value);
+
+        // Debug logging
+        const isInWebView = typeof window !== 'undefined' && typeof window.ReactNativeWebView !== 'undefined';
+        if (isInWebView) {
+          console.log(`StorySDK - Storage cache hit for key "${key}"`);
+          // For debugging we send information through webview
+          window.ReactNativeWebView?.postMessage(JSON.stringify({
+            type: 'storysdk:debug:info',
+            data: {
+              message: `Storage cache hit for key "${key}"`,
+              timestamp: new Date().toISOString(),
+            },
+          }));
+        }
+
+        return parsedValue;
       } catch (error) {
         console.error(`StorySDK - Error parsing JSON for key "${key}":`, error);
         return null;
       }
     }
+
+    // Debug logging for cache miss
+    const isInWebView = typeof window !== 'undefined' && typeof window.ReactNativeWebView !== 'undefined';
+    if (isInWebView) {
+      console.log(`StorySDK - Storage cache miss for key "${key}"`);
+      // For debugging we send information through webview
+      window.ReactNativeWebView?.postMessage(JSON.stringify({
+        type: 'storysdk:debug:info',
+        data: {
+          message: `Storage cache miss for key "${key}"`,
+          timestamp: new Date().toISOString(),
+        },
+      }));
+    }
+
     return null;
   },
 
@@ -156,6 +242,17 @@ export const StorageService = {
     };
 
     await this.setItem(key, cacheData);
+  },
+
+  /**
+   * Check if storage is available
+   * @returns True if storage is available, false otherwise
+   */
+  isAvailable(): boolean {
+    if (isInReactNativeWebView) {
+      return typeof window !== 'undefined' && typeof window.ReactNativeWebView !== 'undefined';
+    }
+    return isLocalStorageAvailable();
   },
 };
 

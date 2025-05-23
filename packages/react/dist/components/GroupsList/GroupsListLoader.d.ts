@@ -3,10 +3,9 @@ import './GroupsList.scss';
 interface GroupsListLoaderProps {
     groupImageWidth?: number;
     isInReactNativeWebView?: boolean;
-    isCentered: boolean;
-    showSkeleton: boolean;
-    autoplay?: boolean;
-    carouselSkeletonRef: RefObject<HTMLDivElement>;
+    isCentered?: boolean;
+    showSkeleton?: boolean;
+    carouselSkeletonRef?: RefObject<HTMLDivElement>;
 }
 export declare const GroupsListLoader: React.FC<GroupsListLoaderProps>;
 export {};

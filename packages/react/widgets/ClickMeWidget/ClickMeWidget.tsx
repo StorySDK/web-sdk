@@ -84,8 +84,6 @@ export const ClickMeWidget: WidgetComponent<{
 
     storyContextVal.container?.dispatchEvent(generalClickEvent);
 
-    console.log(actionType);
-
     if (actionType === 'link' && url) {
       setTimeout(() => {
         if (window?.cordova) {

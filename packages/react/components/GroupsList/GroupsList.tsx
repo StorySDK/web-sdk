@@ -134,7 +134,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     if (autoplay && onOpenGroup && groups?.length) {
       onOpenGroup(startGroupId ?? groups[0].id);
     }
-  }, [autoplay, groups, startGroupId, onOpenGroup]);
+  }, [autoplay, groups?.length, startGroupId]);
 
   const handleSelectGroup = useCallback(
     (groupIndex: number) => {
@@ -202,7 +202,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     if (!isLoading && groups.length > 0) {
       timer = setTimeout(() => {
         setShowSkeleton(false);
-      }, 300);
+      }, 500);
     } else if (isLoading) {
       setShowSkeleton(true);
     }
@@ -329,16 +329,15 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           ref={scrollRef}
           style={{
             width: '100%',
-            minHeight: groupMinHeight,
+            minHeight: groupMinHeight < 100 ? 100 : groupMinHeight,
             overflowY: 'hidden',
           }}
 
         >
           <>
-            {groups.length ? (
+            {groups.length > 0 && !isLoading ? (
               <div className={b('carousel', { show: !showSkeleton && !autoplay, loading: showSkeleton })} ref={carouselRef}>
                 {groups
-                  .filter((group: any) => group.stories.length)
                   .map((group, index) => (
                     <GroupItem
                       activeGroupOutlineColor={activeGroupOutlineColor}
@@ -358,17 +357,16 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
                   ))}
               </div>
             ) : (
-              <>{!autoplay && !isLoading && <p className={b('emptyText')}>Stories will be here</p>}</>
+              <>{!autoplay && !isLoading && <p className={b('emptyText', { show: !showSkeleton })}>Stories will be here</p>}</>
             )}
           </>
 
           <GroupsListLoader
-            autoplay={autoplay}
             carouselSkeletonRef={carouselSkeletonRef}
             groupImageWidth={groupImageWidth}
             isCentered={isCentered}
             isInReactNativeWebView={isInReactNativeWebView}
-            showSkeleton={showSkeleton}
+            showSkeleton={showSkeleton && !autoplay}
           />
         </SimpleBar>
       </div>

@@ -1,14 +1,32 @@
 export declare const API: {
     app: {
-        getApp(): Promise<import("axios").AxiosResponse<any, any>>;
+        getApp(): Promise<import("axios").AxiosResponse<any, any> | {
+            data: {};
+            status: number;
+            statusText: string;
+            headers: import("axios").AxiosResponseHeaders | {};
+            config: {};
+        }>;
     };
     groups: {
-        getList(): Promise<import("axios").AxiosResponse<any, any>>;
+        getList(): Promise<import("axios").AxiosResponse<any, any> | {
+            data: {};
+            status: number;
+            statusText: string;
+            headers: import("axios").AxiosResponseHeaders | {};
+            config: {};
+        }>;
     };
     stories: {
         getList(params: {
             groupId: string;
-        }): Promise<import("axios").AxiosResponse<any, any>>;
+        }): Promise<import("axios").AxiosResponse<any, any> | {
+            data: {};
+            status: number;
+            statusText: string;
+            headers: import("axios").AxiosResponseHeaders | {};
+            config: {};
+        }>;
     };
     statistics: {
         group: {
