@@ -355,13 +355,15 @@ const withGroupsData = (
 
         const consistentUserId = getConsistentUserId();
 
-        if (consistentUserId && options?.isOnlyGroups) {
+        if (options?.isOnlyGroups) {
+          // Use consistentUserId if available, otherwise use 'anonymous' for isOnlyGroups mode
+          const userIdForGroups = consistentUserId || 'anonymous';
           const onlyGroupsData = adaptGroupData(
             groupsFetchedData.map((group: any) => ({
               ...group,
               stories: [],
             })),
-            consistentUserId,
+            userIdForGroups,
             state.language,
             isMobile,
             true,
