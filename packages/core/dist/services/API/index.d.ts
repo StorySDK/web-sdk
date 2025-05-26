@@ -4,7 +4,7 @@ export declare const API: {
             data: {};
             status: number;
             statusText: string;
-            headers: import("axios").AxiosResponseHeaders | {};
+            headers: {} | import("axios").AxiosResponseHeaders;
             config: {};
         }>;
     };
@@ -13,7 +13,7 @@ export declare const API: {
             data: {};
             status: number;
             statusText: string;
-            headers: import("axios").AxiosResponseHeaders | {};
+            headers: {} | import("axios").AxiosResponseHeaders;
             config: {};
         }>;
     };
@@ -24,7 +24,7 @@ export declare const API: {
             data: {};
             status: number;
             statusText: string;
-            headers: import("axios").AxiosResponseHeaders | {};
+            headers: {} | import("axios").AxiosResponseHeaders;
             config: {};
         }>;
     };

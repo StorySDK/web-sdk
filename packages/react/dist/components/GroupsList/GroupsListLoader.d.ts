@@ -1,7 +1,6 @@
 import React, { RefObject } from 'react';
 import './GroupsList.scss';
 interface GroupsListLoaderProps {
-    groupImageWidth?: number;
     isInReactNativeWebView?: boolean;
     isCentered?: boolean;
     showSkeleton?: boolean;

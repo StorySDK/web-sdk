@@ -39,7 +39,6 @@ const SkeletonItem: React.FC<SkeletonItemProps> = ({ width, height, style }) => 
 );
 
 interface GroupsListLoaderProps {
-  groupImageWidth?: number;
   isInReactNativeWebView?: boolean;
   isCentered?: boolean;
   showSkeleton?: boolean;
@@ -47,7 +46,6 @@ interface GroupsListLoaderProps {
 }
 
 export const GroupsListLoader: React.FC<GroupsListLoaderProps> = ({
-  groupImageWidth,
   isInReactNativeWebView,
   isCentered,
   showSkeleton,
@@ -62,22 +60,12 @@ export const GroupsListLoader: React.FC<GroupsListLoaderProps> = ({
     })}
     ref={carouselSkeletonRef}
   >
-    <div className={b('loaderItem')}>
-      <SkeletonItem height={groupImageWidth || 64} width={groupImageWidth || 64} />
-      <SkeletonItem height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-    </div>
-    <div className={b('loaderItem')}>
-      <SkeletonItem height={groupImageWidth || 64} width={groupImageWidth || 64} />
-      <SkeletonItem height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-    </div>
-    <div className={b('loaderItem')}>
-      <SkeletonItem height={groupImageWidth || 64} width={groupImageWidth || 64} />
-      <SkeletonItem height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-    </div>
-    <div className={b('loaderItem')}>
-      <SkeletonItem height={groupImageWidth || 64} width={groupImageWidth || 64} />
-      <SkeletonItem height={16} style={{ marginTop: 8 }} width={groupImageWidth || 64} />
-    </div>
+    {Array.from({ length: 4 }).map((_, index) => (
+      <div className={b('loaderItem')}>
+        <SkeletonItem height={64} width={64} />
+        <SkeletonItem height={16} style={{ marginTop: 8 }} width={64} />
+      </div>
+    ))}
   </div>
 
 );

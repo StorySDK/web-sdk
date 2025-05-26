@@ -3,7 +3,6 @@ import React, {
 } from 'react';
 import block from 'bem-cn';
 import classNames from 'classnames';
-import SimpleBar from 'simplebar-react';
 import ReactDOM from 'react-dom';
 import { useWindowSize } from '@react-hook/window-size';
 import { getUniqUserId } from '@utils';
@@ -13,6 +12,13 @@ import { GroupsListLoader } from './GroupsListLoader';
 import './GroupsList.scss';
 
 const b = block('GroupsSdkList');
+
+const DEFAULT_GROUP_IMAGE_HEIGHT = 68;
+const DEFAULT_GROUP_IMAGE_WIDTH = 68;
+const DEFAULT_GROUP_TITLE_SIZE = 16;
+const DEFAULT_GROUP_MIN_HEIGHT = 100;
+const DEFAULT_GROUP_TITLE_PADDING = 4;
+
 export interface GroupsListProps {
   groups: Group[];
   groupImageWidth?: number;
@@ -60,11 +66,11 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     isLoading,
     groupClassName,
     groupsClassName,
-    groupImageWidth,
+    groupImageWidth = DEFAULT_GROUP_IMAGE_WIDTH,
     activeGroupOutlineColor,
     groupsOutlineColor,
-    groupImageHeight,
-    groupTitleSize,
+    groupImageHeight = DEFAULT_GROUP_IMAGE_HEIGHT,
+    groupTitleSize = DEFAULT_GROUP_TITLE_SIZE,
     isShowMockup,
     isShowLabel,
     isStatusBarActive,
@@ -97,26 +103,82 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   const [currentGroup, setCurrentGroup] = useState(-1);
   const [modalShow, setModalShow] = useState(!!autoplay);
   const [width] = useWindowSize();
-  const scrollRef = useRef<any>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
   const carouselSkeletonRef = useRef<HTMLDivElement | null>(null);
   const [isCentered, setIsCentered] = useState(true);
-  const [groupMinHeight, setGroupMinHeight] = useState(100);
+  const [groupMinHeight, setGroupMinHeight] = useState(DEFAULT_GROUP_MIN_HEIGHT);
   const [currentGroupItem, setCurrentGroupItem] = useState<Group | undefined>();
   const [showSkeleton, setShowSkeleton] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const calculateTitleLines = useCallback((
+    title: string,
+    view: string,
+    imageWidth: number,
+    fontSize: number,
+  ): number => {
+    let availableWidth: number;
+    let actualFontSize: number;
+
+    switch (view) {
+      case 'bigSquare':
+        availableWidth = Math.max(imageWidth * 0.93 - 20, 44);
+        actualFontSize = 10;
+        break;
+      case 'rectangle':
+        availableWidth = Math.max(imageWidth * 0.97 - 20, 46);
+        actualFontSize = 8;
+        break;
+      default: // circle, square
+        availableWidth = Math.max(imageWidth * 1.32 - 10, 80);
+        actualFontSize = fontSize;
+    }
+
+    const charWidth = actualFontSize * 0.65;
+
+    const charsPerLine = Math.floor(availableWidth / charWidth);
+
+    if (title.length <= charsPerLine) {
+      return 1;
+    }
+
+    const words = title.split(' ');
+    let lines = 1;
+    let currentLineLength = 0;
+
+    for (const word of words) {
+      const wordLength = word.length + (currentLineLength > 0 ? 1 : 0);
+
+      if (currentLineLength + wordLength > charsPerLine && currentLineLength > 0) {
+        lines++;
+        currentLineLength = word.length;
+      } else {
+        currentLineLength += wordLength;
+      }
+    }
+
+    return lines;
+  }, []);
 
   useEffect(() => {
     const handlePause = () => {
       setModalShow(false);
     };
 
+    const checkMobileDevice = () => {
+      setIsMobile(width <= 767);
+    };
+
+    checkMobileDevice();
+
     document.addEventListener('pause', handlePause, false);
 
     return () => {
       document.removeEventListener('pause', handlePause, false);
     };
-  }, []);
+  }, [width]);
 
   useEffect(() => {
     if (startGroupId) {
@@ -292,8 +354,26 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
       if (!containerElement) return;
 
       const containerWidth = containerElement.clientWidth;
-      const containerHeight = containerElement.clientHeight;
-      setGroupMinHeight(containerHeight);
+
+      let maxLines = 1;
+      if (groups.length > 0) {
+        groups.forEach((group) => {
+          const lines = calculateTitleLines(
+            group.title,
+            groupView,
+            groupImageWidth,
+            groupTitleSize,
+          );
+          maxLines = Math.max(maxLines, lines);
+        });
+      }
+
+      const lineHeight = groupTitleSize * 1.2;
+      const totalTitleHeight = lineHeight * maxLines;
+      const calculatedMinHeight = groupImageHeight + totalTitleHeight
+        + DEFAULT_GROUP_TITLE_PADDING * 2;
+
+      setGroupMinHeight(calculatedMinHeight);
 
       if (showSkeleton && carouselSkeletonElement) {
         const skeletonWidth = carouselSkeletonElement.clientWidth;
@@ -316,59 +396,67 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         resizeObserver.unobserve(containerElement);
       }
     };
-  }, [width, showSkeleton, isInReactNativeWebView]);
+  }, [
+    width,
+    showSkeleton,
+    isInReactNativeWebView,
+    groupImageHeight,
+    groupTitleSize,
+    groups,
+    groupView,
+    groupImageWidth,
+    calculateTitleLines,
+  ]);
 
   return (
     <>
       <div className={classNames(b(), groupsClassName)} ref={containerRef}>
-        <SimpleBar
-          classNames={{
-            contentEl: b('carouselContent', { centered: isCentered }).toString(),
-            track: b('track').toString(),
-          }}
+        <div
+          className={b('scrollContainer', { mobile: isMobile })}
           ref={scrollRef}
           style={{
             width: '100%',
-            minHeight: groupMinHeight < 100 ? 100 : groupMinHeight,
+            minHeight: Math.max(groupMinHeight, DEFAULT_GROUP_MIN_HEIGHT),
             overflowY: 'hidden',
+            scrollBehavior: 'smooth',
           }}
-
         >
-          <>
-            {groups.length > 0 && !isLoading ? (
-              <div className={b('carousel', { show: !showSkeleton && !autoplay, loading: showSkeleton })} ref={carouselRef}>
-                {groups
-                  .map((group, index) => (
-                    <GroupItem
-                      activeGroupOutlineColor={activeGroupOutlineColor}
-                      groupClassName={groupClassName}
-                      groupImageHeight={groupImageHeight}
-                      groupImageWidth={groupImageWidth}
-                      groupTitleSize={groupTitleSize}
-                      groupsOutlineColor={groupsOutlineColor}
-                      imageUrl={group.imageUrl}
-                      index={index}
-                      key={group.id}
-                      title={group.title}
-                      type={group.type}
-                      view={groupView}
-                      onClick={handleGroupClick}
-                    />
-                  ))}
-              </div>
-            ) : (
-              <>{!autoplay && !isLoading && <p className={b('emptyText', { show: !showSkeleton })}>Stories will be here</p>}</>
-            )}
-          </>
+          <div className={b('carouselContent', { centered: isCentered })}>
+            <>
+              {groups.length > 0 && !isLoading ? (
+                <div className={b('carousel', { show: !showSkeleton && !autoplay, loading: showSkeleton })} ref={carouselRef}>
+                  {groups
+                    .map((group, index) => (
+                      <GroupItem
+                        activeGroupOutlineColor={activeGroupOutlineColor}
+                        groupClassName={groupClassName}
+                        groupImageHeight={groupImageHeight}
+                        groupImageWidth={groupImageWidth}
+                        groupTitleSize={groupTitleSize}
+                        groupsOutlineColor={groupsOutlineColor}
+                        imageUrl={group.imageUrl}
+                        index={index}
+                        key={group.id}
+                        title={group.title}
+                        type={group.type}
+                        view={groupView}
+                        onClick={handleGroupClick}
+                      />
+                    ))}
+                </div>
+              ) : (
+                <>{!autoplay && !isLoading && <p className={b('emptyText', { show: !showSkeleton })}>Stories will be here</p>}</>
+              )}
+            </>
+          </div>
 
           <GroupsListLoader
             carouselSkeletonRef={carouselSkeletonRef}
-            groupImageWidth={groupImageWidth}
             isCentered={isCentered}
             isInReactNativeWebView={isInReactNativeWebView}
             showSkeleton={showSkeleton && !autoplay}
           />
-        </SimpleBar>
+        </div>
       </div>
     </>
   );

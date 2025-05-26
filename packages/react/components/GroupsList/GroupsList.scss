@@ -21,12 +21,11 @@
     &_show {
       opacity: 1;
     }
-
   }
 
   &__carousel {
     display: flex;
-    min-height: 100px;
+    min-height: 110px;
     opacity: 0;
     transition: opacity 0.3s ease;
 
@@ -47,6 +46,7 @@
 
     &_centered {
       left: 50%;
+      top: 0;
       transform: translateX(-50%);
     }
 
@@ -65,6 +65,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-right: 15px;
     cursor: auto;
   }
@@ -88,8 +89,9 @@
 
   &__carouselContent {
     display: flex;
+    align-items: center;
     position: relative;
-    min-height: 100px;
+    min-height: 110px;
 
     &_centered {
       justify-content: center;
@@ -98,6 +100,70 @@
 
   &__track {
     display: none;
+  }
+
+  &__scrollContainer {
+    scroll-behavior: smooth;
+    will-change: scroll-position;
+    contain: layout style paint;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+
+    @media (min-width: 768px) {
+      &::-webkit-scrollbar {
+        height: 4px;
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #e5e5e5;
+        border-radius: 2px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 2px;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.3);
+        }
+      }
+
+      &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
+
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0, 0, 0, 0.15) #e5e5e5;
+    }
+
+    @media (max-width: 767px) {
+      &::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+      }
+
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    &_mobile {
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      &::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
   }
 }
 
