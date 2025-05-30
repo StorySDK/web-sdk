@@ -39,29 +39,29 @@ const SkeletonItem: React.FC<SkeletonItemProps> = ({ width, height, style }) => 
 );
 
 interface GroupsListLoaderProps {
-  isInReactNativeWebView?: boolean;
   isCentered?: boolean;
   showSkeleton?: boolean;
   carouselSkeletonRef?: RefObject<HTMLDivElement>;
+  isReactNativeWebView?: boolean;
 }
 
 export const GroupsListLoader: React.FC<GroupsListLoaderProps> = ({
-  isInReactNativeWebView,
   isCentered,
   showSkeleton,
   carouselSkeletonRef,
+  isReactNativeWebView,
 }) => (
 
   <div
     className={b('carousel', {
       hide: !showSkeleton,
       skeleton: true,
-      centered: isInReactNativeWebView ? false : isCentered,
+      centered: isCentered,
     })}
     ref={carouselSkeletonRef}
   >
-    {Array.from({ length: 4 }).map((_, index) => (
-      <div className={b('loaderItem')}>
+    {Array.from({ length: isReactNativeWebView ? 5 : 4 }).map((_, index) => (
+      <div className={b('loaderItem')} key={index}>
         <SkeletonItem height={64} width={64} />
         <SkeletonItem height={16} style={{ marginTop: 8 }} width={64} />
       </div>

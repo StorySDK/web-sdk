@@ -1,6 +1,6 @@
 export declare const API: {
     app: {
-        getApp(): Promise<import("axios").AxiosResponse<any, any> | {
+        getApp(isDisableCache?: boolean, isDebugMode?: boolean): Promise<import("axios").AxiosResponse<any, any> | {
             data: {};
             status: number;
             statusText: string;
@@ -9,7 +9,7 @@ export declare const API: {
         }>;
     };
     groups: {
-        getList(): Promise<import("axios").AxiosResponse<any, any> | {
+        getList(isDisableCache?: boolean, isDebugMode?: boolean): Promise<import("axios").AxiosResponse<any, any> | {
             data: {};
             status: number;
             statusText: string;
@@ -20,7 +20,7 @@ export declare const API: {
     stories: {
         getList(params: {
             groupId: string;
-        }): Promise<import("axios").AxiosResponse<any, any> | {
+        }, isDisableCache?: boolean, isDebugMode?: boolean): Promise<import("axios").AxiosResponse<any, any> | {
             data: {};
             status: number;
             statusText: string;
@@ -35,7 +35,7 @@ export declare const API: {
                 uniqUserId: string;
                 seconds: number;
                 language: string;
-            }): import("axios").AxiosPromise<any>;
+            }): import("axios").AxiosPromise<any> | Promise<void>;
             onOpen(params: {
                 groupId: string;
                 uniqUserId: string;
@@ -54,14 +54,14 @@ export declare const API: {
                 uniqUserId: string;
                 seconds: number;
                 language: string;
-            }): import("axios").AxiosPromise<any>;
+            }): import("axios").AxiosPromise<any> | Promise<void>;
             sendImpression(params: {
                 groupId: string;
                 storyId: string;
                 uniqUserId: string;
                 seconds: number;
                 language: string;
-            }): import("axios").AxiosPromise<any>;
+            }): import("axios").AxiosPromise<any> | Promise<void>;
             onOpen(params: {
                 groupId: string;
                 storyId: string;

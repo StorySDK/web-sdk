@@ -38,5 +38,22 @@ export declare const StorageService: {
      * @returns True if storage is available, false otherwise
      */
     isAvailable(): boolean;
+    /**
+     * Clear corrupted data for a specific key
+     * @param key Storage key to clear
+     */
+    clearCorruptedData(key: string): Promise<void>;
+    /**
+     * Validate if a string is valid JSON
+     * @param value String to validate
+     * @returns True if valid JSON, false otherwise
+     */
+    isValidJSON(value: string): boolean;
+    /**
+     * Get raw value from storage without JSON parsing
+     * @param key Storage key
+     * @returns Raw string value or null
+     */
+    getRawItem(key: string): Promise<string | null>;
 };
 export default StorageService;

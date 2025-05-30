@@ -4,3 +4,4 @@ export * from './localization';
 export * from './checkIos';
 export * from './writeToDebug';
 export * from './initGA';
+export * from './cacheKeys';

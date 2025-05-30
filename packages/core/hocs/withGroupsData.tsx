@@ -12,7 +12,7 @@ import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
 import { loadFontsToPage, preloadFonts } from '../utils/fontsInclude';
 import {
-  checkIos, initGA, writeToDebug,
+  checkIos, initGA, writeToDebug, generateAdaptedDataCacheKey,
 } from '../utils';
 import { useGroupCache, useStoryCache } from '../hooks';
 
@@ -124,7 +124,7 @@ const initialState: AppState = {
 };
 
 const withGroupsData = (
-  GroupsList: React.FC<GroupsListProps>,
+  GroupsList: React.FC<any>,
   options?: {
     token?: string;
     groupImageWidth?: number;
@@ -153,6 +153,7 @@ const withGroupsData = (
     forbidClose?: boolean;
     devMode?: 'staging' | 'development';
     isOnlyGroups?: boolean;
+    disableCache?: boolean;
     on?(event: string, callback: (data: any) => void): void;
     off?(event: string, callback: (data: any) => void): void;
     destroy?(): void;
@@ -162,25 +163,58 @@ const withGroupsData = (
   const [state, dispatch] = useReducer(appReducer, initialState);
   const [isNeedToLoad, setIsNeedToLoad] = useState(false);
 
-  // Cache
-  const [getGroupCache, setGroupCache] = useGroupCache(state.userId || null);
-  const [getStoryCache, setStoryCache] = useStoryCache(state.userId || null);
+  // Always call hooks at the top level, regardless of token validity
+  const rawGroupCache = useGroupCache(state.userId || null, options?.token || '');
+  const rawStoryCache = useStoryCache(state.userId || null, options?.token || '');
+
+  // Cache - only use if valid token is provided
+  const [getGroupCache, setGroupCache] = useMemo(() => {
+    // CRITICAL: Check if token is valid before using cache hooks
+    if (!options?.token || options.token === 'no-token' || options.token.length < 5) {
+      // Return dummy functions if token is invalid
+      console.warn('withGroupsData: Invalid token provided, cache hooks disabled');
+      return [
+        () => null, // getGroupCache returns null
+        () => { }, // setGroupCache does nothing
+      ];
+    }
+
+    return rawGroupCache;
+  }, [rawGroupCache, options?.token]);
+
+  const [getStoryCache, setStoryCache] = useMemo(() => {
+    // CRITICAL: Check if token is valid before using cache hooks
+    if (!options?.token || options.token === 'no-token' || options.token.length < 5) {
+      // Return dummy functions if token is invalid
+      return [
+        () => null, // getStoryCache returns null
+        () => { }, // setStoryCache does nothing
+      ];
+    }
+
+    return rawStoryCache;
+  }, [rawStoryCache, options?.token]);
 
   // Refs for request cancellation and state tracking
   const apiRequestsRef = useRef<AbortController[]>([]);
   const initialUserIdRef = useRef<string | null>(null);
   const isUserIdChangingRef = useRef<boolean>(false);
+  const isMountedRef = useRef<boolean>(true);
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const animationFrameRef = useRef<number | null>(null);
 
   // Viewport detection
   const [width] = useWindowSize();
   const isMobile = useMemo(() => width < 768, [width]);
 
-  // Function to update loading status
+  // Function to update loading status with mount check
   const setLoadingStatus = useCallback((
     key: keyof LoadingState,
     status: LoadingState[keyof LoadingState],
   ) => {
-    dispatch({ type: 'SET_LOADING_STATUS', payload: { key, status } });
+    if (isMountedRef.current) {
+      dispatch({ type: 'SET_LOADING_STATUS', payload: { key, status } });
+    }
   }, []);
 
   // Get consistent userId
@@ -189,27 +223,49 @@ const withGroupsData = (
 
   // Split language calculation for early initialization
   useEffect(() => {
-    if (state.appLocale) {
+    if (state.appLocale && isMountedRef.current) {
       const detectedLanguage = getNavigatorLanguage(state.appLocale);
-      dispatch({ type: 'SET_LANGUAGE', payload: detectedLanguage });
-      axios.defaults.headers.common['Accept-Language'] = detectedLanguage;
+      if (isMountedRef.current) {
+        dispatch({ type: 'SET_LANGUAGE', payload: detectedLanguage });
+        axios.defaults.headers.common['Accept-Language'] = detectedLanguage;
+      }
     }
   }, [state.appLocale]);
 
-  // Set up cancellation for API requests
+  // Set up cancellation for API requests and cleanup
   useEffect(() => {
+    isMountedRef.current = true;
     const controller = new AbortController();
     apiRequestsRef.current.push(controller);
 
     return () => {
-      apiRequestsRef.current.forEach((ctrl) => ctrl.signal.aborted || ctrl.abort());
+      isMountedRef.current = false;
+
+      // Cancel all API requests
+      apiRequestsRef.current.forEach((ctrl) => {
+        if (!ctrl.signal.aborted) {
+          ctrl.abort();
+        }
+      });
+
+      // Clear all timeouts
+      timeoutsRef.current.forEach((timeout) => {
+        clearTimeout(timeout);
+      });
+      timeoutsRef.current = [];
+
+      // Cancel animation frame
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
     };
   }, []);
 
   // Fetch user ID early and independently
   useEffect(() => {
     const fetchUserId = async () => {
-      if (isUserIdChangingRef.current || initialUserIdRef.current) {
+      if (isUserIdChangingRef.current || initialUserIdRef.current || !isMountedRef.current) {
         if (options?.isDebugMode) {
           writeToDebug(`Skipping userId fetch - already in progress or set. Current: ${state.userId}, initial: ${initialUserIdRef.current}`);
         }
@@ -224,22 +280,33 @@ const withGroupsData = (
           writeToDebug(`userId obtained: ${id}, previous: ${state.userId || 'empty'}`);
         }
 
-        if (!initialUserIdRef.current) {
+        if (!initialUserIdRef.current && isMountedRef.current) {
           initialUserIdRef.current = id;
           dispatch({ type: 'SET_USER_ID', payload: id });
           if (options?.isDebugMode) {
             writeToDebug(`Setting initial userId: ${id}`);
           }
         }
-      } catch {
-        const newId = nanoid();
+      } catch (error) {
         if (options?.isDebugMode) {
-          writeToDebug(`Error obtaining userId, created new: ${newId}`);
+          writeToDebug(`Error obtaining userId: ${error}`);
         }
 
-        if (!initialUserIdRef.current) {
+        const newId = nanoid();
+        if (options?.isDebugMode) {
+          writeToDebug(`Created fallback userId: ${newId}`);
+        }
+
+        if (!initialUserIdRef.current && isMountedRef.current) {
           initialUserIdRef.current = newId;
           dispatch({ type: 'SET_USER_ID', payload: newId });
+
+          // Try to save fallback ID in storage
+          StorageService.setItem('storysdk_user_id', newId).catch((storageError) => {
+            if (options?.isDebugMode) {
+              writeToDebug(`Failed to save fallback userId to storage: ${storageError}`);
+            }
+          });
         }
       } finally {
         isUserIdChangingRef.current = false;
@@ -251,10 +318,14 @@ const withGroupsData = (
 
   // Optimized app data fetching
   const fetchAppData = useCallback(async () => {
+    if (!isMountedRef.current) return false;
+
     setLoadingStatus('app', 'loading');
 
     try {
-      const appData = await API.app.getApp();
+      const appData = await API.app.getApp(options?.disableCache, options?.isDebugMode);
+
+      if (!isMountedRef.current) return false;
 
       if (options?.isDebugMode) {
         writeToDebug(`App data: ${JSON.stringify(appData)}`);
@@ -263,26 +334,36 @@ const withGroupsData = (
       if (!appData.data.error) {
         const app = appData.data.data;
 
-        if (app) {
+        if (app && isMountedRef.current) {
           const appGroupView = app.settings?.groupView?.web || 'circle';
           const isShowMockupApp = options?.isShowMockup !== undefined
             ? options.isShowMockup
             : app.settings?.isShowMockup;
 
-          dispatch({ type: 'SET_APP_LOCALE', payload: app.localization });
-          dispatch({ type: 'SET_GROUP_VIEW', payload: appGroupView });
-          dispatch({ type: 'SET_IS_SHOW_MOCKUP', payload: checkIos() ? false : isShowMockupApp });
-          dispatch({ type: 'SET_IS_SHOW_LABEL', payload: !app.premium_owner });
+          if (isMountedRef.current) {
+            dispatch({ type: 'SET_APP_LOCALE', payload: app.localization });
+            dispatch({ type: 'SET_GROUP_VIEW', payload: appGroupView });
+            dispatch({ type: 'SET_IS_SHOW_MOCKUP', payload: checkIos() ? false : isShowMockupApp });
+            dispatch({ type: 'SET_IS_SHOW_LABEL', payload: !app.premium_owner });
+          }
 
           if (app.settings?.fonts?.length) {
             preloadFonts(app.settings.fonts);
-            setTimeout(() => loadFontsToPage(app.settings.fonts), 0);
+            const fontTimeout = setTimeout(() => {
+              if (isMountedRef.current) {
+                loadFontsToPage(app.settings.fonts);
+              }
+            }, 0);
+            timeoutsRef.current.push(fontTimeout);
           }
 
           if (app.settings?.integrations?.googleAnalytics?.trackingId) {
-            setTimeout(() => {
-              initGA(app.settings?.integrations?.googleAnalytics?.trackingId);
+            const gaTimeout = setTimeout(() => {
+              if (isMountedRef.current) {
+                initGA(app.settings?.integrations?.googleAnalytics?.trackingId);
+              }
             }, 100);
+            timeoutsRef.current.push(gaTimeout);
           }
 
           setLoadingStatus('app', 'loaded');
@@ -294,17 +375,23 @@ const withGroupsData = (
       return false;
     } catch (error) {
       console.error('Error fetching app data:', error);
-      setLoadingStatus('app', 'error');
+      if (isMountedRef.current) {
+        setLoadingStatus('app', 'error');
+      }
       return false;
     }
   }, [options?.isDebugMode, options?.isShowMockup, setLoadingStatus]);
 
   // Groups fetching
   const fetchGroups = useCallback(async () => {
+    if (!isMountedRef.current) return false;
+
     setLoadingStatus('groups', 'loading');
 
     try {
-      const groupsData = await API.groups.getList();
+      const groupsData = await API.groups.getList(options?.disableCache, options?.isDebugMode);
+
+      if (!isMountedRef.current) return false;
 
       if (options?.isDebugMode) {
         writeToDebug(`Groups loaded, status: ${groupsData.status}, data items: ${groupsData.data.data?.length || 0}`);
@@ -321,7 +408,10 @@ const withGroupsData = (
             }
 
             if (isOnboarding) {
-              if (options?.groupId === item.id || options?.autoplay) {
+              if (options?.groupId) {
+                return options?.groupId === item.id && isActive;
+              }
+              if (options?.autoplay) {
                 return isActive;
               }
               return isActive && item.settings?.addToStories;
@@ -350,13 +440,16 @@ const withGroupsData = (
             return 0;
           });
 
-        dispatch({ type: 'SET_GROUPS', payload: groupsFetchedData });
-        dispatch({ type: 'SET_GROUPS_WITH_STORIES', payload: groupsFetchedData });
+        if (!isMountedRef.current) return false;
+
+        if (isMountedRef.current) {
+          dispatch({ type: 'SET_GROUPS', payload: groupsFetchedData });
+          dispatch({ type: 'SET_GROUPS_WITH_STORIES', payload: groupsFetchedData });
+        }
 
         const consistentUserId = getConsistentUserId();
 
-        if (options?.isOnlyGroups) {
-          // Use consistentUserId if available, otherwise use 'anonymous' for isOnlyGroups mode
+        if (options?.isOnlyGroups && isMountedRef.current) {
           const userIdForGroups = consistentUserId || 'anonymous';
           const onlyGroupsData = adaptGroupData(
             groupsFetchedData.map((group: any) => ({
@@ -368,13 +461,39 @@ const withGroupsData = (
             isMobile,
             true,
           );
-          dispatch({ type: 'SET_DATA', payload: onlyGroupsData });
-          setLoadingStatus('status', 'loaded');
 
-          const dataLoadedEvent = new CustomEvent('storysdk:data:loaded', {
-            detail: { message: 'Groups data loaded successfully (only groups mode)' },
-          });
-          container?.dispatchEvent(dataLoadedEvent);
+          if (isMountedRef.current) {
+            dispatch({ type: 'SET_DATA', payload: onlyGroupsData });
+            setLoadingStatus('status', 'loaded');
+
+            // Cache groups-only data separately
+            if (consistentUserId && !options?.disableCache) {
+              const groupsOnlyCacheKey = generateAdaptedDataCacheKey({
+                token: options?.token,
+                language: state.language,
+                userId: consistentUserId,
+                includeStories: false,
+              });
+
+              // Only cache if we have a valid cache key (valid token and userId)
+              if (groupsOnlyCacheKey) {
+                StorageService.setItem(groupsOnlyCacheKey, onlyGroupsData).catch((error) => {
+                  console.error('Error saving groups-only data to cache:', error);
+                });
+
+                if (options?.isDebugMode) {
+                  writeToDebug(`Cached groups-only data with key: ${groupsOnlyCacheKey}`);
+                }
+              } else if (options?.isDebugMode) {
+                writeToDebug('Skipping groups-only data caching due to invalid token or userId');
+              }
+            }
+
+            const dataLoadedEvent = new CustomEvent('storysdk:data:loaded', {
+              detail: { message: 'Groups data loaded successfully (only groups mode)' },
+            });
+            container?.dispatchEvent(dataLoadedEvent);
+          }
         }
 
         setLoadingStatus('groups', 'loaded');
@@ -385,11 +504,14 @@ const withGroupsData = (
       return false;
     } catch (error) {
       console.error('Error fetching groups:', error);
-      setLoadingStatus('groups', 'error');
+      if (isMountedRef.current) {
+        setLoadingStatus('groups', 'error');
+      }
       return false;
     }
   }, [state.language, isMobile, getConsistentUserId, options?.isOnboarding,
-  options?.groupId, options?.autoplay, options?.isOnlyGroups, setLoadingStatus]);
+  options?.groupId, options?.autoplay, options?.isOnlyGroups, setLoadingStatus,
+  options?.disableCache, options?.isDebugMode]);
 
   // Filter active stories
   const filterActiveStories = useCallback((storiesData: any[]) => storiesData.filter(
@@ -410,13 +532,15 @@ const withGroupsData = (
   const fetchStories = useCallback(async () => {
     const activeUserId = getConsistentUserId();
 
+    if (!isMountedRef.current) return false;
+
     if (options?.isDebugMode) {
       writeToDebug(`fetchStories called: groups.length=${state.groups.length}, isOnlyGroups=${options?.isOnlyGroups}, loading.stories=${state.loading.stories}, userId=${activeUserId}`);
     }
 
-    if (!state.groups.length || options?.isOnlyGroups) {
+    if (!state.groups.length || (options?.isOnlyGroups && !options?.isOnboarding)) {
       if (options?.isDebugMode) {
-        writeToDebug(`fetchStories: skipping - no groups (${state.groups.length}) or isOnlyGroups (${options?.isOnlyGroups}), userId: ${activeUserId}`);
+        writeToDebug(`fetchStories: skipping - no groups (${state.groups.length}) or isOnlyGroups (${options?.isOnlyGroups}) without onboarding (${options?.isOnboarding}), userId: ${activeUserId}`);
       }
       return false;
     }
@@ -437,12 +561,20 @@ const withGroupsData = (
     try {
       const loadStoriesForGroup = async (groupItem: any) => {
         try {
+          if (!isMountedRef.current) return null;
+
           if (options?.isDebugMode) {
             writeToDebug(`Loading stories for group ${groupItem.id}`);
           }
 
           // Use API service which handles HEAD requests and Last-Modified automatically
-          const storiesData = await API.stories.getList({ groupId: groupItem.id });
+          const storiesData = await API.stories.getList(
+            { groupId: groupItem.id },
+            options?.disableCache,
+            options?.isDebugMode,
+          );
+
+          if (!isMountedRef.current) return null;
 
           if (options?.isDebugMode) {
             const cacheStatus = storiesData.statusText?.includes('cache') ? 'from cache' : 'from server';
@@ -487,6 +619,9 @@ const withGroupsData = (
       }
 
       const allResults = await Promise.all(state.groups.map(loadStoriesForGroup));
+
+      if (!isMountedRef.current) return false;
+
       const validResults = allResults.filter(Boolean) as Array<{
         groupId: string;
         stories: any[];
@@ -497,7 +632,7 @@ const withGroupsData = (
         writeToDebug(`Stories loading completed: ${validResults.length}/${state.groups.length} groups have stories`);
       }
 
-      if (validResults.length > 0) {
+      if (validResults.length > 0 && isMountedRef.current) {
         let newUpdatedGroupsWithStories = [...state.groupsWithStories];
         let hasNewDataFromServer = false;
 
@@ -515,39 +650,69 @@ const withGroupsData = (
           });
         });
 
-        dispatch({ type: 'SET_GROUPS_WITH_STORIES', payload: newUpdatedGroupsWithStories });
+        if (isMountedRef.current) {
+          dispatch({ type: 'SET_GROUPS_WITH_STORIES', payload: newUpdatedGroupsWithStories });
 
-        const userIdForAdapt = activeUserId || 'anonymous';
-        const updatedData = adaptGroupData(
-          newUpdatedGroupsWithStories,
-          userIdForAdapt,
-          state.language,
-          isMobile,
-        );
-        dispatch({ type: 'SET_DATA', payload: updatedData });
+          const userIdForAdapt = activeUserId || 'anonymous';
+          const updatedData = adaptGroupData(
+            newUpdatedGroupsWithStories,
+            userIdForAdapt,
+            state.language,
+            isMobile,
+          );
+          dispatch({ type: 'SET_DATA', payload: updatedData });
 
-        // Update adapted data cache only if we got new data from server
-        if (activeUserId && hasNewDataFromServer) {
-          const adaptedCacheKey = `storysdk_adapted_data_${options?.token || 'no-token'}_${state.language}_${activeUserId}`;
-          StorageService.setItem(adaptedCacheKey, updatedData).catch((error) => {
-            console.error('Error saving adapted data to cache:', error);
-          });
+          // Update adapted data cache only if we got new data from server and cache is not disabled
+          // Use separate cache key for data with stories
+          if (activeUserId && hasNewDataFromServer && !options?.disableCache) {
+            const adaptedWithStoriesCacheKey = generateAdaptedDataCacheKey({
+              token: options?.token,
+              language: state.language,
+              userId: activeUserId,
+              includeStories: true,
+            });
 
-          if (options?.isDebugMode) {
-            writeToDebug(`Updated adapted data cache due to new server data, userId: ${activeUserId}`);
+            // Only cache if we have a valid cache key (valid token and userId)
+            if (adaptedWithStoriesCacheKey) {
+              StorageService.setItem(adaptedWithStoriesCacheKey, updatedData).catch((error) => {
+                console.error('Error saving adapted data with stories to cache:', error);
+              });
+
+              if (options?.isDebugMode) {
+                writeToDebug(`Updated adapted data cache with stories due to new server data, userId: ${activeUserId}, key: ${adaptedWithStoriesCacheKey}`);
+              }
+            } else if (options?.isDebugMode) {
+              writeToDebug('Skipping adapted data with stories caching due to invalid token or userId');
+            }
           }
         }
-      } else if (options?.isDebugMode) {
-        writeToDebug('No valid story results found for any groups');
+      } else {
+        if (options?.isDebugMode) {
+          writeToDebug('No valid story results found for any groups');
+        }
+
+        // For onboarding mode or when no stories are found, still set the data with empty stories
+        if (isMountedRef.current) {
+          const userIdForAdapt = activeUserId || 'anonymous';
+          const dataWithEmptyStories = adaptGroupData(
+            state.groupsWithStories.map((group: Group) => ({ ...group, stories: [] })),
+            userIdForAdapt,
+            state.language,
+            isMobile,
+          );
+          dispatch({ type: 'SET_DATA', payload: dataWithEmptyStories });
+        }
       }
 
-      setLoadingStatus('stories', 'loaded');
-      setLoadingStatus('status', 'loaded');
+      if (isMountedRef.current) {
+        setLoadingStatus('stories', 'loaded');
+        setLoadingStatus('status', 'loaded');
 
-      const dataLoadedEvent = new CustomEvent('storysdk:data:loaded', {
-        detail: { message: 'All data loaded successfully' },
-      });
-      container?.dispatchEvent(dataLoadedEvent);
+        const dataLoadedEvent = new CustomEvent('storysdk:data:loaded', {
+          detail: { message: validResults.length > 0 ? 'All data loaded successfully' : 'Groups loaded, no stories available' },
+        });
+        container?.dispatchEvent(dataLoadedEvent);
+      }
 
       return true;
     } catch (error) {
@@ -555,55 +720,89 @@ const withGroupsData = (
       if (options?.isDebugMode) {
         writeToDebug(`fetchStories failed with error: ${error.message}`);
       }
-      setLoadingStatus('stories', 'error');
+      if (isMountedRef.current) {
+        setLoadingStatus('stories', 'error');
+      }
       return false;
     }
   }, [state.groups, state.groupsWithStories, state.language, isMobile,
     getConsistentUserId, filterActiveStories, options?.isOnlyGroups,
-  options?.isDebugMode, setLoadingStatus, options?.token]);
+  options?.isDebugMode, setLoadingStatus, options?.token,
+  options?.disableCache, options?.isOnboarding]);
 
   // General data loading function with server-side caching
   const loadData = useCallback(async () => {
     const activeUserId = getConsistentUserId();
 
+    if (!isMountedRef.current) return;
+
     setLoadingStatus('status', 'loading');
 
-    // Try to load adapted data from cache first for fast initial render
-    if (state.language && activeUserId) {
-      const adaptedCacheKey = `storysdk_adapted_data_${options?.token || 'no-token'}_${state.language}_${activeUserId}`;
+    // Try to load adapted data from cache first for fast initial render (skip if cache disabled)
+    if (state.language && activeUserId && !options?.disableCache && isMountedRef.current) {
+      // Use appropriate cache key based on whether we need stories or not
+      const adaptedCacheKey = generateAdaptedDataCacheKey({
+        token: options?.token,
+        language: state.language,
+        userId: activeUserId,
+        includeStories: !options?.isOnlyGroups,
+      });
 
-      try {
-        const cachedData = await StorageService.getItem<any[]>(adaptedCacheKey);
-        if (cachedData) {
-          if (options?.isDebugMode) {
-            writeToDebug(`Loading adapted data from cache for ${activeUserId}`);
+      // Only try to load from cache if we have a valid cache key
+      if (adaptedCacheKey) {
+        try {
+          const cachedData = await StorageService.getItem<any[]>(adaptedCacheKey);
+          if (cachedData && isMountedRef.current) {
+            if (options?.isDebugMode) {
+              const cacheType = options?.isOnlyGroups ? 'groups-only' : 'with-stories';
+              writeToDebug(`Loading adapted ${cacheType} data from cache for ${activeUserId}, key: ${adaptedCacheKey}`);
+            }
+            dispatch({ type: 'SET_DATA', payload: cachedData });
+            setLoadingStatus('status', 'loaded');
           }
-          dispatch({ type: 'SET_DATA', payload: cachedData });
-          setLoadingStatus('status', 'loaded');
+        } catch (error) {
+          console.error('Error loading from cache:', error);
         }
-      } catch (error) {
-        console.error('Error loading from cache:', error);
+      } else if (options?.isDebugMode) {
+        writeToDebug('Skipping cache loading due to invalid token or userId');
       }
     }
 
     // Always check server for updates (API service handles caching with Last-Modified)
-    if (options?.isDebugMode) {
-      writeToDebug(`Loading data from server (with server-side caching), userId: ${activeUserId}`);
+    if (options?.isDebugMode && isMountedRef.current) {
+      const cacheModeText = options?.disableCache ? 'with cache disabled' : 'with server-side caching';
+      const dataType = options?.isOnlyGroups ? 'groups-only' : 'with-stories';
+      writeToDebug(`Loading ${dataType} data from server (${cacheModeText}), userId: ${activeUserId}`);
     }
 
-    const appLoaded = await fetchAppData();
-    if (appLoaded) {
-      await fetchGroups();
-      // Remove fetchStories call from here - it will be triggered by useEffect when groups change
+    if (isMountedRef.current) {
+      const appLoaded = await fetchAppData();
+      if (appLoaded && isMountedRef.current) {
+        await fetchGroups();
+      }
     }
   }, [getConsistentUserId, state.language, fetchAppData, fetchGroups,
-    options?.isDebugMode, setLoadingStatus, options?.token]);
+    options?.isDebugMode, setLoadingStatus, options?.token,
+    options?.isOnlyGroups, options?.disableCache]);
 
   // Auto-trigger fetchStories when groups are loaded
   useEffect(() => {
+    if (!isMountedRef.current) return;
+
     if (state.groups.length > 0 && state.loading.groups === 'loaded' && !options?.isOnlyGroups) {
       if (options?.isDebugMode) {
         writeToDebug(`Groups loaded (${state.groups.length}), triggering fetchStories`);
+      }
+      fetchStories();
+    } else if (state.groups.length === 0 && state.loading.groups === 'loaded' && !options?.isOnlyGroups) {
+      if (options?.isDebugMode) {
+        writeToDebug('No groups found after loading, setting status to loaded');
+      }
+      setLoadingStatus('status', 'loaded');
+    } else if (state.groups.length > 0 && state.loading.groups === 'loaded' && options?.isOnboarding) {
+      // Special handling for onboarding mode - always load stories even if isOnlyGroups is true
+      if (options?.isDebugMode) {
+        writeToDebug(`Onboarding mode: Groups loaded (${state.groups.length}), triggering fetchStories for onboarding`);
       }
       fetchStories();
     }
@@ -611,18 +810,22 @@ const withGroupsData = (
     state.groups,
     state.loading.groups,
     options?.isOnlyGroups,
+    options?.isOnboarding,
     options?.isDebugMode,
     fetchStories,
+    setLoadingStatus,
   ]);
 
   // Initialize data loading
   useEffect(() => {
-    if (!isNeedToLoad) {
+    if (!isNeedToLoad && isMountedRef.current) {
       setIsNeedToLoad(true);
     }
 
     const handleResume = () => {
-      setIsNeedToLoad(true);
+      if (isMountedRef.current) {
+        setIsNeedToLoad(true);
+      }
     };
 
     document.addEventListener('resume', handleResume, false);
@@ -634,17 +837,28 @@ const withGroupsData = (
 
   // Main data loading
   useEffect(() => {
-    if (!isNeedToLoad || !state.language || !state.userId) return;
+    if (!isNeedToLoad || !state.language || !state.userId || !isMountedRef.current) return;
 
     if (options?.isDebugMode) {
       writeToDebug(`Starting data loading: isNeedToLoad=${isNeedToLoad}, language=${state.language}, userId=${state.userId}`);
     }
 
-    requestAnimationFrame(() => {
-      loadData();
-      setIsNeedToLoad(false);
+    animationFrameRef.current = requestAnimationFrame(() => {
+      if (isMountedRef.current) {
+        loadData();
+        setIsNeedToLoad(false);
+      }
+      animationFrameRef.current = null;
     });
   }, [isNeedToLoad, state.language, state.userId, loadData, options?.isDebugMode]);
+
+  // Cleanup animation frame on dependencies change
+  useEffect(() => () => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+  }, [isNeedToLoad, state.language, state.userId, loadData]);
 
   // Factory for creating event handlers
   const createEventHandler = useCallback((
@@ -653,7 +867,7 @@ const withGroupsData = (
     customHandler?: (data: any) => any,
   ) => (...args: any[]) => {
     const activeUserId = getConsistentUserId();
-    if (!activeUserId) return undefined;
+    if (!activeUserId || !isMountedRef.current) return undefined;
 
     const [groupId, storyId, ...rest] = args;
     const eventData = {
@@ -667,11 +881,13 @@ const withGroupsData = (
     // Execute custom logic if exists
     const customResult = customHandler?.(eventData);
 
-    // Dispatch event
-    const customEvent = new CustomEvent(`storysdk:${eventName}`, {
-      detail: eventData,
-    });
-    container?.dispatchEvent(customEvent);
+    // Dispatch event only if component is still mounted
+    if (isMountedRef.current) {
+      const customEvent = new CustomEvent(`storysdk:${eventName}`, {
+        detail: eventData,
+      });
+      container?.dispatchEvent(customEvent);
+    }
 
     // Call API handler
     return apiHandler?.(eventData) || customResult;
@@ -682,6 +898,7 @@ const withGroupsData = (
     'group:open',
     (data) => API.statistics.group.onOpen(data),
     (data) => {
+      if (!isMountedRef.current) return undefined;
       const startTime = DateTime.now().toSeconds();
       dispatch({
         type: 'SET_GROUP_DURATION',
@@ -716,16 +933,19 @@ const withGroupsData = (
   const handleCloseGroup = useMemo(() => createEventHandler(
     'group:close',
     (data) => {
-      const duration = DateTime.now().toSeconds() - state.groupDuration.startTime;
-      API.statistics.group.sendDuration({
-        groupId: state.groupDuration.groupId,
-        uniqUserId: data.uniqUserId,
-        seconds: duration,
-        language: data.language,
-      });
+      // Проверяем, что у нас есть валидный groupId для отправки duration
+      if (state.groupDuration.groupId && state.groupDuration.groupId.trim() !== '') {
+        const duration = DateTime.now().toSeconds() - state.groupDuration.startTime;
+        API.statistics.group.sendDuration({
+          groupId: state.groupDuration.groupId,
+          uniqUserId: data.uniqUserId,
+          seconds: duration,
+          language: data.language,
+        });
+      }
       return API.statistics.group.onClose(data);
     },
-  ), [createEventHandler, state.groupDuration.startTime]);
+  ), [createEventHandler, state.groupDuration.startTime, state.groupDuration.groupId]);
 
   const handleOpenStory = useMemo(() => createEventHandler(
     'story:open',
@@ -747,22 +967,25 @@ const withGroupsData = (
     'story:close',
     (data) => {
       const { duration } = data.arg0 || {};
-      API.statistics.story.sendDuration({
-        storyId: data.storyId,
-        groupId: data.groupId,
-        uniqUserId: data.uniqUserId,
-        seconds: duration,
-        language: data.language,
-      });
 
-      if (duration > 1) {
-        API.statistics.story.sendImpression({
+      if (data.groupId && data.groupId.trim() !== '') {
+        API.statistics.story.sendDuration({
           storyId: data.storyId,
           groupId: data.groupId,
           uniqUserId: data.uniqUserId,
           seconds: duration,
           language: data.language,
         });
+
+        if (duration > 1) {
+          API.statistics.story.sendImpression({
+            storyId: data.storyId,
+            groupId: data.groupId,
+            uniqUserId: data.uniqUserId,
+            seconds: duration,
+            language: data.language,
+          });
+        }
       }
 
       return API.statistics.story.onClose(data);
@@ -804,6 +1027,7 @@ const withGroupsData = (
         startStoryId={options?.startStoryId}
         storyHeight={options?.storyHeight}
         storyWidth={options?.storyWidth}
+        token={options?.token}
         onCloseGroup={handleCloseGroup}
         onCloseStory={handleCloseStory}
         onFinishQuiz={handleFinishQuiz}

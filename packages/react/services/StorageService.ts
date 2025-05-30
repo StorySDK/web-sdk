@@ -159,7 +159,17 @@ export const StorageService = {
     const value = await storageAdapter.getItem(key);
     if (value) {
       try {
-        const parsedValue = JSON.parse(value);
+        let parsedValue = JSON.parse(value);
+
+        // Protection against double serialization - if result is string, try to parse again
+        if (typeof parsedValue === 'string') {
+          try {
+            const doubleParsed = JSON.parse(parsedValue);
+            parsedValue = doubleParsed;
+          } catch {
+            // If we can't parse the second time, use the result of the first parsing
+          }
+        }
 
         // Debug logging
         const isInWebView = typeof window !== 'undefined' && typeof window.ReactNativeWebView !== 'undefined';
@@ -178,6 +188,16 @@ export const StorageService = {
         return parsedValue;
       } catch (error) {
         console.error(`StorySDK - Error parsing JSON for key "${key}":`, error);
+        console.error(`StorySDK - Corrupted value for key "${key}":`, value);
+
+        // Try to clear the corrupted data
+        try {
+          await storageAdapter.setItem(key, 'null');
+          console.warn(`StorySDK - Cleared corrupted data for key "${key}"`);
+        } catch (clearError) {
+          console.error(`StorySDK - Failed to clear corrupted data for key "${key}":`, clearError);
+        }
+
         return null;
       }
     }
@@ -253,6 +273,42 @@ export const StorageService = {
       return typeof window !== 'undefined' && typeof window.ReactNativeWebView !== 'undefined';
     }
     return isLocalStorageAvailable();
+  },
+
+  /**
+   * Clear corrupted data for a specific key
+   * @param key Storage key to clear
+   */
+  async clearCorruptedData(key: string): Promise<void> {
+    try {
+      await storageAdapter.setItem(key, 'null');
+      console.warn(`StorySDK - Cleared corrupted data for key "${key}"`);
+    } catch (error) {
+      console.error(`StorySDK - Failed to clear corrupted data for key "${key}":`, error);
+    }
+  },
+
+  /**
+   * Validate if a string is valid JSON
+   * @param value String to validate
+   * @returns True if valid JSON, false otherwise
+   */
+  isValidJSON(value: string): boolean {
+    try {
+      JSON.parse(value);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
+  /**
+   * Get raw value from storage without JSON parsing
+   * @param key Storage key
+   * @returns Raw string value or null
+   */
+  async getRawItem(key: string): Promise<string | null> {
+    return storageAdapter.getItem(key);
   },
 };
 

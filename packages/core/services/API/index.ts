@@ -1,22 +1,38 @@
 import axios from 'axios';
 import ReactGA from 'react-ga4';
 import { StorageService } from '@storysdk/react';
+import { writeToDebug } from '../../utils';
 
 // Request wrapper with caching capability
-const makeRequestWithHeadCheck = async (options: any) => {
+const makeRequestWithHeadCheck = async (options: any, isDisableCache?: boolean) => {
   // Extract token from Authorization header
   const authHeader = axios.defaults.headers.common?.Authorization as string;
   const token = authHeader?.replace('SDK ', '') || '';
 
+  // SECURITY CHECK: Don't use cache if token is invalid
+  const isValidToken = token && token !== 'no-token' && token.length >= 5;
+
+  if (!isValidToken) {
+    // If token is invalid, make direct request without caching
+    writeToDebug(`StorySDK - Invalid token detected, making direct request without cache to: ${options.url}`);
+    return await axios(options);
+  }
+
   const cacheKey = `storysdk_api_cache_${token}_${options.url}`;
 
   try {
+    // If cache is disabled, make direct request without HEAD check
+    if (isDisableCache) {
+      writeToDebug(`StorySDK - Cache disabled, making direct request to: ${options.url}`);
+      return await axios(options);
+    }
+
     // First make a HEAD request - always fresh, no caching
     const headResult = await axios({
       method: 'head',
       url: options.url,
     }).catch((error) => {
-      console.error('StorySDK - HEAD request failed:', error);
+      writeToDebug(`StorySDK - HEAD request failed: ${error}`);
       return { headers: {} };
     });
 
@@ -67,27 +83,36 @@ const makeRequestWithHeadCheck = async (options: any) => {
 
 export const API = {
   app: {
-    getApp() {
+    getApp(isDisableCache?: boolean, isDebugMode?: boolean) {
+      if (isDebugMode) {
+        writeToDebug(`StorySDK - API.app.getApp called with disableCache: ${isDisableCache}`);
+      }
       return makeRequestWithHeadCheck({
         method: 'get',
         url: '/app',
-      });
+      }, isDisableCache);
     },
   },
   groups: {
-    getList() {
+    getList(isDisableCache?: boolean, isDebugMode?: boolean) {
+      if (isDebugMode) {
+        writeToDebug(`StorySDK - API.groups.getList called with disableCache: ${isDisableCache}`);
+      }
       return makeRequestWithHeadCheck({
         method: 'get',
         url: '/groups',
-      });
+      }, isDisableCache);
     },
   },
   stories: {
-    getList(params: { groupId: string }) {
+    getList(params: { groupId: string }, isDisableCache?: boolean, isDebugMode?: boolean) {
+      if (isDebugMode) {
+        writeToDebug(`StorySDK - API.stories.getList called for group: ${params.groupId} with disableCache: ${isDisableCache}`);
+      }
       return makeRequestWithHeadCheck({
         method: 'get',
         url: `/groups/${params.groupId}/stories`,
-      });
+      }, isDisableCache);
     },
   },
   statistics: {
@@ -98,6 +123,11 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        if (!params.groupId || params.groupId.trim() === '') {
+          console.warn('StorySDK: Attempted to send group duration without valid groupId');
+          return Promise.resolve();
+        }
+
         ReactGA.gtag('event', 'storysdk_group_duration', {
           event_category: 'storysdk_groups',
           group_id: params.groupId,
@@ -167,6 +197,12 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        // Предотвращаем отправку реакции duration без валидного group_id
+        if (!params.groupId || params.groupId.trim() === '') {
+          console.warn('StorySDK: Attempted to send story duration without valid groupId');
+          return Promise.resolve();
+        }
+
         ReactGA.gtag('event', 'storysdk_story_duration', {
           event_category: 'storysdk_stories',
           group_id: params.groupId,
@@ -196,6 +232,12 @@ export const API = {
         seconds: number;
         language: string;
       }) {
+        // Предотвращаем отправку реакции impression без валидного group_id
+        if (!params.groupId || params.groupId.trim() === '') {
+          console.warn('StorySDK: Attempted to send story impression without valid groupId');
+          return Promise.resolve();
+        }
+
         ReactGA.gtag('event', 'storysdk_story_impression', {
           event_category: 'storysdk_stories',
           group_id: params.groupId,

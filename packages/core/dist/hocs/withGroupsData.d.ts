@@ -1,12 +1,11 @@
 import React from 'react';
-import type { GroupsListProps } from '@storysdk/react';
 export interface DurationProps {
     storyId?: string;
     groupId: string;
     startTime: number;
     endTime?: number;
 }
-declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: {
+declare const withGroupsData: (GroupsList: React.FC<any>, options?: {
     token?: string | undefined;
     groupImageWidth?: number | undefined;
     groupImageHeight?: number | undefined;
@@ -34,6 +33,7 @@ declare const withGroupsData: (GroupsList: React.FC<GroupsListProps>, options?: 
     forbidClose?: boolean | undefined;
     devMode?: "staging" | "development" | undefined;
     isOnlyGroups?: boolean | undefined;
+    disableCache?: boolean | undefined;
     on?(event: string, callback: (data: any) => void): void;
     off?(event: string, callback: (data: any) => void): void;
     destroy?(): void;

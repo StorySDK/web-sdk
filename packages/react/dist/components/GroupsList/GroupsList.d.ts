@@ -15,6 +15,7 @@ export interface GroupsListProps {
     groupClassName?: string;
     isShowMockup?: boolean;
     isShowLabel?: boolean;
+    token?: string;
     arrowsColor?: string;
     preventCloseOnGroupClick?: boolean;
     isLoading?: boolean;

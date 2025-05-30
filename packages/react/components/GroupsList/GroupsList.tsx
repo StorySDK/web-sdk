@@ -33,6 +33,7 @@ export interface GroupsListProps {
   groupClassName?: string;
   isShowMockup?: boolean;
   isShowLabel?: boolean;
+  token?: string;
   arrowsColor?: string;
   preventCloseOnGroupClick?: boolean;
   isLoading?: boolean;
@@ -88,6 +89,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     preventCloseOnGroupClick,
     storyHeight,
     container,
+    token,
     onOpenGroup,
     onCloseGroup,
     onNextStory,
@@ -262,9 +264,10 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     if (!isLoading && groups.length > 0) {
+      const delay = isInReactNativeWebView ? 100 : 500;
       timer = setTimeout(() => {
         setShowSkeleton(false);
-      }, 500);
+      }, delay);
     } else if (isLoading) {
       setShowSkeleton(true);
     }
@@ -274,7 +277,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         clearTimeout(timer);
       }
     };
-  }, [groups, isLoading]);
+  }, [groups, isLoading, isInReactNativeWebView]);
 
   useEffect(() => {
     if (groups?.[currentGroup]) {
@@ -308,6 +311,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           stories={currentGroupItem?.stories}
           storyHeight={storyHeight}
           storyWidth={storyWidth}
+          token={token}
           onClose={handleCloseModal}
           onCloseStory={onCloseStory}
           onFinishQuiz={onFinishQuiz}
@@ -326,11 +330,13 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   }, [isLoading, autoplay, modalShow, currentGroupItem]);
 
   const handleGroupClick = useCallback(
-    (groupIndex: number) => {
+    async (groupIndex: number) => {
+      const uniqUserId = await getUniqUserId();
+
       const customEvent = new CustomEvent('storysdk:group:click', {
         detail: {
           groupId: groups[groupIndex].id,
-          uniqUserId: getUniqUserId(),
+          uniqUserId,
         },
       });
 
@@ -342,7 +348,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
 
       handleSelectGroup(groupIndex);
     },
-    [preventCloseOnGroupClick, handleSelectGroup],
+    [preventCloseOnGroupClick, handleSelectGroup, groups, container],
   );
 
   useEffect(() => {
@@ -385,6 +391,22 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     };
 
     updateCentering();
+    if (isInReactNativeWebView) {
+      const fallbackTimer = setTimeout(updateCentering, 200);
+
+      const handleOrientationChange = () => {
+        setTimeout(updateCentering, 100);
+      };
+
+      window.addEventListener('orientationchange', handleOrientationChange);
+      window.addEventListener('resize', handleOrientationChange);
+
+      return () => {
+        clearTimeout(fallbackTimer);
+        window.removeEventListener('orientationchange', handleOrientationChange);
+        window.removeEventListener('resize', handleOrientationChange);
+      };
+    }
 
     const resizeObserver = new ResizeObserver(updateCentering);
     if (containerElement) {
@@ -399,13 +421,13 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   }, [
     width,
     showSkeleton,
-    isInReactNativeWebView,
     groupImageHeight,
     groupTitleSize,
     groups,
     groupView,
     groupImageWidth,
     calculateTitleLines,
+    isInReactNativeWebView,
   ]);
 
   return (
@@ -424,7 +446,13 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           <div className={b('carouselContent', { centered: isCentered })}>
             <>
               {groups.length > 0 && !isLoading ? (
-                <div className={b('carousel', { show: !showSkeleton && !autoplay, loading: showSkeleton })} ref={carouselRef}>
+                <div
+                  className={b('carousel', {
+                    show: !showSkeleton && !autoplay,
+                    loading: showSkeleton,
+                  })}
+                  ref={carouselRef}
+                >
                   {groups
                     .map((group, index) => (
                       <GroupItem
@@ -453,7 +481,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           <GroupsListLoader
             carouselSkeletonRef={carouselSkeletonRef}
             isCentered={isCentered}
-            isInReactNativeWebView={isInReactNativeWebView}
+            isReactNativeWebView={isInReactNativeWebView}
             showSkeleton={showSkeleton && !autoplay}
           />
         </div>

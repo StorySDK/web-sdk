@@ -5,6 +5,7 @@ import { GroupsList } from '@storysdk/react';
 import EventEmitter from './EventEmitter';
 import withGroupsData from './hocs/withGroupsData';
 import { StoryEventTypes } from './types';
+import { writeToDebug } from './utils/writeToDebug';
 
 // Function to check if React 18 createRoot API is supported
 const isReact18 = () => !!(typeof ReactDOM === 'object'
@@ -81,6 +82,7 @@ export class Story extends EventEmitter {
     devMode?: 'staging' | 'development';
     isInReactNativeWebView?: boolean;
     preventCloseOnGroupClick?: boolean;
+    disableCache?: boolean;
   };
 
   container?: Element | HTMLDivElement | null;
@@ -120,6 +122,7 @@ export class Story extends EventEmitter {
       isInReactNativeWebView?: boolean;
       preventCloseOnGroupClick?: boolean;
       isOnlyGroups?: boolean;
+      disableCache?: boolean;
     },
   ) {
     super();
@@ -157,6 +160,7 @@ export class Story extends EventEmitter {
       this.options.preventCloseOnGroupClick = options?.preventCloseOnGroupClick;
       this.options.isOnboarding = options?.isOnboarding;
       this.options.isOnlyGroups = options?.isOnlyGroups;
+      this.options.disableCache = options?.disableCache;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -173,8 +177,10 @@ export class Story extends EventEmitter {
       const debugContainer = document.querySelector('#storysdk-debug');
 
       axios.interceptors.request.use((request) => {
-        console.log('StorySDK - Starting Request to', request.url);
-        console.log('StorySDK - Request Headers:', request.headers);
+        if (this.options?.isDebugMode) {
+          writeToDebug(`Starting Request to: ${request.url}`);
+          writeToDebug(`Request Headers: ${JSON.stringify(request.headers, null, 2)}`);
+        }
 
         if (this.options?.isDebugMode && this.isInReactNativeWebView) {
           this.sendDebugInfoToReactNative('Starting Request', {
@@ -195,8 +201,10 @@ Request Headers: ${JSON.stringify(request.headers, null, 2)}`;
 
       axios.interceptors.response.use(
         (response) => {
-          console.log('StorySDK - Response Status:', response.status);
-          console.log('StorySDK - Response Headers:', response.headers);
+          if (this.options?.isDebugMode) {
+            writeToDebug(`Response Status: ${response.status}`);
+            writeToDebug(`Response Headers: ${JSON.stringify(response.headers, null, 2)}`);
+          }
 
           if (this.options?.isDebugMode && this.isInReactNativeWebView) {
             this.sendDebugInfoToReactNative('Response Received', {
@@ -214,7 +222,9 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
           return response;
         },
         (error) => {
-          console.error('StorySDK - Response Error:', error);
+          if (this.options?.isDebugMode) {
+            writeToDebug(`Response Error: ${error}`);
+          }
 
           if (this.options?.isDebugMode && this.isInReactNativeWebView) {
             this.sendDebugInfoToReactNative('Response Error', { error: String(error) });
@@ -249,7 +259,7 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
       }
     } catch (e) {
       if (this.options?.isDebugMode) {
-        console.warn('StorySDK - Failed to parse message from React Native WebView:', e);
+        writeToDebug(`Failed to parse message from React Native WebView: ${e}`);
         this.sendDebugInfoToReactNative('Failed to parse message from React Native WebView', { error: String(e) });
       }
     }
@@ -266,7 +276,7 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
       }));
 
       if (this.options?.isDebugMode && type !== 'storysdk:debug:info') {
-        console.log('StorySDK - Sent message to React Native:', { type, data });
+        writeToDebug(`Sent message to React Native: ${JSON.stringify({ type, data })}`);
         this.sendDebugInfoToReactNative('Sent message to React Native', { type, data });
       }
     }
@@ -365,6 +375,8 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
     if (!this.token) {
       if (container && !this.isInReactNativeWebView) {
         this.root = renderElement(<p>StorySDK has not been initialized.</p>, container);
+      } else if (this.options?.isDebugMode) {
+        writeToDebug('StorySDK has not been initialized');
       } else {
         console.warn('StorySDK has not been initialized.');
       }
@@ -419,7 +431,11 @@ export const init = () => {
         try {
           optionsFromUrl = JSON.parse(decodeURIComponent(optionsParam));
         } catch (e) {
-          console.warn('StorySDK: Failed to parse options from URL', e);
+          if (typeof writeToDebug === 'function') {
+            writeToDebug(`Failed to parse options from URL: ${e}`);
+          } else {
+            console.warn('StorySDK: Failed to parse options from URL', e);
+          }
         }
       }
     }
@@ -462,6 +478,7 @@ export const init = () => {
           const isForceCloseAvailable = container.getAttribute('data-storysdk-is-force-close-available');
           const isOnboarding = container.getAttribute('data-storysdk-is-onboarding');
           const isOnlyGroups = container.getAttribute('data-storysdk-is-only-groups');
+          const disableCache = container.getAttribute('data-storysdk-disable-cache');
 
           storyOptions = {
             ...storyOptions,
@@ -490,6 +507,7 @@ export const init = () => {
             isForceCloseAvailable: isForceCloseAvailable === 'true',
             isOnboarding: isOnboarding === 'true',
             isOnlyGroups: isOnlyGroups === 'true',
+            disableCache: disableCache === 'true',
           };
         }
 
@@ -515,9 +533,13 @@ export const init = () => {
         }
 
         window.storysdk = story;
+      } else if (typeof writeToDebug === 'function') {
+        writeToDebug('Wrong app token');
       } else {
         console.warn('StorySDK: wrong app token');
       }
+    } else if (typeof writeToDebug === 'function') {
+      writeToDebug('Container not found');
     } else {
       console.warn('StorySDK: container not found.');
     }

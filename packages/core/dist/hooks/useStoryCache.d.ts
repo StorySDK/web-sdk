@@ -1,1 +1,1 @@
-export declare const useStoryCache: (userId: string | null) => [(storyId: string) => any, (storyId: string, data: any) => void];
+export declare const useStoryCache: (userId: string | null, token?: string) => [(storyId: string) => any, (storyId: string, data: any) => void];

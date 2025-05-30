@@ -42,6 +42,7 @@ export declare class Story extends EventEmitter {
         devMode?: 'staging' | 'development';
         isInReactNativeWebView?: boolean;
         preventCloseOnGroupClick?: boolean;
+        disableCache?: boolean;
     };
     container?: Element | HTMLDivElement | null;
     root: any;
@@ -76,6 +77,7 @@ export declare class Story extends EventEmitter {
         isInReactNativeWebView?: boolean;
         preventCloseOnGroupClick?: boolean;
         isOnlyGroups?: boolean;
+        disableCache?: boolean;
     });
     private handleReactNativeMessage;
     private sendMessageToReactNative;

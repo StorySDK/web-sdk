@@ -7,6 +7,7 @@ export interface StoryContenxt {
     playStatus: PlayStatusType;
     container?: Element | HTMLDivElement | null;
     uniqUserId?: string;
+    token?: string;
     closeStoryGroup?: () => void;
     playStatusChange?: (status: PlayStatusType) => void;
     handleQuizAnswer?: (params: {

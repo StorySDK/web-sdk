@@ -25,6 +25,7 @@ interface StoryModalProps {
     openInExternalModal?: boolean;
     backgroundColor?: string;
     container?: Element | HTMLDivElement | null;
+    token?: string;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;

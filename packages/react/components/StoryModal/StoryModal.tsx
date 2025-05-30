@@ -50,6 +50,7 @@ interface StoryModalProps {
   openInExternalModal?: boolean;
   backgroundColor?: string;
   container?: Element | HTMLDivElement | null;
+  token?: string;
   onClose(): void;
   onPrevGroup(): void;
   onNextGroup(): void;
@@ -158,6 +159,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     openInExternalModal,
     backgroundColor,
     container,
+    token,
     onClose,
     onNextGroup,
     onPrevGroup,
@@ -827,7 +829,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
     getUniqUserId().then(setUserId);
   }, []);
 
-  const [getAnswerCache, setAnswerCache] = useAnswersCache(userId);
+  const [getAnswerCache, setAnswerCache] = useAnswersCache(userId, token);
 
   useEffect(() => {
     if (isMediaLoading) {
@@ -924,6 +926,7 @@ export const StoryModal: React.FC<StoryModalProps> = (props) => {
       value={{
         currentStoryId,
         uniqUserId: typeof userId === 'string' ? userId : undefined,
+        token,
         quizMode: currentGroup?.settings?.scoreType,
         playStatus,
         container,
