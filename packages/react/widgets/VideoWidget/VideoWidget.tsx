@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { useEffect, useMemo, useRef } from 'react';
-import { VideoWidgetParamsType, WidgetComponent } from '@types';
+import { VideoWidgetParamsType } from '@storysdk/types';
 import { block } from '@utils';
 import { IconPlay } from '@components/icons';
 import Hls from 'hls.js';
@@ -13,7 +13,7 @@ const b = block('VideoWidget');
 // For backward compatibility
 export const preloadVideo = VideoCache.preloadVideo;
 
-export const VideoWidget: WidgetComponent<{
+export const VideoWidget: React.FunctionComponent<{
   params: VideoWidgetParamsType;
   isVideoPlaying?: boolean;
   isMuted?: boolean;

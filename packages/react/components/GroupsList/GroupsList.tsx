@@ -3,10 +3,10 @@ import React, {
 } from 'react';
 import block from 'bem-cn';
 import classNames from 'classnames';
-import ReactDOM from 'react-dom';
 import { useWindowSize } from '@react-hook/window-size';
 import { getUniqUserId } from '@utils';
-import { Group } from '../../types';
+import { Group } from '@storysdk/types';
+import { renderElement, unmountComponent } from '../../utils/reactUtils';
 import { GroupItem, StoryModal } from '..';
 import { GroupsListLoader } from './GroupsListLoader';
 import './GroupsList.scss';
@@ -32,6 +32,7 @@ export interface GroupsListProps {
   isStatusBarActive?: boolean;
   groupClassName?: string;
   isShowMockup?: boolean;
+  isOnlyGroups?: boolean;
   isShowLabel?: boolean;
   token?: string;
   arrowsColor?: string;
@@ -88,6 +89,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
     storyWidth,
     preventCloseOnGroupClick,
     storyHeight,
+    isOnlyGroups,
     container,
     token,
     onOpenGroup,
@@ -114,6 +116,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   const [currentGroupItem, setCurrentGroupItem] = useState<Group | undefined>();
   const [showSkeleton, setShowSkeleton] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const modalRootRef = useRef<any>(null); // For storing modal root reference
 
   const calculateTitleLines = useCallback((
     title: string,
@@ -251,13 +254,26 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   }, [currentGroup, forbidClose, groups, onCloseGroup]);
 
   const rootElement = useMemo(() => {
+    const existingRoot = document.getElementById('storysdk-modal-root');
+    if (existingRoot) {
+      return existingRoot;
+    }
+
     const element = document.createElement('div');
     element.id = 'storysdk-modal-root';
     return element;
   }, []);
 
   useEffect(() => {
-    document.body.appendChild(rootElement);
+    if (rootElement) {
+      document.body.appendChild(rootElement);
+    }
+
+    return () => {
+      if (rootElement) {
+        document.body.removeChild(rootElement);
+      }
+    };
   }, [rootElement]);
 
   useEffect(() => {
@@ -288,8 +304,8 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   }, [currentGroup, groups]);
 
   useEffect(() => {
-    if (!isLoading || autoplay) {
-      ReactDOM.render(
+    if (!isOnlyGroups && !modalRootRef.current) {
+      modalRootRef.current = renderElement(
         <StoryModal
           arrowsColor={arrowsColor}
           backgroundColor={backgroundColor}
@@ -327,7 +343,88 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         rootElement,
       );
     }
-  }, [isLoading, autoplay, modalShow, currentGroupItem]);
+
+    return () => {
+      if (modalRootRef.current) {
+        unmountComponent(null, modalRootRef.current);
+        modalRootRef.current = null;
+      }
+    };
+  }, [isOnlyGroups]);
+
+  useEffect(() => {
+    if (modalRootRef.current && !isOnlyGroups) {
+      modalRootRef.current = renderElement(
+        <StoryModal
+          arrowsColor={arrowsColor}
+          backgroundColor={backgroundColor}
+          container={container}
+          currentGroup={currentGroupItem}
+          devMode={devMode}
+          forbidClose={forbidClose}
+          isFirstGroup={currentGroup === 0}
+          isForceCloseAvailable={isForceCloseAvailable}
+          isInReactNativeWebView={isInReactNativeWebView}
+          isLastGroup={currentGroup === groups?.length - 1}
+          isLoading={isLoading}
+          isShowLabel={isShowLabel}
+          isShowMockup={isShowMockup}
+          isShowing={modalShow}
+          isStatusBarActive={isStatusBarActive}
+          openInExternalModal={openInExternalModal}
+          startStoryId={startStoryId}
+          stories={currentGroupItem?.stories}
+          storyHeight={storyHeight}
+          storyWidth={storyWidth}
+          token={token}
+          onClose={handleCloseModal}
+          onCloseStory={onCloseStory}
+          onFinishQuiz={onFinishQuiz}
+          onModalClose={onModalClose}
+          onModalOpen={onModalOpen}
+          onNextGroup={handleNextGroup}
+          onNextStory={onNextStory}
+          onOpenStory={onOpenStory}
+          onPrevGroup={handlePrevGroup}
+          onPrevStory={onPrevStory}
+          onStartQuiz={onStartQuiz}
+        />,
+        rootElement,
+      );
+    }
+  }, [
+    arrowsColor,
+    backgroundColor,
+    container,
+    currentGroupItem,
+    devMode,
+    forbidClose,
+    currentGroup,
+    groups?.length,
+    isLoading,
+    isShowLabel,
+    isShowMockup,
+    modalShow,
+    isStatusBarActive,
+    openInExternalModal,
+    startStoryId,
+    storyHeight,
+    storyWidth,
+    token,
+    isForceCloseAvailable,
+    isInReactNativeWebView,
+    handleCloseModal,
+    onCloseStory,
+    onFinishQuiz,
+    onModalClose,
+    onModalOpen,
+    handleNextGroup,
+    onNextStory,
+    onOpenStory,
+    handlePrevGroup,
+    onPrevStory,
+    onStartQuiz,
+  ]);
 
   const handleGroupClick = useCallback(
     async (groupIndex: number) => {

@@ -3,8 +3,9 @@ import block from 'bem-cn';
 import { DateTime } from 'luxon';
 import { IconIphoneBattery, IconIphoneCellular, IconIphoneWifi } from '@components/icons';
 import { useAdaptiveValue } from '@hooks';
-import dynamicIsland from '../../../../assets/images/dynamic-island-mockup.svg';
 import './StatusBar.scss';
+// Temporary fix for SVG imports during React 19 migration
+const dynamicIsland = '../../../../assets/images/dynamic-island-mockup.svg';
 
 const b = block('StorySdkStatusBar');
 
@@ -37,7 +38,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({ className }) => {
         paddingTop: paddingVertical,
         paddingBottom: paddingVertical,
         paddingLeft: paddingSide,
-        paddingRight: paddingSide
+        paddingRight: paddingSide,
       }}
     >
       <span className={b('time')}>{time}</span>

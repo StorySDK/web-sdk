@@ -1,5 +1,5 @@
 import React from 'react';
-import { Group } from '../../types';
+import { Group } from '@storysdk/types';
 import './GroupsList.scss';
 export interface GroupsListProps {
     groups: Group[];

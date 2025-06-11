@@ -50,6 +50,7 @@ export declare class Story extends EventEmitter {
         [key: string]: ((data: any) => void)[];
     };
     private listenersSetup;
+    private isDestroying;
     constructor(token: string, options?: {
         isDebugMode?: boolean;
         groupImageWidth?: number;
@@ -86,6 +87,10 @@ export declare class Story extends EventEmitter {
      */
     private sendDebugInfoToReactNative;
     emit(eventName: StoryEventTypes, data: any): void;
+    /**
+     * Updates the token and axios headers
+     */
+    updateToken(newToken: string): void;
     private setupEventListeners;
     renderGroups(container?: Element | HTMLDivElement | null): void;
     destroy(): void;

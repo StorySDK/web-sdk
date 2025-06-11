@@ -1,5 +1,6 @@
-import { PlayStatusType } from '@components';
-import { ScoreType } from '@types';
+import { ScoreType } from './GroupType';
+
+export type PlayStatusType = 'wait' | 'play' | 'pause';
 
 export interface StoryContenxt {
   currentStoryId: string;

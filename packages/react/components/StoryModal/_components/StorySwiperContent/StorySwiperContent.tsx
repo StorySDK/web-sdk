@@ -11,10 +11,10 @@ import {
   IconUnmute,
 } from '@components/icons';
 import { LongPressTouchHandlers } from 'use-long-press';
-import { GroupType, StoryType } from '@types';
+import { GroupType, StoryType, PlayStatusType } from '@storysdk/types';
 import JSConfetti from 'js-confetti';
 import { SwipeOutput, useAdaptiveValue } from '@hooks';
-import { PlayStatusType, StoryContent, StoryContext } from '../../..';
+import { StoryContent, StoryContext } from '../../..';
 import { StatusBar } from '../StatusBar';
 import '../../StoryModal.scss';
 

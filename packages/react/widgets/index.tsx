@@ -1,4 +1,4 @@
-import { WidgetsTypes } from '@types';
+import { WidgetsTypes } from '@storysdk/types';
 import { ChooseAnswerWidget } from './ChooseAnswerWidget';
 import { ClickMeWidget } from './ClickMeWidget';
 import { EllipseWidget } from './EllipseWidget';
@@ -40,7 +40,7 @@ const widgets = {
   [WidgetsTypes.QUIZ_OPEN_ANSWER]: QuizOpenAnswerWidget,
   [WidgetsTypes.QUIZ_RATE]: QuizRateWidget,
   [WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE]: QuizMultipleAnswerWithImageWidget,
-  [WidgetsTypes.LINK]: LinkWidget
+  [WidgetsTypes.LINK]: LinkWidget,
 };
 
 export default widgets;
@@ -65,5 +65,5 @@ export {
   QuizOpenAnswerWidget,
   QuizRateWidget,
   QuizMultipleAnswerWithImageWidget,
-  LinkWidget
+  LinkWidget,
 };

@@ -1,11 +1,12 @@
-import React, { useState, useCallback, useContext, useEffect, useRef } from 'react';
+import React, {
+  useState, useCallback, useContext, useEffect, useRef,
+} from 'react';
 import {
   TalkAboutWidgetParamsType,
-  WidgetComponent,
   TalkAboutElementsType,
   BackgroundColorType,
-  WidgetsTypes
-} from '@types';
+  WidgetsTypes,
+} from '@storysdk/types';
 import cn from 'classnames';
 import { StoryContext } from '@components';
 import { IconLogoCircle } from '@components/icons';
@@ -16,46 +17,48 @@ const b = block('TalkAboutWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {
-    borderRadius: 10
+    borderRadius: 10,
   },
   content: {
     paddingRight: 12,
     paddingLeft: 12,
     paddingBottom: 12,
-    paddingTop: 30
+    paddingTop: 30,
   },
   text: {
     fontSize: 14,
-    marginBottom: 15
+    marginBottom: 15,
   },
   input: {
     fontSize: 10,
     padding: 11,
-    borderRadius: 8
+    borderRadius: 8,
   },
   empty: {
-    height: 18
+    height: 18,
   },
   imageWrapper: {
     width: 36,
-    height: 36
+    height: 36,
   },
   send: {
-    height: 50
+    height: 50,
   },
   sendText: {
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 };
 
-export const TalkAboutWidget: WidgetComponent<{
+export const TalkAboutWidget: React.FunctionComponent<{
   id: string;
   params: TalkAboutWidgetParamsType;
   elementsSize?: TalkAboutElementsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): void;
 }> = React.memo((props) => {
-  const { id, params, elementsSize, isReadOnly } = props;
+  const {
+    id, params, elementsSize, isReadOnly,
+  } = props;
 
   const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
@@ -73,7 +76,7 @@ export const TalkAboutWidget: WidgetComponent<{
       setText(e.target.value);
       storyContextVal.playStatusChange?.('pause');
     },
-    [storyContextVal]
+    [storyContextVal],
   );
 
   const handleSendClick = useCallback(() => {
@@ -87,9 +90,9 @@ export const TalkAboutWidget: WidgetComponent<{
           storyId: storyContextVal.currentStoryId,
           widgetId: props.id,
           data: {
-            answer: text
-          }
-        }
+            answer: text,
+          },
+        },
       });
 
       storyContextVal.container?.dispatchEvent(generalAnswerEvent);
@@ -114,7 +117,7 @@ export const TalkAboutWidget: WidgetComponent<{
         storyContextVal.playStatusChange?.('pause');
       }
     },
-    [isSent, storyContextVal]
+    [isSent, storyContextVal],
   );
 
   useEffect(() => {
@@ -154,8 +157,8 @@ export const TalkAboutWidget: WidgetComponent<{
                 className={
                   (cn(
                     b('text', {
-                      gradient: params.fontColor?.type === BackgroundColorType.GRADIENT
-                    }).toString()
+                      gradient: params.fontColor?.type === BackgroundColorType.GRADIENT,
+                    }).toString(),
                   ),
                     'StorySdk-widgetTitle')
                 }
@@ -164,7 +167,7 @@ export const TalkAboutWidget: WidgetComponent<{
                   fontStyle: params.fontParams?.style,
                   fontWeight: params.fontParams?.weight,
                   fontFamily: params.fontFamily,
-                  ...textStyles
+                  ...textStyles,
                 }}
               >
                 {params.text}

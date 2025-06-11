@@ -1,2 +1,1 @@
-export type MaterialIconValueType = { name: string };
-export type MaterialIconChangeType = (params: MaterialIconValueType) => void;
+export { MaterialIconValueType } from '@storysdk/types';

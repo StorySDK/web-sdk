@@ -9,5 +9,5 @@ interface ElementSize {
  * @param dependencies Array of dependencies for recreating the ResizeObserver
  * @returns Object with current element dimensions { width, height }
  */
-export declare const useElementSize: <T extends HTMLElement>(elementRef: RefObject<T>, dependencies?: any[]) => ElementSize;
+export declare const useElementSize: <T extends HTMLElement>(elementRef: RefObject<T | null>, dependencies?: any[]) => ElementSize;
 export {};

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { ImageWidgetParamsType, WidgetComponent } from '@types';
+import { ImageWidgetParamsType } from '@storysdk/types';
 import { block } from '@utils';
 import './ImageWidget.scss';
 
 const b = block('ImageWidget');
 
-export const ImageWidget: WidgetComponent<{
+export const ImageWidget: React.FunctionComponent<{
   params: ImageWidgetParamsType;
   handleMediaLoading?: (isLoading: boolean) => void;
   width?: number;

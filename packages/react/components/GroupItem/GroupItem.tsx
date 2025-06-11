@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import block from 'bem-cn';
 import classNames from 'classnames';
-import { GroupType } from '../../types';
+import { GroupType } from '@storysdk/types';
 import './GroupItem.scss';
 
 const b = block('GroupSdkItem');

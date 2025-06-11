@@ -1,8 +1,9 @@
-import { VideoWidgetParamsType, WidgetComponent } from '@types';
+import React from 'react';
+import { VideoWidgetParamsType } from '@storysdk/types';
 import { VideoCache } from '../../services/VideoCache';
 import './VideoWidget.scss';
 export declare const preloadVideo: typeof VideoCache.preloadVideo;
-export declare const VideoWidget: WidgetComponent<{
+export declare const VideoWidget: React.FunctionComponent<{
     params: VideoWidgetParamsType;
     isVideoPlaying?: boolean;
     isMuted?: boolean;

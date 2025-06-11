@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import cn from 'classnames';
 import { nanoid } from 'nanoid';
-import { BackgroundColorType, BackgroundType } from '../../types';
+import { BackgroundColorType, BackgroundType } from '@storysdk/types';
 import { MATERIAL_ICONS } from './_constants';
 import './MaterialIcon.scss';
 
@@ -21,7 +21,7 @@ export const MaterialIcon = memo(
     className,
     color,
     background,
-    size = 'auto'
+    size = 'auto',
   }: PropsType) => {
     const Icon = useMemo(() => MATERIAL_ICONS[name], [name]);
 
@@ -46,5 +46,5 @@ export const MaterialIcon = memo(
     }
 
     return null;
-  }
+  },
 );

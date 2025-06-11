@@ -1,6 +1,6 @@
 import React from 'react';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
-import { BackgroundColorType, TextWidgetParamsType, WidgetComponent } from '@types';
+import { BackgroundColorType, TextWidgetParamsType } from '@storysdk/types';
 import './TextWidget.scss';
 
 const b = block('TextWidget');
@@ -9,7 +9,7 @@ type PropsType = {
   params: any;
 };
 
-export const TextWidget: WidgetComponent<{ params: TextWidgetParamsType }> = React.memo(
+export const TextWidget: React.FunctionComponent<{ params: TextWidgetParamsType }> = React.memo(
   (props: PropsType) => {
     const { params } = props;
 
@@ -17,7 +17,7 @@ export const TextWidget: WidgetComponent<{ params: TextWidgetParamsType }> = Rea
       <div className={b()}>
         <div
           className={b('container', {
-            gradient: params.color.type === BackgroundColorType.GRADIENT
+            gradient: params.color.type === BackgroundColorType.GRADIENT,
           })}
           style={{
             opacity: params.widgetOpacity / 100,
@@ -27,7 +27,7 @@ export const TextWidget: WidgetComponent<{ params: TextWidgetParamsType }> = Rea
             fontFamily: params.fontFamily,
             fontSize: `${params.fontSize}px`,
             textAlign: params.align,
-            ...renderTextBackgroundStyles({ color: params.color })
+            ...renderTextBackgroundStyles({ color: params.color }),
           }}
         >
           <span className={b('span')}>{params.text}</span>
@@ -37,11 +37,11 @@ export const TextWidget: WidgetComponent<{ params: TextWidgetParamsType }> = Rea
           <div
             className={b('background')}
             style={{
-              background: renderBackgroundStyles(params.backgroundColor)
+              background: renderBackgroundStyles(params.backgroundColor),
             }}
           />
         ) : null}
       </div>
     );
-  }
+  },
 );

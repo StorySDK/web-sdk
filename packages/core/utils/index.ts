@@ -5,3 +5,5 @@ export * from './checkIos';
 export * from './writeToDebug';
 export * from './initGA';
 export * from './cacheKeys';
+
+export { writeToDebug } from './writeToDebug';

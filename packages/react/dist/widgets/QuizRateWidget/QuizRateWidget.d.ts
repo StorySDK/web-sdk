@@ -1,6 +1,7 @@
-import { QuizRateWidgetElementsType, QuizRateWidgetParamsType, WidgetComponent } from '@types';
+import React from 'react';
+import { QuizRateWidgetElementsType, QuizRateWidgetParamsType } from '@storysdk/types';
 import './QuizRateWidget.scss';
-export declare const QuizRateWidget: WidgetComponent<{
+export declare const QuizRateWidget: React.FunctionComponent<{
     id?: string;
     params: QuizRateWidgetParamsType;
     elementsSize: QuizRateWidgetElementsType;

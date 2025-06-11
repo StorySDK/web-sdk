@@ -5,3 +5,4 @@ export * from './findNestedHtmlChild';
 export * from './writeToDebug';
 export * from './storageCleanup';
 export * from './getUniqUserId';
+export * from './reactUtils';

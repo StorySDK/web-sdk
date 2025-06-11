@@ -1,11 +1,12 @@
-import React, { useState, useCallback, useContext, useEffect } from 'react';
+import React, {
+  useState, useCallback, useContext, useEffect,
+} from 'react';
 import {
   BackgroundColorType,
   SliderWidgetElementsType,
   SliderWidgetParamsType,
-  WidgetComponent,
-  WidgetsTypes
-} from '@types';
+  WidgetsTypes,
+} from '@storysdk/types';
 import cn from 'classnames';
 import { block, getTextStyles } from '@utils';
 import { useInterval } from '@hooks';
@@ -23,23 +24,23 @@ const INIT_ELEMENT_STYLES = {
     paddingTop: 20,
     paddingLeft: 20,
     paddingRight: 20,
-    paddingBottom: 30
+    paddingBottom: 30,
   },
   emoji: {
     width: 30,
-    height: 30
+    height: 30,
   },
   text: {
     fontSize: 16,
-    marginBottom: 15
+    marginBottom: 15,
   },
   slider: {
     height: 11,
-    borderRadius: 6
-  }
+    borderRadius: 6,
+  },
 };
 
-export const SliderWidget: WidgetComponent<{
+export const SliderWidget: React.FunctionComponent<{
   id: string;
   storyId: string;
   params: SliderWidgetParamsType;
@@ -47,8 +48,12 @@ export const SliderWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(value: number): void;
 }> = React.memo((props) => {
-  const { id, params, storyId, elementsSize, isReadOnly, onAnswer } = props;
-  const { color, text, emoji, value } = params;
+  const {
+    id, params, storyId, elementsSize, isReadOnly, onAnswer,
+  } = props;
+  const {
+    color, text, emoji, value,
+  } = params;
 
   const storyContextVal = useContext(StoryContext);
 
@@ -62,7 +67,7 @@ export const SliderWidget: WidgetComponent<{
 
   const [sliderValue, setSliderValue] = useState<number>(isReadOnly ? value : defaultAnswer);
   const [changeStatus, setChangeStatus] = useState<ChangeStatus>(
-    answerFromCache !== undefined ? 'moved' : 'wait'
+    answerFromCache !== undefined ? 'moved' : 'wait',
   );
 
   const time = 500;
@@ -87,9 +92,9 @@ export const SliderWidget: WidgetComponent<{
           storyId: storyContextVal.currentStoryId,
           widgetId: props.id,
           data: {
-            answer: sliderValue
-          }
-        }
+            answer: sliderValue,
+          },
+        },
       });
 
       storyContextVal.container?.dispatchEvent(generalAnswerEvent);
@@ -128,16 +133,16 @@ export const SliderWidget: WidgetComponent<{
       <div
         className={cn(
           b('text', {
-            gradient: params.fontColor?.type === BackgroundColorType.GRADIENT
+            gradient: params.fontColor?.type === BackgroundColorType.GRADIENT,
           }).toString(),
-          'StorySdk-widgetTitle'
+          'StorySdk-widgetTitle',
         )}
         style={{
           ...sizes.text,
           fontStyle: params.fontParams?.style,
           fontWeight: params.fontParams?.weight,
           fontFamily: params.fontFamily,
-          ...textStyles
+          ...textStyles,
         }}
       >
         {text}
@@ -146,7 +151,7 @@ export const SliderWidget: WidgetComponent<{
       <div
         className={b('sliderWrapper')}
         style={{
-          height: sizes.slider.height
+          height: sizes.slider.height,
         }}
       >
         <SliderCustom

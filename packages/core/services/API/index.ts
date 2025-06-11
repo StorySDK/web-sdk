@@ -3,6 +3,17 @@ import ReactGA from 'react-ga4';
 import { StorageService } from '@storysdk/react';
 import { writeToDebug } from '../../utils';
 
+// Helper function to add cache-busting parameter to prevent browser caching
+const addCacheBusting = (config: any = {}) => {
+  const url = new URL(config.url, 'http://dummy');
+  url.searchParams.set('_t', Date.now().toString());
+
+  return {
+    ...config,
+    url: url.pathname + url.search,
+  };
+};
+
 // Request wrapper with caching capability
 const makeRequestWithHeadCheck = async (options: any, isDisableCache?: boolean) => {
   // Extract token from Authorization header
@@ -15,8 +26,36 @@ const makeRequestWithHeadCheck = async (options: any, isDisableCache?: boolean) 
   if (!isValidToken) {
     // If token is invalid, make direct request without caching
     writeToDebug(`StorySDK - Invalid token detected, making direct request without cache to: ${options.url}`);
-    return await axios(options);
+    return axios(addCacheBusting(options));
   }
+
+  // Check if token has changed and clear cache if needed
+  // eslint-disable-next-line no-underscore-dangle
+  const previousToken = (window as any).__STORYSDK_API_PREVIOUS_TOKEN__;
+  if (previousToken && previousToken !== token) {
+    writeToDebug(`StorySDK - Token changed from ${previousToken} to ${token}, clearing API cache...`);
+
+    // Clear all API cache for the old token
+    try {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i += 1) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('storysdk_api_cache_')) {
+          keysToRemove.push(key);
+        }
+      }
+
+      // Remove keys using StorageService's clearCorruptedData method
+      await Promise.all(keysToRemove.map((key) => StorageService.clearCorruptedData(key)));
+      writeToDebug(`StorySDK - Cleared ${keysToRemove.length} API cache keys`);
+    } catch (error) {
+      writeToDebug(`StorySDK - Error clearing API cache: ${error}`);
+    }
+  }
+
+  // Store current token for next comparison
+  // eslint-disable-next-line no-underscore-dangle
+  (window as any).__STORYSDK_API_PREVIOUS_TOKEN__ = token;
 
   const cacheKey = `storysdk_api_cache_${token}_${options.url}`;
 
@@ -24,14 +63,14 @@ const makeRequestWithHeadCheck = async (options: any, isDisableCache?: boolean) 
     // If cache is disabled, make direct request without HEAD check
     if (isDisableCache) {
       writeToDebug(`StorySDK - Cache disabled, making direct request to: ${options.url}`);
-      return await axios(options);
+      return await axios(addCacheBusting(options));
     }
 
     // First make a HEAD request - always fresh, no caching
-    const headResult = await axios({
+    const headResult = await axios(addCacheBusting({
       method: 'head',
       url: options.url,
-    }).catch((error) => {
+    })).catch((error) => {
       writeToDebug(`StorySDK - HEAD request failed: ${error}`);
       return { headers: {} };
     });
@@ -58,7 +97,7 @@ const makeRequestWithHeadCheck = async (options: any, isDisableCache?: boolean) 
     }
 
     // Always make a request if cache is missing or empty
-    const response = await axios(options);
+    const response = await axios(addCacheBusting(options));
 
     const isDataNotEmpty = (data: any): boolean => {
       if (Array.isArray(data)) {

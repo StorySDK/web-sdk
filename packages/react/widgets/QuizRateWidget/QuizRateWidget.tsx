@@ -6,9 +6,8 @@ import {
   BackgroundColorType,
   QuizRateWidgetElementsType,
   QuizRateWidgetParamsType,
-  WidgetComponent,
-  WidgetsTypes
-} from '@types';
+  WidgetsTypes,
+} from '@storysdk/types';
 import cn from 'classnames';
 import './QuizRateWidget.scss';
 import { StoryContext } from '@components';
@@ -18,16 +17,16 @@ const b = block('QuizRateWidget');
 const INIT_ELEMENT_STYLES = {
   title: {
     fontSize: 14,
-    marginBottom: 16
+    marginBottom: 16,
   },
   stars: {
-    gap: 10
-  }
+    gap: 10,
+  },
 };
 
 const RATE_MAX = 5;
 
-export const QuizRateWidget: WidgetComponent<{
+export const QuizRateWidget: React.FunctionComponent<{
   id?: string;
   params: QuizRateWidgetParamsType;
   elementsSize: QuizRateWidgetElementsType;
@@ -35,8 +34,12 @@ export const QuizRateWidget: WidgetComponent<{
   onAnswer?(answer: string): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
-  const { title, isTitleHidden, storyId, storeLinks } = props.params;
-  const { params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
+  const {
+    title, isTitleHidden, storyId, storeLinks,
+  } = props.params;
+  const {
+    params, elementsSize, isReadOnly, onAnswer, onGoToStory,
+  } = props;
 
   const [isSent, setIsSent] = useState<boolean>(false);
 
@@ -55,9 +58,9 @@ export const QuizRateWidget: WidgetComponent<{
           storyId: storyContextVal.currentStoryId,
           widgetId: props.id,
           data: {
-            answer: rate
-          }
-        }
+            answer: rate,
+          },
+        },
       });
 
       storyContextVal.container?.dispatchEvent(generalAnswerEvent);
@@ -73,7 +76,7 @@ export const QuizRateWidget: WidgetComponent<{
 
       setIsSent(true);
     },
-    [onAnswer, onGoToStory, storeLinks?.web, storyId]
+    [onAnswer, onGoToStory, storeLinks?.web, storyId],
   );
 
   const textStyles = getTextStyles(params.fontColor);
@@ -84,16 +87,16 @@ export const QuizRateWidget: WidgetComponent<{
         <div
           className={cn(
             b('title', {
-              gradient: params.fontColor?.type === BackgroundColorType.GRADIENT
+              gradient: params.fontColor?.type === BackgroundColorType.GRADIENT,
             }).toString(),
-            'StorySdk-widgetTitle'
+            'StorySdk-widgetTitle',
           )}
           style={{
             ...sizes.title,
             fontStyle: params.fontParams?.style,
             fontWeight: params.fontParams?.weight,
             fontFamily: params.fontFamily,
-            ...textStyles
+            ...textStyles,
           }}
         >
           {title}
@@ -101,10 +104,10 @@ export const QuizRateWidget: WidgetComponent<{
       )}
       <div
         className={b('starsContainer', {
-          disabled: isSent || isReadOnly
+          disabled: isSent || isReadOnly,
         })}
         style={{
-          gap: sizes.stars.gap
+          gap: sizes.stars.gap,
         }}
       >
         {new Array(RATE_MAX).fill(0).map((_, index) => (

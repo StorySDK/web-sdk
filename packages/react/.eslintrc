@@ -96,7 +96,8 @@
       "prefer-double"
     ],
     "react/button-has-type": "off",
-    "no-param-reassign": 0
+    "no-param-reassign": 0,
+    "max-len": "off"
   },
   "settings": {
     "import/ignore": [

@@ -1,6 +1,7 @@
-import { EmojiReactionWidgetParamsType, WidgetComponent, EmojiReactionWidgetElemetsType } from '@types';
+import React from 'react';
+import { EmojiReactionWidgetParamsType, EmojiReactionWidgetElemetsType } from '@storysdk/types';
 import './EmojiReactionWidget.scss';
-export declare const EmojiReactionWidget: WidgetComponent<{
+export declare const EmojiReactionWidget: React.FunctionComponent<{
     id: string;
     params: EmojiReactionWidgetParamsType;
     elementsSize?: EmojiReactionWidgetElemetsType;

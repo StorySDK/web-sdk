@@ -1,4 +1,5 @@
-import { ClickMeWidgetParamsType, WidgetComponent } from '@types';
+import React from 'react';
+import { ClickMeWidgetParamsType } from '@storysdk/types';
 import './ClickMeWidget.scss';
 declare global {
     interface Window {
@@ -9,7 +10,7 @@ declare global {
         };
     }
 }
-export declare const ClickMeWidget: WidgetComponent<{
+export declare const ClickMeWidget: React.FunctionComponent<{
     id?: string;
     params: ClickMeWidgetParamsType;
     isReadOnly?: boolean;

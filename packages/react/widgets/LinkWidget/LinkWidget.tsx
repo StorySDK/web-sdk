@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
-import { LinkWidgetParamsType, WidgetComponent } from '@types';
+import { LinkWidgetParamsType } from '@storysdk/types';
 import { MaterialIcon, StoryContext } from '@components';
 import './LinkWidget.scss';
 
@@ -8,7 +8,7 @@ const b = block('LinkWidget');
 
 const DELAY_MS = 200;
 
-export const LinkWidget: WidgetComponent<{
+export const LinkWidget: React.FunctionComponent<{
   id?: string;
   params: LinkWidgetParamsType;
   isReadOnly?: boolean;

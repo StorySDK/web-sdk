@@ -18,21 +18,21 @@ export declare const StorageService: {
      * @param key Storage key
      * @param value Value to store
      */
-    setItem<T_1>(key: string, value: T_1): Promise<void>;
+    setItem<T>(key: string, value: T): Promise<void>;
     /**
      * Get cached data with lastModified check
      * @param key Cache key
      * @param lastModified Last-Modified header value
      * @returns Cached data if valid, null if expired or not found
      */
-    getCachedData<T_2>(key: string, lastModified?: string): Promise<T_2 | null>;
+    getCachedData<T>(key: string, lastModified?: string): Promise<T | null>;
     /**
      * Store data with lastModified value
      * @param key Cache key
      * @param data Data to cache
      * @param lastModified Last-Modified header value
      */
-    setCachedData<T_3>(key: string, data: T_3, lastModified?: string): Promise<void>;
+    setCachedData<T>(key: string, data: T, lastModified?: string): Promise<void>;
     /**
      * Check if storage is available
      * @returns True if storage is available, false otherwise

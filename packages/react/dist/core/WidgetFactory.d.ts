@@ -1,6 +1,6 @@
 import React from 'react';
 import { StoryCurrentSize } from '@components';
-import { WidgetObjectType } from '../types';
+import { WidgetObjectType } from '@storysdk/types';
 interface WidgetFactoryProps {
     storyId: string;
     currentStorySize: StoryCurrentSize;

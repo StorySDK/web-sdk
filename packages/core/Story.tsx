@@ -1,41 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
-import { GroupsList } from '@storysdk/react';
+import { GroupsList, renderElement, unmountComponent } from '@storysdk/react';
 import EventEmitter from './EventEmitter';
 import withGroupsData from './hocs/withGroupsData';
 import { StoryEventTypes } from './types';
 import { writeToDebug } from './utils/writeToDebug';
-
-// Function to check if React 18 createRoot API is supported
-const isReact18 = () => !!(typeof ReactDOM === 'object'
-  // @ts-ignore - checking if createRoot exists in ReactDOM
-  && typeof ReactDOM.createRoot === 'function');
-
-// Helper function for rendering in React 17 or React 18
-const renderElement = (element: React.ReactElement, container: Element) => {
-  if (isReact18()) {
-    // React 18
-    // @ts-ignore - using createRoot from React 18
-    const root = ReactDOM.createRoot(container);
-    root.render(element);
-    return root;
-  }
-  // React 17
-  ReactDOM.render(element, container);
-  return null;
-};
-
-// Helper function for unmounting in React 17 or React 18
-const unmountComponent = (container: Element, root: any) => {
-  if (isReact18() && root) {
-    // React 18
-    root.unmount();
-  } else {
-    // React 17
-    ReactDOM.unmountComponentAtNode(container);
-  }
-};
 
 declare global {
   interface Window {
@@ -93,6 +62,8 @@ export class Story extends EventEmitter {
 
   private listenersSetup: boolean = false; // Флаг для предотвращения дублирования обработчиков
 
+  private isDestroying: boolean = false; // Flag for preventing multiple destroy calls
+
   constructor(
     token: string,
     options?: {
@@ -130,6 +101,10 @@ export class Story extends EventEmitter {
     this.options = {};
     this.container = null;
     this.eventHandlers = {};
+    this.eventListeners = [];
+
+    // Reset destroying flag on new instance
+    this.isDestroying = false;
 
     this.isInReactNativeWebView = !!options?.isInReactNativeWebView
       || (typeof window !== 'undefined' && window.ReactNativeWebView !== undefined);
@@ -303,78 +278,119 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
     }
   }
 
+  /**
+   * Updates the token and axios headers
+   */
+  updateToken(newToken: string) {
+    if (this.token !== newToken) {
+      this.token = newToken;
+      if (newToken) {
+        axios.defaults.headers.common = { Authorization: `SDK ${newToken}` };
+      }
+      if (this.options?.isDebugMode) {
+        writeToDebug(`Token updated to: ${newToken}`);
+        this.sendDebugInfoToReactNative('Token updated', { newToken });
+      }
+    }
+  }
+
   // * Set up event listeners for story interactions
   // * @private
   // * @param element Container element
   // */
+  // Store event listeners for proper cleanup
+  private eventListeners: Array<{
+    element: Element | HTMLDivElement;
+    type: string;
+    listener: EventListener;
+  }> = [];
+
   private setupEventListeners(element: Element | HTMLDivElement): void {
     // Предотвращаем дублирование обработчиков событий
     if (this.listenersSetup) {
       return;
     }
 
-    element.addEventListener('storysdk:widget:click', (event) => {
-      this.emit(StoryEventTypes.WIDGET_CLICK, (event as CustomEvent).detail || {});
-    });
+    const createListener = (eventType: string, storyEventType: StoryEventTypes) => {
+      const listener = (event: Event) => {
+        this.emit(storyEventType, (event as CustomEvent).detail || {});
+      };
+      element.addEventListener(eventType, listener);
+      this.eventListeners.push({ element, type: eventType, listener });
+    };
 
-    element.addEventListener('storysdk:widget:answer', (event) => {
-      this.emit(StoryEventTypes.WINDGET_ANSWER, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:group:open', (event) => {
-      this.emit(StoryEventTypes.GROUP_OPEN, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:group:close', (event) => {
-      this.emit(StoryEventTypes.GROUP_CLOSE, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:story:open', (event) => {
-      this.emit(StoryEventTypes.STORY_OPEN, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:story:close', (event) => {
-      this.emit(StoryEventTypes.STORY_CLOSE, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:story:next', (event) => {
-      this.emit(StoryEventTypes.STORY_NEXT, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:story:prev', (event) => {
-      this.emit(StoryEventTypes.STORY_PREV, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:modal:open', (event) => {
-      this.emit(StoryEventTypes.MODAL_OPEN, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:modal:close', (event) => {
-      this.emit(StoryEventTypes.MODAL_CLOSE, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:group:click', (event) => {
-      this.emit(StoryEventTypes.GROUP_CLICK, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:data:loaded', (event) => {
-      this.emit(StoryEventTypes.DATA_LOADED, (event as CustomEvent).detail || {});
-    });
+    createListener('storysdk:widget:click', StoryEventTypes.WIDGET_CLICK);
+    createListener('storysdk:widget:answer', StoryEventTypes.WIDGET_ANSWER);
+    createListener('storysdk:group:open', StoryEventTypes.GROUP_OPEN);
+    createListener('storysdk:group:close', StoryEventTypes.GROUP_CLOSE);
+    createListener('storysdk:story:open', StoryEventTypes.STORY_OPEN);
+    createListener('storysdk:story:close', StoryEventTypes.STORY_CLOSE);
+    createListener('storysdk:story:next', StoryEventTypes.STORY_NEXT);
+    createListener('storysdk:story:prev', StoryEventTypes.STORY_PREV);
+    createListener('storysdk:modal:open', StoryEventTypes.MODAL_OPEN);
+    createListener('storysdk:modal:close', StoryEventTypes.MODAL_CLOSE);
+    createListener('storysdk:group:click', StoryEventTypes.GROUP_CLICK);
+    createListener('storysdk:data:loaded', StoryEventTypes.DATA_LOADED);
 
     this.listenersSetup = true;
   }
 
+  private cleanupEventListeners(): void {
+    this.eventListeners.forEach(({ element, type, listener }) => {
+      try {
+        element.removeEventListener(type, listener);
+      } catch (error) {
+        if (this.options?.isDebugMode) {
+          writeToDebug(`Error removing event listener: ${error}`);
+        }
+        console.warn('StorySDK: Error removing event listener:', error);
+      }
+    });
+    this.eventListeners = [];
+    this.listenersSetup = false;
+  }
+
   renderGroups(container?: Element | HTMLDivElement | null) {
+    // Prevent rendering if component is being destroyed
+    if (this.isDestroying) {
+      return;
+    }
+
     if (container) {
+      // If we're switching to a new container, clean up the old one first
+      if (this.container && this.container !== container && this.root) {
+        try {
+          unmountComponent(this.container, this.root);
+          this.root = null;
+        } catch (error) {
+          if (this.options?.isDebugMode) {
+            writeToDebug(`Error cleaning up old container: ${error}`);
+          }
+          console.warn('StorySDK: Error cleaning up old container:', error);
+        }
+      }
+
       this.container = container;
       if (!container.classList.contains('storysdk-container')) {
         container.classList.add('storysdk-container');
       }
     }
 
+    // If we already have a root for the same container, no need to create a new one
+    // The renderElement function will handle reusing the existing root
+    const currentContainer = container || this.container;
+
+    // Additional safety check - ensure container is still in DOM
+    if (currentContainer && !document.contains(currentContainer)) {
+      if (this.options?.isDebugMode) {
+        writeToDebug('Container is no longer in DOM, skipping render');
+      }
+      return;
+    }
+
     if (!this.token) {
-      if (container && !this.isInReactNativeWebView) {
-        this.root = renderElement(<p>StorySDK has not been initialized.</p>, container);
+      if (currentContainer && !this.isInReactNativeWebView) {
+        this.root = renderElement(<p>StorySDK has not been initialized.</p>, currentContainer);
       } else if (this.options?.isDebugMode) {
         writeToDebug('StorySDK has not been initialized');
       } else {
@@ -384,31 +400,79 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
       return;
     }
 
-    const Groups = withGroupsData(GroupsList, { ...this.options, token: this.token }, container);
+    const Groups = withGroupsData(
+      GroupsList,
+      { ...this.options, token: this.token },
+      currentContainer,
+    );
 
-    if (container) {
-      this.setupEventListeners(container);
-      this.root = renderElement(<Groups />, container);
+    if (currentContainer) {
+      // Additional check before rendering
+      if (this.isDestroying) {
+        return;
+      }
+
+      this.setupEventListeners(currentContainer);
+
+      try {
+        this.root = renderElement(<Groups />, currentContainer);
+      } catch (error) {
+        if (this.options?.isDebugMode) {
+          writeToDebug(`Error during render: ${error}`);
+        }
+        console.error('StorySDK: Error during render:', error);
+      }
     }
   }
 
   destroy() {
-    if (this.container) {
-      unmountComponent(this.container, this.root);
-      this.root = null;
+    // Prevent multiple destroy calls
+    if (this.isDestroying) {
+      return;
+    }
+    this.isDestroying = true;
 
-      const modalRoot = document.getElementById('storysdk-modal-root');
-      if (modalRoot) {
+    // First, stop rendering if it's in progress
+    if (this.container && this.root) {
+      try {
+        unmountComponent(this.container, this.root);
+      } catch (error) {
+        if (this.options?.isDebugMode) {
+          writeToDebug(`Error during unmount: ${error}`);
+        }
+        console.warn('StorySDK: Error during unmount:', error);
+      }
+
+      // Clear root reference after attempting unmount
+      this.root = null;
+    }
+
+    // Handle modal root separately
+    const modalRoot = document.getElementById('storysdk-modal-root');
+    if (modalRoot) {
+      try {
         unmountComponent(modalRoot, null);
+      } catch (error) {
+        if (this.options?.isDebugMode) {
+          writeToDebug(`Error during modal unmount: ${error}`);
+        }
+        console.warn('StorySDK: Error during modal unmount:', error);
       }
     }
 
+    // Remove all event listeners
+    this.cleanupEventListeners();
+
+    // Remove React Native WebView event listener
     if (this.isInReactNativeWebView && typeof window !== 'undefined') {
       window.removeEventListener('message', this.handleReactNativeMessage);
     }
 
-    // Сбрасываем флаг для возможности повторной настройки обработчиков
-    this.listenersSetup = false;
+    // Clear container reference
+    this.container = null;
+
+    // Reset the destroying flag immediately since we're now synchronous
+    this.isDestroying = false;
   }
 }
 

@@ -15,15 +15,16 @@ import {
 } from '@components/icons';
 import { useLongPress } from 'use-long-press';
 import { DateTime } from 'luxon';
-import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
 import {
-  StoryType, Group, GroupType, StoryContenxt, ScoreType, WidgetsTypes,
-} from '../../types';
-import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
-import storySdkLogo from '../../assets/images/storysdk-logo.svg';
+  StoryType, Group, GroupType, StoryContenxt, ScoreType, WidgetsTypes, PlayStatusType,
+} from '@storysdk/types';
+import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
 import { StorySwiperContent } from './_components';
 
 import './StoryModal.scss';
+// Temporary fix for SVG imports during React 19 migration
+const largeIphoneMockup = '../../assets/images/iphone-mockup-large.svg';
+const storySdkLogo = '../../assets/images/storysdk-logo.svg';
 
 const b = block('StorySdkModal');
 interface StoryModalProps {
@@ -64,7 +65,7 @@ interface StoryModalProps {
   onModalClose?(groupId: string, storyId: string): void;
 }
 
-export type PlayStatusType = 'wait' | 'play' | 'pause';
+// PlayStatusType теперь импортируется из @storysdk/types
 
 export const StoryContext = React.createContext<StoryContenxt>({
   currentStoryId: '',

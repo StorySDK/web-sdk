@@ -1,9 +1,8 @@
 import React from 'react';
 import { LongPressTouchHandlers } from 'use-long-press';
-import { GroupType, StoryType } from '@types';
+import { GroupType, StoryType, PlayStatusType } from '@storysdk/types';
 import JSConfetti from 'js-confetti';
 import { SwipeOutput } from '@hooks';
-import { PlayStatusType } from '../../..';
 import '../../StoryModal.scss';
 interface StorySwiperContentProps {
     isMobile: boolean;

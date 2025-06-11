@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo } from 'react';
-import { Group } from '../../types';
+import { Group } from '@storysdk/types';
 import { StoryModal } from '..';
 
 interface GroupProps {
+  children?: React.ReactNode;
   group?: Group;
   isFirstGroup: boolean;
   isLastGroup: boolean;
@@ -41,7 +42,7 @@ export const CustomGroupControl: React.FC<GroupProps> = (props) => {
     isCacheDisabled,
     handleCloseModal,
     handleNextGroup,
-    handlePrevGroup
+    handlePrevGroup,
   } = props;
 
   const initOverlow = useMemo(() => document.body.style.overflow, []);

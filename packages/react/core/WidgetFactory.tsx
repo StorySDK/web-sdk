@@ -34,7 +34,7 @@ import {
   TalkAboutElementsType,
   WidgetObjectType,
   WidgetsTypes,
-} from '../types';
+} from '@storysdk/types';
 
 interface WidgetFactoryProps {
   storyId: string;

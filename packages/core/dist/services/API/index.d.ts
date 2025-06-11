@@ -1,7 +1,7 @@
 export declare const API: {
     app: {
         getApp(isDisableCache?: boolean, isDebugMode?: boolean): Promise<import("axios").AxiosResponse<any, any> | {
-            data: {};
+            data: never;
             status: number;
             statusText: string;
             headers: {} | import("axios").AxiosResponseHeaders;
@@ -10,7 +10,7 @@ export declare const API: {
     };
     groups: {
         getList(isDisableCache?: boolean, isDebugMode?: boolean): Promise<import("axios").AxiosResponse<any, any> | {
-            data: {};
+            data: never;
             status: number;
             statusText: string;
             headers: {} | import("axios").AxiosResponseHeaders;
@@ -21,7 +21,7 @@ export declare const API: {
         getList(params: {
             groupId: string;
         }, isDisableCache?: boolean, isDebugMode?: boolean): Promise<import("axios").AxiosResponse<any, any> | {
-            data: {};
+            data: never;
             status: number;
             statusText: string;
             headers: {} | import("axios").AxiosResponseHeaders;

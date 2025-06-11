@@ -1,4 +1,4 @@
-import { WidgetsTypes } from '@storysdk/react';
+import { WidgetsTypes } from '@storysdk/types';
 import { API } from '../services';
 
 const answerWidgets = [

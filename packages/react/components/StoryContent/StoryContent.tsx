@@ -4,11 +4,11 @@ import React, {
 import block from 'bem-cn';
 import { useWindowSize } from '@react-hook/window-size';
 import { IconLoader, IconPlay } from '@components/icons';
+import { StoryType, WidgetsTypes, PlayStatusType } from '@storysdk/types';
 import { WidgetFactory } from '../../core';
-import { StoryType, WidgetsTypes } from '../../types';
 import { StoryVideoBackground } from '../StoryVideoBackground/StoryVideoBackground';
 import { renderBackgroundStyles, renderPosition } from '../../utils';
-import { PlayStatusType, StoryContext, StoryCurrentSize } from '../StoryModal/StoryModal';
+import { StoryContext, StoryCurrentSize } from '../StoryModal/StoryModal';
 import { useElementSize } from '../../hooks/useElementSize';
 import './StoryContent.scss';
 import '../StoryModal/StoryModal.scss';
@@ -248,7 +248,7 @@ export const StoryContent: React.FC<StoryContentProps> = (props) => {
   useEffect(() => {
     const shouldShowLoader = resourcesToLoad > 0 && !isLoaded;
 
-    let timeoutId: NodeJS.Timeout | null = null;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     if (shouldShowLoader) {
       timeoutId = setTimeout(() => {

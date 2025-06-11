@@ -1,6 +1,6 @@
 import React from 'react';
-import { StoryType } from '../../types';
-import { PlayStatusType, StoryCurrentSize } from '../StoryModal/StoryModal';
+import { StoryType, PlayStatusType } from '@storysdk/types';
+import { StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
 import '../StoryModal/StoryModal.scss';
 interface StoryContentProps {

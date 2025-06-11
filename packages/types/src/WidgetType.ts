@@ -9,7 +9,7 @@ import {
   QuizOpenAnswerWidgetElementsType,
   QuizRateWidgetElementsType,
   SliderWidgetElementsType,
-  TalkAboutElementsType
+  TalkAboutElementsType,
 } from './widgetElementsTypes';
 import {
   ChooseAnswerWidgetParamsType,
@@ -31,8 +31,8 @@ import {
   QuizOpenAnswerWidgetParamsType,
   ImageWidgetParamsType,
   VideoWidgetParamsType,
-  LinkWidgetParamsType
-} from './WidgetsParams';
+  LinkWidgetParamsType,
+} from './widgetsParams';
 
 export enum MediaType {
   IMAGE = 'image',
@@ -251,16 +251,16 @@ export interface WidgetPositionType {
   realHeight: number;
   isHeightLocked?: boolean;
   elementsSize?:
-    | ChooseAnswerWidgetElemetsType
-    | EmojiReactionWidgetElemetsType
-    | QuestionWidgetElementsType
-    | QuizMultipleAnswerWidgetElementsType
-    | QuizOneAnswerWidgetElementsType
-    | QuizMultipleAnswerWidgetWithImageElementsType
-    | QuizOpenAnswerWidgetElementsType
-    | QuizRateWidgetElementsType
-    | SliderWidgetElementsType
-    | TalkAboutElementsType;
+  | ChooseAnswerWidgetElemetsType
+  | EmojiReactionWidgetElemetsType
+  | QuestionWidgetElementsType
+  | QuizMultipleAnswerWidgetElementsType
+  | QuizOneAnswerWidgetElementsType
+  | QuizMultipleAnswerWidgetWithImageElementsType
+  | QuizOpenAnswerWidgetElementsType
+  | QuizRateWidgetElementsType
+  | SliderWidgetElementsType
+  | TalkAboutElementsType;
 }
 
 export interface WidgetObjectType {
@@ -270,26 +270,26 @@ export interface WidgetObjectType {
   };
   positionLimits: WidgetPositionLimitsType;
   content:
-    | RectangleState
-    | ImageState
-    | VideoState
-    | EllipseState
-    | TextState
-    | SwipeUpState
-    | SliderState
-    | QuestionState
-    | ClickMeState
-    | LinkState
-    | TalkAboutState
-    | EmojiReactionState
-    | TimerState
-    | ChooseAnswerState
-    | GiphyState
-    | QuizOneAnswerState
-    | QuizMultipleAnswerState
-    | QuizMultipleAnswerWithImageState
-    | QuizRateState
-    | QuizOpenAnswerState;
+  | RectangleState
+  | ImageState
+  | VideoState
+  | EllipseState
+  | TextState
+  | SwipeUpState
+  | SliderState
+  | QuestionState
+  | ClickMeState
+  | LinkState
+  | TalkAboutState
+  | EmojiReactionState
+  | TimerState
+  | ChooseAnswerState
+  | GiphyState
+  | QuizOneAnswerState
+  | QuizMultipleAnswerState
+  | QuizMultipleAnswerWithImageState
+  | QuizRateState
+  | QuizOpenAnswerState;
   action?(): void;
 }
 
@@ -317,5 +317,5 @@ export const ScoreWidgets = [
   WidgetsTypes.CHOOSE_ANSWER,
   WidgetsTypes.QUIZ_ONE_ANSWER,
   WidgetsTypes.QUIZ_MULTIPLE_ANSWERS,
-  WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE
+  WidgetsTypes.QUIZ_MULTIPLE_ANSWER_WITH_IMAGE,
 ];

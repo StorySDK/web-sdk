@@ -1,13 +1,5 @@
-import { MaterialIconValueType } from '../components/MaterialIcon/_types';
-import { BackgroundType, BorderType, ColorValue, FontParamsType, VideoMetadataType } from '.';
-export type QuizAnswersScoreParams = {
-    letter: string;
-    points: number;
-};
-export type EmojiItemType = {
-    name: string;
-    unicode: string;
-};
+import { MaterialIconChangeType, QuizAnswersScoreParams, EmojiItemType } from './common/types';
+import { BackgroundType, BorderType, ColorValue, FontParamsType, VideoMetadataType } from './WidgetType';
 export type RectangleWidgetParamsType = {
     fillColor: BackgroundType;
     fillBorderRadius: number;
@@ -57,7 +49,7 @@ export type ClickMeWidgetParamsType = {
     opacity: number;
     color: BorderType;
     text: string;
-    icon: MaterialIconValueType;
+    icon: MaterialIconChangeType;
     actionType: 'link' | 'story' | 'custom' | 'close';
     borderRadius: number;
     backgroundColor: BackgroundType;
@@ -140,7 +132,7 @@ export type SwipeUpWidgetParamsType = {
     fontSize: number;
     color: BorderType;
     url: string;
-    icon: MaterialIconValueType;
+    icon: MaterialIconChangeType;
     editor?: {
         iconSize?: number;
         fontSize?: number;

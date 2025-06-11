@@ -2,7 +2,8 @@ import React, {
   useState, useEffect, useMemo, useCallback, Suspense, useRef, useReducer,
 } from 'react';
 import type { Group, GroupsListProps } from '@storysdk/react';
-import { getUniqUserId, GroupType, StorageService } from '@storysdk/react';
+import { getUniqUserId, StorageService } from '@storysdk/react';
+import { GroupType } from '@storysdk/types';
 import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
@@ -200,8 +201,10 @@ const withGroupsData = (
   const initialUserIdRef = useRef<string | null>(null);
   const isUserIdChangingRef = useRef<boolean>(false);
   const isMountedRef = useRef<boolean>(true);
-  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const animationFrameRef = useRef<number | null>(null);
+  const lastFetchStoriesCallRef = useRef<number>(0);
+  const isStoriesLoadingRef = useRef<boolean>(false);
 
   // Viewport detection
   const [width] = useWindowSize();
@@ -220,6 +223,25 @@ const withGroupsData = (
   // Get consistent userId
   const getConsistentUserId = useCallback(() => initialUserIdRef.current || state.userId,
     [state.userId]);
+
+  // Memoize stable cache key components to prevent unnecessary regeneration
+  const stableCacheComponents = useMemo(() => {
+    const activeUserId = getConsistentUserId();
+    return {
+      userId: activeUserId,
+      token: options?.token,
+      language: state.language,
+      isValidForCache: !!(
+        activeUserId
+        && activeUserId !== 'anonymous'
+        && activeUserId !== 'promise-user-id'
+        && options?.token
+        && options.token !== 'no-token'
+        && options.token.length >= 5
+        && state.language
+      ),
+    };
+  }, [getConsistentUserId, options?.token, state.language]);
 
   // Split language calculation for early initialization
   useEffect(() => {
@@ -469,13 +491,13 @@ const withGroupsData = (
             // Cache groups-only data separately
             if (consistentUserId && !options?.disableCache) {
               const groupsOnlyCacheKey = generateAdaptedDataCacheKey({
-                token: options?.token,
-                language: state.language,
-                userId: consistentUserId,
+                token: stableCacheComponents.token,
+                language: stableCacheComponents.language,
+                userId: stableCacheComponents.userId,
                 includeStories: false,
               });
 
-              // Only cache if we have a valid cache key (valid token and userId)
+              // Only cache if we have a valid cache key
               if (groupsOnlyCacheKey) {
                 StorageService.setItem(groupsOnlyCacheKey, onlyGroupsData).catch((error) => {
                   console.error('Error saving groups-only data to cache:', error);
@@ -485,7 +507,7 @@ const withGroupsData = (
                   writeToDebug(`Cached groups-only data with key: ${groupsOnlyCacheKey}`);
                 }
               } else if (options?.isDebugMode) {
-                writeToDebug('Skipping groups-only data caching due to invalid token or userId');
+                writeToDebug('Skipping groups-only data caching due to invalid cache key');
               }
             }
 
@@ -511,7 +533,7 @@ const withGroupsData = (
     }
   }, [state.language, isMobile, getConsistentUserId, options?.isOnboarding,
   options?.groupId, options?.autoplay, options?.isOnlyGroups, setLoadingStatus,
-  options?.disableCache, options?.isDebugMode]);
+  options?.disableCache, options?.isDebugMode, stableCacheComponents]);
 
   // Filter active stories
   const filterActiveStories = useCallback((storiesData: any[]) => storiesData.filter(
@@ -531,8 +553,28 @@ const withGroupsData = (
   // Stories fetching with server-side caching support
   const fetchStories = useCallback(async () => {
     const activeUserId = getConsistentUserId();
+    const now = Date.now();
 
     if (!isMountedRef.current) return false;
+
+    // Prevent rapid successive calls (debounce by 100ms)
+    if (now - lastFetchStoriesCallRef.current < 100) {
+      if (options?.isDebugMode) {
+        const timeSinceLastCall = now - lastFetchStoriesCallRef.current;
+        writeToDebug(`fetchStories: debounced call, skipping (${timeSinceLastCall}ms ago)`);
+      }
+      return false;
+    }
+
+    // Prevent concurrent calls
+    if (isStoriesLoadingRef.current) {
+      if (options?.isDebugMode) {
+        writeToDebug('fetchStories: already loading stories, skipping concurrent call');
+      }
+      return false;
+    }
+
+    lastFetchStoriesCallRef.current = now;
 
     if (options?.isDebugMode) {
       writeToDebug(`fetchStories called: groups.length=${state.groups.length}, isOnlyGroups=${options?.isOnlyGroups}, loading.stories=${state.loading.stories}, userId=${activeUserId}`);
@@ -556,6 +598,7 @@ const withGroupsData = (
       writeToDebug(`fetchStories: starting to load stories for ${state.groups.length} groups, userId: ${activeUserId}`);
     }
 
+    isStoriesLoadingRef.current = true;
     setLoadingStatus('stories', 'loading');
 
     try {
@@ -663,16 +706,16 @@ const withGroupsData = (
           dispatch({ type: 'SET_DATA', payload: updatedData });
 
           // Update adapted data cache only if we got new data from server and cache is not disabled
-          // Use separate cache key for data with stories
-          if (activeUserId && hasNewDataFromServer && !options?.disableCache) {
+          // Use stable cache components
+          if (stableCacheComponents.isValidForCache && hasNewDataFromServer && !options?.disableCache) {
             const adaptedWithStoriesCacheKey = generateAdaptedDataCacheKey({
-              token: options?.token,
-              language: state.language,
-              userId: activeUserId,
+              token: stableCacheComponents.token,
+              language: stableCacheComponents.language,
+              userId: stableCacheComponents.userId,
               includeStories: true,
             });
 
-            // Only cache if we have a valid cache key (valid token and userId)
+            // Only cache if we have a valid cache key
             if (adaptedWithStoriesCacheKey) {
               StorageService.setItem(adaptedWithStoriesCacheKey, updatedData).catch((error) => {
                 console.error('Error saving adapted data with stories to cache:', error);
@@ -682,7 +725,7 @@ const withGroupsData = (
                 writeToDebug(`Updated adapted data cache with stories due to new server data, userId: ${activeUserId}, key: ${adaptedWithStoriesCacheKey}`);
               }
             } else if (options?.isDebugMode) {
-              writeToDebug('Skipping adapted data with stories caching due to invalid token or userId');
+              writeToDebug('Skipping adapted data with stories caching due to invalid cache key');
             }
           }
         }
@@ -724,11 +767,17 @@ const withGroupsData = (
         setLoadingStatus('stories', 'error');
       }
       return false;
+    } finally {
+      isStoriesLoadingRef.current = false;
     }
   }, [state.groups, state.groupsWithStories, state.language, isMobile,
     getConsistentUserId, filterActiveStories, options?.isOnlyGroups,
-  options?.isDebugMode, setLoadingStatus, options?.token,
+  options?.isDebugMode, setLoadingStatus, stableCacheComponents,
   options?.disableCache, options?.isOnboarding]);
+
+  // Ref to store latest fetchStories function to avoid infinite loops
+  const fetchStoriesRef = useRef(fetchStories);
+  fetchStoriesRef.current = fetchStories;
 
   // General data loading function with server-side caching
   const loadData = useCallback(async () => {
@@ -739,12 +788,12 @@ const withGroupsData = (
     setLoadingStatus('status', 'loading');
 
     // Try to load adapted data from cache first for fast initial render (skip if cache disabled)
-    if (state.language && activeUserId && !options?.disableCache && isMountedRef.current) {
+    if (stableCacheComponents.isValidForCache && !options?.disableCache && isMountedRef.current) {
       // Use appropriate cache key based on whether we need stories or not
       const adaptedCacheKey = generateAdaptedDataCacheKey({
-        token: options?.token,
-        language: state.language,
-        userId: activeUserId,
+        token: stableCacheComponents.token,
+        language: stableCacheComponents.language,
+        userId: stableCacheComponents.userId,
         includeStories: !options?.isOnlyGroups,
       });
 
@@ -764,7 +813,7 @@ const withGroupsData = (
           console.error('Error loading from cache:', error);
         }
       } else if (options?.isDebugMode) {
-        writeToDebug('Skipping cache loading due to invalid token or userId');
+        writeToDebug('Skipping cache loading due to invalid cache key');
       }
     }
 
@@ -781,9 +830,8 @@ const withGroupsData = (
         await fetchGroups();
       }
     }
-  }, [getConsistentUserId, state.language, fetchAppData, fetchGroups,
-    options?.isDebugMode, setLoadingStatus, options?.token,
-    options?.isOnlyGroups, options?.disableCache]);
+  }, [getConsistentUserId, stableCacheComponents, fetchAppData, fetchGroups,
+    options?.isDebugMode, setLoadingStatus, options?.isOnlyGroups, options?.disableCache]);
 
   // Auto-trigger fetchStories when groups are loaded
   useEffect(() => {
@@ -793,7 +841,7 @@ const withGroupsData = (
       if (options?.isDebugMode) {
         writeToDebug(`Groups loaded (${state.groups.length}), triggering fetchStories`);
       }
-      fetchStories();
+      fetchStoriesRef.current();
     } else if (state.groups.length === 0 && state.loading.groups === 'loaded' && !options?.isOnlyGroups) {
       if (options?.isDebugMode) {
         writeToDebug('No groups found after loading, setting status to loaded');
@@ -804,7 +852,7 @@ const withGroupsData = (
       if (options?.isDebugMode) {
         writeToDebug(`Onboarding mode: Groups loaded (${state.groups.length}), triggering fetchStories for onboarding`);
       }
-      fetchStories();
+      fetchStoriesRef.current();
     }
   }, [
     state.groups,
@@ -812,7 +860,6 @@ const withGroupsData = (
     options?.isOnlyGroups,
     options?.isOnboarding,
     options?.isDebugMode,
-    fetchStories,
     setLoadingStatus,
   ]);
 
@@ -1018,6 +1065,7 @@ const withGroupsData = (
         isForceCloseAvailable={options?.isForceCloseAvailable}
         isInReactNativeWebView={options?.isInReactNativeWebView}
         isLoading={options?.isOnlyGroups ? state.loading.groups !== 'loaded' : state.loading.status !== 'loaded'}
+        isOnlyGroups={options?.isOnlyGroups}
         isShowLabel={state.isShowLabel}
         isShowMockup={state.isShowMockup}
         isStatusBarActive={options?.isStatusBarActive}

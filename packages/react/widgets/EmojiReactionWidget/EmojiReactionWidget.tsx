@@ -4,10 +4,9 @@ import React, {
 import { block, getScalableValue } from '@utils';
 import {
   EmojiReactionWidgetParamsType,
-  WidgetComponent,
   EmojiReactionWidgetElemetsType,
   WidgetsTypes,
-} from '@types';
+} from '@storysdk/types';
 import { useInterval } from '@hooks';
 import './EmojiReactionWidget.scss';
 import { StoryContext, Emoji } from '@components';
@@ -31,7 +30,7 @@ const INIT_ELEMENT_STYLES = {
   },
 };
 
-export const EmojiReactionWidget: WidgetComponent<{
+export const EmojiReactionWidget: React.FunctionComponent<{
   id: string;
   params: EmojiReactionWidgetParamsType;
   elementsSize?: EmojiReactionWidgetElemetsType;

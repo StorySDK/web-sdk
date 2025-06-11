@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, {
+  useState, useEffect, useCallback, useMemo,
+} from 'react';
 import {
   TimerWidgetParamsType,
-  WidgetComponent,
   WidgetPositionType,
-  WidgetPositionLimitsType
-} from '@types';
+  WidgetPositionLimitsType,
+} from '@storysdk/types';
 import cn from 'classnames';
 import { block, calculateElementSize } from '@utils';
 import './TimerWidget.scss';
@@ -20,32 +21,32 @@ const calculateTime = (time: number) => {
   return {
     days: days < 10 ? `0${days > 0 ? days : 0}` : `${days}`,
     hours: hours < 10 ? `0${hours > 0 ? hours : 0}` : `${hours}`,
-    minutes: minutes < 10 ? `0${minutes > 0 ? minutes : 0}` : `${minutes}`
+    minutes: minutes < 10 ? `0${minutes > 0 ? minutes : 0}` : `${minutes}`,
   };
 };
 
 const INIT_ELEMENT_STYLES = {
   widget: {
     borderRadius: 10,
-    padding: 15
+    padding: 15,
   },
   text: {
     fontSize: 16,
-    marginBottom: 8
+    marginBottom: 8,
   },
   digit: {
     width: 22,
     height: 36,
     fontSize: 16,
-    borderRadius: 4
+    borderRadius: 4,
   },
   caption: {
     marginTop: 2,
-    fontSize: 6
-  }
+    fontSize: 6,
+  },
 };
 
-export const TimerWidget: WidgetComponent<{
+export const TimerWidget: React.FunctionComponent<{
   params: TimerWidgetParamsType;
   position?: WidgetPositionType;
   positionLimits?: WidgetPositionLimitsType;
@@ -70,31 +71,31 @@ export const TimerWidget: WidgetComponent<{
 
       return size;
     },
-    [position?.width, positionLimits?.minWidth]
+    [position?.width, positionLimits?.minWidth],
   );
 
   const elementSizes = useMemo(
     () => ({
       text: {
         fontSize: calculate(INIT_ELEMENT_STYLES.text.fontSize),
-        marginBottom: calculate(INIT_ELEMENT_STYLES.text.marginBottom)
+        marginBottom: calculate(INIT_ELEMENT_STYLES.text.marginBottom),
       },
       widget: {
         borderRadius: calculate(INIT_ELEMENT_STYLES.widget.borderRadius),
-        padding: calculate(INIT_ELEMENT_STYLES.widget.padding)
+        padding: calculate(INIT_ELEMENT_STYLES.widget.padding),
       },
       digit: {
         width: calculate(INIT_ELEMENT_STYLES.digit.width),
         height: calculate(INIT_ELEMENT_STYLES.digit.height),
         fontSize: calculate(INIT_ELEMENT_STYLES.digit.fontSize),
-        borderRadius: calculate(INIT_ELEMENT_STYLES.digit.borderRadius)
+        borderRadius: calculate(INIT_ELEMENT_STYLES.digit.borderRadius),
       },
       caption: {
         marginTop: calculate(INIT_ELEMENT_STYLES.caption.marginTop),
-        fontSize: calculate(INIT_ELEMENT_STYLES.caption.fontSize)
-      }
+        fontSize: calculate(INIT_ELEMENT_STYLES.caption.fontSize),
+      },
     }),
-    [calculate]
+    [calculate],
   );
 
   return (

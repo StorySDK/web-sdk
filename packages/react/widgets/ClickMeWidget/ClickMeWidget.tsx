@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
-import { BackgroundColorType, ClickMeWidgetParamsType, WidgetComponent } from '@types';
+import { BackgroundColorType, ClickMeWidgetParamsType } from '@storysdk/types';
 import { MaterialIcon, StoryContext } from '@components';
 import './ClickMeWidget.scss';
 
@@ -18,7 +18,7 @@ const b = block('ClickMeWidget');
 
 const DELAY_MS = 200;
 
-export const ClickMeWidget: WidgetComponent<{
+export const ClickMeWidget: React.FunctionComponent<{
   id?: string;
   params: ClickMeWidgetParamsType;
   isReadOnly?: boolean;
