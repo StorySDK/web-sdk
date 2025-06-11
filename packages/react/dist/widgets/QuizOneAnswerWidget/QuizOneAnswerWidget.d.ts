@@ -1,6 +1,7 @@
-import { QuizOneAnswerWidgetElementsType, QuizOneAnswerWidgetParamsType, WidgetComponent } from '@types';
+import React from 'react';
+import { QuizOneAnswerWidgetElementsType, QuizOneAnswerWidgetParamsType } from '@storysdk/types';
 import './QuizOneAnswerWidget.scss';
-export declare const QuizOneAnswerWidget: WidgetComponent<{
+export declare const QuizOneAnswerWidget: React.FunctionComponent<{
     id: string;
     params: QuizOneAnswerWidgetParamsType;
     elementsSize?: QuizOneAnswerWidgetElementsType;

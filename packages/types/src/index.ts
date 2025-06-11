@@ -1,30 +1,9 @@
-// Общие типы
-export {
-  MaterialIconValueType,
-  BackgroundType,
-  BorderType,
-  ColorValue,
-  FontParamsType,
-  VideoMetadataType,
-  QuizAnswersScoreParams,
-  EmojiItemType
-} from './common/types';
 
-// Типы виджетов
-export {
-  RectangleWidgetParamsType,
-  TextWidgetParamsType,
-  ImageWidgetParamsType,
-  VideoWidgetParamsType,
-  QuizWidgetParamsType,
-  EmojiWidgetParamsType,
-  IconWidgetParamsType,
-  WidgetType
-} from './widgets/types';
+export * from './common/types';
 
-// Типы групп
-export {
-  GroupType,
-  GroupsListProps
-} from './groups/types';
-
+export * from './widgetsParams';
+export * from './WidgetComponent';
+export * from './WidgetType';
+export * from './GroupType';
+export * from './StoryContext';
+export * from './widgetElementsTypes';

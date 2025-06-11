@@ -1,6 +1,6 @@
 import React from 'react';
-import { StoryType } from '../../types';
-import { PlayStatusType, StoryCurrentSize } from '../StoryModal/StoryModal';
+import { StoryType, PlayStatusType } from '@storysdk/types';
+import { StoryCurrentSize } from '../StoryModal/StoryModal';
 import './StoryContent.scss';
 import '../StoryModal/StoryModal.scss';
 interface StoryContentProps {
@@ -23,6 +23,8 @@ interface StoryContentProps {
     isLarge?: boolean;
     isMediaLoading?: boolean;
     isVideoMuted?: boolean;
+    nextStory?: StoryType;
+    prevStory?: StoryType;
     handleMuteVideo?: (isMuted: boolean) => void;
     handleLoadStory?: (storyId: string) => void;
     handleGoToStory?: (storyId: string) => void;

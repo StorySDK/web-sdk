@@ -1,5 +1,5 @@
 import React from 'react';
-import { GroupType } from '../../types';
+import { GroupType } from '@storysdk/types';
 import './GroupItem.scss';
 interface Props {
     index: number;

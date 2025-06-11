@@ -2,23 +2,24 @@ import React, { useCallback, useContext, useState } from 'react';
 import {
   BackgroundColorType,
   SwipeUpWidgetParamsType,
-  WidgetComponent,
-  WidgetsTypes
-} from '@types';
+  WidgetsTypes,
+} from '@storysdk/types';
 import { block, renderBackgroundStyles, renderTextBackgroundStyles } from '@utils';
 import { MaterialIcon, StoryContext } from '@components';
 import './SwipeUpWidget.scss';
 
 const b = block('SwipeUpWidget');
 
-export const SwipeUpWidget: WidgetComponent<{
+export const SwipeUpWidget: React.FunctionComponent<{
   id?: string;
   params: SwipeUpWidgetParamsType;
   isReadOnly?: boolean;
   onSwipe?(): void;
   handleMuteVideo?(isMuted: boolean): void;
 }> = React.memo((props) => {
-  const { color, fontFamily, fontParams, fontSize, iconSize, icon, text, url } = props.params;
+  const {
+    color, fontFamily, fontParams, fontSize, iconSize, icon, text, url,
+  } = props.params;
   const { isReadOnly, onSwipe, handleMuteVideo } = props;
 
   const [touchStart, setTouchStart] = useState(0);
@@ -43,9 +44,9 @@ export const SwipeUpWidget: WidgetComponent<{
           storyId: storyContextVal.currentStoryId,
           widgetId: props.id,
           data: {
-            url
-          }
-        }
+            url,
+          },
+        },
       });
 
       storyContextVal.container?.dispatchEvent(generalAnswerEvent);
@@ -95,7 +96,7 @@ export const SwipeUpWidget: WidgetComponent<{
         fontSize: `${fontSize}px`,
         fontStyle: fontParams.style,
         fontWeight: fontParams.weight,
-        ...renderTextBackgroundStyles({ color })
+        ...renderTextBackgroundStyles({ color }),
       }}
       tabIndex={0}
       onClick={!isReadOnly ? handleClick : undefined}

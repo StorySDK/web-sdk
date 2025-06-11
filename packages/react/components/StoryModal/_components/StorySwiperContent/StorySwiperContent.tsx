@@ -1,4 +1,6 @@
-import React, { useContext, useMemo } from 'react';
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import block from 'bem-cn';
 import {
   IconClose,
@@ -6,13 +8,13 @@ import {
   IconMute,
   IconStoryPause,
   IconStoryPlay,
-  IconUnmute
+  IconUnmute,
 } from '@components/icons';
 import { LongPressTouchHandlers } from 'use-long-press';
-import { GroupType, StoryType } from '@types';
+import { GroupType, StoryType, PlayStatusType } from '@storysdk/types';
 import JSConfetti from 'js-confetti';
 import { SwipeOutput, useAdaptiveValue } from '@hooks';
-import { PlayStatusType, StoryContent, StoryContext } from '../../..';
+import { StoryContent, StoryContext } from '../../..';
 import { StatusBar } from '../StatusBar';
 import '../../StoryModal.scss';
 
@@ -102,12 +104,28 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
     handleGoToStory,
     pressHandlers,
     handleVideoPlaying,
-    swipeHandlers
+    swipeHandlers,
   } = props;
+
+  const [isGroupImageLoading, setIsGroupImageLoading] = useState(true);
+
+  useEffect(() => {
+    if (currentGroup?.imageUrl) {
+      setIsGroupImageLoading(true);
+
+      const timeout = setTimeout(() => {
+        setIsGroupImageLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(timeout);
+    }
+
+    return () => { };
+  }, [currentGroup]);
 
   const defaultRatioIndex = useMemo(
     () => currentStorySize.width / currentStorySize.height,
-    [currentStorySize]
+    [currentStorySize],
   );
 
   const largeElementsTop = useAdaptiveValue(INIT_TOP_ELEMENTS);
@@ -122,35 +140,37 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
   const controlGap = isLarge ? controlGapLarge : controlSidePaddingSmall;
 
   const currentRatioIndex = useMemo(() => {
-    if (storyWidth && storyHeight) {
+    if (storyWidth && storyHeight && !isInReactNativeWebView) {
       return storyWidth / storyHeight;
     }
 
     return defaultRatioIndex;
-  }, [storyHeight, storyWidth, defaultRatioIndex]);
+  }, [storyHeight, storyWidth, defaultRatioIndex, isInReactNativeWebView]);
 
   const isShowStatusBarInStory = isShowMockupCurrent && !isMobile && isLarge && isStatusBarActive;
   const desktopWidth = Math.ceil(currentRatioIndex * contentHeight);
 
-  const noTopShadow =
-    currentGroupType === GroupType.ONBOARDING &&
-    currentGroup?.settings?.isProgressHidden &&
-    currentGroup?.settings?.isProhibitToClose;
+  const noTopShadow = currentGroupType === GroupType.ONBOARDING
+    && currentGroup?.settings?.isProgressHidden;
 
-  const noTopBackgroundShadow =
-    currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.GROUP;
+  const noTopBackgroundShadow = currentGroupType === GroupType.ONBOARDING || currentGroupType === GroupType.GROUP;
 
   const storyContextVal = useContext(StoryContext);
+
+  let borderRadius;
+  if (!isMobile && isShowMockupCurrent) {
+    borderRadius = isLarge ? largeBorderRadius : 0;
+  }
 
   return (
     <div
       className={b('swiper', {
-        mockup: !isMobile && isShowMockupCurrent
+        mockup: !isMobile && isShowMockupCurrent,
       })}
       style={{
         width: !isMobile ? desktopWidth : '100%',
         height: contentHeight,
-        borderRadius: isLarge ? largeBorderRadius : 0
+        borderRadius,
       }}
     >
       <>
@@ -188,30 +208,37 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     isVideoMuted={isVideoMuted}
                     isVideoPlaying={isVideoPlaying}
                     jsConfetti={jsConfetti}
+                    nextStory={index < activeStoriesWithResult.length - 1 ? activeStoriesWithResult[index + 1] : undefined}
                     noTopBackgroundShadow={noTopBackgroundShadow}
                     noTopShadow={noTopShadow}
+                    prevStory={index > 0 ? activeStoriesWithResult[index - 1] : undefined}
                     story={story}
                     storyPlayStatus={playStatus}
                   />
                 </div>
               ))}
             </div>
-            <div className={b('topContainer')}>
+            <div
+              className={b('topContainer')}
+              style={{
+                paddingTop: isInReactNativeWebView && currentGroup?.type === GroupType.ONBOARDING ? '88px' : undefined,
+              }}
+            >
               <>
                 {isShowStatusBarInStory && <StatusBar />}
                 <div
                   className={b('controls', {
                     noClose:
-                      currentGroup?.settings?.isProhibitToClose ||
-                      forbidClose ||
-                      isForceCloseAvailable
+                      currentGroup?.settings?.isProhibitToClose
+                      || forbidClose
+                      || isForceCloseAvailable,
                   })}
                   style={{
                     gap: !isShowStatusBarInStory && !isMobile ? controlGap : undefined,
                     paddingTop:
                       !isShowStatusBarInStory && isShowMockupCurrent && !isMobile
                         ? controlTop
-                        : undefined
+                        : undefined,
                   }}
                 >
                   {!currentGroup?.settings?.isProgressHidden && !isProgressHidden && (
@@ -219,10 +246,10 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                       className={b('indicators', {
                         playAnimation: playStatus === 'play',
                         stopAnimation: playStatus === 'pause',
-                        widePadding: isShowMockupCurrent && isLarge
+                        widePadding: isShowMockupCurrent && isLarge,
                       })}
                       style={{
-                        top: isShowMockupCurrent && isLarge ? largeIndicatorTop : undefined
+                        top: isShowMockupCurrent && isLarge ? largeIndicatorTop : undefined,
                       }}
                     >
                       {activeStoriesWithResult
@@ -231,11 +258,11 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                           <div
                             className={b('indicator', {
                               filled: index < currentStory,
-                              current: index === currentStory
+                              current: index === currentStory,
                             })}
                             key={story.id}
                             style={{
-                              animationDuration: `${story.layerData?.duration}s`
+                              animationDuration: `${story.layerData?.duration}s`,
                             }}
                             onAnimationEnd={handleAnimationEnd}
                           />
@@ -247,15 +274,20 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     <div
                       className={b('group', {
                         noProgress: currentGroup?.settings?.isProgressHidden || isProgressHidden,
-                        wideLeft: isShowMockupCurrent && isLarge
+                        wideLeft: isShowMockupCurrent && isLarge,
                       })}
                       style={{
-                        top: isShowMockupCurrent && isLarge ? largeElementsTop : undefined
+                        top: isShowMockupCurrent && isLarge ? largeElementsTop : undefined,
                       }}
                     >
                       {currentGroup?.imageUrl && (
                         <div className={b('groupImgWrapper')}>
-                          <img alt="" className={b('groupImg')} src={currentGroup?.imageUrl} />
+                          <img
+                            alt=""
+                            className={b('groupImg', { loading: isGroupImageLoading })}
+                            src={`${currentGroup?.imageUrl}?tr=n-group_thumbnail_small`}
+                            onLoad={() => setIsGroupImageLoading(false)}
+                          />
                         </div>
                       )}
                       {currentGroup?.title && (
@@ -264,8 +296,8 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                     </div>
                   )}
 
-                  {currentGroup.type !== GroupType.ONBOARDING &&
-                    currentGroup.category !== 'onboarding' && (
+                  {currentGroup.type !== GroupType.ONBOARDING
+                    && currentGroup.category !== 'onboarding' && (
                       <div className={b('rightTopContainer')}>
                         {!currentGroup?.settings?.isProgressHidden && playStatus !== 'wait' && (
                           <>
@@ -301,24 +333,24 @@ export const StorySwiperContent: React.FC<StorySwiperContentProps> = (props) => 
                           </div>
                         )}
 
-                        {((isInReactNativeWebView &&
-                          !(currentGroup?.type === GroupType.ONBOARDING)) ||
-                          (!currentGroup?.settings?.isProhibitToClose &&
-                            !forbidClose &&
-                            !(
-                              isForceCloseAvailable &&
-                              (currentGroup?.type === GroupType.ONBOARDING ||
-                                (currentGroup?.type === GroupType.TEMPLATE &&
-                                  currentGroup?.category === 'onboarding'))
+                        {((isInReactNativeWebView
+                          && !(currentGroup?.type === GroupType.ONBOARDING))
+                          || (!currentGroup?.settings?.isProhibitToClose
+                            && !forbidClose
+                            && !(
+                              isForceCloseAvailable
+                              && (currentGroup?.type === GroupType.ONBOARDING
+                                || (currentGroup?.type === GroupType.TEMPLATE
+                                  && currentGroup?.category === 'onboarding'))
                             ))) && (
                             <div
                               className={b('close', {
                                 noProgress:
                                   currentGroup?.settings?.isProgressHidden || isProgressHidden,
-                                wideRight: isShowMockupCurrent && isLarge
+                                wideRight: isShowMockupCurrent && isLarge,
                               })}
                               style={{
-                                top: isShowMockupCurrent && isLarge ? largeElementsTop : undefined
+                                top: isShowMockupCurrent && isLarge ? largeElementsTop : undefined,
                               }}
                               onClick={handleClose}
                             >

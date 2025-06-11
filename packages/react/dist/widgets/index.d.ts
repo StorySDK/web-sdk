@@ -19,136 +19,139 @@ import { ImageWidget } from './ImageWidget';
 import { VideoWidget } from './VideoWidget';
 import { LinkWidget } from './LinkWidget';
 declare const widgets: {
-    choose_answer: import("@types").WidgetComponent<{
+    choose_answer: import("react").FunctionComponent<{
         id: string;
-        params: import("@types").ChooseAnswerWidgetParamsType;
-        elementsSize?: import("@types").ChooseAnswerWidgetElemetsType | undefined;
+        params: import("@storysdk/types").ChooseAnswerWidgetParamsType;
+        elementsSize?: import("@storysdk/types").ChooseAnswerWidgetElemetsType;
         jsConfetti?: any;
-        isReadOnly?: boolean | undefined;
+        isReadOnly?: boolean;
         onAnswer?(answerId: string): void;
     }>;
-    image: import("@types").WidgetComponent<{
-        params: import("@types").ImageWidgetParamsType;
-        handleMediaLoading?: ((isLoading: boolean) => void) | undefined;
+    image: import("react").FunctionComponent<{
+        params: import("@storysdk/types").ImageWidgetParamsType;
+        handleMediaLoading?: (isLoading: boolean) => void;
+        width?: number;
+        height?: number;
     }>;
-    video: import("@types").WidgetComponent<{
-        params: import("@types").VideoWidgetParamsType;
-        isVideoPlaying?: boolean | undefined;
-        isMuted?: boolean | undefined;
-        isAutoplay?: boolean | undefined;
-        isDisplaying?: boolean | undefined;
-        handleMediaPlaying?: ((isPlaying: boolean) => void) | undefined;
-        handleMediaLoading?: ((isLoading: boolean) => void) | undefined;
+    video: import("react").FunctionComponent<{
+        params: import("@storysdk/types").VideoWidgetParamsType;
+        isVideoPlaying?: boolean;
+        isMuted?: boolean;
+        isAutoplay?: boolean;
+        isDisplaying?: boolean;
+        handleMediaPlaying?: (isPlaying: boolean) => void;
+        handleMediaLoading?: (isLoading: boolean) => void;
+        nextVideoUrl?: string;
     }>;
-    click_me: import("@types").WidgetComponent<{
-        id?: string | undefined;
-        params: import("@types").ClickMeWidgetParamsType;
-        isReadOnly?: boolean | undefined;
+    click_me: import("react").FunctionComponent<{
+        id?: string;
+        params: import("@storysdk/types").ClickMeWidgetParamsType;
+        isReadOnly?: boolean;
         onClick?(): void;
         onGoToStory?(storyId: string): void;
         onCloseStory?(): void;
         handleMuteVideo?(isMuted: boolean): void;
     }>;
-    ellipse: import("@types").WidgetComponent<{
-        params: import("@types").EllipseWidgetParamsType;
+    ellipse: import("react").FunctionComponent<{
+        params: import("@storysdk/types").EllipseWidgetParamsType;
     }>;
-    emoji_reaction: import("@types").WidgetComponent<{
+    emoji_reaction: import("react").FunctionComponent<{
         id: string;
-        params: import("@types").EmojiReactionWidgetParamsType;
-        elementsSize?: import("@types").EmojiReactionWidgetElemetsType | undefined;
-        isReadOnly?: boolean | undefined;
+        params: import("@storysdk/types").EmojiReactionWidgetParamsType;
+        elementsSize?: import("@storysdk/types").EmojiReactionWidgetElemetsType;
+        isReadOnly?: boolean;
         onAnswer?(emoji: string): void;
     }>;
-    giphy: import("@types").WidgetComponent<{
-        params: import("@types").GiphyWidgetParamsType;
+    giphy: import("react").FunctionComponent<{
+        params: import("@storysdk/types").GiphyWidgetParamsType;
     }>;
-    question: import("@types").WidgetComponent<{
+    question: import("react").FunctionComponent<{
         id: string;
-        params: import("@types").QuestionWidgetParamsType;
-        elementsSize?: import("@types").QuestionWidgetElementsType | undefined;
-        isReadOnly?: boolean | undefined;
+        params: import("@storysdk/types").QuestionWidgetParamsType;
+        elementsSize?: import("@storysdk/types").QuestionWidgetElementsType;
+        isReadOnly?: boolean;
         onAnswer?(answer: string): any;
     }>;
-    rectangle: import("@types").WidgetComponent<{
-        params: import("@types").RectangleWidgetParamsType;
+    rectangle: import("react").FunctionComponent<{
+        params: import("@storysdk/types").RectangleWidgetParamsType;
     }>;
-    slider: import("@types").WidgetComponent<{
+    slider: import("react").FunctionComponent<{
         id: string;
         storyId: string;
-        params: import("@types").SliderWidgetParamsType;
-        elementsSize?: import("@types").SliderWidgetElementsType | undefined;
-        isReadOnly?: boolean | undefined;
+        params: import("@storysdk/types").SliderWidgetParamsType;
+        elementsSize?: import("@storysdk/types").SliderWidgetElementsType;
+        isReadOnly?: boolean;
         onAnswer?(value: number): void;
     }>;
-    swipe_up: import("@types").WidgetComponent<{
-        id?: string | undefined;
-        params: import("@types").SwipeUpWidgetParamsType;
-        isReadOnly?: boolean | undefined;
+    swipe_up: import("react").FunctionComponent<{
+        id?: string;
+        params: import("@storysdk/types").SwipeUpWidgetParamsType;
+        isReadOnly?: boolean;
         onSwipe?(): void;
         handleMuteVideo?(isMuted: boolean): void;
     }>;
-    talk_about: import("@types").WidgetComponent<{
+    talk_about: import("react").FunctionComponent<{
         id: string;
-        params: import("@types").TalkAboutWidgetParamsType;
-        elementsSize?: import("@types").TalkAboutElementsType | undefined;
-        isReadOnly?: boolean | undefined;
+        params: import("@storysdk/types").TalkAboutWidgetParamsType;
+        elementsSize?: import("@storysdk/types").TalkAboutElementsType;
+        isReadOnly?: boolean;
         onAnswer?(answer: string): void;
     }>;
-    text: import("@types").WidgetComponent<{
-        params: import("@types").TextWidgetParamsType;
+    text: import("react").FunctionComponent<{
+        params: import("@storysdk/types").TextWidgetParamsType;
     }>;
-    timer: import("@types").WidgetComponent<{
-        params: import("@types").TimerWidgetParamsType;
-        position?: import("@types").WidgetPositionType | undefined;
-        positionLimits?: import("@types").WidgetPositionLimitsType | undefined;
+    timer: import("react").FunctionComponent<{
+        params: import("@storysdk/types").TimerWidgetParamsType;
+        position?: import("@storysdk/types").WidgetPositionType;
+        positionLimits?: import("@storysdk/types").WidgetPositionLimitsType;
     }>;
-    quiz_multiple_answers: import("@types").WidgetComponent<{
+    quiz_multiple_answers: import("react").FunctionComponent<{
         id: string;
-        params: import("@types").QuizMultipleAnswerWidgetParamsType;
-        elementsSize?: import("@types").QuizMultipleAnswerWidgetElementsType | undefined;
-        isReadOnly?: boolean | undefined;
+        params: import("@storysdk/types").QuizMultipleAnswerWidgetParamsType;
+        elementsSize?: import("@storysdk/types").QuizMultipleAnswerWidgetElementsType;
+        isReadOnly?: boolean;
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
     }>;
-    quiz_one_answer: import("@types").WidgetComponent<{
+    quiz_one_answer: import("react").FunctionComponent<{
         id: string;
-        params: import("@types").QuizOneAnswerWidgetParamsType;
-        elementsSize?: import("@types").QuizOneAnswerWidgetElementsType | undefined;
-        isReadOnly?: boolean | undefined;
+        params: import("@storysdk/types").QuizOneAnswerWidgetParamsType;
+        elementsSize?: import("@storysdk/types").QuizOneAnswerWidgetElementsType;
+        isReadOnly?: boolean;
         onAnswer?(id: string): any;
         onGoToStory?(storyId: string): void;
     }>;
-    quiz_open_answer: import("@types").WidgetComponent<{
+    quiz_open_answer: import("react").FunctionComponent<{
         id: string;
-        params: import("@types").QuizOpenAnswerWidgetParamsType;
-        elementsSize?: import("@types").QuizOpenAnswerWidgetElementsType | undefined;
-        isReadOnly?: boolean | undefined;
+        params: import("@storysdk/types").QuizOpenAnswerWidgetParamsType;
+        elementsSize?: import("@storysdk/types").QuizOpenAnswerWidgetElementsType;
+        isReadOnly?: boolean;
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
     }>;
-    quiz_rate: import("@types").WidgetComponent<{
-        id?: string | undefined;
-        params: import("@types").QuizRateWidgetParamsType;
-        elementsSize: import("@types").QuizRateWidgetElementsType;
-        isReadOnly?: boolean | undefined;
+    quiz_rate: import("react").FunctionComponent<{
+        id?: string;
+        params: import("@storysdk/types").QuizRateWidgetParamsType;
+        elementsSize: import("@storysdk/types").QuizRateWidgetElementsType;
+        isReadOnly?: boolean;
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
     }>;
-    quiz_one_multiple_with_image: import("@types").WidgetComponent<{
+    quiz_one_multiple_with_image: import("react").FunctionComponent<{
         id: string;
-        params: import("@types").QuizMultipleAnswerWithImageWidgetParamsType;
-        elementsSize?: import("@types").QuizMultipleAnswerWidgetWithImageElementsType | undefined;
-        isReadOnly?: boolean | undefined;
+        params: import("@storysdk/types").QuizMultipleAnswerWithImageWidgetParamsType;
+        elementsSize?: import("@storysdk/types").QuizMultipleAnswerWidgetWithImageElementsType;
+        isReadOnly?: boolean;
         onAnswer?(answer: string): any;
         onGoToStory?(storyId: string): void;
     }>;
-    link: import("@types").WidgetComponent<{
-        id?: string | undefined;
-        params: import("@types").LinkWidgetParamsType;
-        isReadOnly?: boolean | undefined;
-        onClick?: (() => void) | undefined;
+    link: import("react").FunctionComponent<{
+        id?: string;
+        params: import("@storysdk/types").LinkWidgetParamsType;
+        isReadOnly?: boolean;
+        onClick?: () => void;
         handleMuteVideo?(isMuted: boolean): void;
     }>;
 };
 export default widgets;
-export { ChooseAnswerWidget, ImageWidget, VideoWidget, ClickMeWidget, EllipseWidget, EmojiReactionWidget, GiphyWidget, QuestionWidget, RectangleWidget, SliderWidget, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, QuizMultipleAnswerWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, QuizMultipleAnswerWithImageWidget, LinkWidget };
+export { ChooseAnswerWidget, ImageWidget, VideoWidget, ClickMeWidget, EllipseWidget, EmojiReactionWidget, GiphyWidget, QuestionWidget, RectangleWidget, SliderWidget, SwipeUpWidget, TalkAboutWidget, TextWidget, TimerWidget, QuizMultipleAnswerWidget, QuizOneAnswerWidget, QuizOpenAnswerWidget, QuizRateWidget, QuizMultipleAnswerWithImageWidget, LinkWidget, };

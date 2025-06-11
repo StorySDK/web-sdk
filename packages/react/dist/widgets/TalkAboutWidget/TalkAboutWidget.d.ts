@@ -1,6 +1,7 @@
-import { TalkAboutWidgetParamsType, WidgetComponent, TalkAboutElementsType } from '@types';
+import React from 'react';
+import { TalkAboutWidgetParamsType, TalkAboutElementsType } from '@storysdk/types';
 import './TalkAboutWidget.scss';
-export declare const TalkAboutWidget: WidgetComponent<{
+export declare const TalkAboutWidget: React.FunctionComponent<{
     id: string;
     params: TalkAboutWidgetParamsType;
     elementsSize?: TalkAboutElementsType;

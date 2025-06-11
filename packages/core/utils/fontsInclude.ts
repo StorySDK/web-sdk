@@ -52,3 +52,14 @@ export const loadFontsToPage = (fonts: GoogleFont[]) => {
 
   updateLinkHref(createLinkElement(), fonts);
 };
+
+export const preloadFonts = (fonts: any[]): void => {
+  fonts.forEach((font) => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.href = font.url;
+    link.as = 'font';
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
+  });
+};

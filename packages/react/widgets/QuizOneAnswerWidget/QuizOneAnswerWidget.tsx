@@ -5,9 +5,8 @@ import {
   QuizOneAnswerWidgetElementsType,
   QuizOneAnswerWidgetParamsType,
   ScoreType,
-  WidgetComponent,
-  WidgetsTypes
-} from '@types';
+  WidgetsTypes,
+} from '@storysdk/types';
 import { block, getTextStyles } from '@utils';
 import cn from 'classnames';
 import './QuizOneAnswerWidget.scss';
@@ -17,25 +16,25 @@ const b = block('QuizOneAnswerWidget');
 const INIT_ELEMENT_STYLES = {
   title: {
     fontSize: 14,
-    marginBottom: 16
+    marginBottom: 16,
   },
   answers: {
-    gap: 10
+    gap: 10,
   },
   answer: {
     padding: 10,
     gap: 10,
-    borderRadius: 20
+    borderRadius: 20,
   },
   emoji: {
-    width: 17
+    width: 17,
   },
   answerTitle: {
-    fontSize: 11
-  }
+    fontSize: 11,
+  },
 };
 
-export const QuizOneAnswerWidget: WidgetComponent<{
+export const QuizOneAnswerWidget: React.FunctionComponent<{
   id: string;
   params: QuizOneAnswerWidgetParamsType;
   elementsSize?: QuizOneAnswerWidgetElementsType;
@@ -43,8 +42,12 @@ export const QuizOneAnswerWidget: WidgetComponent<{
   onAnswer?(id: string): any;
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
-  const { title, answers, storyId, isTitleHidden } = props.params;
-  const { id, params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
+  const {
+    title, answers, storyId, isTitleHidden,
+  } = props.params;
+  const {
+    id, params, elementsSize, isReadOnly, onAnswer, onGoToStory,
+  } = props;
 
   const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
@@ -66,11 +69,11 @@ export const QuizOneAnswerWidget: WidgetComponent<{
         storyContextVal.handleQuizAnswer({
           type: 'add',
           answer:
-            storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points
+            storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points,
         });
       }
     },
-    [params.answers, storyContextVal]
+    [params.answers, storyContextVal],
   );
 
   const handleAnswer = useCallback(
@@ -86,9 +89,9 @@ export const QuizOneAnswerWidget: WidgetComponent<{
           storyId: storyContextVal.currentStoryId,
           widgetId: props.id,
           data: {
-            answer: answerId
-          }
-        }
+            answer: answerId,
+          },
+        },
       });
 
       storyContextVal.container?.dispatchEvent(generalAnswerEvent);
@@ -101,7 +104,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
         onGoToStory?.(storyId);
       }
     },
-    [onAnswer, handleSendScore, storyContextVal, id, storyId, onGoToStory]
+    [onAnswer, handleSendScore, storyContextVal, id, storyId, onGoToStory],
   );
 
   const titleTextStyles = getTextStyles(params.titleFont?.fontColor);
@@ -113,16 +116,16 @@ export const QuizOneAnswerWidget: WidgetComponent<{
         <div
           className={cn(
             b('title', {
-              gradient: params.titleFont?.fontColor?.type === BackgroundColorType.GRADIENT
+              gradient: params.titleFont?.fontColor?.type === BackgroundColorType.GRADIENT,
             }).toString(),
-            'StorySdk-widgetTitle'
+            'StorySdk-widgetTitle',
           )}
           style={{
             ...sizes.title,
             fontStyle: params.titleFont?.fontParams?.style,
             fontWeight: params.titleFont?.fontParams?.weight,
             fontFamily: params.titleFont?.fontFamily,
-            ...titleTextStyles
+            ...titleTextStyles,
           }}
         >
           {title}
@@ -134,7 +137,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
             aria-disabled={userAnswer !== null || isReadOnly}
             className={b('answer', {
               selected: userAnswer === answer.id,
-              disabled: userAnswer !== null || isReadOnly
+              disabled: userAnswer !== null || isReadOnly,
             })}
             key={answer.id}
             role="button"
@@ -151,9 +154,9 @@ export const QuizOneAnswerWidget: WidgetComponent<{
             <p
               className={cn(
                 b('answerTitle', {
-                  gradient: params.answersFont?.fontColor?.type === BackgroundColorType.GRADIENT
+                  gradient: params.answersFont?.fontColor?.type === BackgroundColorType.GRADIENT,
                 }).toString(),
-                'StorySdk-widgetAnswerTitle'
+                'StorySdk-widgetAnswerTitle',
               )}
               data-id={answer.id}
               style={{
@@ -161,7 +164,7 @@ export const QuizOneAnswerWidget: WidgetComponent<{
                 fontStyle: params.answersFont?.fontParams?.style,
                 fontWeight: params.answersFont?.fontParams?.weight,
                 fontFamily: params.answersFont?.fontFamily,
-                ...answerTextStyles
+                ...answerTextStyles,
               }}
             >
               {answer.title}

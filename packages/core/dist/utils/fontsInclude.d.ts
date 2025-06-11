@@ -11,4 +11,5 @@ interface GoogleFont {
     category: string;
 }
 export declare const loadFontsToPage: (fonts: GoogleFont[]) => void;
+export declare const preloadFonts: (fonts: any[]) => void;
 export {};

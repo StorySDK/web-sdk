@@ -1,16 +1,20 @@
 {
   "name": "storysdk",
   "scripts": {
-    "build": "lerna exec --scope @storysdk/types -- tsc && lerna exec --scope @storysdk/react -- rollup -c ../../rollup.config.js && lerna exec --scope @storysdk/core -- rollup -c ../../rollup.config.js && lerna exec --scope @storysdk/react-native -- rollup -c",
+    "build": "npm run build:types && npm run build:packages",
+    "build:packages": "lerna exec --scope @storysdk/react -- rollup -c ../../rollup.config.js && lerna exec --scope @storysdk/core -- rollup -c ../../rollup.config.js",
+    "build:types": "lerna exec --scope @storysdk/types -- tsc && lerna exec --scope @storysdk/react -- tsc -p tsconfig.build.json && lerna exec --scope @storysdk/core -- tsc -p tsconfig.build.json",
+    "build:react": "lerna exec --scope @storysdk/react -- rollup -c ../../rollup.config.js && lerna exec --scope @storysdk/react -- tsc -p tsconfig.build.json",
+    "build:core": "lerna exec --scope @storysdk/core -- rollup -c ../../rollup.config.js && lerna exec --scope @storysdk/core -- tsc -p tsconfig.build.json",
     "dev:core": "lerna exec --scope @storysdk/core -- rollup -w -c ../../rollup.config.js",
-    "dev:react": "lerna exec --scope @storysdk/react -- rollup -w -c ../../rollup.config.js" 
+    "dev:react": "lerna exec --scope @storysdk/react -- rollup -w -c ../../rollup.config.js"
   },
   "workspaces": [
     "packages/*"
   ],
   "resolutions": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^20.0.0",
@@ -19,9 +23,7 @@
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^8.5.0",
-    "@types/react": "^17.0.21",
-    "@types/react-dom": "^17.0.9",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@types/rollup-plugin-node-resolve": "^4.1.0",
     "autoprefixer": "^10.4.21",
     "lerna": "^4.0.0",
@@ -35,7 +37,8 @@
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-scss": "^3.0.0",
     "rollup-plugin-ts": "^1.4.6",
+    "rollup-plugin-typescript2": "^0.36.0",
     "sass": "^1.86.1",
-    "typescript": "^4.9.5"
+    "typescript": "^5.8.3"
   }
 }

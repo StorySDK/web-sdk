@@ -1,7 +1,5 @@
 import React from 'react';
-import { Group } from '../../types';
-import 'simplebar-react/dist/simplebar.min.css';
-import 'react-loading-skeleton/dist/skeleton.css';
+import { Group } from '@storysdk/types';
 import './GroupsList.scss';
 export interface GroupsListProps {
     groups: Group[];
@@ -17,6 +15,7 @@ export interface GroupsListProps {
     groupClassName?: string;
     isShowMockup?: boolean;
     isShowLabel?: boolean;
+    token?: string;
     arrowsColor?: string;
     preventCloseOnGroupClick?: boolean;
     isLoading?: boolean;

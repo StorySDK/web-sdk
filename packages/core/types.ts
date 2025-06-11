@@ -5,9 +5,10 @@ export enum StoryEventTypes {
   STORY_OPEN = 'storyOpen',
   STORY_NEXT = 'storyNext',
   STORY_PREV = 'storyPrev',
-  WINDGET_ANSWER = 'widgetAnswer',
+  WIDGET_ANSWER = 'widgetAnswer',
   WIDGET_CLICK = 'widgetClick',
   MODAL_OPEN = 'storyModalOpen',
   MODAL_CLOSE = 'storyModalClose',
-  GROUP_CLICK = 'groupClick'
+  GROUP_CLICK = 'groupClick',
+  DATA_LOADED = 'dataLoaded'
 }

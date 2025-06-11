@@ -1,6 +1,7 @@
-import { QuizMultipleAnswerWidgetElementsType, QuizMultipleAnswerWidgetParamsType, WidgetComponent } from '@types';
+import React from 'react';
+import { QuizMultipleAnswerWidgetElementsType, QuizMultipleAnswerWidgetParamsType } from '@storysdk/types';
 import './QuizMultipleAnswerWidget.scss';
-export declare const QuizMultipleAnswerWidget: WidgetComponent<{
+export declare const QuizMultipleAnswerWidget: React.FunctionComponent<{
     id: string;
     params: QuizMultipleAnswerWidgetParamsType;
     elementsSize?: QuizMultipleAnswerWidgetElementsType;

@@ -3,25 +3,27 @@
  */
 export type MaterialIconValueType = string;
 
-/**
- * Type for background
- */
-export type BackgroundType = string;
+export type MaterialIconChangeType = (params: { name: string }) => void;
 
 /**
- * Type for borders
+ * Type for background (simple version)
  */
-export type BorderType = string;
+export type SimpleBackgroundType = string;
 
 /**
- * Type for colors
+ * Type for borders (simple version)
  */
-export type ColorValue = string;
+export type SimpleBorderType = string;
 
 /**
- * Font parameters
+ * Type for colors (simple version)
  */
-export type FontParamsType = {
+export type SimpleColorValue = string;
+
+/**
+ * Font parameters (simple version)
+ */
+export type SimpleFontParamsType = {
   /** Font weight */
   fontWeight: number;
   /** Font style */
@@ -31,9 +33,9 @@ export type FontParamsType = {
 };
 
 /**
- * Video metadata
+ * Video metadata (simple version)
  */
-export type VideoMetadataType = {
+export type SimpleVideoMetadataType = {
   /** Duration in seconds */
   duration: number;
   /** Width in pixels */

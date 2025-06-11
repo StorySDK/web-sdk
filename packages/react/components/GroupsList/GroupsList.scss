@@ -15,22 +15,84 @@
     color: #dddbde;
     text-align: center;
     padding: 8px;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+
+    &_show {
+      opacity: 1;
+    }
   }
 
   &__carousel {
     display: flex;
-    min-height: 100px;
+    min-height: 110px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    &_loading {
+      cursor: auto;
+      pointer-events: none;
+    }
+
+    &_skeleton {
+      opacity: 1;
+      position: absolute;
+      top: 0;
+      left: 5px;
+      pointer-events: none;
+      z-index: 100;
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    &_centered {
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+    }
+
+    &_show {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    &_hide {
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
   }
 
   &__loaderItem {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-right: 15px;
+    cursor: auto;
+  }
+
+  &__skeleton {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__skeletonShimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    animation: shimmer 1.5s infinite;
   }
 
   &__carouselContent {
     display: flex;
+    align-items: center;
+    position: relative;
+    min-height: 110px;
 
     &_centered {
       justify-content: center;
@@ -39,5 +101,79 @@
 
   &__track {
     display: none;
+  }
+
+  &__scrollContainer {
+    scroll-behavior: smooth;
+    will-change: scroll-position;
+    contain: layout style paint;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+
+    @media (min-width: 768px) {
+      &::-webkit-scrollbar {
+        height: 4px;
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #e5e5e5;
+        border-radius: 2px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 2px;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.3);
+        }
+      }
+
+      &::-webkit-scrollbar-corner {
+        background: transparent;
+      }
+
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0, 0, 0, 0.15) #e5e5e5;
+    }
+
+    @media (max-width: 767px) {
+      &::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+      }
+
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    &_mobile {
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      &::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+      }
+
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
   }
 }

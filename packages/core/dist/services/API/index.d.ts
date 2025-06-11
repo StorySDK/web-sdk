@@ -1,14 +1,32 @@
 export declare const API: {
     app: {
-        getApp(): import("axios").AxiosPromise<any>;
+        getApp(isDisableCache?: boolean, isDebugMode?: boolean): Promise<import("axios").AxiosResponse<any, any> | {
+            data: never;
+            status: number;
+            statusText: string;
+            headers: {} | import("axios").AxiosResponseHeaders;
+            config: {};
+        }>;
     };
     groups: {
-        getList(): import("axios").AxiosPromise<any>;
+        getList(isDisableCache?: boolean, isDebugMode?: boolean): Promise<import("axios").AxiosResponse<any, any> | {
+            data: never;
+            status: number;
+            statusText: string;
+            headers: {} | import("axios").AxiosResponseHeaders;
+            config: {};
+        }>;
     };
     stories: {
         getList(params: {
             groupId: string;
-        }): import("axios").AxiosPromise<any>;
+        }, isDisableCache?: boolean, isDebugMode?: boolean): Promise<import("axios").AxiosResponse<any, any> | {
+            data: never;
+            status: number;
+            statusText: string;
+            headers: {} | import("axios").AxiosResponseHeaders;
+            config: {};
+        }>;
     };
     statistics: {
         group: {
@@ -17,7 +35,7 @@ export declare const API: {
                 uniqUserId: string;
                 seconds: number;
                 language: string;
-            }): import("axios").AxiosPromise<any>;
+            }): import("axios").AxiosPromise<any> | Promise<void>;
             onOpen(params: {
                 groupId: string;
                 uniqUserId: string;
@@ -36,14 +54,14 @@ export declare const API: {
                 uniqUserId: string;
                 seconds: number;
                 language: string;
-            }): import("axios").AxiosPromise<any>;
+            }): import("axios").AxiosPromise<any> | Promise<void>;
             sendImpression(params: {
                 groupId: string;
                 storyId: string;
                 uniqUserId: string;
                 seconds: number;
                 language: string;
-            }): import("axios").AxiosPromise<any>;
+            }): import("axios").AxiosPromise<any> | Promise<void>;
             onOpen(params: {
                 groupId: string;
                 storyId: string;

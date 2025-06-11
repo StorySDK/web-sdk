@@ -1,5 +1,4 @@
-/// <reference types="react" />
-import { WidgetPositionType, WidgetPositionLimitsType, BackgroundType, BorderType } from '../types';
+import { WidgetPositionType, WidgetPositionLimitsType, BackgroundType, BorderType } from '@storysdk/types';
 interface Stroke {
     strokeThickness: number;
     strokeColor: BorderType;
@@ -10,10 +9,10 @@ export declare const block: import("bem-cn").BemCn;
 export declare const renderColor: (color: string, opacity?: number) => string;
 export declare const renderGradient: (colors: string[], opacity?: number) => string;
 export declare const renderBackgroundStyles: (background: BackgroundType, opacity?: number) => string;
-export declare const renderBorderStyles: ({ strokeThickness, strokeColor, strokeOpacity, fillBorderRadius }: Stroke) => any;
-export declare const renderTextBackgroundStyles: ({ color, opacity }: {
+export declare const renderBorderStyles: ({ strokeThickness, strokeColor, strokeOpacity, fillBorderRadius, }: Stroke) => any;
+export declare const renderTextBackgroundStyles: ({ color, opacity, }: {
     color: BorderType;
-    opacity?: number | undefined;
+    opacity?: number;
 }) => React.CSSProperties;
 export declare const renderPosition: (position: WidgetPositionType, positionLimits: WidgetPositionLimitsType) => {
     left: string;

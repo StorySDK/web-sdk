@@ -1,10 +1,18 @@
+# @storysdk/core
+
+The complete StorySDK package that provides a high-level `Story` class for easy integration of interactive stories and onboarding experiences. This is the main package that most developers should use.
+
 ## Introduction
 
 StorySDK is an open-source SDK and web service that makes it easy to create and integrate video stories and onboarding into mobile apps and websites. It provides a powerful solution for implementing story-based experiences similar to those found in major banking and social media apps, but accessible to indie developers without contracts, sales calls, or unnecessary hassle.
 
 > **Please note:** StorySDK Core is built on React and requires it to be present in your project. React is NOT bundled with the library, including the CDN version. Detailed information is in the [Installation](#installation) section.
 
-This SDK is part of the StorySDK platform, which is available at [storysdk.com](https://storysdk.com).
+This package is part of the StorySDK monorepo and includes:
+- **[@storysdk/react](../react)** - React components for rendering stories
+- **[@storysdk/types](../types)** - TypeScript definitions and interfaces
+
+For more information about the platform, visit [storysdk.com](https://storysdk.com).
 
 ## Features
 
@@ -34,19 +42,84 @@ This SDK is part of the StorySDK platform, which is available at [storysdk.com](
 
 ## Table of Contents
 
-1. [Installation](#installation)
-2. [Basic Usage](#basic-usage)
+1. [Package Overview](#package-overview)
+2. [Installation](#installation)
+3. [Basic Usage](#basic-usage)
    - [React](#react)
    - [Next.js](#nextjs)
    - [JavaScript (ES6)](#javascript-es6)
    - [Static HTML](#static-html)
    - [Shopify (Liquid)](#shopify-liquid)
-3. [API Reference](#api-reference)
-4. [Event Handling](#event-handling)
-5. [Styling & Customization](#styling--customization)
-6. [Troubleshooting](#troubleshooting)
+4. [API Reference](#api-reference)
+5. [Event Handling](#event-handling)
+6. [Styling & Customization](#styling--customization)
+7. [Troubleshooting](#troubleshooting)
+8. [Performance Optimizations](#performance-optimizations)
+
+## Package Overview
+
+`@storysdk/core` is the main entry point for StorySDK and provides a complete, batteries-included solution for integrating interactive stories. This package follows a layered architecture:
+
+### Package Dependencies
+
+```
+@storysdk/core
+├── @storysdk/react     # React components and hooks
+│   └── @storysdk/types # TypeScript definitions
+└── @storysdk/types     # TypeScript definitions (direct dependency)
+```
+
+### What's Included
+
+- **Story Class**: High-level API for story initialization and control
+- **React Components**: All UI components via `@storysdk/react`
+- **TypeScript Support**: Full type definitions via `@storysdk/types`
+- **CSS Styling**: Pre-built styles and themes
+- **Event System**: Comprehensive event handling and analytics
+- **Performance Features**: Lazy loading, caching, and optimization
+
+### When to Use This Package
+
+Choose `@storysdk/core` when you:
+- Want a simple, all-in-one solution
+- Are new to StorySDK and want to get started quickly
+- Need the high-level `Story` class API
+- Want automatic dependency management
+- Are building a standard web application or React app
+
+### Alternative Packages
+
+If you need more granular control, consider using individual packages:
+
+- **[@storysdk/react](../react)** - For React-specific implementations with custom layouts
+- **[@storysdk/types](../types)** - For custom integrations or when building extensions
+
+### Core Features
+
+The `Story` class provides these main methods:
+
+```javascript
+import { Story } from '@storysdk/core';
+
+const story = new Story(token, options);
+
+// Core methods
+story.renderGroups(element);           // Render all story groups
+story.updateToken(newToken);           // Update authentication token
+story.destroy();                       // Clean up resources and unmount
+
+// Event handling
+story.on(eventType, callback);         // Listen to story events
+story.off(eventType, callback);        // Remove event listeners
+story.once(eventType, callback);       // Listen to event once
+
+// Event emission (internal)
+story.emit(eventType, data);           // Emit events (internal use)
+```
 
 ## Installation
+
+`@storysdk/core` is the recommended way to install StorySDK. It automatically includes all necessary dependencies (`@storysdk/react` and `@storysdk/types`) for a complete installation.
 
 > **Important:** `@storysdk/core` uses React as a peer dependency. You need to install React in your project before using StorySDK.
 
@@ -58,20 +131,54 @@ StorySDK will not work without React. It relies on React for rendering component
 # Install React if it's not already installed in your project
 npm install react react-dom
 
-# Recommended versions: React 16.8.0 and above
-# Minimum supported React version: 16.8.0 (with hooks support)
+# Recommended versions: React 17.0.0 and above
+# Minimum supported React version: 17.0.0 (with hooks support)
 ```
 
-### NPM
+### Installing the Core Package
+
+#### NPM
 
 ```bash
 npm install @storysdk/core
 ```
 
-### Yarn
+#### Yarn
 
 ```bash
 yarn add @storysdk/core
+```
+
+This single installation gives you access to:
+- The main `Story` class from `@storysdk/core`
+- All React components from `@storysdk/react`
+- Complete TypeScript definitions from `@storysdk/types`
+
+### Alternative: Individual Package Installation
+
+If you prefer to manage dependencies manually or only need specific functionality:
+
+```bash
+# Install all packages individually
+npm install @storysdk/types @storysdk/react @storysdk/core
+
+# Or use only what you need
+npm install @storysdk/types  # For TypeScript definitions only
+npm install @storysdk/react  # For React components only
+```
+
+### CDN Installation
+
+For static HTML projects, you can use the CDN version:
+
+```html
+<!-- Include React first (required dependency) -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+<!-- Include StorySDK -->
+<script src="https://unpkg.com/@storysdk/core@latest/dist/bundle.umd.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/@storysdk/core@latest/dist/bundle.css">
 ```
 
 ## Basic Usage
@@ -197,8 +304,8 @@ For static HTML pages:
 ```html
 <head>
   <!-- First include React -->
-  <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   
   <!-- Then include StorySDK -->
   <script src="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.min.js"></script>
@@ -236,8 +343,8 @@ StorySDK can be easily integrated into your Shopify store using theme sections. 
 
 ```html
 <!-- First include React -->
-<script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 
 <!-- Then include StorySDK -->
 <script src="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.umd.js"></script>
@@ -432,23 +539,31 @@ StorySDK provides the following event types:
 enum StoryEventTypes {
   GROUP_CLOSE = 'groupClose',
   GROUP_OPEN = 'groupOpen',
+  GROUP_CLICK = 'groupClick',
   STORY_CLOSE = 'storyClose',
   STORY_OPEN = 'storyOpen',
   STORY_NEXT = 'storyNext',
   STORY_PREV = 'storyPrev',
-  WINDGET_ANSWER = 'widgetAnswer',
-  WIDGET_CLICK = 'widgetClick'
+  WIDGET_ANSWER = 'widgetAnswer',
+  WIDGET_CLICK = 'widgetClick',
+  MODAL_OPEN = 'storyModalOpen',
+  MODAL_CLOSE = 'storyModalClose',
+  DATA_LOADED = 'dataLoaded'
 }
 ```
 
 - `groupClose`: When a story group is closed (provides group ID, user ID, viewing duration in seconds, and language)
 - `groupOpen`: When a story group is opened (provides user ID, group ID, start time, and language)
+- `groupClick`: When a story group item is clicked (provides group ID, user ID)
 - `storyClose`: When a story is closed (provides group ID, story ID, user ID, viewing duration, and language)
 - `storyOpen`: When a specific story is opened (provides group ID, story ID, user ID, and language)
 - `storyNext`: When navigating to the next story (provides group ID, story ID, user ID, and language)
 - `storyPrev`: When navigating to the previous story (provides group ID, story ID, user ID, and language)
 - `widgetAnswer`: When a user responds to an interactive widget (polls, quizzes, etc.)
 - `widgetClick`: When a widget within a story is clicked (buttons, links, swipe up actions)
+- `storyModalOpen`: When the story modal/fullscreen view is opened
+- `storyModalClose`: When the story modal/fullscreen view is closed
+- `dataLoaded`: When story groups data has been loaded from the API
 
 ### Widget Click Event
 
@@ -562,7 +677,7 @@ import { Story, StoryEventTypes } from "@storysdk/core";
 const story = new Story("<APP_TOKEN_HERE>");
 
 // Listen for widget answer events
-story.on(StoryEventTypes.WINDGET_ANSWER, (event) => {
+story.on(StoryEventTypes.WIDGET_ANSWER, (event) => {
   console.log("Widget type:", event.detail.widget);
   console.log("User's answer:", event.detail.data.answer);
   
@@ -1045,8 +1160,8 @@ With debug mode enabled:
    - Make sure you have installed React: `npm install react react-dom`
    - When using the CDN version, ensure you've included React and ReactDOM before loading StorySDK:
      ```html
-     <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
      ```
    - Check that the React version you're using is compatible with StorySDK (17.0.0 or higher)
    - If you have multiple instances of React in your application, this may cause issues with hooks
@@ -1073,3 +1188,49 @@ StorySDK is an open-source software available for developers. For technical supp
 StorySDK offers transparent pricing without hidden costs. Visit the website for current pricing information.
 
 For comprehensive documentation, including advanced usage guides, API references, and tutorials, visit [docs.storysdk.com](https://docs.storysdk.com/).
+
+## Performance Optimizations
+
+The StorySDK has been optimized for fast initial rendering. Key optimizations include:
+
+### Skeleton Loader
+The SDK now uses a two-phase rendering strategy:
+1. First, it renders a lightweight skeleton loader for immediate visual feedback
+2. Then it loads the actual content progressively
+
+### Progressive Loading Strategy
+- App data is loaded first
+- Group placeholders are shown immediately 
+- Stories are loaded in batches, prioritizing the active group
+- Font loading is non-blocking
+- Analytics initialization is deferred
+
+### Developer Options
+You can improve first render performance by:
+- Pre-caching key API responses
+- Adding the critical CSS to your page's `<head>`
+- Using the `preconnect` hint for API endpoints
+
+```html
+<!-- Add these to your HTML head for even faster loading -->
+<link rel="preconnect" href="https://api.storysdk.com">
+<style>
+  /* Critical skeleton styles */
+  .critical-skeleton-styles {
+    width: 100%;
+    animation: pulse 1.5s infinite;
+    background: linear-gradient(
+      90deg,
+      rgba(190, 190, 190, 0.2) 25%,
+      rgba(129, 129, 129, 0.24) 37%,
+      rgba(190, 190, 190, 0.2) 63%
+    );
+    background-size: 400% 100%;
+  }
+  
+  @keyframes pulse {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+  }
+</style>
+```

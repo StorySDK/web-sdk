@@ -2,23 +2,23 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "@utils": [
+        "./utils"
+      ],
+      "@utils/*": [
+        "./utils/*"
+      ],
+      "@hooks": [
+        "./hooks"
+      ],
+      "@hooks/*": [
+        "./hooks/*"
+      ],
       "@components": [
         "./components"
       ],
       "@components/*": [
         "./components/*"
-      ],
-      "@hooks": [
-        "./hooks"
-      ],
-      "@constants": [
-        "./constants"
-      ],
-      "@utils": [
-        "./utils"
-      ],
-      "@types": [
-        "./types"
       ],
       "@widgets": [
         "./widgets"
@@ -26,12 +26,12 @@
       "@widgets/*": [
         "./widgets/*"
       ],
-      "@styles": [
-        "./styles"
+      "@types": [
+        "@storysdk/types"
       ],
-      "@styles/*": [
-        "./styles/*"
-      ],
+      "@constants": [
+        "./constants"
+      ]
     }
   },
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BackgroundType } from '../../types';
+import { BackgroundType } from '@storysdk/types';
 import './MaterialIcon.scss';
 type PropsType = {
     name: string;
@@ -8,5 +8,5 @@ type PropsType = {
     color?: string;
     background?: BackgroundType;
 };
-export declare const MaterialIcon: React.MemoExoticComponent<({ name, className, color, background, size }: PropsType) => React.JSX.Element | null>;
+export declare const MaterialIcon: React.MemoExoticComponent<({ name, className, color, background, size, }: PropsType) => React.JSX.Element | null>;
 export {};

@@ -35,17 +35,26 @@ This SDK is part of the StorySDK platform, which is available at [storysdk.com](
 ## Table of Contents
 
 1. [Installation](#installation)
-2. [Basic Usage](#basic-usage)
+2. [Packages Overview](#packages-overview)
+3. [Basic Usage](#basic-usage)
    - [React](#react)
    - [Next.js](#nextjs)
    - [JavaScript (ES6)](#javascript-es6)
    - [Static HTML](#static-html)
-3. [API Reference](#api-reference)
-4. [Event Handling](#event-handling)
-5. [Styling & Customization](#styling--customization)
-6. [Troubleshooting](#troubleshooting)
+   - [Shopify (Liquid)](#shopify-liquid)
+4. [API Reference](#api-reference)
+5. [Event Handling](#event-handling)
+6. [Styling & Customization](#styling--customization)
+7. [Migration Guide](#migration-guide)
+8. [Troubleshooting](#troubleshooting)
 
 ## Installation
+
+StorySDK is distributed as a multi-package npm library with a monorepo architecture. The SDK consists of three main packages:
+
+- **`@storysdk/types`** - Common TypeScript definitions and interfaces
+- **`@storysdk/react`** - React components for rendering stories
+- **`@storysdk/core`** - Core SDK with the main Story class
 
 > **Important:** `@storysdk/core` uses React as a peer dependency. You need to install React in your project before using StorySDK.
 
@@ -57,21 +66,143 @@ StorySDK will not work without React. It relies on React for rendering component
 # Install React if it's not already installed in your project
 npm install react react-dom
 
-# Recommended versions: React 16.8.0 and above
-# Minimum supported React version: 16.8.0 (with hooks support)
+# Recommended versions: React 17.0.0 and above
+# Minimum supported React version: 17.0.0 (with hooks support)
 ```
 
-### NPM
+### Installing Core Package
+
+For most use cases, you only need to install the core package, which includes all necessary dependencies:
+
+#### NPM
 
 ```bash
 npm install @storysdk/core
 ```
 
-### Yarn
+#### Yarn
 
 ```bash
 yarn add @storysdk/core
 ```
+
+### Installing Individual Packages
+
+If you prefer to install packages separately or need only specific functionality:
+
+#### NPM
+
+```bash
+# Install all packages
+npm install @storysdk/types @storysdk/react @storysdk/core
+
+# Or install only what you need
+npm install @storysdk/types  # For TypeScript definitions only
+npm install @storysdk/react  # For React components only
+```
+
+#### Yarn
+
+```bash
+# Install all packages
+yarn add @storysdk/types @storysdk/react @storysdk/core
+
+# Or install only what you need
+yarn add @storysdk/types  # For TypeScript definitions only
+yarn add @storysdk/react  # For React components only
+```
+
+## Packages Overview
+
+StorySDK follows a modular architecture with three distinct packages, each serving a specific purpose:
+
+### @storysdk/types
+
+**Purpose**: Provides shared TypeScript definitions and interfaces used across all StorySDK packages.
+
+**What it contains**:
+- Common data types (`BackgroundType`, `ColorValue`, `FontParamsType`, etc.)
+- Widget type definitions (`TextWidgetParamsType`, `ImageWidgetParamsType`, etc.)
+- Group and story structure types (`GroupType`, `StoryContext`)
+- Material Design icon types and enums
+
+**When to use directly**:
+- When building custom widgets or extensions
+- When you need type safety in TypeScript projects
+- For custom integrations that interact with StorySDK data structures
+
+```typescript
+import { GroupType, WidgetType, MaterialIconValueType } from '@storysdk/types';
+
+// Use types for custom implementations
+const myCustomGroup: GroupType = {
+  // ... group configuration
+};
+```
+
+### @storysdk/react
+
+**Purpose**: Contains React components for rendering stories and individual widgets.
+
+**What it contains**:
+- `GroupsList` component for rendering multiple story groups
+- Individual widget components (`TextWidget`, `ImageWidget`, etc.)
+- React hooks for story interactions
+- Styling utilities and CSS
+
+**When to use directly**:
+- When you need fine-grained control over story rendering
+- For custom React implementations
+- When building custom story layouts
+
+```jsx
+import { GroupsList, GroupType } from '@storysdk/react';
+import '@storysdk/react/dist/bundle.css';
+
+function CustomStoryComponent({ groups }) {
+  return (
+    <GroupsList 
+      groups={groups}
+      token="your-token"
+      customProps={{ theme: 'dark' }}
+    />
+  );
+}
+```
+
+### @storysdk/core
+
+**Purpose**: Main SDK package that provides the high-level `Story` class and complete functionality.
+
+**What it contains**:
+- `Story` class with all SDK methods
+- Event handling and analytics
+- Integration with @storysdk/react components
+- Bundle with all necessary dependencies
+
+**When to use** (most common):
+- For standard StorySDK integrations
+- When you want a simple, all-in-one solution
+- For non-React projects that still need React components
+
+```javascript
+import { Story } from '@storysdk/core';
+import '@storysdk/core/dist/bundle.css';
+
+const story = new Story('your-token');
+story.renderGroups(document.getElementById('story-container'));
+```
+
+### Package Dependencies
+
+```
+@storysdk/core
+├── @storysdk/react
+│   └── @storysdk/types
+└── @storysdk/types
+```
+
+The core package includes both react and types packages, so installing `@storysdk/core` gives you access to all functionality.
 
 ## Basic Usage
 
@@ -196,8 +327,8 @@ For static HTML pages:
 ```html
 <head>
   <!-- First include React -->
-  <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   
   <!-- Then include StorySDK -->
   <script src="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.min.js"></script>
@@ -226,6 +357,64 @@ For static HTML pages:
   </script>
 </body>
 ```
+
+### Shopify (Liquid)
+
+StorySDK can be easily integrated into your Shopify store using theme sections. Follow these steps:
+
+1. Add the following code to the `<head>` tag of your Shopify theme:
+
+```html
+<!-- First include React -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+
+<!-- Then include StorySDK -->
+<script src="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.umd.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@storysdk/core@latest/dist/bundle.css"/>
+```
+
+2. Create a section for StorySDK integration in your theme customizer:
+
+```liquid
+{% schema %}
+{
+  "name": "StorySDK Stories",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sdk_token",
+      "label": "StorySDK Token",
+      "default": "<SDK_TOKEN_HERE>"
+    },
+    {
+      "type": "number",
+      "id": "container_height",
+      "label": "Container Height (px)",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "StorySDK Stories",
+      "category": "Interactive"
+    }
+  ]
+}
+{% endschema %}
+
+<!-- StorySDK container -->
+<div
+  data-storysdk-token="{{ section.settings.sdk_token }}"
+  style="min-height: {{ section.settings.container_height }}px;"
+  id="storysdk"
+></div>
+```
+
+This implementation allows you to:
+- Add StorySDK to your Shopify theme through the theme customizer
+- Configure your StorySDK token and container height directly from the Shopify admin
+- Place the StorySDK container anywhere in your store through the theme editor
 
 ## API Reference
 
@@ -373,23 +562,31 @@ StorySDK provides the following event types:
 enum StoryEventTypes {
   GROUP_CLOSE = 'groupClose',
   GROUP_OPEN = 'groupOpen',
+  GROUP_CLICK = 'groupClick',
   STORY_CLOSE = 'storyClose',
   STORY_OPEN = 'storyOpen',
   STORY_NEXT = 'storyNext',
   STORY_PREV = 'storyPrev',
-  WINDGET_ANSWER = 'widgetAnswer',
-  WIDGET_CLICK = 'widgetClick'
+  WIDGET_ANSWER = 'widgetAnswer',
+  WIDGET_CLICK = 'widgetClick',
+  MODAL_OPEN = 'storyModalOpen',
+  MODAL_CLOSE = 'storyModalClose',
+  DATA_LOADED = 'dataLoaded'
 }
 ```
 
 - `groupClose`: When a story group is closed (provides group ID, user ID, viewing duration in seconds, and language)
 - `groupOpen`: When a story group is opened (provides user ID, group ID, start time, and language)
+- `groupClick`: When a story group item is clicked (provides group ID, user ID)
 - `storyClose`: When a story is closed (provides group ID, story ID, user ID, viewing duration, and language)
 - `storyOpen`: When a specific story is opened (provides group ID, story ID, user ID, and language)
 - `storyNext`: When navigating to the next story (provides group ID, story ID, user ID, and language)
 - `storyPrev`: When navigating to the previous story (provides group ID, story ID, user ID, and language)
 - `widgetAnswer`: When a user responds to an interactive widget (polls, quizzes, etc.)
 - `widgetClick`: When a widget within a story is clicked (buttons, links, swipe up actions)
+- `storyModalOpen`: When the story modal/fullscreen view is opened
+- `storyModalClose`: When the story modal/fullscreen view is closed
+- `dataLoaded`: When story groups data has been loaded from the API
 
 ### Widget Click Event
 
@@ -503,7 +700,7 @@ import { Story, StoryEventTypes } from "@storysdk/core";
 const story = new Story("<APP_TOKEN_HERE>");
 
 // Listen for widget answer events
-story.on(StoryEventTypes.WINDGET_ANSWER, (event) => {
+story.on(StoryEventTypes.WIDGET_ANSWER, (event) => {
   console.log("Widget type:", event.detail.widget);
   console.log("User's answer:", event.detail.data.answer);
   
@@ -957,6 +1154,106 @@ Then in your CSS:
 }
 ```
 
+## Migration Guide
+
+### From Earlier Versions (Pre-Monorepo)
+
+If you're upgrading from an earlier version of StorySDK where types were embedded within the core package, here's what has changed:
+
+#### Package Structure Changes
+
+**Before (v1.8.x and earlier):**
+```bash
+npm install @storysdk/core  # Everything was in one package
+```
+
+**After (v1.9.x and later):**
+```bash
+npm install @storysdk/core  # Now includes @storysdk/react and @storysdk/types
+```
+
+The installation remains the same, but internally the package now uses a modular architecture.
+
+#### Import Changes
+
+**No changes required** for most users. All existing imports continue to work:
+
+```javascript
+// These imports work exactly the same
+import { Story } from "@storysdk/core";
+import "@storysdk/core/dist/bundle.css";
+```
+
+#### TypeScript Changes
+
+**Enhanced TypeScript support** with dedicated types package:
+
+```typescript
+// New: Direct access to all types (optional - you can still import from core)
+import { GroupType, WidgetType } from '@storysdk/types';
+
+// Existing: Still works the same way
+import { Story } from '@storysdk/core';
+```
+
+#### New Features in v1.9.x
+
+1. **Modular Architecture**: Types are now in a separate package for better reusability
+2. **Enhanced React Components**: Improved React integration via dedicated `@storysdk/react` package
+3. **Better TypeScript Support**: Complete type definitions with JSDoc comments
+4. **Performance Improvements**: Better tree-shaking and smaller bundle sizes
+
+#### Breaking Changes
+
+**None** - This update is fully backward compatible. Your existing code will continue to work without any changes.
+
+#### Recommended Migrations
+
+While not required, you may want to consider these improvements:
+
+1. **Use React Components Directly** (for React projects):
+   ```jsx
+   // Current approach
+   import { Story } from '@storysdk/core';
+   const story = new Story(token);
+   story.renderGroups(ref.current);
+   
+   // Alternative (for custom React layouts)
+   import { GroupsList } from '@storysdk/react';
+   <GroupsList groups={groups} token={token} />
+   ```
+
+2. **Enhanced TypeScript Usage**:
+   ```typescript
+   // Before
+   import { Story } from '@storysdk/core';
+   
+   // After (optional, for better type safety)
+   import { Story } from '@storysdk/core';
+   import { GroupType, WidgetType } from '@storysdk/types';
+   
+   const groups: GroupType[] = [...];
+   ```
+
+#### Performance Benefits
+
+The new modular architecture provides:
+- **Smaller Bundle Sizes**: Better tree-shaking eliminates unused code
+- **Faster TypeScript Compilation**: Separate types package reduces compilation time
+- **Better Code Splitting**: React components can be loaded separately
+- **Improved Developer Experience**: Better IntelliSense and error messages
+
+#### Getting Help
+
+If you encounter any issues during migration:
+
+1. Check that React version is 17.0.0 or higher (updated minimum requirement)
+2. Verify all peer dependencies are installed
+3. Enable debug mode for detailed logging: `new Story(token, { isDebugMode: true })`
+4. Consult the [troubleshooting section](#troubleshooting) below
+
+All existing APIs, events, and styling options remain unchanged.
+
 ## Troubleshooting
 
 ### Debug Mode
@@ -986,8 +1283,8 @@ With debug mode enabled:
    - Make sure you have installed React: `npm install react react-dom`
    - When using the CDN version, ensure you've included React and ReactDOM before loading StorySDK:
      ```html
-     <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
      ```
    - Check that the React version you're using is compatible with StorySDK (17.0.0 or higher)
    - If you have multiple instances of React in your application, this may cause issues with hooks

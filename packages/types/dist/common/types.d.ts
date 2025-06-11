@@ -2,22 +2,25 @@
  * Type for Material Design icons
  */
 export type MaterialIconValueType = string;
+export type MaterialIconChangeType = (params: {
+    name: string;
+}) => void;
 /**
- * Type for background
+ * Type for background (simple version)
  */
-export type BackgroundType = string;
+export type SimpleBackgroundType = string;
 /**
- * Type for borders
+ * Type for borders (simple version)
  */
-export type BorderType = string;
+export type SimpleBorderType = string;
 /**
- * Type for colors
+ * Type for colors (simple version)
  */
-export type ColorValue = string;
+export type SimpleColorValue = string;
 /**
- * Font parameters
+ * Font parameters (simple version)
  */
-export type FontParamsType = {
+export type SimpleFontParamsType = {
     /** Font weight */
     fontWeight: number;
     /** Font style */
@@ -26,9 +29,9 @@ export type FontParamsType = {
     textDecoration: string;
 };
 /**
- * Video metadata
+ * Video metadata (simple version)
  */
-export type VideoMetadataType = {
+export type SimpleVideoMetadataType = {
     /** Duration in seconds */
     duration: number;
     /** Width in pixels */

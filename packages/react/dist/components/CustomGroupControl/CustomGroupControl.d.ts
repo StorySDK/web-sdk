@@ -1,6 +1,7 @@
 import React from 'react';
-import { Group } from '../../types';
+import { Group } from '@storysdk/types';
 interface GroupProps {
+    children?: React.ReactNode;
     group?: Group;
     isFirstGroup: boolean;
     isLastGroup: boolean;

@@ -1,6 +1,7 @@
-import { LinkWidgetParamsType, WidgetComponent } from '@types';
+import React from 'react';
+import { LinkWidgetParamsType } from '@storysdk/types';
 import './LinkWidget.scss';
-export declare const LinkWidget: WidgetComponent<{
+export declare const LinkWidget: React.FunctionComponent<{
     id?: string;
     params: LinkWidgetParamsType;
     isReadOnly?: boolean;

@@ -1,13 +1,16 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useState,
+} from 'react';
 import {
   QuizMultipleAnswerWithImageWidgetParamsType,
-  WidgetComponent,
   ScoreType,
   QuizMultipleAnswerWidgetWithImageElementsType,
   BackgroundColorType,
-  WidgetsTypes
-} from '@types';
-import { block, eventSubscribe, eventUnsubscribe, getTextStyles } from '@utils';
+  WidgetsTypes,
+} from '@storysdk/types';
+import {
+  block, eventSubscribe, eventUnsubscribe, getTextStyles,
+} from '@utils';
 import cn from 'classnames';
 import { StoryContext } from '@components';
 import './QuizMultipleAnswerWithImageWidget.scss';
@@ -17,31 +20,31 @@ const b = block('QuizMultipleAnswerWithImageWidget');
 const INIT_ELEMENT_STYLES = {
   title: {
     fontSize: 14,
-    marginBottom: 16
+    marginBottom: 16,
   },
   answers: {
-    gap: 5
+    gap: 5,
   },
   answer: {
     padding: 4,
     gap: 5,
-    borderRadius: 5
+    borderRadius: 5,
   },
   emoji: {
-    width: 11
+    width: 11,
   },
   answerTitle: {
-    fontSize: 11
+    fontSize: 11,
   },
   sendBtn: {
     fontSize: 11,
     borderRadius: 5,
     padding: 10,
-    marginTop: 5
-  }
+    marginTop: 5,
+  },
 };
 
-export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
+export const QuizMultipleAnswerWithImageWidget: React.FunctionComponent<{
   id: string;
   params: QuizMultipleAnswerWithImageWidgetParamsType;
   elementsSize?: QuizMultipleAnswerWidgetWithImageElementsType;
@@ -50,7 +53,9 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, answers, isTitleHidden } = props.params;
-  const { id, params, elementsSize, isReadOnly, onAnswer } = props;
+  const {
+    id, params, elementsSize, isReadOnly, onAnswer,
+  } = props;
 
   const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
@@ -82,19 +87,19 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
               }
               return acc;
             },
-            storyContextVal.quizMode === ScoreType.LETTERS ? '' : 0
+            storyContextVal.quizMode === ScoreType.LETTERS ? '' : 0,
           )
         : undefined;
 
       if (
-        answerScore !== undefined &&
-        storyContextVal.quizMode &&
-        storyContextVal.handleQuizAnswer
+        answerScore !== undefined
+        && storyContextVal.quizMode
+        && storyContextVal.handleQuizAnswer
       ) {
         storyContextVal.handleQuizAnswer({ type, answer: answerScore });
       }
     },
-    [params.answers, storyContextVal]
+    [params.answers, storyContextVal],
   );
 
   const handleAnswer = useCallback(
@@ -107,7 +112,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
         setUserAnswers((prevState) => [...prevState, answerId]);
       }
     },
-    [handleSendScore, userAnswers]
+    [handleSendScore, userAnswers],
   );
 
   const handleSendAnswer = useCallback(() => {
@@ -119,9 +124,9 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
           storyId: storyContextVal.currentStoryId,
           widgetId: props.id,
           data: {
-            answer: userAnswers
-          }
-        }
+            answer: userAnswers,
+          },
+        },
       });
 
       storyContextVal.container?.dispatchEvent(generalAnswerEvent);
@@ -157,16 +162,16 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
         <div
           className={cn(
             b('title', {
-              gradient: params.titleFont?.fontColor?.type === BackgroundColorType.GRADIENT
+              gradient: params.titleFont?.fontColor?.type === BackgroundColorType.GRADIENT,
             }).toString(),
-            'StorySdk-widgetTitle'
+            'StorySdk-widgetTitle',
           )}
           style={{
             ...sizes.title,
             fontStyle: params.titleFont?.fontParams?.style,
             fontWeight: params.titleFont?.fontParams?.weight,
             fontFamily: params.titleFont?.fontFamily,
-            ...titleTextStyles
+            ...titleTextStyles,
           }}
         >
           {title}
@@ -177,7 +182,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
           <div
             className={b('answer', {
               selected: userAnswers.includes(answer.id),
-              disabled: isSent || isReadOnly
+              disabled: isSent || isReadOnly,
             })}
             key={answer.id}
             role="button"
@@ -193,15 +198,15 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
             <div
               className={b('answerImgContainer')}
               style={{
-                backgroundImage: answer.image ? `url(${answer.image.url})` : ''
+                backgroundImage: answer.image ? `url(${answer.image.url})` : '',
               }}
             />
             <p
               className={cn(
                 b('answerTitle', {
-                  gradient: params.answersFont?.fontColor?.type === BackgroundColorType.GRADIENT
+                  gradient: params.answersFont?.fontColor?.type === BackgroundColorType.GRADIENT,
                 }).toString(),
-                'StorySdk-widgetAnswerTitle'
+                'StorySdk-widgetAnswerTitle',
               )}
               data-id={answer.id}
               style={{
@@ -209,7 +214,7 @@ export const QuizMultipleAnswerWithImageWidget: WidgetComponent<{
                 fontStyle: params.answersFont?.fontParams?.style,
                 fontWeight: params.answersFont?.fontParams?.weight,
                 fontFamily: params.answersFont?.fontFamily,
-                ...answerTextStyles
+                ...answerTextStyles,
               }}
             >
               {answer.title}

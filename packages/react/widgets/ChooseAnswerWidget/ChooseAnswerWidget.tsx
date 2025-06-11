@@ -1,11 +1,12 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react';
+import React, {
+  useState, useCallback, useEffect, useContext,
+} from 'react';
 import { StoryContext } from '@components';
 import {
   ChooseAnswerWidgetParamsType,
-  WidgetComponent,
   ScoreType,
-  ChooseAnswerWidgetElemetsType
-} from '@types';
+  ChooseAnswerWidgetElemetsType,
+} from '@storysdk/types';
 import { IconConfirm, IconDecline } from '@components/icons';
 import { block } from '@utils';
 
@@ -15,32 +16,32 @@ const b = block('ChooseAnswerWidget');
 
 const INIT_ELEMENT_STYLES = {
   widget: {
-    borderRadius: 10
+    borderRadius: 10,
   },
   header: {
     fontSize: 12,
     paddingTop: 13,
-    paddingBottom: 13
+    paddingBottom: 13,
   },
   answers: {
-    padding: 12
+    padding: 12,
   },
   answer: {
     padding: 8,
-    marginBottom: 6
+    marginBottom: 6,
   },
   answerId: {
     width: 18,
     height: 18,
     marginRight: 8,
-    fontSize: 10
+    fontSize: 10,
   },
   answerTitle: {
-    fontSize: 10
-  }
+    fontSize: 10,
+  },
 };
 
-export const ChooseAnswerWidget: WidgetComponent<{
+export const ChooseAnswerWidget: React.FunctionComponent<{
   id: string;
   params: ChooseAnswerWidgetParamsType;
   elementsSize?: ChooseAnswerWidgetElemetsType;
@@ -48,7 +49,9 @@ export const ChooseAnswerWidget: WidgetComponent<{
   isReadOnly?: boolean;
   onAnswer?(answerId: string): void;
 }> = React.memo((props) => {
-  const { id, params, isReadOnly, jsConfetti, elementsSize, onAnswer } = props;
+  const {
+    id, params, isReadOnly, jsConfetti, elementsSize, onAnswer,
+  } = props;
 
   const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
 
@@ -70,11 +73,11 @@ export const ChooseAnswerWidget: WidgetComponent<{
         storyContextVal.handleQuizAnswer({
           type: 'add',
           answer:
-            storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points
+            storyContextVal.quizMode === ScoreType.LETTERS ? answerScore.letter : answerScore.points,
         });
       }
     },
-    [params.answers, storyContextVal]
+    [params.answers, storyContextVal],
   );
 
   const handleMarkAnswer = useCallback(
@@ -90,7 +93,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
       setUserAnswer(answerId);
       handleSendScore(answerId);
     },
-    [onAnswer, storyContextVal, id, handleSendScore]
+    [onAnswer, storyContextVal, id, handleSendScore],
   );
 
   const renderAnswer = useCallback(
@@ -102,7 +105,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
               correct: answer.id === params.correct && params.markCorrectAnswer,
               incorrect: answer.id !== params.correct && params.markCorrectAnswer,
               choosen: userAnswer === answer.id && params.markCorrectAnswer,
-              filled: userAnswer === answer.id && !params.markCorrectAnswer
+              filled: userAnswer === answer.id && !params.markCorrectAnswer,
             })}
             key={`answer-${answer.id}`}
             style={sizes.answer}
@@ -112,7 +115,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
                 correct: answer.id === params.correct && params.markCorrectAnswer,
                 incorrect: answer.id !== params.correct && params.markCorrectAnswer,
                 choosen: userAnswer === answer.id && params.markCorrectAnswer,
-                filled: userAnswer === answer.id && !params.markCorrectAnswer
+                filled: userAnswer === answer.id && !params.markCorrectAnswer,
               })}
               style={sizes.answerId}
             >
@@ -123,7 +126,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
                       className={b('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
-                        choosen: userAnswer === answer.id
+                        choosen: userAnswer === answer.id,
                       })}
                     />
                   ) : (
@@ -131,7 +134,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
                       className={b('answerIcon', {
                         correct: answer.id === params.correct,
                         incorrect: answer.id !== params.correct,
-                        choosen: userAnswer === answer.id
+                        choosen: userAnswer === answer.id,
                       })}
                     />
                   )}
@@ -145,7 +148,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
               className={b('answerTitle', {
                 choosen: userAnswer === answer.id,
                 correct: answer.id === params.correct && params.markCorrectAnswer,
-                incorrect: answer.id !== params.correct && params.markCorrectAnswer
+                incorrect: answer.id !== params.correct && params.markCorrectAnswer,
               })}
               style={sizes.answerTitle}
             >
@@ -181,8 +184,8 @@ export const ChooseAnswerWidget: WidgetComponent<{
       sizes.answer,
       sizes.answerId,
       sizes.answerTitle,
-      handleMarkAnswer
-    ]
+      handleMarkAnswer,
+    ],
   );
 
   useEffect(() => {
@@ -196,7 +199,7 @@ export const ChooseAnswerWidget: WidgetComponent<{
       className={b({
         color: params.color,
         shake: userAnswer && params.markCorrectAnswer && userAnswer !== params.correct,
-        celebrate: userAnswer && params.markCorrectAnswer && userAnswer === params.correct
+        celebrate: userAnswer && params.markCorrectAnswer && userAnswer === params.correct,
       })}
       style={sizes.widget}
     >

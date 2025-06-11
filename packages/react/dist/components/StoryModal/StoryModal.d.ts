@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoryType, Group, StoryContenxt } from '../../types';
+import { StoryType, Group, StoryContenxt } from '@storysdk/types';
 import './StoryModal.scss';
 interface StoryModalProps {
     currentGroup?: Group;
@@ -25,6 +25,7 @@ interface StoryModalProps {
     openInExternalModal?: boolean;
     backgroundColor?: string;
     container?: Element | HTMLDivElement | null;
+    token?: string;
     onClose(): void;
     onPrevGroup(): void;
     onNextGroup(): void;
@@ -37,7 +38,6 @@ interface StoryModalProps {
     onModalOpen?(groupId: string, storyId: string): void;
     onModalClose?(groupId: string, storyId: string): void;
 }
-export type PlayStatusType = 'wait' | 'play' | 'pause';
 export declare const StoryContext: React.Context<StoryContenxt>;
 export type StoryCurrentSize = {
     width: number;

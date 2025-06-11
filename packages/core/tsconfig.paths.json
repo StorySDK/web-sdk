@@ -1,0 +1,73 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@utils": [
+        "../react/utils"
+      ],
+      "@utils/*": [
+        "../react/utils/*"
+      ],
+      "@core-utils": [
+        "./utils"
+      ],
+      "@core-utils/*": [
+        "./utils/*"
+      ],
+      "@hooks": [
+        "../react/hooks"
+      ],
+      "@hooks/*": [
+        "../react/hooks/*"
+      ],
+      "@core-hooks": [
+        "./hooks"
+      ],
+      "@core-hooks/*": [
+        "./hooks/*"
+      ],
+      "@services": [
+        "./services"
+      ],
+      "@services/*": [
+        "./services/*"
+      ],
+      "@hocs": [
+        "./hocs"
+      ],
+      "@hocs/*": [
+        "./hocs/*"
+      ],
+      "@types": [
+        "@storysdk/types"
+      ],
+      "@core-types": [
+        "./types.ts"
+      ],
+      "@components": [
+        "../react/components"
+      ],
+      "@components/*": [
+        "../react/components/*"
+      ],
+      "@widgets": [
+        "../react/widgets"
+      ],
+      "@widgets/*": [
+        "../react/widgets/*"
+      ],
+      "@constants": [
+        "../react/constants"
+      ],
+      "@components/icons": [
+        "../react/components/icons"
+      ],
+      "@assets": [
+        "../react/assets"
+      ],
+      "@assets/*": [
+        "../react/assets/*"
+      ]
+    }
+  }
+} 

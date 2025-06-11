@@ -1,0 +1,28 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "dist",
+    "emitDeclarationOnly": true,
+    "outDir": "dist",
+    "rootDir": ".",
+    "skipLibCheck": true
+  },
+  "include": [
+    "index.ts",
+    "utils/**/*",
+    "Story.tsx",
+    "types.ts",
+    "EventEmitter.ts",
+    "hocs/**/*",
+    "hooks/**/*",
+    "services/**/*",
+    "declarations.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "../react/**/*",
+    "../types/**/*"
+  ]
+} 

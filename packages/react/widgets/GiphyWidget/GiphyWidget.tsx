@@ -1,11 +1,11 @@
 import React from 'react';
-import { GiphyWidgetParamsType, WidgetComponent } from '@types';
+import { GiphyWidgetParamsType } from '@storysdk/types';
 import './GiphyWidget.scss';
 import { block } from '@utils';
 
 const b = block('GiphyWidget');
 
-export const GiphyWidget: WidgetComponent<{ params: GiphyWidgetParamsType }> = React.memo(
+export const GiphyWidget: React.FunctionComponent<{ params: GiphyWidgetParamsType }> = React.memo(
   (props) => {
     const { params } = props;
 
@@ -17,5 +17,5 @@ export const GiphyWidget: WidgetComponent<{ params: GiphyWidgetParamsType }> = R
         <img alt="" className={b('img')} src={params.gif} />
       </div>
     );
-  }
+  },
 );

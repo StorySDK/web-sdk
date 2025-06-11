@@ -1,5 +1,6 @@
-import { EllipseWidgetParamsType, WidgetComponent } from '@types';
+import React from 'react';
+import { EllipseWidgetParamsType } from '@storysdk/types';
 import './EllipseWidget.scss';
-export declare const EllipseWidget: WidgetComponent<{
+export declare const EllipseWidget: React.FunctionComponent<{
     params: EllipseWidgetParamsType;
 }>;

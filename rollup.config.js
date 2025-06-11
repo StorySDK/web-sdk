@@ -1,7 +1,7 @@
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
+import typescript from 'rollup-plugin-typescript2';
 import postcss from 'rollup-plugin-postcss';
 import json from '@rollup/plugin-json';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
@@ -39,7 +39,9 @@ export default [
         sourcemap: true,
         globals: {
           react: 'React',
-          'react-dom': 'ReactDOM'
+          'react-dom': 'ReactDOM',
+          'react-dom/client': 'ReactDOMClient',
+          'hls.js': 'Hls'
         },
         ...(isCore && {
           footer: "if(typeof window !== 'undefined' && typeof StorySDK !== 'undefined') { window.Story = StorySDK.Story; }"
@@ -50,15 +52,29 @@ export default [
       peerDepsExternal(),
       resolve({
         browser: true,
-        dedupe: ['react', 'react-dom']
+        dedupe: ['react', 'react-dom'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+        preferBuiltins: false
       }),
       commonjs(),
       typescript({
-        tsconfig: `${PACKAGE_ROOT_PATH}/tsconfig.json`
+        tsconfig: `${PACKAGE_ROOT_PATH}/tsconfig.json`,
+        clean: true,
+        useTsconfigDeclarationDir: false,
+        check: true,
+        tsconfigOverride: {
+          compilerOptions: {
+            skipLibCheck: true,
+            declaration: false
+          }
+        }
       }),
       copy({
         targets: [
           { src: "assets/fonts", dest: "dist" },
+          ...(LERNA_PACKAGE_NAME === '@storysdk/react' ? [
+            { src: "dist/react/index.d.ts", dest: "dist/", hook: 'writeBundle' }
+          ] : [])
         ],
       }),
       ...(!isCore ? [

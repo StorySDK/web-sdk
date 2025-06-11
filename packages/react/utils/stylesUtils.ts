@@ -7,9 +7,8 @@ import {
   BackgroundType,
   BorderType,
   BackgroundColorType,
-  MediaType,
-  GradientDirection
-} from '../types';
+  GradientDirection,
+} from '@storysdk/types';
 
 interface Stroke {
   strokeThickness: number;
@@ -70,30 +69,30 @@ export const renderBorderStyles = ({
   strokeThickness,
   strokeColor,
   strokeOpacity,
-  fillBorderRadius
+  fillBorderRadius,
 }: Stroke): any => {
   switch (strokeColor.type) {
     case BackgroundColorType.COLOR:
       return {
-        border: `${strokeThickness}px solid ${renderColor(strokeColor.value, strokeOpacity)}`
+        border: `${strokeThickness}px solid ${renderColor(strokeColor.value, strokeOpacity)}`,
       };
     case BackgroundColorType.GRADIENT:
       return {
         border: `${strokeThickness}px solid`,
-        borderImageSlice: `1`,
+        borderImageSlice: '1',
         borderImageSource: renderGradient(strokeColor.value, strokeOpacity),
-        borderRadius: `${fillBorderRadius}px`
+        borderRadius: `${fillBorderRadius}px`,
       };
     default:
       return {
-        background: 'transparent'
+        background: 'transparent',
       };
   }
 };
 
 export const renderTextBackgroundStyles = ({
   color,
-  opacity
+  opacity,
 }: {
   color: BorderType;
   opacity?: number;
@@ -101,46 +100,43 @@ export const renderTextBackgroundStyles = ({
   switch (color.type) {
     case BackgroundColorType.COLOR:
       return {
-        color: color.value
+        color: color.value,
       };
     case BackgroundColorType.GRADIENT:
       return {
-        background: renderGradient(color.value, opacity)
+        background: renderGradient(color.value, opacity),
       };
     default:
       return {
-        background: 'transparent'
+        background: 'transparent',
       };
   }
 };
 
 export const renderPosition = (
   position: WidgetPositionType,
-  positionLimits: WidgetPositionLimitsType
+  positionLimits: WidgetPositionLimitsType,
 ) => ({
   left: `${position.x}px`,
   top: `${position.y}px`,
   width: positionLimits.isAutoWidth ? 'auto' : `${position.width}px`,
   height: positionLimits.isAutoHeight ? 'auto' : `${position.height}px`,
-  transform: `rotate(${position.rotate}deg)`
+  transform: `rotate(${position.rotate}deg)`,
 });
 
 const SCALE_INDEX = 1;
 export const getScalableValue = (value: number): number => Math.round(value * SCALE_INDEX);
 
-export const calculateElementSize = (width: number, elementSize: number, minWidth?: number) =>
-  minWidth
-    ? getScalableValue(Math.round((elementSize * +width) / minWidth))
-    : getScalableValue(elementSize);
+export const calculateElementSize = (width: number, elementSize: number, minWidth?: number) => (minWidth
+  ? getScalableValue(Math.round((elementSize * +width) / minWidth))
+  : getScalableValue(elementSize));
 
 export const calculateElementSizeByHeight = (
   height: number,
   elementSize: number,
-  minHeight?: number
-) =>
-  minHeight
-    ? getScalableValue(Math.round((elementSize * height) / minHeight))
-    : getScalableValue(elementSize);
+  minHeight?: number,
+) => (minHeight
+  ? getScalableValue(Math.round((elementSize * height) / minHeight))
+  : getScalableValue(elementSize));
 
-export const getTextStyles = (fontColor: BorderType) =>
-  fontColor ? (renderTextBackgroundStyles({ color: fontColor }) as React.CSSProperties) : undefined;
+export const getTextStyles = (fontColor: BorderType) => (fontColor ? (renderTextBackgroundStyles({ color: fontColor }) as React.CSSProperties) : undefined);

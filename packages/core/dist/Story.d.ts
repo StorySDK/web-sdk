@@ -31,20 +31,26 @@ export declare class Story extends EventEmitter {
         isForceCloseAvailable?: boolean;
         autoplay?: boolean;
         groupId?: string;
+        isOnboarding?: boolean;
         isDebugMode?: boolean;
         startStoryId?: string;
         forbidClose?: boolean;
         activeGroupOutlineColor?: string;
         groupsOutlineColor?: string;
         openInExternalModal?: boolean;
+        isOnlyGroups?: boolean;
         devMode?: 'staging' | 'development';
         isInReactNativeWebView?: boolean;
         preventCloseOnGroupClick?: boolean;
+        disableCache?: boolean;
     };
     container?: Element | HTMLDivElement | null;
+    root: any;
     eventHandlers: {
         [key: string]: ((data: any) => void)[];
     };
+    private listenersSetup;
+    private isDestroying;
     constructor(token: string, options?: {
         isDebugMode?: boolean;
         groupImageWidth?: number;
@@ -66,18 +72,25 @@ export declare class Story extends EventEmitter {
         groupId?: string;
         startStoryId?: string;
         forbidClose?: boolean;
+        isOnboarding?: boolean;
         openInExternalModal?: boolean;
         devMode?: 'staging' | 'development';
         isInReactNativeWebView?: boolean;
         preventCloseOnGroupClick?: boolean;
+        isOnlyGroups?: boolean;
+        disableCache?: boolean;
     });
     private handleReactNativeMessage;
     private sendMessageToReactNative;
     /**
-     * Отправляет отладочные сообщения в React Native WebView, если isInReactNativeWebView и isDebugMode = true
+     * Sends debug messages to React Native WebView if isInReactNativeWebView and isDebugMode = true
      */
     private sendDebugInfoToReactNative;
     emit(eventName: StoryEventTypes, data: any): void;
+    /**
+     * Updates the token and axios headers
+     */
+    updateToken(newToken: string): void;
     private setupEventListeners;
     renderGroups(container?: Element | HTMLDivElement | null): void;
     destroy(): void;

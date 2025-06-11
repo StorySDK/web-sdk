@@ -1,11 +1,10 @@
-/* eslint-disable prettier/prettier */
 import React from 'react';
-import ReactDOM from 'react-dom';
 import axios from 'axios';
-import { GroupsList } from '@storysdk/react';
+import { GroupsList, renderElement, unmountComponent } from '@storysdk/react';
 import EventEmitter from './EventEmitter';
 import withGroupsData from './hocs/withGroupsData';
 import { StoryEventTypes } from './types';
+import { writeToDebug } from './utils/writeToDebug';
 
 declare global {
   interface Window {
@@ -41,20 +40,29 @@ export class Story extends EventEmitter {
     isForceCloseAvailable?: boolean;
     autoplay?: boolean;
     groupId?: string;
+    isOnboarding?: boolean;
     isDebugMode?: boolean;
     startStoryId?: string;
     forbidClose?: boolean;
     activeGroupOutlineColor?: string;
     groupsOutlineColor?: string;
     openInExternalModal?: boolean;
+    isOnlyGroups?: boolean;
     devMode?: 'staging' | 'development';
     isInReactNativeWebView?: boolean;
     preventCloseOnGroupClick?: boolean;
+    disableCache?: boolean;
   };
 
   container?: Element | HTMLDivElement | null;
 
+  root: any = null; // For storing reference to root in React 18
+
   eventHandlers: { [key: string]: ((data: any) => void)[] };
+
+  private listenersSetup: boolean = false; // Флаг для предотвращения дублирования обработчиков
+
+  private isDestroying: boolean = false; // Flag for preventing multiple destroy calls
 
   constructor(
     token: string,
@@ -79,20 +87,27 @@ export class Story extends EventEmitter {
       groupId?: string;
       startStoryId?: string;
       forbidClose?: boolean;
+      isOnboarding?: boolean;
       openInExternalModal?: boolean;
       devMode?: 'staging' | 'development';
       isInReactNativeWebView?: boolean;
       preventCloseOnGroupClick?: boolean;
-    }
+      isOnlyGroups?: boolean;
+      disableCache?: boolean;
+    },
   ) {
     super();
     this.token = token;
     this.options = {};
     this.container = null;
     this.eventHandlers = {};
+    this.eventListeners = [];
 
-    this.isInReactNativeWebView = !!options?.isInReactNativeWebView ||
-      (typeof window !== 'undefined' && window.ReactNativeWebView !== undefined);
+    // Reset destroying flag on new instance
+    this.isDestroying = false;
+
+    this.isInReactNativeWebView = !!options?.isInReactNativeWebView
+      || (typeof window !== 'undefined' && window.ReactNativeWebView !== undefined);
 
     if (this.options) {
       this.options.groupImageWidth = options?.groupImageWidth;
@@ -118,6 +133,9 @@ export class Story extends EventEmitter {
       this.options.backgroundColor = options?.backgroundColor;
       this.options.isInReactNativeWebView = this.isInReactNativeWebView;
       this.options.preventCloseOnGroupClick = options?.preventCloseOnGroupClick;
+      this.options.isOnboarding = options?.isOnboarding;
+      this.options.isOnlyGroups = options?.isOnlyGroups;
+      this.options.disableCache = options?.disableCache;
     }
 
     let reqUrl = 'https://api.storysdk.com/sdk/v1';
@@ -134,20 +152,22 @@ export class Story extends EventEmitter {
       const debugContainer = document.querySelector('#storysdk-debug');
 
       axios.interceptors.request.use((request) => {
-        console.log('StorySDK - Starting Request to', request.url);
-        console.log('StorySDK - Request Headers:', request.headers);
+        if (this.options?.isDebugMode) {
+          writeToDebug(`Starting Request to: ${request.url}`);
+          writeToDebug(`Request Headers: ${JSON.stringify(request.headers, null, 2)}`);
+        }
 
         if (this.options?.isDebugMode && this.isInReactNativeWebView) {
           this.sendDebugInfoToReactNative('Starting Request', {
             url: request.url,
-            headers: request.headers
+            headers: request.headers,
           });
         }
 
         if (debugContainer) {
           const debugElement = document.createElement('pre');
-          debugElement.innerHTML = `Starting Request to: ${request.url
-            }\nRequest Headers: ${JSON.stringify(request.headers, null, 2)}`;
+          debugElement.innerHTML = `Starting Request to: ${request.url}
+Request Headers: ${JSON.stringify(request.headers, null, 2)}`;
           debugContainer.appendChild(debugElement);
         }
 
@@ -156,26 +176,30 @@ export class Story extends EventEmitter {
 
       axios.interceptors.response.use(
         (response) => {
-          console.log('StorySDK - Response Status:', response.status);
-          console.log('StorySDK - Response Headers:', response.headers);
+          if (this.options?.isDebugMode) {
+            writeToDebug(`Response Status: ${response.status}`);
+            writeToDebug(`Response Headers: ${JSON.stringify(response.headers, null, 2)}`);
+          }
 
           if (this.options?.isDebugMode && this.isInReactNativeWebView) {
             this.sendDebugInfoToReactNative('Response Received', {
               status: response.status,
-              headers: response.headers
+              headers: response.headers,
             });
           }
 
           if (debugContainer) {
             const debugElement = document.createElement('pre');
-            debugElement.innerHTML = `Response Status: ${response.status
-              }\nResponse Headers: ${JSON.stringify(response.headers, null, 2)}`;
+            debugElement.innerHTML = `Response Status: ${response.status}
+Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
             debugContainer.appendChild(debugElement);
           }
           return response;
         },
         (error) => {
-          console.error('StorySDK - Response Error:', error);
+          if (this.options?.isDebugMode) {
+            writeToDebug(`Response Error: ${error}`);
+          }
 
           if (this.options?.isDebugMode && this.isInReactNativeWebView) {
             this.sendDebugInfoToReactNative('Response Error', { error: String(error) });
@@ -187,7 +211,7 @@ export class Story extends EventEmitter {
             debugContainer.appendChild(debugElement);
           }
           return Promise.reject(error);
-        }
+        },
       );
     }
 
@@ -210,39 +234,38 @@ export class Story extends EventEmitter {
       }
     } catch (e) {
       if (this.options?.isDebugMode) {
-        console.warn('StorySDK - Failed to parse message from React Native WebView:', e);
+        writeToDebug(`Failed to parse message from React Native WebView: ${e}`);
         this.sendDebugInfoToReactNative('Failed to parse message from React Native WebView', { error: String(e) });
       }
     }
   };
 
   private sendMessageToReactNative(type: string, data: any) {
-    if (this.isInReactNativeWebView &&
-      typeof window !== 'undefined' &&
-      window.ReactNativeWebView &&
-      typeof window.ReactNativeWebView.postMessage === 'function') {
-
+    if (this.isInReactNativeWebView
+      && typeof window !== 'undefined'
+      && window.ReactNativeWebView
+      && typeof window.ReactNativeWebView.postMessage === 'function') {
       window.ReactNativeWebView.postMessage(JSON.stringify({
         type,
-        data
+        data,
       }));
 
-      if (this.options?.isDebugMode) {
-        console.log('StorySDK - Sent message to React Native:', { type, data });
+      if (this.options?.isDebugMode && type !== 'storysdk:debug:info') {
+        writeToDebug(`Sent message to React Native: ${JSON.stringify({ type, data })}`);
         this.sendDebugInfoToReactNative('Sent message to React Native', { type, data });
       }
     }
   }
 
   /**
-   * Отправляет отладочные сообщения в React Native WebView, если isInReactNativeWebView и isDebugMode = true
+   * Sends debug messages to React Native WebView if isInReactNativeWebView and isDebugMode = true
    */
   private sendDebugInfoToReactNative(message: string, data?: any) {
     if (this.isInReactNativeWebView && this.options?.isDebugMode) {
       this.sendMessageToReactNative('storysdk:debug:info', {
         message,
         data,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
   }
@@ -255,67 +278,121 @@ export class Story extends EventEmitter {
     }
   }
 
+  /**
+   * Updates the token and axios headers
+   */
+  updateToken(newToken: string) {
+    if (this.token !== newToken) {
+      this.token = newToken;
+      if (newToken) {
+        axios.defaults.headers.common = { Authorization: `SDK ${newToken}` };
+      }
+      if (this.options?.isDebugMode) {
+        writeToDebug(`Token updated to: ${newToken}`);
+        this.sendDebugInfoToReactNative('Token updated', { newToken });
+      }
+    }
+  }
+
   // * Set up event listeners for story interactions
   // * @private
   // * @param element Container element
   // */
+  // Store event listeners for proper cleanup
+  private eventListeners: Array<{
+    element: Element | HTMLDivElement;
+    type: string;
+    listener: EventListener;
+  }> = [];
+
   private setupEventListeners(element: Element | HTMLDivElement): void {
-    element.addEventListener('storysdk:widget:click', (event) => {
-      this.emit(StoryEventTypes.WIDGET_CLICK, (event as CustomEvent).detail || {});
-    });
+    // Предотвращаем дублирование обработчиков событий
+    if (this.listenersSetup) {
+      return;
+    }
 
-    element.addEventListener('storysdk:widget:answer', (event) => {
-      this.emit(StoryEventTypes.WINDGET_ANSWER, (event as CustomEvent).detail || {});
-    });
+    const createListener = (eventType: string, storyEventType: StoryEventTypes) => {
+      const listener = (event: Event) => {
+        this.emit(storyEventType, (event as CustomEvent).detail || {});
+      };
+      element.addEventListener(eventType, listener);
+      this.eventListeners.push({ element, type: eventType, listener });
+    };
 
-    element.addEventListener('storysdk:group:open', (event) => {
-      this.emit(StoryEventTypes.GROUP_OPEN, (event as CustomEvent).detail || {});
-    });
+    createListener('storysdk:widget:click', StoryEventTypes.WIDGET_CLICK);
+    createListener('storysdk:widget:answer', StoryEventTypes.WIDGET_ANSWER);
+    createListener('storysdk:group:open', StoryEventTypes.GROUP_OPEN);
+    createListener('storysdk:group:close', StoryEventTypes.GROUP_CLOSE);
+    createListener('storysdk:story:open', StoryEventTypes.STORY_OPEN);
+    createListener('storysdk:story:close', StoryEventTypes.STORY_CLOSE);
+    createListener('storysdk:story:next', StoryEventTypes.STORY_NEXT);
+    createListener('storysdk:story:prev', StoryEventTypes.STORY_PREV);
+    createListener('storysdk:modal:open', StoryEventTypes.MODAL_OPEN);
+    createListener('storysdk:modal:close', StoryEventTypes.MODAL_CLOSE);
+    createListener('storysdk:group:click', StoryEventTypes.GROUP_CLICK);
+    createListener('storysdk:data:loaded', StoryEventTypes.DATA_LOADED);
 
-    element.addEventListener('storysdk:group:close', (event) => {
-      this.emit(StoryEventTypes.GROUP_CLOSE, (event as CustomEvent).detail || {});
-    });
+    this.listenersSetup = true;
+  }
 
-    element.addEventListener('storysdk:story:open', (event) => {
-      this.emit(StoryEventTypes.STORY_OPEN, (event as CustomEvent).detail || {});
+  private cleanupEventListeners(): void {
+    this.eventListeners.forEach(({ element, type, listener }) => {
+      try {
+        element.removeEventListener(type, listener);
+      } catch (error) {
+        if (this.options?.isDebugMode) {
+          writeToDebug(`Error removing event listener: ${error}`);
+        }
+        console.warn('StorySDK: Error removing event listener:', error);
+      }
     });
-
-    element.addEventListener('storysdk:story:close', (event) => {
-      this.emit(StoryEventTypes.STORY_CLOSE, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:story:next', (event) => {
-      this.emit(StoryEventTypes.STORY_NEXT, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:story:prev', (event) => {
-      this.emit(StoryEventTypes.STORY_PREV, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:modal:open', (event) => {
-      this.emit(StoryEventTypes.MODAL_OPEN, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:modal:close', (event) => {
-      this.emit(StoryEventTypes.MODAL_CLOSE, (event as CustomEvent).detail || {});
-    });
-
-    element.addEventListener('storysdk:group:click', (event) => {
-      this.emit(StoryEventTypes.GROUP_CLICK, (event as CustomEvent).detail || {});
-    });
+    this.eventListeners = [];
+    this.listenersSetup = false;
   }
 
   renderGroups(container?: Element | HTMLDivElement | null) {
+    // Prevent rendering if component is being destroyed
+    if (this.isDestroying) {
+      return;
+    }
+
     if (container) {
+      // If we're switching to a new container, clean up the old one first
+      if (this.container && this.container !== container && this.root) {
+        try {
+          unmountComponent(this.container, this.root);
+          this.root = null;
+        } catch (error) {
+          if (this.options?.isDebugMode) {
+            writeToDebug(`Error cleaning up old container: ${error}`);
+          }
+          console.warn('StorySDK: Error cleaning up old container:', error);
+        }
+      }
+
       this.container = container;
       if (!container.classList.contains('storysdk-container')) {
         container.classList.add('storysdk-container');
       }
     }
 
+    // If we already have a root for the same container, no need to create a new one
+    // The renderElement function will handle reusing the existing root
+    const currentContainer = container || this.container;
+
+    // Additional safety check - ensure container is still in DOM
+    if (currentContainer && !document.contains(currentContainer)) {
+      if (this.options?.isDebugMode) {
+        writeToDebug('Container is no longer in DOM, skipping render');
+      }
+      return;
+    }
+
     if (!this.token) {
-      if (container && !this.isInReactNativeWebView) {
-        ReactDOM.render(<p>StorySDK has not been initialized.</p>, container);
+      if (currentContainer && !this.isInReactNativeWebView) {
+        this.root = renderElement(<p>StorySDK has not been initialized.</p>, currentContainer);
+      } else if (this.options?.isDebugMode) {
+        writeToDebug('StorySDK has not been initialized');
       } else {
         console.warn('StorySDK has not been initialized.');
       }
@@ -323,27 +400,79 @@ export class Story extends EventEmitter {
       return;
     }
 
-    const Groups = withGroupsData(GroupsList, this.options, container);
+    const Groups = withGroupsData(
+      GroupsList,
+      { ...this.options, token: this.token },
+      currentContainer,
+    );
 
-    if (container) {
-      ReactDOM.render(<Groups />, container);
-      this.setupEventListeners(container);
+    if (currentContainer) {
+      // Additional check before rendering
+      if (this.isDestroying) {
+        return;
+      }
+
+      this.setupEventListeners(currentContainer);
+
+      try {
+        this.root = renderElement(<Groups />, currentContainer);
+      } catch (error) {
+        if (this.options?.isDebugMode) {
+          writeToDebug(`Error during render: ${error}`);
+        }
+        console.error('StorySDK: Error during render:', error);
+      }
     }
   }
 
   destroy() {
-    if (this.container) {
-      ReactDOM.unmountComponentAtNode(this.container);
-      const modalRoot = document.getElementById('storysdk-modal-root');
+    // Prevent multiple destroy calls
+    if (this.isDestroying) {
+      return;
+    }
+    this.isDestroying = true;
 
-      if (modalRoot) {
-        ReactDOM.unmountComponentAtNode(modalRoot);
+    // First, stop rendering if it's in progress
+    if (this.container && this.root) {
+      try {
+        unmountComponent(this.container, this.root);
+      } catch (error) {
+        if (this.options?.isDebugMode) {
+          writeToDebug(`Error during unmount: ${error}`);
+        }
+        console.warn('StorySDK: Error during unmount:', error);
+      }
+
+      // Clear root reference after attempting unmount
+      this.root = null;
+    }
+
+    // Handle modal root separately
+    const modalRoot = document.getElementById('storysdk-modal-root');
+    if (modalRoot) {
+      try {
+        unmountComponent(modalRoot, null);
+      } catch (error) {
+        if (this.options?.isDebugMode) {
+          writeToDebug(`Error during modal unmount: ${error}`);
+        }
+        console.warn('StorySDK: Error during modal unmount:', error);
       }
     }
 
+    // Remove all event listeners
+    this.cleanupEventListeners();
+
+    // Remove React Native WebView event listener
     if (this.isInReactNativeWebView && typeof window !== 'undefined') {
       window.removeEventListener('message', this.handleReactNativeMessage);
     }
+
+    // Clear container reference
+    this.container = null;
+
+    // Reset the destroying flag immediately since we're now synchronous
+    this.isDestroying = false;
   }
 }
 
@@ -366,7 +495,11 @@ export const init = () => {
         try {
           optionsFromUrl = JSON.parse(decodeURIComponent(optionsParam));
         } catch (e) {
-          console.warn('StorySDK: Failed to parse options from URL', e);
+          if (typeof writeToDebug === 'function') {
+            writeToDebug(`Failed to parse options from URL: ${e}`);
+          } else {
+            console.warn('StorySDK: Failed to parse options from URL', e);
+          }
         }
       }
     }
@@ -387,7 +520,7 @@ export const init = () => {
           const groupTitleSize = container.getAttribute('data-storysdk-group-title-size');
           const groupClassName = container.getAttribute('data-storysdk-group-class-name');
           const activeGroupOutlineColor = container.getAttribute(
-            'data-storysdk-active-group-outline-color'
+            'data-storysdk-active-group-outline-color',
           );
           const groupsOutlineColor = container.getAttribute('data-storysdk-groups-outline-color');
           const groupsClassName = container.getAttribute('data-storysdk-groups-class-name');
@@ -407,6 +540,10 @@ export const init = () => {
           const backgroundColor = container.getAttribute('data-storysdk-background-color');
           const preventCloseOnGroupClick = container.getAttribute('data-storysdk-prevent-close-on-group-click');
           const isForceCloseAvailable = container.getAttribute('data-storysdk-is-force-close-available');
+          const isOnboarding = container.getAttribute('data-storysdk-is-onboarding');
+          const isOnlyGroups = container.getAttribute('data-storysdk-is-only-groups');
+          const disableCache = container.getAttribute('data-storysdk-disable-cache');
+
           storyOptions = {
             ...storyOptions,
             groupImageWidth: groupImageWidth ? parseInt(groupImageWidth, 10) : undefined,
@@ -431,7 +568,10 @@ export const init = () => {
             arrowsColor: arrowsColor ?? undefined,
             backgroundColor: backgroundColor ?? undefined,
             preventCloseOnGroupClick: preventCloseOnGroupClick === 'true',
-            isForceCloseAvailable: isForceCloseAvailable === 'true'
+            isForceCloseAvailable: isForceCloseAvailable === 'true',
+            isOnboarding: isOnboarding === 'true',
+            isOnlyGroups: isOnlyGroups === 'true',
+            disableCache: disableCache === 'true',
           };
         }
 
@@ -457,9 +597,13 @@ export const init = () => {
         }
 
         window.storysdk = story;
+      } else if (typeof writeToDebug === 'function') {
+        writeToDebug('Wrong app token');
       } else {
         console.warn('StorySDK: wrong app token');
       }
+    } else if (typeof writeToDebug === 'function') {
+      writeToDebug('Container not found');
     } else {
       console.warn('StorySDK: container not found.');
     }

@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, {
+  useState, useEffect, useCallback, useContext,
+} from 'react';
 import cn from 'classnames';
 import {
   QuestionWidgetParamsType,
-  WidgetComponent,
   QuestionWidgetElementsType,
   BackgroundColorType,
-  WidgetsTypes
-} from '@types';
+  WidgetsTypes,
+} from '@storysdk/types';
 import { block, getTextStyles } from '@utils';
 import './QuestionWidget.scss';
 import { StoryContext } from '@components';
@@ -16,23 +17,25 @@ const b = block('QuestionWidget');
 const INIT_ELEMENT_STYLES = {
   text: {
     fontSize: 14,
-    marginBottom: 10
+    marginBottom: 10,
   },
   button: {
     height: 50,
     fontSize: 24,
-    borderRadius: 10
-  }
+    borderRadius: 10,
+  },
 };
 
-export const QuestionWidget: WidgetComponent<{
+export const QuestionWidget: React.FunctionComponent<{
   id: string;
   params: QuestionWidgetParamsType;
   elementsSize?: QuestionWidgetElementsType;
   isReadOnly?: boolean;
   onAnswer?(answer: string): any;
 }> = React.memo((props) => {
-  const { id, params, elementsSize, isReadOnly, onAnswer } = props;
+  const {
+    id, params, elementsSize, isReadOnly, onAnswer,
+  } = props;
   const storyContextVal = useContext(StoryContext);
 
   const answerFromCache = storyContextVal.getAnswerCache
@@ -46,8 +49,8 @@ export const QuestionWidget: WidgetComponent<{
       ? { confirm: 0, decline: 0, ...answerFromCache.percents }
       : {
         confirm: 0,
-        decline: 0
-      }
+        decline: 0,
+      },
   );
 
   const sizes = elementsSize ?? INIT_ELEMENT_STYLES;
@@ -62,9 +65,9 @@ export const QuestionWidget: WidgetComponent<{
             storyId: storyContextVal.currentStoryId,
             widgetId: props.id,
             data: {
-              answer
-            }
-          }
+              answer,
+            },
+          },
         });
 
         storyContextVal.container?.dispatchEvent(generalAnswerEvent);
@@ -77,7 +80,7 @@ export const QuestionWidget: WidgetComponent<{
               if (storyContextVal.setAnswerCache && id) {
                 storyContextVal.setAnswerCache(id, {
                   answer: option,
-                  percents: res.data.data
+                  percents: res.data.data,
                 });
               }
             }
@@ -87,14 +90,14 @@ export const QuestionWidget: WidgetComponent<{
         }
       }
     },
-    [answer, id, onAnswer, storyContextVal]
+    [answer, id, onAnswer, storyContextVal],
   );
 
   useEffect(() => {
     if (answer && !onAnswer) {
       const percentsFromApi = {
         confirm: answer === 'confirm' ? 100 : 0,
-        decline: answer === 'decline' ? 100 : 0
+        decline: answer === 'decline' ? 100 : 0,
       };
 
       setPercents(percentsFromApi);
@@ -126,16 +129,16 @@ export const QuestionWidget: WidgetComponent<{
         <div
           className={cn(
             b('question', {
-              gradient: params.fontColor?.type === BackgroundColorType.GRADIENT
+              gradient: params.fontColor?.type === BackgroundColorType.GRADIENT,
             }).toString(),
-            'StorySdk-widgetTitle'
+            'StorySdk-widgetTitle',
           )}
           style={{
             ...sizes.text,
             fontStyle: params.fontParams?.style,
             fontWeight: params.fontParams?.weight,
             fontFamily: params.fontFamily,
-            ...textStyles
+            ...textStyles,
           }}
         >
           {params.question}
@@ -150,13 +153,13 @@ export const QuestionWidget: WidgetComponent<{
             confirm: true,
             answerConfirm: answer && percents.confirm !== 100,
             zero: answer && percents.confirm === 0,
-            full: answer && percents.confirm === 100
+            full: answer && percents.confirm === 100,
           })}
           role="button"
           style={{
             width: answer ? `${calculateWidth(percents.confirm)}%` : '50%',
             height: sizes.button.height,
-            fontSize: sizes.button.fontSize
+            fontSize: sizes.button.fontSize,
           }}
           tabIndex={!!answer || isReadOnly ? -1 : 0}
           onClick={() => !isReadOnly && !answer && handleChange('confirm')}
@@ -170,12 +173,15 @@ export const QuestionWidget: WidgetComponent<{
             <span
               className={cn(
                 b('itemTextConfirm').toString(),
-                b('itemText', { answered: answer !== null }).toString()
+                b('itemText', { answered: answer !== null }).toString(),
               )}
             >
               {params.confirm}
             </span>
-            {answer && <span className={b('itemTextPercent')}>{percents.confirm}%</span>}
+            {answer && (<span className={b('itemTextPercent')}>
+              {percents.confirm}
+              %
+            </span>)}
           </div>
         </div>
         <div
@@ -185,13 +191,13 @@ export const QuestionWidget: WidgetComponent<{
             decline: true,
             answerDecline: answer && percents.decline !== 100,
             zero: answer && percents.decline === 0,
-            full: answer && percents.decline === 100
+            full: answer && percents.decline === 100,
           })}
           role="button"
           style={{
             width: answer ? `${calculateWidth(percents.decline)}%` : '50%',
             height: sizes.button.height,
-            fontSize: sizes.button.fontSize
+            fontSize: sizes.button.fontSize,
           }}
           tabIndex={!!answer || isReadOnly ? -1 : 0}
           onClick={() => !isReadOnly && !answer && handleChange('decline')}
@@ -205,12 +211,15 @@ export const QuestionWidget: WidgetComponent<{
             <span
               className={cn(
                 b('itemTextDecline').toString(),
-                b('itemText', { answered: answer !== null }).toString()
+                b('itemText', { answered: answer !== null }).toString(),
               )}
             >
               {params.decline}
             </span>
-            {answer && <span className={b('itemTextPercent')}>{percents.decline}%</span>}
+            {answer && (<span className={b('itemTextPercent')}>
+              {percents.decline}
+              %
+            </span>)}
           </div>
         </div>
       </div>

@@ -1,12 +1,13 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useRef, useState,
+} from 'react';
 import { StoryContext } from '@components';
 import { block, getTextStyles } from '@utils';
 import {
   QuizOpenAnswerWidgetElementsType,
   QuizOpenAnswerWidgetParamsType,
-  WidgetComponent,
-  WidgetsTypes
-} from '@types';
+  WidgetsTypes,
+} from '@storysdk/types';
 import cn from 'classnames';
 import { IconArrowSend } from '@components/icons';
 import './QuizOpenAnswerWidget.scss';
@@ -16,25 +17,25 @@ const b = block('QuizOpenAnswerWidget');
 const INIT_ELEMENT_STYLES = {
   title: {
     fontSize: 14,
-    marginBottom: 16
+    marginBottom: 16,
   },
   input: {
-    fontSize: 11
+    fontSize: 11,
   },
   inputWrapper: {
     paddingVertical: 9,
     paddingHorizontal: 16,
     borderRadius: 20,
-    paddingRight: 35
+    paddingRight: 35,
   },
   sendButton: {
     width: 25,
     height: 25,
-    right: 4
-  }
+    right: 4,
+  },
 };
 
-export const QuizOpenAnswerWidget: WidgetComponent<{
+export const QuizOpenAnswerWidget: React.FunctionComponent<{
   id: string;
   params: QuizOpenAnswerWidgetParamsType;
   elementsSize?: QuizOpenAnswerWidgetElementsType;
@@ -43,7 +44,9 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
   onGoToStory?(storyId: string): void;
 }> = React.memo((props) => {
   const { title, isTitleHidden, storyId } = props.params;
-  const { id, params, elementsSize, isReadOnly, onAnswer, onGoToStory } = props;
+  const {
+    id, params, elementsSize, isReadOnly, onAnswer, onGoToStory,
+  } = props;
 
   const storyContextVal = useContext(StoryContext);
 
@@ -61,7 +64,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
       setText(e.target.value);
       storyContextVal.playStatusChange?.('pause');
     },
-    [storyContextVal]
+    [storyContextVal],
   );
 
   const handleClickOutside = useCallback(
@@ -72,7 +75,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
         storyContextVal.playStatusChange?.('pause');
       }
     },
-    [isSent, storyContextVal]
+    [isSent, storyContextVal],
   );
 
   const handleSendClick = useCallback(() => {
@@ -86,9 +89,9 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
           storyId: storyContextVal.currentStoryId,
           widgetId: props.id,
           data: {
-            answer: text
-          }
-        }
+            answer: text,
+          },
+        },
       });
 
       storyContextVal.container?.dispatchEvent(generalAnswerEvent);
@@ -133,7 +136,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
             fontStyle: params.fontParams?.style,
             fontWeight: params.fontParams?.weight,
             fontFamily: params.fontFamily,
-            ...textStyles
+            ...textStyles,
           }}
         >
           {title}
@@ -146,7 +149,7 @@ export const QuizOpenAnswerWidget: WidgetComponent<{
           paddingBottom: sizes.inputWrapper.paddingVertical,
           paddingLeft: sizes.inputWrapper.paddingHorizontal,
           borderRadius: sizes.inputWrapper.borderRadius,
-          paddingRight: sizes.inputWrapper.paddingRight
+          paddingRight: sizes.inputWrapper.paddingRight,
         }}
       >
         <input
