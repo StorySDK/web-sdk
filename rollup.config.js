@@ -48,6 +48,7 @@ export default [
         })
       }
     ],
+    external: ['react', 'react-dom', 'react-dom/client'],
     plugins: [
       peerDepsExternal(),
       resolve({
