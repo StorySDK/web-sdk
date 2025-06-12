@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/core",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "StorySDK for web projects",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "storysdk.com",
@@ -60,8 +60,8 @@
   },
   "dependencies": {
     "@react-hook/window-size": "^3.1.1",
-    "@storysdk/react": "^2.0.0",
-    "@storysdk/types": "^2.0.0",
+    "@storysdk/react": "^2.0.1",
+    "@storysdk/types": "^2.0.1",
     "axios": "^0.24.0",
     "luxon": "^2.3.0",
     "nanoid": "^3.1.32",

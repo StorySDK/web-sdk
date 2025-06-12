@@ -1,6 +1,6 @@
 {
   "name": "@storysdk/types",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Common types for StorySDK",
   "author": "Dmitry Bayko <dabaycode@gmail.com>",
   "homepage": "storysdk.com",
