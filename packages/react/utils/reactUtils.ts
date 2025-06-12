@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOMClient from 'react-dom/client';
 import * as ReactDOM from 'react-dom';
 
 // WeakSet to track roots that are currently unmounting
@@ -8,9 +7,32 @@ const unmountingRoots = new WeakSet();
 // WeakMap to store roots for containers to avoid creating multiple roots for the same container
 const containerRoots = new WeakMap<Element, any>();
 
+// Safe require helper without eval
+const safeRequire = (moduleName: string) => {
+  try {
+    // Use indirect require call to avoid bundler issues
+    const req = typeof require !== 'undefined' ? require : null;
+    return req ? req(moduleName) : null;
+  } catch {
+    return null;
+  }
+};
+
 // Function to check if React 18+ createRoot API is supported
-export const isReact18Plus = (): boolean => !!(typeof ReactDOMClient === 'object'
-  && typeof ReactDOMClient.createRoot === 'function');
+export const isReact18Plus = (): boolean => {
+  // First try CommonJS require (bundler/Node.js environment)
+  const ReactDOMClientModule = safeRequire('react-dom/client');
+  if (ReactDOMClientModule && typeof ReactDOMClientModule.createRoot === 'function') {
+    return true;
+  }
+
+  // Fallback: check global ReactDOM for browser/CDN environment
+  if (typeof window !== 'undefined' && (window as any).ReactDOM) {
+    return typeof (window as any).ReactDOM.createRoot === 'function';
+  }
+
+  return false;
+};
 
 // Helper function for rendering in React 18+ and React 17
 export const renderElement = (element: React.ReactElement, container: Element): any => {
@@ -28,6 +50,13 @@ export const renderElement = (element: React.ReactElement, container: Element): 
 
       if (!root) {
         // Create new root only if one doesn't exist for this container
+        let ReactDOMClient = safeRequire('react-dom/client');
+
+        // Fallback to global ReactDOM for browser/CDN environment
+        if (!ReactDOMClient && typeof window !== 'undefined' && (window as any).ReactDOM) {
+          ReactDOMClient = (window as any).ReactDOM;
+        }
+
         root = ReactDOMClient.createRoot(container);
         containerRoots.set(container, root);
       }
