@@ -91,7 +91,9 @@ export declare class Story extends EventEmitter {
      * Updates the token and axios headers
      */
     updateToken(newToken: string): void;
+    private eventListeners;
     private setupEventListeners;
+    private cleanupEventListeners;
     renderGroups(container?: Element | HTMLDivElement | null): void;
     destroy(): void;
 }

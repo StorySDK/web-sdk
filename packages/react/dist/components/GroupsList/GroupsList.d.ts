@@ -14,6 +14,7 @@ export interface GroupsListProps {
     isStatusBarActive?: boolean;
     groupClassName?: string;
     isShowMockup?: boolean;
+    isOnlyGroups?: boolean;
     isShowLabel?: boolean;
     token?: string;
     arrowsColor?: string;
