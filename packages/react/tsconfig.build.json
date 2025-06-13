@@ -6,7 +6,8 @@
     "emitDeclarationOnly": true,
     "outDir": "dist",
     "rootDir": ".",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noResolve": false
   },
   "include": [
     "index.ts",
@@ -17,12 +18,12 @@
     "services/**/*",
     "constants/**/*",
     "core/**/*",
-    "declarations.d.ts"
+    "global.d.ts",
+    "assets/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "../core/**/*",
-    "../types/**/*"
+    "../core/**/*"
   ]
 } 

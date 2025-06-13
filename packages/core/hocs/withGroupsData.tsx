@@ -1,8 +1,8 @@
 import React, {
   useState, useEffect, useMemo, useCallback, Suspense, useRef, useReducer,
 } from 'react';
-import type { Group, GroupsListProps } from '@storysdk/react';
-import { getUniqUserId, StorageService } from '@storysdk/react';
+import type { Group } from '@storysdk/types';
+import { getUniqUserId, StorageService, GroupsListProps } from '@storysdk/react';
 import { GroupType } from '@storysdk/types';
 import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';

@@ -19,12 +19,12 @@ import {
   StoryType, Group, GroupType, StoryContenxt, ScoreType, WidgetsTypes, PlayStatusType,
 } from '@storysdk/types';
 import { useAdaptiveValue, useAnswersCache, useSwipe } from '../../hooks';
+// @ts-ignore
+import largeIphoneMockup from '../../assets/images/iphone-mockup-large.svg';
+// @ts-ignore
+import storySdkLogo from '../../assets/images/storysdk-logo.svg';
 import { StorySwiperContent } from './_components';
-
 import './StoryModal.scss';
-// Temporary fix for SVG imports during React 19 migration
-const largeIphoneMockup = '../../assets/images/iphone-mockup-large.svg';
-const storySdkLogo = '../../assets/images/storysdk-logo.svg';
 
 const b = block('StorySdkModal');
 interface StoryModalProps {
