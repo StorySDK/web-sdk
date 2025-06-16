@@ -265,7 +265,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (rootElement) {
+    if (rootElement && !document.getElementById('storysdk-modal-root')) {
       document.body.appendChild(rootElement);
     }
 
@@ -392,39 +392,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
         rootElement,
       );
     }
-  }, [
-    arrowsColor,
-    backgroundColor,
-    container,
-    currentGroupItem,
-    devMode,
-    forbidClose,
-    currentGroup,
-    groups?.length,
-    isLoading,
-    isShowLabel,
-    isShowMockup,
-    modalShow,
-    isStatusBarActive,
-    openInExternalModal,
-    startStoryId,
-    storyHeight,
-    storyWidth,
-    token,
-    isForceCloseAvailable,
-    isInReactNativeWebView,
-    handleCloseModal,
-    onCloseStory,
-    onFinishQuiz,
-    onModalClose,
-    onModalOpen,
-    handleNextGroup,
-    onNextStory,
-    onOpenStory,
-    handlePrevGroup,
-    onPrevStory,
-    onStartQuiz,
-  ]);
+  }, [arrowsColor, backgroundColor, container, currentGroupItem, devMode, forbidClose, currentGroup, groups?.length, isLoading, isShowLabel, isShowMockup, modalShow, isStatusBarActive, openInExternalModal, startStoryId, storyHeight, storyWidth, token, isForceCloseAvailable, isInReactNativeWebView, handleCloseModal, onCloseStory, onFinishQuiz, onModalClose, onModalOpen, handleNextGroup, onNextStory, onOpenStory, handlePrevGroup, onPrevStory, onStartQuiz, isOnlyGroups, rootElement]);
 
   const handleGroupClick = useCallback(
     async (groupIndex: number) => {
