@@ -68,6 +68,7 @@ npm install react react-dom
 
 # Recommended versions: React 17.0.0 and above
 # Minimum supported React version: 17.0.0 (with hooks support)
+# Support for React 18 and React 19 (latest versions)
 ```
 
 ### Installing Core Package
@@ -1247,7 +1248,7 @@ The new modular architecture provides:
 
 If you encounter any issues during migration:
 
-1. Check that React version is 17.0.0 or higher (updated minimum requirement)
+1. Check that React version is 17.0.0 or higher (updated minimum requirement, including React 19 support)
 2. Verify all peer dependencies are installed
 3. Enable debug mode for detailed logging: `new Story(token, { isDebugMode: true })`
 4. Consult the [troubleshooting section](#troubleshooting) below
@@ -1286,7 +1287,7 @@ With debug mode enabled:
      <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
      <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
      ```
-   - Check that the React version you're using is compatible with StorySDK (17.0.0 or higher)
+   - Check that the React version you're using is compatible with StorySDK (17.0.0 or higher, including React 19)
    - If you have multiple instances of React in your application, this may cause issues with hooks
 
 3. **Initialization issues**

@@ -1,11 +1,25 @@
 import React from 'react';
 import * as ReactDOM from 'react-dom';
+// import { createRoot } from 'react-dom/client'; // Direct import as fallback for ES modules environment
 
 // WeakSet to track roots that are currently unmounting
 const unmountingRoots = new WeakSet();
 
 // WeakMap to store roots for containers to avoid creating multiple roots for the same container
 const containerRoots = new WeakMap<Element, any>();
+
+let ReactDomClient: any = null;
+let isReact18Plus: boolean = false;
+
+const importReactDomClient = async () => {
+  ReactDomClient = await import('react-dom/client');
+
+  if (ReactDomClient && typeof ReactDomClient.createRoot === 'function') {
+    return ReactDomClient;
+  }
+
+  return null;
+};
 
 // Safe require helper without eval
 const safeRequire = (moduleName: string) => {
@@ -19,26 +33,32 @@ const safeRequire = (moduleName: string) => {
 };
 
 // Function to check if React 18+ createRoot API is supported
-export const isReact18Plus = (): boolean => {
-  // First try CommonJS require (bundler/Node.js environment)
-  const ReactDOMClientModule = safeRequire('react-dom/client');
-  if (ReactDOMClientModule && typeof ReactDOMClientModule.createRoot === 'function') {
-    return true;
-  }
-
+export const isReactDomClientAvailable = async (): Promise<boolean> => {
   // Fallback: check global ReactDOM for browser/CDN environment
   if (typeof window !== 'undefined' && (window as any).ReactDOM) {
     return typeof (window as any).ReactDOM.createRoot === 'function';
+  }
+
+  ReactDomClient = safeRequire('react-dom/client');
+
+  if (ReactDomClient && typeof ReactDomClient.createRoot === 'function') {
+    return true;
+  }
+
+  await importReactDomClient();
+
+  if (ReactDomClient && typeof ReactDomClient.createRoot === 'function') {
+    return true;
   }
 
   return false;
 };
 
 // Helper function for rendering in React 18+ and React 17
-export const renderElement = (element: React.ReactElement, container: Element): any => {
+export const renderElement = async (element: React.ReactElement, container: Element): Promise<any> => {
   try {
-    if (isReact18Plus()) {
-      // React 18+ flow
+    if (await isReactDomClientAvailable()) {
+      isReact18Plus = true;
       let root = containerRoots.get(container);
 
       // Check if root exists and is not being unmounted
@@ -49,19 +69,14 @@ export const renderElement = (element: React.ReactElement, container: Element): 
       }
 
       if (!root) {
-        // Create new root only if one doesn't exist for this container
-        let ReactDOMClient = safeRequire('react-dom/client');
-
-        // Fallback to global ReactDOM for browser/CDN environment
-        if (!ReactDOMClient && typeof window !== 'undefined' && (window as any).ReactDOM) {
-          ReactDOMClient = (window as any).ReactDOM;
+        if (!ReactDomClient && typeof window !== 'undefined' && (window as any).ReactDOM && (window as any).ReactDOM.createRoot) {
+          ReactDomClient = (window as any).ReactDOM;
         }
 
-        root = ReactDOMClient.createRoot(container);
+        root = ReactDomClient.createRoot(container);
         containerRoots.set(container, root);
       }
 
-      // Render the element using existing or new root
       root.render(element);
       return root;
     }
@@ -105,9 +120,8 @@ export const unmountComponent = (container?: Element | null, root?: any): void =
     unmountingRoots.add(root);
   }
 
-  // Immediate synchronous unmounting for better reliability
   try {
-    if (isReact18Plus() && root && typeof root.unmount === 'function') {
+    if (isReact18Plus && root && typeof root.unmount === 'function') {
       // React 18+ flow
       root.unmount();
       unmountingRoots.delete(root);
@@ -116,10 +130,9 @@ export const unmountComponent = (container?: Element | null, root?: any): void =
       if (container) {
         containerRoots.delete(container);
       }
-      return;
     }
 
-    if (!isReact18Plus() && container && typeof (ReactDOM as any).unmountComponentAtNode === 'function') {
+    if (!isReact18Plus && container && typeof (ReactDOM as any).unmountComponentAtNode === 'function') {
       // React 17 fallback
       // eslint-disable-next-line react/no-deprecated
       (ReactDOM as any).unmountComponentAtNode(container);
