@@ -34,7 +34,7 @@ export const ensureAxiosConfig = (options: AxiosConfigOptions = {}) => {
   if (token && (!axios.defaults.headers.common?.Authorization || axios.defaults.headers.common.Authorization === 'SDK undefined')) {
     axios.defaults.headers.common = {
       ...axios.defaults.headers.common,
-      Authorization: `SDK ${token}`
+      Authorization: `SDK ${token}`,
     };
 
     if (isDebugMode) {
@@ -43,9 +43,9 @@ export const ensureAxiosConfig = (options: AxiosConfigOptions = {}) => {
   }
 
   // Validate final configuration
-  const isValid = axios.defaults.baseURL &&
-    axios.defaults.baseURL !== 'undefined' &&
-    axios.defaults.headers.common?.Authorization;
+  const isValid = axios.defaults.baseURL
+    && axios.defaults.baseURL !== 'undefined'
+    && axios.defaults.headers.common?.Authorization;
 
   if (!isValid) {
     const errorMsg = `StorySDK - Invalid axios configuration detected:
@@ -65,10 +65,8 @@ export const ensureAxiosConfig = (options: AxiosConfigOptions = {}) => {
 /**
  * Gets current axios configuration for debugging
  */
-export const getAxiosConfigDebugInfo = () => {
-  return {
-    baseURL: axios.defaults.baseURL,
-    hasAuthorization: !!axios.defaults.headers.common?.Authorization,
-    authorizationPrefix: axios.defaults.headers.common?.Authorization?.substring(0, 10),
-  };
-}; 
+export const getAxiosConfigDebugInfo = () => ({
+  baseURL: axios.defaults.baseURL,
+  hasAuthorization: !!axios.defaults.headers.common?.Authorization,
+  authorizationPrefix: axios.defaults.headers.common?.Authorization?.substring(0, 10),
+});

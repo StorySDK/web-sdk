@@ -36,6 +36,12 @@ const makeRequestWithHeadCheck = async (options: any, isDisableCache?: boolean) 
     const errorMsg = `StorySDK - axios.defaults.baseURL is not set (${axios.defaults.baseURL}). This will cause requests to fail.`;
     console.error(errorMsg);
     writeToDebug(errorMsg);
+
+    // Try to auto-fix by setting a default baseURL
+    if (!axios.defaults.baseURL || axios.defaults.baseURL === 'undefined') {
+      axios.defaults.baseURL = 'https://api.storysdk.com/sdk/v1';
+      writeToDebug(`StorySDK - Auto-fixed baseURL to: ${axios.defaults.baseURL}`);
+    }
   }
 
   // Extract token from Authorization header

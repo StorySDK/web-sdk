@@ -2,7 +2,8 @@ import React, {
   useState, useEffect, useMemo, useCallback, Suspense, useRef, useReducer,
 } from 'react';
 import type { Group } from '@storysdk/types';
-import { getUniqUserId, StorageService, GroupsListProps } from '@storysdk/react';
+import { getUniqUserId, StorageService } from '@storysdk/react';
+import type { GroupsListProps } from '@storysdk/react';
 import { GroupType } from '@storysdk/types';
 import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';
@@ -15,6 +16,7 @@ import { loadFontsToPage, preloadFonts } from '../utils/fontsInclude';
 import {
   checkIos, initGA, writeToDebug, generateAdaptedDataCacheKey,
 } from '../utils';
+import { ensureAxiosConfig } from '../utils/axiosConfig';
 import { useGroupCache, useStoryCache } from '../hooks';
 
 export interface DurationProps {
@@ -342,6 +344,13 @@ const withGroupsData = (
   const fetchAppData = useCallback(async () => {
     if (!isMountedRef.current) return false;
 
+    // Ensure axios is properly configured before making any API requests
+    ensureAxiosConfig({
+      devMode: options?.devMode,
+      isDebugMode: options?.isDebugMode,
+      token: options?.token,
+    });
+
     setLoadingStatus('app', 'loading');
 
     try {
@@ -370,6 +379,9 @@ const withGroupsData = (
           }
 
           if (app.settings?.fonts?.length) {
+            if (options?.isDebugMode) {
+              writeToDebug(`Loading fonts: ${JSON.stringify(app.settings.fonts, null, 2)}`);
+            }
             preloadFonts(app.settings.fonts);
             const fontTimeout = setTimeout(() => {
               if (isMountedRef.current) {
@@ -377,6 +389,8 @@ const withGroupsData = (
               }
             }, 0);
             timeoutsRef.current.push(fontTimeout);
+          } else if (options?.isDebugMode) {
+            writeToDebug('No fonts found in app settings');
           }
 
           if (app.settings?.integrations?.googleAnalytics?.trackingId) {
@@ -407,6 +421,13 @@ const withGroupsData = (
   // Groups fetching
   const fetchGroups = useCallback(async () => {
     if (!isMountedRef.current) return false;
+
+    // Ensure axios is properly configured before making any API requests
+    ensureAxiosConfig({
+      devMode: options?.devMode,
+      isDebugMode: options?.isDebugMode,
+      token: options?.token,
+    });
 
     setLoadingStatus('groups', 'loading');
 
@@ -705,9 +726,11 @@ const withGroupsData = (
           );
           dispatch({ type: 'SET_DATA', payload: updatedData });
 
-          // Update adapted data cache only if we got new data from server and cache is not disabled
+          // Update adapted data cache only if we got new data from server
+          // and cache is not disabled
           // Use stable cache components
-          if (stableCacheComponents.isValidForCache && hasNewDataFromServer && !options?.disableCache) {
+          if (stableCacheComponents.isValidForCache
+            && hasNewDataFromServer && !options?.disableCache) {
             const adaptedWithStoriesCacheKey = generateAdaptedDataCacheKey({
               token: stableCacheComponents.token,
               language: stableCacheComponents.language,

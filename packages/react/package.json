@@ -24,7 +24,7 @@
 		"@emoji-mart/data": "^1.2.1",
 		"@emoji-mart/react": "^1.1.1",
 		"@react-hook/window-size": "^3.0.7",
-		"axios": "^0.23.0",
+		"axios": "^0.24.0",
 		"bem-cn": "^3.0.1",
 		"classnames": "^2.3.1",
 		"emoji-mart": "^5.6.0",
