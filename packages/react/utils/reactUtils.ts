@@ -9,7 +9,7 @@ const unmountingRoots = new WeakSet();
 const containerRoots = new WeakMap<Element, any>();
 
 let ReactDomClient: any = null;
-let isReact18Plus: boolean = false;
+let isReact18PlusDetected: boolean = false;
 
 const importReactDomClient = async () => {
   ReactDomClient = await import('react-dom/client');
@@ -57,8 +57,10 @@ export const isReactDomClientAvailable = async (): Promise<boolean> => {
 // Helper function for rendering in React 18+ and React 17
 export const renderElement = async (element: React.ReactElement, container: Element): Promise<any> => {
   try {
-    if (await isReactDomClientAvailable()) {
-      isReact18Plus = true;
+    const hasReact18Api = await isReactDomClientAvailable();
+
+    if (hasReact18Api) {
+      isReact18PlusDetected = true;
       let root = containerRoots.get(container);
 
       // Check if root exists and is not being unmounted
@@ -69,16 +71,55 @@ export const renderElement = async (element: React.ReactElement, container: Elem
       }
 
       if (!root) {
-        if (!ReactDomClient && typeof window !== 'undefined' && (window as any).ReactDOM && (window as any).ReactDOM.createRoot) {
-          ReactDomClient = (window as any).ReactDOM;
+        // Check if container already has a React root mounted by another instance
+        const hasExistingReactRoot = container.hasAttribute('data-reactroot')
+          || container.querySelector('[data-reactroot]');
+
+        if (hasExistingReactRoot) {
+          console.warn('StorySDK: Container already has a React root from another instance, skipping createRoot');
+          return null;
         }
 
-        root = ReactDomClient.createRoot(container);
-        containerRoots.set(container, root);
+        // Ensure we have ReactDomClient available
+        if (!ReactDomClient) {
+          if (typeof window !== 'undefined' && (window as any).ReactDOM && (window as any).ReactDOM.createRoot) {
+            ReactDomClient = (window as any).ReactDOM;
+          } else {
+            ReactDomClient = await importReactDomClient();
+          }
+        }
+
+        if (ReactDomClient && typeof ReactDomClient.createRoot === 'function') {
+          try {
+            root = ReactDomClient.createRoot(container);
+
+            // Validate that the created root has the expected methods
+            if (root && typeof root.render === 'function' && typeof root.unmount === 'function') {
+              containerRoots.set(container, root);
+            } else {
+              console.error('StorySDK: Created root is missing required methods:', {
+                hasRender: typeof root.render === 'function',
+                hasUnmount: typeof root.unmount === 'function',
+                rootType: typeof root,
+              });
+              return null;
+            }
+          } catch (createRootError) {
+            console.error('StorySDK: Error creating root:', createRootError);
+            return null;
+          }
+        } else {
+          console.error('StorySDK: ReactDomClient.createRoot is not available');
+          return null;
+        }
       }
 
-      root.render(element);
-      return root;
+      if (root && typeof root.render === 'function') {
+        root.render(element);
+        return root;
+      }
+      console.error('StorySDK: Invalid root object created');
+      return null;
     }
 
     // React 17 fallback - use legacy render if available
@@ -88,7 +129,7 @@ export const renderElement = async (element: React.ReactElement, container: Elem
 
       // eslint-disable-next-line react/no-deprecated
       (ReactDOM as any).render(element, container);
-      return container; // Return container as "root" for React 17
+      return { isLegacyRoot: true, container }; // Return special object for React 17
     }
 
     console.error('StorySDK: No suitable render method found');
@@ -109,8 +150,11 @@ export const renderElement = async (element: React.ReactElement, container: Elem
   }
 };
 
+// Helper function to check if React 18+ is being used
+export const isReact18Plus = (): boolean => isReact18PlusDetected;
+
 // Universal helper function for safe unmounting in React 18+ and React 17
-export const unmountComponent = (container?: Element | null, root?: any): void => {
+export const unmountComponent = async (container?: Element | null, root?: any): Promise<void> => {
   // Prevent duplicate unmounting
   if (root && unmountingRoots.has(root)) {
     return;
@@ -120,39 +164,145 @@ export const unmountComponent = (container?: Element | null, root?: any): void =
     unmountingRoots.add(root);
   }
 
-  try {
-    if (isReact18Plus && root && typeof root.unmount === 'function') {
-      // React 18+ flow
-      root.unmount();
-      unmountingRoots.delete(root);
+  let unmountSuccessful = false;
 
-      // Remove the root from our container mapping when unmounting
-      if (container) {
-        containerRoots.delete(container);
+  try {
+    // Check if React 18+ createRoot API is available first
+    const hasReact18Api = await isReactDomClientAvailable();
+
+    // Handle React 17 legacy root object
+    if (root && root.isLegacyRoot && root.container) {
+      if (!hasReact18Api && typeof (ReactDOM as any).unmountComponentAtNode === 'function') {
+        try {
+          // eslint-disable-next-line react/no-deprecated
+          const result = (ReactDOM as any).unmountComponentAtNode(root.container);
+          if (root) {
+            unmountingRoots.delete(root);
+          }
+          if (result) {
+            unmountSuccessful = true;
+            return;
+          }
+        } catch (legacyError) {
+          console.warn('StorySDK: React 17 unmount failed:', legacyError);
+        }
       }
     }
 
-    if (!isReact18Plus && container && typeof (ReactDOM as any).unmountComponentAtNode === 'function') {
-      // React 17 fallback
-      // eslint-disable-next-line react/no-deprecated
-      (ReactDOM as any).unmountComponentAtNode(container);
-      if (root) {
+    // Try React 18+ unmount first if we have a proper root with unmount method
+    if (hasReact18Api && root && typeof root.unmount === 'function') {
+      try {
+        root.unmount();
         unmountingRoots.delete(root);
+
+        // Remove the root from our container mapping when unmounting
+        if (container) {
+          containerRoots.delete(container);
+        }
+        unmountSuccessful = true;
+        return;
+      } catch (unmountError) {
+        console.warn('StorySDK: Error during React 18+ unmount:', unmountError);
+        // Continue to other unmount methods
       }
+    }
+
+    // Try to find and unmount existing root from container mapping if we have container
+    if (hasReact18Api && container) {
+      const existingRoot = containerRoots.get(container);
+      if (existingRoot && typeof existingRoot.unmount === 'function') {
+        try {
+          existingRoot.unmount();
+          containerRoots.delete(container);
+          if (root) {
+            unmountingRoots.delete(root);
+          }
+          unmountSuccessful = true;
+          return;
+        } catch (unmountError) {
+          console.warn('StorySDK: Error during container root unmount:', unmountError);
+          // Continue to other unmount methods
+        }
+      }
+    }
+
+    // If we have React 18 but no container and root without unmount method, try to force unmount
+    if (hasReact18Api && !container && root && typeof root.unmount !== 'function') {
+      // This case happens when root object is corrupted or not a proper React 18 root
+      // We can't do much without container, just clean up tracking
+      console.warn('StorySDK: Invalid root object without unmount method, cleaning up tracking', {
+        rootType: typeof root,
+        rootConstructor: root?.constructor?.name,
+        rootKeys: root ? Object.keys(root) : [],
+        hasRender: typeof root.render === 'function',
+      });
+      unmountingRoots.delete(root);
+      unmountSuccessful = true; // Mark as successful to avoid further warnings
       return;
     }
 
-    console.warn('StorySDK: No valid unmount method found');
+    // Fallback: Try React 17 unmount if available and we have container
+    if (container && typeof (ReactDOM as any).unmountComponentAtNode === 'function') {
+      try {
+        // eslint-disable-next-line react/no-deprecated
+        const result = (ReactDOM as any).unmountComponentAtNode(container);
+
+        if (root) {
+          unmountingRoots.delete(root);
+        }
+
+        // Remove from container mapping
+        containerRoots.delete(container);
+
+        // unmountComponentAtNode returns true if a component was unmounted
+        if (result) {
+          unmountSuccessful = true;
+          return;
+        }
+      } catch (legacyError) {
+        console.warn('StorySDK: React 17 fallback unmount failed:', legacyError);
+      }
+    }
+
+    // Last resort: try to clean container content if nothing else worked
+    if (!unmountSuccessful && container) {
+      try {
+        container.innerHTML = '';
+        containerRoots.delete(container);
+        if (root) {
+          unmountingRoots.delete(root);
+        }
+        unmountSuccessful = true;
+        console.warn('StorySDK: Used innerHTML cleanup as fallback');
+        return;
+      } catch (cleanupError) {
+        console.warn('StorySDK: Fallback cleanup failed:', cleanupError);
+      }
+    }
+
+    // If we reach here and haven't successfully unmounted, log a warning
+    if (!unmountSuccessful) {
+      console.warn('StorySDK: No valid unmount method found', {
+        hasContainer: !!container,
+        hasRoot: !!root,
+        rootType: root ? typeof root : 'none',
+        hasUnmountMethod: root ? typeof root.unmount : 'none',
+        hasReact18Api,
+        isLegacyRoot: root ? !!root.isLegacyRoot : false,
+        rootHasOwnUnmount: root && Object.prototype.hasOwnProperty.call(root, 'unmount'),
+        rootPrototype: root ? Object.getPrototypeOf(root)?.constructor?.name : 'none',
+      });
+    }
   } catch (error) {
     // Handle unmount errors gracefully
     console.warn('StorySDK: Error during unmount:', error);
-
-    // Clean up tracking even on error
+  } finally {
+    // Clean up tracking in all cases
     if (root) {
       unmountingRoots.delete(root);
     }
 
-    // Still clean up the container mapping in case of error
+    // Clean up the container mapping in case of error
     if (container) {
       containerRoots.delete(container);
     }

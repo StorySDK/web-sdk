@@ -305,7 +305,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
 
   useEffect(() => {
     if (!isOnlyGroups && !modalRootRef.current) {
-      modalRootRef.current = renderElement(
+      renderElement(
         <StoryModal
           arrowsColor={arrowsColor}
           backgroundColor={backgroundColor}
@@ -341,12 +341,19 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           onStartQuiz={onStartQuiz}
         />,
         rootElement,
-      );
+      ).then((root) => {
+        modalRootRef.current = root;
+      }).catch((error) => {
+        console.error('StorySDK: Error during modal render:', error);
+      });
     }
 
     return () => {
       if (modalRootRef.current) {
-        unmountComponent(null, modalRootRef.current);
+        // Handle async unmount in cleanup function
+        unmountComponent(null, modalRootRef.current).catch((error) => {
+          console.warn('StorySDK: Error during cleanup unmount:', error);
+        });
         modalRootRef.current = null;
       }
     };
@@ -354,7 +361,7 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
 
   useEffect(() => {
     if (modalRootRef.current && !isOnlyGroups) {
-      modalRootRef.current = renderElement(
+      renderElement(
         <StoryModal
           arrowsColor={arrowsColor}
           backgroundColor={backgroundColor}
@@ -390,7 +397,11 @@ export const GroupsList: React.FC<GroupsListProps> = (props) => {
           onStartQuiz={onStartQuiz}
         />,
         rootElement,
-      );
+      ).then((root) => {
+        modalRootRef.current = root;
+      }).catch((error) => {
+        console.error('StorySDK: Error during modal re-render:', error);
+      });
     }
   }, [arrowsColor, backgroundColor, container, currentGroupItem, devMode, forbidClose, currentGroup, groups?.length, isLoading, isShowLabel, isShowMockup, modalShow, isStatusBarActive, openInExternalModal, startStoryId, storyHeight, storyWidth, token, isForceCloseAvailable, isInReactNativeWebView, handleCloseModal, onCloseStory, onFinishQuiz, onModalClose, onModalOpen, handleNextGroup, onNextStory, onOpenStory, handlePrevGroup, onPrevStory, onStartQuiz, isOnlyGroups, rootElement]);
 

@@ -5,6 +5,7 @@ import EventEmitter from './EventEmitter';
 import withGroupsData from './hocs/withGroupsData';
 import { StoryEventTypes } from './types';
 import { writeToDebug } from './utils/writeToDebug';
+import { ensureAxiosConfig } from './utils/axiosConfig';
 
 declare global {
   interface Window {
@@ -138,15 +139,12 @@ export class Story extends EventEmitter {
       this.options.disableCache = options?.disableCache;
     }
 
-    let reqUrl = 'https://api.storysdk.com/sdk/v1';
-
-    if (options?.devMode === 'staging') {
-      reqUrl = 'https://api.diffapp.link/sdk/v1';
-    } else if (options?.devMode === 'development') {
-      reqUrl = 'http://localhost:8080/sdk/v1';
-    }
-
-    axios.defaults.baseURL = reqUrl;
+    // Ensure axios is properly configured
+    ensureAxiosConfig({
+      devMode: options?.devMode,
+      isDebugMode: options?.isDebugMode,
+      token,
+    });
 
     if (options?.isDebugMode) {
       const debugContainer = document.querySelector('#storysdk-debug');
@@ -213,10 +211,6 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
           return Promise.reject(error);
         },
       );
-    }
-
-    if (token) {
-      axios.defaults.headers.common = { Authorization: `SDK ${token}` };
     }
 
     // Set up message listener for React Native WebView
@@ -356,6 +350,18 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
       return;
     }
 
+    // Ensure axios is properly configured before rendering
+    const isConfigValid = ensureAxiosConfig({
+      devMode: this.options?.devMode,
+      isDebugMode: this.options?.isDebugMode,
+      token: this.token,
+    });
+
+    if (!isConfigValid) {
+      console.error('StorySDK: Failed to configure axios. Rendering may fail.');
+      return;
+    }
+
     if (container) {
       // If we're switching to a new container, clean up the old one first
       if (this.container && this.container !== container && this.root) {
@@ -390,7 +396,13 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
 
     if (!this.token) {
       if (currentContainer && !this.isInReactNativeWebView) {
-        this.root = renderElement(<p>StorySDK has not been initialized.</p>, currentContainer);
+        renderElement(<p>StorySDK has not been initialized.</p>, currentContainer).then((root) => {
+          if (!this.isDestroying) {
+            this.root = root;
+          }
+        }).catch((error) => {
+          console.error('StorySDK: Error during initialization render:', error);
+        });
       } else if (this.options?.isDebugMode) {
         writeToDebug('StorySDK has not been initialized');
       } else {
@@ -415,7 +427,16 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
       this.setupEventListeners(currentContainer);
 
       try {
-        this.root = renderElement(<Groups />, currentContainer);
+        renderElement(<Groups />, currentContainer).then((root) => {
+          if (!this.isDestroying) {
+            this.root = root;
+          }
+        }).catch((error) => {
+          if (this.options?.isDebugMode) {
+            writeToDebug(`Error during render: ${error}`);
+          }
+          console.error('StorySDK: Error during render:', error);
+        });
       } catch (error) {
         if (this.options?.isDebugMode) {
           writeToDebug(`Error during render: ${error}`);
@@ -425,54 +446,56 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
     }
   }
 
-  destroy() {
+  async destroy() {
     // Prevent multiple destroy calls
     if (this.isDestroying) {
       return;
     }
     this.isDestroying = true;
 
-    // First, stop rendering if it's in progress
-    if (this.container && this.root) {
-      try {
-        unmountComponent(this.container, this.root);
-      } catch (error) {
-        if (this.options?.isDebugMode) {
-          writeToDebug(`Error during unmount: ${error}`);
+    try {
+      // First, stop rendering if it's in progress
+      if (this.container && this.root) {
+        try {
+          await unmountComponent(this.container, this.root);
+        } catch (error) {
+          if (this.options?.isDebugMode) {
+            writeToDebug(`Error during unmount: ${error}`);
+          }
+          console.warn('StorySDK: Error during unmount:', error);
         }
-        console.warn('StorySDK: Error during unmount:', error);
+
+        // Clear root reference after attempting unmount
+        this.root = null;
       }
 
-      // Clear root reference after attempting unmount
-      this.root = null;
-    }
-
-    // Handle modal root separately
-    const modalRoot = document.getElementById('storysdk-modal-root');
-    if (modalRoot) {
-      try {
-        unmountComponent(modalRoot, null);
-      } catch (error) {
-        if (this.options?.isDebugMode) {
-          writeToDebug(`Error during modal unmount: ${error}`);
+      // Handle modal root separately
+      const modalRoot = document.getElementById('storysdk-modal-root');
+      if (modalRoot) {
+        try {
+          await unmountComponent(modalRoot, null);
+        } catch (error) {
+          if (this.options?.isDebugMode) {
+            writeToDebug(`Error during modal unmount: ${error}`);
+          }
+          console.warn('StorySDK: Error during modal unmount:', error);
         }
-        console.warn('StorySDK: Error during modal unmount:', error);
       }
+
+      // Remove all event listeners
+      this.cleanupEventListeners();
+
+      // Remove React Native WebView event listener
+      if (this.isInReactNativeWebView && typeof window !== 'undefined') {
+        window.removeEventListener('message', this.handleReactNativeMessage);
+      }
+
+      // Clear container reference
+      this.container = null;
+    } finally {
+      // Reset the destroying flag
+      this.isDestroying = false;
     }
-
-    // Remove all event listeners
-    this.cleanupEventListeners();
-
-    // Remove React Native WebView event listener
-    if (this.isInReactNativeWebView && typeof window !== 'undefined') {
-      window.removeEventListener('message', this.handleReactNativeMessage);
-    }
-
-    // Clear container reference
-    this.container = null;
-
-    // Reset the destroying flag immediately since we're now synchronous
-    this.isDestroying = false;
   }
 }
 
