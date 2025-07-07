@@ -12,3 +12,8 @@ export declare enum StoryEventTypes {
     GROUP_CLICK = "groupClick",
     DATA_LOADED = "dataLoaded"
 }
+export declare enum GroupsDisplayType {
+    HIGHLIGHTS = "highlights",
+    CAROUSEL = "carousel",
+    POPVIDEO = "popvideo"
+}

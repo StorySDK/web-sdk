@@ -95,6 +95,21 @@ export default [
           parser: require('postcss-scss')
         })
       ] : [
+        // For core package, we need to process SCSS but not extract it
+        postcss({
+          inject: false,
+          extract: false,
+          modules: false,
+          sourceMap: false,
+          use: ['sass'],
+          plugins: [
+            require('postcss-nested'),
+            require('autoprefixer')({
+              overrideBrowserslist: ['last 2 versions', '> 1%', 'not dead']
+            })
+          ],
+          parser: require('postcss-scss')
+        }),
         copy({
           targets: [
             { 

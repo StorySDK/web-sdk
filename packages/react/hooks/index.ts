@@ -7,3 +7,4 @@ export * from './useGroupCache';
 export * from './useSwipe';
 export * from './useLocalStorage';
 export * from './useDebounced';
+export { useStoryModal } from './useStoryModal';

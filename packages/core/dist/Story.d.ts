@@ -1,5 +1,5 @@
 import EventEmitter from './EventEmitter';
-import { StoryEventTypes } from './types';
+import { StoryEventTypes, GroupsDisplayType } from './types';
 declare global {
     interface Window {
         storysdk?: Story;
@@ -43,6 +43,8 @@ export declare class Story extends EventEmitter {
         isInReactNativeWebView?: boolean;
         preventCloseOnGroupClick?: boolean;
         disableCache?: boolean;
+        widgetId?: string;
+        type?: GroupsDisplayType;
     };
     container?: Element | HTMLDivElement | null;
     root: any;
@@ -79,6 +81,8 @@ export declare class Story extends EventEmitter {
         preventCloseOnGroupClick?: boolean;
         isOnlyGroups?: boolean;
         disableCache?: boolean;
+        widgetId?: string;
+        type?: GroupsDisplayType;
     });
     private handleReactNativeMessage;
     private sendMessageToReactNative;
@@ -95,6 +99,6 @@ export declare class Story extends EventEmitter {
     private setupEventListeners;
     private cleanupEventListeners;
     renderGroups(container?: Element | HTMLDivElement | null): void;
-    destroy(): void;
+    destroy(): Promise<void>;
 }
 export declare const init: () => void;

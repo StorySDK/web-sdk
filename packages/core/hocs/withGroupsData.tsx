@@ -9,6 +9,7 @@ import { useWindowSize } from '@react-hook/window-size';
 import { nanoid } from 'nanoid';
 import { DateTime } from 'luxon';
 import axios from 'axios';
+import { GroupsDisplayType } from '../types';
 import { API } from '../services/API';
 import { adaptGroupData } from '../utils/groupsAdapter';
 import { getNavigatorLanguage } from '../utils/localization';
@@ -127,7 +128,7 @@ const initialState: AppState = {
 };
 
 const withGroupsData = (
-  GroupsList: React.FC<any>,
+  RendererComponent: React.FC<any>,
   options?: {
     token?: string;
     groupImageWidth?: number;
@@ -157,6 +158,8 @@ const withGroupsData = (
     devMode?: 'staging' | 'development';
     isOnlyGroups?: boolean;
     disableCache?: boolean;
+    widgetId?: string;
+    type?: GroupsDisplayType;
     on?(event: string, callback: (data: any) => void): void;
     off?(event: string, callback: (data: any) => void): void;
     destroy?(): void;
@@ -221,6 +224,49 @@ const withGroupsData = (
       dispatch({ type: 'SET_LOADING_STATUS', payload: { key, status } });
     }
   }, []);
+
+  // Function to check if all required components are loaded and update general status
+  const updateGeneralLoadingStatus = useCallback((updatedLoading: Partial<LoadingState>) => {
+    if (!isMountedRef.current) return;
+
+    // Merge current loading state with updates
+    const currentLoading = { ...state.loading, ...updatedLoading };
+
+    // Determine if all required components are loaded
+    const isAppLoaded = currentLoading.app === 'loaded';
+    const isGroupsLoaded = currentLoading.groups === 'loaded';
+    const isStoriesLoaded = currentLoading.stories === 'loaded';
+
+    // Check if there are any errors
+    const hasError = currentLoading.app === 'error'
+      || currentLoading.groups === 'error'
+      || currentLoading.stories === 'error';
+
+    if (hasError) {
+      if (currentLoading.status !== 'error') {
+        setLoadingStatus('status', 'error');
+      }
+      return;
+    }
+
+    // For isOnlyGroups mode: need app + groups
+    // For normal mode: need app + groups + stories (unless no groups)
+    const shouldBeLoaded = options?.isOnlyGroups
+      ? (isAppLoaded && isGroupsLoaded)
+      : (isAppLoaded && isGroupsLoaded && (isStoriesLoaded || state.groups.length === 0));
+
+    if (shouldBeLoaded && currentLoading.status !== 'loaded') {
+      setLoadingStatus('status', 'loaded');
+    } else if (!shouldBeLoaded && currentLoading.status === 'loaded') {
+      // If components are still loading, ensure status reflects that
+      const anyLoading = currentLoading.app === 'loading'
+        || currentLoading.groups === 'loading'
+        || currentLoading.stories === 'loading';
+      if (anyLoading) {
+        setLoadingStatus('status', 'loading');
+      }
+    }
+  }, [state.loading, state.groups.length, options?.isOnlyGroups, setLoadingStatus]);
 
   // Get consistent userId
   const getConsistentUserId = useCallback(() => initialUserIdRef.current || state.userId,
@@ -441,27 +487,60 @@ const withGroupsData = (
       }
 
       if (!groupsData.data.error) {
-        const groupsFetchedData = groupsData.data.data
-          .filter((item: any) => {
-            const isActive = item.active && item.type;
-            const isOnboarding = item.type === GroupType.ONBOARDING;
+        // Store original data for parentId lookup
+        const originalData = groupsData.data.data;
 
-            if (options?.isOnboarding) {
+        // First, apply basic filtering (active, type conditions)
+        // but keep PARENT_GROUP for widgetId logic
+        const baseFilteredData = originalData.filter((item: any) => {
+          const isActive = item.active && item.type;
+          const isOnboarding = item.type === GroupType.ONBOARDING;
+
+          if (options?.isOnboarding) {
+            return options?.groupId === item.id && isActive;
+          }
+
+          if (isOnboarding) {
+            if (options?.groupId) {
               return options?.groupId === item.id && isActive;
             }
-
-            if (isOnboarding) {
-              if (options?.groupId) {
-                return options?.groupId === item.id && isActive;
-              }
-              if (options?.autoplay) {
-                return isActive;
-              }
-              return isActive && item.settings?.addToStories;
+            if (options?.autoplay) {
+              return isActive;
             }
+            return isActive && item.settings?.addToStories;
+          }
 
-            return isActive;
-          })
+          return isActive;
+        });
+
+        let finalFilteredData;
+
+        // Apply widgetId filtering logic
+        if (options?.widgetId) {
+          const targetGroup = originalData.find((item: any) => item.id === options.widgetId);
+
+          if (targetGroup && targetGroup.type === GroupType.PARENT_GROUP) {
+            // If target group is PARENT_GROUP, show all groups with matching parentId
+            finalFilteredData = baseFilteredData.filter(
+              (item: any) => item.parent_id === targetGroup.id,
+            );
+          } else if (targetGroup) {
+            // For other group types, show only the specific group
+            finalFilteredData = baseFilteredData.filter(
+              (item: any) => item.id === options.widgetId,
+            );
+          } else {
+            // If target group not found, show nothing
+            finalFilteredData = [];
+          }
+        } else {
+          // If no widgetId specified, use all base filtered data
+          finalFilteredData = baseFilteredData;
+        }
+
+        // Finally, exclude PARENT_GROUP types from display (never show them regardless of widgetId)
+        const groupsFetchedData = finalFilteredData
+          .filter((item: any) => item.type !== GroupType.PARENT_GROUP)
           .map((item: any) => ({
             id: item.id,
             app_id: item.app_id,
@@ -469,6 +548,7 @@ const withGroupsData = (
             image_url: item.image_url,
             settings: item.settings,
             type: item.type,
+            parentId: item.parent_id,
           }))
           .sort((a: any, b: any) => {
             if (a.type === GroupType.ONBOARDING && b.type !== GroupType.ONBOARDING) {
@@ -507,44 +587,63 @@ const withGroupsData = (
 
           if (isMountedRef.current) {
             dispatch({ type: 'SET_DATA', payload: onlyGroupsData });
-            setLoadingStatus('status', 'loaded');
+            setLoadingStatus('groups', 'loaded');
+          }
 
-            // Cache groups-only data separately
-            if (consistentUserId && !options?.disableCache) {
-              const groupsOnlyCacheKey = generateAdaptedDataCacheKey({
-                token: stableCacheComponents.token,
-                language: stableCacheComponents.language,
-                userId: stableCacheComponents.userId,
-                includeStories: false,
+          // Cache groups-only data separately
+          if (consistentUserId && !options?.disableCache) {
+            const groupsOnlyCacheKey = generateAdaptedDataCacheKey({
+              token: stableCacheComponents.token,
+              language: stableCacheComponents.language,
+              userId: stableCacheComponents.userId,
+              includeStories: false,
+            });
+
+            // Only cache if we have a valid cache key
+            if (groupsOnlyCacheKey) {
+              StorageService.setItem(groupsOnlyCacheKey, onlyGroupsData).catch((error) => {
+                console.error('Error saving groups-only data to cache:', error);
               });
 
-              // Only cache if we have a valid cache key
-              if (groupsOnlyCacheKey) {
-                StorageService.setItem(groupsOnlyCacheKey, onlyGroupsData).catch((error) => {
-                  console.error('Error saving groups-only data to cache:', error);
-                });
-
-                if (options?.isDebugMode) {
-                  writeToDebug(`Cached groups-only data with key: ${groupsOnlyCacheKey}`);
-                }
-              } else if (options?.isDebugMode) {
-                writeToDebug('Skipping groups-only data caching due to invalid cache key');
+              if (options?.isDebugMode) {
+                writeToDebug(`Cached groups-only data with key: ${groupsOnlyCacheKey}`);
               }
+            } else if (options?.isDebugMode) {
+              writeToDebug('Skipping groups-only data caching due to invalid cache key');
             }
+          }
 
-            const dataLoadedEvent = new CustomEvent('storysdk:data:loaded', {
-              detail: { message: 'Groups data loaded successfully (only groups mode)' },
-            });
-            container?.dispatchEvent(dataLoadedEvent);
+          const dataLoadedEvent = new CustomEvent('storysdk:data:loaded', {
+            detail: { message: 'Groups data loaded successfully (only groups mode)' },
+          });
+          container?.dispatchEvent(dataLoadedEvent);
+        } else {
+          // For non-isOnlyGroups mode, set initial data with empty stories
+          // This prevents showing empty list before fetchStories completes
+          const userIdForGroups = consistentUserId || 'anonymous';
+          const initialData = adaptGroupData(
+            groupsFetchedData.map((group: any) => ({
+              ...group,
+              stories: [],
+            })),
+            userIdForGroups,
+            state.language,
+            isMobile,
+            true, // isOnlyGroups for now, will be updated by fetchStories
+          );
+
+          if (isMountedRef.current) {
+            dispatch({ type: 'SET_DATA', payload: initialData });
+            setLoadingStatus('groups', 'loaded');
           }
         }
-
-        setLoadingStatus('groups', 'loaded');
-        return true;
+      } else {
+        // Handle error case - set groups loading as error
+        setLoadingStatus('groups', 'error');
+        setLoadingStatus('status', 'error');
       }
 
-      setLoadingStatus('groups', 'error');
-      return false;
+      return true;
     } catch (error) {
       console.error('Error fetching groups:', error);
       if (isMountedRef.current) {
@@ -554,7 +653,7 @@ const withGroupsData = (
     }
   }, [state.language, isMobile, getConsistentUserId, options?.isOnboarding,
   options?.groupId, options?.autoplay, options?.isOnlyGroups, setLoadingStatus,
-  options?.disableCache, options?.isDebugMode, stableCacheComponents]);
+  options?.disableCache, options?.isDebugMode, options?.widgetId, stableCacheComponents]);
 
   // Filter active stories
   const filterActiveStories = useCallback((storiesData: any[]) => storiesData.filter(
@@ -772,7 +871,6 @@ const withGroupsData = (
 
       if (isMountedRef.current) {
         setLoadingStatus('stories', 'loaded');
-        setLoadingStatus('status', 'loaded');
 
         const dataLoadedEvent = new CustomEvent('storysdk:data:loaded', {
           detail: { message: validResults.length > 0 ? 'All data loaded successfully' : 'Groups loaded, no stories available' },
@@ -830,7 +928,7 @@ const withGroupsData = (
               writeToDebug(`Loading adapted ${cacheType} data from cache for ${activeUserId}, key: ${adaptedCacheKey}`);
             }
             dispatch({ type: 'SET_DATA', payload: cachedData });
-            setLoadingStatus('status', 'loaded');
+            // Do not set status to loaded here - let updateGeneralLoadingStatus handle it
           }
         } catch (error) {
           console.error('Error loading from cache:', error);
@@ -856,6 +954,11 @@ const withGroupsData = (
   }, [getConsistentUserId, stableCacheComponents, fetchAppData, fetchGroups,
     options?.isDebugMode, setLoadingStatus, options?.isOnlyGroups, options?.disableCache]);
 
+  // Auto-update general loading status when individual states change
+  useEffect(() => {
+    updateGeneralLoadingStatus({});
+  }, [state.loading.app, state.loading.groups, state.loading.stories, updateGeneralLoadingStatus]);
+
   // Auto-trigger fetchStories when groups are loaded
   useEffect(() => {
     if (!isMountedRef.current) return;
@@ -867,9 +970,9 @@ const withGroupsData = (
       fetchStoriesRef.current();
     } else if (state.groups.length === 0 && state.loading.groups === 'loaded' && !options?.isOnlyGroups) {
       if (options?.isDebugMode) {
-        writeToDebug('No groups found after loading, setting status to loaded');
+        writeToDebug('No groups found after loading, general status will be updated automatically');
       }
-      setLoadingStatus('status', 'loaded');
+      // Do not set status to loaded here - let updateGeneralLoadingStatus handle it
     } else if (state.groups.length > 0 && state.loading.groups === 'loaded' && options?.isOnboarding) {
       // Special handling for onboarding mode - always load stories even if isOnlyGroups is true
       if (options?.isDebugMode) {
@@ -1003,7 +1106,7 @@ const withGroupsData = (
   const handleCloseGroup = useMemo(() => createEventHandler(
     'group:close',
     (data) => {
-      // Проверяем, что у нас есть валидный groupId для отправки duration
+      // Check that we have a valid groupId for sending duration
       if (state.groupDuration.groupId && state.groupDuration.groupId.trim() !== '') {
         const duration = DateTime.now().toSeconds() - state.groupDuration.startTime;
         API.statistics.group.sendDuration({
@@ -1069,7 +1172,7 @@ const withGroupsData = (
 
   return (
     <Suspense fallback={<div className="storysdk-skeleton-loader" />}>
-      <GroupsList
+      <RendererComponent
         activeGroupOutlineColor={options?.activeGroupOutlineColor}
         arrowsColor={options?.arrowsColor}
         autoplay={options?.autoplay}
@@ -1099,6 +1202,8 @@ const withGroupsData = (
         storyHeight={options?.storyHeight}
         storyWidth={options?.storyWidth}
         token={options?.token}
+        type={options?.type}
+        widgetId={options?.widgetId}
         onCloseGroup={handleCloseGroup}
         onCloseStory={handleCloseStory}
         onFinishQuiz={handleFinishQuiz}

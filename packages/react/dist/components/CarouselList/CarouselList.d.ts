@@ -1,0 +1,38 @@
+import React from 'react';
+import { Group } from '@storysdk/types';
+import '../GroupsList/GroupsList.scss';
+import './CarouselList.scss';
+export interface CarouselListProps {
+    group?: Group;
+    className?: string;
+    isLoading?: boolean;
+    isInReactNativeWebView?: boolean;
+    onStoryClick?: (groupId: string, storyId: string) => void;
+    storyWidth?: number;
+    storyHeight?: number;
+    isStatusBarActive?: boolean;
+    isShowMockup?: boolean;
+    isShowLabel?: boolean;
+    token?: string;
+    arrowsColor?: string;
+    autoplay?: boolean;
+    startStoryId?: string;
+    isForceCloseAvailable?: boolean;
+    backgroundColor?: string;
+    startGroupId?: string;
+    forbidClose?: boolean;
+    openInExternalModal?: boolean;
+    devMode?: 'staging' | 'development';
+    container?: Element | HTMLDivElement | null;
+    onOpenGroup?(id: string): void;
+    onCloseGroup?(id: string): void;
+    onNextStory?(groupId: string, storyId: string): void;
+    onPrevStory?(groupId: string, storyId: string): void;
+    onCloseStory?(groupId: string, storyId: string, duration: number): void;
+    onOpenStory?(groupId: string, storyId: string): void;
+    onStartQuiz?(groupId: string, storyId?: string): void;
+    onFinishQuiz?(groupId: string, storyId?: string): void;
+    onModalOpen?(groupId: string, storyId: string): void;
+    onModalClose?(groupId: string, storyId: string): void;
+}
+export declare const CarouselList: React.FC<CarouselListProps>;

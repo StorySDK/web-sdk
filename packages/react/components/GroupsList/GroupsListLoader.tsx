@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React from 'react';
 import block from 'bem-cn';
 import './GroupsList.scss';
 

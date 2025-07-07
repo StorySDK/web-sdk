@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import { GroupsList, renderElement, unmountComponent } from '@storysdk/react';
+import { renderElement, unmountComponent } from '@storysdk/react';
+import { GroupsRenderer } from '@storysdk/react/components/GroupsRenderer';
 import EventEmitter from './EventEmitter';
 import withGroupsData from './hocs/withGroupsData';
-import { StoryEventTypes } from './types';
+import { StoryEventTypes, GroupsDisplayType } from './types';
 import { writeToDebug } from './utils/writeToDebug';
 import { ensureAxiosConfig } from './utils/axiosConfig';
 
@@ -53,6 +54,8 @@ export class Story extends EventEmitter {
     isInReactNativeWebView?: boolean;
     preventCloseOnGroupClick?: boolean;
     disableCache?: boolean;
+    widgetId?: string;
+    type?: GroupsDisplayType;
   };
 
   container?: Element | HTMLDivElement | null;
@@ -61,7 +64,7 @@ export class Story extends EventEmitter {
 
   eventHandlers: { [key: string]: ((data: any) => void)[] };
 
-  private listenersSetup: boolean = false; // Флаг для предотвращения дублирования обработчиков
+  private listenersSetup: boolean = false; // Flag to prevent event handler duplication
 
   private isDestroying: boolean = false; // Flag for preventing multiple destroy calls
 
@@ -95,6 +98,8 @@ export class Story extends EventEmitter {
       preventCloseOnGroupClick?: boolean;
       isOnlyGroups?: boolean;
       disableCache?: boolean;
+      widgetId?: string;
+      type?: GroupsDisplayType;
     },
   ) {
     super();
@@ -137,6 +142,8 @@ export class Story extends EventEmitter {
       this.options.isOnboarding = options?.isOnboarding;
       this.options.isOnlyGroups = options?.isOnlyGroups;
       this.options.disableCache = options?.disableCache;
+      this.options.widgetId = options?.widgetId;
+      this.options.type = options?.type;
     }
 
     // Ensure axios is properly configured
@@ -300,7 +307,7 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
   }> = [];
 
   private setupEventListeners(element: Element | HTMLDivElement): void {
-    // Предотвращаем дублирование обработчиков событий
+    // Prevent event handler duplication
     if (this.listenersSetup) {
       return;
     }
@@ -399,9 +406,14 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
         renderElement(<p>StorySDK has not been initialized.</p>, currentContainer).then((root) => {
           if (!this.isDestroying) {
             this.root = root;
+          } else if (root && typeof root.unmount === 'function') {
+            // Clean up if component was destroyed while rendering
+            root.unmount();
           }
         }).catch((error) => {
-          console.error('StorySDK: Error during initialization render:', error);
+          if (!this.isDestroying) {
+            console.error('StorySDK: Error during initialization render:', error);
+          }
         });
       } else if (this.options?.isDebugMode) {
         writeToDebug('StorySDK has not been initialized');
@@ -413,7 +425,7 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
     }
 
     const Groups = withGroupsData(
-      GroupsList,
+      GroupsRenderer,
       { ...this.options, token: this.token },
       currentContainer,
     );
@@ -430,18 +442,25 @@ Response Headers: ${JSON.stringify(response.headers, null, 2)}`;
         renderElement(<Groups />, currentContainer).then((root) => {
           if (!this.isDestroying) {
             this.root = root;
+          } else if (root && typeof root.unmount === 'function') {
+            // Clean up if component was destroyed while rendering
+            root.unmount();
           }
         }).catch((error) => {
+          if (!this.isDestroying) {
+            if (this.options?.isDebugMode) {
+              writeToDebug(`Error during render: ${error}`);
+            }
+            console.error('StorySDK: Error during render:', error);
+          }
+        });
+      } catch (error) {
+        if (!this.isDestroying) {
           if (this.options?.isDebugMode) {
             writeToDebug(`Error during render: ${error}`);
           }
           console.error('StorySDK: Error during render:', error);
-        });
-      } catch (error) {
-        if (this.options?.isDebugMode) {
-          writeToDebug(`Error during render: ${error}`);
         }
-        console.error('StorySDK: Error during render:', error);
       }
     }
   }
@@ -566,6 +585,7 @@ export const init = () => {
           const isOnboarding = container.getAttribute('data-storysdk-is-onboarding');
           const isOnlyGroups = container.getAttribute('data-storysdk-is-only-groups');
           const disableCache = container.getAttribute('data-storysdk-disable-cache');
+          const widgetId = container.getAttribute('data-storysdk-widget-id');
 
           storyOptions = {
             ...storyOptions,
@@ -595,6 +615,7 @@ export const init = () => {
             isOnboarding: isOnboarding === 'true',
             isOnlyGroups: isOnlyGroups === 'true',
             disableCache: disableCache === 'true',
+            widgetId: widgetId ?? undefined,
           };
         }
 

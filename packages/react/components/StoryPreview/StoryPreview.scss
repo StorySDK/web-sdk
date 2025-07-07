@@ -1,0 +1,81 @@
+.StorySdkPreview {
+  position: relative;
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #05051D;
+
+  &__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  &__imageBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 3;
+  }
+
+  &__widget {
+    position: absolute;
+    z-index: 4;
+
+    // Disable interaction by default in preview mode
+    pointer-events: none;
+
+    // Optional: add subtle visual indicator that it's a preview
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.02);
+      pointer-events: none;
+    }
+  }
+
+  // Loading state styles
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10;
+  }
+
+  &__loadingIcon {
+    width: 32px;
+    height: 32px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
