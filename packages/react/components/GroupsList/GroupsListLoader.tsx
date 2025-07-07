@@ -41,7 +41,7 @@ const SkeletonItem: React.FC<SkeletonItemProps> = ({ width, height, style }) => 
 interface GroupsListLoaderProps {
   isCentered?: boolean;
   showSkeleton?: boolean;
-  carouselSkeletonRef?: RefObject<HTMLDivElement | null>;
+  carouselSkeletonRef?: React.RefObject<HTMLDivElement>;
   isReactNativeWebView?: boolean;
 }
 

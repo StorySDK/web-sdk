@@ -48,6 +48,7 @@ export default [
         })
       }
     ],
+    external: ['react', 'react-dom', 'react-dom/client'],
     plugins: [
       peerDepsExternal(),
       resolve({
@@ -107,9 +108,14 @@ export default [
       replace({
         'process.env.NODE_ENV': NODE_ENV,
         preventAssignment: true,
-        ...(pkg.browser && {
-          IS_UMD: JSON.stringify(true)
-        })
+        values: {
+          IS_UMD: JSON.stringify(pkg.browser ? true : false),
+          ...(pkg.browser && {
+            // Remove react-dom/client imports for UMD builds
+            "require('react-dom/client')": 'null',
+            "import('react-dom/client')": 'Promise.resolve(null)'
+          })
+        }
       }),
       json(),
       nodePolyfills(),

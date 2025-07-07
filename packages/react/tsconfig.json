@@ -22,7 +22,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "declarations.d.ts"
+    "global.d.ts",
+    "assets/**/*"
   ],
   "exclude": ["node_modules", "lib"] 
 }

@@ -1,7 +1,9 @@
 /**
  * Type for Material Design icons
  */
-export type MaterialIconValueType = string;
+export type MaterialIconValueType = {
+    name: string;
+};
 export type MaterialIconChangeType = (params: {
     name: string;
 }) => void;

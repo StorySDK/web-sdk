@@ -4,8 +4,8 @@ import { DateTime } from 'luxon';
 import { IconIphoneBattery, IconIphoneCellular, IconIphoneWifi } from '@components/icons';
 import { useAdaptiveValue } from '@hooks';
 import './StatusBar.scss';
-// Temporary fix for SVG imports during React 19 migration
-const dynamicIsland = '../../../../assets/images/dynamic-island-mockup.svg';
+// @ts-ignore
+import dynamicIsland from '../../../../assets/images/dynamic-island-mockup.svg';
 
 const b = block('StorySdkStatusBar');
 

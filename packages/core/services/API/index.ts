@@ -5,17 +5,45 @@ import { writeToDebug } from '../../utils';
 
 // Helper function to add cache-busting parameter to prevent browser caching
 const addCacheBusting = (config: any = {}) => {
-  const url = new URL(config.url, 'http://dummy');
+  // Check if config.url is already absolute or if it's relative with a baseURL
+  let fullUrl;
+
+  if (config.url.startsWith('http')) {
+    // Already absolute URL
+    fullUrl = config.url;
+  } else {
+    // Relative URL - use axios.defaults.baseURL
+    const baseURL = axios.defaults.baseURL;
+    if (!baseURL || baseURL === 'undefined') {
+      console.error('StorySDK: axios.defaults.baseURL is not set or undefined');
+    }
+    fullUrl = `${baseURL}${config.url}`;
+  }
+
+  const url = new URL(fullUrl);
   url.searchParams.set('_t', Date.now().toString());
 
   return {
     ...config,
-    url: url.pathname + url.search,
+    url: url.toString(),
   };
 };
 
 // Request wrapper with caching capability
 const makeRequestWithHeadCheck = async (options: any, isDisableCache?: boolean) => {
+  // CRITICAL: Check baseURL before making any request
+  if (!axios.defaults.baseURL || axios.defaults.baseURL === 'undefined') {
+    const errorMsg = `StorySDK - axios.defaults.baseURL is not set (${axios.defaults.baseURL}). This will cause requests to fail.`;
+    console.error(errorMsg);
+    writeToDebug(errorMsg);
+
+    // Try to auto-fix by setting a default baseURL
+    if (!axios.defaults.baseURL || axios.defaults.baseURL === 'undefined') {
+      axios.defaults.baseURL = 'https://api.storysdk.com/sdk/v1';
+      writeToDebug(`StorySDK - Auto-fixed baseURL to: ${axios.defaults.baseURL}`);
+    }
+  }
+
   // Extract token from Authorization header
   const authHeader = axios.defaults.headers.common?.Authorization as string;
   const token = authHeader?.replace('SDK ', '') || '';
