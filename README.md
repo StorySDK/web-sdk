@@ -42,11 +42,12 @@ This SDK is part of the StorySDK platform, which is available at [storysdk.com](
    - [JavaScript (ES6)](#javascript-es6)
    - [Static HTML](#static-html)
    - [Shopify (Liquid)](#shopify-liquid)
-4. [API Reference](#api-reference)
-5. [Event Handling](#event-handling)
-6. [Styling & Customization](#styling--customization)
-7. [Migration Guide](#migration-guide)
-8. [Troubleshooting](#troubleshooting)
+4. [Inline Story Player](#inline-story-player)
+5. [API Reference](#api-reference)
+6. [Event Handling](#event-handling)
+7. [Styling & Customization](#styling--customization)
+8. [Migration Guide](#migration-guide)
+9. [Troubleshooting](#troubleshooting)
 
 ## Installation
 
@@ -416,6 +417,274 @@ This implementation allows you to:
 - Add StorySDK to your Shopify theme through the theme customizer
 - Configure your StorySDK token and container height directly from the Shopify admin
 - Place the StorySDK container anywhere in your store through the theme editor
+
+## Inline Story Player
+
+The `InlineStoryPlayer` component allows you to embed stories directly within your UI layout without opening a fullscreen modal. This is perfect for creating inline story feeds, embedded story experiences, or any scenario where stories need to respect the dimensions of a parent container.
+
+### When to Use InlineStoryPlayer
+
+- **Inline Feeds**: Display stories within a scrollable feed layout
+- **Embedded Experiences**: Stories that appear within specific UI containers
+- **Custom Layouts**: When you need full control over story placement and sizing
+- **Non-Modal Display**: When fullscreen modal behavior is not desired
+
+### Basic Usage
+
+```jsx
+import { InlineStoryPlayer } from '@storysdk/react';
+import '@storysdk/react/dist/bundle.css';
+
+function MyComponent() {
+  const storyGroup = {
+    id: 'group-1',
+    title: 'Featured Stories',
+    stories: [...], // Your story data
+    settings: {...}
+  };
+
+  return (
+    <div style={{ width: 320, height: 568 }}>
+      <InlineStoryPlayer
+        group={storyGroup}
+        width={320}
+        height={568}
+        borderRadius={12}
+        autoplayVideos={true}
+        showArrows={true}
+        showControls={true}
+      />
+    </div>
+  );
+}
+```
+
+### With Data Fetching
+
+```jsx
+import { useEffect, useState } from 'react';
+import { InlineStoryPlayer } from '@storysdk/react';
+import '@storysdk/react/dist/bundle.css';
+
+function StoryFeedItem({ groupId, token }) {
+  const [group, setGroup] = useState(null);
+
+  useEffect(() => {
+    // Fetch your story group data
+    fetchStoryGroup(groupId, token).then(setGroup);
+  }, [groupId, token]);
+
+  if (!group) return <div>Loading...</div>;
+
+  return (
+    <InlineStoryPlayer
+      group={group}
+      token={token}
+      width="100%"
+      height={400}
+      borderRadius={16}
+      autoplayVideos={true}
+      loop={false}
+      pauseOnHover={true}
+      onComplete={(groupId) => console.log('All stories viewed:', groupId)}
+    />
+  );
+}
+```
+
+### Props Reference
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `group` | `Group` | **required** | The story group object to display |
+| `stories` | `StoryType[]` | `group.stories` | Optional array of stories (overrides group.stories) |
+| `width` | `number \| string` | `'100%'` | Container width |
+| `height` | `number \| string` | `auto` | Container height (auto-calculated from aspect ratio if not provided) |
+| `storyWidth` | `number` | `360` | Original story content width |
+| `storyHeight` | `number` | `640` | Original story content height |
+| `startStoryId` | `string` | - | ID of the story to start with |
+| `isProgressHidden` | `boolean` | `false` | Hide progress indicators |
+| `isStatusBarActive` | `boolean` | `false` | Show status bar |
+| `isCacheDisabled` | `boolean` | `false` | Disable answer caching |
+| `token` | `string` | - | API token for widget interactions |
+| `backgroundColor` | `string` | - | Background color |
+| `autoplayVideos` | `boolean` | `true` | Autoplay video content |
+| `isVideoMutedInitial` | `boolean` | `true` | Initial muted state for videos |
+| `showArrows` | `boolean` | `true` | Show navigation arrows |
+| `arrowsColor` | `string` | - | Color of navigation arrows |
+| `borderRadius` | `number` | `8` | Border radius in pixels |
+| `showControls` | `boolean` | `true` | Show play/pause and mute controls |
+| `disableInteraction` | `boolean` | `false` | Disable all user interactions with widgets |
+| `loop` | `boolean` | `false` | Loop back to first story after last |
+| `pauseOnHover` | `boolean` | `true` | Pause playback when mouse hovers over player |
+
+### Event Callbacks
+
+| Prop | Signature | Description |
+|------|-----------|-------------|
+| `onOpenStory` | `(groupId: string, storyId: string) => void` | Called when a story becomes visible |
+| `onCloseStory` | `(groupId: string, storyId: string, duration: number) => void` | Called when transitioning away from a story |
+| `onNextStory` | `(groupId: string, storyId: string) => void` | Called when navigating to the next story |
+| `onPrevStory` | `(groupId: string, storyId: string) => void` | Called when navigating to the previous story |
+| `onStartQuiz` | `(groupId: string, storyId?: string) => void` | Called when user starts interacting with a quiz |
+| `onFinishQuiz` | `(groupId: string, storyId?: string) => void` | Called when quiz is completed |
+| `onComplete` | `(groupId: string) => void` | Called when all stories have been viewed |
+
+### Inline Feed Example
+
+Create a scrollable feed of story players:
+
+```jsx
+import { InlineStoryPlayer } from '@storysdk/react';
+import '@storysdk/react/dist/bundle.css';
+
+function StoryFeed({ groups, token }) {
+  return (
+    <div className="story-feed">
+      {groups.map((group) => (
+        <div key={group.id} className="feed-item">
+          <h3>{group.title}</h3>
+          <InlineStoryPlayer
+            group={group}
+            token={token}
+            width="100%"
+            height={450}
+            borderRadius={12}
+            autoplayVideos={true}
+            showArrows={true}
+            showControls={true}
+            loop={false}
+            pauseOnHover={true}
+            onOpenStory={(gId, sId) => {
+              console.log(`Viewing story ${sId} in group ${gId}`);
+            }}
+            onComplete={(gId) => {
+              console.log(`Completed all stories in group ${gId}`);
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### Responsive Example
+
+```jsx
+import { InlineStoryPlayer } from '@storysdk/react';
+import '@storysdk/react/dist/bundle.css';
+
+function ResponsiveStoryPlayer({ group }) {
+  return (
+    <div 
+      style={{ 
+        width: '100%', 
+        maxWidth: 400,
+        aspectRatio: '9/16' // Maintains story aspect ratio
+      }}
+    >
+      <InlineStoryPlayer
+        group={group}
+        width="100%"
+        height="100%"
+        borderRadius={16}
+        autoplayVideos={true}
+        pauseOnHover={true}
+      />
+    </div>
+  );
+}
+```
+
+### Using with Token Only (Auto Data Loading)
+
+If you only have an `appToken` and optionally a `groupId`, use `InlineStoryPlayerWithData` which automatically fetches the story data:
+
+```jsx
+import { InlineStoryPlayerWithData } from '@storysdk/react';
+import '@storysdk/react/dist/bundle.css';
+
+function MyComponent() {
+  return (
+    <InlineStoryPlayerWithData
+      token="<YOUR_APP_TOKEN>"
+      groupId="<OPTIONAL_GROUP_ID>"  // Optional: if not provided, first available group is used
+      width={320}
+      height={568}
+      borderRadius={12}
+      autoplayVideos={true}
+      showArrows={true}
+      showControls={true}
+      onDataLoaded={(group) => console.log('Data loaded:', group)}
+      onError={(error) => console.error('Error:', error)}
+      onComplete={(groupId) => console.log('All stories viewed!')}
+    />
+  );
+}
+```
+
+### InlineStoryPlayerWithData Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `token` | `string` | **required** | Your StorySDK app token |
+| `groupId` | `string` | - | Optional group ID. If not provided, first available group is displayed |
+| `width` | `number \| string` | `'100%'` | Container width |
+| `height` | `number \| string` | `auto` | Container height |
+| `devMode` | `'staging' \| 'development'` | - | Development mode for testing |
+| `loader` | `React.ReactNode` | - | Custom loading component |
+| `errorComponent` | `React.ReactNode` | - | Custom error component |
+| `onDataLoaded` | `(group: Group) => void` | - | Called when data is successfully loaded |
+| `onError` | `(error: Error) => void` | - | Called when an error occurs |
+| *...all other InlineStoryPlayer props* | | | See InlineStoryPlayer props above |
+
+### Complete Example with Token
+
+```jsx
+import { InlineStoryPlayerWithData } from '@storysdk/react';
+import '@storysdk/react/dist/bundle.css';
+
+function StoryWidget() {
+  return (
+    <div style={{ width: 300, height: 500 }}>
+      <InlineStoryPlayerWithData
+        token="your-storysdk-token"
+        width="100%"
+        height="100%"
+        borderRadius={16}
+        autoplayVideos={true}
+        showArrows={true}
+        showControls={true}
+        loop={false}
+        pauseOnHover={true}
+        loader={<div>Loading stories...</div>}
+        errorComponent={<div>Failed to load stories</div>}
+        onDataLoaded={(group) => {
+          console.log('Loaded group:', group.title);
+        }}
+        onOpenStory={(groupId, storyId) => {
+          console.log('Viewing story:', storyId);
+        }}
+        onComplete={(groupId) => {
+          console.log('Finished viewing all stories');
+        }}
+      />
+    </div>
+  );
+}
+```
+
+### Key Differences from Modal Player
+
+| Feature | InlineStoryPlayer | Default Modal |
+|---------|-------------------|---------------|
+| Display Mode | Embedded in container | Fullscreen overlay |
+| Closing | No close button (use `onComplete`) | Close button available |
+| Size | Respects parent container | Fullscreen |
+| Multiple Instances | Can have many on same page | One at a time |
+| Navigation | Arrows + swipe + tap | Arrows + swipe + tap |
+| Interactive Widgets | ✅ Fully supported | ✅ Fully supported |
 
 ## API Reference
 

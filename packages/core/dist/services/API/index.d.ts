@@ -35,7 +35,7 @@ export declare const API: {
                 uniqUserId: string;
                 seconds: number;
                 language: string;
-            }): import("axios").AxiosPromise<any> | Promise<void>;
+            }): Promise<void> | import("axios").AxiosPromise<any>;
             onOpen(params: {
                 groupId: string;
                 uniqUserId: string;
@@ -54,14 +54,14 @@ export declare const API: {
                 uniqUserId: string;
                 seconds: number;
                 language: string;
-            }): import("axios").AxiosPromise<any> | Promise<void>;
+            }): Promise<void> | import("axios").AxiosPromise<any>;
             sendImpression(params: {
                 groupId: string;
                 storyId: string;
                 uniqUserId: string;
                 seconds: number;
                 language: string;
-            }): import("axios").AxiosPromise<any> | Promise<void>;
+            }): Promise<void> | import("axios").AxiosPromise<any>;
             onOpen(params: {
                 groupId: string;
                 storyId: string;

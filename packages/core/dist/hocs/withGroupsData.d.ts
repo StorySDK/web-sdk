@@ -1,11 +1,12 @@
 import React from 'react';
+import { GroupsDisplayType } from '../types';
 export interface DurationProps {
     storyId?: string;
     groupId: string;
     startTime: number;
     endTime?: number;
 }
-declare const withGroupsData: (GroupsList: React.FC<any>, options?: {
+declare const withGroupsData: (RendererComponent: React.FC<any>, options?: {
     token?: string;
     groupImageWidth?: number;
     groupImageHeight?: number;
@@ -34,6 +35,8 @@ declare const withGroupsData: (GroupsList: React.FC<any>, options?: {
     devMode?: "staging" | "development";
     isOnlyGroups?: boolean;
     disableCache?: boolean;
+    widgetId?: string;
+    type?: GroupsDisplayType;
     on?(event: string, callback: (data: any) => void): void;
     off?(event: string, callback: (data: any) => void): void;
     destroy?(): void;

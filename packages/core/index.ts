@@ -4,7 +4,7 @@ export { adaptGroupData } from './utils';
 
 export { Story };
 
-export { StoryEventTypes } from './types';
+export { StoryEventTypes, GroupsDisplayType } from './types';
 
 export { init };
 

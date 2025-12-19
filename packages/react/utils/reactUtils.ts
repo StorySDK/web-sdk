@@ -5,6 +5,9 @@ import * as ReactDOM from 'react-dom';
 // WeakSet to track roots that are currently unmounting
 const unmountingRoots = new WeakSet();
 
+// WeakSet to track roots that have been unmounted
+const unmountedRoots = new WeakSet();
+
 // WeakMap to store roots for containers to avoid creating multiple roots for the same container
 const containerRoots = new WeakMap<Element, any>();
 
@@ -63,9 +66,9 @@ export const renderElement = async (element: React.ReactElement, container: Elem
       isReact18PlusDetected = true;
       let root = containerRoots.get(container);
 
-      // Check if root exists and is not being unmounted
-      if (root && unmountingRoots.has(root)) {
-        // Root is being unmounted, remove it and create a new one
+      // Check if root exists and is not being unmounted or already unmounted
+      if (root && (unmountingRoots.has(root) || unmountedRoots.has(root))) {
+        // Root is being unmounted or has been unmounted, remove it and create a new one
         containerRoots.delete(container);
         root = null;
       }
@@ -194,6 +197,7 @@ export const unmountComponent = async (container?: Element | null, root?: any): 
       try {
         root.unmount();
         unmountingRoots.delete(root);
+        unmountedRoots.add(root);
 
         // Remove the root from our container mapping when unmounting
         if (container) {
@@ -216,7 +220,9 @@ export const unmountComponent = async (container?: Element | null, root?: any): 
           containerRoots.delete(container);
           if (root) {
             unmountingRoots.delete(root);
+            unmountedRoots.add(root);
           }
+          unmountedRoots.add(existingRoot);
           unmountSuccessful = true;
           return;
         } catch (unmountError) {
