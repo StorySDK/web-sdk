@@ -8,6 +8,7 @@ export * from './GroupsRenderer';
 export * from './StoryModal/StoryModal';
 export * from './StoryContent/StoryContent';
 export * from './StoryPreview';
+export * from './InlineStoryPlayer';
 export * from './CustomGroupControl/CustomGroupControl';
 export * from './MaterialIcon';
 export * from './Emoji';

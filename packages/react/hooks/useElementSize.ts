@@ -1,4 +1,6 @@
-import { useState, useEffect, RefObject } from 'react';
+import {
+  useState, useEffect, RefObject, useCallback,
+} from 'react';
 
 interface ElementSize {
   width: number;
@@ -17,14 +19,31 @@ export const useElementSize = <T extends HTMLElement>(
 ): ElementSize => {
   const [size, setSize] = useState<ElementSize>({ width: 0, height: 0 });
 
+  const updateSize = useCallback(() => {
+    const element = elementRef.current;
+    if (element) {
+      const { width, height } = element.getBoundingClientRect();
+      if (width !== size.width || height !== size.height) {
+        setSize({ width, height });
+      }
+    }
+  }, [elementRef, size.width, size.height]);
+
+  // Update size on resize and on mount
   useEffect(() => {
     const element = elementRef.current;
 
     if (element) {
+      // Get initial size
+      const { width, height } = element.getBoundingClientRect();
+      if (width !== size.width || height !== size.height) {
+        setSize({ width, height });
+      }
+
       const resizeObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {
-          const { width, height } = entry.contentRect;
-          setSize({ width, height });
+          const { width: w, height: h } = entry.contentRect;
+          setSize({ width: w, height: h });
         }
       });
 

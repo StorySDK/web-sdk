@@ -1,10 +1,11 @@
 import React from 'react';
-import { Group, GroupsDisplayType } from '@storysdk/types';
+import { Group, GroupsDisplayType, GroupStyleSettings } from '@storysdk/types';
 export interface GroupsRendererProps {
     groups: Group[];
     isLoading?: boolean;
     widgetId?: string;
     type?: GroupsDisplayType;
+    style?: GroupStyleSettings;
     groupImageWidth?: number;
     groupImageHeight?: number;
     groupTitleSize?: number;

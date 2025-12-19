@@ -23,6 +23,18 @@ export interface PreviewWidgetProps {
     openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
     container?: Element | HTMLDivElement | null;
+    style?: {
+        isShowMockup?: boolean;
+        showTitle?: boolean;
+        title?: string;
+        position?: string;
+        size?: string;
+        showPlayButton?: boolean;
+        autoplay?: boolean;
+        allowDragDrop?: boolean;
+        radius?: number;
+        border?: number;
+    } | null;
     onOpenGroup?(id: string): void;
     onCloseGroup?(id: string): void;
     onNextStory?(groupId: string, storyId: string): void;

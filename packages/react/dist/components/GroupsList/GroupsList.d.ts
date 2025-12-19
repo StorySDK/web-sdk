@@ -31,6 +31,15 @@ export interface GroupsListProps {
     devMode?: 'staging' | 'development';
     groupView: 'circle' | 'square' | 'bigSquare' | 'rectangle';
     container?: Element | HTMLDivElement | null;
+    style?: {
+        itemStyle?: any;
+        isShowMockup?: boolean;
+        strokeThickness?: number;
+        activeColor?: string;
+        inactiveColor?: string;
+        width?: number;
+        height?: number;
+    } | null;
     onOpenGroup?(id: string): void;
     onCloseGroup?(id: string): void;
     onNextStory?(groupId: string, storyId: string): void;

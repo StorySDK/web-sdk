@@ -24,6 +24,10 @@ export interface CarouselListProps {
     openInExternalModal?: boolean;
     devMode?: 'staging' | 'development';
     container?: Element | HTMLDivElement | null;
+    style?: {
+        titlePosition?: any;
+        isShowMockup?: boolean;
+    } | null;
     onOpenGroup?(id: string): void;
     onCloseGroup?(id: string): void;
     onNextStory?(groupId: string, storyId: string): void;
